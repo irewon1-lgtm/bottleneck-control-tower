@@ -41,6 +41,14 @@ def test_mixed_labor_and_physical_shortage_retained():
     assert screen("Production capacity may become tight.")["target_status"] == "UNRESOLVED"
 
 
+def test_generic_demand_and_expansion_do_not_become_candidates():
+    assert not screen("Demand for warehouse automation is growing. A company is expanding production capacity.")["candidate"]
+    assert not screen("The plant has production capacity of 100 units. Demand was 90 units.")["candidate"]
+    result = screen("Demand for more specialised care is growing. The provider plans an expansion.")
+    assert not result["candidate"]
+    assert result["targets"] == []
+
+
 def test_live_phrase_errors_do_not_become_targets():
     result = screen('Shortages of diesel, jet fuel and petrochemical feedstocks if it cannot move crude may occur.')
     assert [t['name'] for t in result['targets']] == ['diesel', 'jet fuel', 'petrochemical feedstocks']
