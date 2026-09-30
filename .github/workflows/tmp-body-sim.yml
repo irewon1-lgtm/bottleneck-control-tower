@@ -21,6 +21,7 @@ jobs:
           set -euo pipefail
           cp config.example.yaml config.yaml
           git fetch --no-tags origin data
+          mkdir -p var/canonical
           git show FETCH_HEAD:canonical.sqlite3 > var/canonical/canonical.sqlite3
           python - <<'PY'
           import json, sqlite3, requests
