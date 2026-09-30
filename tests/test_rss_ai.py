@@ -25,7 +25,8 @@ def test_signal_only_idempotent_error_and_versioned_retry(setup, tmp_path):
         if payload["title"].startswith("If"):
             raise RuntimeError("model unavailable")
         return {"TARGET_TYPE": "COMPONENT", "TARGET_NAME": "transformer",
-            "SCOPE": "UNRESOLVED", "FACT_STATUS": "CURRENT_FACT",
+            "SCOPE_REGION": "UNRESOLVED", "SCOPE_INDUSTRY": "UNRESOLVED",
+            "SCOPE_CUSTOMER": "UNRESOLVED", "FACT_STATUS": "CURRENT_FACT",
             "SIGNAL_DIRECTION": "PRESSURE", "SIGNAL_TYPE": "LEAD_TIME",
             "UPSTREAM_SOURCE": "UNRESOLVED", "EVIDENCE_NOTE": "Lead time remains elevated."}
     first = run(settings, feeds, model="test-model", reviewer=reviewer)
@@ -62,7 +63,8 @@ def test_invalid_output_retries_then_terminal_error(setup, tmp_path):
 
 def test_provider_sends_only_allowed_input_and_parses_structured_output(monkeypatch):
     result = {"TARGET_TYPE": "UNRESOLVED", "TARGET_NAME": "UNRESOLVED",
-              "SCOPE": "UNRESOLVED", "FACT_STATUS": "CONDITIONAL",
+              "SCOPE_REGION": "Europe", "SCOPE_INDUSTRY": "steel manufacturing",
+              "SCOPE_CUSTOMER": "UNRESOLVED", "FACT_STATUS": "CONDITIONAL",
               "SIGNAL_DIRECTION": "NEUTRAL", "SIGNAL_TYPE": "OTHER",
               "UPSTREAM_SOURCE": "UNRESOLVED", "EVIDENCE_NOTE": "The stated claim is conditional."}
     class Response:
@@ -78,6 +80,6 @@ def test_provider_sends_only_allowed_input_and_parses_structured_output(monkeypa
         assert body["text"]["format"]["strict"] is True
         return Response()
     monkeypatch.setattr("bct.rss_ai.urlopen", fake_urlopen)
-    assert openai_review({"title": "If steel shortage", "snippet": None,
+    assert openai_review({"title": "If steel shortage in Europe", "snippet": "Steel manufacturing faces a conditional risk.",
                           "signals": [{"signal": "SHORTAGE", "candidate_term": "steel"}]},
                          model="test-model", api_key="test-key") == result
