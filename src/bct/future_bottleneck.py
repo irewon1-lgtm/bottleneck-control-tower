@@ -157,8 +157,9 @@ def screen(body):
         if TARGET.search(sentence) and PRESSURE.search(sentence):
             return True
         for match in OPEN_TARGET.finditer(sentence):
-            phrase = match.group(1)
-            if not LABOR.search(phrase) and not PROCESS_ONLY.search(phrase):
+            phrase = STOP.split(match.group(1), maxsplit=1)[0]
+            parts = [p.strip() for p in re.split(r",|\s+and\s+", phrase) if p.strip()]
+            if any(not LABOR.search(p) and not PROCESS_ONLY.search(p) and not GENERIC_TARGET.search(p) for p in parts):
                 return True
         return bool(
             PHYSICAL_OBJECT.search(sentence)
