@@ -16,22 +16,23 @@ import tempfile
 from urllib.parse import urlsplit
 from urllib.request import Request, HTTPRedirectHandler, build_opener
 
-VERSION = "body-candidate-v1"
+VERSION = "body-candidate-v2"
 CATEGORIES = {
     "DEMAND": r"\b(?:demand|orders?|backlog|offtake|procurement|consumption)\b",
     "CONSTRAINT": r"\b(?:shortages?|scarcity|scarce|constraints?|bottlenecks?|supply[- ]crunch|supply[- ]gap|export controls?|supply disruptions?|allocation)\b",
     "CAPACITY_LEAD_TIME": r"\b(?:capacity|lead[- ]times?|utilization|production|manufacturing|output|throughput)\b",
     "TIMING": r"\b(?:ramp[- ]up|commissioning|by 20\d{2}|in 20\d{2}|delays?|delayed|months?|years?)\b",
-    "RELIEF": r"\b(?:expansion|expand\w*|new facilit\w*|new plant|new supplier|normaliz\w*|debottleneck\w*|capacity additions?|supply recover\w*)\b",
+    "RELIEF": r"\b(?:expansion|expand\w*|new facilit\w*|new plant|new supplier|normaliz\w*|debottleneck\w*|capacity additions?|add(?:ing)? capacity|supply recover\w*)\b",
 }
 PATTERNS = {k: re.compile(v, re.I) for k, v in CATEGORIES.items()}
 LABOR = re.compile(r"\b(?:workers?|contractors?|crews?|staff|labor|labour|talent|skills?|nurses?|drivers?|recruitment)\b", re.I)
 SUPPLY = re.compile(r"\b(?:materials?|components?|equipment|factory|factories|plants?|suppliers?|supply chain|inventory|inventories|shipping|manufactur\w*)\b", re.I)
 COMPUTE = re.compile(r"\b(?:CPU|GPU|RAM|gaming|frame rates?|software|database|algorithm|bandwidth|latency|performance)\b", re.I)
+PRESSURE = re.compile(r"\b(?:shortages?|scarcity|scarce|constraints?|bottlenecks?|backlogs?|lead[- ]times?|limited|tight|insufficient|outpac\w*|allocation|supply[- ]crunch|supply[- ]gap|supply disruptions?|throughput limits?|capacity limits?|orders? (?:are )?(?:accelerat\w*|surg\w*|jump\w*)|supply (?:may |could |will )?(?:recover\w*|normaliz\w*))\b", re.I)
 BLOCKED = re.compile(r"(?:verify (?:that )?you are human|enable javascript and cookies|checking your browser|access denied|just a moment)", re.I)
 # Explicit fine-grained phrases, plus open phrase extraction below. Never a sector label.
 TARGET = re.compile(r"\b(?:(?:high[- ]voltage|power|distribution|large power) transformers?|(?:gas|steam) turbines?|(?:high[- ]bandwidth|HBM\d*|DDR\d+) memory|advanced packaging|CoWoS|ABF substrates?|300\s*mm wafers?|solid rocket motors?|ammonium perchlorate|HTPB|high[- ]assay low[- ]enriched uranium|HALEU|battery[- ]grade lithium (?:carbonate|hydroxide)|copper (?:foil|concentrate)|rare[- ]earth magnets?|grain[- ]oriented electrical steel|silicon carbide wafers?|(?:marine|aviation|diesel) fuel|sulfuric acid|helium|medical isotopes?)\b", re.I)
-OPEN_TARGET = re.compile(r"\b(?:shortages? of|scarcity of|supply constraints? for|lead[- ]times? for|production of|manufacturing of|capacity for|demand for)\s+([^.;:\n]{2,100})", re.I)
+OPEN_TARGET = re.compile(r"\b(?:shortages? of|scarcity of|supply constraints? for|lead[- ]times? for|production of|manufacturing of|capacity for)\s+([^.;:\n]{2,100})", re.I)
 STOP = re.compile(r"\b(?:is|are|was|were|has|have|will|could|would|may|if|as|because|while|which|that|to|in|at|by|from|with|for|said|discussing|nearly|both)\b|[“”\"—]", re.I)
 GENERIC_TARGET = re.compile(r"\b(?:up|between|just|time|ever|innovation|mindset|problem-solving|essential material|new equipment|expansion|technology|project|enhances|positions|manager)\b", re.I)
 
@@ -156,12 +157,35 @@ def screen(body):
     compute_only = bool(constrained) and all(COMPUTE.search(s) and not SUPPLY.search(s)
         and not re.search(r"\b(?:shortages?|supply|orders?|capacity|lead[- ]time)\b", s, re.I) for s in constrained)
     reason = "LABOR_ONLY" if labor_only else "COMPUTER_PERFORMANCE_ONLY" if compute_only else None
-    candidate = bool(set(evidence) - {"TIMING"}) and reason is None
+
+    # Require bottleneck-like pressure plus supporting evidence in the same
+    # local context. Generic demand/capacity/expansion mentions alone stay out.
+    qualifying_indexes = set()
+    for i, sentence in enumerate(sentences):
+        if not (PRESSURE.search(sentence) or PATTERNS["CONSTRAINT"].search(sentence)):
+            continue
+        lo, hi = max(0, i - 1), min(len(sentences), i + 2)
+        context = " ".join(sentences[lo:hi])
+        axes = {k for k, pattern in PATTERNS.items() if pattern.search(context)}
+        physical = bool(SUPPLY.search(context) or TARGET.search(context) or OPEN_TARGET.search(context))
+        strong_constraint = "CONSTRAINT" in axes and (
+            physical or bool(axes & {"DEMAND", "CAPACITY_LEAD_TIME", "RELIEF"})
+        )
+        structural_pressure = "CAPACITY_LEAD_TIME" in axes and bool(
+            axes & {"DEMAND", "TIMING", "RELIEF"}
+        )
+        relief_pressure = (
+            "RELIEF" in axes and "TIMING" in axes
+            and bool(re.search(r"\bsupply .*?(?:recover|normaliz)|\bdebottleneck", context, re.I))
+        )
+        if PRESSURE.search(context) and (strong_constraint or structural_pressure or relief_pressure):
+            qualifying_indexes.update(range(lo, hi))
+
+    candidate = bool(qualifying_indexes) and reason is None
     targets = {}
     if candidate:
-        for i, sentence in enumerate(sentences):
-            if not any(p.search(sentence) for p in PATTERNS.values()):
-                continue
+        for i in sorted(qualifying_indexes):
+            sentence = sentences[i]
             context = " ".join(sentences[max(0, i - 1):i + 2])
             for match in TARGET.finditer(context):
                 targets.setdefault(match.group().lower(), {"name": match.group(), "method": "EXPLICIT_PHRASE", "evidence": context[:500]})
