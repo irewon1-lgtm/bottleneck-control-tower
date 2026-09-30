@@ -1,0 +1,65 @@
+name: Temporary body fetch simulation
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/tmp-body-sim.yml']
+permissions:
+  contents: read
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e . trafilatura requests
+      - name: Restore current DB and test body extraction
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp config.example.yaml config.yaml
+          git fetch --no-tags origin data
+          git show FETCH_HEAD:canonical.sqlite3 > var/canonical/canonical.sqlite3
+          python - <<'PY'
+          import json, sqlite3, requests
+          from pathlib import Path
+          import trafilatura
+          from bct.radar_signals import extract
+
+          db=sqlite3.connect('var/canonical/canonical.sqlite3')
+          db.row_factory=sqlite3.Row
+          rows=list(db.execute("select id, source, title, snippet, url, published_at, collected_at from radar_items where status='active' order by collected_at,id"))
+          sig=[]
+          for r in rows:
+              signals=extract(r['title'],r['snippet'])
+              if signals:
+                  sig.append((dict(r),signals))
+          out=[]
+          headers={'User-Agent':'Mozilla/5.0 (BCT research body check; contact via repository)'}
+          for r,signals in sig[:20]:
+              rec={'id':r['id'],'title':r['title'],'url':r['url'],'signals':signals}
+              try:
+                  resp=requests.get(r['url'],headers=headers,timeout=15,allow_redirects=True)
+                  rec['http_status']=resp.status_code
+                  rec['html_chars']=len(resp.text or '')
+                  text=trafilatura.extract(resp.text, include_comments=False, include_tables=False, favor_precision=True) or ''
+                  rec['body_chars']=len(text)
+                  rec['body_ok']=bool(len(text)>=300 and resp.status_code < 400)
+                  rec['excerpt']=text[:500]
+              except Exception as e:
+                  rec.update({'body_ok':False,'error':type(e).__name__+': '+str(e)[:200]})
+              out.append(rec)
+          summary={'signal_articles':len(sig),'tested':len(out),
+                   'body_ok':sum(x.get('body_ok',False) for x in out),
+                   'body_failed':sum(not x.get('body_ok',False) for x in out),
+                   'results':out}
+          Path('body-sim-result.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({k:v for k,v in summary.items() if k!='results'}))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: body-sim-result
+          path: body-sim-result.json
+          if-no-files-found: error
