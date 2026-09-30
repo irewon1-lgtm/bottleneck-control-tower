@@ -2,6 +2,7 @@
 (() => {
   const pages = {
     dashboard: ["대시보드", "현재 수집 결과와 기존 SIGNAL·Family 현황"],
+    future: ["검증된 미래병목", "8단계 고정 결과 · 상태·TARGET·기업 연결·근거"],
     sectors: ["섹터 랭킹", "PRESSURE → 출처 수 → 최근 신호 → RELIEF 순서"],
     signals: ["SIGNAL 기사", "기존 SIGNAL 결과 · 제목과 요약문 기준"],
     ai: ["AI 리뷰", "현재 DB에 저장된 AI 보조판독 결과"],
@@ -96,6 +97,8 @@
     return rows.length ? list : empty("수집 기록 없음", "현재 snapshot에 수집 실행 기록이 없습니다.");
   }
   let snapshot = null;
+  let verified = null;
+  let verifiedError = false;
   let loading = false;
   const route = () => Object.hasOwn(pages, location.hash.slice(1)) ? location.hash.slice(1) : "dashboard";
   function toolbar(key, filters, usePeriod) {
@@ -181,6 +184,61 @@
     values.forEach(([label, value]) => { const pair = node("div", null, "key-value"); pair.append(node("dt", label), node("dd", value || "데이터 없음")); list.append(pair); });
     body.append(list); document.getElementById("family-dialog").showModal();
   }
+  function verifiedPanels() {
+    const box = panel("검증된 미래병목", verified ? `검증 기준 ${verified.as_of} · ${verified.note}` : "8단계 고정 검증 결과");
+    if (!verified) {
+      box.append(empty(verifiedError ? "고정 결과를 불러올 수 없음" : "고정 결과 확인 중", verifiedError ? "페이지를 다시 열어 주세요. 기존 수집 데이터와는 별도로 표시됩니다." : "검증된 3개 병목을 불러옵니다."));
+      return box;
+    }
+    const cards = node("div", null, "verified-cards");
+    verified.items.forEach(item => {
+      const card = node("article", null, "verified-card");
+      card.append(pill(item.status, item.status.toLowerCase()), node("h3", item.target));
+      const connections = node("p", null, "verified-connections");
+      connections.textContent = item.companies.map(company => `${company.ticker} · ${company.role}`).join(" / ");
+      card.append(connections);
+      const gaps = node("p", null, "verified-connections");
+      gaps.append(pill(`UNRESOLVED ${item.unresolved.length}항목`, "unresolved"));
+      if (item.no_public_play.length) gaps.append(node("span", " "), pill(`NO_PUBLIC_PLAY ${item.no_public_play.length}단계`, "unresolved"));
+      card.append(gaps);
+      const details = node("details");
+      details.append(node("summary", "공급망·근거·기업 연결 보기"));
+      const list = node("dl");
+      [["병목 공급망 단계", item.stage], ["핵심 수요 근거", item.demand], ["핵심 공급제약", item.constraint], ["예상 수요 시점", item.demand_timing], ["공급완화·증설 시점", item.relief_timing]].forEach(([label, value]) => {
+        const pair = node("div", null, "key-value");
+        pair.append(node("dt", label), node("dd", value || "UNRESOLVED")); list.append(pair);
+      });
+      details.append(list, node("h4", "미국 상장사 연결"));
+      item.companies.forEach(company => {
+        const entry = node("div", null, "verified-company");
+        const heading = node("p");
+        heading.append(node("strong", `${company.ticker} · ${company.name} (${company.listing}) `), pill(company.role, company.role.toLowerCase()));
+        entry.append(heading, node("p", company.evidence), node("p", company.business_share, "muted"), articleTitle({title: "공식 사업·공시 근거 ↗", url: company.source}));
+        details.append(entry);
+      });
+      if (item.no_public_play.length) {
+        details.append(node("h4", "NO_PUBLIC_PLAY · 투자표현 없음"));
+        item.no_public_play.forEach(value => details.append(node("p", value)));
+      }
+      details.append(node("h4", "UNRESOLVED · 미확정 항목"));
+      const unresolved = node("ul"); item.unresolved.forEach(value => unresolved.append(node("li", value))); details.append(unresolved);
+      details.append(node("h4", "근거 출처"));
+      const sources = node("ul"); item.sources.forEach(source => { const entry = node("li"); entry.append(articleTitle({title: source.label, url: source.url})); sources.append(entry); }); details.append(sources);
+      card.append(details); cards.append(card);
+    });
+    box.append(cards); return box;
+  }
+  async function loadVerified() {
+    const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 12000);
+    try {
+      const response = await fetch("./verified-bottlenecks.json", {cache: "no-cache", signal: controller.signal});
+      if (!response.ok) throw new Error("Verified results unavailable");
+      const value = await response.json();
+      if (value.version !== 1 || !value.as_of || !Array.isArray(value.items) || value.items.length !== 3 || !value.items.every(item => ["FUTURE", "EMERGING"].includes(item.status) && item.target && Array.isArray(item.companies) && Array.isArray(item.sources) && Array.isArray(item.unresolved) && Array.isArray(item.no_public_play))) throw new Error("Invalid verified results");
+      verified = value;
+    } catch { verifiedError = true; }
+    finally { clearTimeout(timeout); if (["dashboard", "future"].includes(route())) render(); }
+  }
   function render() {
     const key = route(), [title, subtitle] = pages[key];
     document.getElementById("page-title").textContent = title;
@@ -190,7 +248,12 @@
       if (link.dataset.page === key) link.setAttribute("aria-current", "page"); else link.removeAttribute("aria-current");
     });
     content.replaceChildren();
-    if (!snapshot) { content.append(empty("데이터 확인 중", "저장된 snapshot을 불러옵니다.")); return; }
+    if (key === "future") { content.append(verifiedPanels()); return; }
+    if (!snapshot) {
+      content.append(empty("데이터 확인 중", "저장된 snapshot을 불러옵니다."));
+      if (key === "dashboard") content.append(verifiedPanels());
+      return;
+    }
     const overview = snapshot.overview;
     if (key === "dashboard") {
       const metrics = node("div", null, "metrics");
@@ -200,6 +263,7 @@
       const summary = panel("수집 결과", "현재 DB에 기록된 최근 실행 기준");
       summary.append(metric("성공 / 실패", `${number(overview.successful_feeds)} / ${number(overview.failed_feeds)}`), metric("최근 수집 시각", date(overview.last_collection_at)), metric("AI 실행 방식", aiMode(overview.ai_mode)));
       columns.append(collections, summary); content.append(metrics, columns);
+      const fixed = verifiedPanels(); fixed.classList.add("section-gap"); content.append(fixed);
     } else if (key === "sectors") {
       const box = panel("섹터별 SIGNAL 집계", snapshot.sector_note);
       const rows = [...snapshot.sector_rankings].sort((a, b) => b.pressure - a.pressure || b.source_count - a.source_count || (Date.parse(b.latest_at) || 0) - (Date.parse(a.latest_at) || 0) || a.relief - b.relief);
@@ -243,12 +307,15 @@
       if (changed) render();
     } catch {
       document.getElementById("notice").textContent = snapshot ? "최신 snapshot을 읽지 못했습니다. 마지막으로 확인한 데이터를 표시합니다." : "snapshot을 읽지 못했습니다. 잠시 후 자동으로 다시 확인합니다.";
-      if (!snapshot) content.replaceChildren(empty("데이터를 불러올 수 없음", "snapshot 연결 상태를 확인해 주세요."));
+      if (!snapshot && route() !== "future") {
+        content.replaceChildren(empty("데이터를 불러올 수 없음", "snapshot 연결 상태를 확인해 주세요."));
+        if (route() === "dashboard") content.append(verifiedPanels());
+      }
     } finally { clearTimeout(timeout); loading = false; }
   }
   document.getElementById("dialog-close").addEventListener("click", () => document.getElementById("family-dialog").close());
   window.addEventListener("hashchange", render);
   document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
   setInterval(() => { if (!document.hidden) refresh(); }, 300000);
-  render(); refresh();
+  render(); refresh(); loadVerified();
 })();

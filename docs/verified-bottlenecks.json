@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "as_of": "2026-09-30",
+  "note": "8단계 고정 검증 결과 · 자동 갱신·점수·종목 추천 없음 · 사업 비중 미확정은 UNRESOLVED",
+  "items": [
+    {
+      "id": "large-gas-turbine-slots",
+      "status": "FUTURE",
+      "target": "2030년 이전 전력 확보에 필요한 신규 대형 가스터빈 생산 슬롯",
+      "stage": "고온부 주조 부품 → 대형 터빈 제작·조립·시험 → 발전소 건설·시운전. 병목 TARGET은 미예약 신규 프로젝트의 완제품 생산 슬롯.",
+      "demand": "GEV의 2026년 상반기 heavy-duty 터빈 수주 80대·판매 28대. 전력 수요시설의 2030년 이전 가동 계획과 신규 설비 조달 시점이 충돌.",
+      "constraint": "GEV 2026년 2분기 가스 설비 확정 backlog 53GW + 슬롯 예약 63GW. 예약은 확정 수주와 다름. 신규 슬롯 일부는 2030~2031년 출하 후 2032~2033년 가동으로 이어질 수 있음.",
+      "demand_timing": "2030년 이전 전력 확보. 개별 프로젝트의 정확한 수요일은 UNRESOLVED.",
+      "relief_timing": "GEV 연간 생산능력 계획: 2026년 20GW → 2028년 24GW → 2030년 30GW. 증설만으로 모든 신규 프로젝트의 2030년 이전 가동을 보장하지 않음.",
+      "companies": [
+        {"ticker": "GEV", "name": "GE Vernova", "listing": "NYSE", "role": "DIRECT", "evidence": "대형 가스터빈 OEM. 2026년 상반기 Gas Power 매출 84.93억 달러, 연결 매출의 약 41.5%. 서비스·소형 터빈 등 포함.", "business_share": "UNRESOLVED — 신규 대형 터빈 전용 매출·수주 비중", "source": "https://www.sec.gov/Archives/edgar/data/1996810/000199681026000148/gev-20260630.htm"},
+        {"ticker": "HWM", "name": "Howmet Aerospace", "listing": "NYSE", "role": "ENABLEMENT", "evidence": "대형 산업용 터빈 고온부 블레이드 등 핵심 부품 공급. 2025년 Gas Turbines 매출 9.44억 달러, 전체의 약 11.4%. 대형·중소형 부품 포함.", "business_share": "UNRESOLVED — 신규 대형 터빈 전용 비중", "source": "https://www.sec.gov/Archives/edgar/data/4281/000000428126000012/hwm-20251231.htm"}
+      ],
+      "no_public_play": [],
+      "unresolved": ["개별 미예약 프로젝트 수요일·슬롯 계약일", "GEV·HWM의 신규 대형 터빈 전용 사업 비중"],
+      "sources": [
+        {"label": "GEV · 2026년 2분기 SEC 실적자료 · 수주·예약·증설", "url": "https://www.sec.gov/Archives/edgar/data/1996810/000199681026000147/gevpressrelease2q26.htm"},
+        {"label": "GEV · 2026년 2분기 공식 설명회 · 출하와 가동 시점", "url": "https://www.gevernova.com/sites/default/files/gev_webcast_transcript_07222026.pdf"},
+        {"label": "Howmet · 2026년 공식 기술·시장 자료 · 대형 터빈 부품", "url": "https://www.howmet.com/wp-content/uploads/sites/3/2026/03/Howmet-Aerospace-Technology-and-Markets-Day-2026.pdf"}
+      ]
+    },
+    {
+      "id": "uk-regional-grid-connections",
+      "status": "EMERGING",
+      "target": "영국 대규모 수요시설의 지역별 계통 접속·접속공사 능력",
+      "stage": "접속 심사·배정 → 지역 송배전망 운영 → 설계·인허가 → 변전소·송전망 보강 → 현장 접속공사. 지역·접속 지점별로 확인 필요.",
+      "demand": "Ofgem: 대규모 수요 접속 제안량이 2024년 11월 41GW에서 2025년 6월 125GW로 증가, 약 80GW는 데이터센터. 실제 전력 소비량이 아니며 투기적·중복 신청이 포함될 수 있음.",
+      "constraint": "접속 대기·지역 망 보강·설계·공사능력이 제약. 전체 영국이나 모든 변압기·케이블 부족으로 일반화하지 않음.",
+      "demand_timing": "현재 접속 수요부터 2030~2035년 수요 확대. 시설별 실제 가동일은 UNRESOLVED.",
+      "relief_timing": "Uxbridge Moor: 2029년부터 12개 이상 신규 데이터센터 접속 계획. RIIO-T3: 2026년 4월~2031년 3월, 최대 310억 파운드 투자 틀. 지역별 공사 완료·가용 접속능력은 UNRESOLVED.",
+      "companies": [
+        {"ticker": "NGG", "name": "National Grid", "listing": "NYSE ADR", "role": "DIRECT", "evidence": "영국 송배전망 운영·접속 제공. FY2025/26 영국 송배전 대외매출 합계 47.48억 파운드, 연결 매출의 약 26.8%. 규제 요금·허용 투자수익 구조.", "business_share": "UNRESOLVED — 대규모 수요시설 접속 전용 비중", "source": "https://www.nationalgrid.com/document/579676/download"},
+        {"ticker": "J", "name": "Jacobs", "listing": "NYSE", "role": "ENABLEMENT", "evidence": "영국 Central·Southeast·Southwest 800개 이상 송전 자산의 설계·검증·공사 지원. 5년 계약 1,300만 달러 이상. 신규 수요시설 접속 전용 계약은 아님.", "business_share": "UNRESOLVED — 해당 영국 사업 매출·backlog 비중", "source": "https://www.jacobs.com/newsroom/press-release/jacobs-expands-role-national-grids-asset-health-intervention-programme"},
+        {"ticker": "ACM", "name": "AECOM", "listing": "NYSE", "role": "ENABLEMENT", "evidence": "Arup과 JV로 Great Grid Partnership 설계·인허가 파트너 참여. 전체 프레임워크 금액을 AECOM 단독 수주로 볼 수 없음.", "business_share": "UNRESOLVED — 회사 귀속 계약액·영국 해당 사업 비중", "source": "https://aecom.com/press-releases/aecom-joint-venture-to-deliver-the-uk-national-grids-great-grid-upgrade/"},
+        {"ticker": "GEV", "name": "GE Vernova", "listing": "NYSE", "role": "ENABLEMENT", "evidence": "EGL1 2GW HVDC 변환소 기술·장비 공급. 컨소시엄 계약 10억 파운드. 특정 시설 접속권보다 상위 송전망 보강에 노출.", "business_share": "UNRESOLVED — GEV 귀속 계약액·영국 해당 사업 비중", "source": "https://www.gevernova.com/electrification/news-press/ge-vernova-mytilineos-consortium-awarded-ps1bn-contract-construct-uks-first-high"}
+      ],
+      "no_public_play": ["접속 배정·정책 기능: 공적 기능으로 NGG 망 운영과 구분", "지역 접속공사 순수플레이: 확인 범위에서 적절한 미국 거래소 상장 투자수단 미확인"],
+      "unresolved": ["시설별 확정 수요량·가동일", "지역별 공사 완료일·가용 접속능력", "연결 기업의 대규모 수요시설 접속 전용 사업 비중"],
+      "sources": [
+        {"label": "Ofgem · 접속 신청량과 투기적 데이터센터 신청", "url": "https://www.ofgem.gov.uk/press-release/ofgem-acts-free-grid-capacity-tackling-speculative-data-centre-projects"},
+        {"label": "National Grid · 2025/26 연차보고서 · 투자·Uxbridge Moor", "url": "https://www.nationalgrid.com/document/579676/download"},
+        {"label": "National Grid · 2026년 송전선 보강 파트너·공사능력", "url": "https://www.nationalgrid.com/next-phase-national-grids-electricity-transmission-partnership-boost-overhead-line-capacity"}
+      ]
+    },
+    {
+      "id": "compliant-non-china-tungsten",
+      "status": "EMERGING",
+      "target": "미국 방산 규정 적격 비중국계 원료 → 텅스텐 금속 분말·중합금 공급망",
+      "stage": "원산지 추적 가능한 광석·재활용 원료 → 정광 → APT·산화물 정제 → 금속 분말 → 중합금·가공 부품 → 방산 납품. 일반 텅스텐 카바이드 전체로 확대하지 않음.",
+      "demand": "2027년 1월 방산 조달 원산지 요건 전환과 실제 방산 납품·비축 계약 확인. ELMT DLA 계약: 상한 20억 달러, 보장 최소 구매 1.5억 달러. 상한 전체는 확정 backlog·매출이 아님. 적격 수요 증가량은 UNRESOLVED.",
+      "constraint": "비중국계 원료 확보만으로 최종 적격성을 확정할 수 없음. 채굴·가공 단계의 추적, 적격 분말·중합금 생산·인증을 함께 확인해야 함. 원료·미국 정제능력 확충이 진행 중.",
+      "demand_timing": "2027년 1월 1일 원산지 요건 전환. 계약별 실제 인도 일정·물량은 UNRESOLVED.",
+      "relief_timing": "ALM Sangdong: 2026년 9월 17일 상업 운영 허가 후 램프업, Phase II 2027년 계획. ELMT Springer 광산: 2027년 4분기 재가동 목표, APT 시설: 2028년 하반기 가동 목표. 계획은 완료 사실과 구분.",
+      "companies": [
+        {"ticker": "ALM", "name": "Almonty Industries", "listing": "Nasdaq", "role": "DIRECT", "evidence": "상류 정광 생산·판매. 2026년 2분기 매출 약 4,300만 캐나다달러는 Panasqueira에서 발생. Sangdong Phase I 생산 90% 이상을 GTP와 21년 계약. 최종 분말·중합금 제조사는 아님.", "business_share": "UNRESOLVED — 미국 방산 최종 매출·물량별 적격성", "source": "https://www.sec.gov/Archives/edgar/data/1670061/000149315226043476/ex99-1.htm"},
+        {"ticker": "ELMT", "name": "The Elmet Group", "listing": "Nasdaq", "role": "DIRECT", "evidence": "미국에서 텅스텐 분말·중합금·부품 생산 및 방산 공급. 2026년 2분기 CMC 매출 5,704.7만 달러, 전체의 약 85.9%. CMC에는 몰리브덴 등 포함.", "business_share": "UNRESOLVED — 텅스텐·방산 적격 제품만의 비중·2027년 물량별 원산지 인증", "source": "https://www.sec.gov/Archives/edgar/data/2101698/000162828026056460/elmt-20260703.htm"},
+        {"ticker": "KMT", "name": "Kennametal", "listing": "NYSE", "role": "UNRESOLVED", "evidence": "텅스텐·중금속 분말 생산은 확인. 비중국계 원료 출처와 2027년 방산 적격성 근거 부족으로 DIRECT 확정 보류.", "business_share": "UNRESOLVED — 해당 적격 제품 매출·수주 비중", "source": "https://www.kennametal.com/hu/en/products/Metal-Powders-Materials-Consumables/tungsten-powders.html"}
+      ],
+      "no_public_play": ["GTP/Plansee 정제·분말 사업: 실제 핵심 공급자이나 재단 소유 비상장 그룹. ALM 보유는 GTP 가공이익 지분 노출이 아님"],
+      "unresolved": ["2027년 요건에 맞는 실제 적격 수요 증가량", "ALM·ELMT 납품 물량별 원산지·인증 연결", "KMT의 비중국계 공급·방산 적격성", "각 기업의 적격 제품 전용 사업 비중·계약별 인도 일정"],
+      "sources": [
+        {"label": "DFARS · 방산 원산지 제한", "url": "https://www.acquisition.gov/dfars/225.7018-2-restriction."},
+        {"label": "ALM · 2026년 2분기 SEC MD&A · 실제 매출·사업", "url": "https://www.sec.gov/Archives/edgar/data/1670061/000149315226037264/ex99-3.htm"},
+        {"label": "Elmet · 미국 분말 생산·DFARS 준수 표시", "url": "https://www.elmetpowders.com/tungsten/powder/"},
+        {"label": "Elmet · SEC 첨부 DLA 계약 · 상한과 최소 구매", "url": "https://investors.theelmetgroup.com/sec-filings/content/0001213900-26-099734/ea030468201ex10-5.htm"},
+        {"label": "Elmet · 증설·Springer 계획 가동일", "url": "https://investors.theelmetgroup.com/news-events/press-releases/detail/169/the-elmet-group-to-deploy-strategic-capital-to-strengthen-u-s-and-allied-tungsten-supply-chain"},
+        {"label": "Plansee · 비상장 소유 구조", "url": "https://plansee-group.com/en"}
+      ]
+    }
+  ]
+}
