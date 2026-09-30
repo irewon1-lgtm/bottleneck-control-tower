@@ -1,0 +1,105 @@
+name: Temporary apply PRESSURE 9 reviews
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rss-canonical-data
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: Restore canonical database
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp config.example.yaml config.yaml
+          data_sha=$(git ls-remote origin refs/heads/data | cut -f1)
+          test -n "$data_sha"
+          echo "BASE_DATA_SHA=$data_sha" >> "$GITHUB_ENV"
+          git fetch --no-tags origin "$data_sha"
+          mkdir -p "$RUNNER_TEMP/review-prior"
+          for name in canonical.sqlite3 canonical.previous.sqlite3 state.json; do
+            git show "$data_sha:$name" > "$RUNNER_TEMP/review-prior/$name"
+          done
+          python .github/scripts/rss_state.py load             "$RUNNER_TEMP/review-prior" var/canonical/canonical.sqlite3
+      - name: Apply exactly nine manual reviews
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          from sqlalchemy import select
+
+          from bct.config import load_settings
+          from bct.db import engine_for, session_factory
+          from bct.models import RadarItem
+          from bct.radar_pressure_relief import RELIEF
+          from bct.radar_signals import extract
+          from bct.rss_ai import RSSAIReview, validate
+
+          payload = json.loads(Path('.github/tmp/pressure9_reviews.json').read_text(encoding='utf-8'))
+          assert len(payload['items']) == 9
+          settings = load_settings(Path('config.yaml'))
+          RSSAIReview.__table__.create(engine_for(settings), checkfirst=True)
+          sf = session_factory(settings)
+          inserted = 0
+          with sf.begin() as db:
+              for row in payload['items']:
+                  item = db.get(RadarItem, row['radar_item_id'])
+                  assert item is not None and item.status == 'active'
+                  signals = extract(item.title, item.snippet)
+                  pressure = [s for s in signals if s['signal'] not in RELIEF]
+                  assert pressure
+                  result = validate(row['result'])
+                  exists = db.scalar(select(RSSAIReview).where(
+                      RSSAIReview.radar_item_id == item.id,
+                      RSSAIReview.model == payload['model'],
+                      RSSAIReview.prompt_version == payload['prompt_version']))
+                  if exists is not None:
+                      continue
+                  ai_input = {'title': item.title, 'snippet': item.snippet, 'signals': signals}
+                  digest = hashlib.sha256(json.dumps(
+                      ai_input, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
+                  db.add(RSSAIReview(
+                      radar_item_id=item.id,
+                      model=payload['model'],
+                      prompt_version=payload['prompt_version'],
+                      input_sha256=digest,
+                      status='OK',
+                      attempts=1,
+                      result_json=json.dumps(result, ensure_ascii=False, sort_keys=True),
+                  ))
+                  inserted += 1
+          print(json.dumps({'requested': 9, 'inserted': inserted}))
+          PY
+      - name: Validate tests
+        run: |
+          python -m pip install pytest
+          python -m pytest -q
+      - name: Persist reviewed database
+        shell: bash
+        run: |
+          set -euo pipefail
+          current_sha=$(git ls-remote origin refs/heads/data | cut -f1)
+          if [[ "$current_sha" != "$BASE_DATA_SHA" ]]; then
+            echo 'data branch changed; refusing to overwrite' >&2
+            exit 1
+          fi
+          git worktree add "$RUNNER_TEMP/review-data" "$BASE_DATA_SHA"
+          python .github/scripts/rss_state.py save             var/canonical/canonical.sqlite3 "$RUNNER_TEMP/review-data"             --run-id 'manual-pressure9-${{ github.run_id }}'
+          git -C "$RUNNER_TEMP/review-data" add canonical.sqlite3 canonical.previous.sqlite3 state.json
+          git -C "$RUNNER_TEMP/review-data"             -c user.name='github-actions[bot]'             -c user.email='41898282+github-actions[bot]@users.noreply.github.com'             commit -m 'Persist nine manual PRESSURE reviews'
+          git -C "$RUNNER_TEMP/review-data" push origin HEAD:refs/heads/data
