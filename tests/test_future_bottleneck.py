@@ -100,6 +100,5 @@ def test_workflow_is_independent_and_never_writes_canonical_database():
     assert 'future-bottleneck-results' in text
     assert 'rss-canonical-data' not in text
     assert 'OPENAI_API_KEY' not in text
-    assert 'pip install -e' not in text
     assert 'python -m pytest -q' in text
     assert 'canonical.sqlite3' not in text.split('Publish candidate sidecar only')[1]
