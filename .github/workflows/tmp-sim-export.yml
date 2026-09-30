@@ -1,0 +1,39 @@
+name: Temporary simulation export
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/tmp-sim-export.yml']
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Fetch current data snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin data
+          git show FETCH_HEAD:canonical.sqlite3 > /tmp/canonical.sqlite3
+      - name: Export radar items for simulation
+        run: |
+          python - <<'PY'
+          import json, sqlite3
+          db=sqlite3.connect('/tmp/canonical.sqlite3')
+          db.row_factory=sqlite3.Row
+          cols={r[1] for r in db.execute('pragma table_info(radar_items)')}
+          wanted=['id','source','title','snippet','url','published_at','collected_at','status']
+          use=[c for c in wanted if c in cols]
+          rows=[dict(r) for r in db.execute('select '+','.join(use)+' from radar_items order by collected_at,id')]
+          open('/tmp/radar-items.json','w',encoding='utf-8').write(json.dumps(rows,ensure_ascii=False,indent=2))
+          print('rows',len(rows))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tmp-sim-radar-items
+          path: /tmp/radar-items.json
+          if-no-files-found: error
