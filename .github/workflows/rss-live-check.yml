@@ -1,6 +1,9 @@
 name: RSS live environment check
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 22 * * *'  # 07:00 KST
+    - cron: '0 10 * * *'  # 19:00 KST
 permissions:
   contents: write
 concurrency:
