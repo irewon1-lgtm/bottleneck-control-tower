@@ -1,14 +1,24 @@
 # BOTTLENECK CONTROL TOWER — Stages 0–3
 
-## Optional RSS AI annotation (manual only)
+## Independent RSS AI annotation
+
+`.github/workflows/rss-ai.yml` runs at 07:20 / 19:20 KST (GitHub scheduling can
+be delayed), or via workflow_dispatch. Set repository secret `OPENAI_API_KEY`;
+the optional repository variable `RSS_AI_MODEL` defaults to `gpt-5-mini`.
+It restores the verified existing data-branch SQLite snapshot, runs the existing
+review logic, and persists only AI annotations with the existing snapshot helper.
+It shares the RSS database concurrency lock and refuses stale writes. Missing
+secrets or invalid snapshots stop only this workflow; no new database is created.
+Article ERRORs are saved normally. An empty batch does not commit. Logs contain
+only processing counts, never provider errors or article/AI response text.
 
 `python -m bct.rss_ai --config config.yaml --feeds rss_feeds.yaml --model YOUR_MODEL --limit 3`
-requires `OPENAI_API_KEY` in the environment. It is never run by RSS collection or
-GitHub Actions. Run it separately against the existing SQLite snapshot. At most
+requires `OPENAI_API_KEY` in the environment. It is never run by RSS collection.
+Run it separately against the existing SQLite snapshot. At most
 20 unreviewed active RSS articles with existing signals are sent, using only the
 title, snippet and signal names. One retry is allowed; a second failure records
 a terminal `ERROR`. Both `OK` and `ERROR` are skipped until the model or
-`--prompt-version` changes. On manual execution only, the script creates one
+`--prompt-version` changes. The script creates one
 `rss_ai_reviews` table alongside the existing tables; it does not change Core,
 SIGNAL, WATCH/PROMOTE or the `radar_items` rows. Its annotations are advisory,
 and `UPSTREAM_SOURCE` can be used to identify reprints in a future review; the
