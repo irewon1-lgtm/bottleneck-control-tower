@@ -65,11 +65,11 @@ jobs:
               batch = feeds[start:start + 30]
               print(f'Batch {start // 30 + 1}: {len(batch)} feeds', flush=True)
               for name, url in batch:
-                  result = collector.run(url, run_key, limit=5)
+                  result = collector.run(url, run_key, limit=10)
                   attempts = 1
                   saved, duplicates = result.saved, result.duplicates
                   if result.status != 'succeeded':
-                      result = collector.run(url, run_key, limit=5)
+                      result = collector.run(url, run_key, limit=10)
                       attempts = 2
                       saved += result.saved
                       duplicates += result.duplicates
