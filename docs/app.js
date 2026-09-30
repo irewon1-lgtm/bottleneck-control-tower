@@ -11,6 +11,21 @@
   const content = document.getElementById("content");
   const states = Object.fromEntries(Object.keys(pages).map(key => [key, {filter: "전체", query: "", period: "all", page: 1}]));
   const number = value => value == null ? "데이터 없음" : Number(value).toLocaleString("ko-KR");
+  const DISPLAY = {
+    PRESSURE: "압박", RELIEF: "완화", NEUTRAL: "중립",
+    CURRENT_FACT: "현재 사실", CONDITIONAL: "조건부", FORECAST: "전망", PLAN: "계획",
+    UNRESOLVED: "확인 필요", PRODUCT: "제품", COMPONENT: "부품", MATERIAL: "원재료",
+    PROCESS: "공정", SUPPLY_CHAIN_STEP: "공급망 단계",
+    SHORTAGE: "부족", LEAD_TIME: "납기", CAPACITY: "생산능력", BACKLOG: "수주잔고",
+    DELAY: "지연", EXPANSION: "증설", RAMP: "생산 확대", NEW_SUPPLIER: "신규 공급자",
+    NORMALIZATION: "정상화", OTHER: "기타", OK: "정상", ERROR: "오류",
+    global: "글로벌", mining: "광업", manufacturing: "제조업", industrials: "산업재",
+    fulfillment: "풀필먼트", "oil shipping": "원유 해운", "petroleum refining": "정유",
+    "petroleum refining and logistics": "정유·물류", "material handling": "물류·자재 취급",
+    brands: "브랜드", "small and medium-sized manufacturers": "중소 제조업체"
+  };
+  const display = value => value == null || value === "" ? "데이터 없음" : (DISPLAY[value] || value);
+  const sectorDisplay = value => value && value !== "미분류" ? display(value) : "섹터 정보 없음";
   const aiMode = value => value === "scheduled" ? "예약 실행 설정" : value === "manual" ? "수동" : "데이터 없음";
   const date = value => {
     const parsed = new Date(value);
@@ -88,7 +103,7 @@
     const bar = node("div", null, "toolbar");
     const choices = node("div", null, "filters");
     filters.forEach(([label, count]) => {
-      const button = node("button", `${label} (${number(count)})`, "filter");
+      const button = node("button", `${display(label)} (${number(count)})`, "filter");
       button.type = "button";
       button.setAttribute("aria-pressed", String(state.filter === label));
       button.addEventListener("click", () => { state.filter = label; state.page = 1; render(); });
@@ -136,20 +151,20 @@
   }
   function reviewCell(row, field) {
     const value = row.result?.[field];
-    return value === "UNRESOLVED" && field.startsWith("SCOPE_") ? "미분류" : value || "데이터 없음";
+    return display(value);
   }
   function renderRows(key) {
     const body = document.getElementById("table-body"), state = states[key];
     if (!body || !snapshot) return;
     if (key === "signals") {
       const rows = snapshot.signal_articles.filter(row => (state.filter === "전체" || row.directions.includes(state.filter)) && matches(row, state) && inPeriod(row.published_at || row.collected_at, state));
-      paginate(key, rows, body, subset => table(["제목", "섹터", "SIGNAL", "출처", "FACT_STATUS", "시간 (KST)"], subset, row => {
-        const signals = node("div", null, "cell-stacked"); row.directions.forEach(value => signals.append(pill(value)));
-        return [articleTitle(row), row.sector || "미분류", signals, row.source, row.fact_status || "데이터 없음", date(row.published_at || row.collected_at)];
+      paginate(key, rows, body, subset => table(["제목", "섹터", "신호", "출처", "사실 상태", "시간 (KST)"], subset, row => {
+        const signals = node("div", null, "cell-stacked"); row.directions.forEach(value => signals.append(pill(display(value), value.toLowerCase())));
+        return [articleTitle(row), sectorDisplay(row.sector), signals, row.source, display(row.fact_status), date(row.published_at || row.collected_at)];
       }));
     } else if (key === "ai") {
       const rows = snapshot.ai_reviews.filter(row => (state.filter === "전체" || row.status === state.filter) && matches(row, state) && inPeriod(row.created_at, state));
-      paginate(key, rows, body, subset => table(["기사 제목", "TARGET_TYPE", "TARGET_NAME", "SCOPE_REGION", "SCOPE_INDUSTRY", "SCOPE_CUSTOMER", "FACT_STATUS", "SIGNAL_DIRECTION", "SIGNAL_TYPE", "UPSTREAM_SOURCE", "EVIDENCE_NOTE", "상태"], subset, row => [row.title, ...["TARGET_TYPE", "TARGET_NAME", "SCOPE_REGION", "SCOPE_INDUSTRY", "SCOPE_CUSTOMER", "FACT_STATUS", "SIGNAL_DIRECTION", "SIGNAL_TYPE", "UPSTREAM_SOURCE", "EVIDENCE_NOTE"].map(field => reviewCell(row, field)), pill(row.status)]), snapshot.ai_reviews.length ? null : "아직 수동 AI 판독 결과 없음");
+      paginate(key, rows, body, subset => table(["기사 제목", "대상 유형", "대상 이름", "지역", "산업", "고객", "사실 상태", "신호 방향", "신호 유형", "원출처", "근거 메모", "상태"], subset, row => [row.title, ...["TARGET_TYPE", "TARGET_NAME", "SCOPE_REGION", "SCOPE_INDUSTRY", "SCOPE_CUSTOMER", "FACT_STATUS", "SIGNAL_DIRECTION", "SIGNAL_TYPE", "UPSTREAM_SOURCE", "EVIDENCE_NOTE"].map(field => reviewCell(row, field)), pill(display(row.status), row.status?.toLowerCase())]), snapshot.ai_reviews.length ? null : "아직 수동 AI 판독 결과 없음");
     } else if (key === "families") {
       const rows = snapshot.families.filter(row => (state.filter === "전체" || (row.status || "데이터 없음") === state.filter) && matches(row, state));
       paginate(key, rows, body, subset => table(["Family 이름", "섹터", "관련 기사", "출처 수", "현재 상태", "최근 업데이트 (KST)"], subset, row => [row.name, row.sector || "미분류", number(row.article_count), number(row.source_count), pill(row.status || "데이터 없음", "review"), date(row.latest_at)], showFamily));
@@ -188,7 +203,7 @@
     } else if (key === "sectors") {
       const box = panel("섹터별 SIGNAL 집계", snapshot.sector_note);
       const rows = [...snapshot.sector_rankings].sort((a, b) => b.pressure - a.pressure || b.source_count - a.source_count || (Date.parse(b.latest_at) || 0) - (Date.parse(a.latest_at) || 0) || a.relief - b.relief);
-      box.append(table(["순위", "섹터", "PRESSURE", "RELIEF", "후보 Family", "출처 수", "최근 신호 (KST)"], rows, (row, index) => [row.sector === "미분류" ? "집계" : index + 1, row.sector, row.pressure, row.relief, row.family_count, row.source_count, date(row.latest_at)]));
+      box.append(table(["순위", "섹터", "압박", "완화", "후보군", "출처 수", "최근 신호 (KST)"], rows, (row, index) => [row.sector === "미분류" ? "집계" : index + 1, sectorDisplay(row.sector), row.pressure, row.relief, row.family_count, row.source_count, date(row.latest_at)]));
       if (!rows.length) box.append(empty("섹터 집계 결과 없음", snapshot.sector_note)); content.append(box);
     } else {
       let filters;
