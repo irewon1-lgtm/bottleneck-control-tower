@@ -47,6 +47,9 @@ def test_generic_demand_and_expansion_do_not_become_candidates():
     assert not screen("Reduced lead times and expanded capacity are improving cross-border operations.")["candidate"]
     assert not screen("Connectivity constraints can slow AI systems and increase latency.")["candidate"]
     assert not screen("A shortage of skilled workers is delaying new production capacity.")["candidate"]
+    assert not screen("Skilled workers are in shortage. The real constraint is execution, capacity and capability.")["candidate"]
+    assert not screen("Manual scheduling bottlenecks constrain AI-driven planning workflows.")["candidate"]
+    assert screen("Equipment order books are backlogged years out and manufacturing throughput is limited.")["candidate"]
     result = screen("Demand for more specialised care is growing. The provider plans an expansion.")
     assert not result["candidate"]
     assert result["targets"] == []
