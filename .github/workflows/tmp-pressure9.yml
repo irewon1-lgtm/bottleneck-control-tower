@@ -1,0 +1,68 @@
+name: Temporary PRESSURE 9 export
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: Export nine PRESSURE SIGNAL articles
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin data
+          git show FETCH_HEAD:canonical.sqlite3 > "$RUNNER_TEMP/canonical.sqlite3"
+          python - <<'PY'
+          import json, sqlite3, os
+          from pathlib import Path
+          from bct.radar_signals import extract
+          from bct.radar_pressure_relief import RELIEF
+
+          db_path = Path(os.environ["RUNNER_TEMP"]) / "canonical.sqlite3"
+          rows = []
+          with sqlite3.connect(db_path) as db:
+              db.row_factory = sqlite3.Row
+              items = db.execute("""
+                SELECT id, title, snippet, source, url, published_at, collected_at
+                FROM radar_items
+                WHERE status='active'
+                ORDER BY COALESCE(published_at, collected_at) DESC, id DESC
+              """).fetchall()
+          for item in items:
+              signals = extract(item["title"], item["snippet"])
+              pressure = [s for s in signals if s["signal"] not in RELIEF]
+              if not pressure:
+                  continue
+              rows.append({
+                "radar_item_id": item["id"],
+                "title": item["title"],
+                "snippet": item["snippet"],
+                "source": item["source"],
+                "url": item["url"],
+                "published_at": item["published_at"],
+                "collected_at": item["collected_at"],
+                "signals": pressure,
+              })
+              if len(rows) == 9:
+                  break
+          Path("pressure9.json").write_text(
+              json.dumps({"count": len(rows), "items": rows}, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8"
+          )
+          print(json.dumps({"pressure_count": len(rows)}))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pressure9
+          path: pressure9.json
+          if-no-files-found: error
