@@ -39,7 +39,7 @@ jobs:
         run: |
           python -m pip install pytest
           python -m pytest -q
-      - name: Collect 146 configured feeds in serial batches
+      - name: Collect configured feeds in serial batches
         run: |
           python - <<'PY'
           import json
@@ -77,7 +77,7 @@ jobs:
                                'attempts': attempts, 'saved': saved,
                                'duplicates': duplicates,
                                'error': result.error if result.status != 'succeeded' else None})
-          assert len(rows) == len(feeds) == 146
+          assert len(rows) == len(feeds)
           with sqlite3.connect(settings.db_path) as db:
               final_articles = db.execute('SELECT count(*) FROM radar_items').fetchone()[0]
           summary = {'registered': len(rows),
