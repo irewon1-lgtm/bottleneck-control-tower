@@ -153,12 +153,28 @@ def screen(body):
             if len(parts) > 1 and any(p.strip() and not LABOR.search(p) for p in parts):
                 return True
         return False
-    labor_only = bool(constrained) and all(LABOR.search(s) and not TARGET.search(s)
-        and not mixed_objects(s)
-        and not re.search(r"\b(?:materials?|components?|equipment|suppliers?|inventory|shipping|supply chain)\b", s, re.I) for s in constrained)
+    def strong_physical_signal(sentence):
+        if TARGET.search(sentence) and PRESSURE.search(sentence):
+            return True
+        for match in OPEN_TARGET.finditer(sentence):
+            phrase = match.group(1)
+            if not LABOR.search(phrase) and not PROCESS_ONLY.search(phrase):
+                return True
+        return bool(
+            PHYSICAL_OBJECT.search(sentence)
+            and re.search(r"\b(?:shortages?|scarcity|scarce|backlogs?|tight|limited|supply[- ]crunch|supply[- ]gap|supply disruptions?|throughput limits?|capacity limits?)\b", sentence, re.I)
+        )
+
+    physical_constraint = any(strong_physical_signal(s) for s in constrained)
+    labor_only = bool(constrained) and any(LABOR.search(s) for s in constrained) and not physical_constraint
     compute_only = bool(constrained) and all(COMPUTE.search(s) and not SUPPLY.search(s)
         and not re.search(r"\b(?:shortages?|supply|orders?|capacity|lead[- ]time)\b", s, re.I) for s in constrained)
-    reason = "LABOR_ONLY" if labor_only else "COMPUTER_PERFORMANCE_ONLY" if compute_only else None
+    process_only = bool(constrained) and all(
+        (PROCESS_ONLY.search(s) or COMPUTE.search(s) or re.search(r"\b(?:plann\w*|manual observation)\b", s, re.I))
+        and not strong_physical_signal(s) for s in constrained
+    )
+    reason = ("LABOR_ONLY" if labor_only else "COMPUTER_PERFORMANCE_ONLY" if compute_only
+              else "DIGITAL_PROCESS_ONLY" if process_only else None)
 
     # Require bottleneck-like pressure plus supporting evidence in the same
     # local context. Generic demand/capacity/expansion mentions alone stay out.
