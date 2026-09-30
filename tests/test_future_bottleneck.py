@@ -44,6 +44,9 @@ def test_mixed_labor_and_physical_shortage_retained():
 def test_generic_demand_and_expansion_do_not_become_candidates():
     assert not screen("Demand for warehouse automation is growing. A company is expanding production capacity.")["candidate"]
     assert not screen("The plant has production capacity of 100 units. Demand was 90 units.")["candidate"]
+    assert not screen("Reduced lead times and expanded capacity are improving cross-border operations.")["candidate"]
+    assert not screen("Connectivity constraints can slow AI systems and increase latency.")["candidate"]
+    assert not screen("A shortage of skilled workers is delaying new production capacity.")["candidate"]
     result = screen("Demand for more specialised care is growing. The provider plans an expansion.")
     assert not result["candidate"]
     assert result["targets"] == []
