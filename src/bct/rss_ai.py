@@ -32,7 +32,7 @@ class RSSAIReview(Base):
     result_json: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[str] = mapped_column(String(40), default=now, nullable=False)
 
-PROMPT_VERSION = "rss-ai-v1-scope3"
+PROMPT_VERSION = "rss-ai-v1-scope3-factsignal"
 FIELDS = ("TARGET_TYPE", "TARGET_NAME", "SCOPE_REGION", "SCOPE_INDUSTRY", "SCOPE_CUSTOMER", "FACT_STATUS",
           "SIGNAL_DIRECTION", "SIGNAL_TYPE", "UPSTREAM_SOURCE", "EVIDENCE_NOTE")
 OPTIONS = {
@@ -54,6 +54,7 @@ INSTRUCTIONS = (
     "Use UNRESOLVED for uncertain target, fact status, target name or upstream source. "
     "CURRENT_FACT is for a stated present observation, CONDITIONAL for an if-then claim, "
     "FORECAST for a projection and PLAN for an announced intention. "
+    "Classify FACT_STATUS for the specific signal claim being reviewed, not for the article as a whole. "
     "UPSTREAM_SOURCE means the original publisher or report named in the supplied text, not an inferred one. "
     "EVIDENCE_NOTE is one short sentence grounded in that text. Never decide bottleneck, WATCH, PROMOTE, "
     "Core status, securities or weights."
