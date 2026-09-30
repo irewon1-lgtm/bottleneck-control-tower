@@ -28,7 +28,9 @@ PATTERNS = {k: re.compile(v, re.I) for k, v in CATEGORIES.items()}
 LABOR = re.compile(r"\b(?:workers?|contractors?|crews?|staff|labor|labour|talent|skills?|nurses?|drivers?|recruitment)\b", re.I)
 SUPPLY = re.compile(r"\b(?:materials?|components?|equipment|factory|factories|plants?|suppliers?|supply chain|inventory|inventories|shipping|manufactur\w*)\b", re.I)
 COMPUTE = re.compile(r"\b(?:CPU|GPU|RAM|gaming|frame rates?|software|database|algorithm|bandwidth|latency|performance)\b", re.I)
-PRESSURE = re.compile(r"\b(?:shortages?|scarcity|scarce|constraints?|bottlenecks?|backlogs?|lead[- ]times?|limited|tight|insufficient|outpac\w*|allocation|supply[- ]crunch|supply[- ]gap|supply disruptions?|throughput limits?|capacity limits?|orders? (?:are )?(?:accelerat\w*|surg\w*|jump\w*)|supply (?:may |could |will )?(?:recover\w*|normaliz\w*))\b", re.I)
+PRESSURE = re.compile(r"\b(?:shortages?|scarcity|scarce|constraints?|bottlenecks?|backlogs?|limited|tight|insufficient|outpac\w*|allocation|supply[- ]crunch|supply[- ]gap|supply disruptions?|throughput limits?|capacity limits?|orders? (?:are )?(?:accelerat\w*|surg\w*|jump\w*)|supply (?:may |could |will )?(?:recover\w*|normaliz\w*)|(?:long|extended|lengthy|rising|increas\w*) lead[- ]times?|lead[- ]times? (?:of|at|are|remain|stretch\w*|exceed\w*)|\d+(?:[- ](?:day|week|month|year)s?) lead[- ]time)\b", re.I)
+PROCESS_ONLY = re.compile(r"\b(?:software|data(?:base)?|algorithm|AI|connectivity|latency|bandwidth|synchronization|scheduling|workflow|flight planning|revenue management|legacy systems?|downstream systems?|memory access)\b", re.I)
+PHYSICAL_OBJECT = re.compile(r"\b(?:raw materials?|critical materials?|components?|equipment|suppliers?|inventory|inventories|shipping|factories?|plants?|transformers?|turbines?|engines?|fuels?|vessels?|tankers?|semiconductors?|wafers?)\b", re.I)
 BLOCKED = re.compile(r"(?:verify (?:that )?you are human|enable javascript and cookies|checking your browser|access denied|just a moment)", re.I)
 # Explicit fine-grained phrases, plus open phrase extraction below. Never a sector label.
 TARGET = re.compile(r"\b(?:(?:high[- ]voltage|power|distribution|large power) transformers?|(?:gas|steam) turbines?|(?:high[- ]bandwidth|HBM\d*|DDR\d+) memory|advanced packaging|CoWoS|ABF substrates?|300\s*mm wafers?|solid rocket motors?|ammonium perchlorate|HTPB|high[- ]assay low[- ]enriched uranium|HALEU|battery[- ]grade lithium (?:carbonate|hydroxide)|copper (?:foil|concentrate)|rare[- ]earth magnets?|grain[- ]oriented electrical steel|silicon carbide wafers?|(?:marine|aviation|diesel) fuel|sulfuric acid|helium|medical isotopes?)\b", re.I)
@@ -166,6 +168,18 @@ def screen(body):
             continue
         lo, hi = max(0, i - 1), min(len(sentences), i + 2)
         context = " ".join(sentences[lo:hi])
+        local_labor_only = bool(LABOR.search(context)) and not (
+            PHYSICAL_OBJECT.search(context) or TARGET.search(context) or OPEN_TARGET.search(context)
+        )
+        anchor_physical = bool(
+            PHYSICAL_OBJECT.search(sentence) or TARGET.search(sentence) or OPEN_TARGET.search(sentence)
+            or re.search(r"\b(?:shortages?|scarcity|supply[- ]crunch|supply[- ]gap|supply disruptions?)\b", sentence, re.I)
+        )
+        local_process_only = bool(PATTERNS["CONSTRAINT"].search(sentence)) and bool(
+            PROCESS_ONLY.search(context) or COMPUTE.search(context)
+        ) and not anchor_physical
+        if local_labor_only or local_process_only:
+            continue
         axes = {k for k, pattern in PATTERNS.items() if pattern.search(context)}
         physical = bool(SUPPLY.search(context) or TARGET.search(context) or OPEN_TARGET.search(context))
         strong_constraint = "CONSTRAINT" in axes and (
