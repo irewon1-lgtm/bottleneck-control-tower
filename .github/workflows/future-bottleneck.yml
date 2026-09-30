@@ -1,0 +1,87 @@
+name: Future bottleneck body candidates
+on:
+  push:
+    branches: [main, codex/future-bottleneck]
+    paths: ['src/bct/future_bottleneck.py', 'tests/test_future_bottleneck.py', '.github/workflows/future-bottleneck.yml']
+  workflow_dispatch:
+  workflow_run:
+    workflows: ['RSS live environment check']
+    types: [completed]
+    branches: [main]
+  schedule:
+    - cron: '45 22,10 * * *'  # 07:45 / 19:45 KST; retries if RSS is delayed
+permissions:
+  contents: write
+concurrency:
+  group: future-bottleneck-results
+  cancel-in-progress: false
+jobs:
+  candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run full regression suite
+        run: |
+          python -m pip install '.[test]'
+          python -m pytest -q
+      - name: Read existing canonical database and prior candidate sidecar
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin data
+          mkdir -p "$RUNNER_TEMP/future-input" "$RUNNER_TEMP/future-output"
+          for name in canonical.sqlite3 canonical.previous.sqlite3 state.json; do
+            git show "FETCH_HEAD:$name" > "$RUNNER_TEMP/future-input/$name"
+          done
+          python .github/scripts/rss_state.py load "$RUNNER_TEMP/future-input" "$RUNNER_TEMP/future.sqlite3"
+          sha256sum "$RUNNER_TEMP/future.sqlite3" > "$RUNNER_TEMP/future-db.sha256"
+          prior=$(git ls-remote origin refs/heads/future-bottleneck-data | cut -f1)
+          echo "BASE_FUTURE_SHA=$prior" >> "$GITHUB_ENV"
+          if [[ -n "$prior" ]]; then
+            git fetch --no-tags origin "$prior"
+            git show "$prior:future-candidates.json" > "$RUNNER_TEMP/future-output/future-candidates.json"
+          fi
+      - name: Screen article bodies without any AI API
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m bct.future_bottleneck --db "$RUNNER_TEMP/future.sqlite3" --output "$RUNNER_TEMP/future-output/future-candidates.json"
+          sha256sum --check "$RUNNER_TEMP/future-db.sha256"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          state = json.loads((Path(os.environ['RUNNER_TEMP']) / 'future-output/future-candidates.json').read_text())
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+              f.write('Candidate screening only; no final bottleneck decision.\n\n')
+              f.write('```json\n' + json.dumps(state['summary'], indent=2) + '\n```\n')
+          PY
+      - name: Publish candidate sidecar only
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          current=$(git ls-remote origin refs/heads/future-bottleneck-data | cut -f1)
+          test "$current" = "$BASE_FUTURE_SHA" || { echo 'Candidate branch changed; refusing overwrite'; exit 1; }
+          if [[ -n "$current" ]]; then
+            git worktree add "$RUNNER_TEMP/future-data" "$current"
+          else
+            tree=$(git hash-object -t tree /dev/null)
+            commit=$(printf 'Initialize candidate sidecar\n' | git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit-tree "$tree")
+            git worktree add "$RUNNER_TEMP/future-data" "$commit"
+          fi
+          cp "$RUNNER_TEMP/future-output/future-candidates.json" "$RUNNER_TEMP/future-data/"
+          git -C "$RUNNER_TEMP/future-data" add future-candidates.json
+          if ! git -C "$RUNNER_TEMP/future-data" diff --cached --quiet; then
+            git -C "$RUNNER_TEMP/future-data" -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Persist body candidate screening'
+            git -C "$RUNNER_TEMP/future-data" push origin HEAD:refs/heads/future-bottleneck-data
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: future-bottleneck-candidates
+          path: ${{ runner.temp }}/future-output/future-candidates.json
+          if-no-files-found: warn
