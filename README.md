@@ -1,5 +1,19 @@
 # BOTTLENECK CONTROL TOWER — Stages 0–3
 
+## Optional RSS AI annotation (manual only)
+
+`python -m bct.rss_ai --config config.yaml --feeds rss_feeds.yaml --model YOUR_MODEL --limit 3`
+requires `OPENAI_API_KEY` in the environment. It is never run by RSS collection or
+GitHub Actions. Run it separately against the existing SQLite snapshot. At most
+20 unreviewed active RSS articles with existing signals are sent, using only the
+title, snippet and signal names. One retry is allowed; a second failure records
+a terminal `ERROR`. Both `OK` and `ERROR` are skipped until the model or
+`--prompt-version` changes. On manual execution only, the script creates one
+`rss_ai_reviews` table alongside the existing tables; it does not change Core,
+SIGNAL, WATCH/PROMOTE or the `radar_items` rows. Its annotations are advisory,
+and `UPSTREAM_SOURCE` can be used to identify reprints in a future review; the
+existing candidate counts are not changed by AI.
+
 ## Media Cloud RADAR intake
 
 Media Cloud is the primary metadata feed for this pilot; GDELT remains an
