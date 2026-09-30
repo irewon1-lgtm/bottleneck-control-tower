@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#080e13">
+  <title>BCT · Bottleneck Control Tower</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand"><strong>BCT</strong><span>Bottleneck Control Tower</span></div>
+      <nav aria-label="화면 이동" id="navigation">
+        <a href="#dashboard" data-page="dashboard"><span class="nav-icon">◫</span>대시보드</a>
+        <a href="#sectors" data-page="sectors"><span class="nav-icon">▥</span>섹터 랭킹</a>
+        <a href="#signals" data-page="signals"><span class="nav-icon">◎</span>SIGNAL 기사</a>
+        <a href="#ai" data-page="ai"><span class="nav-icon">◇</span>AI 리뷰</a>
+        <a href="#families" data-page="families"><span class="nav-icon">▧</span>후보 Family</a>
+        <a href="#system" data-page="system"><span class="nav-icon">◉</span>수집 현황</a>
+      </nav>
+      <div class="sidebar-note">READ ONLY<br><small>기존 데이터 표시 전용</small></div>
+    </aside>
+    <main class="main">
+      <header class="topline"><div><span class="eyebrow">BCT / OVERVIEW</span><h1 id="page-title">대시보드</h1><p id="page-subtitle"></p></div><div class="meta"><span id="snapshot-time">스냅샷 확인 중</span><span class="badge" id="snapshot-badge">SNAPSHOT</span></div></header>
+      <div id="notice" role="status" aria-live="polite"></div>
+      <div id="content" aria-live="polite"></div>
+    </main>
+  </div>
+  <dialog id="family-dialog" aria-labelledby="dialog-title"><div class="dialog-head"><h2 id="dialog-title"></h2><button type="button" id="dialog-close" aria-label="닫기">×</button></div><div id="dialog-content"></div></dialog>
+</body>
+</html>
