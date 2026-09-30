@@ -175,7 +175,7 @@ def screen(body):
             axes & {"DEMAND", "TIMING", "RELIEF"}
         )
         relief_pressure = (
-            "RELIEF" in axes and "TIMING" in axes
+            "RELIEF" in axes
             and bool(re.search(r"\bsupply .*?(?:recover|normaliz)|\bdebottleneck", context, re.I))
         )
         if PRESSURE.search(context) and (strong_constraint or structural_pressure or relief_pressure):
