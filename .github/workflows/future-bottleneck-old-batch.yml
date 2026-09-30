@@ -41,7 +41,7 @@ jobs:
                      WHERE status='active' AND source_type='NEWS'
                      ORDER BY collected_at DESC,id DESC LIMIT 300"""
               )]
-              db.executemany("DELETE FROM radar_items WHERE id=?", [(i,) for i in ids])
+              db.executemany("UPDATE radar_items SET status='deleted' WHERE id=?", [(i,) for i in ids])
               db.commit()
               remaining = db.execute(
                   "SELECT COUNT(*) FROM radar_items WHERE status='active' AND source_type='NEWS'"
