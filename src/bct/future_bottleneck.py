@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone, timedelta
 import hashlib
 from html.parser import HTMLParser
+from html import unescape
 import ipaddress
 import json
 import os
@@ -24,14 +25,15 @@ CATEGORIES = {
     "RELIEF": r"\b(?:expansion|expand\w*|new facilit\w*|new plant|new supplier|normaliz\w*|debottleneck\w*|capacity additions?|supply recover\w*)\b",
 }
 PATTERNS = {k: re.compile(v, re.I) for k, v in CATEGORIES.items()}
-LABOR = re.compile(r"\b(?:workers?|staff|labor|labour|talent|skills?|nurses?|drivers?|recruitment)\b", re.I)
+LABOR = re.compile(r"\b(?:workers?|contractors?|crews?|staff|labor|labour|talent|skills?|nurses?|drivers?|recruitment)\b", re.I)
 SUPPLY = re.compile(r"\b(?:materials?|components?|equipment|factory|factories|plants?|suppliers?|supply chain|inventory|inventories|shipping|manufactur\w*)\b", re.I)
 COMPUTE = re.compile(r"\b(?:CPU|GPU|RAM|gaming|frame rates?|software|database|algorithm|bandwidth|latency|performance)\b", re.I)
 BLOCKED = re.compile(r"(?:verify (?:that )?you are human|enable javascript and cookies|checking your browser|access denied|just a moment)", re.I)
 # Explicit fine-grained phrases, plus open phrase extraction below. Never a sector label.
 TARGET = re.compile(r"\b(?:(?:high[- ]voltage|power|distribution|large power) transformers?|(?:gas|steam) turbines?|(?:high[- ]bandwidth|HBM\d*|DDR\d+) memory|advanced packaging|CoWoS|ABF substrates?|300\s*mm wafers?|solid rocket motors?|ammonium perchlorate|HTPB|high[- ]assay low[- ]enriched uranium|HALEU|battery[- ]grade lithium (?:carbonate|hydroxide)|copper (?:foil|concentrate)|rare[- ]earth magnets?|grain[- ]oriented electrical steel|silicon carbide wafers?|(?:marine|aviation|diesel) fuel|sulfuric acid|helium|medical isotopes?)\b", re.I)
 OPEN_TARGET = re.compile(r"\b(?:shortages? of|scarcity of|supply constraints? for|lead[- ]times? for|production of|manufacturing of|capacity for|demand for)\s+([^.;:\n]{2,100})", re.I)
-STOP = re.compile(r"\b(?:is|are|was|were|has|have|will|could|would|may|as|because|while|which|that|to|in|at|by|from|with|for)\b", re.I)
+STOP = re.compile(r"\b(?:is|are|was|were|has|have|will|could|would|may|if|as|because|while|which|that|to|in|at|by|from|with|for|said|discussing|nearly|both)\b|[“”\"—]", re.I)
+GENERIC_TARGET = re.compile(r"\b(?:up|between|just|time|ever|innovation|mindset|problem-solving|essential material|new equipment|expansion|technology|project|enhances|positions|manager)\b", re.I)
 
 
 class ArticleHTML(HTMLParser):
@@ -102,6 +104,7 @@ def extract_body(html):
             choices.append((text, method))
     choices.append(("\n".join(dict.fromkeys(t for t, _, _ in parser.blocks)), "PARAGRAPHS"))
     for text, method in choices:
+        text = unescape(re.sub(r"<[^>]+>", " ", text))
         if len(text) >= 400 and len(text.split()) >= 70 and not BLOCKED.search(text[:500]):
             return text, method
     raise ValueError("NO_READABLE_BODY")
@@ -141,7 +144,15 @@ def screen(body):
     evidence = {k: [s[:350] for s in sentences if p.search(s)][:2] for k, p in PATTERNS.items()}
     evidence = {k: v for k, v in evidence.items() if v}
     constrained = [s for s in sentences if PATTERNS["CONSTRAINT"].search(s)]
-    labor_only = bool(constrained) and all(LABOR.search(s) and not SUPPLY.search(s) and not TARGET.search(s) for s in constrained)
+    def mixed_objects(sentence):
+        for match in OPEN_TARGET.finditer(sentence):
+            parts = re.split(r",|\s+and\s+", STOP.split(match.group(1), maxsplit=1)[0])
+            if len(parts) > 1 and any(p.strip() and not LABOR.search(p) for p in parts):
+                return True
+        return False
+    labor_only = bool(constrained) and all(LABOR.search(s) and not TARGET.search(s)
+        and not mixed_objects(s)
+        and not re.search(r"\b(?:materials?|components?|equipment|suppliers?|inventory|shipping|supply chain)\b", s, re.I) for s in constrained)
     compute_only = bool(constrained) and all(COMPUTE.search(s) and not SUPPLY.search(s)
         and not re.search(r"\b(?:shortages?|supply|orders?|capacity|lead[- ]time)\b", s, re.I) for s in constrained)
     reason = "LABOR_ONLY" if labor_only else "COMPUTER_PERFORMANCE_ONLY" if compute_only else None
@@ -158,7 +169,9 @@ def screen(body):
                 phrase = STOP.split(match.group(1), maxsplit=1)[0].strip(" ,")
                 for name in re.split(r",|\s+and\s+", phrase):
                     name = re.sub(r"^(?:the|a|an)\s+", "", name.strip(), flags=re.I)
-                    if 1 <= len(name.split()) <= 6 and not LABOR.search(name) and name.lower() not in {"energy", "oil", "mining", "refining", "products", "goods", "services", "capacity", "demand", "production"}:
+                    if (1 <= len(name.split()) <= 6 and re.fullmatch(r"[A-Za-z][A-Za-z0-9 -]*", name)
+                        and not LABOR.search(name) and not GENERIC_TARGET.search(name)
+                        and name.lower() not in {"energy", "oil", "mining", "refining", "products", "goods", "services", "capacity", "demand", "production"}):
                         targets.setdefault(name.lower(), {"name": name, "method": "OPEN_PHRASE_UNVERIFIED", "evidence": sentence[:500]})
     return {"candidate": candidate, "decision": "CANDIDATE_ONLY" if candidate else "EXCLUDED_NOISE" if reason else "NO_EVIDENCE",
             "reason": reason, "evidence": evidence, "targets": list(targets.values())[:12],

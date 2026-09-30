@@ -35,9 +35,19 @@ def test_only_obvious_noise_removed(body, reason):
 
 def test_mixed_labor_and_physical_shortage_retained():
     assert screen("A shortage of workers and power transformers delays manufacturing.")["candidate"]
+    assert screen("A shortage of workers and sapphire optical windows delays production.")["candidate"]
     assert screen("The GPU supply shortage constrains equipment manufacturers.")["candidate"]
     assert not screen("The game launches in 2028.")["candidate"]
     assert screen("Production capacity may become tight.")["target_status"] == "UNRESOLVED"
+
+
+def test_live_phrase_errors_do_not_become_targets():
+    result = screen('Shortages of diesel, jet fuel and petrochemical feedstocks if it cannot move crude may occur.')
+    assert [t['name'] for t in result['targets']] == ['diesel', 'jet fuel', 'petrochemical feedstocks']
+    assert not screen('Shortages of skilled workers and contractors delay new production.')["candidate"]
+    assert not screen('Production of up to 90 units per day is planned.')["targets"]
+    assert not screen('Transit capacity for just the second time ever is reduced.')["targets"]
+    assert screen('A shortage of treatment slots,” Sleuth said, discussing RLTs.')["targets"][0]['name'] == 'treatment slots'
 
 
 def test_article_body_excludes_navigation_and_scripts():
