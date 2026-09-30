@@ -10,11 +10,11 @@
   };
   const content = document.getElementById("content");
   const states = Object.fromEntries(Object.keys(pages).map(key => [key, {filter: "전체", query: "", period: "all", page: 1}]));
-  const number = value => value == null ? "—" : Number(value).toLocaleString("ko-KR");
-  const aiMode = value => value === "scheduled" ? "예약 실행 설정" : "수동";
+  const number = value => value == null ? "데이터 없음" : Number(value).toLocaleString("ko-KR");
+  const aiMode = value => value === "scheduled" ? "예약 실행 설정" : value === "manual" ? "수동" : "데이터 없음";
   const date = value => {
     const parsed = new Date(value);
-    return !value || Number.isNaN(parsed.getTime()) ? "—" : new Intl.DateTimeFormat("ko-KR", {
+    return !value || Number.isNaN(parsed.getTime()) ? "데이터 없음" : new Intl.DateTimeFormat("ko-KR", {
       timeZone: "Asia/Seoul", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false
     }).format(parsed);
   };
@@ -24,7 +24,7 @@
     if (className) value.className = className;
     return value;
   };
-  const pill = (text, className) => node("span", text || "—", `pill ${className || (text || "").toLowerCase()}`);
+  const pill = (text, className) => node("span", text || "데이터 없음", `pill ${className || (text || "").toLowerCase()}`);
   const empty = (title, message) => {
     const box = node("div", null, "empty");
     box.append(node("strong", title), node("span", message));
@@ -38,7 +38,7 @@
   };
   const metric = (label, value, note) => {
     const box = node("div", null, "metric");
-    box.append(node("label", label), node("strong", typeof value === "number" ? number(value) : value ?? "—"));
+    box.append(node("label", label), node("strong", typeof value === "number" ? number(value) : value ?? "데이터 없음"));
     if (note) box.append(node("small", note));
     return box;
   };
@@ -54,7 +54,7 @@
       const row = node("tr");
       cells(item, index).forEach(value => {
         const cell = node("td");
-        cell.append(value instanceof Node ? value : node("span", value ?? "—"));
+        cell.append(value instanceof Node ? value : node("span", value ?? "데이터 없음"));
         row.append(cell);
       });
       if (onClick) {
@@ -134,7 +134,10 @@
     try { const url = new URL(row.url); if (["http:", "https:"].includes(url.protocol)) { label.href = url.href; label.target = "_blank"; label.rel = "noopener noreferrer"; } } catch { /* A missing URL remains plain text. */ }
     return label;
   }
-  function reviewCell(row, field) { return row.result?.[field] || "—"; }
+  function reviewCell(row, field) {
+    const value = row.result?.[field];
+    return value === "UNRESOLVED" && field.startsWith("SCOPE_") ? "미분류" : value || "데이터 없음";
+  }
   function renderRows(key) {
     const body = document.getElementById("table-body"), state = states[key];
     if (!body || !snapshot) return;
@@ -142,25 +145,25 @@
       const rows = snapshot.signal_articles.filter(row => (state.filter === "전체" || row.directions.includes(state.filter)) && matches(row, state) && inPeriod(row.published_at || row.collected_at, state));
       paginate(key, rows, body, subset => table(["제목", "섹터", "SIGNAL", "출처", "FACT_STATUS", "시간 (KST)"], subset, row => {
         const signals = node("div", null, "cell-stacked"); row.directions.forEach(value => signals.append(pill(value)));
-        return [articleTitle(row), row.sector || "—", signals, row.source, row.fact_status || "—", date(row.published_at || row.collected_at)];
+        return [articleTitle(row), row.sector || "미분류", signals, row.source, row.fact_status || "데이터 없음", date(row.published_at || row.collected_at)];
       }));
     } else if (key === "ai") {
       const rows = snapshot.ai_reviews.filter(row => (state.filter === "전체" || row.status === state.filter) && matches(row, state) && inPeriod(row.created_at, state));
       paginate(key, rows, body, subset => table(["기사 제목", "TARGET_TYPE", "TARGET_NAME", "SCOPE_REGION", "SCOPE_INDUSTRY", "SCOPE_CUSTOMER", "FACT_STATUS", "SIGNAL_DIRECTION", "SIGNAL_TYPE", "UPSTREAM_SOURCE", "EVIDENCE_NOTE", "상태"], subset, row => [row.title, ...["TARGET_TYPE", "TARGET_NAME", "SCOPE_REGION", "SCOPE_INDUSTRY", "SCOPE_CUSTOMER", "FACT_STATUS", "SIGNAL_DIRECTION", "SIGNAL_TYPE", "UPSTREAM_SOURCE", "EVIDENCE_NOTE"].map(field => reviewCell(row, field)), pill(row.status)]), snapshot.ai_reviews.length ? null : "아직 수동 AI 판독 결과 없음");
     } else if (key === "families") {
-      const rows = snapshot.families.filter(row => (state.filter === "전체" || (row.status || "미검토") === state.filter) && matches(row, state));
-      paginate(key, rows, body, subset => table(["Family 이름", "섹터", "관련 기사", "출처 수", "현재 상태", "최근 업데이트 (KST)"], subset, row => [row.name, row.sector || "—", number(row.article_count), number(row.source_count), pill(row.status || "미검토", "review"), date(row.latest_at)], showFamily));
+      const rows = snapshot.families.filter(row => (state.filter === "전체" || (row.status || "데이터 없음") === state.filter) && matches(row, state));
+      paginate(key, rows, body, subset => table(["Family 이름", "섹터", "관련 기사", "출처 수", "현재 상태", "최근 업데이트 (KST)"], subset, row => [row.name, row.sector || "미분류", number(row.article_count), number(row.source_count), pill(row.status || "데이터 없음", "review"), date(row.latest_at)], showFamily));
     } else if (key === "system") {
       const rows = snapshot.feeds.filter(row => matches(row, state) && (state.filter === "전체" || (state.filter === "성공" ? row.status === "succeeded" : row.status === "failed")));
-      paginate(key, rows, body, subset => table(["RSS 이름", "최근 실행 상태", "시도 횟수", "최근 수집 (KST)", "오류"], subset, row => [row.name, pill(row.status === "succeeded" ? "성공" : row.status === "failed" ? "실패" : row.status || "미기록", row.status === "succeeded" ? "ok" : row.status === "failed" ? "error" : "neutral"), number(row.attempts), date(row.updated_at), row.last_error || "—"]));
+      paginate(key, rows, body, subset => table(["RSS 이름", "최근 실행 상태", "시도 횟수", "최근 수집 (KST)", "오류"], subset, row => [row.name, pill(row.status === "succeeded" ? "성공" : row.status === "failed" ? "실패" : row.status || "미기록", row.status === "succeeded" ? "ok" : row.status === "failed" ? "error" : "neutral"), number(row.attempts), date(row.updated_at), row.last_error || (row.status === "succeeded" ? "기록된 오류 없음" : "데이터 없음")]));
     }
   }
   function showFamily(row) {
     document.getElementById("dialog-title").textContent = row.name;
     const body = document.getElementById("dialog-content"); body.replaceChildren();
-    const values = [["섹터", row.sector], ["현재 상태", row.status || "미검토"], ["구성 항목", row.members?.join(", ")], ["관련 기사 수", number(row.article_count)], ["출처 수", number(row.source_count)], ["PRESSURE", number(row.pressure_articles)], ["RELIEF", number(row.relief_articles)], ["확인된 범위", row.confirmed_scope?.join(", ")], ["미해결 범위", row.unresolved_scope?.join(", ")], ["최근 업데이트", date(row.latest_at)]];
+    const values = [["섹터", row.sector || "미분류"], ["현재 상태", row.status || "데이터 없음"], ["구성 항목", row.members?.join(", ")], ["관련 기사 수", number(row.article_count)], ["출처 수", number(row.source_count)], ["PRESSURE", number(row.pressure_articles)], ["RELIEF", number(row.relief_articles)], ["확인된 범위", row.confirmed_scope?.join(", ")], ["미해결 범위", row.unresolved_scope?.join(", ")], ["최근 업데이트", date(row.latest_at)]];
     const list = node("dl");
-    values.forEach(([label, value]) => { const pair = node("div", null, "key-value"); pair.append(node("dt", label), node("dd", value || "—")); list.append(pair); });
+    values.forEach(([label, value]) => { const pair = node("div", null, "key-value"); pair.append(node("dt", label), node("dd", value || "데이터 없음")); list.append(pair); });
     body.append(list); document.getElementById("family-dialog").showModal();
   }
   function render() {
@@ -183,15 +186,15 @@
       summary.append(metric("성공 / 실패", `${number(overview.successful_feeds)} / ${number(overview.failed_feeds)}`), metric("최근 수집 시각", date(overview.last_collection_at)), metric("AI 실행 방식", aiMode(overview.ai_mode)));
       columns.append(collections, summary); content.append(metrics, columns);
     } else if (key === "sectors") {
-      const box = panel("섹터별 SIGNAL 집계", "점수 없이 기존 기사·출처·Family만 집계");
+      const box = panel("섹터별 SIGNAL 집계", snapshot.sector_note);
       const rows = [...snapshot.sector_rankings].sort((a, b) => b.pressure - a.pressure || b.source_count - a.source_count || (Date.parse(b.latest_at) || 0) - (Date.parse(a.latest_at) || 0) || a.relief - b.relief);
-      box.append(table(["순위", "섹터", "PRESSURE", "RELIEF", "후보 Family", "출처 수", "최근 신호 (KST)"], rows, (row, index) => [index + 1, row.sector, row.pressure, row.relief, row.family_count, row.source_count, date(row.latest_at)]));
+      box.append(table(["순위", "섹터", "PRESSURE", "RELIEF", "후보 Family", "출처 수", "최근 신호 (KST)"], rows, (row, index) => [row.sector === "미분류" ? "집계" : index + 1, row.sector, row.pressure, row.relief, row.family_count, row.source_count, date(row.latest_at)]));
       if (!rows.length) box.append(empty("섹터 집계 결과 없음", snapshot.sector_note)); content.append(box);
     } else {
       let filters;
       if (key === "signals") filters = [["전체", snapshot.signal_articles.length], ...["PRESSURE", "RELIEF", "NEUTRAL"].map(label => [label, snapshot.signal_articles.filter(row => row.directions.includes(label)).length])];
       if (key === "ai") filters = [["전체", snapshot.ai_reviews.length], ...["OK", "ERROR"].map(label => [label, snapshot.ai_reviews.filter(row => row.status === label).length])];
-      if (key === "families") filters = [["전체", snapshot.families.length], ...[...new Set(snapshot.families.map(row => row.status || "미검토"))].map(label => [label, snapshot.families.filter(row => (row.status || "미검토") === label).length])];
+      if (key === "families") filters = [["전체", snapshot.families.length], ...[...new Set(snapshot.families.map(row => row.status || "데이터 없음"))].map(label => [label, snapshot.families.filter(row => (row.status || "데이터 없음") === label).length])];
       if (key === "system") {
         const grid = node("div", null, "status-grid");
         grid.append(metric("DB 기사 수", overview.total_articles), metric("AI 실행 방식", aiMode(overview.ai_mode)), metric("최근 수집 시각", date(overview.last_collection_at)));

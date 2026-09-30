@@ -88,13 +88,38 @@ def export(database, state_path, feeds_path, destination):
         directions = sorted({"RELIEF" if kind in RELIEF else "PRESSURE" for kind in kinds})
         annotation = latest_ai.get(article["id"]) or {}
         signal_articles.append({"title": article["title"], "url": article["url"],
-                                "source": article["source"], "sector": None,
+                                "source": article["source"],
+                                "sector": annotation.get("SCOPE_INDUSTRY")
+                                if annotation.get("SCOPE_INDUSTRY") not in (None, "", "UNRESOLVED") else None,
                                 "published_at": article["published_at"],
                                 "collected_at": article["collected_at"],
                                 "directions": directions, "signal_types": kinds,
                                 "fact_status": annotation.get("FACT_STATUS")})
     signal_articles.sort(key=lambda row: row["published_at"] or row["collected_at"],
                          reverse=True)
+
+    # Group explicit stored industry scopes only; missing classifications remain
+    # one unclassified bucket. Family results currently have no sector field.
+    sectors = {}
+    for row in signal_articles:
+        name = row["sector"] or "미분류"
+        group = sectors.setdefault(name, {"sector": name, "pressure": 0,
+                                         "relief": 0, "family_count": 0,
+                                         "sources": set(), "latest_at": None})
+        group["pressure"] += "PRESSURE" in row["directions"]
+        group["relief"] += "RELIEF" in row["directions"]
+        if row["source"]:
+            group["sources"].add(row["source"])
+        stamp = row["published_at"] or row["collected_at"]
+        if stamp and (not group["latest_at"] or stamp > group["latest_at"]):
+            group["latest_at"] = stamp
+    if summary["families"]:
+        group = sectors.setdefault("미분류", {"sector": "미분류", "pressure": 0,
+                                            "relief": 0, "family_count": 0,
+                                            "sources": set(), "latest_at": None})
+        group["family_count"] = len(summary["families"])
+    for group in sectors.values():
+        group["source_count"] = len(group.pop("sources"))
 
     feed_hashes = {hashlib.sha256(url.encode()).hexdigest(): name
                    for name, url in feeds.items()}
@@ -132,10 +157,8 @@ def export(database, state_path, feeds_path, destination):
             "last_collection_at": recent[0]["updated_at"] if recent else None,
             "ai_mode": ai_mode,
         },
-        # Neither radar_items nor the existing family results have a sector
-        # field. Do not infer one from a headline, source host or feed category.
-        "sector_rankings": [],
-        "sector_note": "현재 DB와 기존 Family 결과에 섹터 분류가 없어 순위를 집계할 수 없습니다.",
+        "sector_rankings": list(sectors.values()),
+        "sector_note": "저장된 SCOPE_INDUSTRY만 사용합니다. 섹터 정보가 없는 SIGNAL·Family는 미분류로 집계합니다. 출처 수와 최근 신호는 SIGNAL 기사 기준입니다.",
         "signal_articles": signal_articles,
         "ai_reviews": reviews,
         "families": [{"name": row["family"], "sector": None,
