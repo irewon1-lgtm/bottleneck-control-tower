@@ -25,7 +25,7 @@ CATEGORIES = {
     "RELIEF": r"\b(?:expansion|expand\w*|new facilit\w*|new plant|new supplier|normaliz\w*|debottleneck\w*|capacity additions?|add(?:ing)? capacity|supply recover\w*)\b",
 }
 PATTERNS = {k: re.compile(v, re.I) for k, v in CATEGORIES.items()}
-LABOR = re.compile(r"\b(?:workers?|contractors?|crews?|staff|labor|labour|talent|skills?|nurses?|drivers?|recruitment)\b", re.I)
+LABOR = re.compile(r"\b(?:workers?|workforce|contractors?|crews?|staff|labor|labour|talent|skills?|skilled|professionals?|nurses?|drivers?|recruitment)\b", re.I)
 SUPPLY = re.compile(r"\b(?:materials?|components?|equipment|factory|factories|plants?|suppliers?|supply chain|inventory|inventories|shipping|manufactur\w*)\b", re.I)
 COMPUTE = re.compile(r"\b(?:CPU|GPU|RAM|gaming|frame rates?|software|database|algorithm|bandwidth|latency|performance)\b", re.I)
 PRESSURE = re.compile(r"\b(?:shortages?|scarcity|scarce|constraints?|bottlenecks?|backlogs?|limited|tight|insufficient|outpac\w*|allocation|supply[- ]crunch|supply[- ]gap|supply disruptions?|throughput limits?|capacity limits?|orders? (?:are )?(?:accelerat\w*|surg\w*|jump\w*)|supply (?:may |could |will )?(?:recover\w*|normaliz\w*)|(?:long|extended|lengthy|rising|increas\w*) lead[- ]times?|lead[- ]times? (?:of|at|are|remain|stretch\w*|exceed\w*)|\d+(?:[- ](?:day|week|month|year)s?) lead[- ]time)\b", re.I)
