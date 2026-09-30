@@ -1,0 +1,70 @@
+name: RSS live environment check
+on:
+  workflow_dispatch:
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: Collect 146 configured feeds in serial batches
+        run: |
+          cp config.example.yaml config.yaml
+          python - <<'PY'
+          import json
+          from collections import Counter
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          from bct.collectors.rss.cli import load_feeds
+          from bct.collectors.rss.collector import RSSCollector, RSSTransport
+          from bct.config import load_settings
+          from bct.db import migrate
+
+          feeds = list(load_feeds(Path('rss_feeds.yaml')).items())
+          settings = load_settings(Path('config.yaml'))
+          migrate(settings)
+          collector = RSSCollector(settings, RSSTransport(timeout_seconds=8))
+          run_key = 'actions-${{ github.run_id }}-${{ github.run_attempt }}'
+          rows = []
+          for start in range(0, len(feeds), 30):
+              batch = feeds[start:start + 30]
+              print(f'Batch {start // 30 + 1}: {len(batch)} feeds', flush=True)
+              for name, url in batch:
+                  result = collector.run(url, run_key, limit=5)
+                  attempts = 1
+                  saved, duplicates = result.saved, result.duplicates
+                  if result.status != 'succeeded':
+                      result = collector.run(url, run_key, limit=5)
+                      attempts = 2
+                      saved += result.saved
+                      duplicates += result.duplicates
+                  rows.append({'feed': name, 'status': result.status,
+                               'attempts': attempts, 'saved': saved,
+                               'duplicates': duplicates,
+                               'error': result.error if result.status != 'succeeded' else None})
+          assert len(rows) == len(feeds) == 146
+          summary = {'registered': len(rows),
+                     'successful_feeds': sum(r['status'] == 'succeeded' for r in rows),
+                     'failed_feeds': sum(r['status'] != 'succeeded' for r in rows),
+                     'new_articles': sum(r['saved'] for r in rows),
+                     'duplicate_articles': sum(r['duplicates'] for r in rows),
+                     'error_types': dict(Counter((r['error'] or '').split(':', 1)[0]
+                                                 for r in rows if r['status'] != 'succeeded')),
+                     'completed_at_utc': datetime.now(timezone.utc).isoformat(),
+                     'feeds': rows}
+          Path('rss-live-result.json').write_text(
+              json.dumps(summary, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps({k: v for k, v in summary.items() if k != 'feeds'}), flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rss-live-result
+          path: |
+            rss-live-result.json
+          if-no-files-found: warn
