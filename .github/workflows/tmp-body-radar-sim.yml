@@ -1,0 +1,87 @@
+name: Temporary body radar simulation
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/tmp-body-radar-sim.yml']
+permissions:
+  contents: read
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install trafilatura requests
+      - name: Scan newest article bodies
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin data
+          git show FETCH_HEAD:canonical.sqlite3 > /tmp/canonical.sqlite3
+          python - <<'PY'
+          import json, re, sqlite3, requests, concurrent.futures
+          from pathlib import Path
+          import trafilatura
+
+          db=sqlite3.connect('/tmp/canonical.sqlite3')
+          db.row_factory=sqlite3.Row
+          rows=[dict(r) for r in db.execute(
+              "select id,source,title,snippet,url,published_at,collected_at from radar_items "
+              "where status='active' order by coalesce(published_at,collected_at) desc,id desc limit 100")]
+
+          pats={
+            'DEMAND': re.compile(r"\b(?:demand (?:is |will |expected to |projected to )?(?:grow|increase|rise|surge|double|outpace)|record orders?|orders? (?:surged|jumped|increased)|deployment targets?|production targets?|capacity (?:booked|sold out)|fully (?:booked|allocated))\b",re.I),
+            'CONSTRAINT': re.compile(r"\b(?:shortages?|shortfalls?|bottlenecks?|tight supplies|capacity constrained|constrained capacity|unable to meet demand|cannot meet demand|demand exceeds supply|single[- ]source|sole supplier|only (?:one|two|three) (?:qualified )?suppliers?|limited (?:number of )?suppliers?|long lead times?|lead times? (?:of|have|has|rose|increased|extended)|qualification takes?|certification takes?)\b",re.I),
+            'RELIEF': re.compile(r"\b(?:capacity expansion|expand(?:ing|ed)? capacity|new (?:plant|line|fab|facility|mill)|second source|new supplier|ramp(?:ing)? up production|commercial production|commissioning|capacity (?:online|coming online))\b",re.I),
+            'TIMING': re.compile(r"\b(?:not (?:expected|available|online) until|expected (?:by|in)|scheduled (?:for|to)|by 20(?:2[7-9]|3\d)|in 20(?:2[7-9]|3\d)|through 20(?:2[7-9]|3\d)|multi[- ]year lead time|\d{1,2}[- ]month lead time)\b",re.I),
+          }
+
+          headers={'User-Agent':'Mozilla/5.0 (BCT research body radar test)'}
+          def one(r):
+              rec={k:r.get(k) for k in ('id','source','title','url','published_at','collected_at')}
+              try:
+                  resp=requests.get(r['url'],headers=headers,timeout=12,allow_redirects=True)
+                  text=trafilatura.extract(resp.text,include_comments=False,include_tables=False,favor_precision=True) or ''
+                  rec['http_status']=resp.status_code
+                  rec['body_chars']=len(text)
+                  rec['body_ok']=resp.status_code<400 and len(text)>=300
+                  hits={}
+                  windows=[]
+                  if rec['body_ok']:
+                      for group,pat in pats.items():
+                          ms=list(pat.finditer(text))
+                          hits[group]=len(ms)
+                          for m in ms[:2]:
+                              a=max(0,m.start()-140); b=min(len(text),m.end()+220)
+                              windows.append({'group':group,'text':' '.join(text[a:b].split())[:500]})
+                  rec['hits']=hits
+                  d,c,rl,t=[hits.get(x,0) for x in ('DEMAND','CONSTRAINT','RELIEF','TIMING')]
+                  rec['future_prefilter']=bool((d and (c or rl or t)) or (c and t) or (rl and t))
+                  rec['current_only']=bool(c and not rec['future_prefilter'])
+                  rec['windows']=windows[:6]
+              except Exception as e:
+                  rec.update({'body_ok':False,'error':type(e).__name__+': '+str(e)[:160],'hits':{},'future_prefilter':False,'current_only':False,'windows':[]})
+              return rec
+
+          with concurrent.futures.ThreadPoolExecutor(max_workers=6) as ex:
+              results=list(ex.map(one,rows))
+          summary={
+              'tested':len(results),
+              'body_ok':sum(r['body_ok'] for r in results),
+              'body_failed':sum(not r['body_ok'] for r in results),
+              'any_pattern':sum(any(r['hits'].values()) for r in results),
+              'future_prefilter':sum(r['future_prefilter'] for r in results),
+              'current_only':sum(r['current_only'] for r in results),
+              'results':[r for r in results if any(r['hits'].values()) or not r['body_ok']]
+          }
+          Path('body-radar-sim.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({k:v for k,v in summary.items() if k!='results'}))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: body-radar-sim
+          path: body-radar-sim.json
+          if-no-files-found: error
