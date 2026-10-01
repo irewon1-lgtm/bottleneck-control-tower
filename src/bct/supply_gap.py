@@ -100,10 +100,10 @@ def evaluate(inputs, as_of):
     relief_ok = relief.get("review_complete") is True and _sourced(relief, today)
     if not relief_ok:
         missing.append("경쟁 증설·대체 공급·재고·수요 지연 반증 점검 미완료")
-    quantity_window_ok = (quantity_ok and demand["period_start"] <= window.get("start", "")
-                          <= window.get("end", "") <= demand["period_end"])
-    timing_window_ok = (timing_ok and window.get("start", "") <= timing["required_by"]
-                       <= window.get("end", ""))
+    quantity_window_ok = (in_window and quantity_ok and demand["period_start"] <= window["start"]
+                          <= window["end"] <= demand["period_end"])
+    timing_window_ok = (in_window and timing_ok and window["start"] <= timing["required_by"]
+                       <= window["end"])
     if quantity_ok and in_window and not quantity_window_ok:
         missing.append("수량 비교 기간과 예상 부족 발생 기간 불일치")
     if (result["gap_status"] == "GAP_SUPPORTED" and in_window and relief_ok
