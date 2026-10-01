@@ -178,3 +178,40 @@ def test_challenge_inside_article_scope_is_not_full(html):
 def test_normal_article_discussing_access_checks_remains_readable():
     result = extract_document('<article><h1>Factory access controls change</h1><p>The report discusses systems that verify you are human and the resulting certification delays.</p></article>')
     assert result['body_status'] == 'FULL'
+
+
+def test_subscriber_access_notice_outside_closed_preview_is_partial():
+    html = '<article><p>A visible introduction reports a new contract.</p><p>The remaining sentence stops ...</p></article>'
+    html += '<section><h3>Subscriber Access</h3><p>For uninterrupted access, sign in, subscribe or upgrade to Daily News.</p></section>'
+    html += '<script type="application/ld+json">' + json.dumps({'@type': 'NewsArticle', 'articleBody': 'Hidden subscriber-only text.'}) + '</script>'
+    result = extract_document(html)
+    assert result['body_status'] == 'PARTIAL'
+    assert 'PAYWALL_OR_LOGIN_PREVIEW' in result['reasons']
+    assert 'new contract' in result['body']
+    assert 'Hidden subscriber-only' not in result['body']
+
+
+@pytest.mark.parametrize('extra', [
+    '<section><h3>Sign-In Here</h3><p>For uninterrupted access, sign in or sign up to Daily News.</p></section>',
+    '<section><p>Subscribe to our newsletter for daily market updates.</p></section>',
+])
+def test_free_short_article_with_sign_in_or_newsletter_ui_remains_full(extra):
+    result = extract_document('<article><p>Production starts in 2028.</p></article>' + extra)
+    assert result['body_status'] == 'FULL'
+    assert not result['reasons']
+
+
+def test_explicit_interview_summary_retains_signals_but_is_partial():
+    html = '<article><p>Intermodal volumes increased by eight percent.</p><iframe src="https://example.org/video"></iframe>'
+    html += '<p>This Summary is generated from a transcription; for the full interview please watch the video above.</p></article>'
+    result = extract_document(html)
+    assert result['body_status'] == 'PARTIAL'
+    assert 'MEDIA_SUMMARY_NOT_FULL_CONTEXT' in result['reasons']
+    assert 'volumes increased' in result['body']
+
+
+def test_complete_written_article_with_supplementary_video_remains_full():
+    html = '<article><p>The plant qualified twenty new production lines.</p><iframe src="https://example.org/video"></iframe>'
+    html += '<p>An optional full interview is available in the video above.</p></article>'
+    result = extract_document(html)
+    assert result['body_status'] == 'FULL'

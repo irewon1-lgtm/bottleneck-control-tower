@@ -2,8 +2,10 @@
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 import hashlib
+import inspect
 import json
 from pathlib import Path
+import re
 import runpy
 import sqlite3
 import subprocess
@@ -211,6 +213,7 @@ def test_system_delay_and_invalid_execution_are_visible():
 
 def test_local_trial_snapshot_and_evaluation_keep_actual_version_counts(tmp_path, monkeypatch):
     """One synthetic source fixture exercises the real CLI/helper boundaries."""
+    from bct import future_bottleneck as frozen_filter
     from bct.future_bottleneck import run as collect
     from bct.future_review import READER_VERSION
 
@@ -225,14 +228,23 @@ def test_local_trial_snapshot_and_evaluation_keep_actual_version_counts(tmp_path
             for row in documents
         ])
     db_hash = hashlib.sha256(source.read_bytes()).hexdigest()
-    manifest = {"sample_id": "fixture-not-live-performance", "filter_freeze": {"sha256": "fixture-frozen-filter"}, "documents": documents}
+    filter_proof = {"filter_version": frozen_filter.FILTER_VERSION,
+                    "screen_source": inspect.getsource(frozen_filter.screen), "categories": frozen_filter.CATEGORIES,
+                    "patterns": {name: {"pattern": value.pattern, "flags": value.flags}
+                                 for name, value in vars(frozen_filter).items() if isinstance(value, re.Pattern)}}
+    filter_sha = hashlib.sha256(json.dumps(filter_proof, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    manifest = {"sample_id": "fixture-not-live-performance", "database_sha256": db_hash,
+                "filter_freeze": {"version": frozen_filter.FILTER_VERSION, "sha256": filter_sha}, "documents": documents}
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(json.dumps(manifest))
     candidates_path, tracking_path = tmp_path / "candidates.json", tmp_path / "tracking.json"
     output = tmp_path / "queue"
     private_cache = tmp_path / "private-runtime-cache"
 
+    fetch_calls = []
+
     def source_fixture(url):
+        fetch_calls.append(url)
         name = url.rsplit("-", 1)[-1]
         return {"body": f"Fixture Company {name} signed a contract and placed orders for equipment. It will expand production capacity with a new factory.",
                 "body_status": "FULL" if name == "a" else "PARTIAL", "reasons": ["SYNTHETIC_TEST_SOURCE"], "extraction_method": "FIXTURE"}
@@ -241,7 +253,19 @@ def test_local_trial_snapshot_and_evaluation_keep_actual_version_counts(tmp_path
     monkeypatch.setitem(trial["main"].__globals__, "run", lambda *a, **kw: collect(*a, fetcher=source_fixture, **kw))
     monkeypatch.setattr(sys, "argv", ["future_quality_trial.py", "--db", str(source), "--manifest", str(manifest_path),
                                      "--output", str(candidates_path), "--cache-dir", str(private_cache)])
+    for changed_field, message in (("database_sha256", "source database SHA"), ("filter_freeze", "filter SHA")):
+        changed_manifest = deepcopy(manifest)
+        if changed_field == "filter_freeze":
+            changed_manifest[changed_field]["sha256"] = "0" * 64
+        else:
+            changed_manifest[changed_field] = "0" * 64
+        manifest_path.write_text(json.dumps(changed_manifest))
+        with pytest.raises(RuntimeError, match=message):
+            trial["main"]()
+        assert not fetch_calls and not candidates_path.exists()
+    manifest_path.write_text(json.dumps(manifest))
     trial["main"]()
+    assert len(fetch_calls) == 2
     assert hashlib.sha256(source.read_bytes()).hexdigest() == db_hash
     candidates = json.loads(candidates_path.read_text())
     body = candidates["results"]["a"]

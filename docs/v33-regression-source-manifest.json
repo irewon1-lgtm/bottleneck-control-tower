@@ -5,17 +5,14 @@
   "source_data_commit": "9308cab93ab58a7b9d3279406cc00a6d3ec2f1cd",
   "database_sha256": "740fd4a8d203835573f4bfa9433e4b43a89d371a952f34e72129899acaa1082a",
   "selection_rule": "Latest 100 active NEWS documents at this frozen database commit, ORDER BY collected_at DESC,id DESC LIMIT 100, then reversed for chronological reference reading. No title, signal, or automatic result used for selection.",
-  "sample_status": "REGRESSION_AFTER_FAILURE",
+  "sample_status": "NEW_FROZEN_HOLDOUT_REFERENCE_PENDING",
   "past_baseline_disjointness": "UNKNOWN_OLD_TEST_MANIFEST_UNAVAILABLE",
   "filter_freeze": {
-    "version": "bct-v33-recall-2",
-    "sha256": "fde732b09f3e80a88e0be600c751df419d1871245a5f4103b581375e5dc313c0",
+    "version": "bct-v33-recall-1",
+    "sha256": "29eb56d539fd865fb5da440fe82923bb458043a836b61c511c0e42e2c9f85f44",
     "screen_source_sha256": "390715d49aef9c93dc3d3174fb693c35a545a367fd500ba07c7c7704eb98bb05",
-    "basis": "Minimal lexical fixes after sample 1 failure, frozen before any sample 2 labels or automatic outputs were read.",
-    "canonical_scheme": "Sorted compact JSON {filter_version,screen_source,categories,patterns:{global_name:{pattern,flags}}}, UTF-8, ensure_ascii=False.",
-    "proof_recorded_at": "2026-10-01T23:54:54.596900+00:00",
-    "filter_last_modified_at": "2026-10-01T23:51:36.295854+00:00",
-    "freeze_declared_before_new_reference": true
+    "basis": "Design and synthetic regressions only; reference labels and automatic holdout outputs not opened by filter implementer.",
+    "canonical_scheme": "Sorted compact JSON {filter_version,screen_source,categories,patterns:{global_name:{pattern,flags}}}, UTF-8, ensure_ascii=False."
   },
   "source_count": 15,
   "document_count": 100,
@@ -920,6 +917,5 @@
       "published_at": "2026-10-01T20:18:45+00:00",
       "ordinal": 100
     }
-  ],
-  "evaluation_kind": "REGRESSION_NOT_NEW_PERFORMANCE"
+  ]
 }

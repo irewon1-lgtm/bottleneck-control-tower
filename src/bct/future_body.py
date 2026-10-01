@@ -19,6 +19,9 @@ _VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "me
 _SKIP = {"script", "style", "noscript", "nav", "header", "footer", "aside", "form", "menu"}
 _CHALLENGE = re.compile(r"verify (?:that )?you are human|enable javascript and cookies|checking your browser|access denied|just a moment|captcha verification", re.I)
 _PREVIEW = re.compile(r"\b(?:subscribe|sign in|log in|register)\b.{0,90}\b(?:continue reading|read (?:the )?(?:full|rest)|access (?:the )?(?:full|article))\b|\b(?:continue reading|read (?:the )?full article)\b.{0,90}\b(?:subscribe|sign in|log in|register)\b", re.I)
+_SUBSCRIBER_ACCESS = re.compile(r"\bsubscriber\s+access\b", re.I)
+_ACCESS_NOTICE = re.compile(r"\b(?:for|to)\s+(?:uninterrupted|full|continued)\s+access\b.{0,100}\b(?:sign\s+in|log\s+in|subscribe|upgrade)\b", re.I)
+_MEDIA_SUMMARY = re.compile(r"\bthis\s+(?:summary|(?:text|article|post)\s+is\s+(?:a\s+)?summary)\b.{0,240}\b(?:full|complete)\s+(?:interview|conversation|episode)\b.{0,100}\b(?:video|podcast|audio)\b", re.I)
 _TABLE_REF = re.compile(r"\b(?:table (?:below|above|\d+)|(?:following|below|above) table|see (?:the )?table)\b", re.I)
 _NOISE_CLASS = re.compile(r"(?:^|[\s_-])(?:advert|advertisement|ad-slot|related|recommended|cookie|social|share|navigation|breadcrumb)(?:$|[\s_-])", re.I)
 _PREVIEW_CLASS = re.compile(r"(?:^|[\s_-])(?:preview|teaser|excerpt|summary|paywall|subscriber-only)(?:$|[\s_-])", re.I)
@@ -155,6 +158,9 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
                 pass
     paywall = any(a.get("isAccessibleForFree") in (False, "false", "False") for a in articles)
     paywall = paywall or bool(_PREVIEW.search(visible))
+    # A publisher's subscriber-access notice can sit outside its closed preview
+    # article. Generic newsletter or sign-in UI alone does not establish a wall.
+    paywall = paywall or bool(_SUBSCRIBER_ACCESS.search(visible) and _ACCESS_NOTICE.search(visible))
     visible_nodes = list(_visible_nodes(doc.root))
     paywall = paywall or any(re.search(r"(?:^|[\s_-])(?:paywall|subscriber-only|subscription-required)(?:$|[\s_-])",
                                       str(n.attrs.get("class", "")), re.I) for n in visible_nodes)
@@ -204,6 +210,9 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
                                  for n in _nodes(node)):
             status = "PARTIAL"
             reasons.append("PREVIEW_OR_SUMMARY_CONTENT")
+        if body and _MEDIA_SUMMARY.search(body):
+            status = "PARTIAL"
+            reasons.append("MEDIA_SUMMARY_NOT_FULL_CONTEXT")
         tables = [n for n in _nodes(node or doc.root) if n.tag == "table" and not _skipped(n)]
         table_rows = sum(1 for t in tables for n in _nodes(t) if n.tag == "tr" and _blocks(n))
         if body and (any(not any(n.tag in {"td", "th"} and _text(n) for n in _nodes(t)) for t in tables)

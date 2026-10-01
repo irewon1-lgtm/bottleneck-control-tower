@@ -104,3 +104,21 @@ def test_signal_at_end_of_long_body_is_preserved():
 ])
 def test_static_information_and_clear_digital_performance_noise_are_excluded(body):
     assert not screen(body)['candidate']
+
+
+@pytest.mark.parametrize('body,path', [
+    ('The company signed an agreement to develop a replacement product.', 'DEMAND'),
+    ('The model sold fewer units; deliveries are down from the prior quarter.', 'RELIEF'),
+    ('The funded development programme will bring the new mine online.', 'DEMAND'),
+    ('The planned clinical trial was discontinued.', 'RELIEF'),
+    ('Shipping services will return to the shorter transit route.', 'RELIEF'),
+    ('The network restored access to alternative suppliers.', 'RELIEF'),
+    ('Qualified production output increased at the larger operation.', 'RELIEF'),
+    ('Workforce jobs were lost after the operation was halted.', 'SUPPLY'),
+    ('The pediatric study is exploring a new treatment population.', 'DEMAND'),
+])
+def test_v33_general_action_synonyms_are_preserved_after_holdout_failure(body, path):
+    # Previous live sample is now regression-only; new performance needs unseen data.
+    result = screen(body)
+    assert result['candidate'] and path in result['discovery_paths']
+    assert result['final_bottleneck'] is None
