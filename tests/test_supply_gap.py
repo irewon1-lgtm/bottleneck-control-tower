@@ -93,3 +93,24 @@ def test_future_quantity_period_cannot_prove_earlier_shortage():
     for key in ("demand", "supply"):
         data[key].update(period_start="2030-01-01", period_end="2030-12-31")
     assert evaluate(data, "2026-10-01")["objective_fit"] != "FUTURE_MATCH"
+
+
+@pytest.mark.parametrize("route", ["quantity", "timing"])
+@pytest.mark.parametrize("window", [{}, {"start": None, "end": None},
+    {"start": None, "end": "2027-09-01"},
+    {"start": "2027-06-01", "end": None},
+    {"start": "invalid", "end": "2027-09-01"}])
+def test_missing_or_invalid_window_preserves_gap_without_future_confirmation(route, window):
+    data = fixture()
+    if route == "timing":
+        data.pop("demand")
+        data.pop("supply")
+        data["timing"] = claim(required_by="2027-06-01",
+            earliest_qualified_supply="2028-01-01", coverage="ALL_FEASIBLE_SUPPLIERS")
+    data["shortage_window"] = claim(**window)
+    original = deepcopy(data)
+    result = evaluate(data, "2026-10-01")
+    assert result["gap_status"] == "GAP_SUPPORTED"
+    assert result["objective_fit"] == "UNRESOLVED"
+    assert "향후 24개월 이내 부족 발생 시점 미확인 또는 범위 밖" in result["blockers"]
+    assert data == original
