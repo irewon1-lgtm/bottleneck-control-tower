@@ -253,7 +253,7 @@
       }
       if (!tracking) return box;
     }
-    box.append(node("p", "FUTURE: 미래 시간차 · EMERGING: 제약 확대 관찰 · OBSERVE: 근거 보완 중 · CURRENT: 현재 부족 참고. 병목 상태는 주가 상승 판단과 별개입니다.", "panel-caption"));
+    box.append(node("p", "기존 상태·과거 이력을 보존합니다. 목표 적합성은 현재 부족 여부와 향후 24개월의 수급을 별도로 확인합니다. 병목·기업 이익·시장 선반영은 각각 검증합니다.", "panel-caption"));
     const cards = node("div", null, "verified-cards");
     tracking.targets.forEach(target => {
       const latest = target.history[target.history.length - 1] || {};
@@ -261,6 +261,23 @@
       card.append(pill(latest.status || "UNRESOLVED", "unresolved"), node("h3", latest.target_detail || target.target));
       card.append(node("p", `최근 점검 ${latest.reviewed_on || "데이터 없음"} · ${target.history.length}개 판단 이력`, "verified-connections"));
       card.append(node("p", latest.reason || "판단 근거 데이터 없음"));
+      const assessment = latest.supply_gap;
+      if (assessment && assessment.version === "supply-gap-v1") {
+        const labels = {UNRESOLVED: "확인 필요", FUTURE_MATCH: "현재 부족 아님 · 24개월 내 부족 근거 확인",
+          CURRENT_REFERENCE: "현재 부족 · 참고 대상", OUTSIDE_WINDOW: "24개월 범위 밖",
+          GAP_SUPPORTED: "수급 시간차 근거 있음", GAP_CONDITIONAL: "수요·공급 범위 겹침",
+          NO_GAP_IN_RANGE: "입력 범위에서 부족 없음"};
+        card.append(node("p", `목표 적합성: ${labels[assessment.objective_fit] || "확인 필요"} · 수급 판정: ${labels[assessment.gap_status] || "확인 필요"}`, "verified-connections"));
+        const range = assessment.gap_range;
+        if (Array.isArray(range) && range.length === 2 && range.every(Number.isFinite))
+          card.append(node("p", `수요 − 적격 공급: ${number(range[0])} ~ ${number(range[1])} ${assessment.unit || ""}`));
+        card.append(node("p", `시장 선반영: ${assessment.market_awareness || "UNRESOLVED"} · 기업 이익 귀속: ${assessment.economic_capture || "UNRESOLVED"}`, "muted"));
+        if (Array.isArray(assessment.blockers) && assessment.blockers.length) {
+          const details = node("details"); details.append(node("summary", `판정에 필요한 근거 (${assessment.blockers.length})`));
+          assessment.blockers.forEach(text => details.append(node("p", text, "muted"))); card.append(details);
+        }
+      }
+      if (latest.next_check) card.append(node("p", `다음 확인: ${latest.next_check}`));
       const sources = node("ul");
       [...new Set(latest.sources || [])].forEach(url => {
         let label; try { const parsed = new URL(url); if (!["http:", "https:"].includes(parsed.protocol)) return; label = parsed.hostname; } catch { return; }
