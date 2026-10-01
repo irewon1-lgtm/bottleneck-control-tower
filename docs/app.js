@@ -3,6 +3,7 @@
   const pages = {
     dashboard: ["대시보드", "현재 수집 결과와 기존 SIGNAL·Family 현황"],
     future: ["검증된 미래병목", "8단계 고정 결과 · 상태·TARGET·기업 연결·근거"],
+    tracking: ["미래병목 추적", "향후 1~2년 수요·공급 시간차 관찰 · 미확인은 UNRESOLVED"],
     sectors: ["섹터 랭킹", "PRESSURE → 출처 수 → 최근 신호 → RELIEF 순서"],
     signals: ["SIGNAL 기사", "기존 SIGNAL 결과 · 제목과 요약문 기준"],
     ai: ["AI 리뷰", "현재 DB에 저장된 AI 보조판독 결과"],
@@ -99,6 +100,9 @@
   let snapshot = null;
   let verified = null;
   let verifiedError = false;
+  let tracking = null;
+  let trackingLoading = false;
+  let trackingError = false;
   let loading = false;
   const route = () => Object.hasOwn(pages, location.hash.slice(1)) ? location.hash.slice(1) : "dashboard";
   function toolbar(key, filters, usePeriod) {
@@ -239,6 +243,51 @@
     } catch { verifiedError = true; }
     finally { clearTimeout(timeout); if (["dashboard", "future"].includes(route())) render(); }
   }
+  function trackingPanels() {
+    const box = panel("지속 추적 기록", tracking ? `기록 갱신 ${tracking.updated_at || "데이터 없음"} · ${number(tracking.targets.length)}개 TARGET` : "정기 점검과 요청 조사의 누적 기록");
+    if (!tracking || trackingError) {
+      box.append(empty(trackingError ? "최신 추적 기록을 읽지 못했습니다" : "추적 기록 확인 중", tracking ? "아래는 마지막으로 읽은 기록입니다." : "기존 수집 결과와 고정 검증 결과는 다른 메뉴에서 확인할 수 있습니다."));
+      if (trackingError) {
+        const retry = node("button", "다시 확인", "filter"); retry.type = "button";
+        retry.addEventListener("click", loadTracking); box.append(retry);
+      }
+      if (!tracking) return box;
+    }
+    box.append(node("p", "FUTURE: 미래 시간차 · EMERGING: 제약 확대 관찰 · OBSERVE: 근거 보완 중 · CURRENT: 현재 부족 참고. 병목 상태는 주가 상승 판단과 별개입니다.", "panel-caption"));
+    const cards = node("div", null, "verified-cards");
+    tracking.targets.forEach(target => {
+      const latest = target.history[target.history.length - 1] || {};
+      const card = node("article", null, "verified-card tracking-card");
+      card.append(pill(latest.status || "UNRESOLVED", "unresolved"), node("h3", latest.target_detail || target.target));
+      card.append(node("p", `최근 점검 ${latest.reviewed_on || "데이터 없음"} · ${target.history.length}개 판단 이력`, "verified-connections"));
+      card.append(node("p", latest.reason || "판단 근거 데이터 없음"));
+      const sources = node("ul");
+      [...new Set(latest.sources || [])].forEach(url => {
+        let label; try { const parsed = new URL(url); if (!["http:", "https:"].includes(parsed.protocol)) return; label = parsed.hostname; } catch { return; }
+        const entry = node("li"); entry.append(articleTitle({title: label, url})); sources.append(entry);
+      });
+      if (!sources.children.length && target.baseline_source) {
+        const entry = node("li"); entry.append(articleTitle({title: "기존 고정 검증 기록", url: target.baseline_source})); sources.append(entry);
+      }
+      card.append(sources.children.length ? sources : node("p", "근거 링크 데이터 없음", "muted"));
+      cards.append(card);
+    });
+    box.append(cards.children.length ? cards : empty("추적 TARGET 없음", "저장된 추적 기록에 TARGET이 없습니다."));
+    return box;
+  }
+  async function loadTracking() {
+    if (trackingLoading) return;
+    trackingLoading = true;
+    const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 12000);
+    try {
+      const response = await fetch(`https://raw.githubusercontent.com/irewon1-lgtm/bottleneck-control-tower/future-bottleneck-data/future-tracking.json?t=${Date.now()}`, {cache: "no-store", signal: controller.signal});
+      if (!response.ok) throw new Error("Tracking unavailable");
+      const value = await response.json();
+      if (!value || value.version !== 1 || !Array.isArray(value.targets) || !value.targets.every(target => target && typeof target.id === "string" && typeof target.target === "string" && Array.isArray(target.history) && target.history.every(entry => entry && typeof entry === "object" && (!entry.sources || Array.isArray(entry.sources))))) throw new Error("Invalid tracking record");
+      tracking = value; trackingError = false;
+    } catch { trackingError = true; }
+    finally { clearTimeout(timeout); trackingLoading = false; if (route() === "tracking") render(); }
+  }
   function render() {
     const key = route(), [title, subtitle] = pages[key];
     document.getElementById("page-title").textContent = title;
@@ -248,6 +297,11 @@
       if (link.dataset.page === key) link.setAttribute("aria-current", "page"); else link.removeAttribute("aria-current");
     });
     content.replaceChildren();
+    if (key === "tracking") {
+      content.append(trackingPanels());
+      if (!tracking && !trackingLoading && !trackingError) loadTracking();
+      return;
+    }
     if (key === "future") { content.append(verifiedPanels()); return; }
     if (!snapshot) {
       content.append(empty("데이터 확인 중", "저장된 snapshot을 불러옵니다."));
@@ -293,6 +347,7 @@
     return value;
   }
   async function refresh() {
+    if (route() === "tracking") loadTracking();
     if (loading) return;
     loading = true;
     const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 12000);
@@ -307,7 +362,7 @@
       if (changed) render();
     } catch {
       document.getElementById("notice").textContent = snapshot ? "최신 snapshot을 읽지 못했습니다. 마지막으로 확인한 데이터를 표시합니다." : "snapshot을 읽지 못했습니다. 잠시 후 자동으로 다시 확인합니다.";
-      if (!snapshot && route() !== "future") {
+      if (!snapshot && !["future", "tracking"].includes(route())) {
         content.replaceChildren(empty("데이터를 불러올 수 없음", "snapshot 연결 상태를 확인해 주세요."));
         if (route() === "dashboard") content.append(verifiedPanels());
       }
