@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-10-01T08:08:30.904Z",
+  "updated_at": "2026-10-01T16:55:14.701Z",
   "purpose": "향후 1~2년 내 구체적 산업 공급 TARGET의 수요·공급 시간차 발견 및 예측 결과 추적",
   "mode": "research_sidecar",
   "integration": {
@@ -1824,6 +1824,92 @@
       "delivery_state": "RESPONSE_CREATED",
       "received_state": "UNCONFIRMED",
       "recorded_at": "2026-10-01T16:51:59.926Z"
+    }
+  ],
+  "roundtrip_reviews": [
+    {
+      "operation_id": "bct-v33-20261002-review-1",
+      "scope": "TEST_ONLY",
+      "mode": "implementation_function_test",
+      "request_basis": "사용자의 v3.3 구현과 실제 기능시험 지시",
+      "candidate_id": "8a69213a-dcd4-4626-980a-0547923d65fc",
+      "bundle_id": "bct-v33-structure-1",
+      "document_version": {
+        "body_sha256": "fc27b28e95fe3ccbe09f39b195018fdd782aa315ff22bcf4c6f0eebc183212ec",
+        "extraction_method": "WEB_TEXT_ARTICLE_L21_L127",
+        "source_url": "https://www.freightwaves.com/news/nearshoring-growth-collides-with-tightening-us-mexico-trucking-capacity",
+        "original_extraction_version_unverified": true
+      },
+      "reader_version": "bct-v33-stage1-test",
+      "recorded_at": "2026-10-01T16:55:14.701Z",
+      "read_progress": {
+        "start": "L21",
+        "end": "L127",
+        "article_complete": true
+      },
+      "quick_review": "MEANINGFUL_CHANGE_AND_DATA_WAIT",
+      "sector": "운송",
+      "subsector": "미국·멕시코 국경 간 도로 화물운송",
+      "target": "국경 간 운송에 투입 가능한 트럭·운전자 처리능력",
+      "discovery_paths": [
+        "DEMAND",
+        "SUPPLY"
+      ],
+      "time_classification": "CURRENT",
+      "future_window_months": [
+        12,
+        36
+      ],
+      "conditions": {
+        "demand_change": {
+          "value": "TRUE",
+          "fact_status": "REPORTED_ACTUAL",
+          "evidence_location": "L29-L34,L38,L51",
+          "reason": "패널 참가자가 교역·화물량 증가와 진행 중 제조투자 상황을 설명"
+        },
+        "supply_change": {
+          "value": "TRUE",
+          "fact_status": "REPORTED_ACTUAL",
+          "evidence_location": "L40-L54",
+          "reason": "운전자 확보 제약과 운행 축소를 보고"
+        },
+        "target_relationship": {
+          "value": "TRUE",
+          "fact_status": "REPORTED_ACTUAL",
+          "evidence_location": "L43-L59",
+          "reason": "운전자·트럭 가용성 제약이 국경 운송 지연과 연결됨"
+        },
+        "future_demand_timing": {
+          "value": "UNKNOWN",
+          "evidence_location": "Article L21-L127",
+          "reason": "12~36개월 기간의 고객 필요량·필요일 자료 미확인"
+        },
+        "future_supply_gap": {
+          "value": "UNKNOWN",
+          "evidence_location": "Article L21-L127",
+          "reason": "같은 미래 기간의 적격 공급량·확약 납기 자료 미확인"
+        },
+        "important_relief_resolved": {
+          "value": "UNKNOWN",
+          "evidence_location": "L44,L94-L102,L110-L118",
+          "reason": "환적 방식·운송사 분산·자동화는 언급됐으나 충분한 완화 효과 미확인"
+        }
+      },
+      "s_stage": "S2",
+      "candidate_state": "DATA_WAIT",
+      "Q": "UNKNOWN",
+      "T": "UNKNOWN",
+      "next_check_conditions": [
+        "12~36개월 고객별 운송 필요량·필요일 공개",
+        "해당 운송 범위의 적격 가용능력·대체 경로·해소 근거 공개"
+      ],
+      "delivery": {
+        "request": "RUN_REQUESTED",
+        "response_created": true,
+        "user_receipt": "UNCONFIRMED",
+        "post_notification_user_request": "UNCONFIRMED"
+      },
+      "overall_roundtrip": "BLOCKED_USER_RECEIPT_AND_POST_NOTIFICATION_REQUEST"
     }
   ]
 }
