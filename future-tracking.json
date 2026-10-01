@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-10-01T14:06:45+09:00",
+  "updated_at": "2026-10-01T05:49:15.085Z",
   "purpose": "향후 1~2년 내 구체적 산업 공급 TARGET의 수요·공급 시간차 발견 및 예측 결과 추적",
   "mode": "research_sidecar",
   "integration": {
@@ -73,6 +73,30 @@
           "reason": "사용자가 고정한 기존 검증 결과를 참조 등록. 이번 신규 조사에서 재검증한 결과가 아님.",
           "new_evidence": [],
           "outcome": "UNRESOLVED"
+        },
+        {
+          "review_id": "on-demand-20261001-tungsten-first-output",
+          "reviewed_on": "2026-10-01",
+          "mode": "on_demand",
+          "status": "EMERGING",
+          "reason": "새 관찰은 2026-09-23 기업 발표의 Sangdong 첫 텅스텐 생산 사실. 기존 고정 검증에 포함된 9월17일 상업 운영 허가와 중복으로 집계하지 않음. 첫 생산은 건설·허가 계획보다 진전된 공급 완화 근거지만 정광의 안정적 램프업·최종 적격 금속분말/중합금 납품을 입증하지 않음. EMERGING 유지.",
+          "sources": [
+            "https://almonty.com/almonty-marks-first-tungsten-production-at-sangdong-since-1993/",
+            "https://www.acquisition.gov/node/35510/printable/print"
+          ],
+          "demand_timing": "기존 2027-01-01 방산 원산지 전환 재확인. 실제 적격 추가 수요량·계약별 납품일 UNRESOLVED. DFARS 예외(소액 조달, 일부 COTS/전자기기 및 nonavailability 판단)가 있어 방산 전체 수요를 일괄 전환으로 계산하지 않음.",
+          "supply_timing": "2026-09-23 첫 생산 발표 확인. 월별 saleable concentrate 생산·실제 GTP 인도량, 정제·분말 단계 인증과 2027 적격 납기 UNRESOLVED. 허가와 90% 초과 장기계약은 기존 고정 자료에 이미 포함되어 신규 근거로 집계하지 않음.",
+          "companies": [
+            {
+              "ticker": "ALM",
+              "role": "DIRECT",
+              "scope": "상류 정광 공급; 최종 분말·중합금 공정과 구분",
+              "business_share": "UNRESOLVED — 미국 방산 적격 최종 납품 귀속"
+            }
+          ],
+          "market_awareness": "기업 공식 발표로 공개된 사실. 일반 투자자 인지도·주가 선반영 UNRESOLVED.",
+          "outcome": "PARTIAL_SUPPLY_MILESTONE_CONFIRMED — 첫 생산 사실만 확인. 기존 예측의 2027 부족 여부와 정확도는 UNRESOLVED; 과거 예측 덮어쓰기 없음.",
+          "next_check": "첫 상업 인도·분기 생산량·램프업 수율과 GTP/최종 방산 납품 규격별 인증, 예외 적용 물량"
         }
       ]
     },
@@ -360,6 +384,41 @@
           "review_id": "scheduled-20261001-silicon-photonics-wafer-level-burn-in"
         }
       ]
+    },
+    {
+      "id": "novalt16-qualified-production-slots",
+      "target": "북미 데이터센터용 NovaLT16 산업용 소형 가스터빈·발전기 패키지의 신규 생산 슬롯",
+      "stage": "소형 산업용 터빈 제작 → gearbox·발전기 결합 → 모바일 패키징 → 현장 설치·시운전",
+      "history": [
+        {
+          "review_id": "on-demand-20261001-novalt16-discovery",
+          "reviewed_on": "2026-10-01",
+          "mode": "on_demand",
+          "status": "OBSERVE",
+          "reason": "별도 규격 신규 탐색. BKR 2026-07-29 공식 발표에서 Dynamis의 NovaLT16 76대 약1.3GW 확정 주문 확인(데이터센터와 oil&gas 합산). 대형 가스터빈·Frame5·항공전용형과 합치지 않음. 고객 필요일·공급 확약일·실제 생산 대수 없으므로 미래 부족 확정 보류.",
+          "sources": [
+            "https://investors.bakerhughes.com/news/press-releases/news-details/2026/Dynamis-Power-Solutions-Awards-Baker-Hughes-Major-Power-Generation-Order-for-Data-Centers-Oil--Gas/default.aspx",
+            "https://investors.bakerhughes.com/news/press-releases/news-details/2026/Baker-Hughes-Receives-Gas-Turbine-Order-from-Twenty20-Energy-to-Power-U-S--Data-Center-Infrastructure/default.aspx",
+            "https://investors.bakerhughes.com/files/doc_presentations/2026/Annual-Meeting-2026-Power-Systems-Overview_FINAL_published.pdf",
+            "https://www.sec.gov/Archives/edgar/data/1701605/000119312526385823/d539011dex991.htm",
+            "https://www.reuters.com/business/energy/dash-small-gas-turbines-set-impact-data-center-costs--reeii-2026-09-29/"
+          ],
+          "demand_timing": "2026년2분기 NovaLT16 76대 주문, gearboxes/generators는3분기 주문. 데이터센터 몫·2027~2028 현장 가동 필요일·계약 취소조건 UNRESOLVED. 2030 BTM 시장 전망을 1~2년 규격별 확정 수요로 사용하지 않음.",
+          "supply_timing": "Dynamis 주문의 출하·패키징·고객인증·시운전 날짜 및 NovaLT16 연간 적격 생산량 UNRESOLVED. 2026-02-11 BKR 공식 발표의 Frame5 10대 최대250MW 초기2027 납품은 다른 규격의 대체 가능성 근거이며 NovaLT 납기로 사용하지 않음. 2027~2028 증설 일정에 관한 2차 transcript 검색결과는 기업 원문 확보 안 되어 판단 근거 제외.",
+          "companies": [
+            {
+              "ticker": "BKR",
+              "role": "DIRECT",
+              "scope": "NovaLT16 터빈·gearbox·발전기 공급. Dynamis 최종 패키지 이익과 구분",
+              "business_share": "UNRESOLVED — NovaLT16 데이터센터 전용 매출·마진·수주 비중; 전체 IET 금액을 귀속하지 않음"
+            }
+          ],
+          "relief_evidence": "Frame5의 2027 공급 계획과 왕복동 엔진·계통전력 등 대체 옵션. 실제 현장 규격·연료·배출 허가 적합성 및 가용 공급량 UNRESOLVED. 전문기사의 광범위 납기 평균을 NovaLT16 개별 계약 납기로 일반화하지 않음.",
+          "market_awareness": "2026-07-29 기업 IR·2026-09-29 Reuters Events 산업기사에 공개. 알려지지 않은 섹터라고 확정하지 않음. 인지도·valuation·주가 선반영 UNRESOLVED.",
+          "outcome": "UNRESOLVED — 미래 부족 및 투자수익 미확인",
+          "next_check": "고객별2027~2028 필요일과 OEM 확약납기 차이, 신규 예약 가능 슬롯, 증설 완료/인증 산출량, 대체 엔진 계약·수요 연기"
+        }
+      ]
     }
   ],
   "runs": [
@@ -463,6 +522,57 @@
         "srm-ammonium-perchlorate"
       ],
       "outcome": "UNRESOLVED — 미래 실제 결과 미도래; 발견·저장 성공은 예측 정확도 향상의 증명이 아님"
+    },
+    {
+      "id": "on-demand-evidence-review-20261001-1446",
+      "date": "2026-10-01",
+      "mode": "on_demand",
+      "targets_reviewed": [
+        "large-gas-turbine-slots",
+        "compliant-non-china-tungsten"
+      ],
+      "documents_read": 10,
+      "new_documents_read": 7,
+      "prior_document_rechecked": 3,
+      "source_urls_read": [
+        "https://www.sec.gov/Archives/edgar/data/1996810/000199681026000147/gevpressrelease2q26.htm",
+        "https://www.sec.gov/Archives/edgar/data/1670061/000149315226043476/ex99-1.htm",
+        "https://almonty.com/almonty-marks-first-tungsten-production-at-sangdong-since-1993/",
+        "https://www.acquisition.gov/dfars/225.7018-2-restriction.",
+        "https://www.acquisition.gov/node/35510/printable/print",
+        "https://investors.bakerhughes.com/news/press-releases/news-details/2026/Dynamis-Power-Solutions-Awards-Baker-Hughes-Major-Power-Generation-Order-for-Data-Centers-Oil--Gas/default.aspx",
+        "https://investors.bakerhughes.com/news/press-releases/news-details/2026/Baker-Hughes-Receives-Gas-Turbine-Order-from-Twenty20-Energy-to-Power-U-S--Data-Center-Infrastructure/default.aspx",
+        "https://investors.bakerhughes.com/files/doc_presentations/2026/Annual-Meeting-2026-Power-Systems-Overview_FINAL_published.pdf",
+        "https://www.sec.gov/Archives/edgar/data/1701605/000119312526385823/d539011dex991.htm",
+        "https://www.reuters.com/business/energy/dash-small-gas-turbines-set-impact-data-center-costs--reeii-2026-09-29/"
+      ],
+      "updated_targets": [
+        "compliant-non-china-tungsten"
+      ],
+      "new_targets": [
+        "novalt16-qualified-production-slots"
+      ],
+      "new_verified_future_targets": 0,
+      "note": "기존 fixed baseline도 읽어 중복 방지. GEV 2Q실적·Sangdong 허가·DFARS 제한은 기존 고정 검증에 이미 사용된3자료; gas history 중복 추가 없음. 신규 NovaLT16은 OBSERVE. 핵연료 UF6 전환 신규 탐색은 정부 원문 접근벽과 규격별 납기 부족으로 후보 등록 안 함. 앱·RSS·DB·Actions·점수·랭킹·main 고정 결과 수정 없음.",
+      "errors": [
+        {
+          "url": "https://almonty.kr/almonty-marks-first-tungsten-production-at-sangdong-since-1993/",
+          "status": "BODY_UNAVAILABLE",
+          "reason": "timeout; 성공한 기업 .com 원문으로만 판단"
+        },
+        {
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex:52026SC0084",
+          "status": "BODY_UNAVAILABLE",
+          "reason": "Javascript verification wall; 판단 근거 제외"
+        }
+      ],
+      "next_review_targets": [
+        "uk-regional-grid-connections",
+        "inp-qualified-exportable-substrates",
+        "srm-ammonium-perchlorate",
+        "cpo-qualified-cw-lasers"
+      ],
+      "outcome": "UNRESOLVED — 최초 생산은 공급 진전만 확인, 미래 예측성과 미도래"
     }
   ],
   "on_demand": "사용자 요청 시 범위·자료 수를 확대하여 같은 TARGET history에 mode=on_demand로 누적"
