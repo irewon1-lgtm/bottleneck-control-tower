@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-10-01T06:11:28.493Z",
+  "updated_at": "2026-10-01T06:26:18.830Z",
   "purpose": "향후 1~2년 내 구체적 산업 공급 TARGET의 수요·공급 시간차 발견 및 예측 결과 추적",
   "mode": "research_sidecar",
   "integration": {
@@ -57,6 +57,30 @@
           "reason": "사용자가 고정한 기존 검증 결과를 참조 등록. 이번 신규 조사에서 재검증한 결과가 아님.",
           "new_evidence": [],
           "outcome": "UNRESOLVED"
+        },
+        {
+          "reviewed_on": "2026-10-01",
+          "mode": "on_demand",
+          "review_id": "on-demand-20261001-grid-data",
+          "status": "EMERGING",
+          "reason": "2026-09-25 Ofgem이 신규 Demand Capacity Register와 월별 공개 필요성을 결정. 법규 수단·용량 기준·세부 필드는 상담 중이며 분기별 MVA, 접속 제한, 계약 상태, 프로젝트 진척과 증설 공사를 연결하도록 제안. 정보 공개 개선은 공급능력 준공이 아니므로 EMERGING 유지.",
+          "sources": [
+            "https://www.ofgem.gov.uk/consultation/transforming-connections-data",
+            "https://www.ofgem.gov.uk/sites/default/files/2026-09/transforming-connections-data.pdf",
+            "https://questions-statements.parliament.uk/written-questions/detail/2026-09-02/HL3044"
+          ],
+          "demand_timing": "2027~2028 프로젝트별 실제 필요 MVA·필요일 UNRESOLVED. 견적 신청·확정 계약·통전 완료를 구분.",
+          "supply_timing": "프로젝트별 접속일·증설 공사 준공일·제한 없는 가용 용량 UNRESOLVED. 상담 종료2026-11-06, 2027초 규제 초안 추진 계획은 공급 완료 약속이 아님.",
+          "companies": [
+            {
+              "ticker": "NGG",
+              "role": "ENABLEMENT",
+              "scope": "영국 계통 관련 사업. 해당 혼잡 지역의 공사·이익 귀속 미확인",
+              "business_share": "UNRESOLVED"
+            }
+          ],
+          "outcome": "UNRESOLVED — 지역별 시간차·수혜 기업 이익 미확인",
+          "next_check": "2027~2028 확약 수요의 분기별 MVA·필요일, 접속 제한, 관련 증설 공사 준공일 및 실제 DCR 공개 확인."
         }
       ]
     },
@@ -124,6 +148,31 @@
             }
           ],
           "outcome": "UNRESOLVED"
+        },
+        {
+          "reviewed_on": "2026-10-01",
+          "mode": "on_demand",
+          "review_id": "on-demand-20261001-inp-export",
+          "status": "CURRENT",
+          "reason": "AXT Q2 10-Q에서 미국 InP 수출 허가 시점을 추정할 수 없다고 명시. 일부 유럽·일본 고객 허가는 미국 공급 재개와 다르며 비군사용 최종 용도 서면 인증도 처리 주기를 늘림. 7/30 IR의 생산능력·생산성 개선과 InP 분기 매출 최고치는 공급 개선 반증으로 함께 기록.",
+          "sources": [
+            "https://www.sec.gov/Archives/edgar/data/1051627/000143774926027677/axti20260630_10q.htm",
+            "https://investors.axt.com/Investors/news/news-details/2026/AXT-Inc--Announces-Second-Quarter-2026-Financial-Results/default.aspx"
+          ],
+          "demand_timing": "2026 이미 발생한 주문·광통신 수요. 2027~2028 고객 인증 규격별 필요 수량·필요일 UNRESOLVED.",
+          "supply_timing": "Q2 10-Q 기준 미국 InP 수출 허가 일정 예측 불가. 미허가 주문은 미국에 실제 공급 가능한 능력으로 계산하지 않음. 유럽·일본 일부 허가와 별도 구분. 신규 규격별 인증 생산량·미국 출하 재개일 UNRESOLVED.",
+          "companies": [
+            {
+              "ticker": "AXTI",
+              "role": "DIRECT",
+              "scope": "InP 기판, 중국 제조. 수출 제한은 매출 실현도 방해하므로 부족이 자동 수혜를 의미하지 않음",
+              "business_share": "UNRESOLVED — InP 세부 이익·미국 실현 가능 매출"
+            }
+          ],
+          "relief_evidence": "회사 발표의 생산능력·생산성 개선 및 InP 분기 최고 매출. 타 공급자의 동일 규격 인증 생산량·대체 납기 UNRESOLVED.",
+          "market_awareness": "SEC·기업 IR에 공개. 시장 인지도·주가 선반영 UNRESOLVED.",
+          "outcome": "UNRESOLVED — CURRENT 유지, 아직 발생하지 않은 신규 미래병목으로 집계하지 않음",
+          "next_check": "미국 수출 허가·출하 실제 재개, 규격별 고객 인증·수출 가능 수량, 비중국 대체 공급 및 인증 일정."
         }
       ]
     },
@@ -469,6 +518,38 @@
           "market_awareness": "2026-07-29 기업 IR·2026-09-29 Reuters Events 산업기사에 공개. 알려지지 않은 섹터라고 확정하지 않음. 인지도·valuation·주가 선반영 UNRESOLVED.",
           "outcome": "UNRESOLVED — 미래 부족 및 투자수익 미확인",
           "next_check": "고객별2027~2028 필요일과 OEM 확약납기 차이, 신규 예약 가능 슬롯, 증설 완료/인증 산출량, 대체 엔진 계약·수요 연기"
+        },
+        {
+          "reviewed_on": "2026-10-01",
+          "mode": "on_demand",
+          "review_id": "on-demand-20261001-novalt-supply",
+          "status": "OBSERVE",
+          "reason": "7/8 Kodiak 초기 약1GW 계약은2030까지 납품 예정이며 NovaLT16·Frame5·BRUSH 혼합. 최대1.8GW 프레임워크와 구분. 2025 Q2 공식 발표의2027 NovaLT 증설과2026 Q2 준비 발언의2029 Power Systems 증설은 제품 범위가 달라 NovaLT16 공급 부족 일정으로 합치지 않음.",
+          "sources": [
+            "https://investors.bakerhughes.com/news/press-releases/news-details/2026/Kodiak-Gas-Services-Baker-Hughes-Announce-Multi-Year-Gas-Turbine-Order-Agreement-to-Support-U-S--Data-Center-Growth/default.aspx",
+            "https://s21.q4cdn.com/548121662/files/doc_earnings/2026/q2/transcript/Baker-Hughes-2Q26-Earnings-Call-Prepared-Remarks.pdf",
+            "https://investors.bakerhughes.com/files/doc_financials/2025/Q2/Second-Quarter-2025-Earnings-Conference-Call-Slides.pdf"
+          ],
+          "demand_timing": "Kodiak 초기 약1GW는2030까지 납품. 2027~2028 NovaLT16 배분 수량·고객 필요일 UNRESOLVED. 최대1.8GW 프레임워크는 전량 확정 주문으로 계산하지 않음. Dynamis76대의 과거 이력 보존.",
+          "supply_timing": "2025 Q2 공식 발표는2027까지 NovaLT 생산능력 확대 계획. 실제 준공·NovaLT16 인증 산출량·새 예약 가능 슬롯 UNRESOLVED. 2026 Q2 준비 발언의2029 Power Systems 신규 생산능력은 NovaLT16 전용 투입일이 아님. Kodiak 혼합 제품의2030 납품은 NovaLT16 개별 확약 납기로 사용하지 않음.",
+          "companies": [
+            {
+              "ticker": "BKR",
+              "role": "DIRECT",
+              "scope": "NovaLT16 OEM 제조. Power Systems 전체 매출능력을 제품 전용 수치로 귀속하지 않음",
+              "business_share": "UNRESOLVED"
+            },
+            {
+              "ticker": "KGS",
+              "role": "ENABLEMENT",
+              "scope": "하류 공급 서비스·설치 고객. NovaLT16 제조 병목의 직접 공급자와 구분",
+              "business_share": "UNRESOLVED — 발전 서비스 매출·투자·이익"
+            }
+          ],
+          "relief_evidence": "2027 NovaLT 증설 계획 및 Frame5 혼합 공급은 완화 후보. 실제 완료·고객 요구 적합성 미확인. Kodiak 롤링 생산능력 약정은 수요와 단계별 프로젝트 변화를 반영하므로 장기 프레임워크 전량을 근시일 확정 수요로 계산하지 않음.",
+          "market_awareness": "수년간 공식 IR에 공개. 세부 공급량 미공개와 대중에게 알려지지 않음은 별개. 인지도·가치평가·주가 선반영 UNRESOLVED.",
+          "outcome": "UNRESOLVED — 2027~2028 수요가 실제 공급보다 앞선다는 시간차 미확인",
+          "next_check": "NovaLT16 증설 실제 완료·인증 산출량과 고객 필요일·확약 납기, Frame5·왕복동 엔진의 현장 대체 공급 확인."
         }
       ]
     },
@@ -693,6 +774,49 @@
         "uk-regional-grid-connections",
         "inp-qualified-exportable-substrates",
         "novalt16-qualified-production-slots"
+      ]
+    },
+    {
+      "id": "on-demand-grid-inp-novalt-20261001",
+      "date": "2026-10-01",
+      "mode": "on_demand",
+      "targets_reviewed": [
+        "uk-regional-grid-connections",
+        "inp-qualified-exportable-substrates",
+        "novalt16-qualified-production-slots"
+      ],
+      "documents_read": 9,
+      "new_documents_read": 9,
+      "source_urls_read": [
+        "https://www.ofgem.gov.uk/consultation/transforming-connections-data",
+        "https://www.ofgem.gov.uk/sites/default/files/2026-09/transforming-connections-data.pdf",
+        "https://questions-statements.parliament.uk/written-questions/detail/2026-09-02/HL3044",
+        "https://investors.axt.com/Investors/news/news-details/2026/AXT-Inc--Announces-Second-Quarter-2026-Financial-Results/default.aspx",
+        "https://www.sec.gov/Archives/edgar/data/1051627/000143774926027677/axti20260630_10q.htm",
+        "https://investors.bakerhughes.com/news/press-releases/news-details/2026/Kodiak-Gas-Services-Baker-Hughes-Announce-Multi-Year-Gas-Turbine-Order-Agreement-to-Support-U-S--Data-Center-Growth/default.aspx",
+        "https://s21.q4cdn.com/548121662/files/doc_earnings/2026/q2/transcript/Baker-Hughes-2Q26-Earnings-Call-Prepared-Remarks.pdf",
+        "https://investors.bakerhughes.com/files/doc_financials/2025/Q2/Second-Quarter-2025-Earnings-Conference-Call-Slides.pdf",
+        "https://insidelines.pjm.com/pjm-kicks-off-annual-process-of-vetting-large-load-requests/"
+      ],
+      "updated_targets": [
+        "uk-regional-grid-connections",
+        "inp-qualified-exportable-substrates",
+        "novalt16-qualified-production-slots"
+      ],
+      "new_targets": [],
+      "new_verified_future_targets": 0,
+      "errors": [
+        {
+          "url": "https://insidelines.pjm.com/ferc-accepts-pjm-reliability-backstop-proposal/",
+          "error": "본문 접근 실패; 판단 근거 제외"
+        }
+      ],
+      "discovery": "PJM 2026-09-29 공식 대규모 부하 검토: 근시일 계약 확약·다른 지역 중복 신청·실현 가능성 검토 중. 2026-10 CRA 결과, 11월 최종 조정 설명, 2027-01 장기 부하전망 공개 예정. 구체적 공급능력과2027~2028 부족량 검증 전 신규 TARGET 등록 보류.",
+      "note": "공식 본문9건 확보, 접근 시도10건. 기존3 TARGET의 별개 근거만 추가. 다른 규격·지역·프레임워크 물량을 합산하지 않음. 기존 코드/DB/화면/Actions/점수 및 main 고정 검증 파일 수정 없음.",
+      "next_review_targets": [
+        "cpo-els-garnet-optical-isolators",
+        "silicon-photonics-wafer-level-burn-in",
+        "ai-package-tglass"
       ]
     }
   ],
