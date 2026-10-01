@@ -1822,8 +1822,12 @@
       "candidate_id": "8a69213a-dcd4-4626-980a-0547923d65fc",
       "sent": true,
       "delivery_state": "RESPONSE_CREATED",
-      "received_state": "UNCONFIRMED",
-      "recorded_at": "2026-10-01T16:51:59.926Z"
+      "received_state": "CONFIRMED_BY_POST_NOTIFICATION_USER_REPLY",
+      "recorded_at": "2026-10-01T16:51:59.926Z",
+      "received_recorded_at": "2026-10-01T22:49:09.745Z",
+      "review_requested": true,
+      "review_request_text": "검토해",
+      "review_requested_recorded_at": "2026-10-01T22:49:09.745Z"
     }
   ],
   "roundtrip_reviews": [
@@ -1910,6 +1914,53 @@
         "post_notification_user_request": "UNCONFIRMED"
       },
       "overall_roundtrip": "BLOCKED_USER_RECEIPT_AND_POST_NOTIFICATION_REQUEST"
+    },
+    {
+      "operation_id": "bct-v33-20261002-user-review-1",
+      "notification_operation_id": "bct-v33-20261002-roundtrip-1",
+      "scope": "TEST_ONLY",
+      "mode": "on_demand",
+      "request_basis": "사용자가 알림 이후 이 대화에 검토해라고 명시적으로 요청",
+      "candidate_id": "8a69213a-dcd4-4626-980a-0547923d65fc",
+      "recorded_at": "2026-10-01T22:49:09.745Z",
+      "source_url": "https://www.freightwaves.com/news/nearshoring-growth-collides-with-tightening-us-mexico-trucking-capacity",
+      "source_published_on": "2026-09-30",
+      "source_read_at": "2026-10-01T22:49:09.745Z",
+      "read_progress": {
+        "start": "L21",
+        "end": "L127",
+        "article_complete": true
+      },
+      "sector": "운송",
+      "subsector": "미국·멕시코 국경 간 도로 화물운송",
+      "target": "국경 간 운송에 투입 가능한 트럭·운전자 처리능력",
+      "discovery_paths": [
+        "DEMAND",
+        "SUPPLY"
+      ],
+      "time_classification": "CURRENT",
+      "s_stage": "S2",
+      "candidate_state": "DATA_WAIT",
+      "Q": "UNKNOWN",
+      "T": "UNKNOWN",
+      "findings": {
+        "demand": "패널 참가자는 제조투자 지속 및 교역·화물량 증가를 보고(L29-L34,L38,L51). 독립 정량 검증은 없음.",
+        "constraint": "운전자 이탈·부족, 운행 트럭 축소와 남부 캘리포니아 가을 성수기 압박을 보고(L40-L59).",
+        "future_gap": "2027~2028 또는 12~36개월의 고객 필요량·필요일과 같은 범위의 적격 공급량·확보일 미확인.",
+        "relief": "국경 환적·운송사 분산·자동화 언급. 추가 가용능력과 해소 시점은 미확인.",
+        "extraction_corrections": "도난 증가 11%는 운송 수요 증가율이 아님. 미확장 인프라는 완화 근거가 아니라 제약 근거. 30~45일은 대금 회수기간이며 미래 부족 시점이 아님."
+      },
+      "next_check_conditions": [
+        "미래 고객별 운송 필요량·필요일 공개",
+        "같은 노선·기간의 적격 운전자·트럭 가용능력과 대체 경로의 처리량·해소 시점 공개"
+      ],
+      "delivery": {
+        "response_created": true,
+        "user_receipt": "CONFIRMED_BY_POST_NOTIFICATION_USER_REPLY",
+        "post_notification_user_request": "CONFIRMED",
+        "request_text": "검토해"
+      },
+      "overall_roundtrip": "REVIEW_SAVED_PENDING_REQUERY"
     }
   ]
 }
