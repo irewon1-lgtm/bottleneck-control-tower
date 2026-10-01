@@ -33,3 +33,28 @@ def test_lpg_usage_clause_does_not_become_a_target():
 
 def test_transport_capacity_rule_does_not_capture_compute_capacity():
     assert not screen('Reduced capacity in a software database slows AI workflows. Demand for faster queries is growing.')["candidate"]
+
+
+@pytest.mark.parametrize("body", [
+    'AI improves manufacturing output.The conference discusses analytics.The application was limited to brand sales.The platform has expanded data analysis.',
+    'Manufacturing is expanding.The conference explores digital research.Partners include Example Labs Private Limited.The program lists presentations.',
+    'The operation may need shipment state, inventory, customer priority, warehouse constraints. Workflow software collects context before a decision.',
+])
+def test_stage_11_digital_and_event_false_positives_are_excluded(body):
+    result = screen(body)
+    assert not result["candidate"]
+    assert result["targets"] == []
+    assert result["final_bottleneck"] is None
+
+
+@pytest.mark.parametrize("body,target", [
+    ('AI improves factory planning.Power transformers have lead times of 24 months.A new plant is planned.', 'power transformers'),
+    ('The event discusses gas turbines.Production capacity is limited for 24 months.A new plant is planned.', 'gas turbines'),
+    ('The operation may need inventory and warehouse constraints to decide. Workflow software gathers context. A shortage of power transformers delays manufacturing.', 'power transformers'),
+    ('The operation may need sapphire optical windows amid a shortage of sapphire optical windows. Workflow software tracks production delays.', 'sapphire optical windows'),
+])
+def test_digital_or_event_context_preserves_real_supply_pressure(body, target):
+    result = screen(body)
+    assert result["candidate"]
+    assert target in [t["name"].lower() for t in result["targets"]]
+    assert result["final_bottleneck"] is None
