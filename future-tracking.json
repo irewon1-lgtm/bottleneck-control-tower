@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-10-01",
+  "updated_at": "2026-10-01T14:06:45+09:00",
   "purpose": "향후 1~2년 내 구체적 산업 공급 TARGET의 수요·공급 시간차 발견 및 예측 결과 추적",
   "mode": "research_sidecar",
   "integration": {
@@ -165,6 +165,46 @@
           "market_awareness": "공식 투자자 설명회에 이미 공개. 시장 선반영·valuation UNRESOLVED",
           "outcome": "UNRESOLVED",
           "next_check": "2027 계약별 필요 레이저 수량과 고객 인증된 생산능력, UK 램프업 진행 및 Coherent 경쟁 공급"
+        },
+        {
+          "reviewed_on": "2026-10-01",
+          "mode": "scheduled",
+          "status": "OBSERVE",
+          "outcome": "UNRESOLVED",
+          "reason": "공식 신규 근거로 수요 구체화: Lumentum 2026-08-11 발표는 초고출력 CPO 레이저 수요 증가 및 ELS 모듈 최초 주문을 명시. Coherent 2026-09-21 발표는 CPO·NPO 각각 10건 초과 고객 협의, 두 아키텍처의 핵심 고객·장기계약 및 PhotonLink 전체 매출의 2026년 4분기 램프를 제시. PhotonLink 전체 일정은 특정 CPO CW 레이저의 인증 완료·실제 공급량을 뜻하지 않음. 6인치 InP 증설도 진행 중이므로 미래 부족 확정 불가; OBSERVE 유지.",
+          "sources": [
+            "https://investor.lumentum.com/financial-news-releases/news-details/2026/Lumentum-Announces-Fourth-Quarter-and-Full-Fiscal-Year-2026-Results/default.aspx",
+            "https://www.coherent.com/news/press-releases/launches-photonlink-integrated-optics-platform-ai-infrastructure"
+          ],
+          "demand_timing": "2026-08-11 CPO 레이저 수요 증가·ELS 모듈 초기 주문 공개; 2026-09-21 PhotonLink 전체 2026년 4분기 매출 확대 전망. 2027~2028 CW 레이저 필요 개수·고객별 필요일·주문 취소 조건 UNRESOLVED.",
+          "supply_timing": "Coherent 6인치 InP 증설 진행 확인. 고객 인증된 CW 레이저 월 생산량·수율·확약 납기와 경쟁사 합산 실제 공급량 UNRESOLVED. 기존 Greensboro 일정은 이번에 재검증하지 않았으며 과거 이력으로 보존.",
+          "companies": [
+            {
+              "ticker": "COHR",
+              "role": "DIRECT",
+              "business_share": "UNRESOLVED"
+            },
+            {
+              "ticker": "LITE",
+              "role": "DIRECT",
+              "business_share": "UNRESOLVED"
+            }
+          ],
+          "new_evidence": [
+            {
+              "published_on": "2026-08-11",
+              "url": "https://investor.lumentum.com/financial-news-releases/news-details/2026/Lumentum-Announces-Fourth-Quarter-and-Full-Fiscal-Year-2026-Results/default.aspx",
+              "fact_status": "COMPANY_REPORTED_ORDER",
+              "summary": "ELS 모듈 초기 주문과 초고출력 CPO 레이저 수요 증가; 수량·납기 미공개."
+            },
+            {
+              "published_on": "2026-09-21",
+              "url": "https://www.coherent.com/news/press-releases/launches-photonlink-integrated-optics-platform-ai-infrastructure",
+              "fact_status": "COMPANY_REPORTED_AGREEMENTS_AND_PLAN",
+              "summary": "CPO·NPO 고객 협의 및 장기계약; PhotonLink 전체 매출 램프 전망과 InP 증설. 제품별 인증된 산출량은 미공개."
+            }
+          ],
+          "review_id": "scheduled-20261001-cpo-qualified-cw-lasers"
         }
       ]
     },
@@ -284,6 +324,42 @@
           "outcome": "UNRESOLVED"
         }
       ]
+    },
+    {
+      "id": "silicon-photonics-wafer-level-burn-in",
+      "target": "고집적 실리콘 포토닉스 웨이퍼 단계 번인·신뢰성 스크리닝 처리능력",
+      "stage": "광집적회로 웨이퍼 제조 → 웨이퍼 번인·신뢰성 선별 → 패키징",
+      "history": [
+        {
+          "reviewed_on": "2026-10-01",
+          "mode": "scheduled",
+          "status": "OBSERVE",
+          "outcome": "UNRESOLVED",
+          "reason": "새 공정 관찰 후보. Aehr 2026-08-04 공식 발표는 기존 실리콘 포토닉스 생산 고객의 FOX-XP 추가 생산 주문과 2027년 상반기 장비 출하 계획을 명시. 일반 광·전기 최종검사와 다른 신뢰성 선별 공정이므로 별도 TARGET 등록. 주문·장비 출하 일정만으로 고객 필요 시점보다 공급이 늦다고 판단하지 않음. 검사 슬롯 부족·납기 지연·고객별 필요량은 미확인.",
+          "sources": [
+            "https://www.aehr.com/2026/08/aehr-test-systems-expands-silicon-photonics-production-momentum-with-follow-on-production-order-from-lead-customer/"
+          ],
+          "demand_timing": "기존 생산 고객의 추가 주문 확인; 고객 확대 계획은 있으나 필요한 웨이퍼 수·번인 시간·생산라인 가동 필요일 UNRESOLVED. 미래 CPO/광학 I/O 확대 전망과 확정 주문의 최종 적용처는 구분.",
+          "supply_timing": "FOX-XP 추가 시스템은 2027년 상반기 출하 예정. 9개 독립 WaferPak 및 블레이드당 최대 3500W는 장비 사양이며 고객의 시간당 인증된 웨이퍼 처리량을 뜻하지 않음. 출하 후 설치·고객 인증·양산 시작일 및 경쟁 장비 공급량 UNRESOLVED.",
+          "companies": [
+            {
+              "ticker": "AEHR",
+              "role": "ENABLEMENT",
+              "business_share": "UNRESOLVED",
+              "scope": "실리콘 포토닉스 웨이퍼 번인 장비 공급. 실제 검사 서비스 처리능력 운영자는 익명 고객이며 UNRESOLVED."
+            }
+          ],
+          "new_evidence": [
+            {
+              "published_on": "2026-08-04",
+              "url": "https://www.aehr.com/2026/08/aehr-test-systems-expands-silicon-photonics-production-momentum-with-follow-on-production-order-from-lead-customer/",
+              "fact_status": "COMPANY_REPORTED_ORDER_AND_SHIPMENT_PLAN",
+              "summary": "기존 생산 고객의 추가 FOX-XP 주문과 2027년 상반기 출하 계획. 부족·지연 사실은 미확인."
+            }
+          ],
+          "review_id": "scheduled-20261001-silicon-photonics-wafer-level-burn-in"
+        }
+      ]
     }
   ],
   "runs": [
@@ -343,6 +419,50 @@
         "outcome_accuracy": "아직 평가 불가 — 실제 미래 결과 미도래"
       },
       "scheduled_run": "run_now 요청 수락. last_run_time/완료·저장 확인은 별도이며 이번 수동 저장을 scheduled 성공으로 취급하지 않음."
+    },
+    {
+      "id": "scheduled-evidence-review-20261001",
+      "date": "2026-10-01",
+      "mode": "scheduled",
+      "targets_reviewed": [
+        "cpo-qualified-cw-lasers",
+        "cpo-optical-electrical-volume-test",
+        "ai-package-tglass"
+      ],
+      "documents_read": 5,
+      "new_documents_read": 4,
+      "prior_document_rechecked": 1,
+      "source_urls_read": [
+        "https://www.coherent.com/news/press-releases/launches-photonlink-integrated-optics-platform-ai-infrastructure",
+        "https://investor.lumentum.com/financial-news-releases/news-details/2026/Lumentum-Announces-Fourth-Quarter-and-Full-Fiscal-Year-2026-Results/default.aspx",
+        "https://www.keysight.com/zz/en/cmp/ecoc.html",
+        "https://www.aehr.com/2026/08/aehr-test-systems-expands-silicon-photonics-production-momentum-with-follow-on-production-order-from-lead-customer/",
+        "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/"
+      ],
+      "updated_targets": [
+        "cpo-qualified-cw-lasers"
+      ],
+      "new_targets": [
+        "silicon-photonics-wafer-level-burn-in"
+      ],
+      "new_verified_future_targets": 0,
+      "note": "最新 정본 재조회에서 동시 on_demand 이력을 발견하고 모두 보존. KEYS 동일 URL·검사 워크플로 근거는 이미 저장되어 중복 history를 추가하지 않음. T-glass 추가 증설/가격 관련 2차 기사는 읽었으나 연결 기업 원문 확보 실패로 판정 미변경. 신규 WLBI는 부족 확정이 아닌 OBSERVE.",
+      "errors": [
+        {
+          "source_page": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
+          "stage": "linked_company_earnings_presentation",
+          "status": "BODY_UNAVAILABLE",
+          "reason": "연결된 Nittobo 기업 발표자료 원문 확보 실패; 2차 기사만의 증설·가격 주장을 판단 근거로 사용하지 않음."
+        }
+      ],
+      "next_review_targets": [
+        "large-gas-turbine-slots",
+        "uk-regional-grid-connections",
+        "compliant-non-china-tungsten",
+        "inp-qualified-exportable-substrates",
+        "srm-ammonium-perchlorate"
+      ],
+      "outcome": "UNRESOLVED — 미래 실제 결과 미도래; 발견·저장 성공은 예측 정확도 향상의 증명이 아님"
     }
   ],
   "on_demand": "사용자 요청 시 범위·자료 수를 확대하여 같은 TARGET history에 mode=on_demand로 누적"
