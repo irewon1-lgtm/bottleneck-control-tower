@@ -1,0 +1,228 @@
+{
+  "version": 1,
+  "updated_at": "2026-10-01T13:45:58+09:00",
+  "purpose": "향후 1~2년 내 구체적 산업 공급 TARGET의 수요·공급 시간차 발견 및 예측 결과 추적",
+  "mode": "research_sidecar",
+  "integration": {
+    "operating_db": "unchanged",
+    "candidate_screening": "unchanged",
+    "pages": "not_connected",
+    "scheduled_review": "not_configured"
+  },
+  "policy": {
+    "main_focus": "FUTURE",
+    "secondary": "EMERGING",
+    "unknown": "UNRESOLVED",
+    "current": "reference_only",
+    "preserve_history": true,
+    "no_scores_or_recommendations": true,
+    "source_priority": [
+      "official_company_and_SEC",
+      "government_regulator",
+      "industry_research"
+    ],
+    "distinguish": [
+      "demand_plan_vs_confirmed_order",
+      "capacity_announcement_vs_qualified_output",
+      "bottleneck_vs_market_awareness_vs_price"
+    ]
+  },
+  "targets": [
+    {
+      "id": "large-gas-turbine-slots",
+      "target": "신규 대형 가스터빈 생산 슬롯",
+      "baseline_frozen": true,
+      "baseline_source": "https://github.com/irewon1-lgtm/bottleneck-control-tower/blob/main/docs/verified-bottlenecks.json",
+      "history": [
+        {
+          "reviewed_on": "2026-10-01",
+          "mode": "manual",
+          "status": "FUTURE",
+          "reason": "사용자가 고정한 기존 검증 결과를 참조 등록. 이번 신규 조사에서 재검증한 결과가 아님.",
+          "new_evidence": [],
+          "outcome": "UNRESOLVED"
+        }
+      ]
+    },
+    {
+      "id": "uk-regional-grid-connections",
+      "target": "영국 지역별 계통 접속·접속공사 능력",
+      "baseline_frozen": true,
+      "baseline_source": "https://github.com/irewon1-lgtm/bottleneck-control-tower/blob/main/docs/verified-bottlenecks.json",
+      "history": [
+        {
+          "reviewed_on": "2026-10-01",
+          "mode": "manual",
+          "status": "EMERGING",
+          "reason": "사용자가 고정한 기존 검증 결과를 참조 등록. 이번 신규 조사에서 재검증한 결과가 아님.",
+          "new_evidence": [],
+          "outcome": "UNRESOLVED"
+        }
+      ]
+    },
+    {
+      "id": "compliant-non-china-tungsten",
+      "target": "미국 방산 규정 적격 비중국계 텅스텐 공급망",
+      "baseline_frozen": true,
+      "baseline_source": "https://github.com/irewon1-lgtm/bottleneck-control-tower/blob/main/docs/verified-bottlenecks.json",
+      "history": [
+        {
+          "reviewed_on": "2026-10-01",
+          "mode": "manual",
+          "status": "EMERGING",
+          "reason": "사용자가 고정한 기존 검증 결과를 참조 등록. 이번 신규 조사에서 재검증한 결과가 아님.",
+          "new_evidence": [],
+          "outcome": "UNRESOLVED"
+        }
+      ]
+    },
+    {
+      "id": "inp-qualified-exportable-substrates",
+      "target": "AI 광통신용 고객 인증·수출 가능한 InP 기판 공급능력",
+      "stage": "결정 성장 → 기판 가공·고객 인증 → 수출",
+      "history": [
+        {
+          "reviewed_on": "2026-10-01",
+          "mode": "manual",
+          "status": "CURRENT",
+          "reason": "현재 공급 차질이 공개된 품목. 아직 부족하지 않은 새 미래병목으로 집계하지 않음.",
+          "demand_timing": "2026~2028, 실제 필요 물량 UNRESOLVED",
+          "supply_timing": "공급자별 증설 중. 적격 실제 공급 물량 UNRESOLVED",
+          "sources": [
+            "https://www.sec.gov/Archives/edgar/data/1051627/000143774926024883/ex_993544.htm",
+            "https://www.reuters.com/world/china/chinas-control-over-indium-phosphide-exports-threatens-ai-data-centre-rollout-2026-06-11/"
+          ],
+          "companies": [
+            {
+              "ticker": "AXTI",
+              "role": "DIRECT",
+              "business_share": "UNRESOLVED"
+            }
+          ],
+          "outcome": "UNRESOLVED"
+        }
+      ]
+    },
+    {
+      "id": "cpo-qualified-cw-lasers",
+      "target": "CPO용 고출력 CW 레이저의 고객 인증된 양산능력",
+      "stage": "InP 기판 → 레이저 웨이퍼 제조 → 고객 인증·양산",
+      "history": [
+        {
+          "reviewed_on": "2026-10-01",
+          "mode": "manual",
+          "status": "OBSERVE",
+          "reason": "수요·증설 일정은 있지만 기존 공장과 경쟁사 증설까지 포함한 공급 부족 물량 미확인.",
+          "demand_timing": "2027년 하반기 scale-up CPO 매출 확대 계획",
+          "supply_timing": "Lumentum Greensboro 2028년 중반 램프업 계획; Coherent 2026·2027 생산 확대 계획",
+          "sources": [
+            "https://www.sec.gov/Archives/edgar/data/820318/000119312526208972/d57080dex992.htm",
+            "https://investor.lumentum.com/financial-news-releases/news-details/2026/Lumentum-Announces-New-U-S--Manufacturing-Facility-to-Produce-Advanced-Lasers-for-the-Worlds-Largest-AI-Data-Centers/default.aspx"
+          ],
+          "companies": [
+            {
+              "ticker": "COHR",
+              "role": "DIRECT",
+              "business_share": "UNRESOLVED"
+            },
+            {
+              "ticker": "LITE",
+              "role": "DIRECT",
+              "business_share": "UNRESOLVED"
+            }
+          ],
+          "outcome": "UNRESOLVED"
+        }
+      ]
+    },
+    {
+      "id": "cpo-optical-electrical-volume-test",
+      "target": "CPO 광·전기 통합 양산 검사능력",
+      "stage": "광학 정렬·조립 → 통합 검사 → 고객 인증",
+      "history": [
+        {
+          "reviewed_on": "2026-10-01",
+          "mode": "manual",
+          "status": "OBSERVE",
+          "reason": "기술적 검사 확장 장애는 확인. 공급자의 실제 처리능력·납기 압박·증설 완료일이 없어 부족 확정 불가.",
+          "demand_timing": "2027~2028 양산 확대 전망",
+          "supply_timing": "UNRESOLVED",
+          "sources": [
+            "https://blogs.sw.siemens.com/semiconductor-packaging/2026/02/05/five-key-trends-of-co-packaged-optics-cpo-in-2026/",
+            "https://www.trendforce.com/presscenter/news/20260727-13151.html"
+          ],
+          "companies": [
+            {
+              "ticker": null,
+              "role": "UNRESOLVED",
+              "business_share": "UNRESOLVED"
+            }
+          ],
+          "outcome": "UNRESOLVED"
+        }
+      ]
+    },
+    {
+      "id": "ai-package-tglass",
+      "target": "대형 AI 패키지용 저열팽창 T-glass 원사·직물",
+      "stage": "특수 유리 용융·원사 → 직조 → 패키지 기판",
+      "history": [
+        {
+          "reviewed_on": "2026-10-01",
+          "mode": "manual",
+          "status": "CURRENT",
+          "reason": "이미 공급 부족이 공개된 품목. 증설 이후 부족 지속 여부는 미확인.",
+          "demand_timing": "현재 AI 패키지 수요 및 2027년 제품 확대",
+          "supply_timing": "Nittobo 2025-08 발표는 FY2026 4분기 생산 시작 계획; 전문자료의 2027년 중반 본격 공급 전망과 구분 필요",
+          "sources": [
+            "https://www.nittobo.co.jp/eng/business/electronicmaterials/index.htm",
+            "https://www.marketscreener.com/news/nitto-boseki-notice-regarding-expansion-of-glass-cloth-production-capacity-ce7c50dcd18ff226",
+            "https://www.trendforce.com/research/download/RP260324EB"
+          ],
+          "companies": [
+            {
+              "ticker": null,
+              "role": "UNRESOLVED",
+              "business_share": "UNRESOLVED"
+            }
+          ],
+          "outcome": "UNRESOLVED"
+        }
+      ]
+    },
+    {
+      "id": "srm-ammonium-perchlorate",
+      "target": "고체로켓 추진제용 과염소산암모늄(AP) 생산능력",
+      "stage": "AP 생산 → 추진제 혼합·주조 → 로켓모터",
+      "history": [
+        {
+          "reviewed_on": "2026-10-01",
+          "mode": "manual",
+          "status": "OBSERVE",
+          "reason": "미사일 수요 증가 대비 AP 생산능력은 2026년 말 50% 이상 증설 예정. 증설 후 부족 물량 근거 없음.",
+          "demand_timing": "ATACMS 납품 2027~2028 등; AP 필요량 UNRESOLVED",
+          "supply_timing": "AMPAC 2026년 말 50% 이상 증설 계획, 실제 완료 미확인",
+          "sources": [
+            "https://www.sec.gov/Archives/edgar/data/1282637/000128263726000016/neu-20260630.htm",
+            "https://www.l3harris.com/newsroom/press-release/2026/04/l3harris-receives-rocket-motor-contract-us-long-range-missile-system"
+          ],
+          "companies": [
+            {
+              "ticker": "NEU",
+              "role": "DIRECT",
+              "business_share": "UNRESOLVED"
+            }
+          ],
+          "outcome": "UNRESOLVED"
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "date": "2026-10-01",
+      "mode": "manual",
+      "note": "기존 고정 TARGET 3개 참조 등록 + 이번 소규모 조사 TARGET 5개. 과거 모든 100건 검토를 소급 저장한 것은 아님."
+    }
+  ]
+}
