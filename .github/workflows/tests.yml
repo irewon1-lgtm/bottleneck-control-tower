@@ -12,3 +12,4 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install -e '.[test]'
       - run: python -m pytest -q
+      - run: node --test tests/test_future_pages_v33.js

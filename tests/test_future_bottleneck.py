@@ -23,7 +23,6 @@ def test_broad_candidates_and_explicit_targets(body, target):
 
 
 @pytest.mark.parametrize("body,reason", [
-    ("A shortage of nurses is increasing recruitment costs.", "LABOR_ONLY"),
     ("The CPU bottleneck reduces gaming frame rates.", "COMPUTER_PERFORMANCE_ONLY"),
     ("HBM3 memory bandwidth is the performance bottleneck in this algorithm.", "COMPUTER_PERFORMANCE_ONLY"),
 ])
@@ -37,29 +36,31 @@ def test_mixed_labor_and_physical_shortage_retained():
     assert screen("A shortage of workers and power transformers delays manufacturing.")["candidate"]
     assert screen("A shortage of workers and sapphire optical windows delays production.")["candidate"]
     assert screen("The GPU supply shortage constrains equipment manufacturers.")["candidate"]
-    assert not screen("The game launches in 2028.")["candidate"]
+    assert not screen("The game is set in 2028.")["candidate"]
     assert screen("Production capacity may become tight.")["target_status"] == "UNRESOLVED"
 
 
-def test_generic_demand_and_expansion_do_not_become_candidates():
-    assert not screen("Demand for warehouse automation is growing. A company is expanding production capacity.")["candidate"]
+def test_v33_demand_relief_and_workforce_changes_are_retained():
+    # v3.3 deliberately removes the previous shortage and industrial-only gate.
+    assert screen("Demand for warehouse automation is growing. A company is expanding production capacity.")["candidate"]
     assert not screen("The plant has production capacity of 100 units. Demand was 90 units.")["candidate"]
-    assert not screen("Reduced lead times and expanded capacity are improving cross-border operations.")["candidate"]
+    assert 'RELIEF' in screen("Reduced lead times and expanded capacity are improving cross-border operations.")["discovery_paths"]
     assert not screen("Connectivity constraints can slow AI systems and increase latency.")["candidate"]
-    assert not screen("A shortage of skilled workers is delaying new production capacity.")["candidate"]
-    assert not screen("Skilled workers are in shortage. The real constraint is execution, capacity and capability.")["candidate"]
-    assert not screen("A shortage of skilled cybersecurity professionals is limiting workforce capacity.")["candidate"]
+    assert screen("A shortage of skilled workers is delaying new production capacity.")["candidate"]
+    assert screen("Skilled workers are in shortage. The real constraint is execution, capacity and capability.")["candidate"]
+    assert screen("A shortage of skilled cybersecurity professionals is limiting workforce capacity.")["candidate"]
     assert not screen("Manual scheduling bottlenecks constrain AI-driven planning workflows.")["candidate"]
     assert screen("Equipment order books are backlogged years out and manufacturing throughput is limited.")["candidate"]
     result = screen("Demand for more specialised care is growing. The provider plans an expansion.")
-    assert not result["candidate"]
+    assert result["candidate"]
+    assert result["decision"] == 'CONTEXT_REVIEW'
     assert result["targets"] == []
 
 
 def test_live_phrase_errors_do_not_become_targets():
     result = screen('Shortages of diesel, jet fuel and petrochemical feedstocks if it cannot move crude may occur.')
     assert [t['name'] for t in result['targets']] == ['diesel', 'jet fuel', 'petrochemical feedstocks']
-    assert not screen('Shortages of skilled workers and contractors delay new production.')["candidate"]
+    assert screen('Shortages of skilled workers and contractors delay new production.')["candidate"]
     assert not screen('Production of up to 90 units per day is planned.')["targets"]
     assert not screen('Transit capacity for just the second time ever is reduced.')["targets"]
     assert screen('A shortage of treatment slots,” Sleuth said, discussing RLTs.')["targets"][0]['name'] == 'treatment slots'
@@ -99,11 +100,11 @@ def test_read_only_failure_continuation_cache_and_new_articles(tmp_path):
         calls.append(url)
         if url == '1':
             raise TimeoutError()
-        return 'Demand for power transformers may rise. Capacity is limited.', 'ARTICLE'
+        return '<article><p>Demand for power transformers may rise. Capacity is limited.</p></article>'
     state = run(path, output, fetcher=fetch)
     assert state['summary']['processed_this_run'] == 3
     assert state['summary']['body_ok_this_run'] == 2
-    assert state['results']['1']['body_status'] == 'BODY_UNAVAILABLE'
+    assert state['results']['1']['body_status'] == 'UNAVAILABLE'
     assert state['results']['1']['targets'] == []
     assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
     assert run(path, output, fetcher=fetch)['summary']['processed_this_run'] == 0
@@ -115,6 +116,9 @@ def test_read_only_failure_continuation_cache_and_new_articles(tmp_path):
     state = json.loads(output.read_text())
     state['results']['1']['retry_after'] = ''
     state['results']['1']['attempts'] = 2
+    version = state['results']['1']['source_version']
+    state['results']['1']['acquisition']['versions'][version]['automatic_attempts'] = 2
+    state['results']['1']['acquisition']['versions'][version]['next_retry_at'] = '2020-01-01T00:00:00+00:00'
     output.write_text(json.dumps(state))
     assert run(path, output, fetcher=fetch)['results']['1']['attempts'] == 3
     assert run(path, output, fetcher=fetch)['summary']['processed_this_run'] == 0
