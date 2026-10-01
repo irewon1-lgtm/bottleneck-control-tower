@@ -146,7 +146,8 @@ def fetch_body(url):
 
 def screen(body):
     # No title or RSS snippet enters this decision.
-    sentences = [s.strip() for s in re.split(r"(?<=[.!?])\s+|\n+", body) if s.strip()]
+    # JSON-LD paragraphs can meet at a full stop without a space.
+    sentences = [s.strip() for s in re.split(r"(?<=[.!?])(?:\s+|(?=[A-Z][a-z]|[“‘]))|\n+", body) if s.strip()]
     evidence = {k: [s[:350] for s in sentences if p.search(s)][:2] for k, p in PATTERNS.items()}
     evidence = {k: v for k, v in evidence.items() if v}
     constrained = [s for s in sentences if PATTERNS["CONSTRAINT"].search(s)]
@@ -208,9 +209,10 @@ def screen(body):
             PHYSICAL_OBJECT.search(sentence) or TARGET.search(sentence) or OPEN_TARGET.search(sentence)
             or re.search(r"\b(?:shortages?|scarcity|supply[- ]crunch|supply[- ]gap|supply disruptions?)\b", sentence, re.I)
         )
+        illustrative_process = bool(re.search(r"\bmay need\b", sentence, re.I)) and not strong_physical_signal(sentence)
         local_process_only = bool(PATTERNS["CONSTRAINT"].search(sentence)) and bool(
             PROCESS_ONLY.search(context) or COMPUTE.search(context)
-        ) and not anchor_physical
+        ) and (not anchor_physical or illustrative_process)
         if local_labor_only or local_process_only:
             continue
         axes = {k for k, pattern in PATTERNS.items() if pattern.search(context)}
