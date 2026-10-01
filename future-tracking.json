@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "updated_at": "2026-10-01T06:26:18.830Z",
+  "updated_at": "2026-10-01T07:28:29.695863+00:00",
   "purpose": "향후 1~2년 내 구체적 산업 공급 TARGET의 수요·공급 시간차 발견 및 예측 결과 추적",
   "mode": "research_sidecar",
   "integration": {
     "operating_db": "unchanged",
     "candidate_screening": "unchanged",
-    "pages": "not_connected",
+    "pages": "existing_tracking_connected",
     "scheduled_review": "ChatGPT 예약 조사: 월·수·금 한국시간 오전 8시 전후; 첫 정기 실행은 아직 미검증"
   },
   "policy": {
@@ -25,7 +25,9 @@
       "demand_plan_vs_confirmed_order",
       "capacity_announcement_vs_qualified_output",
       "bottleneck_vs_market_awareness_vs_price"
-    ]
+    ],
+    "decision_protocol": "https://github.com/irewon1-lgtm/bottleneck-control-tower/blob/main/docs/supply-gap-review.md",
+    "primary_objective": "현재 부족 아님 + 향후24개월 이내 부족 예상 + 이익 귀속·시장 선반영 별도 검증"
   },
   "targets": [
     {
@@ -308,6 +310,134 @@
           "market_awareness": "공급자 IR 및 NVIDIA 공개 자료로 이미 전문시장에 공개. 일반 투자자 인지도·주가 선반영 UNRESOLVED.",
           "outcome": "UNRESOLVED — 제품별 공급 계획 보강; 실제 Q4CY26 납품·2027 부족 결과 미도래",
           "next_check": "2026Q4 UHP CW 첫 대량 출하 실적과 고객별 승인, H2CY27 scale-up 확정 필요량. 예정 출하 지연 또는 수요 초과 확인 때 상태 재평가"
+        },
+        {
+          "review_id": "supply-gap-v1-20261001-cpo-qualified-cw-lasers",
+          "reviewed_on": "2026-10-01",
+          "mode": "on_demand",
+          "status": "OBSERVE",
+          "reason": "기존 관찰에 수급 범위·일정 비교를 적용하고 공식 원문 재확인. CW제품 출하 계획은 있으나 고객별 필요일과 기존·경쟁 생산의 적격 월 공급량 미공개. 공장 2028 일정만으로 부족 계산 불가.",
+          "sources": [
+            "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518"
+          ],
+          "demand_timing": "Coherent 2026-09-21 p14 CPO scale-out Q4CY26, scale-up H2CY27 매출 계획. NVIDIA 2026-06-01 PT 블로그는 Spectrum-X Photonics full production, 제품 페이지는 H2CY26 availability를 표시. 시스템 생산 시작·상용 출하·각 공급자 매출 시점을 동일시하지 않음. 고객별 CW 필요 개수·확정 필요일 UNRESOLVED.",
+          "supply_timing": "Coherent UHP CW Q4CY26 대량 출하 계획(p19). 실제 출하 완료는 아직 미확인. p26 총 InP 생산 확대 계획은 CPO용 CW 전용 적격 공급량 아님. p20 70~100mW HP CW 월 수백만개 출하는 NPO용 다른 규격이며 UHP CW 수량으로 대체하지 않음. 고객별 qualification 완료·확약 납기·월별 UHP CW 물량 UNRESOLVED.",
+          "companies": [
+            {
+              "ticker": "COHR",
+              "role": "DIRECT",
+              "business_share": "UNRESOLVED — CPO용 UHP CW 전용 매출·마진·생산량"
+            },
+            {
+              "ticker": "LITE",
+              "role": "DIRECT",
+              "business_share": "UNRESOLVED — 이번 회차 최신 제품별 확약 납기 원문 미확인"
+            }
+          ],
+          "outcome": "UNRESOLVED — 새 부족 확정·예측 적중·주가 상승 판정 없음",
+          "next_check": "2026Q4 UHP CW 첫 대량 출하 실적과 고객별 승인, H2CY27 scale-up 확정 필요량. 예정 출하 지연 또는 수요 초과 확인 때 상태 재평가",
+          "comparison_inputs": {
+            "current": {
+              "state": "UNRESOLVED",
+              "basis": "이번 확인에서 현재 부족 여부를 확정할 근거 없음",
+              "evidence": []
+            },
+            "shortage_window": {
+              "start": null,
+              "end": null,
+              "basis": "수요·증설 계획 시점을 부족 발생일로 대체하지 않음",
+              "evidence": []
+            },
+            "demand": {
+              "scope": "CPO용 고출력 CW 레이저의 고객 인증된 양산능력",
+              "unit": "개/월",
+              "period_start": null,
+              "period_end": null,
+              "balance_basis": "total",
+              "min": null,
+              "max": null,
+              "basis": "CW제품 출하 계획은 있으나 고객별 필요일과 기존·경쟁 생산의 적격 월 공급량 미공개. 공장 2028 일정만으로 부족 계산 불가.",
+              "evidence": [
+                {
+                  "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+                  "published_on": "2026-09-21",
+                  "locator": "p14/19"
+                }
+              ]
+            },
+            "supply": {
+              "scope": "CPO용 고출력 CW 레이저의 고객 인증된 양산능력",
+              "unit": "개/월",
+              "period_start": null,
+              "period_end": null,
+              "balance_basis": "total",
+              "min": null,
+              "max": null,
+              "kind": "QUALIFIED_DELIVERABLE",
+              "coverage": "PARTIAL",
+              "basis": "CW제품 출하 계획은 있으나 고객별 필요일과 기존·경쟁 생산의 적격 월 공급량 미공개. 공장 2028 일정만으로 부족 계산 불가.",
+              "evidence": [
+                {
+                  "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+                  "published_on": "2026-09-21",
+                  "locator": "p14/19"
+                }
+              ]
+            },
+            "timing": {
+              "required_by": null,
+              "earliest_qualified_supply": null,
+              "coverage": "PARTIAL",
+              "basis": "CW제품 출하 계획은 있으나 고객별 필요일과 기존·경쟁 생산의 적격 월 공급량 미공개. 공장 2028 일정만으로 부족 계산 불가.",
+              "evidence": [
+                {
+                  "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+                  "published_on": "2026-09-21",
+                  "locator": "p14/19"
+                }
+              ]
+            },
+            "relief": {
+              "review_complete": false,
+              "basis": "증설·자동화·대체 경로 단서는 있으나 전체 적격 공급 경로 점검 미완료",
+              "evidence": [
+                {
+                  "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+                  "published_on": "2026-09-21",
+                  "locator": "p14/19"
+                }
+              ]
+            },
+            "market_awareness": {
+              "state": "UNRESOLVED",
+              "basis": "기업 원문 공개 사실만으로 대중 인지도·주가 선반영 판정 불가",
+              "evidence": []
+            },
+            "economic_capture": {
+              "state": "UNRESOLVED",
+              "basis": "해당 세부 제품 이익·투자비·계약 구조·가치평가 함께 확인 필요",
+              "evidence": []
+            }
+          },
+          "supply_gap": {
+            "version": "supply-gap-v1",
+            "as_of": "2026-10-01",
+            "gap_status": "UNRESOLVED",
+            "route": null,
+            "gap_range": null,
+            "objective_fit": "UNRESOLVED",
+            "market_awareness": "UNRESOLVED",
+            "economic_capture": "UNRESOLVED",
+            "investment_status": "UNRESOLVED",
+            "blockers": [
+              "현재 같은 규격·지역의 부족 여부 미확인",
+              "향후 24개월 이내 부족 발생 시점 미확인 또는 범위 밖",
+              "동일 규격·기간·단위의 수요량과 전체 적격 공급량 범위 미확인",
+              "고객 필요일과 전체 대체 공급의 가장 빠른 적격 납기 미확인",
+              "경쟁 증설·대체 공급·재고·수요 지연 반증 점검 미완료",
+              "기업별 이익 귀속·가치평가·주가 선반영은 별도 검증"
+            ]
+          }
         }
       ]
     },
@@ -447,6 +577,129 @@
           "market_awareness": "증설은2025년부터 기업 발표·공시에 공개. 낮은 사업비중이 시장 저인지도를 증명하지 않음; 주가 선반영 UNRESOLVED.",
           "outcome": "UNRESOLVED — 증설 완료·부족 실제 결과 미도래",
           "next_check": "2026Q4~2027초 새라인 상업생산/인증 완료와 실제 AP 납기, 증설 후 필요톤수 대비 적격 공급"
+        },
+        {
+          "review_id": "supply-gap-v1-20261001-srm-ammonium-perchlorate",
+          "reviewed_on": "2026-10-01",
+          "mode": "on_demand",
+          "status": "OBSERVE",
+          "reason": "기존 관찰에 수급 범위·일정 비교를 적용하고 공식 원문 재확인. 50%초과 증설과2026완공 계획은 완화 근거. 기존 절대능력·증설 후 적격 AP톤수·2027수요가 없어 잔여 부족 계산 불가.",
+          "sources": [
+            "https://www.ampac.us/press-release-100-million-capacity-expansion/"
+          ],
+          "demand_timing": "기존 2027~2028 모터 납품 계획을 AP 확정 수요톤수로 환산할 자료 없음. Q2 specialty sales 증가에는 가격/제품믹스와 Calca 편입 영향이 포함됨. AP 물량 증가율·고객별 필요일 UNRESOLVED.",
+          "supply_timing": "2026년말 새 생산라인 가동 및50%초과 능력 확대 전망 재확인. 실제 준공·고객 인증·가동률·입도/순도별 판매가능톤수·납기 UNRESOLVED.",
+          "companies": [
+            {
+              "ticker": "NEU",
+              "role": "DIRECT",
+              "business_share": "Q2CY26 specialty materials 매출 비중 약8.99%(67.165/747.094), AP외 제품 포함. AP전용 매출·마진·2027 공급 계약 비중 UNRESOLVED"
+            }
+          ],
+          "outcome": "UNRESOLVED — 새 부족 확정·예측 적중·주가 상승 판정 없음",
+          "next_check": "2026Q4~2027초 새라인 상업생산/인증 완료와 실제 AP 납기, 증설 후 필요톤수 대비 적격 공급",
+          "comparison_inputs": {
+            "current": {
+              "state": "UNRESOLVED",
+              "basis": "이번 확인에서 현재 부족 여부를 확정할 근거 없음",
+              "evidence": []
+            },
+            "shortage_window": {
+              "start": null,
+              "end": null,
+              "basis": "수요·증설 계획 시점을 부족 발생일로 대체하지 않음",
+              "evidence": []
+            },
+            "demand": {
+              "scope": "고체로켓 추진제용 과염소산암모늄(AP) 생산능력",
+              "unit": "tonnes/month",
+              "period_start": null,
+              "period_end": null,
+              "balance_basis": "total",
+              "min": null,
+              "max": null,
+              "basis": "50%초과 증설과2026완공 계획은 완화 근거. 기존 절대능력·증설 후 적격 AP톤수·2027수요가 없어 잔여 부족 계산 불가.",
+              "evidence": [
+                {
+                  "url": "https://www.ampac.us/press-release-100-million-capacity-expansion/",
+                  "published_on": "2025-06-11",
+                  "locator": "capacity expansion paragraph"
+                }
+              ]
+            },
+            "supply": {
+              "scope": "고체로켓 추진제용 과염소산암모늄(AP) 생산능력",
+              "unit": "tonnes/month",
+              "period_start": null,
+              "period_end": null,
+              "balance_basis": "total",
+              "min": null,
+              "max": null,
+              "kind": "QUALIFIED_DELIVERABLE",
+              "coverage": "PARTIAL",
+              "basis": "50%초과 증설과2026완공 계획은 완화 근거. 기존 절대능력·증설 후 적격 AP톤수·2027수요가 없어 잔여 부족 계산 불가.",
+              "evidence": [
+                {
+                  "url": "https://www.ampac.us/press-release-100-million-capacity-expansion/",
+                  "published_on": "2025-06-11",
+                  "locator": "capacity expansion paragraph"
+                }
+              ]
+            },
+            "timing": {
+              "required_by": null,
+              "earliest_qualified_supply": null,
+              "coverage": "PARTIAL",
+              "basis": "50%초과 증설과2026완공 계획은 완화 근거. 기존 절대능력·증설 후 적격 AP톤수·2027수요가 없어 잔여 부족 계산 불가.",
+              "evidence": [
+                {
+                  "url": "https://www.ampac.us/press-release-100-million-capacity-expansion/",
+                  "published_on": "2025-06-11",
+                  "locator": "capacity expansion paragraph"
+                }
+              ]
+            },
+            "relief": {
+              "review_complete": false,
+              "basis": "증설·자동화·대체 경로 단서는 있으나 전체 적격 공급 경로 점검 미완료",
+              "evidence": [
+                {
+                  "url": "https://www.ampac.us/press-release-100-million-capacity-expansion/",
+                  "published_on": "2025-06-11",
+                  "locator": "capacity expansion paragraph"
+                }
+              ]
+            },
+            "market_awareness": {
+              "state": "UNRESOLVED",
+              "basis": "기업 원문 공개 사실만으로 대중 인지도·주가 선반영 판정 불가",
+              "evidence": []
+            },
+            "economic_capture": {
+              "state": "UNRESOLVED",
+              "basis": "해당 세부 제품 이익·투자비·계약 구조·가치평가 함께 확인 필요",
+              "evidence": []
+            }
+          },
+          "supply_gap": {
+            "version": "supply-gap-v1",
+            "as_of": "2026-10-01",
+            "gap_status": "UNRESOLVED",
+            "route": null,
+            "gap_range": null,
+            "objective_fit": "UNRESOLVED",
+            "market_awareness": "UNRESOLVED",
+            "economic_capture": "UNRESOLVED",
+            "investment_status": "UNRESOLVED",
+            "blockers": [
+              "현재 같은 규격·지역의 부족 여부 미확인",
+              "향후 24개월 이내 부족 발생 시점 미확인 또는 범위 밖",
+              "동일 규격·기간·단위의 수요량과 전체 적격 공급량 범위 미확인",
+              "고객 필요일과 전체 대체 공급의 가장 빠른 적격 납기 미확인",
+              "경쟁 증설·대체 공급·재고·수요 지연 반증 점검 미완료",
+              "기업별 이익 귀속·가치평가·주가 선반영은 별도 검증"
+            ]
+          }
         }
       ]
     },
@@ -483,6 +736,130 @@
             }
           ],
           "review_id": "scheduled-20261001-silicon-photonics-wafer-level-burn-in"
+        },
+        {
+          "review_id": "supply-gap-v1-20261001-silicon-photonics-wafer-level-burn-in",
+          "reviewed_on": "2026-10-01",
+          "mode": "on_demand",
+          "status": "OBSERVE",
+          "reason": "기존 관찰에 수급 범위·일정 비교를 적용하고 공식 원문 재확인. 2027상반기 장비 출하 계획은 고객의 필요일·설치·인증 완료일과 다름. 9개 blade 사양을 실제 월 처리량으로 바꾸지 않음.",
+          "sources": [
+            "https://www.aehr.com/2026/08/aehr-test-systems-expands-silicon-photonics-production-momentum-with-follow-on-production-order-from-lead-customer/"
+          ],
+          "demand_timing": "기존 생산 고객의 추가 주문 확인; 고객 확대 계획은 있으나 필요한 웨이퍼 수·번인 시간·생산라인 가동 필요일 UNRESOLVED. 미래 CPO/광학 I/O 확대 전망과 확정 주문의 최종 적용처는 구분.",
+          "supply_timing": "FOX-XP 추가 시스템은 2027년 상반기 출하 예정. 9개 독립 WaferPak 및 블레이드당 최대 3500W는 장비 사양이며 고객의 시간당 인증된 웨이퍼 처리량을 뜻하지 않음. 출하 후 설치·고객 인증·양산 시작일 및 경쟁 장비 공급량 UNRESOLVED.",
+          "companies": [
+            {
+              "ticker": "AEHR",
+              "role": "ENABLEMENT",
+              "business_share": "UNRESOLVED",
+              "scope": "실리콘 포토닉스 웨이퍼 번인 장비 공급. 실제 검사 서비스 처리능력 운영자는 익명 고객이며 UNRESOLVED."
+            }
+          ],
+          "outcome": "UNRESOLVED — 새 부족 확정·예측 적중·주가 상승 판정 없음",
+          "next_check": "규격별 필요량·적격 공급량·고객 필요일·납기",
+          "comparison_inputs": {
+            "current": {
+              "state": "UNRESOLVED",
+              "basis": "이번 확인에서 현재 부족 여부를 확정할 근거 없음",
+              "evidence": []
+            },
+            "shortage_window": {
+              "start": null,
+              "end": null,
+              "basis": "수요·증설 계획 시점을 부족 발생일로 대체하지 않음",
+              "evidence": []
+            },
+            "demand": {
+              "scope": "고집적 실리콘 포토닉스 웨이퍼 단계 번인·신뢰성 스크리닝 처리능력",
+              "unit": "wafers/month",
+              "period_start": null,
+              "period_end": null,
+              "balance_basis": "total",
+              "min": null,
+              "max": null,
+              "basis": "2027상반기 장비 출하 계획은 고객의 필요일·설치·인증 완료일과 다름. 9개 blade 사양을 실제 월 처리량으로 바꾸지 않음.",
+              "evidence": [
+                {
+                  "url": "https://www.aehr.com/2026/08/aehr-test-systems-expands-silicon-photonics-production-momentum-with-follow-on-production-order-from-lead-customer/",
+                  "published_on": "2026-08-04",
+                  "locator": "order and shipment paragraphs"
+                }
+              ]
+            },
+            "supply": {
+              "scope": "고집적 실리콘 포토닉스 웨이퍼 단계 번인·신뢰성 스크리닝 처리능력",
+              "unit": "wafers/month",
+              "period_start": null,
+              "period_end": null,
+              "balance_basis": "total",
+              "min": null,
+              "max": null,
+              "kind": "QUALIFIED_DELIVERABLE",
+              "coverage": "PARTIAL",
+              "basis": "2027상반기 장비 출하 계획은 고객의 필요일·설치·인증 완료일과 다름. 9개 blade 사양을 실제 월 처리량으로 바꾸지 않음.",
+              "evidence": [
+                {
+                  "url": "https://www.aehr.com/2026/08/aehr-test-systems-expands-silicon-photonics-production-momentum-with-follow-on-production-order-from-lead-customer/",
+                  "published_on": "2026-08-04",
+                  "locator": "order and shipment paragraphs"
+                }
+              ]
+            },
+            "timing": {
+              "required_by": null,
+              "earliest_qualified_supply": null,
+              "coverage": "PARTIAL",
+              "basis": "2027상반기 장비 출하 계획은 고객의 필요일·설치·인증 완료일과 다름. 9개 blade 사양을 실제 월 처리량으로 바꾸지 않음.",
+              "evidence": [
+                {
+                  "url": "https://www.aehr.com/2026/08/aehr-test-systems-expands-silicon-photonics-production-momentum-with-follow-on-production-order-from-lead-customer/",
+                  "published_on": "2026-08-04",
+                  "locator": "order and shipment paragraphs"
+                }
+              ]
+            },
+            "relief": {
+              "review_complete": false,
+              "basis": "증설·자동화·대체 경로 단서는 있으나 전체 적격 공급 경로 점검 미완료",
+              "evidence": [
+                {
+                  "url": "https://www.aehr.com/2026/08/aehr-test-systems-expands-silicon-photonics-production-momentum-with-follow-on-production-order-from-lead-customer/",
+                  "published_on": "2026-08-04",
+                  "locator": "order and shipment paragraphs"
+                }
+              ]
+            },
+            "market_awareness": {
+              "state": "UNRESOLVED",
+              "basis": "기업 원문 공개 사실만으로 대중 인지도·주가 선반영 판정 불가",
+              "evidence": []
+            },
+            "economic_capture": {
+              "state": "UNRESOLVED",
+              "basis": "해당 세부 제품 이익·투자비·계약 구조·가치평가 함께 확인 필요",
+              "evidence": []
+            }
+          },
+          "supply_gap": {
+            "version": "supply-gap-v1",
+            "as_of": "2026-10-01",
+            "gap_status": "UNRESOLVED",
+            "route": null,
+            "gap_range": null,
+            "objective_fit": "UNRESOLVED",
+            "market_awareness": "UNRESOLVED",
+            "economic_capture": "UNRESOLVED",
+            "investment_status": "UNRESOLVED",
+            "blockers": [
+              "현재 같은 규격·지역의 부족 여부 미확인",
+              "향후 24개월 이내 부족 발생 시점 미확인 또는 범위 밖",
+              "동일 규격·기간·단위의 수요량과 전체 적격 공급량 범위 미확인",
+              "고객 필요일과 전체 대체 공급의 가장 빠른 적격 납기 미확인",
+              "경쟁 증설·대체 공급·재고·수요 지연 반증 점검 미완료",
+              "기업별 이익 귀속·가치평가·주가 선반영은 별도 검증"
+            ]
+          }
         }
       ]
     },
@@ -550,6 +927,136 @@
           "market_awareness": "수년간 공식 IR에 공개. 세부 공급량 미공개와 대중에게 알려지지 않음은 별개. 인지도·가치평가·주가 선반영 UNRESOLVED.",
           "outcome": "UNRESOLVED — 2027~2028 수요가 실제 공급보다 앞선다는 시간차 미확인",
           "next_check": "NovaLT16 증설 실제 완료·인증 산출량과 고객 필요일·확약 납기, Frame5·왕복동 엔진의 현장 대체 공급 확인."
+        },
+        {
+          "review_id": "supply-gap-v1-20261001-novalt16-qualified-production-slots",
+          "reviewed_on": "2026-10-01",
+          "mode": "on_demand",
+          "status": "OBSERVE",
+          "reason": "기존 관찰에 수급 범위·일정 비교를 적용하고 공식 원문 재확인. 76대는 실제 주문이나 2027~2028별 필요량·확약 납기·미예약 생산능력이 아님. 전체 Power Systems 능력으로 제품 공급량 대체 불가.",
+          "sources": [
+            "https://investors.bakerhughes.com/news/press-releases/news-details/2026/Dynamis-Power-Solutions-Awards-Baker-Hughes-Major-Power-Generation-Order-for-Data-Centers-Oil--Gas/default.aspx"
+          ],
+          "demand_timing": "Kodiak 초기 약1GW는2030까지 납품. 2027~2028 NovaLT16 배분 수량·고객 필요일 UNRESOLVED. 최대1.8GW 프레임워크는 전량 확정 주문으로 계산하지 않음. Dynamis76대의 과거 이력 보존.",
+          "supply_timing": "2025 Q2 공식 발표는2027까지 NovaLT 생산능력 확대 계획. 실제 준공·NovaLT16 인증 산출량·새 예약 가능 슬롯 UNRESOLVED. 2026 Q2 준비 발언의2029 Power Systems 신규 생산능력은 NovaLT16 전용 투입일이 아님. Kodiak 혼합 제품의2030 납품은 NovaLT16 개별 확약 납기로 사용하지 않음.",
+          "companies": [
+            {
+              "ticker": "BKR",
+              "role": "DIRECT",
+              "scope": "NovaLT16 OEM 제조. Power Systems 전체 매출능력을 제품 전용 수치로 귀속하지 않음",
+              "business_share": "UNRESOLVED"
+            },
+            {
+              "ticker": "KGS",
+              "role": "ENABLEMENT",
+              "scope": "하류 공급 서비스·설치 고객. NovaLT16 제조 병목의 직접 공급자와 구분",
+              "business_share": "UNRESOLVED — 발전 서비스 매출·투자·이익"
+            }
+          ],
+          "outcome": "UNRESOLVED — 새 부족 확정·예측 적중·주가 상승 판정 없음",
+          "next_check": "NovaLT16 증설 실제 완료·인증 산출량과 고객 필요일·확약 납기, Frame5·왕복동 엔진의 현장 대체 공급 확인.",
+          "comparison_inputs": {
+            "current": {
+              "state": "UNRESOLVED",
+              "basis": "이번 확인에서 현재 부족 여부를 확정할 근거 없음",
+              "evidence": []
+            },
+            "shortage_window": {
+              "start": null,
+              "end": null,
+              "basis": "수요·증설 계획 시점을 부족 발생일로 대체하지 않음",
+              "evidence": []
+            },
+            "demand": {
+              "scope": "북미 데이터센터용 NovaLT16 산업용 소형 가스터빈·발전기 패키지의 신규 생산 슬롯",
+              "unit": "units/year",
+              "period_start": null,
+              "period_end": null,
+              "balance_basis": "total",
+              "min": null,
+              "max": null,
+              "basis": "76대는 실제 주문이나 2027~2028별 필요량·확약 납기·미예약 생산능력이 아님. 전체 Power Systems 능력으로 제품 공급량 대체 불가.",
+              "evidence": [
+                {
+                  "url": "https://investors.bakerhughes.com/news/press-releases/news-details/2026/Dynamis-Power-Solutions-Awards-Baker-Hughes-Major-Power-Generation-Order-for-Data-Centers-Oil--Gas/default.aspx",
+                  "published_on": "2026-07-29",
+                  "locator": "76 NovaLT16 order paragraph"
+                }
+              ]
+            },
+            "supply": {
+              "scope": "북미 데이터센터용 NovaLT16 산업용 소형 가스터빈·발전기 패키지의 신규 생산 슬롯",
+              "unit": "units/year",
+              "period_start": null,
+              "period_end": null,
+              "balance_basis": "total",
+              "min": null,
+              "max": null,
+              "kind": "QUALIFIED_DELIVERABLE",
+              "coverage": "PARTIAL",
+              "basis": "76대는 실제 주문이나 2027~2028별 필요량·확약 납기·미예약 생산능력이 아님. 전체 Power Systems 능력으로 제품 공급량 대체 불가.",
+              "evidence": [
+                {
+                  "url": "https://investors.bakerhughes.com/news/press-releases/news-details/2026/Dynamis-Power-Solutions-Awards-Baker-Hughes-Major-Power-Generation-Order-for-Data-Centers-Oil--Gas/default.aspx",
+                  "published_on": "2026-07-29",
+                  "locator": "76 NovaLT16 order paragraph"
+                }
+              ]
+            },
+            "timing": {
+              "required_by": null,
+              "earliest_qualified_supply": null,
+              "coverage": "PARTIAL",
+              "basis": "76대는 실제 주문이나 2027~2028별 필요량·확약 납기·미예약 생산능력이 아님. 전체 Power Systems 능력으로 제품 공급량 대체 불가.",
+              "evidence": [
+                {
+                  "url": "https://investors.bakerhughes.com/news/press-releases/news-details/2026/Dynamis-Power-Solutions-Awards-Baker-Hughes-Major-Power-Generation-Order-for-Data-Centers-Oil--Gas/default.aspx",
+                  "published_on": "2026-07-29",
+                  "locator": "76 NovaLT16 order paragraph"
+                }
+              ]
+            },
+            "relief": {
+              "review_complete": false,
+              "basis": "증설·자동화·대체 경로 단서는 있으나 전체 적격 공급 경로 점검 미완료",
+              "evidence": [
+                {
+                  "url": "https://investors.bakerhughes.com/news/press-releases/news-details/2026/Dynamis-Power-Solutions-Awards-Baker-Hughes-Major-Power-Generation-Order-for-Data-Centers-Oil--Gas/default.aspx",
+                  "published_on": "2026-07-29",
+                  "locator": "76 NovaLT16 order paragraph"
+                }
+              ]
+            },
+            "market_awareness": {
+              "state": "UNRESOLVED",
+              "basis": "기업 원문 공개 사실만으로 대중 인지도·주가 선반영 판정 불가",
+              "evidence": []
+            },
+            "economic_capture": {
+              "state": "UNRESOLVED",
+              "basis": "해당 세부 제품 이익·투자비·계약 구조·가치평가 함께 확인 필요",
+              "evidence": []
+            }
+          },
+          "supply_gap": {
+            "version": "supply-gap-v1",
+            "as_of": "2026-10-01",
+            "gap_status": "UNRESOLVED",
+            "route": null,
+            "gap_range": null,
+            "objective_fit": "UNRESOLVED",
+            "market_awareness": "UNRESOLVED",
+            "economic_capture": "UNRESOLVED",
+            "investment_status": "UNRESOLVED",
+            "blockers": [
+              "현재 같은 규격·지역의 부족 여부 미확인",
+              "향후 24개월 이내 부족 발생 시점 미확인 또는 범위 밖",
+              "동일 규격·기간·단위의 수요량과 전체 적격 공급량 범위 미확인",
+              "고객 필요일과 전체 대체 공급의 가장 빠른 적격 납기 미확인",
+              "경쟁 증설·대체 공급·재고·수요 지연 반증 점검 미완료",
+              "기업별 이익 귀속·가치평가·주가 선반영은 별도 검증"
+            ]
+          }
         }
       ]
     },
@@ -581,6 +1088,129 @@
           "market_awareness": "기업 IR·기술 발표에 공개. 덜 알려진 핵심 부품이라는 탐색 가설은 있으나 저인지도·주가 미반영 확인은 UNRESOLVED.",
           "outcome": "UNRESOLVED — 새 관찰 후보; 수요보다 공급 확보가 늦는 시간차·투자수익 미확인",
           "next_check": "LTA별 필요일/납기/수량과 남은 미예약 능력, garnet 성장·가공 lead time, 고객 승인과 경쟁/칩내 통합 양산 일정"
+        },
+        {
+          "review_id": "supply-gap-v1-20261001-cpo-els-garnet-optical-isolators",
+          "reviewed_on": "2026-10-01",
+          "mode": "on_demand",
+          "status": "OBSERVE",
+          "reason": "기존 관찰에 수급 범위·일정 비교를 적용하고 공식 원문 재확인. 아이솔레이터 LTA와 수직통합은 확인되지만 필요 개수·약정 납기·남은 생산능력 미공개. LTA는 부족 확정 근거가 아님.",
+          "sources": [
+            "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518"
+          ],
+          "demand_timing": "Coherent CPO scale-out Q4CY26·scale-up H2CY27 계획에 필요한 ELS 보호 부품. 여러 고객 LTA 확인, CPO/NPO별 수요분할·규격별필요개수·확정 필요일 UNRESOLVED.",
+          "supply_timing": "Coherent garnet 성장~아이솔레이터 통합공급 확인. 누적700M isolators/garnet 실적(p12)은 현재 CPO전용 연간 공급량 아님. 2027~2028 인증 산출량·수율·추가 예약 가능능력·납기·경쟁사 생산량 UNRESOLVED.",
+          "companies": [
+            {
+              "ticker": "COHR",
+              "role": "DIRECT",
+              "business_share": "UNRESOLVED — CPO ELS용 garnet/아이솔레이터 전용 매출·이익·계약액"
+            }
+          ],
+          "outcome": "UNRESOLVED — 새 부족 확정·예측 적중·주가 상승 판정 없음",
+          "next_check": "LTA별 필요일/납기/수량과 남은 미예약 능력, garnet 성장·가공 lead time, 고객 승인과 경쟁/칩내 통합 양산 일정",
+          "comparison_inputs": {
+            "current": {
+              "state": "UNRESOLVED",
+              "basis": "이번 확인에서 현재 부족 여부를 확정할 근거 없음",
+              "evidence": []
+            },
+            "shortage_window": {
+              "start": null,
+              "end": null,
+              "basis": "수요·증설 계획 시점을 부족 발생일로 대체하지 않음",
+              "evidence": []
+            },
+            "demand": {
+              "scope": "CPO 외부 레이저 광원(ELS)용 자성광학 garnet 기반 아이솔레이터의 고객 인증된 공급능력",
+              "unit": "개/월",
+              "period_start": null,
+              "period_end": null,
+              "balance_basis": "total",
+              "min": null,
+              "max": null,
+              "basis": "아이솔레이터 LTA와 수직통합은 확인되지만 필요 개수·약정 납기·남은 생산능력 미공개. LTA는 부족 확정 근거가 아님.",
+              "evidence": [
+                {
+                  "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+                  "published_on": "2026-09-21",
+                  "locator": "p32"
+                }
+              ]
+            },
+            "supply": {
+              "scope": "CPO 외부 레이저 광원(ELS)용 자성광학 garnet 기반 아이솔레이터의 고객 인증된 공급능력",
+              "unit": "개/월",
+              "period_start": null,
+              "period_end": null,
+              "balance_basis": "total",
+              "min": null,
+              "max": null,
+              "kind": "QUALIFIED_DELIVERABLE",
+              "coverage": "PARTIAL",
+              "basis": "아이솔레이터 LTA와 수직통합은 확인되지만 필요 개수·약정 납기·남은 생산능력 미공개. LTA는 부족 확정 근거가 아님.",
+              "evidence": [
+                {
+                  "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+                  "published_on": "2026-09-21",
+                  "locator": "p32"
+                }
+              ]
+            },
+            "timing": {
+              "required_by": null,
+              "earliest_qualified_supply": null,
+              "coverage": "PARTIAL",
+              "basis": "아이솔레이터 LTA와 수직통합은 확인되지만 필요 개수·약정 납기·남은 생산능력 미공개. LTA는 부족 확정 근거가 아님.",
+              "evidence": [
+                {
+                  "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+                  "published_on": "2026-09-21",
+                  "locator": "p32"
+                }
+              ]
+            },
+            "relief": {
+              "review_complete": false,
+              "basis": "증설·자동화·대체 경로 단서는 있으나 전체 적격 공급 경로 점검 미완료",
+              "evidence": [
+                {
+                  "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+                  "published_on": "2026-09-21",
+                  "locator": "p32"
+                }
+              ]
+            },
+            "market_awareness": {
+              "state": "UNRESOLVED",
+              "basis": "기업 원문 공개 사실만으로 대중 인지도·주가 선반영 판정 불가",
+              "evidence": []
+            },
+            "economic_capture": {
+              "state": "UNRESOLVED",
+              "basis": "해당 세부 제품 이익·투자비·계약 구조·가치평가 함께 확인 필요",
+              "evidence": []
+            }
+          },
+          "supply_gap": {
+            "version": "supply-gap-v1",
+            "as_of": "2026-10-01",
+            "gap_status": "UNRESOLVED",
+            "route": null,
+            "gap_range": null,
+            "objective_fit": "UNRESOLVED",
+            "market_awareness": "UNRESOLVED",
+            "economic_capture": "UNRESOLVED",
+            "investment_status": "UNRESOLVED",
+            "blockers": [
+              "현재 같은 규격·지역의 부족 여부 미확인",
+              "향후 24개월 이내 부족 발생 시점 미확인 또는 범위 밖",
+              "동일 규격·기간·단위의 수요량과 전체 적격 공급량 범위 미확인",
+              "고객 필요일과 전체 대체 공급의 가장 빠른 적격 납기 미확인",
+              "경쟁 증설·대체 공급·재고·수요 지연 반증 점검 미완료",
+              "기업별 이익 귀속·가치평가·주가 선반영은 별도 검증"
+            ]
+          }
         }
       ]
     }
@@ -818,6 +1448,24 @@
         "silicon-photonics-wafer-level-burn-in",
         "ai-package-tglass"
       ]
+    },
+    {
+      "id": "supply-gap-v1-20261001",
+      "date": "2026-10-01",
+      "mode": "on_demand",
+      "targets_reviewed": [
+        "cpo-qualified-cw-lasers",
+        "cpo-els-garnet-optical-isolators",
+        "silicon-photonics-wafer-level-burn-in",
+        "srm-ammonium-perchlorate",
+        "novalt16-qualified-production-slots"
+      ],
+      "documents_read": 5,
+      "new_documents_read": 0,
+      "prior_document_rechecked": 5,
+      "new_verified_future_targets": 0,
+      "errors": [],
+      "note": "기존5관찰에 구조화된 비교입력·판정·빈칸 추가. 실제 부족량0이라는 뜻이 아니라 계산불가. 과거 이력·고정baseline 보존."
     }
   ],
   "on_demand": "사용자 요청 시 범위·자료 수를 확대하여 같은 TARGET history에 mode=on_demand로 누적"
