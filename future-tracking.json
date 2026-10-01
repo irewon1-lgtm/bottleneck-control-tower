@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-10-01T13:49:17+09:00",
+  "updated_at": "2026-10-01",
   "purpose": "향후 1~2년 내 구체적 산업 공급 TARGET의 수요·공급 시간차 발견 및 예측 결과 추적",
   "mode": "research_sidecar",
   "integration": {
@@ -132,6 +132,39 @@
             }
           ],
           "outcome": "UNRESOLVED"
+        },
+        {
+          "reviewed_on": "2026-10-01",
+          "mode": "on_demand",
+          "review_id": "first-live-check-20261001-cw",
+          "status": "OBSERVE",
+          "target_detail": "CPO用 고객 인증된 고출력 CW/UHP 레이저 양산능력",
+          "reason": "수요 성장·2027~2028 공급 확대 일정 보강. 2027년 영국 공장 공급과 기존 공장 양산이 있어 Greensboro 시점만으로 산업 전체 부족 확정 불가. EML/CW/UHP 합산 전망을 CPO 전용 물량으로 오인하지 않음.",
+          "demand_timing": "Lumentum March 17 briefing: scale-out CPO CY2027 확대 및 scale-up 첫 출하 late CY2027 계획. 실제 필요한 레이저 수량 UNRESOLVED.",
+          "supply_timing": "UK fab incremental shipments late summer 2027; Greensboro March 17 briefing early 2028 ramp, March 26 release mid-2028 ramp. 문서 날짜·계획 차이를 보존하며 최신 실제 진행 미확인.",
+          "demand_evidence": "회사 전망: EML/CW/UHP 광학 lane 합산 약 85% CAGR. CPO 전용 확정 수요량 아님. 기존 능력으로 CY2027 수억달러 UHP 매출 지원 가능하다는 회사 설명.",
+          "constraint_evidence": "광통신 전체 생산 압박은 설명되지만 이 규격에서 필요량 대비 적격 능력 부족 수치 UNRESOLVED.",
+          "relief_evidence": "UK 2027 추가 출하, Greensboro 2028 램프업 및 기존 생산능력 활용.",
+          "sources": [
+            "https://s21.q4cdn.com/377324469/files/doc_presentations/2026/2026-Lumentum-at-OFC_final.pdf",
+            "https://www.lumentum.com/en/blog/backbone-ai-infrastructure-why-optical-components-will-define-next-era-data-centers",
+            "https://investor.lumentum.com/financial-news-releases/news-details/2026/Lumentum-Announces-New-U-S--Manufacturing-Facility-to-Produce-Advanced-Lasers-for-the-Worlds-Largest-AI-Data-Centers/default.aspx"
+          ],
+          "companies": [
+            {
+              "ticker": "LITE",
+              "role": "DIRECT",
+              "business_share": "UNRESOLVED — CPO용 CW/UHP만의 매출·backlog 비중"
+            },
+            {
+              "ticker": "COHR",
+              "role": "DIRECT",
+              "business_share": "UNRESOLVED — 이번 추가 조사에서 최신 CPO 전용 물량 미확인"
+            }
+          ],
+          "market_awareness": "공식 투자자 설명회에 이미 공개. 시장 선반영·valuation UNRESOLVED",
+          "outcome": "UNRESOLVED",
+          "next_check": "2027 계약별 필요 레이저 수량과 고객 인증된 생산능력, UK 램프업 진행 및 Coherent 경쟁 공급"
         }
       ]
     },
@@ -159,6 +192,41 @@
             }
           ],
           "outcome": "UNRESOLVED"
+        },
+        {
+          "reviewed_on": "2026-10-01",
+          "mode": "on_demand",
+          "review_id": "first-live-check-20261001-test",
+          "status": "OBSERVE",
+          "target_detail": "CPO용 PIC의 웨이퍼 단계 광·전기 동시 검사와 자동 광학 프로브 정렬·교정 처리능력",
+          "reason": "기존 통합 검사 TARGET을 OWAT/PIC wafer-level 단계로 구체화. FormFactor의 실제 양산 장비 공급은 확인됐지만 수요 대비 처리능력 부족·고객 납기 지연은 미확인. 기술적 난도와 장비 공급 부족을 구분.",
+          "demand_timing": "CPO 상용화·양산 확대, 실제 월별 wafer/die 필요 검사량 및 확정 주문 UNRESOLVED.",
+          "supply_timing": "FormFactor TRITON production-ready 제품 공개 및 Pharos 자동 정렬·교정 기술 공급. 장비 생산 대수·설치능력·납기·고객별 실가동 UNRESOLVED.",
+          "demand_evidence": "AI/SiPh/CPO 웨이퍼 양산에 광·전기 검사가 필요. FormFactor와 산업기관 설명 일치.",
+          "constraint_evidence": "TrendForce 공개 분석은 PIC 100% 검사 평균 100초 초과와 수작업 설명. 특정 고객/현재 자동 검사장비의 실측으로 일반화하지 않음.",
+          "relief_evidence": "TRITON 자동 광·전기 측정, calibration·optical scanning·Advantest 93k 통합; Pharos AutoCal 자동 정렬. 자동화 자체가 병목 완화 반증.",
+          "sources": [
+            "https://www.formfactor.com/product/probe-systems/high-volume-manufacturing/triton/",
+            "https://www.formfactor.com/blog/2026/triton-scaling-silicon-photonics-wafer-test-for-high-volume-manufacturing/",
+            "https://www.formfactor.com/blog/2026/pharos-optical-probe-series-for-silicon-photonics-and-co-packaged-optics/",
+            "https://investors.formfactor.com/news-releases/news-release-details/formfactor-expands-silicon-photonics-test-capabilities/",
+            "https://www.trendforce.com/insights/cpo-testing-market-opportunities"
+          ],
+          "companies": [
+            {
+              "ticker": "FORM",
+              "role": "ENABLEMENT",
+              "business_share": "UNRESOLVED — 실제 검사 서비스 처리능력을 직접 판매하는 것과 검사 장비 판매를 구분. CPO 전용 매출/수주 비중 미확인"
+            },
+            {
+              "ticker": "KEYS",
+              "role": "UNRESOLVED",
+              "business_share": "1.6T 양산 검사 workflow 확인. 이번 좁힌 OWAT 단계의 계약·사업 비중 미확인"
+            }
+          ],
+          "market_awareness": "회사 제품·전문 분석에서 공개. 주가 선반영 UNRESOLVED",
+          "outcome": "UNRESOLVED",
+          "next_check": "월별 검사 처리량·cycle time·장비 공급 backlog/lead time·CPO 전용 수주 및 경쟁 자동화"
         }
       ]
     },
@@ -223,6 +291,58 @@
       "date": "2026-10-01",
       "mode": "manual",
       "note": "기존 고정 TARGET 3개 참조 등록 + 이번 소규모 조사 TARGET 5개. 과거 모든 100건 검토를 소급 저장한 것은 아님."
+    },
+    {
+      "id": "first-on-demand-check-20261001",
+      "date": "2026-10-01",
+      "mode": "on_demand",
+      "scope": "정기 점검과 동일한 정본에 요청 조사 근거 누적·읽기 검증",
+      "documents_attempted": 13,
+      "documents_read": 10,
+      "new_documents_read": 9,
+      "prior_document_rechecked": 1,
+      "documents_unavailable": 3,
+      "source_urls_read": [
+        "https://www.formfactor.com/blog/2026/triton-scaling-silicon-photonics-wafer-test-for-high-volume-manufacturing/",
+        "https://www.formfactor.com/blog/2026/pharos-optical-probe-series-for-silicon-photonics-and-co-packaged-optics/",
+        "https://www.formfactor.com/product/probe-systems/high-volume-manufacturing/triton/",
+        "https://investors.formfactor.com/news-releases/news-release-details/formfactor-expands-silicon-photonics-test-capabilities/",
+        "https://www.keysight.com/zz/en/cmp/ecoc.html",
+        "https://www.lumentum.com/en/blog/backbone-ai-infrastructure-why-optical-components-will-define-next-era-data-centers",
+        "https://fabrinet.gcs-web.com/news-releases/news-release-details/fabrinet-announces-fourth-quarter-and-fiscal-year-2026-financial",
+        "https://www.trendforce.com/insights/cpo-testing-market-opportunities",
+        "https://investor.lumentum.com/financial-news-releases/news-details/2026/Lumentum-Announces-New-U-S--Manufacturing-Facility-to-Produce-Advanced-Lasers-for-the-Worlds-Largest-AI-Data-Centers/default.aspx",
+        "https://s21.q4cdn.com/377324469/files/doc_presentations/2026/2026-Lumentum-at-OFC_final.pdf"
+      ],
+      "errors": [
+        {
+          "url": "https://formfactorinc.gcs-web.com/static-files/29f1154b-e1e4-4b57-afbd-f296b3f36504",
+          "status": "BODY_UNAVAILABLE",
+          "reason": "retrieval internal error"
+        },
+        {
+          "url": "https://ontoinnovation.com/wp-content/uploads/2025/10/Rigorous-Analysis-of-TGVs_SemiDigest_Oct25.pdf",
+          "status": "BODY_UNAVAILABLE",
+          "reason": "retrieval internal error"
+        },
+        {
+          "url": "https://ontoinnovation.com/products/firefly-g5/",
+          "status": "BODY_UNAVAILABLE",
+          "reason": "403 Forbidden"
+        }
+      ],
+      "new_target_discovery": "유리 기판 TGV 검사 조사 시도는 원문 확보 실패로 판단 보류. Fabrinet 일반 실적은 신규 공급 부족 근거가 없어 신규 TARGET으로 등록하지 않음.",
+      "updated_targets": [
+        "cpo-qualified-cw-lasers",
+        "cpo-optical-electrical-volume-test"
+      ],
+      "new_verified_future_targets": 0,
+      "checks": {
+        "original_history_preserved": true,
+        "duplicate_review_id_prevented": true,
+        "outcome_accuracy": "아직 평가 불가 — 실제 미래 결과 미도래"
+      },
+      "scheduled_run": "run_now 요청 수락. last_run_time/완료·저장 확인은 별도이며 이번 수동 저장을 scheduled 성공으로 취급하지 않음."
     }
   ],
   "on_demand": "사용자 요청 시 범위·자료 수를 확대하여 같은 TARGET history에 mode=on_demand로 누적"
