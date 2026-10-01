@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-10-01T05:49:15.085Z",
+  "updated_at": "2026-10-01T06:11:28.493Z",
   "purpose": "향후 1~2년 내 구체적 산업 공급 TARGET의 수요·공급 시간차 발견 및 예측 결과 추적",
   "mode": "research_sidecar",
   "integration": {
@@ -229,6 +229,36 @@
             }
           ],
           "review_id": "scheduled-20261001-cpo-qualified-cw-lasers"
+        },
+        {
+          "review_id": "on-demand-20261001-cw-specific-supply",
+          "reviewed_on": "2026-10-01",
+          "mode": "on_demand",
+          "status": "OBSERVE",
+          "reason": "새 2026-09-21 PhotonLink 발표자료 p19에서 UHP CW 레이저 자체의 Q4CY26 volume shipments 계획과 6인치 InP high-yield ramp를 확인. 기존 이력의 'PhotonLink 전체 일정만 확인'보다 제품별 공급시점이 구체화됨. p14 CPO scale-out Q4CY26·scale-up H2CY27 매출 계획 및 NVIDIA의 CPO 시스템 생산 발표까지 확인. 공급이 수요보다 늦다는 결론은 아직 미확인; Lumentum Greensboro 2028 일정만으로 업계 공급공백을 추론할 수 없음.",
+          "sources": [
+            "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+            "https://blogs.nvidia.com/blog/nvidia-gtc-taipei-computex-2026-news/?trk=article-ssr-frontend-pulse_little-text-block",
+            "https://www.nvidia.com/en-us/networking/products/silicon-photonics/"
+          ],
+          "demand_timing": "Coherent 2026-09-21 p14 CPO scale-out Q4CY26, scale-up H2CY27 매출 계획. NVIDIA 2026-06-01 PT 블로그는 Spectrum-X Photonics full production, 제품 페이지는 H2CY26 availability를 표시. 시스템 생산 시작·상용 출하·각 공급자 매출 시점을 동일시하지 않음. 고객별 CW 필요 개수·확정 필요일 UNRESOLVED.",
+          "supply_timing": "Coherent UHP CW Q4CY26 대량 출하 계획(p19). 실제 출하 완료는 아직 미확인. p26 총 InP 생산 확대 계획은 CPO용 CW 전용 적격 공급량 아님. p20 70~100mW HP CW 월 수백만개 출하는 NPO용 다른 규격이며 UHP CW 수량으로 대체하지 않음. 고객별 qualification 완료·확약 납기·월별 UHP CW 물량 UNRESOLVED.",
+          "companies": [
+            {
+              "ticker": "COHR",
+              "role": "DIRECT",
+              "business_share": "UNRESOLVED — CPO용 UHP CW 전용 매출·마진·생산량"
+            },
+            {
+              "ticker": "LITE",
+              "role": "DIRECT",
+              "business_share": "UNRESOLVED — 이번 회차 최신 제품별 확약 납기 원문 미확인"
+            }
+          ],
+          "relief_evidence": "2028 신규공장 이전에도 Coherent 제품별 출하 계획 존재. NVIDIA는 시스템 제조·모듈 신뢰성 검증 경로를 공개했으나 공급자 전용 산출량을 공개하지 않음.",
+          "market_awareness": "공급자 IR 및 NVIDIA 공개 자료로 이미 전문시장에 공개. 일반 투자자 인지도·주가 선반영 UNRESOLVED.",
+          "outcome": "UNRESOLVED — 제품별 공급 계획 보강; 실제 Q4CY26 납품·2027 부족 결과 미도래",
+          "next_check": "2026Q4 UHP CW 첫 대량 출하 실적과 고객별 승인, H2CY27 scale-up 확정 필요량. 예정 출하 지연 또는 수요 초과 확인 때 상태 재평가"
         }
       ]
     },
@@ -346,6 +376,28 @@
             }
           ],
           "outcome": "UNRESOLVED"
+        },
+        {
+          "review_id": "on-demand-20261001-ap-economic-exposure",
+          "reviewed_on": "2026-10-01",
+          "mode": "on_demand",
+          "status": "OBSERVE",
+          "reason": "AP 50%초과 증설·2026년말 가동 계획은 기존 SEC자료와 동일하여 신규 증설 근거로 중복 추가하지 않음. 이번 새 관찰은 NEU 사업 노출 범위: specialty materials Q2매출67.165백만달러/연결747.094백만달러=약8.99%. AP외 Calca 등 포함으로 전체 사업부 성장·수익을 AP 부족 수혜로 귀속할 수 없음. AP 수요톤수·증설 후 잔여 부족은 여전히 미확인.",
+          "sources": [
+            "https://www.sec.gov/Archives/edgar/data/1282637/000128263726000016/neu-20260630.htm"
+          ],
+          "demand_timing": "기존 2027~2028 모터 납품 계획을 AP 확정 수요톤수로 환산할 자료 없음. Q2 specialty sales 증가에는 가격/제품믹스와 Calca 편입 영향이 포함됨. AP 물량 증가율·고객별 필요일 UNRESOLVED.",
+          "supply_timing": "2026년말 새 생산라인 가동 및50%초과 능력 확대 전망 재확인. 실제 준공·고객 인증·가동률·입도/순도별 판매가능톤수·납기 UNRESOLVED.",
+          "companies": [
+            {
+              "ticker": "NEU",
+              "role": "DIRECT",
+              "business_share": "Q2CY26 specialty materials 매출 비중 약8.99%(67.165/747.094), AP외 제품 포함. AP전용 매출·마진·2027 공급 계약 비중 UNRESOLVED"
+            }
+          ],
+          "market_awareness": "증설은2025년부터 기업 발표·공시에 공개. 낮은 사업비중이 시장 저인지도를 증명하지 않음; 주가 선반영 UNRESOLVED.",
+          "outcome": "UNRESOLVED — 증설 완료·부족 실제 결과 미도래",
+          "next_check": "2026Q4~2027초 새라인 상업생산/인증 완료와 실제 AP 납기, 증설 후 필요톤수 대비 적격 공급"
         }
       ]
     },
@@ -417,6 +469,37 @@
           "market_awareness": "2026-07-29 기업 IR·2026-09-29 Reuters Events 산업기사에 공개. 알려지지 않은 섹터라고 확정하지 않음. 인지도·valuation·주가 선반영 UNRESOLVED.",
           "outcome": "UNRESOLVED — 미래 부족 및 투자수익 미확인",
           "next_check": "고객별2027~2028 필요일과 OEM 확약납기 차이, 신규 예약 가능 슬롯, 증설 완료/인증 산출량, 대체 엔진 계약·수요 연기"
+        }
+      ]
+    },
+    {
+      "id": "cpo-els-garnet-optical-isolators",
+      "target": "CPO 외부 레이저 광원(ELS)용 자성광학 garnet 기반 아이솔레이터의 고객 인증된 공급능력",
+      "stage": "garnet 결정 성장·가공 → 광 아이솔레이터 → ELS 조립·인증 → CPO 시스템",
+      "history": [
+        {
+          "review_id": "on-demand-20261001-isolator-discovery",
+          "reviewed_on": "2026-10-01",
+          "mode": "on_demand",
+          "status": "OBSERVE",
+          "reason": "새 세부 공정 후보. Coherent 2026-09-21 p32가 CPO/NPO 램프를 위해 여러 고객이 아이솔레이터 생산능력을 LTA로 확보한다고 명시하고 garnet 결정 성장부터 수직 통합 확인. 레이저·InP·광전검사와 별도 TARGET. LTA만으로 부족을 확정하지 않음. Kyocera/Tohoku의 칩내 통합 아이솔레이터 기술은 대체 경로지만 양산 개선 연구단계여서 현재 적격 대체공급으로 계산하지 않음.",
+          "sources": [
+            "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+            "https://global.kyocera.com/newsroom/news/2026/001197.html"
+          ],
+          "demand_timing": "Coherent CPO scale-out Q4CY26·scale-up H2CY27 계획에 필요한 ELS 보호 부품. 여러 고객 LTA 확인, CPO/NPO별 수요분할·규격별필요개수·확정 필요일 UNRESOLVED.",
+          "supply_timing": "Coherent garnet 성장~아이솔레이터 통합공급 확인. 누적700M isolators/garnet 실적(p12)은 현재 CPO전용 연간 공급량 아님. 2027~2028 인증 산출량·수율·추가 예약 가능능력·납기·경쟁사 생산량 UNRESOLVED.",
+          "companies": [
+            {
+              "ticker": "COHR",
+              "role": "DIRECT",
+              "business_share": "UNRESOLVED — CPO ELS용 garnet/아이솔레이터 전용 매출·이익·계약액"
+            }
+          ],
+          "relief_evidence": "Kyocera/Tohoku 2026년9월 발표는 국부 laser annealing으로 garnet 기반 아이솔레이터 칩내 통합을 실증. 낮은 손실·고효율·양산 생산성 개선이 상용화 과제로 남음. 다른규격의 연구제품을 ELS의 즉시 대체품으로 합산하지 않음.",
+          "market_awareness": "기업 IR·기술 발표에 공개. 덜 알려진 핵심 부품이라는 탐색 가설은 있으나 저인지도·주가 미반영 확인은 UNRESOLVED.",
+          "outcome": "UNRESOLVED — 새 관찰 후보; 수요보다 공급 확보가 늦는 시간차·투자수익 미확인",
+          "next_check": "LTA별 필요일/납기/수량과 남은 미예약 능력, garnet 성장·가공 lead time, 고객 승인과 경쟁/칩내 통합 양산 일정"
         }
       ]
     }
@@ -573,6 +656,44 @@
         "cpo-qualified-cw-lasers"
       ],
       "outcome": "UNRESOLVED — 최초 생산은 공급 진전만 확인, 미래 예측성과 미도래"
+    },
+    {
+      "id": "on-demand-decision-gaps-20261001-1508",
+      "date": "2026-10-01",
+      "mode": "on_demand",
+      "targets_reviewed": [
+        "cpo-qualified-cw-lasers",
+        "srm-ammonium-perchlorate"
+      ],
+      "documents_read": 8,
+      "new_documents_read": 7,
+      "prior_document_rechecked": 1,
+      "source_urls_read": [
+        "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+        "https://www.coherent.com/news/press-releases/a-chip-letter-of-intent-for-50m-to-expand-world-leading-manufacturing-facility-for-ai-infrastructure",
+        "https://www.coherent.com/news/press-releases/showcases-optical-innovations-scale-ai-infrastructure-ecoc-2026",
+        "https://www.ampac.us/press-release-100-million-capacity-expansion/",
+        "https://www.sec.gov/Archives/edgar/data/1282637/000128263726000016/neu-20260630.htm",
+        "https://global.kyocera.com/newsroom/news/2026/001197.html",
+        "https://blogs.nvidia.com/blog/nvidia-gtc-taipei-computex-2026-news/?trk=article-ssr-frontend-pulse_little-text-block",
+        "https://www.nvidia.com/en-us/networking/products/silicon-photonics/"
+      ],
+      "updated_targets": [
+        "cpo-qualified-cw-lasers",
+        "srm-ammonium-perchlorate"
+      ],
+      "new_targets": [
+        "cpo-els-garnet-optical-isolators"
+      ],
+      "new_verified_future_targets": 0,
+      "errors": [],
+      "note": "본문8건(공식자료), PDF p14/19/26/32 그림 검증. 기존 증설·장기계약 일반론 중복은 제외하고 제품별 출하 일정·규격차이·NEU 사업노출·아이솔레이터 LTA 등 별개 근거만 추가. 공개되지 않은 수요량·적격공급량·확약납기는 UNRESOLVED. 신규 API/코드/화면/점수/Actions 수정 없음.",
+      "outcome": "UNRESOLVED — 미래 예측 성과 미검증; 추정 완성도%를 정확도%로 사용하지 않음",
+      "next_review_targets": [
+        "uk-regional-grid-connections",
+        "inp-qualified-exportable-substrates",
+        "novalt16-qualified-production-slots"
+      ]
     }
   ],
   "on_demand": "사용자 요청 시 범위·자료 수를 확대하여 같은 TARGET history에 mode=on_demand로 누적"
