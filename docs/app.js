@@ -3,7 +3,7 @@
   const pages = {
     dashboard: ["대시보드", "현재 수집 결과와 기존 SIGNAL·Family 현황"],
     future: ["검증된 미래병목", "8단계 고정 결과 · 상태·TARGET·기업 연결·근거"],
-    tracking: ["미래병목 추적", "향후 1~2년 수요·공급 시간차 관찰 · 미확인은 UNRESOLVED"],
+    tracking: ["미래병목 추적", "12~36개월 수요·공급 변화 · 요청형 검토와 누적 이력"],
     sectors: ["섹터 랭킹", "PRESSURE → 출처 수 → 최근 신호 → RELIEF 순서"],
     signals: ["SIGNAL 기사", "기존 SIGNAL 결과 · 제목과 요약문 기준"],
     ai: ["AI 리뷰", "현재 DB에 저장된 AI 보조판독 결과"],
@@ -101,6 +101,8 @@
   let verified = null;
   let verifiedError = false;
   let tracking = null;
+  let futureCandidates = null;
+  let candidatesError = false;
   let trackingLoading = false;
   let trackingError = false;
   let loading = false;
@@ -253,7 +255,7 @@
       }
       if (!tracking) return box;
     }
-    box.append(node("p", "기존 상태·과거 이력을 보존합니다. 목표 적합성은 현재 부족 여부와 향후 24개월의 수급을 별도로 확인합니다. 병목·기업 이익·시장 선반영은 각각 검증합니다.", "panel-caption"));
+    box.append(node("p", "기존 상태·과거 이력을 보존합니다. S단계는 근거 수준이며 CURRENT/FUTURE와 구분합니다. 병목·기업 이익·시장 선반영은 각각 검토합니다.", "panel-caption"));
     const cards = node("div", null, "verified-cards");
     tracking.targets.forEach(target => {
       const latest = target.history[target.history.length - 1] || {};
@@ -292,17 +294,68 @@
     box.append(cards.children.length ? cards : empty("추적 TARGET 없음", "저장된 추적 기록에 TARGET이 없습니다."));
     return box;
   }
+  function futureQueuePanel() {
+    const box = panel("미래병목 검토 대기", "자동 후보는 병목 확정이 아닙니다. 검토 결과는 사용자 요청 후 저장합니다.");
+    const summary = futureCandidates?.summary || {}, queue = summary.review_queue;
+    if (candidatesError) {
+      box.append(node("p", futureCandidates ? "최신 대기 기록을 읽지 못했습니다. 표시된 내용은 마지막으로 읽은 집계입니다." : "대기 기록을 읽지 못했습니다. 연결 상태를 다시 확인해 주세요.", "muted"));
+      const retry = node("button", "다시 확인", "filter"); retry.type = "button";
+      retry.addEventListener("click", loadTracking); box.append(retry);
+    }
+    if (!futureCandidates) { if (!candidatesError) box.append(empty("대기 기록 확인 중", "최근 파일을 불러옵니다.")); return box; }
+    if (!queue) { box.append(empty("검토 대기 집계 준비 중", "기존 후보 기록은 보존돼 있습니다.")); return box; }
+    box.append(node("p", `수집 완료 ${date(summary.checked_at)} · 대기 집계 ${date(queue.computed_at)}`, "muted"));
+    const metrics = node("div", null, "metrics");
+    [["자동 후보", queue.automatic_candidates], ["빠른검토 대기", queue.quick_pending],
+     ["심화 대기", queue.deep_pending], ["후보 자료 대기", queue.candidate_data_wait],
+     ["자료확인 대기", queue.material_pending], ["판독 완료", queue.completed_documents]].forEach(([label, value]) => metrics.append(metric(label, value)));
+    box.append(metrics, node("p", `최장 대기 ${queue.oldest_wait_hours == null ? "데이터 없음" : Number(queue.oldest_wait_hours).toFixed(1) + "시간"} · 사건 ${number(queue.event_count)}개`, "panel-caption"));
+    const preview = node("ul", null, "compact-list");
+    (queue.preview || []).slice(0, 5).forEach(item => {
+      const record = futureCandidates.results?.[item.document_id] || {};
+      const entry = node("li");
+      entry.append(articleTitle({title: record.title || item.document_id, url: item.url || record.url}),
+                   node("span", `${item.body_status || "미확인"} · 이어서 ${item.resume_at ?? 0}`, "muted"));
+      preview.append(entry);
+    });
+    box.append(preview.children.length ? preview : empty("대표 대기 문서 없음", "저장된 집계 기준입니다."));
+    const bundles = Object.values(futureCandidates.bundles || {});
+    const details = node("details"); details.append(node("summary", `고정 검토 묶음 ${number(bundles.length)}개`));
+    bundles.forEach(bundle => {
+      const section = node("div"); section.append(node("h3", bundle.id || bundle.bundle_id));
+      (bundle.documents || []).forEach(ref => {
+        const record = futureCandidates.results?.[ref.document_id] || {};
+        const row = node("p"); row.append(articleTitle({title: record.title || ref.document_id, url: ref.url || record.url}),
+          node("span", ` · 버전 ${(ref.body_sha256 || "").slice(0, 12)} · 범위 ${ref.start ?? ref.read_start ?? 0}–${ref.end ?? ref.read_end ?? "전체"}`, "muted"));
+        section.append(row);
+      });
+      details.append(section);
+    });
+    box.append(details, articleTitle({title: "전체 문서·묶음 기록 열기", url: "https://github.com/irewon1-lgtm/bottleneck-control-tower/blob/future-bottleneck-data/future-candidates.json"}));
+    return box;
+  }
   async function loadTracking() {
     if (trackingLoading) return;
     trackingLoading = true;
     const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 12000);
     try {
-      const response = await fetch(`https://raw.githubusercontent.com/irewon1-lgtm/bottleneck-control-tower/future-bottleneck-data/future-tracking.json?t=${Date.now()}`, {cache: "no-store", signal: controller.signal});
-      if (!response.ok) throw new Error("Tracking unavailable");
-      const value = await response.json();
-      if (!value || value.version !== 1 || !Array.isArray(value.targets) || !value.targets.every(target => target && typeof target.id === "string" && typeof target.target === "string" && Array.isArray(target.history) && target.history.every(entry => entry && typeof entry === "object" && (!entry.sources || Array.isArray(entry.sources))))) throw new Error("Invalid tracking record");
-      tracking = value; trackingError = false;
-    } catch { trackingError = true; }
+      const base = "https://raw.githubusercontent.com/irewon1-lgtm/bottleneck-control-tower/future-bottleneck-data/";
+      const [record, queue] = await Promise.allSettled(["future-tracking.json", "future-candidates.json"].map(async name => {
+        const response = await fetch(`${base}${name}?t=${Date.now()}`, {cache: "no-store", signal: controller.signal});
+        if (!response.ok) throw new Error("Record unavailable");
+        return response.json();
+      }));
+      try {
+        const value = record.status === "fulfilled" ? record.value : null;
+        if (!value || value.version !== 1 || !Array.isArray(value.targets) || !value.targets.every(target => target && typeof target.id === "string" && typeof target.target === "string" && Array.isArray(target.history) && target.history.every(entry => entry && typeof entry === "object" && (!entry.sources || Array.isArray(entry.sources))))) throw new Error("Invalid tracking record");
+        tracking = value; trackingError = false;
+      } catch { trackingError = true; }
+      try {
+        const candidates = queue.status === "fulfilled" ? queue.value : null;
+        if (!candidates || !candidates.results || typeof candidates.results !== "object" || Array.isArray(candidates.results)) throw new Error("Invalid candidates");
+        futureCandidates = candidates; candidatesError = false;
+      } catch { candidatesError = true; }
+    } catch { trackingError = true; candidatesError = true; }
     finally { clearTimeout(timeout); trackingLoading = false; if (route() === "tracking") render(); }
   }
   function render() {
@@ -315,7 +368,7 @@
     });
     content.replaceChildren();
     if (key === "tracking") {
-      content.append(trackingPanels());
+      content.append(futureQueuePanel(), trackingPanels());
       if (!tracking && !trackingLoading && !trackingError) loadTracking();
       return;
     }

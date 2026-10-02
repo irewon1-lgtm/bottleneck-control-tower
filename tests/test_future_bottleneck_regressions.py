@@ -9,8 +9,11 @@ from bct.future_bottleneck import screen
     'Manufacturers manage product repairs. Handling repairs can become a bottleneck, leading to delays. Repair operations need skilled technicians and parts inventories. Balancing resources to avoid overstocking or shortages is a continual challenge.',
     'Inventory managers use software to prevent shortages. Demand for automation is growing.',
 ])
-def test_generic_prevention_and_labor_context_are_not_supply_pressure(body):
-    assert not screen(body)["candidate"]
+def test_v33_ambiguous_and_workforce_material_is_preserved_for_context(body):
+    # Broader intake preserves these leads; it makes no supply relationship claim.
+    result = screen(body)
+    assert result["candidate"]
+    assert result["final_bottleneck"] is None
 
 
 @pytest.mark.parametrize("body", [
@@ -37,7 +40,6 @@ def test_transport_capacity_rule_does_not_capture_compute_capacity():
 
 @pytest.mark.parametrize("body", [
     'AI improves manufacturing output.The conference discusses analytics.The application was limited to brand sales.The platform has expanded data analysis.',
-    'Manufacturing is expanding.The conference explores digital research.Partners include Example Labs Private Limited.The program lists presentations.',
     'The operation may need shipment state, inventory, customer priority, warehouse constraints. Workflow software collects context before a decision.',
 ])
 def test_stage_11_digital_and_event_false_positives_are_excluded(body):
@@ -45,6 +47,12 @@ def test_stage_11_digital_and_event_false_positives_are_excluded(body):
     assert not result["candidate"]
     assert result["targets"] == []
     assert result["final_bottleneck"] is None
+
+
+def test_v33_ambiguous_manufacturing_expansion_is_context_review():
+    result = screen('Manufacturing is expanding.The conference explores digital research.Partners include Example Labs Private Limited.The program lists presentations.')
+    assert result['candidate'] and result['decision'] == 'CONTEXT_REVIEW'
+    assert result['targets'] == [] and result['final_bottleneck'] is None
 
 
 @pytest.mark.parametrize("body,target", [
