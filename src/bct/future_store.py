@@ -254,7 +254,8 @@ def _judgment_conflict(base, latest, patch):
 
 
 def apply_owned_patch(document, *, owner, patch, operation_id, version_refs=(),
-                      reference_document=None, extra_collection_fields=()):
+                      reference_document=None, extra_collection_fields=(),
+                      prepared_document=None):
     """Pure preserving merge, also usable when the connector handles transport."""
     validate_ownership(owner, patch, extra_collection_fields=extra_collection_fields)
     if not isinstance(document, dict) or not isinstance(operation_id, str) or not operation_id.strip():
@@ -267,6 +268,11 @@ def apply_owned_patch(document, *, owner, patch, operation_id, version_refs=(),
         if operations[operation_id].get("patch_sha256") != digest:
             raise PatchError("operation ID reused with a different patch")
         return deepcopy(document)
+    if prepared_document is not None:
+        if not isinstance(prepared_document, dict):
+            raise PatchError("preparation context must be an object")
+        if _judgment_conflict(prepared_document, document, patch):
+            raise PatchError("SAME_ITEM_CONFLICT")
     _immutable_records(document, patch)
     merged = deep_merge(document, patch)
     validate_version_refs(reference_document if reference_document is not None else merged, version_refs)
@@ -278,20 +284,24 @@ def apply_owned_patch(document, *, owner, patch, operation_id, version_refs=(),
 
 
 def store_patch(transport, path, *, owner, patch, operation_id, version_refs=(),
-                reference_document=None, extra_collection_fields=()):
+                reference_document=None, extra_collection_fields=(),
+                prepared_document=None):
     """Read/merge/CAS/readback with one rebase retry. Uncertain writes stay pending."""
     try:
         validate_ownership(owner, patch, extra_collection_fields=extra_collection_fields)
         snapshot = transport.read(path)
     except Exception as exc:
         return StoreResult("PENDING", f"READ_OR_PATCH_FAILED: {type(exc).__name__}: {exc}")
-    baseline = snapshot.document
+    # The patch may have been prepared before this fresh transport read. Keep
+    # that original context through both attempts instead of resetting its base.
+    baseline = deepcopy(prepared_document) if prepared_document is not None else snapshot.document
     for attempt in (1, 2):
         try:
             merged = apply_owned_patch(snapshot.document, owner=owner, patch=patch,
                                        operation_id=operation_id, version_refs=version_refs,
                                        reference_document=reference_document,
-                                       extra_collection_fields=extra_collection_fields)
+                                       extra_collection_fields=extra_collection_fields,
+                                       prepared_document=baseline)
             if operation_id in snapshot.document.get("operations", {}):
                 return StoreResult("ALREADY_APPLIED", sha=snapshot.sha, attempts=attempt - 1, document=snapshot.document)
             transport.write(path, merged, snapshot.sha)
@@ -300,11 +310,13 @@ def store_patch(transport, path, *, owner, patch, operation_id, version_refs=(),
                 return StoreResult("PENDING", "SHA_CONFLICT_AFTER_RETRY", attempts=attempt)
             try:
                 snapshot = transport.read(path)
-                if _judgment_conflict(baseline, snapshot.document, patch):
-                    return StoreResult("PENDING", "SAME_ITEM_CONFLICT", sha=snapshot.sha, attempts=attempt)
             except Exception as exc:
                 return StoreResult("PENDING", f"REBASE_READ_FAILED: {type(exc).__name__}", attempts=attempt)
             continue
+        except PatchError as exc:
+            if str(exc) == "SAME_ITEM_CONFLICT":
+                return StoreResult("PENDING", "SAME_ITEM_CONFLICT", sha=snapshot.sha, attempts=attempt - 1)
+            return StoreResult("PENDING", f"WRITE_OR_PATCH_FAILED: {type(exc).__name__}: {exc}", attempts=attempt)
         except Exception as exc:
             return StoreResult("PENDING", f"WRITE_OR_PATCH_FAILED: {type(exc).__name__}: {exc}", attempts=attempt)
         try:

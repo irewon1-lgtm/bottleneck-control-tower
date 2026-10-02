@@ -22,10 +22,11 @@ def main():
     tracking = json.loads(args.tracking.read_text())
     bundle_patch = ensure_bundle(candidates, tracking, now=clock)
     op = 'bundle-' + str(uuid.uuid4())
-    result = patch_json(args.candidates, owner='bundle', patch=bundle_patch, operation_id=op)
+    result = patch_json(args.candidates, owner='bundle', patch=bundle_patch, operation_id=op,
+                        prepared_document=candidates)
     if result.status not in ('APPLIED', 'ALREADY_APPLIED'):
         raise RuntimeError('Bundle save pending: ' + str(result.reason))
-    (args.output_dir / 'bundle-change.json').write_text(json.dumps({'owner': 'bundle', 'operation_id': op, 'patch': bundle_patch}, ensure_ascii=False, indent=2) + '\n')
+    (args.output_dir / 'bundle-change.json').write_text(json.dumps({'owner': 'bundle', 'operation_id': op, 'patch': bundle_patch, 'prepared_document': candidates}, ensure_ascii=False, indent=2) + '\n')
     candidates = result.document
     summary = queue_summary(candidates, tracking, now=clock)
     queues = queue_items(candidates, tracking, now=clock)
@@ -74,10 +75,11 @@ def main():
     observation = observation_status(samples + [sample], now=clock)
     patch = {'summary': {'review_queue': summary, 'operation_observation': observation}, 'operation_samples': [sample]}
     op = 'queue-' + str(uuid.uuid4())
-    saved = patch_json(args.candidates, owner='collection', patch=patch, operation_id=op)
+    saved = patch_json(args.candidates, owner='collection', patch=patch, operation_id=op,
+                       prepared_document=candidates)
     if saved.status not in ('APPLIED', 'ALREADY_APPLIED'):
         raise RuntimeError('Queue snapshot pending: ' + str(saved.reason))
-    (args.output_dir / 'queue-change.json').write_text(json.dumps({'owner': 'collection', 'operation_id': op, 'patch': patch}, ensure_ascii=False, indent=2) + '\n')
+    (args.output_dir / 'queue-change.json').write_text(json.dumps({'owner': 'collection', 'operation_id': op, 'patch': patch, 'prepared_document': candidates}, ensure_ascii=False, indent=2) + '\n')
     print(json.dumps(summary))
 
 

@@ -5,6 +5,7 @@ import json
 import pytest
 
 from bct.future_github import GitHubTransport
+from bct.future_store import Snapshot
 
 
 def blob(document):
@@ -41,3 +42,30 @@ def test_transport_rejects_content_not_matching_returned_sha():
     transport = GitHubTransport('owner/repo', 'test', 'test-token', requester=lambda *a: value)
     with pytest.raises(ValueError, match='SHA disagree'):
         transport.read('future-tracking.json')
+
+
+def test_github_change_envelope_preserves_original_preparation_context(monkeypatch, tmp_path):
+    from bct import future_github
+    change = {'owner': 'review', 'operation_id': 'ours',
+              'prepared_document': {'progress': {'d:hash:reader': {'last_review_id': 'old'}}},
+              'patch': {'reviews': {'ours': {'document_id': 'd', 'body_sha256': 'hash', 'reader_version': 'reader'}},
+                        'progress': {'d:hash:reader': {'last_review_id': 'ours'}}}}
+    latest = {'reviews': {'other': {'document_id': 'd', 'body_sha256': 'hash', 'reader_version': 'reader'}},
+              'progress': {'d:hash:reader': {'last_review_id': 'other'}}}
+    class Transport:
+        writes = 0
+        def read(self, path):
+            return Snapshot(latest, 'latest')
+        def write(self, *args):
+            self.writes += 1
+            raise AssertionError('stale judgment must not be written')
+    transport = Transport()
+    source, pending = tmp_path / 'change.json', tmp_path / 'pending.json'
+    source.write_text(json.dumps(change))
+    monkeypatch.setattr(future_github, 'GitHubTransport', lambda *args: transport)
+    monkeypatch.setattr('sys.argv', ['future_github', '--repository', 'owner/repo', '--path',
+                                  'future-tracking.json', '--change', str(source), '--pending', str(pending)])
+    with pytest.raises(SystemExit) as stopped:
+        future_github.main()
+    assert stopped.value.code == 1 and transport.writes == 0
+    assert json.loads(pending.read_text()) == change

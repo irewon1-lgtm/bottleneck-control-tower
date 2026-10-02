@@ -9,7 +9,7 @@ from bct.future_review import (READER_VERSION, build_bundle, document_complete,
                                delivery_patch, ensure_bundle, event_confirmation_patch, event_groups, full_queue_entries,
                                notification_patch, queue_items, queue_summary, review_patch,
                                save_review, validate_review)
-from bct.future_store import LocalJSONTransport, PatchError, apply_owned_patch
+from bct.future_store import LocalJSONTransport, PatchError, Snapshot, StoreConflict, apply_owned_patch
 
 
 def documents(count=1, chars=100):
@@ -278,7 +278,59 @@ def test_phase4_cli_review_patch_emits_owner_refs_without_modifying_inputs(tmp_p
     subprocess.run([sys.executable, "-m", "bct.future_review", "review-patch", "--candidates", str(candidates), "--tracking", str(tracking), "--review", str(review), "--output", str(output)], check=True)
     value = json.loads(output.read_text())
     assert value["owner"] == "review" and value["version_refs"][0]["end"] == 100
+    assert value["prepared_document"] == {"version": 1}
     assert tracking.read_bytes() == before
+
+
+@pytest.mark.parametrize('race', ['between_reads', 'at_write'])
+def test_save_review_keeps_preparation_context_for_concurrent_distinct_judgments(race):
+    candidates = documents()
+    baseline = {'prediction_ledger': {'laser': {'initial': {'hypothesis': 'first', 'frozen': True}, 'entries': []}}}
+    ours = deep_review(stage='NONE')
+    ours.update(review_id='negative', reviewed_at='2026-10-02T03:00:00Z',
+                prediction={'target_id': 'laser', 'hypothesis': 'connection refuted'})
+    ours['gates']['change'] = gate('FALSE')
+    other = deep_review()
+    other.update(review_id='positive', reviewed_at='2026-10-02T03:00:01Z',
+                 prediction={'target_id': 'laser', 'hypothesis': 'future constraint supported'})
+    competing_patch = review_patch(candidates, baseline, other)
+
+    class Transport:
+        def __init__(self):
+            self.document = deepcopy(baseline)
+            self.revision = self.reads = self.writes = 0
+
+        def compete(self):
+            self.document = apply_owned_patch(self.document, owner='review',
+                                              patch=competing_patch, operation_id='competing')
+            self.revision += 1
+
+        def read(self, path):
+            self.reads += 1
+            if race == 'between_reads' and self.reads == 2:
+                self.compete()
+            return Snapshot(deepcopy(self.document), str(self.revision))
+
+        def write(self, path, document, expected_sha):
+            self.writes += 1
+            if race == 'at_write' and self.writes == 1:
+                self.compete()
+            if expected_sha != str(self.revision):
+                raise StoreConflict('concurrent judgment')
+            self.document = deepcopy(document)
+            self.revision += 1
+
+    transport = Transport()
+    result = save_review(transport, 'tracking', candidates, ours)
+    assert result.status == 'PENDING' and result.reason == 'SAME_ITEM_CONFLICT'
+    assert transport.writes == (0 if race == 'between_reads' else 1)
+    assert set(transport.document['reviews']) == {'positive'}
+    assert next(iter(transport.document['progress'].values()))['last_review_id'] == 'positive'
+    # A later intentional reassessment prepared from the latest record appends.
+    ours['reviewed_at'] = '2026-10-02T04:00:00Z'
+    assert save_review(transport, 'tracking', candidates, ours).status == 'APPLIED'
+    assert set(transport.document['reviews']) == {'positive', 'negative'}
+    assert transport.document['prediction_ledger']['laser']['initial'] == baseline['prediction_ledger']['laser']['initial']
 
 
 def test_phase4_blocked_historical_bundle_preserves_unread_ref_and_serves_new_available_documents():

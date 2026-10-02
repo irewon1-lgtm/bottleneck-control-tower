@@ -112,6 +112,8 @@ python -m bct.future_github --repository irewon1-lgtm/bottleneck-control-tower -
 
 모든 쓰기는 최신 파일·SHA 읽기 → 자기 소유 변경분만 병합 → 참조·형식·버전 검증 → SHA 조건부 저장 → 재조회 확인 순서다. 문서 객체 전체·파일 전체를 새 결과로 대체하지 않는다. 알려지지 않은 필드와 다른 쓰기 경로의 기록도 유지한다. `operation_id`는 review helper가 `review-<review_id>`로 만든 안정적 값이며 생성한 변경분 파일을 그대로 재사용한다. 같은 ID에 다른 payload를 넣지 않는다. 충돌 시 최신본에 해당 변경분만 한 번 재병합·재시도하며 같은 판단 충돌이나 계속된 실패는 반영 대기로 남긴다. `APPLIED` 또는 `ALREADY_APPLIED`와 재조회된 operation 기록·판독 내용·진행 위치를 확인한 뒤 저장 완료를 알린다.
 
+변경분 파일의 `prepared_document`는 변경을 준비할 때 읽은 문서다. 저장 직전 최신 파일을 다시 읽더라도 이 기준을 바꾸지 않는다. GitHub MCP로 저장할 때도 `apply_owned_patch(latest, ..., prepared_document=change["prepared_document"])`로 병합하며, SHA 충돌 후 한 번 재시도할 때 같은 기준을 전달한다. 같은 항목의 판단·현재 본문·알림 상태가 준비 이후 바뀌면 `SAME_ITEM_CONFLICT`로 반영 대기에 남긴다. 독립 필드는 최신본에 보존하여 병합한다. 이 기준 문서는 임시 변경분에만 있으며 운영 sidecar에 추가하지 않는다. 의도적인 새 판단은 최신본을 읽은 뒤 새로운 변경분으로 준비한다.
+
 동일 계약·발표가 확실할 때만 `event_confirmation_patch(candidates, event_id, document_refs, event_key=..., change_kind="ORIGINAL", evidence=...)`로 사건을 묶고 원문 목록을 유지한다. 반환된 `events` 변경분은 `bundle` 소유자로 `future-candidates.json`에 동일 SHA 조건부 저장·재조회 절차를 적용한다. 애매하면 합치지 않는다. 정정·취소·증액·축소는 `CORRECTION/CANCELLATION/INCREASE/DECREASE` 변경으로 분리한다. 다른 본문을 같은 사건이라는 이유로 판독 완료 처리하거나 중복 증거로 세지 않는다.
 
 ## 알림과 시험 상태

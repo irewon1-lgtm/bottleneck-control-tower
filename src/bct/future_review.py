@@ -513,7 +513,8 @@ def save_review(transport, path, candidates, review, *, operation_id=None):
         ref.update(start=normalized["read_start"], end=normalized["read_end"])
     return store_patch(transport, path, owner="review", patch=patch,
                        operation_id=operation_id or "review-" + normalized["review_id"],
-                       version_refs=[ref], reference_document=candidates)
+                       version_refs=[ref], reference_document=candidates,
+                       prepared_document=latest.document)
 
 
 def notification_patch(candidates, tracking, *, now=None, notification_id=None):
@@ -610,10 +611,12 @@ def main():
         patch = ensure_bundle(candidates, tracking)
         refs = [ref for bundle in patch["bundles"].values() for ref in bundle["documents"]]
         value = {"owner": "bundle", "patch": patch,
-                 "operation_id": "bundle-" + _hash(patch)[:32], "version_refs": refs}
+                 "operation_id": "bundle-" + _hash(patch)[:32], "version_refs": refs,
+                 "prepared_document": candidates}
     elif args.command == "notification":
         patch = notification_patch(candidates, tracking)
-        value = {"owner": "notification", "patch": patch, "operation_id": "notification-" + _hash(patch)[:32]} if patch else {"suppressed": True}
+        value = {"owner": "notification", "patch": patch, "operation_id": "notification-" + _hash(patch)[:32],
+                 "prepared_document": candidates} if patch else {"suppressed": True}
     elif args.command == "save-review":
         result = save_review(LocalJSONTransport(), args.tracking, candidates, _read(args.review))
         value = {"status": result.status, "reason": result.reason, "sha": result.sha}
@@ -628,7 +631,8 @@ def main():
         ref = {"document_id": normalized["document_id"], "body_sha256": normalized["body_sha256"], "reader_version": normalized["reader_version"]}
         if normalized["kind"] != "access":
             ref.update(start=normalized["read_start"], end=normalized["read_end"])
-        value = {"owner": "review", "patch": patch, "operation_id": "review-" + review["review_id"], "version_refs": [ref]}
+        value = {"owner": "review", "patch": patch, "operation_id": "review-" + review["review_id"], "version_refs": [ref],
+                 "prepared_document": tracking}
     _write_output(value, args.output)
 
 

@@ -278,6 +278,12 @@ def test_local_trial_snapshot_and_evaluation_keep_actual_version_counts(tmp_path
                                      "--tracking", str(tracking_path), "--output-dir", str(output)])
     snapshot["main"]()
     state = json.loads(candidates_path.read_text())
+    bundle_change = json.loads((output / 'bundle-change.json').read_text())
+    queue_change = json.loads((output / 'queue-change.json').read_text())
+    assert bundle_change['prepared_document'] == candidates
+    assert 'bundles' in queue_change['prepared_document']
+    assert 'operation_samples' not in queue_change['prepared_document']
+    assert 'prepared_document' not in state
     sample = state["operation_samples"][-1]
     assert sample["quick_pending"] == sample["material_pending"] == sample["candidate_data_wait"] == 1
     assert sample["pending_total"] == 2  # b is both QUICK and MATERIAL.

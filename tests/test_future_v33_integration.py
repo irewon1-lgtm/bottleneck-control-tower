@@ -73,6 +73,21 @@ def test_unread_and_partial_material_remain_queued_even_without_a_signal(tmp_pat
     assert state['results']['0']['decision'] == 'UNREAD_MATERIAL'
 
 
+def test_collection_envelope_keeps_the_preparation_context(tmp_path):
+    db, output = tmp_path / 'db.sqlite3', tmp_path / 'future-candidates.json'
+    change = tmp_path / 'collection-change.json'
+    database(db)
+    original = {'version': 'body-candidate-v3.3', 'results': {}, 'unknown_root': {'keep': 1}}
+    output.write_text(json.dumps(original))
+    state = run(db, output, patch_output=change,
+                fetcher=lambda _: '<article><p>Orders grew.</p></article>')
+    envelope = json.loads(change.read_text())
+    assert envelope['prepared_document'] == original
+    assert '0' in envelope['patch']['results']
+    assert 'prepared_document' not in state
+    assert state['unknown_root'] == original['unknown_root']
+
+
 def test_expired_cache_and_exhausted_retry_never_erase_a_positive(tmp_path):
     from bct.future_review import queue_summary
     db, output = tmp_path / 'db.sqlite3', tmp_path / 'future-candidates.json'

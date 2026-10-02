@@ -210,3 +210,43 @@ def test_saved_reviews_and_initial_prediction_cannot_be_overwritten_by_generic_s
     for patch in ({"reviews": {"r": {"stage": "S3"}}}, {"prediction_ledger": {"t": {"initial": {"hypothesis": "overwrite"}}}}):
         result = store_patch(MemoryTransport(before), "tracking", owner="review", patch=patch, operation_id="new")
         assert result.status == "PENDING" and "immutable" in result.reason
+
+
+@pytest.mark.parametrize('owner,prepared,latest,patch', [
+    ('collection', {'results': {'d': {'current_body_sha256': 'old'}}},
+     {'results': {'d': {'current_body_sha256': 'new'}}},
+     {'results': {'d': {'current_body_sha256': 'old'}}}),
+    ('notification', {'notifications': {'n': {'state': 'READY'}}},
+     {'notifications': {'n': {'state': 'RECEIVED'}}},
+     {'notifications': {'n': {'state': 'SENT'}}}),
+])
+def test_prepared_context_blocks_changes_that_became_stale_before_transport_read(owner, prepared, latest, patch):
+    transport = MemoryTransport(latest)
+    result = store_patch(transport, 'sidecar', owner=owner, patch=patch,
+                         operation_id='stale', prepared_document=prepared)
+    assert result.status == 'PENDING' and result.reason == 'SAME_ITEM_CONFLICT'
+    assert transport.writes == 0 and transport.document == latest
+    with pytest.raises(PatchError, match='SAME_ITEM_CONFLICT'):
+        apply_owned_patch(latest, owner=owner, patch=patch, operation_id='stale',
+                          prepared_document=prepared)
+
+
+def test_prepared_context_preserves_independent_changes_and_one_cas_rebase():
+    prepared = {'results': {'d': {'candidate': False}}}
+    transport = MemoryTransport({**prepared, 'notifications': {'n': {'state': 'RECEIVED'}}})
+    def competing_write(t):
+        t.document['bundles'] = {'b': {'documents': ['d']}}
+        t.revision += 1
+    transport.on_write = competing_write
+    result = store_patch(transport, 'sidecar', owner='collection',
+                         patch={'results': {'d': {'candidate': True}}}, operation_id='collect',
+                         prepared_document=prepared)
+    assert result.status == 'APPLIED' and result.attempts == 2
+    assert transport.document['results']['d']['candidate']
+    assert transport.document['notifications']['n']['state'] == 'RECEIVED'
+    assert transport.document['bundles']['b']['documents'] == ['d']
+    assert 'prepared_document' not in transport.document
+    repeated = store_patch(transport, 'sidecar', owner='collection',
+                           patch={'results': {'d': {'candidate': True}}}, operation_id='collect',
+                           prepared_document=prepared)
+    assert repeated.status == 'ALREADY_APPLIED' and transport.writes == 2

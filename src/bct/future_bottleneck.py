@@ -404,11 +404,11 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
         output.write_text(json.dumps(state, ensure_ascii=False) + "\n")
     operation_id = "collect-" + str(uuid.uuid4())
     saved = store_patch(LocalJSONTransport(), str(output), owner="collection",
-                        patch=patch, operation_id=operation_id)
+                        patch=patch, operation_id=operation_id, prepared_document=state)
     if saved.status not in ("APPLIED", "ALREADY_APPLIED"):
         raise RuntimeError("collection save pending: " + saved.reason)
     if patch_output:
-        Path(patch_output).write_text(json.dumps({"operation_id": operation_id, "owner": "collection", "patch": patch}, ensure_ascii=False, indent=2) + "\n")
+        Path(patch_output).write_text(json.dumps({"operation_id": operation_id, "owner": "collection", "patch": patch, "prepared_document": state}, ensure_ascii=False, indent=2) + "\n")
     return json.loads(output.read_text())
 
 

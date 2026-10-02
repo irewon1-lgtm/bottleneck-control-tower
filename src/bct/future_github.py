@@ -77,7 +77,8 @@ def main():
     reference = json.loads(args.candidates.read_text()) if args.candidates else None
     result = store_patch(transport, args.path, owner=change['owner'], patch=change['patch'],
                          operation_id=change['operation_id'],
-                         version_refs=change.get('version_refs', []), reference_document=reference)
+                         version_refs=change.get('version_refs', []), reference_document=reference,
+                         prepared_document=change.get('prepared_document'))
     print(json.dumps({'status': result.status, 'reason': result.reason, 'sha': result.sha}))
     if result.status not in ('APPLIED', 'ALREADY_APPLIED'):
         args.pending.parent.mkdir(parents=True, exist_ok=True)
