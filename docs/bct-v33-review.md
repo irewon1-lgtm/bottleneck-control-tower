@@ -95,6 +95,8 @@ S3는 기본 12~36개월 미래 범위에서 `period.start`·`period.end`를 쓰
 
 UNKNOWN은 해당 승격을 보류하고 FALSE는 해당 연결만 반박한다. 다른 경로·후보를 일괄 삭제하지 않는다. 수요 증가 없이 공급 감소도 진입하지만 공장 폐쇄만으로 S3가 되지 않는다. 자동 수집은 재검토 필요를 알릴 뿐 S 승격·강등을 판단하지 않는다. S3는 구조적 후보이며 Q/T 부족 확정·투자 추천이 아니다. 기존 Q/T는 변경하지 않고 비교 자료가 없으면 UNKNOWN이다. Track X의 실제 구현 범위는 별도 확인 대상이며 재무·주가 CSV로 생산능력·납기를 대신하지 않는다.
 
+기존 `supply_gap.py`의 `_bounds`는 수요·공급 각각 min/max를 모두 요구한다. 따라서 기간·규격·전체 적격 공급 범위가 맞는 `D_low > S_high`라도 반대쪽 두 경계가 없으면 기존 Q 계산은 UNRESOLVED로 남는 과잉제약이 있다. 수요 하한 11·공급 상한 10만 넣은 가상 확인에서도 양쪽 `_bounds`가 None을 반환했다. 기존 함수의 24개월 objective 범위도 v3.3의 12~36개월 S 검토 범위와 구분한다. 이번 작업에서는 이 엔진을 변경·확장하지 않으며 이 한계로 후보를 삭제하거나 S를 자동 변경하지 않는다. 실제 Q 검토는 비교 가능한 출처·기간·규격·범위를 확인하고 부족한 숫자는 UNKNOWN으로 남긴다.
+
 예측을 저장할 때 deep 기록에 `prediction`을 덧붙인다. 최소 필드는 안정적 `target_id`와 `hypothesis`; 함께 `sector`, `subsector`, `target`, 대상 `period`, `support_conditions`, `refutation_conditions`, `sources`, `unconfirmed`, `next_check_at`을 기록한다. 분류 근거가 없으면 미분류다. 최초 원장 `initial`은 고정되고 이후 판단은 `entries`에 추가된다. `next_check_dates`를 별도로 지정하지 않으면 검토일 기준 3개월·6개월 날짜가 생성된다. 확인된 실적·인증·가동 일정도 다음 확인 조건으로 남기고, 자료 대기는 새 자료나 지정 조건이 생겼을 때 재개한다.
 
 ## 저장·검증 명령
