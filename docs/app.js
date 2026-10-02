@@ -327,26 +327,6 @@
       preview.append(entry);
     });
     box.append(preview.children.length ? preview : empty("대표 대기 문서 없음", "저장된 집계 기준입니다."));
-    const hypotheses = Object.values(futureCandidates.hypotheses || {});
-    if (hypotheses.length) {
-      const drafts = node("details"); drafts.append(node("summary", `자동 생성 가설 초안 ${number(hypotheses.length)}건`));
-      drafts.append(node("p", "자료에서 연결한 후보 가설입니다. S3도 선행탐지 성능 통과를 뜻하지 않습니다.", "muted"));
-      hypotheses.forEach(h => {
-        const current = h.current || {}, draft = current.draft || {};
-        const item = node("div");
-        item.append(node("h3", `${current.scope?.target || "미분류"} · ${current.stage || "확인 필요"}`),
-          node("p", draft.text || "가설 내용 확인 필요"),
-          node("p", `공개 선행성 ${current.public_classification || "UNKNOWN"} · 실제 발생 ${current.outcome?.actual_occurred || "UNKNOWN"}`, "muted"));
-        if (draft.unconfirmed?.length) item.append(node("p", `미확인: ${draft.unconfirmed.join(" · ")}`, "muted"));
-        const sources = node("ul");
-        [...new Set((current.evidence || []).map(ref => ref.document_id))].forEach(id => {
-          const record = futureCandidates.results?.[id] || {}, entry = node("li");
-          entry.append(articleTitle({title: record.title || id, url: record.url})); sources.append(entry);
-        });
-        item.append(sources); drafts.append(item);
-      });
-      box.append(drafts);
-    }
     const bundles = Object.values(futureCandidates.bundles || {});
     const details = node("details"); details.append(node("summary", `고정 검토 묶음 ${number(bundles.length)}개`));
     bundles.forEach(bundle => {
@@ -390,6 +370,59 @@
   const detailHref = row => `#detail/${encodeURIComponent(row.id)}`;
   const link = (text, href, className = "text-link") => { const el = node("a", text, className); el.href = href; return el; };
   const statusPill = value => pill(view.status(value)[0], value.toLowerCase());
+  const hypothesisStatus = row => `${row.status}${row.reviewRequired === true ? " · 검토 필요" : ""}`;
+  const detectedDate = value => !value || Number.isNaN(new Date(value).getTime()) ? "UNKNOWN" : `${new Intl.DateTimeFormat("ko-KR", {timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(value))} KST`;
+  function hypothesisPanel() {
+    const box = panel("자동 생성 가설 초안", "저장된 후보 가설입니다. S1 / S2 / S3는 검토 단계이며 병목 확정이나 선행탐지 성능 통과를 뜻하지 않습니다.");
+    box.id = "hypothesis-drafts";
+    if (candidatesError) {
+      box.append(node("p", futureCandidates ? "최신 가설을 읽지 못했습니다. 마지막으로 읽은 기록입니다." : "가설 기록을 읽지 못했습니다.", "data-note"));
+      const retry = node("button", "다시 확인", "filter"); retry.type = "button"; retry.addEventListener("click", loadTracking); box.append(retry);
+    }
+    if (!futureCandidates) { if (!candidatesError) box.append(empty("가설 기록 확인 중", "저장된 후보 파일을 불러옵니다.")); return box; }
+    const rows = view.hypotheses(futureCandidates), named = rows.filter(row => row.named), unnamed = rows.filter(row => !row.named);
+    box.append(node("p", `자동 생성 가설 초안 ${number(named.length)}건 · TARGET 이름 특정 · 전체 ${number(rows.length)}건 · TARGET UNKNOWN ${number(unnamed.length)}건`, "record-meta"));
+    box.append(node("p", ["S1", "S2", "S3"].map(stage => `${stage} ${number(named.filter(row => row.stage === stage).length)}건`).join(" · "), "record-meta"));
+    function listing(items) {
+      return table(["TARGET", "S1 / S2 / S3", "상태", "필요 시점", "최초 탐지일", "상세보기"], items, row => {
+        const button = node("button", "상세보기", "filter"); button.type = "button";
+        button.setAttribute("aria-label", `${row.name} 가설 상세보기`); button.addEventListener("click", () => showHypothesis(row));
+        return [row.name, pill(row.stage, "neutral"), hypothesisStatus(row), row.period, detectedDate(row.firstDetected), button];
+      });
+    }
+    box.append(named.length ? listing(named) : empty("이름이 특정된 가설 없음", "TARGET UNKNOWN 기록은 아래에 보존되어 있습니다."));
+    if (unnamed.length) box.append(folding(`TARGET UNKNOWN ${number(unnamed.length)}건`, "이름이 아직 특정되지 않은 저장 초안", node("div", null, "detail-body")));
+    // Build the larger unclassified list only when the existing disclosure opens.
+    const disclosure = box.children[box.children.length - 1];
+    if (unnamed.length) disclosure.addEventListener("toggle", () => {
+      const body = disclosure.children[1]; if (disclosure.open && !body.children.length) body.append(listing(unnamed));
+    });
+    return box;
+  }
+  function showHypothesis(row) {
+    document.getElementById("dialog-title").textContent = `${row.name} · ${row.stage}`;
+    const body = document.getElementById("dialog-content"); body.replaceChildren();
+    body.append(table(["확인 항목", "저장된 내용"], [
+      ["TARGET", row.name], ["S1 / S2 / S3", row.stage], ["상태", hypothesisStatus(row)],
+      ["필요 시점", row.period], ["최초 탐지일", detectedDate(row.firstDetected)],
+      ["공개 선행성", row.current.public_classification || "UNKNOWN"],
+      ["실제 발생", row.current.outcome?.actual_occurred || "UNKNOWN"]], entry => entry));
+    body.append(node("h3", "미래 공급공백 가설"), node("p", row.text, "verdict-text"));
+    for (const [role, label] of [["DEMAND", "수요 근거"], ["SUPPLY", "공급 근거"], ["CHANGE", "변화 근거"], ["RELIEF", "완화 근거"]]) {
+      const refs = row.evidence.filter(ref => ref.role === role);
+      if (!refs.length && !["DEMAND", "SUPPLY"].includes(role)) continue;
+      body.append(node("h3", label));
+      body.append(refs.length ? table(["원문·문서", "저장된 근거", "본문 버전 / 위치"], refs, ref => [
+        articleTitle({title: ref.title, url: view.url(ref.url)}),
+        `${ref.target || "UNKNOWN"} · 수량 ${ref.quantity ?? "UNKNOWN"} ${ref.unit || "UNKNOWN"} · 필요일 ${ref.need_date || "UNKNOWN"} · 공급일 ${ref.available_date || "UNKNOWN"} · ${ref.actual_statement === true ? "실제 진술" : ref.actual_statement === false ? "조건·전망 진술" : "진술 유형 UNKNOWN"}`,
+        `${ref.body_sha256 || "UNKNOWN"} · 문자 ${ref.locator?.start ?? "UNKNOWN"}–${ref.locator?.end ?? "UNKNOWN"}`
+      ]) : node("p", "UNKNOWN · 저장된 근거 없음", "data-note"));
+    }
+    body.append(node("h3", "UNKNOWN 항목"), node("p", `미확인: ${row.unknown.join(" · ") || "별도 미확인 항목 미기록"}`));
+    if (row.draft.refutation) body.append(node("h3", "반박 조건"), node("p", row.draft.refutation));
+    if (row.draft.next_material?.length) body.append(node("h3", "다음 확인 자료"), node("p", row.draft.next_material.join(" · ")));
+    document.getElementById("family-dialog").showModal();
+  }
   function sourceLinks(sources) {
     const wrap = node("div", null, "source-links");
     sources.forEach(source => {
@@ -424,6 +457,7 @@
       const basis=node("details",null,"ranking-basis");basis.append(node("summary","상태·조사 우선순위에 따른 표시 순서 · 병목 강도 점수 미산정"),node("p","미래 병목 → 병목 가능성 → 관찰·보류 → 현재 병목 순서입니다. 같은 분류에서는 저장된 조사 우선순위, 나머지는 기록 순서를 유지합니다. 병목 강도나 주가 상승률 순위는 아직 산정되지 않았습니다. 섹터명은 저장된 대상명에 따른 화면 분류입니다."));box.append(basis);
     }
     dataNote(box);
+    if (key === "ranking") box.append(link(futureCandidates ? `새 가설 초안 ${number(view.hypotheses(futureCandidates).filter(row => row.named).length)}건 · 검증 중에서 보기` : "새 가설 초안 · 검증 중에서 보기", "#review"));
     const bar = node("div", null, "toolbar"), filters = node("div", null, "filters");
     const list = node("div", null, "rank-list"), count = node("p", null, "record-meta");
     const buttons = [];
@@ -625,13 +659,13 @@
       if (link.dataset.page === key || (key === "detail" && link.dataset.page === "ranking")) link.setAttribute("aria-current", "page"); else link.removeAttribute("aria-current");
     });
     content.replaceChildren();
-    if(key === "ranking" || key === "review") {content.append(rankingPanel(key));return;}
+    if(key === "ranking" || key === "review") {if (key === "review") content.append(hypothesisPanel()); content.append(rankingPanel(key));return;}
     if(key === "detail") {content.append(detailPanel());return;}
     if(key === "evidence") {content.append(documentsPanel(),evidencePanel());return;}
     if(key === "situation") {content.append(situationPanel());return;}
     if(key === "insights") {content.append(insightsPanel());return;}
     if (key === "tracking") {
-      content.append(futureQueuePanel(), trackingPanels());
+      content.append(hypothesisPanel(), futureQueuePanel(), trackingPanels());
       if (!tracking && !trackingLoading && !trackingError) loadTracking();
       return;
     }

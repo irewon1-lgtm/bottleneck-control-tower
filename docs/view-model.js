@@ -85,7 +85,25 @@
         priority: priorityIds.includes(target.id) ? priorityIds.indexOf(target.id) + 1 : null};
     }).sort((a,b) => status(a.status)[2] - status(b.status)[2] || (a.priority ?? 999) - (b.priority ?? 999) || a.index - b.index);
   }
-  const api = {statuses, status, clean, latest, field, evidence, targets, documents, url};
+  const known = value => value != null && value !== "" && String(value).toUpperCase() !== "UNKNOWN";
+  const period = value => typeof value === "object" && value ? `${value.start || "UNKNOWN"} ~ ${value.end || "UNKNOWN"}` : known(value) ? String(value) : "UNKNOWN";
+  function hypotheses(candidates) {
+    return Object.entries(candidates?.hypotheses || {}).map(([id, stored]) => {
+      const current = stored.current || {}, scope = current.scope || {}, draft = current.draft || {};
+      const unknown = [...(draft.unconfirmed || [])];
+      for (const [key, value] of Object.entries(scope)) if (!known(value)) unknown.push(key);
+      for (const [key, value] of Object.entries(current.gates || {})) if (!known(value)) unknown.push(`gate.${key}`);
+      if (!known(current.public_classification)) unknown.push("공개 선행성");
+      if (!known(current.outcome?.actual_occurred)) unknown.push("실제 발생");
+      return {id, name: known(scope.target) ? scope.target : "UNKNOWN", named: known(scope.target),
+        stage: current.stage || "UNKNOWN", status: current.outcome?.status || "UNKNOWN",
+        reviewRequired: current.review_required, period: period(scope.period),
+        firstDetected: stored.first_detected_at || "UNKNOWN", text: draft.text || "UNKNOWN",
+        unknown: [...new Set(unknown)], current, draft,
+        evidence: (current.evidence || []).map(ref => ({...ref, title: candidates.results?.[ref.document_id]?.title || ref.document_id}))};
+    });
+  }
+  const api = {statuses, status, clean, latest, field, evidence, targets, documents, hypotheses, url};
   root.BCTView = api;
   if (typeof module !== "undefined") module.exports = api;
 })(typeof globalThis !== "undefined" ? globalThis : this);

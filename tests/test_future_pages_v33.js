@@ -34,6 +34,7 @@ class Element {
   setAttribute(name, value) { this.attributes[name] = String(value); }
   removeAttribute(name) { delete this.attributes[name]; }
   addEventListener(name, fn) { this.listeners[name] = fn; }
+  showModal() { this.open = true; }
 }
 
 const clone = value => JSON.parse(JSON.stringify(value));
@@ -74,7 +75,7 @@ function fixtures() {
   };
 }
 
-async function app(data, failures = {}) {
+async function app(data, failures = {}, hash = "#tracking") {
   const ids = Object.fromEntries(["content", "page-title", "page-subtitle", "snapshot-time", "notice", "dialog-close", "family-dialog", "dialog-title", "dialog-content"].map(id => [id, new Element("div")]));
   const eyebrow = new Element("span");
   const nav = ["dashboard", "tracking", "future"].map(page => { const el = new Element("a"); el.dataset.page = page; return el; });
@@ -82,7 +83,7 @@ async function app(data, failures = {}) {
   let interval;
   const context = {
     Node: Element, URL, AbortController, Intl, Date, console,
-    location: {hash: "#tracking"},
+    location: {hash},
     setTimeout: () => 1, clearTimeout: () => {},
     setInterval: fn => { interval = fn; return 1; },
     window: {addEventListener: () => {}},
@@ -102,7 +103,7 @@ async function app(data, failures = {}) {
   vm.runInNewContext(source, context, {filename: "docs/app.js"});
   const settle = async () => { for (let i = 0; i < 6; i++) await new Promise(resolve => setImmediate(resolve)); };
   await settle();
-  return {content: ids.content, calls, nav, async refresh() { interval(); await settle(); }};
+  return {content: ids.content, ids, calls, nav, async refresh() { interval(); await settle(); }};
 }
 
 test("tracking renders existing TARGET history beside separate queue counts, capped preview and exact frozen ranges", async () => {
@@ -138,13 +139,55 @@ test("generated hypothesis drafts render separately from verified TARGETs and re
   data.candidates.hypotheses = {h1: {id: "h1", current: {stage: "S2", scope: {target: "novel optical sleeves"},
     draft: {text: "Demand and qualified supply need comparison", unconfirmed: ["supply pool"]},
     public_classification: "UNKNOWN", outcome: {actual_occurred: "UNKNOWN"}, evidence: []}}};
-  const before = clone(data), page = await app(data), queue = headingPanel(page.content, "미래병목 검토 대기");
-  assert.match(queue.textContent, /자동 생성 가설 초안 1건/);
-  assert.match(queue.textContent, /novel optical sleeves · S2/);
-  assert.match(queue.textContent, /공개 선행성 UNKNOWN · 실제 발생 UNKNOWN/);
-  assert.match(queue.textContent, /미확인: supply pool/);
+  const before = clone(data), page = await app(data), drafts = headingPanel(page.content, "자동 생성 가설 초안");
+  assert.match(drafts.textContent, /자동 생성 가설 초안 1건/);
+  assert.match(drafts.textContent, /novel optical sleeves/);
+  assert.match(drafts.textContent, /S2 1건/);
+  walk(drafts).find(el => el.tagName === "BUTTON" && el.textContent === "상세보기").listeners.click();
+  assert.equal(page.ids["family-dialog"].open, true);
+  assert.match(page.ids["dialog-title"].textContent, /novel optical sleeves · S2/);
+  assert.match(page.ids["dialog-content"].textContent, /공개 선행성UNKNOWN.*실제 발생UNKNOWN/);
+  assert.match(page.ids["dialog-content"].textContent, /미확인: supply pool/);
   assert.equal(byClass(page.content, "tracking-card").length, 1);
   assert.deepEqual(data, before);
+});
+
+test("existing review menu shows named hypotheses with exact saved stages and details even without queue aggregation", async () => {
+  const data = fixtures(); delete data.candidates.summary.review_queue;
+  data.candidates.hypotheses = Object.fromEntries(["S1", "S2", "S3"].map((stage, i) => [`h${i}`, {
+    first_detected_at: "2026-10-02T15:26:14Z", current: {stage, scope: {target: `TARGET ${i}`, period: {start:"2027-01-01",end:"2027-12-31"}},
+      draft: {text:"Stored future supply gap hypothesis",unconfirmed:["supply_pool"]},
+      outcome:{status:"OPEN",actual_occurred:"UNKNOWN"}, review_required:true,
+      evidence:[{role:"DEMAND",document_id:"doc0",url:"https://example.test/demand",body_sha256:"frozen-demand",locator:{start:10,end:20},quantity:120,unit:"slots",need_date:"2027-01-01",actual_statement:true},
+        {role:"SUPPLY",document_id:"doc1",url:"https://example.test/supply",body_sha256:"frozen-supply",locator:{start:30,end:40},quantity:100,unit:"slots",available_date:"2028-01-01",actual_statement:true}]}
+  }]));
+  data.candidates.hypotheses.unknown = {current:{stage:"S1",scope:{target:"UNKNOWN"}}};
+  const before=clone(data), page=await app(data,{},"#review"), drafts=headingPanel(page.content,"자동 생성 가설 초안");
+  assert.match(drafts.textContent,/자동 생성 가설 초안 3건.*전체 4건/);
+  assert.match(drafts.textContent,/S1 1건 · S2 1건 · S3 1건/);
+  const rows=walk(drafts).filter(el=>el.tagName==="TBODY")[0].children;
+  assert.equal(rows.length,3);
+  assert.match(rows[0].textContent,/TARGET 0S1OPEN · 검토 필요2027-01-01 ~ 2027-12-31/);
+  assert.match(rows[0].textContent,/2026.*10.*03/);
+  walk(rows[0]).find(el=>el.tagName==="BUTTON").listeners.click();
+  const detail=page.ids["dialog-content"];
+  for(const label of ["TARGET","S1 / S2 / S3","상태","필요 시점","미래 공급공백 가설","수요 근거","공급 근거","UNKNOWN 항목","최초 탐지일"]) assert(detail.textContent.includes(label),label);
+  assert.match(detail.textContent,/Stored future supply gap hypothesis/);
+  assert.match(detail.textContent,/수량 120 slots/); assert.match(detail.textContent,/수량 100 slots/);
+  assert.match(detail.textContent,/frozen-demand · 문자 10–20/);
+  assert(walk(detail).some(el=>el.href==="https://example.test/supply"));
+  assert(headingPanel(page.content,"추가 근거가 필요한 대상"),"existing reviewed targets remain visible");
+  assert.deepEqual(data,before);
+});
+
+test("hypothesis load failure never claims zero drafts and stale refresh keeps existing drafts", async () => {
+  const data=fixtures(), failures={candidates:"http"}, page=await app(data,failures,"#review");
+  assert.match(headingPanel(page.content,"자동 생성 가설 초안").textContent,/가설 기록을 읽지 못했습니다/);
+  assert(!page.content.textContent.includes("자동 생성 가설 초안 0건"));
+  delete failures.candidates;
+  data.candidates.hypotheses={h:{current:{stage:"S1",scope:{target:"Saved target"}}}};
+  await page.refresh(); failures.candidates="network"; await page.refresh();
+  assert.match(headingPanel(page.content,"자동 생성 가설 초안").textContent,/마지막으로 읽은 기록.*Saved target/);
 });
 
 test("legacy candidate state without queue aggregation remains visibly pending, without invented zero completion", async () => {
