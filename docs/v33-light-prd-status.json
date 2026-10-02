@@ -1,0 +1,133 @@
+{
+  "version": "bct-v33-light-prd-acceptance-1",
+  "updated_at": "2026-10-02T15:21:14.120218+00:00",
+  "prd": "BCT_v3_3_Light_PRD_Review.docx",
+  "prd_sha256": "c186359ddd45670679083e9cb4d10142b6d64ce70f759547870fd5c0a32d2836",
+  "baseline_commit": "d93573cb9f06fb1e69b45c7d8099ac9a8f402edc",
+  "branch": "codex/bct-v33-light-prd",
+  "changed_files": [
+    ".github/scripts/future_queue_snapshot.py",
+    "docs/app.js",
+    "docs/bct-v33-review.md",
+    "docs/v33-light-prd-implementation.md",
+    "docs/v33-light-prd-status.json",
+    "src/bct/future_bottleneck.py",
+    "src/bct/future_hypothesis.py",
+    "src/bct/future_review.py",
+    "src/bct/future_store.py",
+    "tests/test_future_light_prd.py",
+    "tests/test_future_pages_v33.js",
+    "tests/test_future_review_v33.py"
+  ],
+  "stages": {
+    "0": {
+      "status": "PASS",
+      "kind": "READ_ONLY_CODE_AND_EXISTING_DATA_INSPECTION",
+      "correspondence": "v33-light-prd-implementation.md"
+    },
+    "1": {
+      "status": "PASS",
+      "kind": "SYNTHETIC_FUNCTIONAL",
+      "passed": 4
+    },
+    "2": {
+      "status": "PASS",
+      "kind": "SYNTHETIC_FUNCTIONAL",
+      "passed": 6
+    },
+    "3": {
+      "status": "PASS",
+      "kind": "SYNTHETIC_FUNCTIONAL",
+      "passed": 11,
+      "initial_additional_checks": "FAIL_2",
+      "retest": "PASS"
+    },
+    "4": {
+      "status": "PASS",
+      "kind": "SYNTHETIC_FUNCTIONAL",
+      "passed": 13,
+      "initial_additional_checks": "FAIL_1",
+      "retest": "PASS"
+    },
+    "5": {
+      "status": "BLOCKED",
+      "actual_trial_executed": false,
+      "reason": "No changed-version seven-day logs or measured request-driven review burden. Existing three snapshots cannot substitute for the PRD operating trial."
+    },
+    "6": {
+      "status": "BLOCKED",
+      "execution": "NOT_RUN",
+      "reason": "Stage 5 has not passed. Independent verified cases, blind historical corpus, unused HOLDOUT, frozen acceptance criteria, matched keyword baseline and prospective resolved S3 cohort remain unavailable."
+    }
+  },
+  "regressions": {
+    "python_passed": 342,
+    "pages_passed": 15,
+    "operation_guard_passed": 1,
+    "diff_check": "PASS"
+  },
+  "migration_smoke": {
+    "kind": "READ_ONLY_EXISTING_DATA_MIGRATION_SMOKE",
+    "status": "PASS",
+    "original_files_unchanged": true,
+    "documents_preserved": 1256,
+    "hypotheses_generated": 436,
+    "automatic_s3": 0,
+    "existing_samples": 3,
+    "prd_observation": {
+      "status": "BLOCKED",
+      "sample_count": 1,
+      "elapsed_seconds": 0.0,
+      "pending_reasons": [
+        "Seven actual elapsed days have not been observed",
+        "Missing operating snapshots within observation days",
+        "Insufficient comparable operating snapshots"
+      ],
+      "missing_evidence": [
+        {
+          "at": "2026-10-02T15:20:03.305880+00:00",
+          "field": "collection_budget_verified"
+        },
+        {
+          "at": "2026-10-02T15:20:03.305880+00:00",
+          "field": "candidate_retention_verified"
+        },
+        {
+          "at": "2026-10-02T15:20:03.305880+00:00",
+          "field": "source_wide_scan"
+        },
+        {
+          "at": "2026-10-02T15:20:03.305880+00:00",
+          "field": "selection_reservations_verified"
+        },
+        {
+          "at": "2026-10-02T15:20:03.305880+00:00",
+          "field": "request_driven_review_execution"
+        }
+      ],
+      "budget_failures": []
+    },
+    "forecast_status": "BLOCKED",
+    "performance_trial_executed": false
+  },
+  "forecast_performance": "NOT_MEASURED",
+  "forecast_pass": null,
+  "paid_api_added": false,
+  "new_scores_added": false,
+  "sqlite_schema_changed": false,
+  "collector_sources_or_schedule_changed": false,
+  "delivery": {
+    "source": "LOCAL_TESTED_REMOTE_PENDING",
+    "production": "NOT_YET_UPDATED"
+  },
+  "minimal_fixes": [
+    "UNKNOWN period cannot crash the reviewer; different TARGET comparisons cannot earn S3.",
+    "Earlier verified public confirmations are checked even after ambiguous same-day documents.",
+    "Missing legacy selection/burden evidence stays UNKNOWN/BLOCKED rather than fabricated PASS or FAIL."
+  ],
+  "limits": [
+    "Synthetic gates do not establish forecast accuracy.",
+    "Migration generated 436 unclassified drafts and zero S3; it did not reacquire article bodies or prove live performance.",
+    "Interrupted chat connection cause could not be confirmed from available logs."
+  ]
+}

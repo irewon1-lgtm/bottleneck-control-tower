@@ -18,7 +18,7 @@ from urllib.parse import urlsplit
 from urllib.request import Request, HTTPRedirectHandler, build_opener
 
 VERSION = "body-candidate-v3.3"
-FILTER_VERSION = "bct-v33-recall-2"
+FILTER_VERSION = "bct-v33-light-prd-1"
 CATEGORIES = {
     "DEMAND": r"\b(?:demand|orders?|order[- ]books?|backlog|offtake|procurement|consumption|contracts?|agreements?|deals?|purchas\w*|shipments?|deliveries|installation|install\w*|adopt\w*|uptake|prescribers?|invest(?:s|ed|ing|ment|ments)?|funding|financing|projects?|programmes?|programs?|development|trials?|stud(?:y|ies)|construction|bookings?|sales|sell(?:s|ing)?|sold|customer\w*|launch\w*)\b|수요|주문|계약|출하|설치|도입|투자|프로젝트",
     "SUPPLY": r"\b(?:supply|suppliers?|production|manufactur\w*|capacity|output|factories|factory|plants?|facilit\w*|mills?|mines?|certif\w*|qualif\w*|lead[- ]times?|deliveries|shipping|freight|carriers?|vessels?|routes?|transit|access|services?|products?|materials?|workforce|workers?|labor|labour|nurses?|drivers?|jobs|inventory|inventories)\b|공급|생산|공장|감산|인증|납기",
@@ -46,6 +46,13 @@ BLOCKED = re.compile(r"(?:verify (?:that )?you are human|enable javascript and c
 # Explicit fine-grained phrases, plus open phrase extraction below. Never a sector label.
 TARGET = re.compile(r"\b(?:(?:high[- ]voltage|power|distribution|large power) transformers?|(?:gas|steam) turbines?|(?:high[- ]bandwidth|HBM\d*|DDR\d+) memory|advanced packaging|CoWoS|ABF substrates?|300\s*mm wafers?|solid rocket motors?|ammonium perchlorate|HTPB|high[- ]assay low[- ]enriched uranium|HALEU|battery[- ]grade lithium (?:carbonate|hydroxide)|copper (?:foil|concentrate)|rare[- ]earth magnets?|grain[- ]oriented electrical steel|silicon carbide wafers?|(?:marine|aviation|diesel) fuel|sulfuric acid|helium|medical isotopes?)\b", re.I)
 OPEN_TARGET = re.compile(r"\b(?:shortages? of|scarcity of|supply constraints? for|lead[- ]times? for|production of|manufacturing of|capacity for)\s+([^.;:\n]{2,100})", re.I)
+CHANGE_TARGET = re.compile(
+    r"\b(?:demand for|orders? for|contracts? for|agreements? for|shipments? of|"
+    r"deliveries of|certification of|qualification of|production of|manufacturing of)\s+"
+    r"(?:\d+(?:,\d{3})*\s+)?(?P<name>[^.;:\n()]{2,100}?)"
+    r"(?=\s+(?:increased|decreased|grew|rose|fell|doubled|tripled|surged|"
+    r"is|are|was|were|has|have|will|must|needs?|requires?|remains?|reached|"
+    r"totalled|totaled|amounted|closed|stopped|halted|delayed|for delivery|in \d{4})\b|[.(;\n]|$)", re.I)
 STOP = re.compile(r"\b(?:is|are|was|were|has|have|will|could|would|may|if|as|because|while|which|that|to|in|at|by|from|with|for|said|discussing|nearly|both|used)\b|[“”\"—]", re.I)
 GENERIC_TARGET = re.compile(r"\b(?:up|between|just|time|ever|innovation|mindset|problem-solving|essential material|new equipment|expansion|technology|project|enhances|positions|manager)\b", re.I)
 
@@ -235,6 +242,14 @@ def screen(body, tracked_terms=()):
                     and name.lower() not in {"energy", "oil", "mining", "refining", "products", "goods", "services", "capacity", "demand", "production"}):
                     targets.setdefault(name.lower(), {"name": name, "method": "OPEN_PHRASE_UNVERIFIED",
                         "evidence_location": {"paragraph": paragraph, "sentence": i + 1, "start": start, "end": end}})
+        for match in CHANGE_TARGET.finditer(sentence):
+            name = re.sub(r"^(?:the|a|an)\s+", "", match['name'].strip(), flags=re.I)
+            if (1 <= len(name.split()) <= 8 and re.fullmatch(r"[A-Za-z][A-Za-z0-9 /+-]*", name)
+                    and not GENERIC_TARGET.search(name)
+                    and not re.match(r"(?:more|less|additional|other|new)\b", name, re.I)
+                    and not re.search(r"\b(?:increased|decreased|to|by|of|up|down|may|could)\b", name, re.I)):
+                targets.setdefault(name.lower(), {"name": name, "method": "CHANGE_PHRASE_UNVERIFIED",
+                    "evidence_location": {"paragraph": paragraph, "sentence": i + 1, "start": start, "end": end}})
     reason = "COMPUTER_PERFORMANCE_ONLY" if not candidate and digital_noise else None
     return {"candidate": candidate,
             "decision": "CONTEXT_REVIEW" if context_review else "CANDIDATE_ONLY" if candidate else "EXCLUDED_NOISE" if reason else "NO_EVIDENCE",
@@ -242,17 +257,20 @@ def screen(body, tracked_terms=()):
             "context_review": bool(context_review), "evidence": evidence,
             "evidence_locations": locations, "quoted_word_count": 24 - remaining,
             "tracked_matches": tracked_matches, "targets": list(targets.values()),
+            "bottleneck_tags": sorted(set(m.group().lower() for m in re.finditer(r"\b(?:shortages?|bottlenecks?)\b", body, re.I))),
             "target_status": "EXTRACTED_UNVERIFIED" if targets else "UNRESOLVED", "final_bottleneck": None}
 
 
 def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
         cache_dir=None, filter_version=FILTER_VERSION, screener=screen,
         trigger="AUTO", trigger_id=None, patch_output=None, tracking_path=None,
-        tracked_terms=(), document_ids=None):
+        tracked_terms=(), document_ids=None, detection_mode="LIVE"):
     from .future_body import acquire_document, read_cached_body
     from .future_store import LocalJSONTransport, store_patch
     if not 1 <= limit <= 1000 or not 1 <= workers <= 8:
         raise ValueError("invalid batch bounds")
+    if detection_mode not in ('LIVE', 'BACKFILL', 'SYNTHETIC'):
+        raise ValueError('invalid detection mode')
     output = Path(output)
     state = json.loads(output.read_text()) if output.exists() else {"version": VERSION, "results": {}}
     if state.get("version") not in (VERSION, "body-candidate-v2"):
@@ -271,7 +289,9 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
     terms_hash = hashlib.sha256(json.dumps(sorted(terms), ensure_ascii=False).encode()).hexdigest()
     with sqlite3.connect(f"file:{Path(db_path).resolve()}?mode=ro", uri=True) as db:
         db.row_factory = sqlite3.Row
-        rows = [dict(r) for r in db.execute("SELECT id,title,url,source,collected_at,updated_at FROM radar_items WHERE status='active' ORDER BY collected_at,id")]
+        columns = {r['name'] for r in db.execute('PRAGMA table_info(radar_items)')}
+        publication = ',published_at' if 'published_at' in columns else ',NULL AS published_at'
+        rows = [dict(r) for r in db.execute("SELECT id,title,url,source,collected_at,updated_at" + publication + " FROM radar_items WHERE status='active' ORDER BY collected_at,id")]
     # A processing bound never limits retention or the discovery window.
     scoped = rows
     now = datetime.now(timezone.utc)
@@ -330,11 +350,19 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
                   "checked_at": now.isoformat()}
         if body:
             result.update(screener(body, tracked_terms=sorted(terms)) if terms else screener(body))
+            from .future_hypothesis import extract_facts
+            result.update(extract_facts(body, result))
+            if result.get('candidate'):
+                result['first_candidate_at'] = prior.get('first_candidate_at', now.isoformat())
+            result['publication_precision'] = 'TIMESTAMP' if row.get('published_at') and 'T' in row['published_at'] else 'DAY' if row.get('published_at') else 'UNKNOWN'
+            # RSS dates are reported metadata, not a verified original publication.
+            result['publication_verified'] = False
             result.update(tracking_terms_sha256=terms_hash, screening_pending_for="", pending_tracking_terms_sha256="", reaccess_status="AVAILABLE")
         else:
             # A missing cache is missing evidence, never a negative re-screen.
             for field in ('candidate', 'decision', 'reason', 'target_status', 'targets', 'evidence',
-                          'discovery_paths', 'evidence_locations', 'context_review', 'quoted_word_count', 'tracked_matches'):
+                          'discovery_paths', 'evidence_locations', 'context_review', 'quoted_word_count', 'tracked_matches',
+                          'scope_facts', 'supply_relationships', 'first_candidate_at'):
                 if field in prior:
                     result[field] = prior[field]
             result.setdefault('candidate', False)
@@ -362,6 +390,7 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
                 "completeness", "source_version", "checked_at", "filter_version", "candidate",
                 "decision", "evidence", "discovery_paths", "evidence_locations", "context_review",
                 "quoted_word_count", "tracked_matches", "targets", "queue_entered_at", "reaccess_status") if k in result}
+            versions[body_hash].update({k: result[k] for k in ('scope_facts', 'supply_relationships', 'published_at', 'publication_precision', 'publication_verified') if k in result})
             if body_hash in prior.get("versions", {}):
                 # Source checks and body versions are different identities. An
                 # unchanged body may be observed under a new source check.
@@ -398,6 +427,10 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
                         "candidates_total": sum(bool(r.get("candidate")) for r in live),
                         "pending_due": max(0, len(pending) - limit), "checked_at": now.isoformat(),
                         "private_cache": "RUNTIME_ONLY_NOT_PUBLISHED",
+                        "detection_mode": detection_mode,
+                        "source_wide_scan": document_ids is None,
+                        "collection_budget_verified": limit <= 300 and workers <= 6,
+                        "candidate_retention_verified": set(state['results']) <= set(projected['results']),
                         "source_reaccess_limit": "Cache may expire; historical body reproducibility is not guaranteed."}
     output.parent.mkdir(parents=True, exist_ok=True)
     if not output.exists():
@@ -423,9 +456,11 @@ def main():
     parser.add_argument("--trigger", choices=["AUTO", "USER", "SCHEDULED"], default="AUTO")
     parser.add_argument("--trigger-id")
     parser.add_argument("--document-id", action="append")
+    parser.add_argument('--detection-mode', choices=['LIVE', 'BACKFILL'], default='LIVE')
     args = parser.parse_args()
     result = run(args.db, args.output, limit=args.limit, cache_dir=args.cache_dir, patch_output=args.patch_output,
-                 tracking_path=args.tracking, trigger=args.trigger, trigger_id=args.trigger_id, document_ids=args.document_id)
+                 tracking_path=args.tracking, trigger=args.trigger, trigger_id=args.trigger_id, document_ids=args.document_id,
+                 detection_mode=args.detection_mode)
     print(json.dumps(result["summary"]))
 
 

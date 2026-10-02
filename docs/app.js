@@ -327,6 +327,26 @@
       preview.append(entry);
     });
     box.append(preview.children.length ? preview : empty("대표 대기 문서 없음", "저장된 집계 기준입니다."));
+    const hypotheses = Object.values(futureCandidates.hypotheses || {});
+    if (hypotheses.length) {
+      const drafts = node("details"); drafts.append(node("summary", `자동 생성 가설 초안 ${number(hypotheses.length)}건`));
+      drafts.append(node("p", "자료에서 연결한 후보 가설입니다. S3도 선행탐지 성능 통과를 뜻하지 않습니다.", "muted"));
+      hypotheses.forEach(h => {
+        const current = h.current || {}, draft = current.draft || {};
+        const item = node("div");
+        item.append(node("h3", `${current.scope?.target || "미분류"} · ${current.stage || "확인 필요"}`),
+          node("p", draft.text || "가설 내용 확인 필요"),
+          node("p", `공개 선행성 ${current.public_classification || "UNKNOWN"} · 실제 발생 ${current.outcome?.actual_occurred || "UNKNOWN"}`, "muted"));
+        if (draft.unconfirmed?.length) item.append(node("p", `미확인: ${draft.unconfirmed.join(" · ")}`, "muted"));
+        const sources = node("ul");
+        [...new Set((current.evidence || []).map(ref => ref.document_id))].forEach(id => {
+          const record = futureCandidates.results?.[id] || {}, entry = node("li");
+          entry.append(articleTitle({title: record.title || id, url: record.url})); sources.append(entry);
+        });
+        item.append(sources); drafts.append(item);
+      });
+      box.append(drafts);
+    }
     const bundles = Object.values(futureCandidates.bundles || {});
     const details = node("details"); details.append(node("summary", `고정 검토 묶음 ${number(bundles.length)}개`));
     bundles.forEach(bundle => {

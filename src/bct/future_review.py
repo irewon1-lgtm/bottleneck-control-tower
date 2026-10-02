@@ -13,7 +13,7 @@ import json
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
-from .future_store import LocalJSONTransport, PatchError, apply_owned_patch, store_patch, validate_version_refs
+from .future_store import LocalJSONTransport, PatchError, StoreResult, apply_owned_patch, store_patch, validate_version_refs
 
 
 READER_VERSION = "bct-v33-reader-1"
@@ -153,7 +153,16 @@ def queue_items(candidates, tracking, *, now=None, reader_version=READER_VERSION
         deep_unfinished = latest_deep and latest_deep.get("analysis_complete") is not True
         requested_after_completion = (latest.get("disposition") == "DEEP_NEEDED" and
             (not latest_deep or latest_deep.get("reviewed_at", "") < latest.get("reviewed_at", "")))
-        if deep_unfinished or requested_after_completion:
+        due = False
+        for ledger in tracking.get('prediction_ledger', {}).values():
+            for entry in ledger.get('entries', []):
+                if entry.get('document_id') != item['document_id']:
+                    continue
+                dates = entry.get('next_check_dates', [])
+                due |= any(isinstance(d, str) and latest.get('reviewed_at', '')[:10] < d <= clock.date().isoformat() for d in dates)
+        if deep_unfinished or requested_after_completion or due:
+            if due:
+                item['recheck_reason'] = '예정된 인증·양산·평가 시점 도래'
             deep.append(item)
         if latest.get("disposition") == "DATA_INSUFFICIENT" or latest.get("candidate_state") == "DATA_WAIT":
             data_wait.append(item)
@@ -295,11 +304,20 @@ def build_bundle(candidates, tracking, *, bundle_id=None, max_documents=10, max_
     pending = queue_items(candidates, tracking, now=now, reader_version=reader_version)["quick"]
     if not pending:
         return None
-    # One FIFO slot is always reserved; urgent relief gets at most two slots.
+    # Reserve FIFO and an unseen TARGET before ordering the remaining work.
     selected = [pending[0]]
+    known = {str(t.get('target', '')).casefold() for t in tracking.get('targets', [])}
+    novel = next((x for x in pending[1:] if any(t.get('name', '').casefold() not in known
+                 for t in x.get('targets', []) if t.get('name'))), None)
+    if novel is not None and max_documents > 1:
+        selected.append(novel)
     urgent = [x for x in pending[1:] if "RELIEF" in x.get("discovery_paths", []) or x.get("important_refutation")]
-    selected.extend(urgent[:min(2, max_documents - 1)])
-    selected.extend(x for x in pending[1:] if x not in selected)
+    selected.extend(x for x in urgent[:min(2, max_documents - len(selected))] if x not in selected)
+    priority = sorted(pending[1:], key=lambda x: (
+        not any(f.get('actual_statement') and f.get('role') in ('DEMAND', 'SUPPLY') for f in x.get('scope_facts', [])),
+        not any(isinstance(f.get('period'), dict) for f in x.get('scope_facts', [])),
+        x.get('queue_entered_at') or '', x['document_id']))
+    selected.extend(x for x in priority if x not in selected)
     refs, budget = [], max_chars
     selected = selected[:max_documents]
     for index, item in enumerate(selected):
@@ -321,10 +339,15 @@ def build_bundle(candidates, tracking, *, bundle_id=None, max_documents=10, max_
         budget -= end - start
     frozen_id = bundle_id or "bundle-" + _hash(refs)[:24]
     return {"id": frozen_id, "created_at": _now(now).isoformat(), "documents": refs,
-            "max_documents": max_documents, "max_chars": max_chars}
+            "max_documents": max_documents, "max_chars": max_chars,
+            "selection_reservations_verified": bool(refs and refs[0]['document_id'] == pending[0]['document_id']
+                and (novel is None or any(ref['document_id'] == novel['document_id'] for ref in refs)))}
 
 
 def ensure_bundle(candidates, tracking, **kwargs):
+    from .future_hypothesis import hypothesis_patch
+    hypotheses = hypothesis_patch(candidates, tracking, now=kwargs.get('now'),
+                                  mode=candidates.get('summary', {}).get('detection_mode', 'LIVE'))
     reader = kwargs.get("reader_version", READER_VERSION)
     queues = queue_items(candidates, tracking, reader_version=reader)
     blocked = {(x["document_id"], x.get("body_sha256")) for x in queues["material"] if x.get("access_status") in ("BLOCKED", "SOURCE_CHANGED")}
@@ -344,9 +367,16 @@ def ensure_bundle(candidates, tracking, **kwargs):
             position = reading_position(tracking, item, reader)
             pending |= position < ref["end"] or (ref["start"] == ref["end"] and not document_complete(tracking, item, reader))
         if pending:
-            return {"bundles": {bundle["id"]: deepcopy(bundle)}, "events": event_groups(candidates)}
+            return {"bundles": {bundle["id"]: deepcopy(bundle)}, "events": event_groups(candidates), **hypotheses}
     bundle = build_bundle(candidates, tracking, **kwargs)
-    return {"bundles": {bundle["id"]: bundle} if bundle else {}, "events": event_groups(candidates)}
+    if bundle:
+        documents = {ref['document_id'] for ref in bundle['documents']}
+        all_hypotheses = {**candidates.get('hypotheses', {}), **hypotheses['hypotheses']}
+        bundle['hypothesis_drafts'] = [{"hypothesis_id": event_id, "stage": h['current']['stage'],
+            "draft": h['current']['draft'], "evidence": h['current'].get('evidence', [])}
+            for event_id, h in all_hypotheses.items()
+            if documents & {ref['document_id'] for ref in h['current'].get('evidence', [])}]
+    return {"bundles": {bundle["id"]: bundle} if bundle else {}, "events": event_groups(candidates), **hypotheses}
 
 
 def _version_item(candidates, document_id, body_hash):
@@ -400,6 +430,19 @@ def _earned_stage(review):
             raise PatchError("relief checks require status and reason; search failure is not absence")
         if check.get("important", False) and (check["status"] == "INACCESSIBLE" or check.get("resolved") is not True):
             return stage
+    # Boolean assertions alone cannot establish a matched supply comparison.
+    from .future_hypothesis import compare_gap
+    comparison = review.get('comparison', {})
+    facts = comparison.get('facts', []) if isinstance(comparison, dict) else []
+    if not isinstance(facts, list) or not facts or any(
+            not isinstance(f, dict) or not isinstance(f.get('period'), dict)
+            or not isinstance(f.get('target'), str)
+            or f['target'].casefold() != review['target'].casefold()
+            or any(f['period'].get(k) != period.get(k) for k in ('start', 'end'))
+            for f in facts):
+        return stage
+    if compare_gap(facts, now=review['as_of'] + 'T00:00:00Z', change_confirmed=change == 'TRUE')['stage'] != 'S3':
+        return stage
     return "S3"
 
 
@@ -442,14 +485,28 @@ def validate_review(candidates, tracking, review):
     if result["read_start"] > position:
         raise PatchError("reading progress cannot skip an unread range")
     previous = tracking.get("reviews", {}).get(result["review_id"])
+    if previous == result:
+        return deepcopy(previous)  # Preserve an exact retry of a historical record.
     result["reviewed_at"] = result.get("reviewed_at") or (previous or {}).get("reviewed_at") or _now().isoformat()
     result["as_of"] = result.get("as_of") or _now(result["reviewed_at"]).date().isoformat()
+    if result.get('kind') == 'deep' and result.get('detection_mode', 'LIVE') == 'LIVE':
+        if result['as_of'] != _now(result['reviewed_at']).date().isoformat():
+            raise PatchError('historical as_of requires BACKFILL detection mode')
+        available_at = item.get('checked_at') or item.get('collected_at')
+        if available_at and _now(result['reviewed_at']) < _now(available_at):
+            raise PatchError('review before source collection requires BACKFILL detection mode')
     result["read_complete"] = _coverage([*_matching_reviews(tracking, item, result["reader_version"]), result], chars) == chars
     result["source_access"] = {"url": item.get("url"), "body_sha256": result["body_sha256"],
                                "reproducibility_limit": item.get("reproducibility_limit") or "Source reaccess or runtime cache may be required."}
     if result.get("candidate_state") is None:
         result["candidate_state"] = "DATA_WAIT" if result["disposition"] == "DATA_INSUFFICIENT" else "REVIEWED"
     if result["kind"] == "deep":
+        if result.get('detection_mode', 'LIVE') not in ('LIVE', 'BACKFILL', 'SYNTHETIC'):
+            raise PatchError('invalid detection mode')
+        for fact in result.get('comparison', {}).get('facts', []):
+            validate_version_refs(candidates, [{'document_id': fact.get('document_id'),
+                'body_sha256': fact.get('body_sha256'), 'start': fact.get('locator', {}).get('start'),
+                'end': fact.get('locator', {}).get('end')}])
         earned = _earned_stage(result)
         requested = result.get("s_stage", earned)
         if requested not in ("NONE", "S1", "S2", "S3") or ("NONE", "S1", "S2", "S3").index(requested) > ("NONE", "S1", "S2", "S3").index(earned):
@@ -484,6 +541,9 @@ def review_patch(candidates, tracking, review):
         entry = {**prediction, "id": normalized["review_id"], "recorded_at": normalized["reviewed_at"],
                  "document_id": normalized["document_id"], "body_sha256": normalized["body_sha256"],
                  "s_stage": normalized.get("s_stage", "NONE"), "discovery_path": normalized.get("discovery_path")}
+        entry['period'] = normalized.get('period', prediction.get('period'))
+        entry['criteria_version'] = 'bct-v33-light-prd-1'
+        entry['detection_mode'] = normalized.get('detection_mode', 'LIVE')
         if "next_check_dates" not in entry:
             anchor = date.fromisoformat(normalized["as_of"])
             dates = []
@@ -493,8 +553,23 @@ def review_patch(candidates, tracking, review):
                 dates.append(anchor.replace(year=year, month=month, day=min(anchor.day, calendar.monthrange(year, month)[1])).isoformat())
             entry["next_check_dates"] = dates
         ledger = {"entries": [entry]}
+        prior_ledger = tracking.get('prediction_ledger', {}).get(target_id, {})
         if not tracking.get("prediction_ledger", {}).get(target_id, {}).get("initial"):
             ledger["initial"] = {**entry, "first_discovered_at": normalized["reviewed_at"], "frozen": True}
+        first_s3 = prior_ledger.get('first_s3') or candidates.get('hypotheses', {}).get(target_id, {}).get('first_s3')
+        if first_s3 and not prior_ledger.get('first_s3'):
+            ledger['first_s3'] = deepcopy(first_s3)
+        if normalized.get('s_stage') == 'S3' and not first_s3:
+            first_s3 = {'at': normalized['reviewed_at'], 'hypothesis': prediction['hypothesis'],
+                        'period': normalized['period'], 'criteria_version': entry['criteria_version'],
+                        'documents': [{k: fact[k] for k in ('document_id', 'body_sha256', 'locator')} for fact in normalized['comparison']['facts']],
+                        'detection_mode': entry['detection_mode']}
+            ledger['first_s3'] = first_s3
+        if prediction.get('outcome_update'):
+            from .future_hypothesis import outcome_update
+            if not first_s3:
+                raise PatchError('outcomes require an original S3 evaluation period')
+            ledger['outcome'] = outcome_update(prior_ledger.get('outcome'), prediction['outcome_update'], first_s3['period'])
         patch["prediction_ledger"] = {target_id: ledger}
         patch["targets"] = [{"id": target_id, "target": prediction.get("target", normalized.get("target", "미분류")),
             "history": [{"review_id": normalized["review_id"], "reviewed_on": normalized["as_of"],
@@ -506,13 +581,18 @@ def review_patch(candidates, tracking, review):
 
 def save_review(transport, path, candidates, review, *, operation_id=None):
     latest = transport.read(path)
+    op = operation_id or 'review-' + review['review_id']
+    if op in latest.document.get('operations', {}):
+        normalized = validate_review(candidates, latest.document, review)
+        if normalized == latest.document.get('reviews', {}).get(review['review_id']):
+            return StoreResult('ALREADY_APPLIED', sha=latest.sha, document=latest.document)
     patch = review_patch(candidates, latest.document, review)
     normalized = patch["reviews"][review["review_id"]]
     ref = {"document_id": normalized["document_id"], "body_sha256": normalized["body_sha256"], "reader_version": normalized["reader_version"]}
     if normalized["kind"] != "access":
         ref.update(start=normalized["read_start"], end=normalized["read_end"])
     return store_patch(transport, path, owner="review", patch=patch,
-                       operation_id=operation_id or "review-" + normalized["review_id"],
+                       operation_id=op,
                        version_refs=[ref], reference_document=candidates,
                        prepared_document=latest.document)
 

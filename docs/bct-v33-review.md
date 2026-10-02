@@ -1,5 +1,43 @@
 # BCT 미래병목 v3.3 요청형 검토 안내
 
+## 2026년 10월 경량 PRD 반영
+
+자동 생성 가설은 후보 파일의 `hypotheses`와 기존 고정 묶음의
+`hypothesis_drafts`에 있다. 기존 대기 화면에서도 펼쳐 볼 수 있다.
+자동 S3는 명시된 동일 규격·지역·기간·공급 풀과 비교 기준이 맞고,
+총 적격 공급에 기존 공급·사용 가능 재고·대체 공급이 포함된 자료만 허용한다.
+추가 수요는 미배정 공급과 비교한다. 관계만 확인된 부품에는 사용량을 추정하지 않는다.
+열린 문장 추출 규칙의 범위를 벗어나거나 핵심 범위가 비공개인 자료는 UNKNOWN으로 남긴다.
+
+새 심화검토의 S3는 TRUE gates 외에 `comparison.facts`가 필요하다.
+각 fact는 `document_id`, `body_sha256`, 원문 문자 범위 `locator.start/end`,
+`target`, `specification`, `region`, `supply_pool`, `period.start/end`,
+`basis`(DEMAND total / SUPPLY total 또는 DEMAND additional / SUPPLY unallocated),
+`role`, `actual_statement`, `quantity`, `unit`, `coverage_complete`를 기록한다.
+수량이 없으면 구체적인 `need_date`·`available_date`를 쓴다.
+`coverage_complete`는 전체 적격 공급·재고·대체 공급이 실제로 확인됐을 때만 true다.
+범위·기준·단위가 안 맞거나 상충하는 수량·핵심 공급이 미확인이면 S3를 요청하지 않는다.
+이전 저장 판독은 변경하지 않으며 정확한 재시도는 원기록을 유지한다.
+
+예측 기록의 `target_id`에는 자동 가설의 안정된 사건 ID를 사용한다.
+별칭·필요기간을 수정할 때 새 사건으로 재생성하지 않는다.
+`prediction_ledger.first_s3`는 S1/S2의 `initial`과 별도로 최초 S3 가설·시각·평가기간·문서 목록을 고정한다.
+`prediction.public_confirmations`는 실제 공개일·정밀도·동일 사건·명시적 제약·원문 위치를,
+`public_scan`은 사전 고정 출처 범위·확인 완료 여부·범위 증거·조회 종료 시각을 기록한다.
+검색 미발견·RSS 날짜만으로 PRE_PUBLIC을 부여하지 않는다.
+LIVE 판정은 실제 검토일과 as_of가 같아야 한다. 과거 재생은 `detection_mode: BACKFILL`로 분리한다.
+
+`prediction.outcome_update`는 `status`, `at`, `evidence`를 사용한다.
+CONFIRMED는 원기간 안의 `actual_started_at`과 `same_scope: true`가 필요하다.
+FALSE는 평가기간 종료 후 전체 기간의 실제 공급 충족 근거와
+`full_period_supply_fulfilled: true`가 있어야 한다.
+RELIEVED는 실제 발생 여부를 FALSE로 바꾸지 않는다. 현재 상태와 기간 내 발생을 따로 보존한다.
+인증·양산 등 명시된 확인일은 `next_check_dates`로 등록한다. 자료 대기를 자동 완료하지 않는다.
+
+변경 후 7일 관측은 `summary.prd_operation_observation`에서 기존 관측과 분리한다.
+사전 성능 기준·독립 정답 사건군·당시 문서군·미사용 HOLDOUT·전향 결과가 없으면
+`summary.forecast_performance`는 BLOCKED다. 기능시험 PASS와 혼동하지 않는다.
+
 이 안내는 확정 설계 v3.3의 기존 JSON·GitHub Pages·알림 경로를 사용하는 운영 절차다. 자동화는 후보 수집·보존·재검토 알림만 수행한다. 사용자가 검토를 요청했을 때 ChatGPT가 원문을 읽고 판단을 저장한다. 유료 AI 자동호출, 새 DB·서버, Core·투자점수 변경은 없다.
 
 ## 읽을 파일과 고정 참조
@@ -133,3 +171,5 @@ python -m bct.future_review notification --candidates future-candidates.json --t
 `READY`는 요약 생성, `SENT`는 실제 발송, `ACCEPTED`는 전달 경로 접수, `RECEIVED`는 사용자 실제 수신 증거다. 발송·접수·수신을 혼동하지 않는다. 실제 경로의 상태를 `delivery_patch(candidates, notification_id, state=..., receipt=...)`로 만들고 notification 소유자의 동일 병합·조건부 저장·재조회 절차를 적용한다. RECEIVED에는 실제 수신 증거가 필수다. 알림·링크 열람은 문서 완료를 만들지 않는다.
 
 1건 실제 알림 수신 → 사용자 검토 요청 → 직접 원문 판독 → 분석 저장 → 재조회 왕복은 기존 시험 기록상 PASS다. 이 문서 자체는 다른 시험의 통과 보고서가 아니다. 전체 기능시험·새 표본의 문서/사건 품질 채택·7일 지속 운영 최종 판정은 해당 단계 기록이 완료될 때까지 PENDING이다. 실제 7일 동안 유입·완료·재시도·자료 대기·최장 대기시간과 사용자 미검토/시스템 지연을 구분한다. 적체가 지속 증가하면 운영 PASS·출처 확대를 보류한다. 실행하지 않은 기간·예측 성능을 PASS라고 표시하지 않는다.
+
+검토 부담의 실제 시간은 검토 기록에 `review_seconds`로 남긴다. 자동으로 시간을 추정하지 않는다. 7일 경과·일별 기록 외에도 실제 수집 예산, 문서 보존, TARGET 비지정 탐색, 묶음 예산과 FIFO·신규 TARGET 선택 근거가 확인돼야 경량 PRD 운영 PASS가 가능하다. 기존 묶음의 선택 기록이 없거나 수동 검토가 실행되지 않았으면 BLOCKED다.

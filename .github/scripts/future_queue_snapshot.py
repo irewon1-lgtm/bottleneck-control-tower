@@ -8,6 +8,7 @@ import uuid
 from bct.future_review import _records, document_complete, ensure_bundle, full_queue_entries, queue_items, queue_summary
 from bct.future_quality import observation_status
 from bct.future_store import patch_json
+from bct.future_hypothesis import CRITERIA_VERSION, POLICY, operation_report, performance_report
 
 
 def main():
@@ -19,6 +20,7 @@ def main():
     clock = datetime.now(timezone.utc).isoformat()
     args.output_dir.mkdir(parents=True, exist_ok=True)
     candidates = json.loads(args.candidates.read_text())
+    retained_before = set(candidates.get('results', {}))
     tracking = json.loads(args.tracking.read_text())
     bundle_patch = ensure_bundle(candidates, tracking, now=clock)
     op = 'bundle-' + str(uuid.uuid4())
@@ -72,8 +74,32 @@ def main():
     sample.update(retries=sample['retry_attempts'], material_wait=sample['material_pending'],
                   pending_total=len(pending_versions),
                   oldest_wait_seconds=(sample['oldest_wait_hours'] or 0) * 3600)
+    sample.update(criteria_version=CRITERIA_VERSION, fixed_policy=POLICY,
+                  hypotheses_total=len(candidates.get('hypotheses', {})),
+                  automatic_s3_total=sum(h.get('current', {}).get('stage') == 'S3' for h in candidates.get('hypotheses', {}).values()),
+                  candidates_auto_discarded=len(retained_before - set(candidates['results'])),
+                  review_execution='REQUEST_DRIVEN_NOT_AUTOMATIC')
+    bundles = list(bundle_patch.get('bundles', {}).values())
+    reviews = [r for r in tracking.get('reviews', {}).values() if r.get('kind') in ('quick', 'deep')]
+    times = [r.get('review_seconds') for r in reviews]
+    time_measured = all(isinstance(t, (int, float)) and not isinstance(t, bool) and t >= 0 for t in times)
+    reservations = [b.get('selection_reservations_verified') for b in bundles]
+    sample.update(collection_budget_verified=candidates.get('summary', {}).get('collection_budget_verified'),
+                  candidate_retention_verified=(retained_before <= set(candidates['results'])
+                      if candidates.get('summary', {}).get('candidate_retention_verified') is True
+                      else candidates.get('summary', {}).get('candidate_retention_verified')),
+                  source_wide_scan=candidates.get('summary', {}).get('source_wide_scan'),
+                  review_bundle_budget_verified=all(len(b.get('documents', [])) <= POLICY['review_documents']
+                      and sum(r['end'] - r['start'] for r in b.get('documents', [])) <= POLICY['review_characters'] for b in bundles),
+                  selection_reservations_verified=(False if any(value is False for value in reservations)
+                      else True if all(value is True for value in reservations) else None),
+                  review_documents_total=len({r['document_id'] for r in reviews}),
+                  review_seconds_total=sum(times) if time_measured else None)
     observation = observation_status(samples + [sample], now=clock)
-    patch = {'summary': {'review_queue': summary, 'operation_observation': observation}, 'operation_samples': [sample]}
+    prd_observation = operation_report(samples + [sample], now=clock)
+    patch = {'summary': {'review_queue': summary, 'operation_observation': observation,
+                        'prd_operation_observation': prd_observation,
+                        'forecast_performance': performance_report(candidates.get('hypotheses', {}), now=clock)}, 'operation_samples': [sample]}
     op = 'queue-' + str(uuid.uuid4())
     saved = patch_json(args.candidates, owner='collection', patch=patch, operation_id=op,
                        prepared_document=candidates)
