@@ -1,6 +1,6 @@
 {
   "version": "bct-v33-implementation-acceptance-v1",
-  "updated_at": "2026-10-02T00:13:29.237444+00:00",
+  "updated_at": "2026-10-02T00:39:20.879930+00:00",
   "repository": "irewon1-lgtm/bottleneck-control-tower",
   "implementation_commit": "65e75563dc2a130f96ebe9176f5c57c23451c7fc",
   "scope": "APPROVED_V3_3_ONLY",
@@ -50,16 +50,18 @@
       ]
     },
     "5": {
-      "status": "PENDING",
+      "status": "PASS",
       "functional_tests": "PASS",
-      "fresh_quality": "REFERENCE_FROZEN_AUTOMATIC_TRIAL_PENDING",
+      "fresh_quality": "PASS",
       "actual_github_sha_conflict": "PASS",
       "candidate_test_blob_sha": "1f7bc8fc8d48065ad95783f374dac2eda5a2698e",
-      "tracking_test_blob_sha": "1cf3151e219c056534da8cfdc1d7f4d9d758a5a3"
+      "tracking_test_blob_sha": "1cf3151e219c056534da8cfdc1d7f4d9d758a5a3",
+      "quality_run_id": 36946818462,
+      "quality_report": "v33-quality-report.json"
     },
     "6": {
       "status": "PENDING",
-      "reason": "Requires production first snapshot and at least 168 actual elapsed hours; no repeated-run substitution.",
+      "reason": "Code wiring complete; production activation/readback and seven elapsed days remain.",
       "migration_smoke": {
         "status": "PASS",
         "operating_file_written": false,
@@ -106,7 +108,116 @@
         "This historical window is disjoint from the preceding quality trial by ID/URL, while disjointness from missing past Work samples is UNKNOWN.",
         "This assesses initial filter/queue adoption only, not actual read completion, seven-day operation, prediction accuracy or investment suitability."
       ]
-    }
+    },
+    "fresh_metrics": {
+      "DEMAND": {
+        "full_document_recall": {
+          "numerator": 38,
+          "denominator": 47,
+          "rate": 0.8085106382978723,
+          "unmeasured_count": 7
+        },
+        "whole_path_document_capture": {
+          "numerator": 63,
+          "denominator": 72,
+          "rate": 0.875,
+          "unmeasured_count": 16
+        },
+        "whole_path_event_capture": {
+          "numerator": 89,
+          "denominator": 100,
+          "rate": 0.89,
+          "unmeasured_count": 6,
+          "total_unmeasured_event_count": null
+        },
+        "precision": {
+          "numerator": 42,
+          "denominator": 48,
+          "rate": 0.875
+        },
+        "unmeasured_document_share": 0.16
+      },
+      "SUPPLY": {
+        "full_document_recall": {
+          "numerator": 10,
+          "denominator": 15,
+          "rate": 0.6666666666666666,
+          "unmeasured_count": 12
+        },
+        "whole_path_document_capture": {
+          "numerator": 17,
+          "denominator": 22,
+          "rate": 0.7727272727272727,
+          "unmeasured_count": 26
+        },
+        "whole_path_event_capture": {
+          "numerator": 18,
+          "denominator": 24,
+          "rate": 0.75,
+          "unmeasured_count": 1,
+          "total_unmeasured_event_count": null
+        },
+        "precision": {
+          "numerator": 7,
+          "denominator": 15,
+          "rate": 0.4666666666666667
+        },
+        "unmeasured_document_share": 0.26
+      },
+      "RELIEF": {
+        "full_document_recall": {
+          "numerator": 40,
+          "denominator": 49,
+          "rate": 0.8163265306122449,
+          "unmeasured_count": 7
+        },
+        "whole_path_document_capture": {
+          "numerator": 62,
+          "denominator": 71,
+          "rate": 0.8732394366197183,
+          "unmeasured_count": 13
+        },
+        "whole_path_event_capture": {
+          "numerator": 70,
+          "denominator": 82,
+          "rate": 0.8536585365853658,
+          "unmeasured_count": 6,
+          "total_unmeasured_event_count": null
+        },
+        "precision": {
+          "numerator": 38,
+          "denominator": 42,
+          "rate": 0.9047619047619048
+        },
+        "unmeasured_document_share": 0.13
+      }
+    },
+    "fresh_body_status_counts": {
+      "FULL": 65,
+      "PARTIAL": 4,
+      "UNAVAILABLE": 31
+    },
+    "full_claims_needing_reference_confirmation": [
+      "bc02f41e-f535-46f6-9f5e-566e656779fe",
+      "5d7c82e6-fcf8-44aa-a490-a41f0ad88905",
+      "5f427f87-4aa6-437f-a294-d49fe0fd5df3",
+      "610b97c0-289a-436e-9720-a1fc84906bd7",
+      "e9721a3a-96ac-43c8-8678-72ca4ed9ed8d",
+      "cc7301d4-6d11-4ec2-a1fe-2f8616fe84be",
+      "f3213cc3-e842-46da-bd3f-6f136c3bc65a",
+      "ede19042-b05f-42d4-9452-6a329c033209",
+      "fea16ca3-bab0-4e5b-9a8a-9c85825dc556",
+      "74cfa2c0-6947-4fcd-abed-7859865e722a",
+      "0ed5958d-d9e2-4ac3-af7b-5111928adec1"
+    ],
+    "limits": [
+      "AI reference, not human Gold.",
+      "Body-version hash equivalence is unverified.",
+      "Reference PARTIAL 27%; Demand UNKNOWN16%, Relief UNKNOWN13%, Supply UNKNOWN26%.",
+      "Supply route whole-path hits17/22 and misses5/22 are reported separately; no design threshold of80% was assigned to this route.",
+      "Eight sources observed in the fixed15-source window; old Work sample disjointness remainsUNKNOWN.",
+      "Historical initial adoption check, not forward forecasting or guaranteed field performance."
+    ]
   },
   "limits": [
     "Historical Work baseline remains BLOCKED.",
