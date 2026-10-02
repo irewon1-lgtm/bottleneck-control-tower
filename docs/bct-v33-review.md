@@ -16,6 +16,8 @@
 
 직접 읽기: [후보·묶음](https://raw.githubusercontent.com/irewon1-lgtm/bottleneck-control-tower/future-bottleneck-data/future-candidates.json), [판독·예측 원장](https://raw.githubusercontent.com/irewon1-lgtm/bottleneck-control-tower/future-bottleneck-data/future-tracking.json). 쓰기 직전에는 GitHub Contents API에서 최신 내용과 **Git blob SHA**를 다시 읽는다. 본문 `body_sha256`과 파일 저장용 SHA를 혼동하지 않는다. Pages의 대기 현황·원문 링크는 진입점이며, 실패 경고가 있으면 마지막 조회 자료임을 확인한다.
 
+후보 파일이 1MB를 넘으면 Contents 조회가 SHA만 주고 `encoding: none`·빈 content를 반환할 수 있다. 빈 파일로 처리하지 말고 해당 SHA의 Git Data blob을 읽는다. GitHub MCP에서는 `https://api.github.com/repos/irewon1-lgtm/bottleneck-control-tower/git/blobs/{SHA}`를 fetch하여 반환된 전체 UTF-8 JSON을 사용한다. raw API의 base64 응답은 UTF-8로 디코딩하고 Git blob SHA를 검증한다. 기존 `future_github.GitHubTransport.read`도 이 경로를 처리한다. 최신 운영 파일 852건의 blob 직접 읽기와 원격 git blob SHA 일치를 실제 확인했다. 전체 JSON은 내부에서 처리하고 요약·고정 묶음만 표시하며 미리보기나 일부 줄을 전체 파일 저장의 입력으로 쓰지 않는다.
+
 사용자 요청 예: “미래병목 대기 묶음을 빠르게 검토하고, 필요한 후보만 심화분석해. 결과를 저장하고 못 끝낸 자료는 남겨둬.” 기사별 복사·입력을 요구하지 않는다.
 
 ## 실제 본문과 읽은 범위

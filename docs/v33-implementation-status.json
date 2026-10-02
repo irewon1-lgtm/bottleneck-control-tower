@@ -1,6 +1,6 @@
 {
   "version": "bct-v33-implementation-acceptance-v1",
-  "updated_at": "2026-10-02T00:39:20.879930+00:00",
+  "updated_at": "2026-10-02T00:56:34.324974+00:00",
   "repository": "irewon1-lgtm/bottleneck-control-tower",
   "implementation_commit": "65e75563dc2a130f96ebe9176f5c57c23451c7fc",
   "scope": "APPROVED_V3_3_ONLY",
@@ -57,11 +57,12 @@
       "candidate_test_blob_sha": "1f7bc8fc8d48065ad95783f374dac2eda5a2698e",
       "tracking_test_blob_sha": "1cf3151e219c056534da8cfdc1d7f4d9d758a5a3",
       "quality_run_id": 36946818462,
-      "quality_report": "v33-quality-report.json"
+      "quality_report": "v33-quality-report.json",
+      "live_browser_queue_verification": "BLOCKED_CLIENT_NETWORK"
     },
     "6": {
       "status": "PENDING",
-      "reason": "Code wiring complete; production activation/readback and seven elapsed days remain.",
+      "reason": "Production first snapshot read back. Actual168hours and daily operating evidence remain pending; automated assessment is enabled.",
       "migration_smoke": {
         "status": "PASS",
         "operating_file_written": false,
@@ -69,7 +70,13 @@
         "preserved_target_count": 12,
         "first_snapshot_status": "PENDING",
         "elapsed_seconds": 0
-      }
+      },
+      "connection_status": "PASS",
+      "first_real_snapshot_at": "2026-10-02T00:42:25.217219+00:00",
+      "expected_earliest_finish": "2026-10-09T00:42:25.217219+00:00",
+      "scheduled_assessment_at": "2026-10-09T12:47:16Z",
+      "scheduled_assessment_timezone": "Asia/Seoul",
+      "scheduled_assessment_local": "2026-10-09T21:47:16+09:00"
     }
   },
   "tests": {
@@ -82,7 +89,14 @@
       36944717256,
       36944720963
     ],
-    "github_test_runs_status": "SUCCESS"
+    "github_test_runs_status": "SUCCESS",
+    "live_browser": {
+      "deployed_page_open": "PASS",
+      "existing_target_history_display": "PASS_12_TARGETS",
+      "current_queue_numbers_display": "BLOCKED",
+      "observed_state": "Tracking page showed legacy queue-aggregation-pending state after production publication; direct GitHub API navigation returned net::ERR_BLOCKED_BY_CLIENT in this browser. Cause of legacy raw data is unconfirmed.",
+      "work_continues": "Existing scheduled collection and notification remain enabled; full candidate/bundle reading via Git Data blob was verified."
+    }
   },
   "quality": {
     "initial_frozen_100": "FAIL",
@@ -245,5 +259,93 @@
       36
     ],
     "effect_on_new_S": "No automatic deletion, promotion or demotion; optional comparison only."
-  }
+  },
+  "overall_status": "CONDITIONAL_PASS_IMPLEMENTED_LIMITED_OPERATION",
+  "production": {
+    "code_commit": "debba47ff443957741f80ba6262aeb547a5c7948",
+    "merge_pr": 8,
+    "main_function_run": 36947222467,
+    "main_test_run": 36947222462,
+    "pages_run": 36947222455,
+    "all_run_status": "SUCCESS",
+    "activation_readback": {
+      "candidate_sha": "c231cdeb41139a269bbc96669be2ab37eaee880c",
+      "tracking_sha": "ccb767ff9260e6dee3a4bb5b46f9805a5fd543de",
+      "version": "body-candidate-v3.3",
+      "documents": 852,
+      "targets": 12,
+      "test_targets": [],
+      "sample_count": 1,
+      "first_sample": {
+        "recorded_at": "2026-10-02T00:42:25.217219+00:00",
+        "documents_total": 852,
+        "completed_total": 0,
+        "quick_pending": 609,
+        "material_pending": 748,
+        "deep_pending": 0,
+        "candidate_data_wait": 0,
+        "oldest_wait_hours": 26.67,
+        "inflow_total": 0,
+        "system_wait": 960,
+        "pending_total": 836,
+        "actual_execution": true
+      },
+      "observation": {
+        "version": "bct-v33-operation-observation-v1",
+        "status": "PENDING",
+        "start_at": "2026-10-02T00:42:25.217219+00:00",
+        "last_observed_at": "2026-10-02T00:42:25.217219+00:00",
+        "expected_earliest_finish": "2026-10-09T00:42:25.217219+00:00",
+        "elapsed_seconds": 0.0,
+        "sample_count": 1,
+        "observed_day_buckets": [
+          0
+        ],
+        "missing_day_buckets": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "inflow_change": null,
+        "completed_change": null,
+        "continued_backlog_growth": false,
+        "pending_reasons": [
+          "Seven actual elapsed days have not been observed",
+          "Missing operating snapshots within observation days",
+          "Insufficient comparable operating snapshots"
+        ],
+        "hold_reasons": [],
+        "invalid_observations": [],
+        "incomplete_observations": [],
+        "limits": [
+          "User waiting and system delays are reported separately.",
+          "Seven-day PASS does not establish long-term stability or prediction accuracy."
+        ]
+      },
+      "collection": {
+        "db_news_articles": 1260,
+        "scope_articles": 1260,
+        "processed_this_run": 300,
+        "body_ok_this_run": 104,
+        "body_rate_this_run": 0.3467,
+        "candidates_this_run": 150,
+        "processed_total": 852,
+        "body_ok_total": 104,
+        "candidates_total": 195,
+        "pending_due": 960,
+        "checked_at": "2026-10-02T00:41:45.167249+00:00",
+        "new_documents_this_run": 0,
+        "private_cache": "RUNTIME_ONLY_NOT_PUBLISHED",
+        "source_reaccess_limit": "Cache may expire; historical body reproducibility is not guaranteed."
+      },
+      "bundles": 1
+    },
+    "large_candidate_mcp_blob_read": "PASS",
+    "initial_user_summary_automation_enabled": true,
+    "daily_summary_limit": 2
+  },
+  "forecast_performance": "UNVERIFIED_NOT_INFERRED_FROM_INITIAL_QUALITY_OR_7_DAY_OPERATIONS"
 }
