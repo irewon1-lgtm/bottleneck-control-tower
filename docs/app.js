@@ -370,6 +370,9 @@
   const detailHref = row => `#detail/${encodeURIComponent(row.id)}`;
   const link = (text, href, className = "text-link") => { const el = node("a", text, className); el.href = href; return el; };
   const statusPill = value => pill(view.status(value)[0], value.toLowerCase());
+  const hypothesisField = value => ({target:"TARGET",specification:"규격",region:"지역",supply_pool:"공급 풀",period:"필요 기간",basis:"수급 비교 기준",
+    "gate.change":"변화 확인","gate.remaining_demand":"잔여 수요","gate.matched_scope":"동일 범위 비교","gate.future_period":"미래 필요 시점",
+    "gate.qualified_supply":"적격 공급","gate.relief_reviewed":"완화 근거 검토","gate.supply_gap":"공급공백 비교"}[value] || value);
   const hypothesisStatus = row => `${row.status}${row.reviewRequired === true ? " · 검토 필요" : ""}`;
   const detectedDate = value => !value || Number.isNaN(new Date(value).getTime()) ? "UNKNOWN" : `${new Intl.DateTimeFormat("ko-KR", {timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(value))} KST`;
   function hypothesisPanel() {
@@ -414,13 +417,13 @@
       body.append(node("h3", label));
       body.append(refs.length ? table(["원문·문서", "저장된 근거", "본문 버전 / 위치"], refs, ref => [
         articleTitle({title: ref.title, url: view.url(ref.url)}),
-        `${ref.target || "UNKNOWN"} · 수량 ${ref.quantity ?? "UNKNOWN"} ${ref.unit || "UNKNOWN"} · 필요일 ${ref.need_date || "UNKNOWN"} · 공급일 ${ref.available_date || "UNKNOWN"} · ${ref.actual_statement === true ? "실제 진술" : ref.actual_statement === false ? "조건·전망 진술" : "진술 유형 UNKNOWN"}`,
+        `${ref.target || "UNKNOWN"} · 수량 ${ref.quantity ?? "UNKNOWN"}${ref.unit && ref.unit.toUpperCase() !== "UNKNOWN" ? " " + ref.unit : ""} · 필요일 ${ref.need_date || "UNKNOWN"} · 공급일 ${ref.available_date || "UNKNOWN"} · ${ref.actual_statement === true ? "실제 진술" : ref.actual_statement === false ? "조건·전망 진술" : "진술 유형 UNKNOWN"}`,
         `${ref.body_sha256 || "UNKNOWN"} · 문자 ${ref.locator?.start ?? "UNKNOWN"}–${ref.locator?.end ?? "UNKNOWN"}`
       ]) : node("p", "UNKNOWN · 저장된 근거 없음", "data-note"));
     }
-    body.append(node("h3", "UNKNOWN 항목"), node("p", `미확인: ${row.unknown.join(" · ") || "별도 미확인 항목 미기록"}`));
+    body.append(node("h3", "UNKNOWN 항목"), node("p", `미확인: ${row.unknown.map(hypothesisField).join(" · ") || "별도 미확인 항목 미기록"}`));
     if (row.draft.refutation) body.append(node("h3", "반박 조건"), node("p", row.draft.refutation));
-    if (row.draft.next_material?.length) body.append(node("h3", "다음 확인 자료"), node("p", row.draft.next_material.join(" · ")));
+    if (row.draft.next_material?.length) body.append(node("h3", "다음 확인 자료"), node("p", row.draft.next_material.map(hypothesisField).join(" · ")));
     document.getElementById("family-dialog").showModal();
   }
   function sourceLinks(sources) {
