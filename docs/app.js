@@ -1,6 +1,12 @@
 "use strict";
 (() => {
   const pages = {
+    ranking: ["전체 병목 순위", "대상·판단·핵심 근거를 한눈에. 순위나 섹터명을 누르면 상세 자료가 열립니다."],
+    detail: ["미래 병목과 근거", ""],
+    evidence: ["근거 자료", "각 판단에 연결된 원문과 기록일을 확인합니다."],
+    review: ["검증 중", "아직 부족을 확정하지 못한 대상과 다음 확인 자료"],
+    situation: ["병목 상황", "최신 판단과 과거 기록의 변화를 함께 확인합니다."],
+    insights: ["판단에 필요한 자료", "수요·공급·시점·완화 근거를 모아 봅니다."],
     dashboard: ["대시보드", "현재 수집 결과와 기존 SIGNAL·Family 현황"],
     future: ["검증된 미래병목", "8단계 고정 결과 · 상태·TARGET·기업 연결·근거"],
     tracking: ["미래병목 추적", "12~36개월 수요·공급 변화 · 요청형 검토와 누적 이력"],
@@ -8,7 +14,7 @@
     signals: ["SIGNAL 기사", "기존 SIGNAL 결과 · 제목과 요약문 기준"],
     ai: ["AI 리뷰", "현재 DB에 저장된 AI 보조판독 결과"],
     families: ["후보 Family", "기존 Candidate Family 집계"],
-    system: ["수집 현황 / 시스템 상태", "최근 RSS 실행 기록과 확인 가능한 상태"]
+    system: ["데이터 수집·저장", "마지막 실행 결과, 본문 확보, 검토 대기와 운영 관찰"]
   };
   const content = document.getElementById("content");
   const states = Object.fromEntries(Object.keys(pages).map(key => [key, {filter: "전체", query: "", period: "all", page: 1}]));
@@ -106,7 +112,9 @@
   let trackingLoading = false;
   let trackingError = false;
   let loading = false;
-  const route = () => Object.hasOwn(pages, location.hash.slice(1)) ? location.hash.slice(1) : "dashboard";
+  const route = () => Object.hasOwn(pages, location.hash.slice(1).split("/")[0]) ? location.hash.slice(1).split("/")[0] : "ranking";
+  const researchRoutes = ["ranking", "detail", "evidence", "review", "situation", "insights", "system", "tracking"];
+  const view = globalThis.BCTView;
   function toolbar(key, filters, usePeriod) {
     const state = states[key];
     const bar = node("div", null, "toolbar");
@@ -243,7 +251,7 @@
       if (value.version !== 1 || !value.as_of || !Array.isArray(value.items) || value.items.length !== 3 || !value.items.every(item => ["FUTURE", "EMERGING"].includes(item.status) && item.target && Array.isArray(item.companies) && Array.isArray(item.sources) && Array.isArray(item.unresolved) && Array.isArray(item.no_public_play))) throw new Error("Invalid verified results");
       verified = value;
     } catch { verifiedError = true; }
-    finally { clearTimeout(timeout); if (["dashboard", "future"].includes(route())) render(); }
+    finally { clearTimeout(timeout); if (["dashboard", "future", ...researchRoutes].includes(route())) render(); }
   }
   function trackingPanels() {
     const box = panel("지속 추적 기록", tracking ? `기록 갱신 ${tracking.updated_at || "데이터 없음"} · ${number(tracking.targets.length)}개 TARGET` : "정기 점검과 요청 조사의 누적 기록");
@@ -356,17 +364,252 @@
         futureCandidates = candidates; candidatesError = false;
       } catch { candidatesError = true; }
     } catch { trackingError = true; candidatesError = true; }
-    finally { clearTimeout(timeout); trackingLoading = false; if (route() === "tracking") render(); }
+    finally { clearTimeout(timeout); trackingLoading = false; if (researchRoutes.includes(route())) render(); }
+  }
+  const targetRows = () => view.targets(tracking, verified);
+  const detailHref = row => `#detail/${encodeURIComponent(row.id)}`;
+  const link = (text, href, className = "text-link") => { const el = node("a", text, className); el.href = href; return el; };
+  const statusPill = value => pill(view.status(value)[0], value.toLowerCase());
+  function sourceLinks(sources) {
+    const wrap = node("div", null, "source-links");
+    sources.forEach(source => {
+      const raw = typeof source === "string" ? source : source.url, safe = view.url(raw);
+      if (!safe) return;
+      wrap.append(articleTitle({title: typeof source === "object" && source.label ? source.label : new URL(safe).hostname, url: safe}));
+    });
+    return wrap.children.length ? wrap : node("span", "원문 연결 미기록", "muted");
+  }
+  function dataNote(box) {
+    if (!tracking) box.append(node("p", trackingError ? "최신 추적 자료를 읽지 못해 초기 확인 자료만 표시합니다. 최신 상태와 다를 수 있습니다." : "최신 추적 자료 확인 중입니다. 초기 확인 자료가 먼저 표시될 수 있습니다.", "data-note"));
+    else if (trackingError) box.append(node("p", "최신 자료를 읽지 못했습니다. 마지막으로 읽은 추적 기록을 표시합니다.", "data-note"));
+    box.append(node("p", `판단 기록 ${tracking ? date(tracking.updated_at) + " KST" : verified?.as_of || "확인 중"} · 원문 수는 연결된 고유 URL 수입니다.`, "record-meta"));
+  }
+  function researchStats(rows) {
+    const metrics = node("div", null, "research-stats");
+    for (const key of ["FUTURE", "EMERGING", "OBSERVE", "CURRENT"]) {
+      const count = rows.filter(row => row.status === key).length;
+      const card = link("", "#ranking", `stat stat-${key.toLowerCase()}`);
+      card.addEventListener("click",()=>{states.ranking.filter=key;states.ranking.query="";if(route()==="ranking")render();});
+      const notes={FUTURE:"미래 공급 제약 근거",EMERGING:"부족량·시점 확인 필요",OBSERVE:"공급 부족 미확인",CURRENT:"이미 발생한 부족"};
+      card.append(node("span", view.status(key)[0]), node("strong", tracking ? number(count) : "—"), node("small", tracking ? notes[key] : "최신 분류 확인 중"));
+      metrics.append(card);
+    }
+    return metrics;
+  }
+  function rankingPanel(key = "ranking") {
+    const all = targetRows(), state = states[key];
+    const box = panel(key === "review" ? "추가 근거가 필요한 대상" : "병목 후보 전체 목록");
+    if (key === "ranking") {
+      content.append(researchStats(all));
+      const basis=node("details",null,"ranking-basis");basis.append(node("summary","상태·조사 우선순위에 따른 표시 순서 · 병목 강도 점수 미산정"),node("p","미래 병목 → 병목 가능성 → 관찰·보류 → 현재 병목 순서입니다. 같은 분류에서는 저장된 조사 우선순위, 나머지는 기록 순서를 유지합니다. 병목 강도나 주가 상승률 순위는 아직 산정되지 않았습니다. 섹터명은 저장된 대상명에 따른 화면 분류입니다."));box.append(basis);
+    }
+    dataNote(box);
+    const bar = node("div", null, "toolbar"), filters = node("div", null, "filters");
+    const list = node("div", null, "rank-list"), count = node("p", null, "record-meta");
+    const buttons = [];
+    const filterKeys = key === "review" ? ["전체", "OBSERVE", "EMERGING", "UNRESOLVED"] : ["전체", "FUTURE", "EMERGING", "OBSERVE", "CURRENT"];
+    for (const value of filterKeys) {
+      const button = node("button", value === "전체" ? "전체" : view.status(value)[0], "filter"); button.type = "button";
+      button.setAttribute("aria-pressed", String(state.filter === value));
+      button.addEventListener("click", () => {state.filter = value; draw();}); filters.append(button); buttons.push([button,value]);
+    }
+    const search = node("input", null, "search"); search.type = "search"; search.placeholder = "대상·섹터·기업 검색";
+    search.setAttribute("aria-label", "병목 대상 검색"); search.value = state.query;
+    search.addEventListener("input", () => {state.query = search.value; draw();});
+    bar.append(filters, search); box.append(bar, count, list);
+    function draw() {
+      const rows = all.filter(row => (key !== "review" || ["OBSERVE", "EMERGING", "UNRESOLVED"].includes(row.status)) && (state.filter === "전체" || state.filter === row.status) && matches(row, state));
+      buttons.forEach(([button,value]) => button.setAttribute("aria-pressed", String(state.filter === value)));
+      count.textContent = `${number(rows.length)}개 대상 · 필터 후에도 전체 표시 순서를 유지합니다.`;
+      list.replaceChildren();
+      if (!rows.length) {list.append(empty(all.length ? "검색 결과가 없습니다" : "추적 기록 확인 중", all.length ? "검색어 또는 분류를 바꿔 주세요." : "자료를 읽지 못했을 때 0건으로 확정하지 않습니다."));return;}
+      const headings = node("div", null, "rank-heading"); ["표시 순서", "섹터 · 세부 병목 대상", "최신 판단의 핵심", "판단 상태"].forEach(text => headings.append(node("span", text))); list.append(headings);
+      for (const row of rows) {
+        const article = node("article", null, "rank-row");
+        const rank = link(String(all.indexOf(row)+1).padStart(2,"0"), detailHref(row), "rank-number"); rank.setAttribute("aria-label", `${all.indexOf(row)+1}번 ${row.name} 상세`);
+        const identity = node("div", null, "rank-identity"); identity.append(link(row.sector, detailHref(row), "sector-link"), link(row.name, detailHref(row), "target-link"));
+        const evidence=["FUTURE","EMERGING"].includes(row.status)?view.field(row.target,["constraint_evidence","constraint"],row.baseline):null;
+        const summary = node("div", null, "rank-summary"); summary.append(node("p", view.clean(key === "review" && row.audit?.decisive_missing ? row.audit.decisive_missing : evidence?.on ? evidence.value : row.latest.reason) || "판단 사유 미기록", "clamp-text"));
+        const meta = node("div", null, "row-meta"); meta.append(node("span", `원문 ${row.sources.length}개`), node("span", `검토 ${row.latest.reviewed_on || "미기록"}`));
+        if(evidence?.on && evidence.on!==row.latest.reviewed_on)meta.append(node("span",`근거 ${evidence.on}`));
+        if (row.priority) meta.append(node("span", `다음 조사 ${row.priority}순위`, "priority")); summary.append(meta);
+        const status = node("div", null, "rank-status"); status.append(statusPill(row.status), link("상세·근거", detailHref(row)));
+        article.append(rank, identity, summary, status); list.append(article);
+      }
+    }
+    draw(); return box;
+  }
+  function folding(title, description, child, open = false) {
+    const section = node("details", null, "detail-section"); section.open = open;
+    const summary = node("summary"); summary.append(node("span", title), node("small", description || "")); section.append(summary, child);return section;
+  }
+  function sourceTable(row) {
+    return table(["원문·문서", "발행일 / 확인 위치", "연결된 검토일", "자료 범위"], row.sources, source => [
+      sourceDocument(source),
+      [source.published || "발행일 미기록", source.locator || "본문 위치 미기록"].join(" · "),
+      source.reviewed || "미기록", source.baseline ? "초기 확인 자료" : "추적 기록에 연결된 원문"
+    ]);
+  }
+  function sourceDocument(source) {
+    const cell=node("div",null,"cell-stacked");cell.append(articleTitle({title:source.label,url:source.url}));
+    const saved=view.documents(futureCandidates).find(doc=>view.url(doc.url)===source.url);
+    if(saved)cell.append(node("span",saved.title,"source-document"));
+    else if(source.label===new URL(source.url).hostname){
+      const parts=new URL(source.url).pathname.split("/").filter(Boolean);
+      const title=parts.at(-1)==="default.aspx"?parts.at(-2):parts.at(-1);
+      cell.append(node("span",`URL 문서명: ${(title||"제목 미기록").replaceAll("-"," ")}`,"source-document"));
+    }
+    return cell;
+  }
+  function detailPanel() {
+    let id; try {id = decodeURIComponent(location.hash.slice(1).split("/").slice(1).join("/"));} catch {id = "";}
+    const row = targetRows().find(item => item.id === id), box = node("div", null, "detail-view");
+    box.append(link("전체 병목 순위로 돌아가기", "#ranking", "back-link"));
+    if (!row) {box.append(empty(trackingLoading ? "대상 확인 중" : "이 대상을 찾을 수 없습니다", "전체 목록에서 대상을 다시 선택해 주세요."));return box;}
+    document.getElementById("page-title").textContent = row.name;
+    document.getElementById("page-subtitle").textContent = `${row.sector} · 최근 검토 ${row.latest.reviewed_on || "미기록"}`;
+    const verdict = panel("현재 판단"); verdict.classList.add("verdict");
+    verdict.append(statusPill(row.status), node("p", view.clean(row.latest.reason) || "판단 사유 미기록", "verdict-text"));
+    verdict.append(node("p", view.status(row.status)[1], "muted")); dataNote(verdict); box.append(verdict);
+    const fields = [
+      ["무엇이 부족할 대상인가", {value: row.name, on: row.latest.reviewed_on}],
+      ["수요 관련 근거", view.field(row.target, ["demand_evidence", "demand", "comparison_inputs.demand.basis"], row.baseline)],
+      ["공급이 따라가기 어려운 근거", view.field(row.target, ["constraint_evidence", "constraint", "comparison_inputs.supply.basis"], row.baseline)],
+      ["고객이 필요한 시점", view.field(row.target, ["demand_timing"], row.baseline)],
+      ["공급 가능한 시점", view.field(row.target, ["supply_timing", "relief_timing"], row.baseline)],
+      ["병목을 완화할 자료", view.field(row.target, ["relief_evidence", "relief_timing"], row.baseline)],
+      ["공급망 단계", {value: row.target.stage || row.baseline?.stage || "자료 미확보", on: row.baseline?.as_of}],
+      ["다음에 확인할 자료", view.field(row.target, ["next_check"])]];
+    const core = panel("수요와 공급, 이렇게 비교했습니다", "최신 기록에서 항목별로 마지막 확인 내용을 표시합니다. 과거 자료의 날짜도 함께 표시합니다.");
+    core.append(table(["확인 항목", "저장된 판단·근거", "기록일"], fields, ([label, value]) => [label, view.clean(value.value), value.on || "미기록"])); box.append(core);
+    const missing = panel("판단에 남아 있는 빈칸");
+    if (row.audit?.decisive_missing) missing.append(node("p", view.clean(row.audit.decisive_missing)));
+    const blockers = row.latest.supply_gap?.blockers || row.baseline?.unresolved || [];
+    missing.append(blockers.length ? table(["번호", "미확인 근거"], blockers, (value,i) => [i+1,view.clean(value)]) : node("p", view.clean(row.latest.outcome) || "별도 미확인 항목 미기록"));
+    if (row.audit?.next_evidence) missing.append(node("p", `다음 자료: ${view.clean(row.audit.next_evidence)}`, "next-evidence"));
+    box.append(missing);
+    const comparison = row.latest.comparison_inputs, gap = row.latest.supply_gap;
+    if (comparison) {
+      const labels = {current:"현재 부족",shortage_window:"미래 부족 시점",demand:"같은 규격의 수요량",supply:"납품 가능한 적격 공급량",timing:"고객 필요일과 공급일",relief:"증설·대체 공급",market_awareness:"시장 선반영",economic_capture:"기업 이익 귀속"};
+      const entries = Object.entries(comparison);
+      const body = node("div", null, "detail-body");
+      body.append(node("p", "계획·주문·생산능력은 같은 수치가 아닙니다. 미확인 값은 계산하지 않습니다.", "muted"));
+      body.append(table(["비교 항목", "공개된 입력", "근거 설명", "연결 원문"], entries, ([key,value]) => [labels[key] || key,
+        value.min != null || value.max != null ? `${value.min ?? "미확인"} ~ ${value.max ?? "미확인"} ${value.unit || ""}` : view.clean(value.state) || (value.review_complete === false ? "점검 미완료" : "정량·일정 미확인"),
+        view.clean(value.basis) || "미기록", sourceLinks(value.evidence || [])]));
+      if (gap) body.append(node("p", `수급 비교 판정: ${view.clean(gap.gap_status)} · 부족량 범위: ${gap.gap_range ? gap.gap_range.join(" ~ ") : "미확인"}`, "data-note"));
+      box.append(folding("수급 비교 입력표", "수요량·적격 공급량·고객 필요일·반증 자료", body));
+    }
+    const companies = row.latest.companies || [], companyBody = node("div", null, "detail-body");
+    companyBody.append(node("p", "공급망과 연결된 기업입니다. 제품별 이익 귀속·주가 선반영은 별도 확인이 필요합니다.", "muted"));
+    companyBody.append(companies.length ? table(["기업", "공급망 역할", "연결 범위·근거", "사업 비중"], companies, company => [[company.ticker, company.name].filter(Boolean).join(" · ") || "상장 투자수단 미확인", ({DIRECT:"직접 공급",ENABLEMENT:"지원·장비·공정",UNRESOLVED:"연결 미확인"}[company.role] || company.role), view.clean(company.scope || company.evidence) || "범위 미기록", view.clean(company.business_share) || "미확인"]) : empty("최신 기업 연결 미기록", "회사명을 임의로 추가하지 않습니다."));
+    if (row.baseline?.companies?.length) {
+      companyBody.append(node("h3", `초기 확인 기업 · ${row.baseline.as_of}`));
+      companyBody.append(table(["기업", "당시 역할", "당시 확인 범위", "공시·원문"], row.baseline.companies, company => [[company.ticker, company.name].filter(Boolean).join(" · ") || "상장 투자수단 미확인", ({DIRECT:"직접 공급",ENABLEMENT:"지원·장비·공정",UNRESOLVED:"연결 미확인"}[company.role] || company.role), view.clean(company.evidence), sourceLinks([{url:company.source}])]));
+    }
+    box.append(folding("관련 기업", `최신 기록 ${companies.length}개 · 초기 자료는 날짜를 구분`, companyBody));
+    const sources = node("div", null, "detail-body"); sources.append(node("p", "원문 링크와 해당 검토 기록의 연결입니다. 문장별 인용 위치가 없으면 미기록으로 표시합니다. 전체 본문은 원문 사이트에서 확인합니다.", "muted"), sourceTable(row));
+    box.append(folding("판단 근거 원문", `${row.sources.length}개 고유 URL · 발행일·본문 위치는 저장된 경우만 표시`, sources, true));
+    const history = node("div", null, "detail-body"); history.append(table(["검토일", "당시 판단", "판단 이유", "다음 확인"], [...row.target.history].reverse(), entry => [entry.reviewed_on || "미기록",statusPill(entry.status || "UNRESOLVED"),view.clean(entry.reason) || "미기록",view.clean(entry.next_check) || "미기록"]));
+    box.append(folding("판단 변경 이력", `${row.target.history.length}개 기록 · 과거 판단을 보존`, history));return box;
+  }
+  function evidencePanel() {
+    const box = panel("대상별 근거 자료", "같은 원문이 여러 대상과 연결될 수 있습니다. 출처 수를 독립 사건 수로 해석하지 않습니다."); dataNote(box);
+    for (const row of targetRows()) {
+      const body = node("div", null, "detail-body"); body.append(link("이 대상의 판단·수급 비교 보기", detailHref(row)), sourceTable(row));
+      box.append(folding(row.name, `${view.status(row.status)[0]} · 원문 ${row.sources.length}개`, body));
+    }
+    return box;
+  }
+  const bodyLabels = {FULL:"본문 확보",PARTIAL:"부분 본문",UNAVAILABLE:"본문 미확보"};
+  const evidenceLabels = {DEMAND:"수요 변화",CONSTRAINT:"공급 제약",CAPACITY_LEAD_TIME:"생산능력·납기",TIMING:"시점",RELIEF:"완화 근거"};
+  function showDocument(row) {
+    document.getElementById("dialog-title").textContent=row.title;
+    const body=document.getElementById("dialog-content");body.replaceChildren();
+    body.append(node("p",`자동 추출 · ${bodyLabels[row.body_status] || row.body_status} · ${row.candidate ? "자동 후보" : "일반 수집 문서"}`,"record-meta"),articleTitle({title:"전체 원문 열기",url:row.url}));
+    body.append(node("p","아래는 저장된 자동 발췌입니다. 병목 확정이나 전체 본문 판독 완료를 의미하지 않습니다.","data-note"));
+    const excerpts=Object.entries(row.evidence).flatMap(([key,values])=>(Array.isArray(values)?values:[values]).map((value,i)=>({key,value,location:row.locations[key]?.[i]})));
+    body.append(excerpts.length ? table(["근거 종류","저장된 원문 발췌","본문 위치"],excerpts,entry=>[evidenceLabels[entry.key]||entry.key,typeof entry.value==="string"?entry.value:JSON.stringify(entry.value),entry.location ? `문단 ${entry.location.paragraph ?? "미기록"} · 문장 ${entry.location.sentence ?? "미기록"}`:"위치 미기록"]) : empty("저장된 발췌 없음","원문에서 내용을 확인해 주세요."));
+    body.append(node("p",`처리 확인 ${date(row.checked_at)} KST · 본문 버전 ${row.hash ? row.hash.slice(0,12) : "미확보"}`,"record-meta"));
+    document.getElementById("family-dialog").showModal();
+  }
+  function documentsPanel() {
+    const box=panel("수집 문서와 자동 발췌","문서명을 누르면 저장된 근거 발췌를 볼 수 있습니다. 자동 후보와 검토가 끝난 대상은 구분합니다.");
+    if(!futureCandidates){box.append(empty(candidatesError?"수집 문서를 읽지 못했습니다":"수집 문서 확인 중","추적 대상의 원문 목록은 아래에서 확인할 수 있습니다."));return box;}
+    if(candidatesError) box.append(node("p","최신 자료를 읽지 못했습니다. 아래는 마지막으로 읽은 문서 기록입니다.","data-note"));
+    const rows=view.documents(futureCandidates),state=states.evidence,bar=node("div",null,"toolbar"),filters=node("div",null,"filters"),list=node("div"),controls=[];
+    for(const value of ["전체","자동 후보","FULL","PARTIAL","UNAVAILABLE"]){const button=node("button",bodyLabels[value]||value,"filter");button.type="button";button.addEventListener("click",()=>{state.filter=value;state.page=1;draw();});filters.append(button);controls.push([button,value]);}
+    const search=node("input",null,"search");search.type="search";search.placeholder="문서·출처·발췌 검색";search.setAttribute("aria-label","근거 문서 검색");search.value=state.query;search.addEventListener("input",()=>{state.query=search.value;state.page=1;draw();});
+    bar.append(filters,search);box.append(bar,list);
+    function draw(){const subset=rows.filter(row=>(state.filter==="전체"||(state.filter==="자동 후보"?row.candidate:row.body_status===state.filter))&&matches(row,state));
+      controls.forEach(([button,value])=>button.setAttribute("aria-pressed",String(state.filter===value)));list.replaceChildren();
+      const max=Math.max(1,Math.ceil(subset.length/15));state.page=Math.min(state.page,max);
+      list.append(node("p",`${subset.length}개 문서 · ${state.page} / ${max}페이지`,"record-meta"));
+      list.append(subset.length?table(["수집 문서","분류","본문 상태","출처","근거 종류"],subset.slice((state.page-1)*15,state.page*15),row=>{
+        const button=node("button",row.title,"document-button");button.type="button";button.addEventListener("click",()=>showDocument(row));
+        return [button,row.candidate?"자동 후보":"일반 문서",bodyLabels[row.body_status]||row.body_status,row.source||"미기록",Object.keys(row.evidence).map(key=>evidenceLabels[key]||key).join(" · ")||"발췌 없음"];
+      }):empty("문서 검색 결과 없음","검색어나 분류를 바꿔 주세요."));
+      const pager=node("div",null,"pager"),previous=node("button","이전"),next=node("button","다음");previous.disabled=state.page<=1;next.disabled=state.page>=max;
+      previous.addEventListener("click",()=>{state.page--;draw();});next.addEventListener("click",()=>{state.page++;draw();});pager.append(previous,next);list.append(pager);
+    }draw();return box;
+  }
+  function situationPanel() {
+    const rows = targetRows(), box = panel("대상별 최신 상태", "현재 부족과 아직 발생하지 않은 미래 부족을 구분합니다. 일별 변화가 저장되지 않은 날은 추정하지 않습니다.");
+    content.append(researchStats(rows));dataNote(box);
+    box.append(table(["대상", "직전 → 최신 상태", "최신 검토일", "최신 판단 이유", "이력"], rows, row => {
+      const past = row.target.history.at(-2), cell = node("div", null, "cell-stacked");
+      if(past) cell.append(node("span", view.status(past.status)[0], "muted"));cell.append(statusPill(row.status));
+      return [link(row.name,detailHref(row)),cell,row.latest.reviewed_on,view.clean(row.latest.reason),`${row.target.history.length}개 기록`];
+    }));return box;
+  }
+  function insightsPanel() {
+    const box = panel("확보된 자료로 판단하기", "시계열·노출도·예측 확률 대신, 현재 기록에서 확인할 수 있는 자료만 제공합니다."); dataNote(box);
+    const specs = [["01", "수요와 고객 필요 시점", ["demand_evidence","demand","demand_timing"], "확정 주문과 계획을 구분하고, 고객별 필요량·필요일을 확인합니다."],
+      ["02", "적격 공급과 납기",["supply_timing","constraint_evidence","constraint"],"생산능력 발표와 고객 인증·납품 가능한 물량을 구분합니다."],
+      ["03", "증설·대체·완화 근거",["relief_evidence","relief_timing"],"부족이 풀릴 수 있는 증설, 대체 공급, 실제 생산 진전을 확인합니다."],
+      ["04", "판단을 바꿀 다음 자료",["next_check"],"각 대상의 미확인 근거와 다음 확인 자료를 확인합니다."]];
+    for (const [num,title,fields,note] of specs) {
+      const body = node("div", null, "detail-body"); body.append(node("p",note,"muted"));
+      body.append(table(["대상", "현재 확보한 내용", "기록일"],targetRows(),row => {const value=view.field(row.target,fields,row.baseline);return [link(row.name,detailHref(row)),value.value,value.on || "미기록"];}));
+      box.append(folding(`${num} · ${title}`,note,body));
+    }
+    return box;
+  }
+  function collectionPanel() {
+    const box = panel("본문 확보와 검토 기록", "수집·본문 확보·자동 후보·판독 완료는 서로 다른 단계입니다.");
+    if (!futureCandidates) {box.append(empty(candidatesError ? "본문·검토 기록을 읽지 못했습니다" : "본문·검토 기록 확인 중", "수집 기사 기록과 별도로 불러옵니다."));return box;}
+    if(candidatesError) box.append(node("p","최신 자료를 읽지 못했습니다. 아래는 마지막으로 읽은 집계입니다.","data-note"));
+    const summary = futureCandidates.summary || {}, queue = summary.review_queue || {};
+    const metrics=node("div",null,"research-stats");
+    [["처리 기록",summary.processed_total,"문서 처리 결과 수"],["자동 후보",queue.automatic_candidates,"확정된 병목 수와 다름"],["판독 완료",queue.completed_documents,"저장된 완료 문서"],["전체 검토 대기",queue.review_list_versions,"문서 버전 기준"]].forEach(([label,value,note])=>metrics.append(metric(label,value,note)));box.append(metrics);
+    const statuses = {}; view.documents(futureCandidates).forEach(record=>{const s=record.body_status;statuses[s]=(statuses[s]||0)+1;});
+    const labels={FULL:"본문 확보",PARTIAL:"부분 본문",UNAVAILABLE:"본문 미확보",UNAVAILABLE_THIS_RUN:"이번 실행 미확보"};
+    box.append(table(["본문 확보 상태", "저장된 결과 수"],Object.entries(statuses),([key,value])=>[labels[key]||key,value]));
+    const counts=[["수집 범위 기사",summary.scope_articles],["이번 처리 문서",summary.processed_this_run],["이번 본문 확보",summary.body_ok_this_run],["빠른 검토 대기",queue.quick_pending],["자료 확인 대기",queue.material_pending],["심화 검토 대기",queue.deep_pending],["보존된 문서 버전",queue.preserved_versions],["고정 검토 묶음",Object.keys(futureCandidates.bundles || {}).length]];
+    box.append(node("p", "빠른 검토와 자료 확인 대기는 같은 문서가 겹칠 수 있어 합산하지 않습니다. 본문 캐시는 공개되지 않으며 원문 재접근 가능 여부는 달라질 수 있습니다.","data-note"),table(["확인 항목","저장된 수치"],counts,([label,value])=>[label,number(value)]));
+    box.append(node("p",`수집 확인 ${date(summary.checked_at)} KST · 대기 집계 ${date(queue.computed_at)} KST · 최장 대기 ${queue.oldest_wait_hours == null ? "미기록" : queue.oldest_wait_hours+"시간"}`,"record-meta"));
+    const observation=summary.operation_observation;
+    if(observation) {
+      const body=node("div",null,"detail-body");
+      body.append(table(["운영 관찰 항목","현재 기록"],[["상태",({PENDING:"관찰 진행 중",HOLD:"점검 필요",PASS:"7일 관찰 통과"}[observation.status]||observation.status)],["실제 관찰 표본",number(observation.sample_count)],["관찰 시작",date(observation.start_at)+" KST"],["가장 빠른 종료 시점",date(observation.expected_earliest_finish)+" KST"],["최근 관찰",date(observation.last_observed_at)+" KST"]],row=>row));
+      body.append(node("p","7일 관찰은 운영 상태 점검입니다. 미래 예측 정확도를 뜻하지 않습니다.","muted"));box.append(folding("7일 운영 관찰","실제 표본과 경과시간으로 확인",body,true));
+    }
+    return box;
   }
   function render() {
     const key = route(), [title, subtitle] = pages[key];
     document.getElementById("page-title").textContent = title;
     document.getElementById("page-subtitle").textContent = subtitle;
-    document.querySelector(".eyebrow").textContent = `BCT / ${key.toUpperCase()}`;
+    document.querySelector(".eyebrow").textContent = "BOTTLENECK RESEARCH";
     document.querySelectorAll("nav a").forEach(link => {
-      if (link.dataset.page === key) link.setAttribute("aria-current", "page"); else link.removeAttribute("aria-current");
+      if (link.dataset.page === key || (key === "detail" && link.dataset.page === "ranking")) link.setAttribute("aria-current", "page"); else link.removeAttribute("aria-current");
     });
     content.replaceChildren();
+    if(key === "ranking" || key === "review") {content.append(rankingPanel(key));return;}
+    if(key === "detail") {content.append(detailPanel());return;}
+    if(key === "evidence") {content.append(documentsPanel(),evidencePanel());return;}
+    if(key === "situation") {content.append(situationPanel());return;}
+    if(key === "insights") {content.append(insightsPanel());return;}
     if (key === "tracking") {
       content.append(futureQueuePanel(), trackingPanels());
       if (!tracking && !trackingLoading && !trackingError) loadTracking();
@@ -375,6 +618,7 @@
     if (key === "future") { content.append(verifiedPanels()); return; }
     if (!snapshot) {
       content.append(empty("데이터 확인 중", "저장된 snapshot을 불러옵니다."));
+      if(key === "system") content.append(collectionPanel());
       if (key === "dashboard") content.append(verifiedPanels());
       return;
     }
@@ -399,6 +643,8 @@
       if (key === "ai") filters = [["전체", snapshot.ai_reviews.length], ...["OK", "ERROR"].map(label => [label, snapshot.ai_reviews.filter(row => row.status === label).length])];
       if (key === "families") filters = [["전체", snapshot.families.length], ...[...new Set(snapshot.families.map(row => row.status || "데이터 없음"))].map(label => [label, snapshot.families.filter(row => (row.status || "데이터 없음") === label).length])];
       if (key === "system") {
+        content.append(collectionPanel());
+        const queue=futureQueuePanel();queue.classList.add("section-gap");content.append(queue);
         const grid = node("div", null, "status-grid");
         grid.append(metric("DB 기사 수", overview.total_articles), metric("AI 실행 방식", aiMode(overview.ai_mode)), metric("최근 수집 시각", date(overview.last_collection_at)));
         content.append(grid); filters = [["전체", snapshot.feeds.length], ["성공", overview.successful_feeds], ["실패", overview.failed_feeds]];
@@ -417,7 +663,7 @@
     return value;
   }
   async function refresh() {
-    if (route() === "tracking") loadTracking();
+    if (researchRoutes.includes(route())) loadTracking();
     if (loading) return;
     loading = true;
     const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 12000);
@@ -432,14 +678,14 @@
       if (changed) render();
     } catch {
       document.getElementById("notice").textContent = snapshot ? "최신 snapshot을 읽지 못했습니다. 마지막으로 확인한 데이터를 표시합니다." : "snapshot을 읽지 못했습니다. 잠시 후 자동으로 다시 확인합니다.";
-      if (!snapshot && !["future", "tracking"].includes(route())) {
+      if (!snapshot && !["future", ...researchRoutes].includes(route())) {
         content.replaceChildren(empty("데이터를 불러올 수 없음", "snapshot 연결 상태를 확인해 주세요."));
         if (route() === "dashboard") content.append(verifiedPanels());
       }
     } finally { clearTimeout(timeout); loading = false; }
   }
   document.getElementById("dialog-close").addEventListener("click", () => document.getElementById("family-dialog").close());
-  window.addEventListener("hashchange", render);
+  window.addEventListener("hashchange", () => {render();if(researchRoutes.includes(route()) && !tracking && !trackingLoading && !trackingError) loadTracking();});
   document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
   setInterval(() => { if (!document.hidden) refresh(); }, 300000);
   render(); refresh(); loadVerified();

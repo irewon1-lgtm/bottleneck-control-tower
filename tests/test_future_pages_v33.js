@@ -1,5 +1,8 @@
 "use strict";
 
+// The existing Pages CI command also covers the new presentation adapter.
+require("./test_readable_view_model.js");
+
 // Run the real dependency-free Pages app with a small DOM, rather than checking
 // source strings. Fixtures intentionally distinguish frozen and current bodies.
 const assert = require("node:assert/strict");
@@ -95,6 +98,7 @@ async function app(data, failures = {}) {
     }
   };
   const source = fs.readFileSync(path.join(__dirname, "..", "docs", "app.js"), "utf8");
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, "..", "docs", "view-model.js"), "utf8"), context);
   vm.runInNewContext(source, context, {filename: "docs/app.js"});
   const settle = async () => { for (let i = 0; i < 6; i++) await new Promise(resolve => setImmediate(resolve)); };
   await settle();
