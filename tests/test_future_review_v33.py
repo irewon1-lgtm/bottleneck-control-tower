@@ -139,6 +139,11 @@ def deep_review(path="DEMAND", stage="S3"):
         "period": {"start": "2027-10-01", "end": "2028-09-30"},
         "gates": {key: gate() for key in ("change", "target_relation", *needed, "future_period", "relief_reviewed")},
         "relief": {"capacity": {"status": "NOT_FOUND_IN_SCOPE", "reason": "official suppliers' capacity statements reviewed", "important": True, "resolved": True}},
+        "comparison": {"facts": [dict(role=role, target="qualified laser output", specification="A", region="US",
+            supply_pool="all qualified suppliers", period={"start": "2027-10-01", "end": "2028-09-30"},
+            basis="total", quantity=quantity, unit="units", actual_statement=True, coverage_complete=True,
+            document_id="d0", body_sha256="hash0", locator={"start": 0, "end": 100})
+            for role, quantity in (("DEMAND", 11), ("SUPPLY", 10))]},
         "analysis_complete": True}
 
 
@@ -147,6 +152,13 @@ def test_phase4_supply_path_can_reach_s3_without_a_demand_increase():
     result = validate_review(documents(), {}, review)
     assert result["s_stage"] == "S3" and result["discovery_path"] == "SUPPLY"
     assert "future_demand" not in result["gates"] and result["read_complete"]
+
+
+def test_s3_boolean_gates_without_matched_comparison_are_rejected():
+    review = deep_review()
+    del review['comparison']
+    with pytest.raises(PatchError, match='exceeds supported gates'):
+        validate_review(documents(), {}, review)
 
 
 @pytest.mark.parametrize("path,key", [("DEMAND", "future_demand"), ("SUPPLY", "remaining_demand"), ("SUPPLY", "supply_gap"), ("DEMAND", "future_period")])
@@ -243,6 +255,18 @@ def test_phase4_prediction_initial_is_frozen_and_changes_are_appended():
     assert tracking["prediction_ledger"]["laser"]["initial"] == initial
     assert len(tracking["prediction_ledger"]["laser"]["entries"]) == 2
     assert len(tracking["targets"][0]["history"]) == 2
+
+
+def test_prediction_save_retry_is_idempotent_with_initial_and_first_s3(tmp_path):
+    path = tmp_path / 'tracking.json'
+    path.write_text('{}')
+    review = deep_review()
+    review['prediction'] = {'target_id': 'laser', 'hypothesis': 'fixed original prediction'}
+    transport = LocalJSONTransport()
+    assert save_review(transport, str(path), documents(), review).status == 'APPLIED'
+    first = path.read_bytes()
+    assert save_review(transport, str(path), documents(), review).status == 'ALREADY_APPLIED'
+    assert path.read_bytes() == first
 
 
 def test_phase4_notification_dedup_daily_bound_and_real_receipt_separation():

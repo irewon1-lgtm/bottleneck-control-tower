@@ -133,6 +133,20 @@ test("tracking renders existing TARGET history beside separate queue counts, cap
   assert.deepEqual(data, before, "rendering links and opening bundles must not mutate review completion");
 });
 
+test("generated hypothesis drafts render separately from verified TARGETs and retain UNKNOWN outcomes", async () => {
+  const data = fixtures();
+  data.candidates.hypotheses = {h1: {id: "h1", current: {stage: "S2", scope: {target: "novel optical sleeves"},
+    draft: {text: "Demand and qualified supply need comparison", unconfirmed: ["supply pool"]},
+    public_classification: "UNKNOWN", outcome: {actual_occurred: "UNKNOWN"}, evidence: []}}};
+  const before = clone(data), page = await app(data), queue = headingPanel(page.content, "미래병목 검토 대기");
+  assert.match(queue.textContent, /자동 생성 가설 초안 1건/);
+  assert.match(queue.textContent, /novel optical sleeves · S2/);
+  assert.match(queue.textContent, /공개 선행성 UNKNOWN · 실제 발생 UNKNOWN/);
+  assert.match(queue.textContent, /미확인: supply pool/);
+  assert.equal(byClass(page.content, "tracking-card").length, 1);
+  assert.deepEqual(data, before);
+});
+
 test("legacy candidate state without queue aggregation remains visibly pending, without invented zero completion", async () => {
   const data = fixtures(); delete data.candidates.summary.review_queue;
   const page = await app(data), queue = headingPanel(page.content, "미래병목 검토 대기");

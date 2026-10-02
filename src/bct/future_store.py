@@ -27,10 +27,13 @@ COLLECTION_FIELDS = frozenset({
     "material_check_required", "reproducibility_limit", "acquisition_status",
     "context_review", "evidence_locations", "quoted_word_count", "tracked_matches",
     "tracking_terms_sha256", "pending_tracking_terms_sha256", "screening_pending_for", "reaccess_status",
+    "bottleneck_tags",
+    "scope_facts", "supply_relationships", "published_at", "publication_precision", "publication_verified",
+    "first_candidate_at",
 })
 OWNER_ROOTS = {
     "collection": frozenset({"version", "schema_version", "filter_version", "start_at", "summary", "results", "operation_samples"}),
-    "bundle": frozenset({"bundles", "events"}),
+    "bundle": frozenset({"bundles", "events", "hypotheses"}),
     "review": frozenset({"reviews", "progress", "prediction_ledger", "targets", "runs", "updated_at"}),
     "notification": frozenset({"notifications"}),
 }
@@ -90,7 +93,10 @@ def _identity(item):
 
 
 def _screen_field(path):
-    fields = {"discovery_paths", "targets", "tracked_matches", "reasons", "evidence_locations", "evidence"}
+    if len(path) == 3 and path[0] == "hypotheses" and path[2] == "current":
+        return True
+    fields = {"discovery_paths", "targets", "tracked_matches", "reasons", "evidence_locations", "evidence",
+              "scope_facts", "supply_relationships", "bottleneck_tags"}
     if len(path) >= 3 and path[0] == "results":
         if path[2] in fields:
             return True
@@ -182,6 +188,11 @@ def validate_version_refs(candidate_state, refs, *, current_only=False):
 
 
 def _immutable_records(existing, patch):
+    for event_id, changes in patch.get("hypotheses", {}).items():
+        prior = existing.get("hypotheses", {}).get(event_id, {})
+        for field in ("id", "first_detected_at", "first_hypothesis_at", "first_s3", "detection_mode"):
+            if field in prior and field in changes and prior[field] != changes[field]:
+                raise PatchError("initial hypothesis identity/times are immutable")
     for review_id, changes in patch.get("reviews", {}).items():
         prior = existing.get("reviews", {}).get(review_id)
         if prior is not None and not _contains(prior, changes):
@@ -190,6 +201,9 @@ def _immutable_records(existing, patch):
         prior = existing.get("prediction_ledger", {}).get(target_id, {}).get("initial")
         if prior is not None and "initial" in changes and not _contains(prior, changes["initial"]):
             raise PatchError("initial prediction is immutable")
+        first_s3 = existing.get("prediction_ledger", {}).get(target_id, {}).get("first_s3")
+        if first_s3 is not None and 'first_s3' in changes and first_s3 != changes['first_s3']:
+            raise PatchError('first S3 prediction is immutable')
     for bundle_id, changes in patch.get("bundles", {}).items():
         prior = existing.get("bundles", {}).get(bundle_id, {})
         for field in ("documents", "document_refs"):
