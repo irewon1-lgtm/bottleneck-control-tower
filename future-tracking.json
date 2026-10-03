@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-10-03T12:36:38.435218+00:00",
+  "updated_at": "2026-10-03T12:36:39.435218+00:00",
   "purpose": "향후 1~2년 내 구체적 산업 공급 TARGET의 수요·공급 시간차 발견 및 예측 결과 추적",
   "mode": "research_sidecar",
   "integration": {
@@ -6173,6 +6173,11 @@
       "owner": "review",
       "patch_sha256": "257ced47f84bab7e2c95a2c0111645e3312573d9f3599c47a36b3605c1b5d051",
       "applied_at": "2026-10-03T12:47:55.868454+00:00"
+    },
+    "review-deep-969dbc56e0d54af8b81ec16a6f0ab33c-event-28fe70945bbf22f707d3cc02": {
+      "owner": "review",
+      "patch_sha256": "b1153ba462dbfe0a7024d5d352ff332870f75fd6ede573f23f36ad1eea25647b",
+      "applied_at": "2026-10-03T12:48:02.224263+00:00"
     }
   },
   "reviews": {
@@ -10728,6 +10733,114 @@
         "body_sha256": "88344091937d828e8b88726be3ef7e119162689f6ee135d6c8a87bb0e9ff99dc",
         "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST"
       }
+    },
+    "deep-969dbc56e0d54af8b81ec16a6f0ab33c-event-28fe70945bbf22f707d3cc02": {
+      "review_id": "deep-969dbc56e0d54af8b81ec16a6f0ab33c-event-28fe70945bbf22f707d3cc02",
+      "document_id": "7b563302-7c50-4a0c-83cb-e5267f41b645",
+      "body_sha256": "5b1f1b69562ce80d413df2c4c4a642c61b824eaae5ac57d44978d79285263419",
+      "reader_version": "bct-v33-reader-1",
+      "kind": "deep",
+      "read_start": 0,
+      "read_end": 7384,
+      "reviewed_at": "2026-10-03T12:36:39.435218+00:00",
+      "as_of": "2026-10-03",
+      "detection_mode": "LIVE",
+      "disposition": "DATA_INSUFFICIENT",
+      "candidate_state": "DATA_WAIT",
+      "analysis_complete": true,
+      "discovery_path": "SUPPLY",
+      "target": "global distillate fuel supply including diesel",
+      "temporal_status": "CURRENT",
+      "s_stage": "S2",
+      "gates": {
+        "change": {
+          "value": "TRUE",
+          "evidence": [
+            {
+              "document_id": "7b563302-7c50-4a0c-83cb-e5267f41b645",
+              "body_sha256": "5b1f1b69562ce80d413df2c4c4a642c61b824eaae5ac57d44978d79285263419",
+              "url": "https://www.eia.gov/todayinenergy/detail.php?id=68164",
+              "locator": {
+                "start": 2179,
+                "end": 2532
+              }
+            }
+          ]
+        },
+        "target_relation": {
+          "value": "TRUE",
+          "evidence": [
+            {
+              "document_id": "7b563302-7c50-4a0c-83cb-e5267f41b645",
+              "body_sha256": "5b1f1b69562ce80d413df2c4c4a642c61b824eaae5ac57d44978d79285263419",
+              "url": "https://www.eia.gov/todayinenergy/detail.php?id=68164",
+              "locator": {
+                "start": 2179,
+                "end": 2532
+              }
+            }
+          ]
+        },
+        "remaining_demand": {
+          "value": "TRUE",
+          "evidence": [
+            {
+              "document_id": "7b563302-7c50-4a0c-83cb-e5267f41b645",
+              "body_sha256": "5b1f1b69562ce80d413df2c4c4a642c61b824eaae5ac57d44978d79285263419",
+              "url": "https://www.eia.gov/todayinenergy/detail.php?id=68164",
+              "locator": {
+                "start": 2179,
+                "end": 2532
+              }
+            }
+          ]
+        },
+        "supply_gap": {
+          "value": "UNKNOWN",
+          "evidence": []
+        },
+        "future_period": {
+          "value": "UNKNOWN",
+          "evidence": []
+        },
+        "relief_reviewed": {
+          "value": "TRUE",
+          "evidence": [
+            {
+              "document_id": "7b563302-7c50-4a0c-83cb-e5267f41b645",
+              "body_sha256": "5b1f1b69562ce80d413df2c4c4a642c61b824eaae5ac57d44978d79285263419",
+              "url": "https://www.eia.gov/todayinenergy/detail.php?id=68164",
+              "locator": {
+                "start": 2582,
+                "end": 2889
+              }
+            },
+            {
+              "document_id": "7b563302-7c50-4a0c-83cb-e5267f41b645",
+              "body_sha256": "5b1f1b69562ce80d413df2c4c4a642c61b824eaae5ac57d44978d79285263419",
+              "url": "https://www.eia.gov/todayinenergy/detail.php?id=68164",
+              "locator": {
+                "start": 2890,
+                "end": 3493
+              }
+            }
+          ]
+        }
+      },
+      "reason": "러시아·중국·중동의 정제활동 감소로 글로벌 중간유분 공급이 타이트해졌다는 공급 변화와 디젤 TARGET 관계는 명시된다. 미국 생산·정유 가동률·재고라는 반증/완화 정보도 검토했다. 그러나 총수요와 전체 적격 공급의 동일 범위 비교, 12~36개월 기간이 없어 S3는 아니다.",
+      "unconfirmed": [
+        "글로벌 총 distillate 수요량",
+        "동일 기간 전체 정제·재고·수입 가능 공급량",
+        "12~36개월 필요기간",
+        "정제설비 복구·증설 일정",
+        "대체 연료·수요 둔화 영향"
+      ],
+      "read_complete": true,
+      "source_access": {
+        "url": "https://www.eia.gov/todayinenergy/detail.php?id=68164",
+        "body_sha256": "5b1f1b69562ce80d413df2c4c4a642c61b824eaae5ac57d44978d79285263419",
+        "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST"
+      }
     }
   },
   "progress": {
@@ -11863,7 +11976,7 @@
       "body_sha256": "5b1f1b69562ce80d413df2c4c4a642c61b824eaae5ac57d44978d79285263419",
       "reader_version": "bct-v33-reader-1",
       "read_end": 7384,
-      "last_review_id": "manual-review-1971dc0328cd6dc4037a3a26f192887a"
+      "last_review_id": "deep-969dbc56e0d54af8b81ec16a6f0ab33c-event-28fe70945bbf22f707d3cc02"
     },
     "9ee1f9a5-8572-43ec-9c3e-ed032a04ff27:4dd215eb019d9820bf79c65ea18121af4eaadec21b00334bcac6564d3cefc6ed:bct-v33-reader-1": {
       "document_id": "9ee1f9a5-8572-43ec-9c3e-ed032a04ff27",
