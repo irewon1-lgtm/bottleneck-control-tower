@@ -6253,6 +6253,11 @@
       "owner": "review",
       "patch_sha256": "db120ea2a5a6212680dda53f2ffdbcfb344bade003203da67c9708f7a1cb5604",
       "applied_at": "2026-10-03T13:04:20.577685+00:00"
+    },
+    "review-deep-be8b9be31a8d44868be6f3715b6a350e-event-ac33f9c87d65ad75ae2e7fe4": {
+      "owner": "review",
+      "patch_sha256": "ddaa855e3e0b152348519aaf1efc59d0adbea34c3f111145c3b6bc7710f1d221",
+      "applied_at": "2026-10-03T13:04:26.990743+00:00"
     }
   },
   "reviews": {
@@ -12260,6 +12265,104 @@
         "body_sha256": "63c713e8821c0304e65f285093ff5454ef23381f0969de1aac41fdd8ae6c2d71",
         "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST"
       }
+    },
+    "deep-be8b9be31a8d44868be6f3715b6a350e-event-ac33f9c87d65ad75ae2e7fe4": {
+      "review_id": "deep-be8b9be31a8d44868be6f3715b6a350e-event-ac33f9c87d65ad75ae2e7fe4",
+      "document_id": "a463b2c3-7a9c-43ec-893a-0a8929c4f2ce",
+      "body_sha256": "d84fe6c3ecf4ee1869e40506ac4075f145eb1e682dfa1edea9c3558c9ffd9529",
+      "reader_version": "bct-v33-reader-1",
+      "kind": "deep",
+      "read_start": 0,
+      "read_end": 9232,
+      "reviewed_at": "2026-10-03T13:00:43.518142+00:00",
+      "as_of": "2026-10-03",
+      "detection_mode": "LIVE",
+      "disposition": "DATA_INSUFFICIENT",
+      "candidate_state": "DATA_WAIT",
+      "analysis_complete": true,
+      "discovery_path": "SUPPLY",
+      "target": "U.S. distillate fuel inventory and supply availability",
+      "temporal_status": "FUTURE",
+      "s_stage": "S2",
+      "gates": {
+        "change": {
+          "value": "TRUE",
+          "evidence": [
+            {
+              "document_id": "a463b2c3-7a9c-43ec-893a-0a8929c4f2ce",
+              "body_sha256": "d84fe6c3ecf4ee1869e40506ac4075f145eb1e682dfa1edea9c3558c9ffd9529",
+              "url": "http://www.eia.gov/outlooks/steo/",
+              "locator": {
+                "start": 1812,
+                "end": 2323
+              }
+            }
+          ]
+        },
+        "target_relation": {
+          "value": "TRUE",
+          "evidence": [
+            {
+              "document_id": "a463b2c3-7a9c-43ec-893a-0a8929c4f2ce",
+              "body_sha256": "d84fe6c3ecf4ee1869e40506ac4075f145eb1e682dfa1edea9c3558c9ffd9529",
+              "url": "http://www.eia.gov/outlooks/steo/",
+              "locator": {
+                "start": 1812,
+                "end": 2323
+              }
+            }
+          ]
+        },
+        "remaining_demand": {
+          "value": "TRUE",
+          "evidence": [
+            {
+              "document_id": "a463b2c3-7a9c-43ec-893a-0a8929c4f2ce",
+              "body_sha256": "d84fe6c3ecf4ee1869e40506ac4075f145eb1e682dfa1edea9c3558c9ffd9529",
+              "url": "http://www.eia.gov/outlooks/steo/",
+              "locator": {
+                "start": 1812,
+                "end": 2323
+              }
+            }
+          ]
+        },
+        "supply_gap": {
+          "value": "UNKNOWN",
+          "evidence": []
+        },
+        "future_period": {
+          "value": "TRUE",
+          "evidence": [
+            {
+              "document_id": "a463b2c3-7a9c-43ec-893a-0a8929c4f2ce",
+              "body_sha256": "d84fe6c3ecf4ee1869e40506ac4075f145eb1e682dfa1edea9c3558c9ffd9529",
+              "url": "http://www.eia.gov/outlooks/steo/",
+              "locator": {
+                "start": 1812,
+                "end": 2323
+              }
+            }
+          ]
+        },
+        "relief_reviewed": {
+          "value": "UNKNOWN",
+          "evidence": []
+        }
+      },
+      "reason": "EIA는 미국 중간유분 재고가 2027년 상당 기간 5년 최저치 아래에 머물고 글로벌 중간유분 생산도 전년보다 낮을 것으로 전망한다. 미래 공급압박과 TARGET 관계는 명확하지만 동일 기간의 총수요와 전체 적격 공급·재고·대체 공급을 맞춘 비교가 없고 완화 경로 검토도 닫히지 않아 S3는 보류한다.",
+      "unconfirmed": [
+        "2027년 동일 기간 미국 중간유분 총수요",
+        "국내 생산·수입·기초재고를 합친 총가용 공급",
+        "글로벌 정제능력 복구와 수입 대체 물량",
+        "재고 최저치가 실제 미충족 수요로 이어지는지 여부"
+      ],
+      "read_complete": true,
+      "source_access": {
+        "url": "http://www.eia.gov/outlooks/steo/",
+        "body_sha256": "d84fe6c3ecf4ee1869e40506ac4075f145eb1e682dfa1edea9c3558c9ffd9529",
+        "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST"
+      }
     }
   },
   "progress": {
@@ -13521,7 +13624,7 @@
       "body_sha256": "d84fe6c3ecf4ee1869e40506ac4075f145eb1e682dfa1edea9c3558c9ffd9529",
       "reader_version": "bct-v33-reader-1",
       "read_end": 9232,
-      "last_review_id": "manual-review-5396df6fe8bab06f2d5da8fc5d1a7a5d"
+      "last_review_id": "deep-be8b9be31a8d44868be6f3715b6a350e-event-ac33f9c87d65ad75ae2e7fe4"
     },
     "b27f8478-45d2-4686-addb-c9a929fb46c0:a215c98896becf7564da5bbef55e1a201055e6b1c39a32b581cdd667e8c1cc8e:bct-v33-reader-1": {
       "document_id": "b27f8478-45d2-4686-addb-c9a929fb46c0",
