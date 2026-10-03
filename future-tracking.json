@@ -6278,6 +6278,11 @@
       "owner": "review",
       "patch_sha256": "dfee5fc23095f138b5dade7a7345ef4b24b0e08075fa6312f241be75815566f6",
       "applied_at": "2026-10-03T13:45:14.199264+00:00"
+    },
+    "review-deep-26f8358c84914336a581c2e90334824f-event-95660c7cdcdcb837a241f7bf": {
+      "owner": "review",
+      "patch_sha256": "c05ee04d90a3d7198f26864fb5098b0d32b10f3f97776d808444fecc41e6694d",
+      "applied_at": "2026-10-03T13:45:20.705732+00:00"
     }
   },
   "reviews": {
@@ -12622,6 +12627,104 @@
         "body_sha256": "92914a440fbb80863ba94d24ff528c88a22e9f0e9204cb66008172a7d3e9a324",
         "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST"
       }
+    },
+    "deep-26f8358c84914336a581c2e90334824f-event-95660c7cdcdcb837a241f7bf": {
+      "review_id": "deep-26f8358c84914336a581c2e90334824f-event-95660c7cdcdcb837a241f7bf",
+      "document_id": "b27f8478-45d2-4686-addb-c9a929fb46c0",
+      "body_sha256": "a215c98896becf7564da5bbef55e1a201055e6b1c39a32b581cdd667e8c1cc8e",
+      "reader_version": "bct-v33-reader-1",
+      "kind": "deep",
+      "read_start": 0,
+      "read_end": 4950,
+      "reviewed_at": "2026-10-03T13:09:50.503882+00:00",
+      "as_of": "2026-10-03",
+      "detection_mode": "LIVE",
+      "disposition": "DATA_INSUFFICIENT",
+      "candidate_state": "DATA_WAIT",
+      "analysis_complete": true,
+      "discovery_path": "DEMAND",
+      "target": "ERCOT grid interconnection capacity for new data centers",
+      "temporal_status": "CURRENT",
+      "s_stage": "S2",
+      "gates": {
+        "change": {
+          "value": "TRUE",
+          "evidence": [
+            {
+              "document_id": "b27f8478-45d2-4686-addb-c9a929fb46c0",
+              "body_sha256": "a215c98896becf7564da5bbef55e1a201055e6b1c39a32b581cdd667e8c1cc8e",
+              "url": "https://www.eia.gov/todayinenergy/detail.php?id=68084",
+              "locator": {
+                "start": 444,
+                "end": 644
+              }
+            },
+            {
+              "document_id": "b27f8478-45d2-4686-addb-c9a929fb46c0",
+              "body_sha256": "a215c98896becf7564da5bbef55e1a201055e6b1c39a32b581cdd667e8c1cc8e",
+              "url": "https://www.eia.gov/todayinenergy/detail.php?id=68084",
+              "locator": {
+                "start": 645,
+                "end": 1330
+              }
+            }
+          ]
+        },
+        "target_relation": {
+          "value": "TRUE",
+          "evidence": [
+            {
+              "document_id": "b27f8478-45d2-4686-addb-c9a929fb46c0",
+              "body_sha256": "a215c98896becf7564da5bbef55e1a201055e6b1c39a32b581cdd667e8c1cc8e",
+              "url": "https://www.eia.gov/todayinenergy/detail.php?id=68084",
+              "locator": {
+                "start": 645,
+                "end": 1330
+              }
+            }
+          ]
+        },
+        "future_demand": {
+          "value": "UNKNOWN",
+          "evidence": []
+        },
+        "supply_constraint": {
+          "value": "TRUE",
+          "evidence": [
+            {
+              "document_id": "b27f8478-45d2-4686-addb-c9a929fb46c0",
+              "body_sha256": "a215c98896becf7564da5bbef55e1a201055e6b1c39a32b581cdd667e8c1cc8e",
+              "url": "https://www.eia.gov/todayinenergy/detail.php?id=68084",
+              "locator": {
+                "start": 645,
+                "end": 1330
+              }
+            }
+          ]
+        },
+        "future_period": {
+          "value": "UNKNOWN",
+          "evidence": []
+        },
+        "relief_reviewed": {
+          "value": "UNKNOWN",
+          "evidence": []
+        }
+      },
+      "reason": "ERCOT 평균부하가 기록을 경신했고 최근 6주 모두 이전 기록을 넘었으며, 동시에 신규 데이터센터 계통연계 모라토리엄 뒤 연결 제안을 감사 중이라는 직접 관계가 확인된다. 그러나 향후 데이터센터 추가 수요, 가용 계통용량, 증설·수요반응 등 완화책과 12~36개월 기간 비교가 없어 S3는 보류한다.",
+      "unconfirmed": [
+        "대기 중 데이터센터 연결 요청 GW",
+        "현재 미배정 계통연계 가능 GW",
+        "송전·발전 증설의 실제 가용 시점",
+        "12~36개월 데이터센터 전력수요 전망",
+        "수요반응·자가발전 등 적용 가능한 완화 규모"
+      ],
+      "read_complete": true,
+      "source_access": {
+        "url": "https://www.eia.gov/todayinenergy/detail.php?id=68084",
+        "body_sha256": "a215c98896becf7564da5bbef55e1a201055e6b1c39a32b581cdd667e8c1cc8e",
+        "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST"
+      }
     }
   },
   "progress": {
@@ -13890,7 +13993,7 @@
       "body_sha256": "a215c98896becf7564da5bbef55e1a201055e6b1c39a32b581cdd667e8c1cc8e",
       "reader_version": "bct-v33-reader-1",
       "read_end": 4950,
-      "last_review_id": "manual-review-7fde1505f5a79eccf4e6361d5a479cc7"
+      "last_review_id": "deep-26f8358c84914336a581c2e90334824f-event-95660c7cdcdcb837a241f7bf"
     },
     "c5a844a8-6fff-4c3b-a839-571f4761812b:a67ac74d3753d0ee10adceb01067e0bef88e892842bbb21f9e1ffec4e5d5c030:bct-v33-reader-1": {
       "document_id": "c5a844a8-6fff-4c3b-a839-571f4761812b",
