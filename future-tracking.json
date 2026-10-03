@@ -6228,6 +6228,11 @@
       "owner": "review",
       "patch_sha256": "62cfafcc7848e706e1551a0f854f3044bfb9add06832ae41e417d11b64abbd11",
       "applied_at": "2026-10-03T13:03:49.939690+00:00"
+    },
+    "review-deep-be8b9be31a8d44868be6f3715b6a350e-event-e1ba58ad9b01d032608139f4": {
+      "owner": "review",
+      "patch_sha256": "33fa9e2b49f7cfecbb1230c277761c42f7a43f228d1f60b29c5caf69fb69b502",
+      "applied_at": "2026-10-03T13:03:55.709157+00:00"
     }
   },
   "reviews": {
@@ -11686,6 +11691,122 @@
         "body_sha256": "a8eff1072b7457cb624fe70538dbfb4b96795a15aae3240ff8e69b4b30cc0de1",
         "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST"
       }
+    },
+    "deep-be8b9be31a8d44868be6f3715b6a350e-event-e1ba58ad9b01d032608139f4": {
+      "review_id": "deep-be8b9be31a8d44868be6f3715b6a350e-event-e1ba58ad9b01d032608139f4",
+      "document_id": "0c4033e7-61f8-4cee-9417-7d58c5d6525d",
+      "body_sha256": "6ba94a56c7473e72c28bf96ff54b5f0e8cecb321cb54bf7c742adbf89d5fcf85",
+      "reader_version": "bct-v33-reader-1",
+      "kind": "deep",
+      "read_start": 0,
+      "read_end": 4377,
+      "reviewed_at": "2026-10-03T13:00:43.518142+00:00",
+      "as_of": "2026-10-03",
+      "detection_mode": "LIVE",
+      "disposition": "DATA_INSUFFICIENT",
+      "candidate_state": "DATA_WAIT",
+      "analysis_complete": true,
+      "discovery_path": "SUPPLY",
+      "target": "serviceable Automated Impella Controllers (AICs)",
+      "temporal_status": "CURRENT",
+      "s_stage": "S2",
+      "gates": {
+        "change": {
+          "value": "TRUE",
+          "evidence": [
+            {
+              "document_id": "0c4033e7-61f8-4cee-9417-7d58c5d6525d",
+              "body_sha256": "6ba94a56c7473e72c28bf96ff54b5f0e8cecb321cb54bf7c742adbf89d5fcf85",
+              "url": "http://www.fda.gov/medical-devices/medical-device-recalls-and-early-alerts/early-alert-heart-pump-controller-issue-abiomed",
+              "locator": {
+                "start": 225,
+                "end": 508
+              }
+            },
+            {
+              "document_id": "0c4033e7-61f8-4cee-9417-7d58c5d6525d",
+              "body_sha256": "6ba94a56c7473e72c28bf96ff54b5f0e8cecb321cb54bf7c742adbf89d5fcf85",
+              "url": "http://www.fda.gov/medical-devices/medical-device-recalls-and-early-alerts/early-alert-heart-pump-controller-issue-abiomed",
+              "locator": {
+                "start": 973,
+                "end": 1383
+              }
+            }
+          ]
+        },
+        "target_relation": {
+          "value": "TRUE",
+          "evidence": [
+            {
+              "document_id": "0c4033e7-61f8-4cee-9417-7d58c5d6525d",
+              "body_sha256": "6ba94a56c7473e72c28bf96ff54b5f0e8cecb321cb54bf7c742adbf89d5fcf85",
+              "url": "http://www.fda.gov/medical-devices/medical-device-recalls-and-early-alerts/early-alert-heart-pump-controller-issue-abiomed",
+              "locator": {
+                "start": 3078,
+                "end": 3380
+              }
+            }
+          ]
+        },
+        "remaining_demand": {
+          "value": "TRUE",
+          "evidence": [
+            {
+              "document_id": "0c4033e7-61f8-4cee-9417-7d58c5d6525d",
+              "body_sha256": "6ba94a56c7473e72c28bf96ff54b5f0e8cecb321cb54bf7c742adbf89d5fcf85",
+              "url": "http://www.fda.gov/medical-devices/medical-device-recalls-and-early-alerts/early-alert-heart-pump-controller-issue-abiomed",
+              "locator": {
+                "start": 1488,
+                "end": 1596
+              }
+            }
+          ]
+        },
+        "supply_gap": {
+          "value": "UNKNOWN",
+          "evidence": []
+        },
+        "future_period": {
+          "value": "UNKNOWN",
+          "evidence": []
+        },
+        "relief_reviewed": {
+          "value": "TRUE",
+          "evidence": [
+            {
+              "document_id": "0c4033e7-61f8-4cee-9417-7d58c5d6525d",
+              "body_sha256": "6ba94a56c7473e72c28bf96ff54b5f0e8cecb321cb54bf7c742adbf89d5fcf85",
+              "url": "http://www.fda.gov/medical-devices/medical-device-recalls-and-early-alerts/early-alert-heart-pump-controller-issue-abiomed",
+              "locator": {
+                "start": 973,
+                "end": 1383
+              }
+            },
+            {
+              "document_id": "0c4033e7-61f8-4cee-9417-7d58c5d6525d",
+              "body_sha256": "6ba94a56c7473e72c28bf96ff54b5f0e8cecb321cb54bf7c742adbf89d5fcf85",
+              "url": "http://www.fda.gov/medical-devices/medical-device-recalls-and-early-alerts/early-alert-heart-pump-controller-issue-abiomed",
+              "locator": {
+                "start": 1597,
+                "end": 1702
+              }
+            }
+          ]
+        }
+      },
+      "reason": "일부 AIC의 제거·서비스 필요라는 공급 변화와 Impella 치료에 필요한 컨트롤러라는 TARGET 관계, 서비스 대기 중 계속 사용해야 하는 잔존 수요가 확인된다. 그러나 영향 장비 수, 사용 가능한 예비기기, 업데이트·반환 일정이 없어 실제 공급공백과 미래 기간은 확정할 수 없다.",
+      "unconfirmed": [
+        "영향받는 AIC 총대수와 지역별 분포",
+        "서비스 중 사용 가능한 예비·백업 컨트롤러 수",
+        "업데이트·수리 처리량과 완료 일정",
+        "실제 치료 지연 또는 공급 부족 규모"
+      ],
+      "read_complete": true,
+      "source_access": {
+        "url": "http://www.fda.gov/medical-devices/medical-device-recalls-and-early-alerts/early-alert-heart-pump-controller-issue-abiomed",
+        "body_sha256": "6ba94a56c7473e72c28bf96ff54b5f0e8cecb321cb54bf7c742adbf89d5fcf85",
+        "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST"
+      }
     }
   },
   "progress": {
@@ -12842,7 +12963,7 @@
       "body_sha256": "6ba94a56c7473e72c28bf96ff54b5f0e8cecb321cb54bf7c742adbf89d5fcf85",
       "reader_version": "bct-v33-reader-1",
       "read_end": 4377,
-      "last_review_id": "manual-review-0de726a304ade42b670c9826c00d773c"
+      "last_review_id": "deep-be8b9be31a8d44868be6f3715b6a350e-event-e1ba58ad9b01d032608139f4"
     },
     "0e83c859-be68-4270-93d5-5799e7f757a7:8b9151ffb226c7a95e892bf403c75001789ec977242c7f38f4ea8904df044b0b:bct-v33-reader-1": {
       "document_id": "0e83c859-be68-4270-93d5-5799e7f757a7",
