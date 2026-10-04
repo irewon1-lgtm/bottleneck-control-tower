@@ -65,7 +65,11 @@ def fetch(url, domains):
         if len(payload) > 2_000_000:
             return {**result, 'blocked_reason': 'BODY_TOO_LARGE'}
         if result['content_type'] == 'application/pdf' or payload.startswith(b'%PDF'):
-            return {**result, **pdf_text_layer(payload)}
+            parsed = pdf_text_layer(payload)
+            if parsed.get('blocked_reason') == 'PDF_TEXT_PARSER_NOT_INSTALLED':
+                parsed['pending_pdf_base64'] = base64.b64encode(payload).decode()
+                parsed['download_sha256'] = hashlib.sha256(payload).hexdigest()
+            return {**result, **parsed}
         result['html'] = payload.decode(response.headers.get_content_charset() or 'utf-8', errors='replace')
         return result
 
@@ -204,6 +208,8 @@ def collect(manifest, output, cache_dir, *, fetcher=fetch, run_id='LOCAL', prior
         record['response_structure'] = html_structure(response['html'], source['url']) if response.get('html') else None
         record['pdf_metadata'] = response.get('pdf_metadata')
         record['download_sha256'] = response.get('download_sha256')
+        if response.get('pending_pdf_base64'):
+            record['pending_pdf_base64'] = response['pending_pdf_base64']
         if response.get('blocked_reason'):
             record.update(blocked_reason=response['blocked_reason'], error=response.get('error'))
         else:
@@ -241,6 +247,35 @@ def collect(manifest, output, cache_dir, *, fetcher=fetch, run_id='LOCAL', prior
     return snapshot
 
 
+
+def resolve_pending_pdf(snapshot, cache_dir):
+    """Resolve an Actions download with an already installed local text parser."""
+    if not shutil.which('pdftotext'):
+        raise ValueError('PDF_TEXT_PARSER_NOT_INSTALLED')
+    snapshot = json.loads(json.dumps(snapshot))
+    for record in snapshot['documents']:
+        encoded = record.pop('pending_pdf_base64', None)
+        if not encoded:
+            continue
+        payload = base64.b64decode(encoded, validate=True)
+        if len(payload) > 2_000_000 or hashlib.sha256(payload).hexdigest() != record.get('download_sha256'):
+            raise ValueError('pending PDF download hash mismatch')
+        extracted = pdf_text_layer(payload)
+        if extracted.get('blocked_reason'):
+            record['blocked_reason'] = extracted['blocked_reason']
+            continue
+        acquired = acquire_document(record['url'], 'official-source-v1', record.get('acquisition_ledger'),
+                                    cache_dir, lambda url: extracted, trigger='USER',
+                                    trigger_id='PDF_TEXT_LAYER_' + snapshot['run_id'])
+        record.update(acquired['metadata'], body=acquired['body'], acquisition_ledger=acquired['ledger'],
+                      pdf_metadata=extracted.get('pdf_metadata'), pdf_resolution='EXISTING_WORKSPACE_PDFTOTEXT',
+                      resolved_at=datetime.now(timezone.utc).isoformat())
+        record.pop('blocked_reason', None)
+        assert read_cached_body(cache_dir, record['body_sha256']) == record['body']
+    snapshot['summary'] = dict(Counter(d['body_status'] for d in snapshot['documents']))
+    snapshot['resolved_from_run_id'] = snapshot['run_id']
+    return snapshot
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--manifest', type=Path, required=True)
@@ -248,8 +283,14 @@ def main():
     parser.add_argument('--cache-dir', type=Path, required=True)
     parser.add_argument('--publish', action='store_true')
     parser.add_argument('--prior-snapshot')
+    parser.add_argument('--resolve-pdf-snapshot', type=Path)
     args = parser.parse_args()
     manifest = manifest_at(args.manifest)
+    if args.resolve_pdf_snapshot:
+        snapshot = resolve_pending_pdf(json.loads(args.resolve_pdf_snapshot.read_text()), args.cache_dir)
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + '\n')
+        return
     run_id = 'actions-' + os.environ.get('GITHUB_RUN_ID', 'LOCAL') + '-' + os.environ.get('GITHUB_RUN_ATTEMPT', '1')
     transport = GitHubTransport(os.environ['GITHUB_REPOSITORY'], 'future-bottleneck-data', os.environ['GITHUB_TOKEN']) if args.publish or args.prior_snapshot else None
     prior = read_snapshot(transport, args.prior_snapshot) if args.prior_snapshot else None

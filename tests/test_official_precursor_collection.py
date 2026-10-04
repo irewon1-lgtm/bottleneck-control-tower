@@ -150,3 +150,13 @@ def test_supplement_does_not_allow_new_targets(tmp_path):
     path = tmp_path / 'manifest.json'; path.write_text(json.dumps(manifest))
     with pytest.raises(ValueError, match='already identified LNG'):
         module.manifest_at(path)
+
+
+def test_local_pdf_resolution_rejects_changed_download(tmp_path):
+    import base64, shutil
+    if not shutil.which('pdftotext'):
+        pytest.skip('existing local PDF parser unavailable')
+    snapshot = {'run_id': 'fixture', 'documents': [{'url': 'https://pubs.usgs.gov/source.pdf',
+        'pending_pdf_base64': base64.b64encode(b'%PDF changed').decode(), 'download_sha256': '0' * 64}]}
+    with pytest.raises(ValueError, match='download hash mismatch'):
+        module.resolve_pending_pdf(snapshot, tmp_path / 'cache')
