@@ -127,3 +127,18 @@ def test_pdf_text_layer_parser_without_ocr():
 def test_no_installed_pdf_parser_is_blocked(monkeypatch):
     monkeypatch.setattr(module.shutil, 'which', lambda name: None)
     assert module.pdf_text_layer(b'%PDF') == {'blocked_reason': 'PDF_TEXT_PARSER_NOT_INSTALLED'}
+
+
+def test_observed_official_div_fallback_preserves_source_text_and_partial():
+    html = '<h1 class="headline">Satellite prototype</h1><p class="NewsroomArticleBody_PublishDateText">September 18, 2026</p><div id="articleBody"><div>Flight-proven platform.</div></div>'
+    result = module.official_html_fallback(html, 'https://news.northropgrumman.com/satellites/source')
+    assert result['body'] == 'Satellite prototype\nSeptember 18, 2026\nFlight-proven platform.'
+    assert result['body_status'] == 'PARTIAL'
+    assert result['rendered_publication_date'] == 'September 18, 2026'
+    assert module.official_html_fallback(html, 'https://outside.invalid/source') is None
+
+
+def test_fallback_does_not_read_challenge_or_login_preview():
+    for text in ('Verify you are human', 'Sign in to continue reading'):
+        html = '<div id="articleBody">' + text + '</div>'
+        assert module.official_html_fallback(html, 'https://news.northropgrumman.com/source') is None

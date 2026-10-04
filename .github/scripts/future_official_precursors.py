@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 from collections import Counter
 
 from bct.future_bottleneck import PublicRedirect, public_url
-from bct.future_body import acquire_document, read_cached_body, extract_document, _Document, _nodes, _text
+from bct.future_body import acquire_document, read_cached_body, extract_document, _Document, _nodes, _text, _CHALLENGE, _PREVIEW
 from bct.future_github import GitHubTransport
 
 
@@ -115,6 +115,30 @@ def html_structure(html, source_url):
     return {'containers': containers[:80], 'same_origin_links': links[:150], 'scripts': scripts[:40]}
 
 
+
+def official_html_fallback(html, source_url):
+    """Recover only the observed public publisher article container, no JS/OCR."""
+    if urlsplit(source_url).hostname != 'news.northropgrumman.com':
+        return None
+    parsed = _Document(); parsed.feed(html); parsed.close()
+    nodes = list(_nodes(parsed.root))
+    node = next((n for n in nodes if n.attrs.get('id') == 'articleBody'), None)
+    if node is None or not node.closed:
+        return None
+    visible = _text(node)
+    if not visible or _CHALLENGE.search(visible) or _PREVIEW.search(visible):
+        return None
+    headings = [_text(n) for n in nodes if n.tag == 'h1' and 'headline' in str(n.attrs.get('class', ''))]
+    dates = [_text(n) for n in nodes if 'PublishDateText' in str(n.attrs.get('class', ''))]
+    body = '\n'.join([*headings[:1], *dates[:1], visible])
+    return {'body': body, 'body_status': 'PARTIAL',
+            'body_sha256': hashlib.sha256(body.encode()).hexdigest(),
+            'body_chars': len(body), 'extraction_method': 'OFFICIAL_ARTICLE_ID_TEXT',
+            'reasons': ['OFFICIAL_DIV_BODY_STRUCTURE_UNVERIFIED'],
+            'completeness': {'explicit_body_scope': True, 'body_scope_closed': True,
+                             'assessment': 'ACCESSIBLE_STRUCTURE_ONLY', 'captured_table_rows': 0},
+            'rendered_publication_date': dates[0] if dates else 'UNKNOWN'}
+
 def read_snapshot(transport, path):
     if not re.fullmatch(r'official-precursors/actions-[0-9]+-[0-9]+\.json', path):
         raise ValueError('approved immutable snapshot path required')
@@ -177,8 +201,17 @@ def collect(manifest, output, cache_dir, *, fetcher=fetch, run_id='LOCAL', prior
         if response.get('blocked_reason'):
             record.update(blocked_reason=response['blocked_reason'], error=response.get('error'))
         else:
+            fetched = response
+            fallback = None
+            if response.get('html'):
+                existing = extract_document(response['html'], http_status=response.get('status', 200), content_type=response.get('content_type', 'text/html'))
+                if not existing['body'] and existing['reasons'] in (['NO_ARTICLE_CONTENT'], ['NO_READABLE_BODY']):
+                    fallback = official_html_fallback(response['html'], source['url'])
+                    if fallback:
+                        fetched = fallback
+                        record['rendered_publication_date'] = fallback['rendered_publication_date']
             acquired = acquire_document(source['url'], 'official-source-v1', None,
-                                        cache_dir, lambda url: response,
+                                        cache_dir, lambda url: fetched,
                                         trigger='USER', trigger_id=run_id, now=at)
             record.update(acquired['metadata'], body=acquired['body'], acquisition_ledger=acquired['ledger'])
             if not record['body']:
