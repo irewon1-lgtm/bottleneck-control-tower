@@ -31,7 +31,7 @@ def test_mixed_batch_isolates_network_failure_and_preserves_body_hash(tmp_path):
             raise TimeoutError()
         return {'html': html, 'status': 200, 'final_url': url, 'content_type': 'text/html'}
     snapshot = module.collect(manifest, tmp_path / 'snapshot.json', tmp_path / 'cache', fetcher=fixture)
-    assert snapshot['summary'] == {'BLOCKED': 1, 'FULL': 22}
+    assert snapshot['summary'] == {'BLOCKED': 1, 'FULL': len(manifest['documents']) + len(manifest.get('supplemental_documents', [])) - 1}
     for doc in snapshot['documents'][1:]:
         assert doc['body_sha256'] == hashlib.sha256(doc['body'].encode()).hexdigest()
         assert module.read_cached_body(tmp_path / 'cache', doc['body_sha256']) == doc['body']
@@ -45,7 +45,7 @@ def test_pdf_is_not_treated_as_readable_body(tmp_path):
         return {'status': 200, 'final_url': url, 'content_type': 'application/pdf',
                 'blocked_reason': 'EXISTING_HTML_EXTRACTOR_DOES_NOT_SUPPORT_PDF'}
     result = module.collect(manifest, tmp_path / 'snapshot.json', tmp_path / 'cache', fetcher=fixture)
-    assert result['summary'] == {'BLOCKED': 23}
+    assert result['summary'] == {'BLOCKED': len(manifest['documents']) + len(manifest.get('supplemental_documents', []))}
     assert all(d['body_sha256'] is None for d in result['documents'])
 
 
@@ -78,7 +78,7 @@ def test_http_error_retains_response_metadata(tmp_path):
     def fixture(url, domains):
         raise HTTPError(url, 403, 'Forbidden', headers, None)
     result = module.collect(manifest, tmp_path / 'snapshot.json', tmp_path / 'cache', fetcher=fixture)
-    assert result['summary'] == {'BLOCKED': 23}
+    assert result['summary'] == {'BLOCKED': len(manifest['documents']) + len(manifest.get('supplemental_documents', []))}
     assert all(d['http_status'] == 403 and d['content_type'] == 'text/html' and d['final_url'] == d['url'] for d in result['documents'])
 
 
@@ -96,7 +96,7 @@ def test_recovery_reuses_success_and_does_not_retry_denials(tmp_path):
     result = module.collect(manifest, tmp_path / 'snapshot.json', tmp_path / 'cache',
                             fetcher=fixture, prior=prior)
     assert calls == [manifest['documents'][0]['url']]
-    assert result['summary'] == {'FULL': 1, 'BLOCKED': 22}
+    assert result['summary'] == {'FULL': 1, 'BLOCKED': len(prior['documents']) - 1}
     assert all(d.get('reused_from_run') == 'prior' for d in result['documents'][1:])
 
 
@@ -148,7 +148,7 @@ def test_supplement_does_not_allow_new_targets(tmp_path):
     manifest = module.manifest_at(ROOT / '.github/official-precursor-urls.json')
     manifest['supplemental_documents'][0]['target_id'] = 'unrelated-target'
     path = tmp_path / 'manifest.json'; path.write_text(json.dumps(manifest))
-    with pytest.raises(ValueError, match='already identified LNG'):
+    with pytest.raises(ValueError, match='three existing targets'):
         module.manifest_at(path)
 
 

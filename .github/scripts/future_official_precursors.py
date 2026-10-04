@@ -29,8 +29,11 @@ def manifest_at(path):
     if any(not d.get('official_document') or not d.get('required_roles') for d in documents):
         raise ValueError('official document and needed role required')
     extra = manifest.get('supplemental_documents', [])
-    if len(extra) > 2 or any(d.get('target_id') != 'us-lng-liquefaction' or d.get('host') != 'www.eia.gov' or not d.get('identified_in_existing_document') for d in extra):
-        raise ValueError('only two already identified LNG official documents allowed')
+    target_scope = {'us-ghost-r-geo-isr', 'us-lng-liquefaction', 'us-defense-qualified-tungsten'}
+    if len(extra) > 24 or any(d.get('target_id') not in target_scope or not d.get('official_document') or not d.get('required_roles') or d.get('host') != urlsplit(d['url']).hostname for d in extra):
+        raise ValueError('only bounded official documents for three existing targets allowed')
+    if set(manifest.get('collection_target_ids', [])) - target_scope:
+        raise ValueError('collection target outside three existing targets')
     if len({d['url'] for d in documents + extra}) != len(documents + extra):
         raise ValueError('duplicate supplemental source')
     if set(manifest['allowed_domains']) != {urlsplit(d['url']).hostname for d in documents + extra}:
@@ -177,7 +180,7 @@ def collect(manifest, output, cache_dir, *, fetcher=fetch, run_id='LOCAL', prior
     for source in manifest['documents'] + manifest.get('supplemental_documents', []):
         at = datetime.now(timezone.utc).isoformat()
         old = prior_by_url.get(source['url'])
-        if old and not (old.get('http_status') == 200 and old.get('body_status') == 'BLOCKED'):
+        if old and (source['target_id'] not in manifest.get('collection_target_ids', [source['target_id']]) or not (old.get('http_status') == 200 and old.get('body_status') == 'BLOCKED')):
             responses.append((source, at, {'reused_record': old}))
             continue
         try:
@@ -200,7 +203,7 @@ def collect(manifest, output, cache_dir, *, fetcher=fetch, run_id='LOCAL', prior
                   'url': source['url'], 'final_url': response.get('final_url'),
                   'source_domain': source['host'], 'target_id': source['target_id'],
                   'target': source['target'], 'source_organization': source['organization'],
-                  'required_roles': source['required_roles'], 'collected_at': at,
+                  'required_roles': source['required_roles'], 'locator_only': source.get('locator_only', False), 'decisive_unknown': source.get('decisive_unknown'), 'collected_at': at,
                   'publication_timestamp': 'UNKNOWN', 'http_status': response.get('status'),
                   'content_type': response.get('content_type'), 'body': '',
                   'body_sha256': None, 'body_status': 'BLOCKED',
