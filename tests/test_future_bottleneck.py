@@ -138,4 +138,7 @@ def test_workflow_is_independent_and_never_writes_canonical_database():
     assert 'python -m pytest -q' in text
     assert 'for pass in 2 3; do' in text
     assert "get('pending_due',0)" in text
+    assert 'body-recovery-v1' in text
+    assert "recoverable = {'NO_ARTICLE_CONTENT', 'TimeoutError', 'LEGACY_COMPLETENESS_UNVERIFIED'}" in text
+    assert '--trigger SCHEDULED' in text
     assert 'canonical.sqlite3' not in text.split('Publish candidate sidecar only')[1]

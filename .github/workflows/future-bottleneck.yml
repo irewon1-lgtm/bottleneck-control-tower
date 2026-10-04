@@ -128,6 +128,71 @@ jobs:
             publish_collection "$change" "$pending"
           done
 
+          # One explicit recovery pass for documents that were fetched before
+          # but ended as NO_ARTICLE_CONTENT, timeout, or legacy-unverified.
+          # HTTP/challenge/paywall failures are intentionally excluded.
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP']) / 'future-output'
+          state = json.loads((root / 'future-candidates.json').read_text())
+          recovery_id = 'body-recovery-v1'
+          selected = []
+          recoverable = {'NO_ARTICLE_CONTENT', 'TimeoutError', 'LEGACY_COMPLETENESS_UNVERIFIED'}
+          for document_id, record in state.get('results', {}).items():
+              digest = record.get('current_body_sha256') or record.get('body_sha256')
+              version = (record.get('versions') or {}).get(digest, {}) if digest else {}
+              status = version.get('body_status') or record.get('body_status') or 'UNAVAILABLE'
+              chars = version.get('body_chars') if isinstance(version.get('body_chars'), int) else record.get('body_chars', 0)
+              if status != 'UNAVAILABLE' and chars > 0:
+                  continue
+              source_version = record.get('source_version') or record.get('fingerprint')
+              acquisition = ((record.get('acquisition') or {}).get('versions') or {}).get(source_version, {})
+              if recovery_id in (acquisition.get('explicit_checks') or {}):
+                  continue
+              reasons = set(record.get('reasons') or []) | set((acquisition.get('latest') or {}).get('reasons') or [])
+              if reasons & recoverable:
+                  selected.append(document_id)
+              if len(selected) >= 300:
+                  break
+          (root / 'recovery-ids.txt').write_text('\n'.join(selected) + ('\n' if selected else ''))
+          print(f'recovery_candidates={len(selected)}')
+          PY
+
+          if [[ -s "$RUNNER_TEMP/future-output/recovery-ids.txt" ]]; then
+            mapfile -t recovery_ids < "$RUNNER_TEMP/future-output/recovery-ids.txt"
+            recovery_args=()
+            for document_id in "${recovery_ids[@]}"; do
+              recovery_args+=(--document-id "$document_id")
+            done
+            python -m bct.future_bottleneck \
+              --db "$RUNNER_TEMP/future.sqlite3" \
+              --output "$RUNNER_TEMP/future-output/future-candidates.json" \
+              --tracking "$RUNNER_TEMP/future-output/future-tracking.json" \
+              --cache-dir "$RUNNER_TEMP/private-future-body-cache" \
+              --trigger SCHEDULED \
+              --trigger-id body-recovery-v1 \
+              --patch-output "$RUNNER_TEMP/future-output/recovery-change.json" \
+              "${recovery_args[@]}"
+            sha256sum --check "$RUNNER_TEMP/future-db.sha256"
+            publish_collection \
+              "$RUNNER_TEMP/future-output/recovery-change.json" \
+              "$RUNNER_TEMP/future-output/pending-recovery.json"
+
+            # Restore a source-wide final summary after the targeted recovery.
+            python -m bct.future_bottleneck \
+              --db "$RUNNER_TEMP/future.sqlite3" \
+              --output "$RUNNER_TEMP/future-output/future-candidates.json" \
+              --tracking "$RUNNER_TEMP/future-output/future-tracking.json" \
+              --cache-dir "$RUNNER_TEMP/private-future-body-cache" \
+              --limit 1 \
+              --patch-output "$RUNNER_TEMP/future-output/final-audit-change.json"
+            sha256sum --check "$RUNNER_TEMP/future-db.sha256"
+            publish_collection \
+              "$RUNNER_TEMP/future-output/final-audit-change.json" \
+              "$RUNNER_TEMP/future-output/pending-final-audit.json"
+          fi
+
           python - <<'PY'
           import json, os
           from pathlib import Path
