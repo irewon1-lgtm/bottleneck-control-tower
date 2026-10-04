@@ -355,6 +355,46 @@
     box.append(details, articleTitle({title: "전체 문서·묶음 기록 열기", url: "https://github.com/irewon1-lgtm/bottleneck-control-tower/blob/future-bottleneck-data/future-candidates.json"}));
     return box;
   }
+  async function readStoredJSON(base, name, options) {
+    const response = await fetch(`${base}${name}?t=${Date.now()}`, options);
+    if (!response.ok) throw new Error("Record unavailable");
+    const manifest = await response.json();
+    if (manifest?.format !== "bct-sharded-sidecar-v1") return manifest;
+    const value = {}, counts = {}, kinds = {}, stem = name.replace(/\.json$/, "");
+    for (const field of manifest.fields) {
+      if (Object.hasOwn(kinds, field.name) || !["dict", "list", "value"].includes(field.kind)) throw new Error("Invalid manifest field");
+      Object.defineProperty(kinds, field.name, {value: field.kind, enumerable: true});
+      Object.defineProperty(value, field.name, {value: field.kind === "dict" ? {} : field.kind === "list" ? [] : null, enumerable: true, writable: true});
+      Object.defineProperty(counts, field.name, {value: 0, enumerable: true, writable: true});
+    }
+    for (const [index, part] of manifest.shards.entries()) {
+      if (part.path !== `${stem}.shards/${manifest.document_sha256}/${stem}.part-${String(index + 1).padStart(3, "0")}.json`) throw new Error("Invalid shard path/order");
+      const response = await fetch(`${base}${part.path}`, options);
+      if (!response.ok) throw new Error("Shard unavailable");
+      const raw = await response.text(), bytes = new TextEncoder().encode(raw);
+      const hash = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)), b => b.toString(16).padStart(2, "0")).join("");
+      if (bytes.length > 10 * 1024 * 1024 || hash !== part.sha256) throw new Error("Shard hash/size mismatch");
+      const shard = JSON.parse(raw);
+      if (shard.format !== "bct-json-shard-v1" || shard.items.length !== part.item_count) throw new Error("Shard count mismatch");
+      for (const item of shard.items) {
+        if (!Object.hasOwn(kinds, item.field)) throw new Error("Unknown shard field");
+        const kind = kinds[item.field];
+        if (kind === "dict") {
+          if (typeof item.key !== "string" || Object.hasOwn(value[item.field], item.key)) throw new Error("Duplicate shard record");
+          Object.defineProperty(value[item.field], item.key, {value: item.value, enumerable: true, writable: true});
+        } else if (kind === "list") {
+          if (!Number.isInteger(item.key) || item.key !== value[item.field].length) throw new Error("Out-of-order shard record");
+          value[item.field].push(item.value);
+        } else {
+          if (item.key !== null || counts[item.field]) throw new Error("Duplicate scalar");
+          value[item.field] = item.value;
+        }
+        counts[item.field]++;
+      }
+    }
+    if (Object.keys(counts).length !== Object.keys(manifest.item_counts).length || Object.entries(counts).some(([k, n]) => n !== manifest.item_counts[k]) || Object.values(counts).reduce((a, b) => a + b, 0) !== manifest.total_item_count) throw new Error("Manifest count mismatch");
+    return value;
+  }
   async function loadTracking() {
     if (trackingLoading) return;
     trackingLoading = true;
@@ -362,9 +402,7 @@
     try {
       const base = "https://raw.githubusercontent.com/irewon1-lgtm/bottleneck-control-tower/future-bottleneck-data/";
       const [record, queue] = await Promise.allSettled(["future-tracking.json", "future-candidates.json"].map(async name => {
-        const response = await fetch(`${base}${name}?t=${Date.now()}`, {cache: "no-store", signal: controller.signal});
-        if (!response.ok) throw new Error("Record unavailable");
-        return response.json();
+        return readStoredJSON(base, name, {cache: "no-store", signal: controller.signal});
       }));
       try {
         const value = record.status === "fulfilled" ? record.value : null;
