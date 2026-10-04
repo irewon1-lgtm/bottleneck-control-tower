@@ -150,7 +150,7 @@ def official_html_fallback(html, source_url):
             'rendered_publication_date': dates[0] if dates else 'UNKNOWN'}
 
 def read_snapshot(transport, path):
-    if not re.fullmatch(r'official-precursors/actions-[0-9]+-[0-9]+\.json', path):
+    if not re.fullmatch(r'official-precursors/actions-[0-9]+-[0-9]+(?:-pdf-resolved)?\.json', path):
         raise ValueError('approved immutable snapshot path required')
     value = transport.requester('GET', '/contents/' + path + '?ref=future-bottleneck-data')
     sha = value['sha']
@@ -287,9 +287,16 @@ def main():
     args = parser.parse_args()
     manifest = manifest_at(args.manifest)
     if args.resolve_pdf_snapshot:
-        snapshot = resolve_pending_pdf(json.loads(args.resolve_pdf_snapshot.read_text()), args.cache_dir)
+        prior = json.loads(args.resolve_pdf_snapshot.read_text())
+        if any(prior.get(k) != manifest.get(k) for k in ('objective_version', 'objective_sha256', 'extractor_sha256')):
+            raise ValueError('PDF snapshot objective/extractor mismatch')
+        snapshot = resolve_pending_pdf(prior, args.cache_dir)
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + '\n')
+        if args.publish:
+            transport = GitHubTransport(os.environ['GITHUB_REPOSITORY'], 'future-bottleneck-data', os.environ['GITHUB_TOKEN'])
+            path = 'official-precursors/' + snapshot['run_id'] + '-pdf-resolved.json'
+            print(json.dumps({'snapshot_path': path, 'blob_sha': transport.write(path, snapshot, None)}))
         return
     run_id = 'actions-' + os.environ.get('GITHUB_RUN_ID', 'LOCAL') + '-' + os.environ.get('GITHUB_RUN_ATTEMPT', '1')
     transport = GitHubTransport(os.environ['GITHUB_REPOSITORY'], 'future-bottleneck-data', os.environ['GITHUB_TOKEN']) if args.publish or args.prior_snapshot else None
