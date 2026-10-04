@@ -104,6 +104,12 @@ def test_read_only_failure_continuation_cache_and_new_articles(tmp_path):
     state = run(path, output, fetcher=fetch)
     assert state['summary']['processed_this_run'] == 3
     assert state['summary']['body_ok_this_run'] == 2
+    assert state['summary']['active_processed_total'] == 3
+    assert state['summary']['active_unprocessed_total'] == 0
+    assert state['summary']['readable_active_total'] == 2
+    assert state['summary']['unavailable_active_total'] == 1
+    assert state['summary']['precursor_documents_total'] == 2
+    assert state['summary']['paired_precursor_documents_total'] == 2
     assert state['results']['1']['body_status'] == 'UNAVAILABLE'
     assert state['results']['1']['targets'] == []
     assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
