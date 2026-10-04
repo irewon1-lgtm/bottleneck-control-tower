@@ -17,6 +17,48 @@ from pathlib import Path
 from bct.future_bottleneck import run
 
 
+def verified_roundtrip_batch(record, body, verification, signals):
+    """One snapshot only; explicit reviewed evidence, never domain-based promotion.
+
+    This adapter does not change/publish collection records or discovery rules.
+    Verification belongs to the exact recovered body, not a mutable URL alone.
+    """
+    from copy import deepcopy
+    from bct.objective_lock import stamp_export
+    digest = hashlib.sha256(body.encode()).hexdigest()
+    current = record.get('current_body_sha256') or record.get('body_sha256')
+    if not body or digest != current or verification['body_sha256'] != digest:
+        raise ValueError('BLOCKED: verification/snapshot hash mismatch')
+    if verification['document_id'] != record['id']:
+        raise ValueError('BLOCKED: verification document ID mismatch')
+    if verification.get('provenance_verified') is not True or not verification.get('provenance_evidence'):
+        raise ValueError('BLOCKED: original source evidence required')
+    for field in ('origin_id', 'origin_url', 'origin_publisher', 'available_at'):
+        if verification.get(field) in (None, '', 'UNKNOWN'):
+            raise ValueError('BLOCKED: ' + field)
+    bound = verification['public_snapshot_observed_at']
+    history = [h for version in record.get('acquisition', {}).get('versions', {}).values()
+               for h in version.get('history', [])]
+    if not any(h.get('body_sha256') == digest and h.get('at') == bound for h in history):
+        raise ValueError('BLOCKED: snapshot observation not in acquisition history')
+    if verification['available_at'] != bound:
+        raise ValueError('BLOCKED: snapshot availability must use its observed acquisition')
+    document = {k: deepcopy(verification[k]) for k in
+                ('origin_id', 'origin_url', 'origin_publisher', 'provenance_verified',
+                 'published_at', 'publication_precision', 'available_at', 'public_snapshot_observed_at')}
+    document.update(document_id=record['id'], body=body, body_sha256=digest)
+    linked = []
+    for signal in signals:
+        if signal.get('document_id') != record['id'] or signal.get('body_sha256') != digest:
+            raise ValueError('BLOCKED: signal snapshot reference mismatch')
+        loc = signal['locator']
+        quote = body[loc['start']:loc['end']]
+        if not quote or signal.get('source_quote') != quote:
+            raise ValueError('BLOCKED: signal quote mismatch')
+        linked.append(deepcopy(signal))
+    return stamp_export({'documents': [document], 'signals': linked, 'confirmations': []})
+
+
 def recover(db, candidates, tracking, cache, request, output, cache_only=False):
     value = json.loads(Path(request).read_text())
     ids = value['document_ids']

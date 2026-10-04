@@ -127,3 +127,47 @@ def test_github_rate_limit_is_distinguished_from_authorization_without_error_bod
             transport._request('PUT','/contents/future-candidates.json',{})
         assert category in str(caught.value) and 'RETRY_AFTER=60' in str(caught.value)
         assert 'must-not-leak' not in str(caught.value) and 'test-placeholder' not in str(caught.value)
+
+
+def _actual_roundtrip():
+    import runpy
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    data = json.loads((root / 'docs/one-document-roundtrip-input.json').read_text())
+    adapter = runpy.run_path(str(root / '.github/scripts/future_backlog_recovery.py'))['verified_roundtrip_batch']
+    return data, adapter
+
+
+def test_real_recovered_eia_document_and_inventory_signal_accepted_without_candidate():
+    from bct.early_forecast import discover
+    data, adapter = _actual_roundtrip()
+    before = deepcopy(data)
+    batch = adapter(data['record'], data['body'], data['verification'], data['signals'])
+    result = discover(batch)
+    assert result['rejected_inputs'] == []
+    assert result['candidates'] == []
+    assert len(result['outcomes']) == 1 and result['outcomes'][0]['state'] == 'DATA_WAIT'
+    assert data == before
+
+
+def test_actual_roundtrip_rejects_wrong_document_hash_and_missing_provenance():
+    import pytest
+    data, adapter = _actual_roundtrip()
+    for field, value in [('document_id', 'other'), ('body_sha256', '0'*64), ('provenance_verified', False)]:
+        changed = {**data['verification'], field: value}
+        with pytest.raises(ValueError, match='BLOCKED'):
+            adapter(data['record'], data['body'], changed, data['signals'])
+    for field, value in [('document_id', 'other'), ('body_sha256', '0'*64), ('source_quote', 'wrong quote')]:
+        signals = [{**data['signals'][0], field: value}]
+        with pytest.raises(ValueError, match='BLOCKED'):
+            adapter(data['record'], data['body'], data['verification'], signals)
+
+
+def test_strict_real_document_rejects_unknown_publication_time_without_imputation():
+    from bct.forecast_discovery import discover
+    data, adapter = _actual_roundtrip()
+    batch = adapter(data['record'], data['body'], data['verification'], data['signals'])
+    batch['documents'][0]['published_at'] = 'UNKNOWN'
+    result = discover(batch)
+    assert result['candidates'] == []
+    assert result['rejected_inputs'][0]['reason'] == "Invalid isoformat string: 'UNKNOWN'"
