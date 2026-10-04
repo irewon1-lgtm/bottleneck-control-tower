@@ -27,7 +27,12 @@ def manifest_at(path):
         raise ValueError('exactly 21 unique frozen URLs required')
     if any(not d.get('official_document') or not d.get('required_roles') for d in documents):
         raise ValueError('official document and needed role required')
-    if set(manifest['allowed_domains']) != {urlsplit(d['url']).hostname for d in documents}:
+    extra = manifest.get('supplemental_documents', [])
+    if len(extra) > 2 or any(d.get('target_id') != 'us-lng-liquefaction' or d.get('host') != 'www.eia.gov' or not d.get('identified_in_existing_document') for d in extra):
+        raise ValueError('only two already identified LNG official documents allowed')
+    if len({d['url'] for d in documents + extra}) != len(documents + extra):
+        raise ValueError('duplicate supplemental source')
+    if set(manifest['allowed_domains']) != {urlsplit(d['url']).hostname for d in documents + extra}:
         raise ValueError('domain scope mismatch')
     from bct import future_body
     if hashlib.sha256(Path(future_body.__file__).read_bytes()).hexdigest() != manifest['extractor_sha256']:
@@ -164,7 +169,7 @@ def collect(manifest, output, cache_dir, *, fetcher=fetch, run_id='LOCAL', prior
     domains = set(manifest['allowed_domains'])
     prior_by_url = {d['url']: d for d in (prior or {}).get('documents', [])}
     # First perform the bounded HTTP trial. Never substitute another URL/source.
-    for source in manifest['documents']:
+    for source in manifest['documents'] + manifest.get('supplemental_documents', []):
         at = datetime.now(timezone.utc).isoformat()
         old = prior_by_url.get(source['url'])
         if old and not (old.get('http_status') == 200 and old.get('body_status') == 'BLOCKED'):
