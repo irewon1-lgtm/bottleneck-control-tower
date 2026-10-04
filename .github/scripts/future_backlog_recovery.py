@@ -7,6 +7,11 @@ Actions artifact; no third-party full text is published to a repository.
 import argparse
 import json
 import shutil
+import os
+import hashlib
+import re
+from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 
 from bct.future_bottleneck import run
@@ -27,13 +32,76 @@ def recover(db, candidates, tracking, cache, request, output):
                     trigger='SCHEDULED', trigger_id=value['operation_id'],
                     patch_output=output / f'collection-change-{index // 300}.json')
         print(json.dumps({'batch': index // 300, 'processed': state['summary']['processed_this_run']}))
+    return target
+
+
+def publish_and_audit(target, cache, output, request):
+    from bct.future_github import GitHubTransport
+    from bct.future_store import store_patch
+    from bct.future_body import read_cached_body
+    transport = GitHubTransport(os.environ['GITHUB_REPOSITORY'], 'future-bottleneck-data', os.environ['GITHUB_TOKEN'])
+    saved = []
+    for path in sorted(Path(output).glob('collection-change-*.json')):
+        change = json.loads(path.read_text())
+        # Persist current observations through the existing preserving CAS writer.
+        result = store_patch(transport, 'future-candidates.json', owner='collection',
+            patch=change['patch'], operation_id=change['operation_id'], prepared_document=change['prepared_document'])
+        if result.status not in ('APPLIED', 'ALREADY_APPLIED'):
+            raise RuntimeError('collection pending: ' + str(result.reason))
+        saved.append(result.status)
+    state = transport.read('future-candidates.json').document
+    checked, readable, misses = [], [], []
+    patterns = {
+        'DEMAND': r'\b(?:orders?|contracts?|reservations?|procurement|deployment)\b',
+        'SUPPLY': r'\b(?:capacity|production|qualification|commissioning|lead[- ]time|yield|utilization)\b',
+        'RELIEF': r'\b(?:expansion|inventory|substitute|dual[- ]source|redesign|new supplier)\b',
+    }
+    for document_id, record in state['results'].items():
+        digest = record.get('current_body_sha256') or record.get('body_sha256')
+        body = read_cached_body(cache, digest)
+        if body is None:
+            continue
+        readable.append(document_id)
+        facts = record.get('scope_facts', [])
+        checked.append({'document_id': document_id, 'body_sha256': digest, 'body_chars': len(body),
+                        'scope_facts': len(facts)})
+        for match in re.finditer(r'[^\n]+', body):
+            line = match.group()
+            targets = [t['name'] for t in record.get('targets', []) if t['name'].casefold() in line.casefold()]
+            if not targets:
+                continue
+            for role, pattern in patterns.items():
+                if re.search(pattern, line, re.I) and not any(f['role'] == role and f['locator']['start'] == match.start() for f in facts):
+                    misses.append({'document_id': document_id, 'body_sha256': digest, 'role': role,
+                                   'targets': targets, 'locator': {'start': match.start(), 'end': match.end()},
+                                   'excerpt': ' '.join(line.split()[:24])})
+    report = {'operation_id': json.loads(Path(request).read_text())['operation_id'],
+              'observed_at': datetime.now(timezone.utc).isoformat(),
+              'published_batches': saved, 'verified_cached_documents': len(readable),
+              'verified_cached_document_records': checked,
+              'parser_missing_role_counts': dict(Counter(x['role'] for x in misses)),
+              'parser_missing_role_examples': misses[:24],
+              'selected_outcomes': [{'document_id': k, 'body_status': state['results'][k].get('body_status'),
+                 'body_sha256': state['results'][k].get('body_sha256'), 'reasons': state['results'][k].get('reasons', [])}
+                 for k in json.loads(Path(request).read_text())['document_ids']]}
+    path = 'backlog-recovery/' + os.environ['GITHUB_RUN_ID'] + '.json'
+    raw = (json.dumps(report, ensure_ascii=False, indent=2) + '\n').encode()
+    import base64
+    transport._request('PUT', '/contents/' + path, {'branch': 'future-bottleneck-data',
+        'message': 'Preserve actual body recovery audit (no full text)', 'content': base64.b64encode(raw).decode()})
+    print(json.dumps({'published_batches': saved, 'verified_cached_documents': len(readable), 'report': path}))
 
 
 def main():
     p = argparse.ArgumentParser()
     for name in ('db', 'candidates', 'tracking', 'cache', 'request', 'output'):
         p.add_argument('--' + name, required=True, type=Path)
-    recover(**vars(p.parse_args()))
+    p.add_argument('--publish', action='store_true')
+    args = vars(p.parse_args())
+    publish = args.pop('publish')
+    target = recover(**args)
+    if publish:
+        publish_and_audit(target, args['cache'], args['output'], args['request'])
 
 
 if __name__ == '__main__':

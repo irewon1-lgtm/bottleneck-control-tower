@@ -261,6 +261,32 @@ def screen(body, tracked_terms=()):
             "target_status": "EXTRACTED_UNVERIFIED" if targets else "UNRESOLVED", "final_bottleneck": None}
 
 
+def _acquire_with_cache_snapshot(url, source_version, ledger, cache_dir, fetcher, *, prior_record, **kwargs):
+    """Recover a verified same-source snapshot without rewriting acquisition history."""
+    from copy import deepcopy
+    from .future_body import acquire_document, read_cached_body
+    original = deepcopy(ledger)
+    prepared = deepcopy(ledger)
+    version = prepared.get("versions", {}).get(source_version, {})
+    latest = version.get("latest", {})
+    if read_cached_body(cache_dir, latest.get("body_sha256")) is None:
+        saved = list(reversed(version.get("history", [])))
+        if prior_record.get("fingerprint") == source_version:
+            saved.append(prior_record.get("versions", {}).get(
+                prior_record.get("current_body_sha256") or prior_record.get("body_sha256"), {}))
+        for snapshot in saved:
+            if (snapshot.get("body_status") in ("FULL", "PARTIAL", "BODY_OK")
+                    and read_cached_body(cache_dir, snapshot.get("body_sha256")) is not None):
+                version["latest"] = deepcopy(snapshot)
+                if snapshot["body_status"] == "BODY_OK":
+                    version["latest"]["body_status"] = "PARTIAL"
+                break
+    result = acquire_document(url, source_version, prepared, cache_dir, fetcher, **kwargs)
+    if not result["acquired"]:
+        result["ledger"] = original
+    return result
+
+
 def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
         cache_dir=None, filter_version=FILTER_VERSION, screener=screen,
         trigger="AUTO", trigger_id=None, patch_output=None, tracking_path=None,
@@ -338,9 +364,9 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
                                    or prior.get("tracking_terms_sha256") != terms_hash)
                 and read_cached_body(cache_dir, latest.get("body_sha256")) is not None):
             acq_trigger = "FILTER_CHANGED"
-        acquired = acquire_document(row["url"], fingerprint, ledger,
+        acquired = _acquire_with_cache_snapshot(row["url"], fingerprint, ledger,
                                     cache_dir, acquire, trigger=acq_trigger, trigger_id=trigger_id,
-                                    now=now.isoformat())
+                                    now=now.isoformat(), prior_record=prior)
         meta = acquired["metadata"]
         meta.setdefault("body_status", "UNAVAILABLE")
         meta.setdefault("reasons", [acquired.get("blocked") or "NO_ACCESSIBLE_BODY"])
