@@ -5,6 +5,7 @@
   "extractor_sha256": "0471b18fb8e48fd77d461879e7edad9a7a5f74e185863553918655262ba09891",
   "source_count": 21,
   "allowed_domains": [
+    "cdn.prod.website-files.com",
     "lngir.cheniere.com",
     "news.northropgrumman.com",
     "open.overheid.nl",
@@ -516,8 +517,7 @@
         "DECISIVE_UNKNOWN_DOCUMENT_LOCATOR"
       ],
       "decisive_unknown": "dated Hemerdon ramp and qualified deliveries disclosures",
-      "locator_only": true,
-      "refresh_locator": true
+      "locator_only": true
     },
     {
       "target_id": "us-defense-qualified-tungsten",
@@ -674,6 +674,54 @@
       ],
       "locator_only": false,
       "identified_from_snapshot": "official-precursors/actions-37173715864-1.json"
+    },
+    {
+      "target_id": "us-lng-liquefaction",
+      "target": "미국 LNG",
+      "organization": "Cheniere Energy",
+      "url": "https://lngir.cheniere.com/sec-filings/all-sec-filings/content/0000003570-26-000028/lng-20260630.htm",
+      "host": "lngir.cheniere.com",
+      "official_document": true,
+      "required_roles": [
+        "firm_contracts_allocated_capacity"
+      ],
+      "identified_from_snapshot": "official-precursors/actions-37173850075-1.json"
+    },
+    {
+      "target_id": "us-lng-liquefaction",
+      "target": "미국 LNG",
+      "organization": "Cheniere Energy",
+      "url": "https://lngir.cheniere.com/_assets/_4b3aa8a5b175b569f60c196a97e37242/cheniere/db/804/7567/presentation/08+06+2026+2Q+2026+Earnings+Presentation+vF.pdf",
+      "host": "lngir.cheniere.com",
+      "official_document": true,
+      "required_roles": [
+        "contract_year_supply_year"
+      ],
+      "identified_from_snapshot": "official-precursors/actions-37173850075-1.json"
+    },
+    {
+      "target_id": "us-defense-qualified-tungsten",
+      "target": "미국 국방용 텅스텐",
+      "organization": "Tungsten West",
+      "url": "https://cdn.prod.website-files.com/69d6c3cf43485ab7fac9a296/6a995da54cb744f81ed2b6f3_Tungsten%20West%20Plc%20-%202026%20Audit%20Signed%20Accounts.pdf",
+      "host": "cdn.prod.website-files.com",
+      "official_document": true,
+      "required_roles": [
+        "production_ramp_qualified_deliveries"
+      ],
+      "identified_from_snapshot": "official-precursors/actions-37173850075-1.json"
+    },
+    {
+      "target_id": "us-defense-qualified-tungsten",
+      "target": "미국 국방용 텅스텐",
+      "organization": "EQ Resources",
+      "url": "https://www.eqresources.com.au/site/pdf/7ca315dc-dd73-4b4f-847f-e37585557041/Platform/ListPage/Quarterly-ActivitiesAppendix-5B-Cash-Flow-Report.pdf",
+      "host": "www.eqresources.com.au",
+      "official_document": true,
+      "required_roles": [
+        "actual_production_allocated_supply"
+      ],
+      "identified_from_snapshot": "official-precursors/actions-37173850075-1.json"
     }
   ],
   "collection_target_ids": [
