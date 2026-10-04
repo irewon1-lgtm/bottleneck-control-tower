@@ -77,3 +77,22 @@ def test_screening_confirmation_does_not_seed_new_precursor_facts():
     from bct.future_bottleneck import screen, _screening_scope_facts
     text = 'A shortage of power transformers delays orders as demand increases.'
     assert _screening_scope_facts(text, screen(text), []) == []
+
+
+def test_demand_only_and_supply_only_never_generate_forecast_candidate():
+    from bct.forecast_discovery import discover
+    from bct.objective_lock import stamp_export
+    for role, kind in [('DEMAND', 'committed_order'), ('SUPPLY', 'qualified_capacity')]:
+        documents, signals = [], []
+        for index in range(2):
+            body = f'Origin {index} explicit precursor for this transformer.'
+            documents.append({'document_id': str(index), 'body': body, 'body_sha256': hashlib.sha256(body.encode()).hexdigest(),
+                'published_at': '2026-01-01T00:00:00Z', 'available_at': '2026-01-02T00:00:00Z',
+                'provenance_verified': True, 'origin_id': str(index), 'origin_publisher': str(index),
+                'origin_url': f'https://example{index}.org/doc'})
+            signals.append({'document_id': str(index), 'target_id': 'transformer', 'target': 'transformer',
+                'role': role, 'signal_type': kind, 'specification': 'HV', 'region': 'US', 'supply_pool': 'qualified',
+                'period': {'start': '2031-01-01', 'end': '2031-12-31'}, 'locator': {'start': 0, 'end': len(body)},
+                'quantity': 'UNKNOWN', 'unit': 'UNKNOWN', 'basis': 'total', 'qualified': True})
+        result = discover(stamp_export({'documents': documents, 'signals': signals}), mode='SYNTHETIC', now='2026-10-04T00:00:00Z')
+        assert result['candidates'] == [] and result['rejected'] == []
