@@ -417,13 +417,34 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
              "results": {r["id"]: r for r in results}}
     projected = deep_merge(state, patch)
     live = list(projected["results"].values())
+    active_ids = {r["id"] for r in scoped}
+    active = [projected["results"][doc_id] for doc_id in active_ids if doc_id in projected["results"]]
+    def effective_body(record):
+        digest = record.get("current_body_sha256") or record.get("body_sha256")
+        version = record.get("versions", {}).get(digest, {}) if digest else {}
+        status = version.get("body_status") or record.get("body_status") or "UNAVAILABLE"
+        chars = version.get("body_chars") if isinstance(version.get("body_chars"), int) else record.get("body_chars", 0)
+        return status, chars
+    active_body = [effective_body(r) for r in active]
+    precursor_docs = [r for r in active if set(r.get("discovery_paths") or ()) & {"DEMAND", "SUPPLY", "RELIEF"}]
+    paired_precursor_docs = [r for r in precursor_docs
+                             if "DEMAND" in set(r.get("discovery_paths") or ())
+                             and set(r.get("discovery_paths") or ()) & {"SUPPLY", "RELIEF"}]
     ok = sum(r["body_status"] == "FULL" for r in results)
     patch["summary"] = {"db_news_articles": len(rows), "scope_articles": len(scoped),
                         "new_documents_this_run": sum(r['collected_at'] > state.get('summary', {}).get('checked_at', now.isoformat()) for r in rows),
                         "processed_this_run": len(results), "body_ok_this_run": ok,
                         "body_rate_this_run": round(ok / len(results), 4) if results else None,
                         "candidates_this_run": sum(r["candidate"] for r in results),
-                        "processed_total": len(live), "body_ok_total": sum(r.get("body_status") == "FULL" for r in live),
+                        "processed_total": len(live), "active_processed_total": len(active),
+                        "active_unprocessed_total": max(0, len(scoped) - len(active)),
+                        "readable_active_total": sum(status in {"FULL", "PARTIAL", "BODY_OK"} and chars > 0 for status, chars in active_body),
+                        "full_active_total": sum(status == "FULL" and chars > 0 for status, chars in active_body),
+                        "unavailable_active_total": sum(status == "UNAVAILABLE" or chars <= 0 for status, chars in active_body),
+                        "screening_pending_total": sum(bool(r.get("screening_pending_for")) for r in active),
+                        "precursor_documents_total": len(precursor_docs),
+                        "paired_precursor_documents_total": len(paired_precursor_docs),
+                        "body_ok_total": sum(r.get("body_status") == "FULL" for r in live),
                         "candidates_total": sum(bool(r.get("candidate")) for r in live),
                         "pending_due": max(0, len(pending) - limit), "checked_at": now.isoformat(),
                         "private_cache": "RUNTIME_ONLY_NOT_PUBLISHED",
