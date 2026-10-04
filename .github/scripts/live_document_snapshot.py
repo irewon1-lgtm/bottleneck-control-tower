@@ -53,6 +53,16 @@ def collect(root, document_ids):
         'provenance_policy': 'No domain-based verification; existing metadata guards only',
         'summary': result['summary'],
     }), ensure_ascii=False, indent=2), encoding='utf-8')
+    # Only aggregate metadata goes into the accessible Actions check; full text
+    # stays in the short-lived artifact and is never written to public Git.
+    rows = list(result['results'].values())
+    counts = {s: sum(r.get('body_status') == s for r in rows)
+              for s in ('FULL', 'PARTIAL', 'UNAVAILABLE')}
+    counts['selected'] = len(document_ids)
+    counts['verified_metadata'] = sum(r.get('provenance_verified') is True
+                                      and r.get('publication_verified') is True
+                                      for r in rows)
+    print('::notice title=LIVE snapshot counts::' + json.dumps(counts))
     return result['summary']
 
 
