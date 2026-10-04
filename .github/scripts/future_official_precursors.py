@@ -123,9 +123,12 @@ def html_structure(html, source_url):
     links = [{'url': urljoin(source_url, n.attrs['href']), 'label': _text(n)}
              for n in nodes if n.tag == 'a' and n.attrs.get('href') and
              urlsplit(urljoin(source_url, n.attrs['href'])).hostname == urlsplit(source_url).hostname]
+    document_links = [{'url': urljoin(source_url, n.attrs['href']), 'label': _text(n)}
+                      for n in nodes if n.tag == 'a' and n.attrs.get('href') and
+                      (re.search(r'\.(?:pdf|xlsx?)(?:[?#]|$)|/Archives/|/download/', n.attrs['href'], re.I))]
     scripts = [{'type': n.attrs.get('type'), 'id': n.attrs.get('id'),
                 'chars': len(_text(n, include_script=True))} for n in nodes if n.tag == 'script']
-    return {'containers': containers[:80], 'same_origin_links': links[:150], 'scripts': scripts[:40]}
+    return {'containers': containers[:80], 'same_origin_links': links[:150], 'scripts': scripts[:40], 'document_links': document_links[:100]}
 
 
 
@@ -180,7 +183,7 @@ def collect(manifest, output, cache_dir, *, fetcher=fetch, run_id='LOCAL', prior
     for source in manifest['documents'] + manifest.get('supplemental_documents', []):
         at = datetime.now(timezone.utc).isoformat()
         old = prior_by_url.get(source['url'])
-        if old and (source['target_id'] not in manifest.get('collection_target_ids', [source['target_id']]) or not (old.get('http_status') == 200 and old.get('body_status') == 'BLOCKED')):
+        if old and not source.get('refresh_locator', False) and (source['target_id'] not in manifest.get('collection_target_ids', [source['target_id']]) or not (old.get('http_status') == 200 and old.get('body_status') == 'BLOCKED')):
             responses.append((source, at, {'reused_record': old}))
             continue
         try:

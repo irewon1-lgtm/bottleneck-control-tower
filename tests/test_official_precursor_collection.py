@@ -160,3 +160,21 @@ def test_local_pdf_resolution_rejects_changed_download(tmp_path):
         'pending_pdf_base64': base64.b64encode(b'%PDF changed').decode(), 'download_sha256': '0' * 64}]}
     with pytest.raises(ValueError, match='download hash mismatch'):
         module.resolve_pending_pdf(snapshot, tmp_path / 'cache')
+
+
+def test_targeted_collection_preserves_other_targets_even_if_body_unreadable(tmp_path):
+    manifest = module.manifest_at(ROOT / '.github/official-precursor-urls.json')
+    sources = manifest['documents'] + manifest.get('supplemental_documents', [])
+    prior = {'run_id': 'prior', 'documents': [
+        {'url': d['url'], 'target_id': d['target_id'], 'http_status': 200,
+         'body_status': 'BLOCKED', 'body': ''} for d in sources]}
+    calls = []
+    def fixture(url, domains):
+        calls.append(url)
+        return {'html': '<article>Official comparison evidence.</article>', 'status': 200,
+                'final_url': url, 'content_type': 'text/html'}
+    snapshot = module.collect(manifest, tmp_path / 'snapshot.json', tmp_path / 'cache',
+                              fetcher=fixture, prior=prior)
+    allowed = set(manifest['collection_target_ids'])
+    assert set(calls) == {d['url'] for d in sources if d['target_id'] in allowed}
+    assert all(d.get('reused_from_run') == 'prior' for d in snapshot['documents'] if d['target_id'] not in allowed)
