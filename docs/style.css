@@ -76,3 +76,9 @@
   .simple-facts{grid-template-columns:1fr}
   .late-strip{grid-template-columns:1fr;gap:6px}
 }
+
+.queue-guide{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0 20px}
+.queue-guide-item{border:1px solid #31445c;background:#0d1a2b;border-radius:8px;padding:12px 14px}
+.queue-guide-item strong{display:block;font-size:14px;color:#e9f0f7;margin-bottom:4px}
+.queue-guide-item span{display:block;font-size:13px;line-height:1.6;color:var(--muted)}
+@media(max-width:600px){.queue-guide{grid-template-columns:1fr}}
