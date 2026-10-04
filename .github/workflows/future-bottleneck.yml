@@ -96,9 +96,38 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m bct.future_github --path future-candidates.json \
-            --change "$RUNNER_TEMP/future-output/collection-change.json" \
-            --pending "$RUNNER_TEMP/future-output/pending-collection.json"
+          publish_collection() {
+            local change="$1"
+            local pending="$2"
+            python -m bct.future_github --path future-candidates.json \
+              --change "$change" \
+              --pending "$pending"
+          }
+
+          # Publish the normal pass first. If more eligible documents remain,
+          # run at most two extra 300-document passes in this same Action.
+          # The per-pass collection budget and worker limits are unchanged.
+          publish_collection \
+            "$RUNNER_TEMP/future-output/collection-change.json" \
+            "$RUNNER_TEMP/future-output/pending-collection.json"
+
+          for pass in 2 3; do
+            remaining=$(python -c "import json,os,pathlib; p=pathlib.Path(os.environ['RUNNER_TEMP'])/'future-output/future-candidates.json'; print(int(json.loads(p.read_text()).get('summary',{}).get('pending_due',0) or 0))")
+            if [[ "$remaining" -le 0 ]]; then
+              break
+            fi
+            change="$RUNNER_TEMP/future-output/collection-change-$pass.json"
+            pending="$RUNNER_TEMP/future-output/pending-collection-$pass.json"
+            python -m bct.future_bottleneck \
+              --db "$RUNNER_TEMP/future.sqlite3" \
+              --output "$RUNNER_TEMP/future-output/future-candidates.json" \
+              --tracking "$RUNNER_TEMP/future-output/future-tracking.json" \
+              --cache-dir "$RUNNER_TEMP/private-future-body-cache" \
+              --patch-output "$change"
+            sha256sum --check "$RUNNER_TEMP/future-db.sha256"
+            publish_collection "$change" "$pending"
+          done
+
           python - <<'PY'
           import json, os
           from pathlib import Path
@@ -108,6 +137,10 @@ jobs:
           for name in ('future-candidates.json', 'future-tracking.json'):
               snapshot = transport.read(name)
               (root / name).write_text(json.dumps(snapshot.document, ensure_ascii=False))
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+              state = json.loads((root / 'future-candidates.json').read_text())
+              f.write('\nFinal bounded backlog-drain state:\n\n')
+              f.write('```json\n' + json.dumps(state.get('summary', {}), indent=2) + '\n```\n')
           PY
           python .github/scripts/future_queue_snapshot.py \
             --candidates "$RUNNER_TEMP/future-output/future-candidates.json" \
