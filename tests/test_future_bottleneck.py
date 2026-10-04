@@ -104,6 +104,12 @@ def test_read_only_failure_continuation_cache_and_new_articles(tmp_path):
     state = run(path, output, fetcher=fetch)
     assert state['summary']['processed_this_run'] == 3
     assert state['summary']['body_ok_this_run'] == 2
+    assert state['summary']['active_processed_total'] == 3
+    assert state['summary']['active_unprocessed_total'] == 0
+    assert state['summary']['readable_active_total'] == 2
+    assert state['summary']['unavailable_active_total'] == 1
+    assert state['summary']['precursor_documents_total'] == 2
+    assert state['summary']['paired_precursor_documents_total'] == 2
     assert state['results']['1']['body_status'] == 'UNAVAILABLE'
     assert state['results']['1']['targets'] == []
     assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
@@ -130,4 +136,6 @@ def test_workflow_is_independent_and_never_writes_canonical_database():
     assert 'rss-canonical-data' not in text
     assert 'OPENAI_API_KEY' not in text
     assert 'python -m pytest -q' in text
+    assert 'for pass in 2 3; do' in text
+    assert "get('pending_due',0)" in text
     assert 'canonical.sqlite3' not in text.split('Publish candidate sidecar only')[1]

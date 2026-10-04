@@ -198,7 +198,15 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
         elif method != "JSON_LD":
             substantive = [n for n in _nodes(node or doc.root) if n.tag in {"p", "li", "td", "dd", "blockquote"}
                            and not _skipped(n) and _text(n)]
-            if not substantive and not (node and any(isinstance(c, str) and _plain(c) for c in node.children)):
+            direct_text = bool(node and any(isinstance(c, str) and _plain(c) for c in node.children))
+            scoped_unstructured = bool(node and body and len(body) >= 200 and not substantive and not direct_text)
+            if scoped_unstructured:
+                # Some publishers render article prose in nested div/span blocks
+                # without semantic p/li tags. Keep the visible text as PARTIAL
+                # rather than discarding it, but never call it complete.
+                status = "PARTIAL"
+                reasons.append("UNSTRUCTURED_ARTICLE_TEXT")
+            elif not substantive and not direct_text:
                 status, body, reasons = "UNAVAILABLE", "", ["NO_ARTICLE_CONTENT"]
             elif node and not node.closed:
                 status = "PARTIAL"
