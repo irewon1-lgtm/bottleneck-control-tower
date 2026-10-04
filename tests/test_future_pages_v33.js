@@ -198,7 +198,7 @@ test("existing review menu shows named hypotheses with exact saved stages and de
   assert.match(detail.textContent,/수량 120 slots/); assert.match(detail.textContent,/수량 100 slots/);
   assert.match(detail.textContent,/frozen-demand · 문자 10–20/);
   assert(walk(detail).some(el=>el.href==="https://example.test/supply"));
-  assert(headingPanel(page.content,"추가 근거가 필요한 대상"),"existing reviewed targets remain visible");
+  assert(headingPanel(page.content,"추가 근거가 필요한 TARGET"),"existing reviewed targets remain visible");
   assert.deepEqual(data,before);
 });
 
