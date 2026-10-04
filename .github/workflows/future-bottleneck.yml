@@ -9,6 +9,10 @@ on:
         description: Collect only the frozen 21 official precursor URLs
         type: boolean
         default: false
+      official_prior_snapshot:
+        description: Reuse this immutable snapshot and retry only HTTP 200 missing bodies
+        type: string
+        default: ""
   workflow_run:
     workflows: ['RSS live environment check']
     types: [completed]
@@ -150,11 +154,14 @@ jobs:
       - name: Collect frozen official sources with existing BCT extractor
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRIOR_SNAPSHOT: ${{ inputs.official_prior_snapshot }}
         run: |
+          recovery_args=()
+          if [[ -n "$PRIOR_SNAPSHOT" ]]; then recovery_args=(--prior-snapshot "$PRIOR_SNAPSHOT"); fi
           python .github/scripts/future_official_precursors.py \
             --manifest .github/official-precursor-urls.json \
             --output "$RUNNER_TEMP/official-precursors/snapshot.json" \
-            --cache-dir "$RUNNER_TEMP/private-future-body-cache" --publish
+            --cache-dir "$RUNNER_TEMP/private-future-body-cache" --publish "${recovery_args[@]}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

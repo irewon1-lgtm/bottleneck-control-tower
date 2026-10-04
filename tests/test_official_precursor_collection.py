@@ -80,3 +80,50 @@ def test_http_error_retains_response_metadata(tmp_path):
     result = module.collect(manifest, tmp_path / 'snapshot.json', tmp_path / 'cache', fetcher=fixture)
     assert result['summary'] == {'BLOCKED': 21}
     assert all(d['http_status'] == 403 and d['content_type'] == 'text/html' and d['final_url'] == d['url'] for d in result['documents'])
+
+
+def test_recovery_reuses_success_and_does_not_retry_denials(tmp_path):
+    manifest = module.manifest_at(ROOT / '.github/official-precursor-urls.json')
+    prior = {'run_id': 'prior', 'documents': [
+        {'url': d['url'], 'http_status': 403, 'body_status': 'BLOCKED', 'body': ''}
+        for d in manifest['documents']]}
+    prior['documents'][0]['http_status'] = 200
+    calls = []
+    def fixture(url, domains):
+        calls.append(url)
+        return {'html': '<article><p>Public source text.</p></article>', 'status': 200,
+                'final_url': url, 'content_type': 'text/html'}
+    result = module.collect(manifest, tmp_path / 'snapshot.json', tmp_path / 'cache',
+                            fetcher=fixture, prior=prior)
+    assert calls == [manifest['documents'][0]['url']]
+    assert result['summary'] == {'FULL': 1, 'BLOCKED': 20}
+    assert all(d.get('reused_from_run') == 'prior' for d in result['documents'][1:])
+
+
+def test_pdf_text_layer_parser_without_ocr():
+    import shutil
+    if not shutil.which('pdftotext'):
+        pytest.skip('existing PDF parser unavailable')
+    stream = b'BT /F1 12 Tf 72 720 Td (Actual public PDF text.) Tj ET'
+    objects = [b'<< /Type /Catalog /Pages 2 0 R >>',
+               b'<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+               b'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>',
+               b'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
+               b'<< /Length ' + str(len(stream)).encode() + b' >>\nstream\n' + stream + b'\nendstream']
+    payload = b'%PDF-1.4\n'; offsets = [0]
+    for index, obj in enumerate(objects, 1):
+        offsets.append(len(payload)); payload += str(index).encode() + b' 0 obj\n' + obj + b'\nendobj\n'
+    xref = len(payload)
+    payload += b'xref\n0 6\n0000000000 65535 f \n'
+    payload += b''.join(f'{offset:010d} 00000 n \n'.encode() for offset in offsets[1:])
+    payload += b'trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n' + str(xref).encode() + b'\n%%EOF\n'
+    result = module.pdf_text_layer(payload)
+    assert 'Actual public PDF text.' in result['body']
+    assert result['body_status'] == 'PARTIAL'
+    assert result['completeness']['OCR_used'] is False
+    assert result['body_sha256'] == hashlib.sha256(result['body'].encode()).hexdigest()
+
+
+def test_no_installed_pdf_parser_is_blocked(monkeypatch):
+    monkeypatch.setattr(module.shutil, 'which', lambda name: None)
+    assert module.pdf_text_layer(b'%PDF') == {'blocked_reason': 'PDF_TEXT_PARSER_NOT_INSTALLED'}
