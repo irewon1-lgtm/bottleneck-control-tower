@@ -111,3 +111,19 @@ def test_cache_only_rescreen_does_not_mark_older_uncached_version_source_changed
     path.write_text(json.dumps(first))
     again = run(db,path,cache_dir=cache,trigger='FILTER_CHANGED',fetcher=lambda _: (_ for _ in ()).throw(AssertionError('offline')))
     assert again['results']['doc']['versions'][old_hash] == old
+
+
+def test_github_rate_limit_is_distinguished_from_authorization_without_error_body_leak(monkeypatch):
+    import io
+    from urllib.error import HTTPError
+    import pytest
+    from bct import future_github as gh
+    transport = gh.GitHubTransport('owner/repository','future-bottleneck-data','test-placeholder')
+    for message, category in [('You have exceeded a secondary rate limit.','RATE_LIMIT'), ('Resource not accessible by integration','ACCESS_DENIED')]:
+        def blocked(*args, **kwargs):
+            raise HTTPError('https://api.github.com/',403,'Forbidden',{'Retry-After':'60'},io.BytesIO(json.dumps({'message':message,'extra':'must-not-leak'}).encode()))
+        monkeypatch.setattr(gh,'urlopen',blocked)
+        with pytest.raises(RuntimeError) as caught:
+            transport._request('PUT','/contents/future-candidates.json',{})
+        assert category in str(caught.value) and 'RETRY_AFTER=60' in str(caught.value)
+        assert 'must-not-leak' not in str(caught.value) and 'test-placeholder' not in str(caught.value)

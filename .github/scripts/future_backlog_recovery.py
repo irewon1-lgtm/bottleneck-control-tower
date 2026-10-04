@@ -51,6 +51,17 @@ def publish_and_audit(target, cache, output, request):
         # Persist current observations through the existing preserving CAS writer.
         result = store_patch(transport, 'future-candidates.json', owner='collection',
             patch=change['patch'], operation_id=change['operation_id'], prepared_document=change['prepared_document'])
+        for retry in range(2):
+            if result.status in ('APPLIED', 'ALREADY_APPLIED') or 'RATE_LIMIT' not in (result.reason or ''):
+                break
+            delay = int(re.search(r'RETRY_AFTER=(\d+)', result.reason)[1])
+            if delay > 120:
+                break  # Leave the bounded operation pending; no permission bypass.
+            import time
+            for part in range(0, max(60, delay), 60):
+                time.sleep(min(60, max(60, delay) - part))
+            result = store_patch(transport, 'future-candidates.json', owner='collection',
+                patch=change['patch'], operation_id=change['operation_id'], prepared_document=change['prepared_document'])
         if result.status not in ('APPLIED', 'ALREADY_APPLIED'):
             raise RuntimeError('collection pending: ' + str(result.reason))
         saved.append(result.status)

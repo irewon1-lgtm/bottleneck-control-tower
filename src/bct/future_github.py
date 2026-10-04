@@ -33,6 +33,17 @@ class GitHubTransport:
         except HTTPError as exc:
             if exc.code == 409:
                 raise StoreConflict('sidecar SHA changed') from None
+            if exc.code in (403, 429):
+                # Classify GitHub's error without emitting the response body or
+                # credential headers. Authorization failures are never retried.
+                try:
+                    message = str(json.loads(exc.read(4096)).get('message', '')).casefold()
+                except (ValueError, UnicodeError):
+                    message = ''
+                category = 'RATE_LIMIT' if exc.code == 429 or 'rate limit' in message else 'ACCESS_DENIED' if 'accessible' in message or 'permission' in message else 'UNCLASSIFIED'
+                delay = exc.headers.get('Retry-After', '60')
+                delay = delay if delay.isdigit() else '60'
+                raise RuntimeError(f'GitHub {method} failed: HTTP {exc.code} {category} RETRY_AFTER={delay}') from None
             # Never emit tokens, request headers or remote response bodies.
             raise RuntimeError(f'GitHub {method} failed: HTTP {exc.code}') from None
 
