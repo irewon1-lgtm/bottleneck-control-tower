@@ -96,3 +96,18 @@ def test_demand_only_and_supply_only_never_generate_forecast_candidate():
                 'quantity': 'UNKNOWN', 'unit': 'UNKNOWN', 'basis': 'total', 'qualified': True})
         result = discover(stamp_export({'documents': documents, 'signals': signals}), mode='SYNTHETIC', now='2026-10-04T00:00:00Z')
         assert result['candidates'] == [] and result['rejected_inputs'] == []
+
+
+def test_cache_only_rescreen_does_not_mark_older_uncached_version_source_changed(tmp_path):
+    db = tmp_path / 'source.sqlite3'
+    with sqlite3.connect(db) as c:
+        c.execute('CREATE TABLE radar_items(id,title,url,source,collected_at,updated_at,status)')
+        c.execute('INSERT INTO radar_items VALUES(?,?,?,?,?,?,?)', ('doc','title','https://example.org/a','source','2026-10-01T00:00:00Z','v1','active'))
+    path, cache = tmp_path / 'state.json', tmp_path / 'cache'
+    first = run(db, path, cache_dir=cache, fetcher=lambda _: '<article><p>Orders for transformers increased.</p></article>')
+    old_hash = hashlib.sha256(b'Older source body.').hexdigest()
+    old = {'body_sha256': old_hash, 'body_status': 'PARTIAL', 'body_chars': 18}
+    first['results']['doc']['versions'][old_hash] = old
+    path.write_text(json.dumps(first))
+    again = run(db,path,cache_dir=cache,trigger='FILTER_CHANGED',fetcher=lambda _: (_ for _ in ()).throw(AssertionError('offline')))
+    assert again['results']['doc']['versions'][old_hash] == old

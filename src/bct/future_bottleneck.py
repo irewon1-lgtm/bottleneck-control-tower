@@ -471,8 +471,9 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
                 versions[body_hash].pop("source_version", None)
             result["current_body_sha256"] = body_hash
             for old_version in prior.get('versions', {}):
-                if (old_version != body_hash
-                        and read_cached_body(cache_dir, old_version) is None):
+                if (acquired["acquired"] and meta.get("acquisition_status") != "UNAVAILABLE"
+                        and old_version == (prior.get("current_body_sha256") or prior.get("body_sha256"))
+                        and old_version != body_hash and read_cached_body(cache_dir, old_version) is None):
                     versions[old_version] = {"reaccess_status": "SOURCE_CHANGED", "access_checked_at": now.isoformat()}
         elif body_hash:
             versions[body_hash] = {"reaccess_status": "UNAVAILABLE", "access_checked_at": now.isoformat()}
