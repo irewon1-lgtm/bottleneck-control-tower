@@ -152,12 +152,8 @@ def publish_and_audit(target, cache, output, request):
         if PUBLIC_CONFIRMATION.search(body):
             public_documents.append(row['document_id'])
             continue
-        documents.append({'document_id': row['document_id'], 'body': body, 'body_sha256': row['body_sha256'],
-            'published_at': r.get('published_at') if r.get('publication_verified') else None,
-            'publication_precision': r.get('publication_precision') if r.get('publication_verified') else 'UNKNOWN',
-            'public_snapshot_observed_at': r['checked_at'], 'available_at': r['checked_at'],
-            'origin_id': r.get('origin_id'), 'origin_url': r.get('origin_url'),
-            'origin_publisher': r.get('origin_publisher'), 'provenance_verified': r.get('provenance_verified') is True})
+        from bct.future_body import discovery_document
+        documents.append(discovery_document(r, body))
         for f in r.get('scope_facts', []):
             if f['role'] not in ('DEMAND', 'SUPPLY'):
                 continue
@@ -165,9 +161,9 @@ def publish_and_audit(target, cache, output, request):
                 'target_id': f.get('target_id', 'UNKNOWN'), 'signal_type': f.get('signal_type', 'UNKNOWN')})
     batch = stamp_export({'documents': documents, 'signals': signals, 'confirmations': []})
     early = early_discover(batch)
-    # Strict discovery needs verified publication timestamps; excluded rows
-    # stay explicit provenance/time failures rather than fabricated inputs.
-    strict_batch = stamp_export({**batch, 'documents': [d for d in documents if d['published_at'] is not None]})
+    # Both engines see the same document references. Unverified publication is
+    # explicitly rejected instead of removing documents but retaining signals.
+    strict_batch = batch
     quantitative = discover(strict_batch)
     report['discovery'] = {'mode': 'LIVE', 'early': early, 'quantitative': quantitative,
         'explicit_confirmation_excluded_documents': public_documents,

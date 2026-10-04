@@ -413,6 +413,29 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
         result = {**row, **meta, "fingerprint": fingerprint, "source_version": fingerprint,
                   "filter_version": filter_version, "acquisition": acquired["ledger"],
                   "checked_at": now.isoformat()}
+        from .future_body import SOURCE_FIELDS, verified_source_metadata
+        digest = meta.get('body_sha256')
+        previous_source = prior.get('versions', {}).get(digest, {})
+        if digest == (prior.get('current_body_sha256') or prior.get('body_sha256')):
+            previous_source = {**prior, **previous_source}
+        source_metadata = {**verified_source_metadata(previous_source, digest),
+                           **verified_source_metadata(meta, digest)} if digest else {}
+        # Cached metadata can predate proof binding; do not trust its flags.
+        for field in SOURCE_FIELDS:
+            result.pop(field, None)
+        result['published_at'] = row.get('published_at')
+        result.update({k: source_metadata.get(k) for k in
+                       ('origin_id', 'origin_url', 'origin_publisher')})
+        result.update(source_metadata)
+        result['provenance_verified'] = source_metadata.get('provenance_verified') is True
+        result['publication_verified'] = source_metadata.get('publication_verified') is True
+        if body:
+            history = acquired['ledger'].get('versions', {}).get(fingerprint, {}).get('history', [])
+            observations = [h['at'] for h in history if h.get('body_sha256') == digest and h.get('at')]
+            if observations:
+                observed = min(observations)
+                result.setdefault('available_at', observed)
+                result.setdefault('public_snapshot_observed_at', observed)
         if body:
             result.update(screener(body, tracked_terms=sorted(terms)) if terms else screener(body))
             from .future_hypothesis import extract_facts
@@ -428,9 +451,10 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
                     (f["target"].casefold(), f["role"], f["locator"]["start"], f["locator"]["end"]) not in identities]
             if result.get('candidate'):
                 result['first_candidate_at'] = prior.get('first_candidate_at', now.isoformat())
-            result['publication_precision'] = 'TIMESTAMP' if row.get('published_at') and 'T' in row['published_at'] else 'DAY' if row.get('published_at') else 'UNKNOWN'
-            # RSS dates are reported metadata, not a verified original publication.
-            result['publication_verified'] = False
+            if result.get('publication_verified') is not True:
+                result['publication_precision'] = 'TIMESTAMP' if row.get('published_at') and 'T' in row['published_at'] else 'DATE' if row.get('published_at') else 'UNKNOWN'
+                # RSS dates never establish verified original publication.
+                result['publication_verified'] = False
             result.update(tracking_terms_sha256=terms_hash, screening_pending_for="", pending_tracking_terms_sha256="", reaccess_status="AVAILABLE")
         else:
             # A missing cache is missing evidence, never a negative re-screen.
@@ -465,6 +489,7 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
                 "decision", "evidence", "discovery_paths", "evidence_locations", "context_review",
                 "quoted_word_count", "tracked_matches", "targets", "queue_entered_at", "reaccess_status") if k in result}
             versions[body_hash].update({k: result[k] for k in ('scope_facts', 'supply_relationships', 'published_at', 'publication_precision', 'publication_verified') if k in result})
+            versions[body_hash].update({k: result[k] for k in SOURCE_FIELDS if k in result})
             if body_hash in prior.get("versions", {}):
                 # Source checks and body versions are different identities. An
                 # unchanged body may be observed under a new source check.

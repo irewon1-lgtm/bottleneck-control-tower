@@ -29,7 +29,8 @@ COLLECTION_FIELDS = frozenset({
     "tracking_terms_sha256", "pending_tracking_terms_sha256", "screening_pending_for", "reaccess_status",
     "bottleneck_tags",
     "scope_facts", "supply_relationships", "published_at", "publication_precision", "publication_verified",
-    "first_candidate_at",
+    "first_candidate_at", "origin_id", "origin_url", "origin_publisher", "provenance_verified",
+    "provenance_evidence", "publication_evidence", "available_at", "public_snapshot_observed_at",
 })
 OWNER_ROOTS = {
     "collection": frozenset({"version", "schema_version", "filter_version", "start_at", "summary", "results", "operation_samples"}),

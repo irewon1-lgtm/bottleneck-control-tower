@@ -275,11 +275,61 @@ def read_cached_body(cache_dir, digest):
     return text if hashlib.sha256(text.encode()).hexdigest() == digest else None
 
 
+SOURCE_FIELDS = frozenset({'origin_id', 'origin_url', 'origin_publisher', 'provenance_verified',
+    'provenance_evidence', 'published_at', 'publication_precision', 'publication_verified',
+    'publication_evidence', 'available_at', 'public_snapshot_observed_at'})
+
+
+def verified_source_metadata(source, body_sha256):
+    """Preserve only explicit verification bound to this body snapshot."""
+    out = {}
+    if not body_sha256:
+        return out
+    evidence = source.get('provenance_evidence') or {}
+    if (source.get('provenance_verified') is True and isinstance(evidence, dict)
+            and evidence.get('body_sha256') == body_sha256
+            and evidence.get('verified_source_url') == source.get('origin_url')
+            and evidence.get('source_identity')
+            and all(source.get(k) not in (None, '', 'UNKNOWN') for k in
+                    ('origin_id', 'origin_url', 'origin_publisher'))):
+        out.update({k: deepcopy(source[k]) for k in
+                    ('origin_id', 'origin_url', 'origin_publisher', 'provenance_verified', 'provenance_evidence')})
+    publication = source.get('publication_evidence') or {}
+    if (source.get('publication_verified') is True and isinstance(publication, dict)
+            and publication.get('body_sha256') == body_sha256 and publication.get('source_quote')
+            and source.get('publication_precision') in ('DATE', 'TIMESTAMP')
+            and source.get('published_at') not in (None, '', 'UNKNOWN')):
+        out.update({k: deepcopy(source[k]) for k in
+                    ('published_at', 'publication_precision', 'publication_verified', 'publication_evidence')})
+    for k in ('available_at', 'public_snapshot_observed_at'):
+        if k in source and out:
+            out[k] = deepcopy(source[k])
+    return out
+
+
+def discovery_document(record, body):
+    """Project verified snapshot metadata for the common discovery path."""
+    digest = hashlib.sha256(body.encode()).hexdigest()
+    if digest != (record.get('current_body_sha256') or record.get('body_sha256')):
+        raise ValueError('discovery snapshot hash mismatch')
+    source = {**record, **record.get('versions', {}).get(digest, {})}
+    metadata = verified_source_metadata(source, digest)
+    return {'document_id': record['id'], 'body': body, 'body_sha256': digest,
+            'origin_id': metadata.get('origin_id'), 'origin_url': metadata.get('origin_url'),
+            'origin_publisher': metadata.get('origin_publisher'),
+            'provenance_verified': metadata.get('provenance_verified') is True,
+            'published_at': metadata.get('published_at'),
+            'publication_precision': metadata.get('publication_precision', 'UNKNOWN'),
+            'available_at': metadata.get('available_at') or source.get('available_at'),
+            'public_snapshot_observed_at': metadata.get('public_snapshot_observed_at') or source.get('public_snapshot_observed_at')}
+
+
 def public_metadata(result, *, redistribution_allowed=False):
     """Exclude arbitrary article full text from public sidecars by default."""
     allowed = {"body_status", "body_sha256", "body_chars", "extraction_method", "reasons", "completeness", "acquisition_status"}
     source = result.get("metadata", result)
     out = {k: deepcopy(v) for k, v in source.items() if k in allowed}
+    out.update(verified_source_metadata(source, source.get('body_sha256')))
     out["cache_access"] = "PRIVATE_RUNTIME"
     out["reproducibility_limit"] = "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST"
     if redistribution_allowed is True:
@@ -346,6 +396,7 @@ def acquire_document(url, source_version, prior, cache_dir, fetcher, *, trigger=
         elif isinstance(fetched, dict) and "html" in fetched:
             extraction = extract_document(fetched["html"], http_status=fetched.get("status", 200),
                                           content_type=fetched.get("content_type", "text/html"))
+            extraction.update(verified_source_metadata(fetched, extraction.get('body_sha256')))
         elif isinstance(fetched, dict) and ("body_status" in fetched or "status" in fetched) and "body" in fetched:
             extraction = deepcopy(fetched)
             extraction.setdefault("body_status", extraction.get("status"))

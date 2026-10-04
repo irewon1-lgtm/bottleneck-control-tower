@@ -1,7 +1,7 @@
 """Source-backed discovery only. Never assign S stages or write v3.3 sidecars."""
 import argparse
 from copy import deepcopy
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 import hashlib
 import json
 import math
@@ -24,6 +24,35 @@ def clock(value):
     if result.tzinfo is None:
         raise ValueError('timezone required')
     return result.astimezone(timezone.utc)
+
+
+def publication_cutoff(doc, as_of, *, allow_unknown=False):
+    """Validate real precision without converting a calendar date to a time."""
+    if not isinstance(doc.get('available_at'), str):
+        raise ValueError('BLOCKED: availability UNKNOWN')
+    available = clock(doc['available_at'])
+    if available > as_of:
+        raise ValueError('not available at discovery cutoff')
+    precision = doc.get('publication_precision')
+    if precision == 'DATE':
+        published = date.fromisoformat(doc['published_at'])
+        if published >= as_of.date():
+            raise ValueError('BLOCKED: DATE publication not strictly before discovery date')
+        if available.date() < published:
+            raise ValueError('availability precedes publication date')
+        return
+    if allow_unknown and doc.get('published_at') is None and precision == 'UNKNOWN':
+        if not isinstance(doc.get('public_snapshot_observed_at'), str):
+            raise ValueError('BLOCKED: snapshot observation UNKNOWN')
+        published = clock(doc['public_snapshot_observed_at'])
+    else:
+        if doc.get('published_at') is None:
+            raise ValueError('BLOCKED: original publication UNKNOWN')
+        published = clock(doc['published_at'])
+    if published > as_of:
+        raise ValueError('not available at discovery cutoff')
+    if available < published:
+        raise ValueError('availability precedes publication')
 
 
 def digest(value):
@@ -111,10 +140,7 @@ def discover(batch, *, now=None, mode='LIVE', previous=None):
                 raise ValueError('duplicate document ID')
             if hashlib.sha256(doc['body'].encode()).hexdigest() != doc['body_sha256']:
                 raise ValueError('snapshot hash mismatch')
-            if clock(doc['published_at']) > as_of or clock(doc['available_at']) > as_of:
-                raise ValueError('not available at discovery cutoff')
-            if clock(doc['available_at']) < clock(doc['published_at']):
-                raise ValueError('availability precedes publication')
+            publication_cutoff(doc, as_of)
             if doc.get('provenance_verified') is not True or not all(doc.get(k) for k in ('origin_id', 'origin_url', 'origin_publisher')):
                 raise ValueError('UNVERIFIED_ORIGINAL_SOURCE')
             url(doc['origin_url'])
@@ -147,6 +173,8 @@ def discover(batch, *, now=None, mode='LIVE', previous=None):
                  'origin_publisher': doc['origin_publisher'], 'body_sha256': doc['body_sha256'],
                  'published_at': doc['published_at'], 'available_at': doc['available_at'],
                  'excerpt_sha256': hashlib.sha256(doc['body'][start:end].encode()).hexdigest()}
+            if 'publication_precision' in doc:
+                x['publication_precision'] = doc['publication_precision']
             groups.setdefault(scope(signal), []).append(x)
         except (KeyError, TypeError, ValueError) as exc:
             rejected.append({'document_id': signal.get('document_id'), 'reason': str(exc)})

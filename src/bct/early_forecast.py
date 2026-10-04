@@ -63,13 +63,7 @@ def discover(batch, *, mode='LIVE', now=None):
         try:
             if d['document_id'] in docs or not d['body'] or hashlib.sha256(d['body'].encode()).hexdigest() != d['body_sha256']:
                 raise ValueError('duplicate document or body hash mismatch')
-            available = strict.clock(d['available_at'])
-            if d.get('published_at') is None and d.get('publication_precision') == 'UNKNOWN':
-                publication_bound = strict.clock(d['public_snapshot_observed_at'])
-            else:
-                publication_bound = strict.clock(d['published_at'])
-            if not publication_bound <= available <= at:
-                raise ValueError('source not available at cutoff')
+            strict.publication_cutoff(d, at, allow_unknown=True)
             if d.get('provenance_verified') is not True or not all(d.get(k) for k in ('origin_id', 'origin_url', 'origin_publisher')):
                 raise ValueError('unverified original source')
             strict.url(d['origin_url'])
@@ -116,6 +110,10 @@ def discover(batch, *, mode='LIVE', now=None):
                  'excerpt_sha256': hashlib.sha256(quote.encode()).hexdigest(), 'source_window': window, 'relation_evidence': {**deepcopy(relation), 'role': 'RELATION',
                  'body_sha256': relation_doc['body_sha256'], 'published_at': relation_doc.get('published_at'),
                  'available_at': relation_doc['available_at']}}
+            if 'publication_precision' in d:
+                x['publication_precision'] = d['publication_precision']
+            if 'publication_precision' in relation_doc:
+                x['relation_evidence']['publication_precision'] = relation_doc['publication_precision']
             if s['role'] == 'SUPPLY' and s.get('supply_status') in PENDING:
                 _quote(d, s['status_locator'])
                 if isinstance(window, dict) and window['end'] < at.date().isoformat():
