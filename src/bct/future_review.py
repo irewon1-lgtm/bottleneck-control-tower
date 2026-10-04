@@ -274,6 +274,11 @@ def queue_summary(candidates, tracking, *, now=None, reader_version=READER_VERSI
         preview.extend({k: item.get(k) for k in ("document_id", "body_sha256", "url", "title", "body_status", "discovery_paths", "wait_hours", "resume_at")}
                        | {"kind": "material"} for item in queues["material"] if (item["document_id"], item["body_sha256"]) not in shown)
         preview = preview[:5]
+    events = event_groups(candidates)
+    event_by_version = {(ref["document_id"], ref.get("body_sha256")): event_id
+                        for event_id, event in events.items() for ref in event["documents"]}
+    pending_events = {event_by_version[(item["document_id"], item.get("body_sha256"))]
+                      for name in ("quick", "material", "deep", "data_wait") for item in queues[name]}
     return {"computed_at": clock.isoformat(), "reader_version": reader_version,
             "documents_total": len(candidates.get("results", {})), "preserved_versions": len(records),
             "automatic_candidates": sum(bool(x.get("candidate")) for x in records),
@@ -281,7 +286,7 @@ def queue_summary(candidates, tracking, *, now=None, reader_version=READER_VERSI
             "quick_pending": len(queues["quick"]), "completed_documents": len(queues["completed"]),
             "deep_pending": len(queues["deep"]), "candidate_data_wait": len(queues["data_wait"]),
             "material_pending": len(queues["material"]), "oldest_wait_hours": max(waits) if waits else 0,
-            "event_count": len(event_groups(candidates)), "preview": preview}
+            "event_count": len(events), "pending_events": len(pending_events), "preview": preview}
 
 
 def full_queue_entries(candidates, tracking, *, now=None, reader_version=READER_VERSION):
