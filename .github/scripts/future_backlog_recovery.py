@@ -144,4 +144,17 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as error:
+        # Preserve a small operational error report when artifact egress is
+        # unavailable. Never publish request headers, tokens, HTML or bodies.
+        if os.environ.get('GITHUB_TOKEN') and os.environ.get('GITHUB_RUN_ID'):
+            import base64
+            from bct.future_github import GitHubTransport
+            report = {'status': 'BLOCKED', 'error_type': type(error).__name__, 'reason': str(error)}
+            transport = GitHubTransport(os.environ['GITHUB_REPOSITORY'], 'future-bottleneck-data', os.environ['GITHUB_TOKEN'])
+            transport._request('PUT', '/contents/backlog-recovery/' + os.environ['GITHUB_RUN_ID'] + '-error.json', {
+                'branch': 'future-bottleneck-data', 'message': 'Preserve bounded recovery failure diagnosis',
+                'content': base64.b64encode(json.dumps(report).encode()).decode()})
+        raise
