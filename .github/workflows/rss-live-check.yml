@@ -1,6 +1,15 @@
 name: RSS live environment check
 on:
   workflow_dispatch:
+    inputs:
+      live_snapshot_only:
+        description: Acquire only an explicitly selected new LIVE batch, without RSS or backlog work
+        type: boolean
+        default: false
+      live_document_ids:
+        description: JSON array of 1 to 20 newly collected document IDs
+        type: string
+        default: '[]'
   schedule:
     - cron: '0 22 * * *'  # 07:00 KST
     - cron: '0 10 * * *'  # 19:00 KST
@@ -11,6 +20,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   collect:
+    if: ${{ !inputs.live_snapshot_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 55
     steps:
@@ -131,3 +141,24 @@ jobs:
           path: |
             rss-live-result.json
           if-no-files-found: warn
+
+  live-snapshot:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.live_snapshot_only }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: Acquire only selected new LIVE documents through the existing pipeline
+        env:
+          LIVE_DOCUMENT_IDS: ${{ inputs.live_document_ids }}
+        run: python .github/scripts/live_document_snapshot.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: live-document-snapshot
+          path: ${{ runner.temp }}/live-input/artifact/
+          retention-days: 1
+          if-no-files-found: error
