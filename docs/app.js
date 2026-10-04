@@ -1,20 +1,20 @@
 "use strict";
 (() => {
   const pages = {
-    ranking: ["전체 병목 순위", "대상·판단·핵심 근거를 한눈에. 순위나 섹터명을 누르면 상세 자료가 열립니다."],
-    detail: ["미래 병목과 근거", ""],
-    evidence: ["근거 자료", "각 판단에 연결된 원문과 기록일을 확인합니다."],
-    review: ["검증 중", "아직 부족을 확정하지 못한 대상과 다음 확인 자료"],
-    situation: ["병목 상황", "최신 판단과 과거 기록의 변화를 함께 확인합니다."],
-    insights: ["판단에 필요한 자료", "수요·공급·시점·완화 근거를 모아 봅니다."],
-    dashboard: ["대시보드", "현재 수집 결과와 기존 SIGNAL·Family 현황"],
-    future: ["검증된 미래병목", "8단계 고정 결과 · 상태·TARGET·기업 연결·근거"],
-    tracking: ["미래병목 추적", "12~36개월 수요·공급 변화 · 요청형 검토와 누적 이력"],
-    sectors: ["섹터 랭킹", "PRESSURE → 출처 수 → 최근 신호 → RELIEF 순서"],
-    signals: ["SIGNAL 기사", "기존 SIGNAL 결과 · 제목과 요약문 기준"],
-    ai: ["AI 리뷰", "현재 DB에 저장된 AI 보조판독 결과"],
-    families: ["후보 Family", "기존 Candidate Family 집계"],
-    system: ["데이터 수집·저장", "마지막 실행 결과, 본문 확보, 검토 대기와 운영 관찰"]
+    ranking: ["미래 병목 한눈에 보기", "병목 뉴스가 나오기 전에 후보를 만들고 있는지, 무엇을 보고 있고 무엇이 부족한지 확인합니다."],
+    detail: ["TARGET 상세", ""],
+    evidence: ["근거 보기", "판단에 연결된 원문과 실제로 확보된 내용을 확인합니다."],
+    review: ["관찰 중", "아직 후보로 확정하지 못한 TARGET과 부족한 근거를 봅니다."],
+    situation: ["상태 변화", "각 TARGET의 이전 판단과 최신 판단이 어떻게 바뀌었는지 확인합니다."],
+    insights: ["부족한 자료", "다음 판단에 필요한 수요·공급·시점·완화 자료를 봅니다."],
+    dashboard: ["수집 대시보드", "현재 수집 결과와 기존 SIGNAL·Family 현황"],
+    future: ["초기 확인 자료", "기존 고정 검증 결과와 연결 근거"],
+    tracking: ["기술 기록", "검토 단계·가설·대기열·누적 이력을 확인하는 내부 화면"],
+    sectors: ["섹터 신호", "PRESSURE → 출처 수 → 최근 신호 → RELIEF 순서"],
+    signals: ["수집 기사", "기존 SIGNAL 결과 · 제목과 요약문 기준"],
+    ai: ["저장된 판독", "현재 DB에 저장된 AI 보조판독 결과"],
+    families: ["후보 묶음", "기존 Candidate Family 집계"],
+    system: ["시스템 상태", "본문 확보, 처리 대기, 수집 오류와 운영 관찰"]
   };
   const content = document.getElementById("content");
   const states = Object.fromEntries(Object.keys(pages).map(key => [key, {filter: "전체", query: "", period: "all", page: 1}]));
@@ -303,7 +303,7 @@
     return box;
   }
   function futureQueuePanel() {
-    const box = panel("미래병목 검토 대기", "자동 후보는 병목 확정이 아닙니다. 검토 결과는 사용자 요청 후 저장합니다.");
+    const box = panel("처리 대기 현황", "이 숫자는 시스템 작업량입니다. 미래병목 후보 수가 아니며 같은 문서가 여러 대기에 겹칠 수 있습니다.");
     const summary = futureCandidates?.summary || {}, queue = summary.review_queue;
     if (candidatesError) {
       box.append(node("p", futureCandidates ? "최신 대기 기록을 읽지 못했습니다. 표시된 내용은 마지막으로 읽은 집계입니다." : "대기 기록을 읽지 못했습니다. 연결 상태를 다시 확인해 주세요.", "muted"));
@@ -314,9 +314,9 @@
     if (!queue) { box.append(empty("검토 대기 집계 준비 중", "기존 후보 기록은 보존돼 있습니다.")); return box; }
     box.append(node("p", `수집 완료 ${date(summary.checked_at)} · 대기 집계 ${date(queue.computed_at)}`, "muted"));
     const metrics = node("div", null, "metrics");
-    [["자동 후보", queue.automatic_candidates], ["빠른검토 대기", queue.quick_pending],
-     ["심화 대기", queue.deep_pending], ["후보 자료 대기", queue.candidate_data_wait],
-     ["자료확인 대기", queue.material_pending], ["판독 완료", queue.completed_documents]].forEach(([label, value]) => metrics.append(metric(label, value)));
+    [["자동으로 걸린 문서", queue.automatic_candidates], ["1차 읽기 대기", queue.quick_pending],
+     ["정밀 검토 대기", queue.deep_pending], ["추가 자료 대기", queue.candidate_data_wait],
+     ["원문 확보 대기", queue.material_pending], ["판독 완료", queue.completed_documents]].forEach(([label, value]) => metrics.append(metric(label, value)));
     box.append(metrics, node("p", `최장 대기 ${queue.oldest_wait_hours == null ? "데이터 없음" : Number(queue.oldest_wait_hours).toFixed(1) + "시간"} · 사건 ${number(queue.event_count)}개`, "panel-caption"));
     const preview = node("ul", null, "compact-list");
     (queue.preview || []).slice(0, 5).forEach(item => {
@@ -452,12 +452,132 @@
     }
     return metrics;
   }
+  const readableStatus = value => ({
+    FUTURE: "미래 병목 후보",
+    EMERGING: "가능성 높아지는 중",
+    OBSERVE: "관찰 중",
+    UNRESOLVED: "자료 부족",
+    CURRENT: "이미 발생"
+  }[value] || view.status(value)[0]);
+
+  function objectiveDashboard() {
+    const rows = targetRows();
+    const box = node("section", null, "objective-board");
+
+    const head = node("div", null, "objective-head");
+    const copy = node("div");
+    copy.append(node("span", "BCT의 한 가지 목표", "objective-kicker"),
+      node("h2", "병목 뉴스가 나오기 전에 먼저 잡는다"),
+      node("p", "여러 독립적인 선행 신호를 합쳐, 앞으로 수요가 공급을 추월할 TARGET을 미리 후보로 등록하는 것이 목적입니다."));
+    const badge = node("div", null, "objective-badge");
+    badge.append(node("strong", "선행탐지"), node("span", "뉴스 확인보다 후보 등록이 먼저여야 성공"));
+    head.append(copy, badge);
+    box.append(head);
+
+    const flow = node("div", null, "objective-flow");
+    [
+      ["01", "수요가 늘어날 조짐", "주문·CAPEX·로드맵·예약"],
+      ["02", "공급이 못 따라올 조짐", "생산능력·납기·인증·ramp"],
+      ["03", "미래병목 후보 등록", "명시적 병목 뉴스가 나오기 전"],
+      ["04", "나중에 실제 확인", "후보일 → 공개확인일 선행일수 측정"]
+    ].forEach(([num,title,note], index) => {
+      const step = node("div", null, "objective-step");
+      step.append(node("span", num, "objective-step-num"), node("strong", title), node("small", note));
+      flow.append(step);
+      if(index < 3) flow.append(node("span", "→", "objective-arrow"));
+    });
+    box.append(flow);
+
+    const prospective = futureCandidates?.prospective || futureCandidates?.summary?.prospective || null;
+    const health = node("div", null, "objective-health");
+    const healthCopy = node("div");
+    healthCopy.append(node("span", "현재 목표 달성 상태", "objective-kicker"));
+    if (prospective) {
+      const open = prospective.open_candidates ?? prospective.open ?? prospective.live_candidates;
+      const success = prospective.success ?? prospective.success_count;
+      const missed = prospective.missed ?? prospective.missed_count;
+      healthCopy.append(node("h3", "LIVE 선행탐지 성적표가 연결되어 있습니다."),
+        node("p", "후보 생성 시각과 공개 확인 시각을 비교한 기록만 성과로 봅니다."));
+      const metrics = node("div", null, "objective-mini-metrics");
+      [["공개 확인 전 후보", open], ["선행탐지 성공", success], ["늦게 잡은 후보", missed]].forEach(([label,value]) => metrics.append(metric(label, value, "LIVE prospective 기록")));
+      health.append(healthCopy, metrics);
+    } else {
+      health.classList.add("needs-link");
+      healthCopy.append(node("h3", "선행탐지 성적표는 아직 이 화면 데이터와 연결되지 않았습니다."),
+        node("p", "현재 화면에는 추적·가설·검토 기록은 있지만 LIVE 후보 freeze와 T_scope 성적이 없습니다. 따라서 이 화면만 보고 ‘미리 잡았다’고 판정하지 않습니다."));
+      const mark = node("div", null, "health-mark");
+      mark.append(node("strong", "확인 불가"), node("span", "성과 데이터 연결 필요"));
+      health.append(healthCopy, mark);
+    }
+    box.append(health);
+
+    const counts = node("div", null, "objective-counts");
+    const future = rows.filter(row => row.status === "FUTURE").length;
+    const watching = rows.filter(row => ["EMERGING","OBSERVE","UNRESOLVED"].includes(row.status)).length;
+    const current = rows.filter(row => row.status === "CURRENT").length;
+    const drafts = futureCandidates ? view.hypotheses(futureCandidates).filter(row => row.named).length : null;
+    [
+      ["추적 기록상 미래 판단", future, "FUTURE로 저장된 TARGET"],
+      ["관찰·자료보충 중", watching, "아직 부족 확정 전"],
+      ["이미 발생한 대상", current, "미래 후보와 분리해서 봄"],
+      ["저장된 가설 초안", drafts, "성과가 아니라 검토 재료"]
+    ].forEach(([label,value,note]) => counts.append(metric(label,value,note)));
+    box.append(counts);
+    return box;
+  }
+
+  function focusTargetsPanel() {
+    const rows = targetRows();
+    const box = panel("지금 무엇을 보고 있나", "후보가 되기 전이라도 수요·공급 신호가 쌓이는 TARGET을 쉬운 말로 봅니다.");
+    const candidates = rows.filter(row => row.status !== "CURRENT").slice(0, 8);
+    if (!candidates.length) {
+      box.append(empty(trackingLoading ? "TARGET 확인 중" : "관찰 중인 TARGET 없음", "자료가 없을 때 임의로 후보를 만들지 않습니다."));
+      return box;
+    }
+    const grid = node("div", null, "simple-target-grid");
+    candidates.forEach(row => {
+      const card = node("article", null, "simple-target-card");
+      const top = node("div", null, "simple-target-top");
+      top.append(pill(readableStatus(row.status), row.status.toLowerCase()), node("span", row.sector, "simple-sector"));
+      card.append(top, node("h3", row.name));
+      card.append(node("p", view.clean(row.latest.reason) || "왜 관찰하는지 아직 기록되지 않았습니다.", "simple-reason"));
+
+      const demand = view.field(row.target, ["demand_evidence","demand","comparison_inputs.demand.basis"], row.baseline);
+      const supply = view.field(row.target, ["constraint_evidence","constraint","comparison_inputs.supply.basis"], row.baseline);
+      const need = view.field(row.target, ["demand_timing"], row.baseline);
+      const available = view.field(row.target, ["supply_timing","relief_timing"], row.baseline);
+      const facts = node("div", null, "simple-facts");
+      [["수요 쪽 근거", demand.value], ["공급 쪽 근거", supply.value], ["필요 시점", need.value], ["공급 가능 시점", available.value]].forEach(([label,value]) => {
+        const item = node("div", null, "simple-fact");
+        item.append(node("span", label), node("strong", view.clean(value) || "자료 미확보"));
+        facts.append(item);
+      });
+      card.append(facts);
+
+      const blockers = row.latest.supply_gap?.blockers || row.baseline?.unresolved || [];
+      const missing = row.audit?.decisive_missing || blockers[0] || row.latest.next_check || "다음 확인 자료가 아직 기록되지 않았습니다.";
+      const missingBox = node("div", null, "simple-missing");
+      missingBox.append(node("span", "지금 부족한 것"), node("strong", view.clean(missing)));
+      card.append(missingBox, link("상세 근거 보기", detailHref(row), "simple-detail-link"));
+      grid.append(card);
+    });
+    box.append(grid);
+    const late = rows.filter(row => row.status === "CURRENT");
+    if (late.length) {
+      const lateBox = node("div", null, "late-strip");
+      lateBox.append(node("strong", "이미 발생한 병목은 따로 봅니다."));
+      lateBox.append(node("span", late.map(row => row.name).join(" · ")));
+      lateBox.append(link("상태 변화에서 보기", "#situation"));
+      box.append(lateBox);
+    }
+    return box;
+  }
+
   function rankingPanel(key = "ranking") {
     const all = targetRows(), state = states[key];
-    const box = panel(key === "review" ? "추가 근거가 필요한 대상" : "병목 후보 전체 목록");
+    const box = panel(key === "review" ? "추가 근거가 필요한 TARGET" : "전체 추적 TARGET", key === "review" ? "왜 아직 후보가 아닌지와 다음에 필요한 자료를 확인합니다." : "기술적인 단계명보다 현재 판단과 근거를 먼저 보여줍니다.");
     if (key === "ranking") {
-      content.append(researchStats(all));
-      const basis=node("details",null,"ranking-basis");basis.append(node("summary","상태·조사 우선순위에 따른 표시 순서 · 병목 강도 점수 미산정"),node("p","미래 병목 → 병목 가능성 → 관찰·보류 → 현재 병목 순서입니다. 같은 분류에서는 저장된 조사 우선순위, 나머지는 기록 순서를 유지합니다. 병목 강도나 주가 상승률 순위는 아직 산정되지 않았습니다. 섹터명은 저장된 대상명에 따른 화면 분류입니다."));box.append(basis);
+      const basis=node("details",null,"ranking-basis");basis.append(node("summary","목록을 보는 법"),node("p","미래 병목 후보 → 가능성 높아지는 중 → 관찰·자료 부족 → 이미 발생 순서입니다. 이것은 병목 강도 점수나 투자 순위가 아닙니다."));box.append(basis);
     }
     dataNote(box);
     if (key === "ranking") box.append(link(futureCandidates ? `새 가설 초안 ${number(view.hypotheses(futureCandidates).filter(row => row.named).length)}건 · 검증 중에서 보기` : "새 가설 초안 · 검증 중에서 보기", "#review"));
@@ -633,16 +753,16 @@
     return box;
   }
   function collectionPanel() {
-    const box = panel("본문 확보와 검토 기록", "수집·본문 확보·자동 후보·판독 완료는 서로 다른 단계입니다.");
+    const box = panel("수집·처리 상태", "여기는 시스템 작업량을 보는 곳입니다. 미래병목 후보 화면과 분리해서 표시합니다.");
     if (!futureCandidates) {box.append(empty(candidatesError ? "본문·검토 기록을 읽지 못했습니다" : "본문·검토 기록 확인 중", "수집 기사 기록과 별도로 불러옵니다."));return box;}
     if(candidatesError) box.append(node("p","최신 자료를 읽지 못했습니다. 아래는 마지막으로 읽은 집계입니다.","data-note"));
     const summary = futureCandidates.summary || {}, queue = summary.review_queue || {};
     const metrics=node("div",null,"research-stats");
-    [["처리 기록",summary.processed_total,"문서 처리 결과 수"],["자동 후보",queue.automatic_candidates,"확정된 병목 수와 다름"],["판독 완료",queue.completed_documents,"저장된 완료 문서"],["전체 검토 대기",queue.review_list_versions,"문서 버전 기준"]].forEach(([label,value,note])=>metrics.append(metric(label,value,note)));box.append(metrics);
+    [["처리 기록",summary.processed_total,"문서 처리 결과 수"],["자동으로 걸린 문서",queue.automatic_candidates,"미래병목 확정 수와 다름"],["판독 완료",queue.completed_documents,"저장된 완료 문서"],["검토 목록",queue.review_list_versions,"문서 버전 기준"]].forEach(([label,value,note])=>metrics.append(metric(label,value,note)));box.append(metrics);
     const statuses = {}; view.documents(futureCandidates).forEach(record=>{const s=record.body_status;statuses[s]=(statuses[s]||0)+1;});
     const labels={FULL:"본문 확보",PARTIAL:"부분 본문",UNAVAILABLE:"본문 미확보",UNAVAILABLE_THIS_RUN:"이번 실행 미확보"};
     box.append(table(["본문 확보 상태", "저장된 결과 수"],Object.entries(statuses),([key,value])=>[labels[key]||key,value]));
-    const counts=[["수집 범위 기사",summary.scope_articles],["이번 처리 문서",summary.processed_this_run],["이번 본문 확보",summary.body_ok_this_run],["빠른 검토 대기",queue.quick_pending],["자료 확인 대기",queue.material_pending],["심화 검토 대기",queue.deep_pending],["보존된 문서 버전",queue.preserved_versions],["고정 검토 묶음",Object.keys(futureCandidates.bundles || {}).length]];
+    const counts=[["수집 범위 기사",summary.scope_articles],["이번 처리 문서",summary.processed_this_run],["이번 본문 확보",summary.body_ok_this_run],["1차 읽기 대기",queue.quick_pending],["원문 확보 대기",queue.material_pending],["정밀 검토 대기",queue.deep_pending],["보존된 문서 버전",queue.preserved_versions],["고정 검토 묶음",Object.keys(futureCandidates.bundles || {}).length]];
     box.append(node("p", "빠른 검토와 자료 확인 대기는 같은 문서가 겹칠 수 있어 합산하지 않습니다. 본문 캐시는 공개되지 않으며 원문 재접근 가능 여부는 달라질 수 있습니다.","data-note"),table(["확인 항목","저장된 수치"],counts,([label,value])=>[label,number(value)]));
     box.append(node("p",`수집 확인 ${date(summary.checked_at)} KST · 대기 집계 ${date(queue.computed_at)} KST · 최장 대기 ${queue.oldest_wait_hours == null ? "미기록" : queue.oldest_wait_hours+"시간"}`,"record-meta"));
     const observation=summary.operation_observation;
@@ -657,12 +777,13 @@
     const key = route(), [title, subtitle] = pages[key];
     document.getElementById("page-title").textContent = title;
     document.getElementById("page-subtitle").textContent = subtitle;
-    document.querySelector(".eyebrow").textContent = "BOTTLENECK RESEARCH";
+    document.querySelector(".eyebrow").textContent = key === "ranking" ? "EARLY BOTTLENECK DETECTION" : "BCT · EVIDENCE FIRST";
     document.querySelectorAll("nav a").forEach(link => {
       if (link.dataset.page === key || (key === "detail" && link.dataset.page === "ranking")) link.setAttribute("aria-current", "page"); else link.removeAttribute("aria-current");
     });
     content.replaceChildren();
-    if(key === "ranking" || key === "review") {if (key === "review") content.append(hypothesisPanel()); content.append(rankingPanel(key));return;}
+    if(key === "ranking") {content.append(objectiveDashboard(), focusTargetsPanel(), rankingPanel(key));return;}
+    if(key === "review") {content.append(hypothesisPanel(), rankingPanel(key));return;}
     if(key === "detail") {content.append(detailPanel());return;}
     if(key === "evidence") {content.append(documentsPanel(),evidencePanel());return;}
     if(key === "situation") {content.append(situationPanel());return;}
