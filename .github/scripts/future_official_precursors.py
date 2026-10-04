@@ -79,7 +79,8 @@ def collect(manifest, output, cache_dir, *, fetcher=fetch, run_id='LOCAL'):
         except Exception as exc:
             response = {'error': type(exc).__name__, 'blocked_reason': 'NETWORK_ACCESS_FAILED',
                         'status': exc.code if isinstance(exc, HTTPError) else None,
-                        'final_url': exc.geturl() if isinstance(exc, HTTPError) else None}
+                        'final_url': exc.geturl() if isinstance(exc, HTTPError) else None,
+                        'content_type': exc.headers.get_content_type() if isinstance(exc, HTTPError) and exc.headers else None}
         responses.append((source, at, response))
     # Extract only responses actually received, with unchanged BCT acquisition.
     for source, at, response in responses:

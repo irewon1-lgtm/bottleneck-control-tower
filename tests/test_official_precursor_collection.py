@@ -67,3 +67,16 @@ def test_redirect_outside_fixed_domains_is_rejected(monkeypatch):
     monkeypatch.setattr(module, 'build_opener', lambda handler: Opener(handler))
     with pytest.raises(ValueError, match='redirect domain'):
         module.fetch('https://www.energy.gov/doc', {'www.energy.gov'})
+
+
+def test_http_error_retains_response_metadata(tmp_path):
+    from email.message import Message
+    from urllib.error import HTTPError
+    manifest = module.manifest_at(ROOT / '.github/official-precursor-urls.json')
+    headers = Message()
+    headers['Content-Type'] = 'text/html; charset=utf-8'
+    def fixture(url, domains):
+        raise HTTPError(url, 403, 'Forbidden', headers, None)
+    result = module.collect(manifest, tmp_path / 'snapshot.json', tmp_path / 'cache', fetcher=fixture)
+    assert result['summary'] == {'BLOCKED': 21}
+    assert all(d['http_status'] == 403 and d['content_type'] == 'text/html' and d['final_url'] == d['url'] for d in result['documents'])
