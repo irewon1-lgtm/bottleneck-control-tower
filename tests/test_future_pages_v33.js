@@ -114,8 +114,8 @@ test("tracking renders existing TARGET history beside separate queue counts, cap
   assert.match(targets[0].textContent, /기존 TARGET/);
   assert.match(targets[0].textContent, /2개 판단 이력/);
   assert.match(targets[0].textContent, /기존 최근 판단/);
-  const queue = headingPanel(page.content, "미래병목 검토 대기");
-  assert.deepEqual(metricValues(queue), {"자동 후보": "27", "빠른검토 대기": "19", "심화 대기": "3", "후보 자료 대기": "4", "자료확인 대기": "8", "판독 완료": "2"});
+  const queue = headingPanel(page.content, "처리 대기 현황");
+  assert.deepEqual(metricValues(queue), {"자동으로 걸린 문서": "27", "1차 읽기 대기": "19", "정밀 검토 대기": "3", "추가 자료 대기": "4", "원문 확보 대기": "8", "판독 완료": "2"});
   assert.match(queue.textContent, /72\.5시간/);
   assert.match(queue.textContent, /사건 23개/);
   assert.match(queue.textContent, /수집 완료/);
@@ -132,6 +132,28 @@ test("tracking renders existing TARGET history beside separate queue counts, cap
   assert(walk(targets[0]).filter(el => el.tagName === "A").every(el => !el.href?.startsWith("javascript:")));
   assert(page.calls.filter(call => call.url.includes("future-")).every(call => call.options.cache === "no-store"));
   assert.deepEqual(data, before, "rendering links and opening bundles must not mutate review completion");
+});
+
+test("ranking starts with the objective, explains the early-detection flow, and does not pretend performance is connected", async () => {
+  const data = fixtures();
+  data.tracking.targets = [
+    {id:"watch", target:"미래 TARGET", history:[{status:"OBSERVE", reviewed_on:"2026-10-02", reason:"수요는 늘지만 공급량이 아직 미확인", demand_timing:"2027", supply_timing:"UNKNOWN", next_check:"적격 공급량 확인", sources:["https://example.test/watch"]}]},
+    {id:"late", target:"이미 발생 TARGET", history:[{status:"CURRENT", reviewed_on:"2026-10-02", reason:"현재 부족 공개 확인", sources:["https://example.test/late"]}]}
+  ];
+  const page = await app(data, {}, "#ranking");
+  const objective = byClass(page.content, "objective-board")[0];
+  assert(objective);
+  assert.match(objective.textContent, /병목 뉴스가 나오기 전에 먼저 잡는다/);
+  assert.match(objective.textContent, /수요가 늘어날 조짐/);
+  assert.match(objective.textContent, /공급이 못 따라올 조짐/);
+  assert.match(objective.textContent, /미래병목 후보 등록/);
+  assert.match(objective.textContent, /확인 불가/);
+  assert.match(objective.textContent, /LIVE 후보 freeze와 T_scope 성적이 없습니다/);
+  const focus = headingPanel(page.content, "지금 무엇을 보고 있나");
+  assert.match(focus.textContent, /미래 TARGET/);
+  assert.match(focus.textContent, /지금 부족한 것/);
+  assert.match(focus.textContent, /적격 공급량 확인/);
+  assert.match(focus.textContent, /이미 발생한 병목은 따로 봅니다/);
 });
 
 test("generated hypothesis drafts render separately from verified TARGETs and retain UNKNOWN outcomes", async () => {
@@ -192,7 +214,7 @@ test("hypothesis load failure never claims zero drafts and stale refresh keeps e
 
 test("legacy candidate state without queue aggregation remains visibly pending, without invented zero completion", async () => {
   const data = fixtures(); delete data.candidates.summary.review_queue;
-  const page = await app(data), queue = headingPanel(page.content, "미래병목 검토 대기");
+  const page = await app(data), queue = headingPanel(page.content, "처리 대기 현황");
   assert.match(queue.textContent, /검토 대기 집계 준비 중/);
   assert.equal(byClass(queue, "metric").length, 0);
   assert.equal(byClass(page.content, "tracking-card").length, 1);
@@ -203,8 +225,8 @@ test("failed refresh preserves last TARGET and queue but explicitly labels the q
   failures.candidates = "network";
   await page.refresh();
   assert.equal(byClass(page.content, "tracking-card").length, 1);
-  assert.equal(metricValues(headingPanel(page.content, "미래병목 검토 대기"))["판독 완료"], "2");
-  assert.match(headingPanel(page.content, "미래병목 검토 대기").textContent, /마지막|이전|최신.*읽지|대기.*오류/);
+  assert.equal(metricValues(headingPanel(page.content, "처리 대기 현황"))["판독 완료"], "2");
+  assert.match(headingPanel(page.content, "처리 대기 현황").textContent, /마지막|이전|최신.*읽지|대기.*오류/);
   assert(!page.content.textContent.includes("검토 완료"));
 });
 
@@ -213,7 +235,7 @@ test("malformed null candidate results cannot replace last queue with fabricated
   data.candidates.results = null;
   data.candidates.summary.review_queue.completed_documents = 100;
   await page.refresh();
-  const queue = headingPanel(page.content, "미래병목 검토 대기");
+  const queue = headingPanel(page.content, "처리 대기 현황");
   assert.equal(metricValues(queue)["판독 완료"], "2");
   assert.match(queue.textContent, /마지막|이전|최신.*읽지|대기.*오류/);
 });
@@ -221,7 +243,7 @@ test("malformed null candidate results cannot replace last queue with fabricated
 test("unavailable new candidate file does not suppress readable legacy TARGET tracking", async () => {
   const page = await app(fixtures(), {candidates: "http"});
   assert.equal(byClass(page.content, "tracking-card").length, 1);
-  const queue = headingPanel(page.content, "미래병목 검토 대기");
+  const queue = headingPanel(page.content, "처리 대기 현황");
   assert.equal(byClass(queue, "metric").length, 0);
   assert.match(queue.textContent, /읽지|오류|불러올 수|연결/);
 });
@@ -233,7 +255,7 @@ test("fresh TARGET records and stale queue have independent status and retained 
   failures.candidates = "http";
   await page.refresh();
   const targets = headingPanel(page.content, "지속 추적 기록");
-  const queue = headingPanel(page.content, "미래병목 검토 대기");
+  const queue = headingPanel(page.content, "처리 대기 현황");
   assert.match(targets.textContent, /새로 저장된 TARGET 판단/);
   assert.match(targets.textContent, /2026-10-02T02:00:00Z/);
   assert(!targets.textContent.includes("최신 추적 기록을 읽지 못했습니다"));
@@ -249,11 +271,11 @@ test("fresh queue still renders when TARGET refresh fails, with stale TARGET war
   data.candidates.summary.review_queue.computed_at = "2026-10-02T03:01:00Z";
   await page.refresh();
   const targets = headingPanel(page.content, "지속 추적 기록");
-  const queue = headingPanel(page.content, "미래병목 검토 대기");
+  const queue = headingPanel(page.content, "처리 대기 현황");
   assert.match(targets.textContent, /최신 추적 기록을 읽지 못했습니다/);
   assert.match(targets.textContent, /마지막으로 읽은 기록/);
   assert.match(targets.textContent, /기존 최근 판단/);
-  assert.equal(metricValues(queue)["빠른검토 대기"], "18");
+  assert.equal(metricValues(queue)["1차 읽기 대기"], "18");
   assert(!queue.textContent.includes("최신 대기 기록을 읽지 못했습니다"));
   assert.equal(metricValues(queue)["판독 완료"], "2");
 });
