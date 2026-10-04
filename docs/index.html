@@ -5,32 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#0a1423">
-  <meta name="description" content="병목 후보의 판단 상태, 수요와 공급 근거, 미확인 자료와 데이터 수집 현황을 확인합니다.">
-  <title>BCT · 병목 리서치</title>
-  <link rel="stylesheet" href="./style.css?v=5">
+  <meta name="description" content="병목 뉴스가 나오기 전 미래 공급부족 후보를 얼마나 잘 찾고 있는지 한눈에 확인합니다.">
+  <title>BCT · 미래병목 관제</title>
+  <link rel="stylesheet" href="./style.css?v=6">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a1423'/%3E%3Cpath d='M8 24V8h8a4 4 0 010 8h-8m8 0a4 4 0 010 8H8' fill='none' stroke='%23ec9ac5' stroke-width='3'/%3E%3C/svg%3E">
-  <script src="./view-model.js?v=6" defer></script>
-  <script src="./app.js?v=6" defer></script>
+  <script src="./view-model.js?v=7" defer></script>
+  <script src="./app.js?v=7" defer></script>
 </head>
 <body>
   <div class="shell">
     <aside class="sidebar">
-      <a class="brand" href="#ranking" aria-label="BCT 병목 순위"><strong>BCT<span class="brand-dot">.</span></strong><span>병목 리서치</span></a>
+      <a class="brand" href="#ranking" aria-label="BCT 미래병목 한눈에 보기"><strong>BCT<span class="brand-dot">.</span></strong><span>미래병목 관제</span></a>
       <nav aria-label="화면 이동" id="navigation">
-        <a href="#ranking" data-page="ranking">병목 순위</a>
-        <a href="#evidence" data-page="evidence">근거 자료</a>
-        <a href="#review" data-page="review">검증 중</a>
-        <a href="#situation" data-page="situation">병목 상황</a>
-        <a href="#insights" data-page="insights">판단에 필요한 자료</a>
-        <a href="#system" data-page="system">수집·저장</a>
+        <a href="#ranking" data-page="ranking">한눈에 보기</a>
+        <a href="#review" data-page="review">관찰 중</a>
+        <a href="#evidence" data-page="evidence">근거 보기</a>
+        <a href="#situation" data-page="situation">상태 변화</a>
+        <a href="#insights" data-page="insights">부족한 자료</a>
+        <a href="#system" data-page="system">시스템</a>
       </nav>
-      <div class="sidebar-note">v3.3 <span>근거와 기록</span></div>
+      <div class="sidebar-note">v3.3 <span>선행탐지 중심</span></div>
     </aside>
     <main class="main">
-      <header class="topline"><div><span class="eyebrow">BOTTLENECK RESEARCH</span><h1 id="page-title">전체 병목 순위</h1><p id="page-subtitle"></p></div><div class="meta"><span id="snapshot-time">수집 기록 확인 중</span><span class="badge" id="snapshot-badge">저장된 기록</span></div></header>
+      <header class="topline"><div><span class="eyebrow">EARLY BOTTLENECK DETECTION</span><h1 id="page-title">미래 병목 한눈에 보기</h1><p id="page-subtitle"></p></div><div class="meta"><span id="snapshot-time">수집 기록 확인 중</span><span class="badge" id="snapshot-badge">저장된 기록</span></div></header>
       <div id="notice" role="status" aria-live="polite"></div>
       <div id="content" aria-live="polite"></div>
-      <footer class="footer"><span>BCT · 병목 리서치</span><div><a href="#signals">수집 기사</a><a href="#sectors">기사 신호 집계</a><a href="#ai">저장된 판독</a><a href="#families">후보 묶음</a><a href="#future">초기 확인 자료</a></div></footer>
+      <footer class="footer"><span>BCT · 미래병목 관제</span><div><a href="#tracking">기술 기록</a><a href="#signals">수집 기사</a><a href="#sectors">기사 신호 집계</a><a href="#ai">저장된 판독</a><a href="#future">초기 확인 자료</a></div></footer>
     </main>
   </div>
   <dialog id="family-dialog" aria-labelledby="dialog-title"><div class="dialog-head"><h2 id="dialog-title"></h2><button type="button" id="dialog-close" aria-label="닫기">×</button></div><div id="dialog-content"></div></dialog>
