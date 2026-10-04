@@ -1,0 +1,187 @@
+{
+  "version": "bct-v33-light-prd-acceptance-1",
+  "updated_at": "2026-10-02T15:32:35.605836+00:00",
+  "prd": "BCT_v3_3_Light_PRD_Review.docx",
+  "prd_sha256": "c186359ddd45670679083e9cb4d10142b6d64ce70f759547870fd5c0a32d2836",
+  "baseline_commit": "d93573cb9f06fb1e69b45c7d8099ac9a8f402edc",
+  "branch": "codex/bct-v33-light-prd",
+  "changed_files": [
+    ".github/scripts/future_queue_snapshot.py",
+    "docs/app.js",
+    "docs/bct-v33-review.md",
+    "docs/v33-light-prd-implementation.md",
+    "docs/v33-light-prd-status.json",
+    "src/bct/future_bottleneck.py",
+    "src/bct/future_hypothesis.py",
+    "src/bct/future_review.py",
+    "src/bct/future_store.py",
+    "tests/test_future_light_prd.py",
+    "tests/test_future_pages_v33.js",
+    "tests/test_future_review_v33.py"
+  ],
+  "stages": {
+    "0": {
+      "status": "PASS",
+      "kind": "READ_ONLY_CODE_AND_EXISTING_DATA_INSPECTION",
+      "correspondence": "v33-light-prd-implementation.md"
+    },
+    "1": {
+      "status": "PASS",
+      "kind": "SYNTHETIC_FUNCTIONAL",
+      "passed": 4
+    },
+    "2": {
+      "status": "PASS",
+      "kind": "SYNTHETIC_FUNCTIONAL",
+      "passed": 6
+    },
+    "3": {
+      "status": "PASS",
+      "kind": "SYNTHETIC_FUNCTIONAL",
+      "passed": 11,
+      "initial_additional_checks": "FAIL_2",
+      "retest": "PASS"
+    },
+    "4": {
+      "status": "PASS",
+      "kind": "SYNTHETIC_FUNCTIONAL",
+      "passed": 13,
+      "initial_additional_checks": "FAIL_1",
+      "retest": "PASS"
+    },
+    "5": {
+      "status": "BLOCKED",
+      "reason": "One changed-version real snapshot, not seven days. Actual request-driven review execution and measured burden remain unavailable.",
+      "execution": "FIRST_REAL_OBSERVATION_ONLY",
+      "actual_seven_day_trial_completed": false,
+      "observation_connected": true,
+      "first_real_snapshot_at": "2026-10-02T15:26:44.170162+00:00",
+      "earliest_possible_finish": "2026-10-09T15:26:44.170162+00:00"
+    },
+    "6": {
+      "status": "BLOCKED",
+      "execution": "NOT_RUN",
+      "reason": "Stage 5 has not passed. Independent verified cases, blind historical corpus, unused HOLDOUT, frozen acceptance criteria, matched keyword baseline and prospective resolved S3 cohort remain unavailable."
+    }
+  },
+  "regressions": {
+    "python_passed": 342,
+    "pages_passed": 15,
+    "operation_guard_passed": 1,
+    "diff_check": "PASS"
+  },
+  "migration_smoke": {
+    "kind": "READ_ONLY_EXISTING_DATA_MIGRATION_SMOKE",
+    "status": "PASS",
+    "original_files_unchanged": true,
+    "documents_preserved": 1256,
+    "hypotheses_generated": 436,
+    "automatic_s3": 0,
+    "existing_samples": 3,
+    "prd_observation": {
+      "status": "BLOCKED",
+      "sample_count": 1,
+      "elapsed_seconds": 0.0,
+      "pending_reasons": [
+        "Seven actual elapsed days have not been observed",
+        "Missing operating snapshots within observation days",
+        "Insufficient comparable operating snapshots"
+      ],
+      "missing_evidence": [
+        {
+          "at": "2026-10-02T15:20:03.305880+00:00",
+          "field": "collection_budget_verified"
+        },
+        {
+          "at": "2026-10-02T15:20:03.305880+00:00",
+          "field": "candidate_retention_verified"
+        },
+        {
+          "at": "2026-10-02T15:20:03.305880+00:00",
+          "field": "source_wide_scan"
+        },
+        {
+          "at": "2026-10-02T15:20:03.305880+00:00",
+          "field": "selection_reservations_verified"
+        },
+        {
+          "at": "2026-10-02T15:20:03.305880+00:00",
+          "field": "request_driven_review_execution"
+        }
+      ],
+      "budget_failures": []
+    },
+    "forecast_status": "BLOCKED",
+    "performance_trial_executed": false
+  },
+  "forecast_performance": "NOT_MEASURED",
+  "forecast_pass": null,
+  "paid_api_added": false,
+  "new_scores_added": false,
+  "sqlite_schema_changed": false,
+  "collector_sources_or_schedule_changed": false,
+  "delivery": {
+    "source": "MERGED_AND_REMOTE_CI_PASS",
+    "production": "AUTOMATIC_COLLECTION_AND_PAGES_SUCCESS",
+    "pull_request": "https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/10",
+    "code_commit": "24f4fcb9659c0e51f136d066aeb27347d73d0cb7",
+    "verified_source_tree": "4ab51c1ff6dce23391e5499d2da29b316035407b",
+    "pull_request_ci_run": 37026704407,
+    "main_ci_run": 37026867485,
+    "collection_run": 37026867356,
+    "pages_run": 37026867354,
+    "all_recorded_runs": "SUCCESS",
+    "data_readback_commit": "a1d09372fea0c2bdb1ed252113a184fe822cedc7",
+    "live_browser_visual_trial": "NOT_RUN"
+  },
+  "minimal_fixes": [
+    "UNKNOWN period cannot crash the reviewer; different TARGET comparisons cannot earn S3.",
+    "Earlier verified public confirmations are checked even after ambiguous same-day documents.",
+    "Missing legacy selection/burden evidence stays UNKNOWN/BLOCKED rather than fabricated PASS or FAIL."
+  ],
+  "limits": [
+    "Synthetic gates do not establish forecast accuracy.",
+    "Read-only migration and the successful first production collection are functional checks, not forecast-performance results.",
+    "Interrupted chat connection cause could not be confirmed from available logs."
+  ],
+  "production_readback": {
+    "kind": "PRODUCTION_AUTOMATIC_COLLECTION_STORAGE_READBACK",
+    "status": "PASS",
+    "filter_version": "bct-v33-light-prd-1",
+    "documents": 1256,
+    "previous_1256_documents_preserved": true,
+    "existing_targets_preserved": 12,
+    "hypotheses": 443,
+    "named_hypotheses": 19,
+    "automatic_s3": 0,
+    "collection": {
+      "processed_this_run": 300,
+      "body_ok_this_run": 100,
+      "checked_at": "2026-10-02T15:26:14.055416+00:00",
+      "collection_budget_verified": true,
+      "candidate_retention_verified": true,
+      "source_wide_scan": true
+    },
+    "prd_observation": {
+      "status": "BLOCKED",
+      "sample_count": 1,
+      "start_at": "2026-10-02T15:26:44.170162+00:00",
+      "expected_earliest_finish": "2026-10-09T15:26:44.170162+00:00",
+      "elapsed_seconds": 0.0,
+      "pending_reasons": [
+        "Seven actual elapsed days have not been observed",
+        "Missing operating snapshots within observation days",
+        "Insufficient comparable operating snapshots"
+      ],
+      "missing_evidence": [
+        {
+          "at": "2026-10-02T15:26:44.170162+00:00",
+          "field": "request_driven_review_execution"
+        }
+      ],
+      "budget_failures": []
+    },
+    "forecast_status": "BLOCKED",
+    "forecast_pass": null
+  }
+}

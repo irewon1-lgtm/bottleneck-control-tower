@@ -1,0 +1,84 @@
+name: RSS AI annotation
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '20 22 * * *'  # 07:20 KST
+    - cron: '20 10 * * *'  # 19:20 KST
+permissions:
+  contents: write
+# Share only the database write lock with RSS; never trigger or depend on RSS.
+concurrency:
+  group: rss-canonical-data
+  cancel-in-progress: false
+jobs:
+  annotate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: Restore existing verified database
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp config.example.yaml config.yaml
+          data_sha=$(git ls-remote origin refs/heads/data | cut -f1)
+          test -n "$data_sha" || { echo 'Existing data branch required' >&2; exit 1; }
+          git fetch --no-tags origin "$data_sha"
+          echo "BASE_DATA_SHA=$data_sha" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/ai-prior"
+          for name in canonical.sqlite3 canonical.previous.sqlite3 state.json; do
+            git show "$data_sha:$name" > "$RUNNER_TEMP/ai-prior/$name"
+          done
+          python .github/scripts/rss_state.py load \
+            "$RUNNER_TEMP/ai-prior" var/canonical/canonical.sqlite3
+      - name: Annotate up to 20 unprocessed signal articles
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          RSS_AI_MODEL: ${{ vars.RSS_AI_MODEL || 'gpt-5-mini' }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from bct.config import load_settings
+          from bct.rss_ai import openai_review, run
+
+          key = os.environ.get('OPENAI_API_KEY')
+          if not key:
+              raise SystemExit('OPENAI_API_KEY secret missing; no articles processed')
+          try:
+              result = run(load_settings(Path('config.yaml')), Path('rss_feeds.yaml'),
+                  model=os.environ['RSS_AI_MODEL'], limit=20,
+                  reviewer=lambda payload, model: openai_review(payload, model=model, api_key=key))
+          except Exception:
+              # Never print request objects, provider errors, article text or credentials.
+              raise SystemExit('AI batch failed; database publication skipped') from None
+          print(json.dumps({k: result[k] for k in ('processed', 'success', 'error')}))
+          # Per-article ERROR is terminal and must still be persisted.
+          Path(os.environ['GITHUB_ENV']).open('a').write(
+              'AI_PROCESSED=' + str(result['processed']) + '\n')
+          PY
+      - name: Persist AI results in existing data branch
+        if: env.AI_PROCESSED != '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          current_sha=$(git ls-remote origin refs/heads/data | cut -f1)
+          if [[ "$current_sha" != "$BASE_DATA_SHA" ]]; then
+            echo 'data branch changed; refusing to overwrite' >&2
+            exit 1
+          fi
+          git worktree add "$RUNNER_TEMP/ai-data" "$BASE_DATA_SHA"
+          python .github/scripts/rss_state.py save \
+            var/canonical/canonical.sqlite3 "$RUNNER_TEMP/ai-data" \
+            --run-id 'ai-${{ github.run_id }}'
+          git -C "$RUNNER_TEMP/ai-data" add canonical.sqlite3 canonical.previous.sqlite3 state.json
+          git -C "$RUNNER_TEMP/ai-data" \
+            -c user.name='github-actions[bot]' \
+            -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+            commit -m 'Persist AI annotations from run ${{ github.run_id }}'
+          git -C "$RUNNER_TEMP/ai-data" push origin HEAD:refs/heads/data

@@ -1,0 +1,164 @@
+name: RSS live environment check
+on:
+  workflow_dispatch:
+    inputs:
+      live_snapshot_only:
+        description: Acquire only an explicitly selected new LIVE batch, without RSS or backlog work
+        type: boolean
+        default: false
+      live_document_ids:
+        description: JSON array of 1 to 20 newly collected document IDs
+        type: string
+        default: '[]'
+  schedule:
+    - cron: '0 22 * * *'  # 07:00 KST
+    - cron: '0 10 * * *'  # 19:00 KST
+permissions:
+  contents: write
+concurrency:
+  group: rss-canonical-data
+  cancel-in-progress: false
+jobs:
+  collect:
+    if: ${{ !inputs.live_snapshot_only }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: Restore last verified database from data branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp config.example.yaml config.yaml
+          data_sha=$(git ls-remote origin refs/heads/data | cut -f1)
+          echo "BASE_DATA_SHA=$data_sha" >> "$GITHUB_ENV"
+          if [[ -n "$data_sha" ]]; then
+            git fetch --no-tags origin data
+            mkdir -p "$RUNNER_TEMP/rss-prior"
+            for name in canonical.sqlite3 canonical.previous.sqlite3 state.json; do
+              git show "FETCH_HEAD:$name" > "$RUNNER_TEMP/rss-prior/$name"
+            done
+            python .github/scripts/rss_state.py load \
+              "$RUNNER_TEMP/rss-prior" var/canonical/canonical.sqlite3
+          fi
+      - name: Run full test suite
+        run: |
+          python -m pip install pytest
+          python -m pytest -q
+      - name: Collect configured feeds in serial batches
+        run: |
+          python - <<'PY'
+          import json
+          import sqlite3
+          from collections import Counter
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          from bct.collectors.rss.cli import load_feeds
+          from bct.collectors.rss.collector import RSSCollector, RSSTransport
+          from bct.config import load_settings
+          from bct.db import migrate
+
+          feeds = list(load_feeds(Path('rss_feeds.yaml')).items())
+          settings = load_settings(Path('config.yaml'))
+          migrate(settings)
+          with sqlite3.connect(settings.db_path) as db:
+              initial_articles = db.execute('SELECT count(*) FROM radar_items').fetchone()[0]
+          collector = RSSCollector(settings, RSSTransport(timeout_seconds=8))
+          run_key = 'actions-${{ github.run_id }}-${{ github.run_attempt }}'
+          rows = []
+          for start in range(0, len(feeds), 30):
+              batch = feeds[start:start + 30]
+              print(f'Batch {start // 30 + 1}: {len(batch)} feeds', flush=True)
+              for name, url in batch:
+                  result = collector.run(url, run_key, limit=10)
+                  attempts = 1
+                  saved, duplicates = result.saved, result.duplicates
+                  if result.status != 'succeeded':
+                      result = collector.run(url, run_key, limit=10)
+                      attempts = 2
+                      saved += result.saved
+                      duplicates += result.duplicates
+                  rows.append({'feed': name, 'status': result.status,
+                               'attempts': attempts, 'saved': saved,
+                               'duplicates': duplicates,
+                               'error': result.error if result.status != 'succeeded' else None})
+          assert len(rows) == len(feeds)
+          with sqlite3.connect(settings.db_path) as db:
+              final_articles = db.execute('SELECT count(*) FROM radar_items').fetchone()[0]
+          summary = {'registered': len(rows),
+                     'initial_articles': initial_articles,
+                     'final_articles': final_articles,
+                     'successful_feeds': sum(r['status'] == 'succeeded' for r in rows),
+                     'failed_feeds': sum(r['status'] != 'succeeded' for r in rows),
+                     'new_articles': sum(r['saved'] for r in rows),
+                     'duplicate_articles': sum(r['duplicates'] for r in rows),
+                     'error_types': dict(Counter((r['error'] or '').split(':', 1)[0]
+                                                 for r in rows if r['status'] != 'succeeded')),
+                     'completed_at_utc': datetime.now(timezone.utc).isoformat(),
+                     'feeds': rows}
+          Path('rss-live-result.json').write_text(
+              json.dumps(summary, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps({k: v for k, v in summary.items() if k != 'feeds'}), flush=True)
+          PY
+      - name: Publish verified database and one prior snapshot to data branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          current_sha=$(git ls-remote origin refs/heads/data | cut -f1)
+          if [[ "$current_sha" != "$BASE_DATA_SHA" ]]; then
+            echo "data branch changed during collection; refusing to overwrite" >&2
+            exit 1
+          fi
+          if [[ -n "$current_sha" ]]; then
+            git fetch --no-tags origin data
+            git worktree add "$RUNNER_TEMP/rss-data" FETCH_HEAD
+          else
+            empty_tree=$(git hash-object -t tree /dev/null)
+            empty_commit=$(printf 'Initialize RSS data branch\n' | \
+              git -c user.name='github-actions[bot]' \
+                  -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+                  commit-tree "$empty_tree")
+            git worktree add -b data "$RUNNER_TEMP/rss-data" "$empty_commit"
+          fi
+          python .github/scripts/rss_state.py save \
+            var/canonical/canonical.sqlite3 "$RUNNER_TEMP/rss-data" \
+            --run-id '${{ github.run_id }}'
+          git -C "$RUNNER_TEMP/rss-data" add canonical.sqlite3 canonical.previous.sqlite3 state.json
+          git -C "$RUNNER_TEMP/rss-data" \
+            -c user.name='github-actions[bot]' \
+            -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+            commit -m "Persist RSS database from run ${{ github.run_id }}"
+          git -C "$RUNNER_TEMP/rss-data" push origin HEAD:refs/heads/data
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rss-live-result
+          path: |
+            rss-live-result.json
+          if-no-files-found: warn
+
+  live-snapshot:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.live_snapshot_only }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: Acquire only selected new LIVE documents through the existing pipeline
+        env:
+          LIVE_DOCUMENT_IDS: ${{ inputs.live_document_ids }}
+        run: python .github/scripts/live_document_snapshot.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: live-document-snapshot
+          path: ${{ runner.temp }}/live-input/artifact/
+          retention-days: 1
+          if-no-files-found: error

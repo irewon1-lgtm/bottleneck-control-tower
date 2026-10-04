@@ -1,0 +1,169 @@
+{
+  "branch": "codex/roundtrip-originals-integration-20261004",
+  "base_commit": "da118cc71b06752d9954ff320d9c672c8c5a4077",
+  "recovery_commit": "eadb6b60485a85afd42298bfb3213c47528c8e7f",
+  "recovered_hashes": {
+    "src/bct/prospective.py": "4412b7e3500655653a30e3c8969585bdb66b9c1e498146784414254c4ff6ea9f",
+    "tests/test_prospective.py": "9cc9c24f3d624c05e215f7e2b3b8b99473069cd5a908594a14600d5a153d29b6",
+    "src/bct/future_manual_review.py": "17617118e8ba36d2b16db67dabd5ed6c38a4228be48f399a2733961f7756ec95",
+    "tests/test_future_worker.py": "5126a1793087cf0ce34e3480464d3d0d1a6888ad72b8443c3280e10cb6fa73b2"
+  },
+  "dependency_original_hashes": {
+    "src/bct/future_reader.py": "de481b4a2be7ca2af02676329425613e15cded52a3b389aad4343c9277aa261e",
+    "src/bct/future_worker.py": "803a65979ce12c1f5cbf5d359968f65e4b7a006c4ffabe95ac58140bf1338e6c"
+  },
+  "changes": "Recovered four byte-identical files; restored two existing workspace dependencies unchanged; add pending_events to existing queue_summary using existing exact event grouping. No test modifications.",
+  "initial_failures": [
+    {
+      "classification": "과거 테스트/의존 파일 추가 누락",
+      "reason": "future_reader and future_worker absent from base branch"
+    },
+    {
+      "classification": "과거 테스트/의존 파일 추가 누락",
+      "reason": "existing worker requires pending_events summary field absent from base branch"
+    }
+  ],
+  "strict": {
+    "passed": 25,
+    "skipped": 1,
+    "confirmation_export": "PASS"
+  },
+  "early": {
+    "passed": 23
+  },
+  "prospective": {
+    "passed": 13
+  },
+  "worker": {
+    "passed": 19
+  },
+  "one_document_roundtrip": {
+    "passed": 14
+  },
+  "python_full": {
+    "command": "python -m pytest -q",
+    "passed": 449,
+    "failed": 0,
+    "skipped": 1
+  },
+  "js_full": {
+    "command": "node --test tests/*.js",
+    "passed": 25,
+    "failed": 0
+  },
+  "live_audit": {
+    "record_count": 11,
+    "candidate_count": 2,
+    "candidate_history_count": 2,
+    "confirmation_count": 0,
+    "first_candidates": [
+      {
+        "target_id": "us-ghost-r-geo-isr",
+        "target": "GHOST-R",
+        "candidate_first_detected_at": "2026-10-04T04:05:59.562011+00:00",
+        "candidate_class": "EARLY_FORECAST_CANDIDATE",
+        "record_sha256": "5f159f062abed03134476b4cdec3c1ada53d732db69b415887102683b9b6840c"
+      },
+      {
+        "target_id": "us-defense-qualified-tungsten",
+        "target": "미국 국방용 텅스텐",
+        "candidate_first_detected_at": "2026-10-04T04:05:59.562011+00:00",
+        "candidate_class": "EARLY_FORECAST_CANDIDATE",
+        "record_sha256": "ada2bee77008a0957411db2473164d38216f65ede41a0f2933062c766822a542"
+      }
+    ],
+    "first_confirmations": [],
+    "record_integrity": "PASS",
+    "history_references": "PASS",
+    "current_report_status": "BLOCKED",
+    "current_report_reason": "SESSION_MODE_OR_ENGINE_CHANGED",
+    "frozen_engine_sha256": "36be8778de3b7cc2f984992da3c6419f077da08a8397fe05b9c58342a41f82b8",
+    "current_engine_sha256": "5a491f55f14a3fef675c0ca652042bb1cd8b76cb0de40c6f003d55181e2480fd",
+    "report": null,
+    "files_unchanged": true
+  },
+  "legacy_live_report": {
+    "mode": "LIVE",
+    "session_started_at": "2026-10-03T15:59:46.953414+00:00",
+    "confirmation_source_universe": {
+      "version": "bct-operating-confirmation-d66df423a040050a",
+      "source_domains": [
+        "breakingdefense.com",
+        "electrek.co",
+        "energy.gov",
+        "feeds.feedburner.com",
+        "logisticsviewpoints.com",
+        "pharma.economictimes.indiatimes.com",
+        "semiengineering.com",
+        "theloadstar.com",
+        "www.autoevolution.com",
+        "www.biospace.com",
+        "www.constructiondive.com",
+        "www.constructionenquirer.com",
+        "www.datacenterdynamics.com",
+        "www.defensenews.com",
+        "www.defenseone.com",
+        "www.dpr.com",
+        "www.eetimes.com",
+        "www.eia.gov",
+        "www.esa.int",
+        "www.fda.gov",
+        "www.freightwaves.com",
+        "www.hpcwire.com",
+        "www.mining-technology.com",
+        "www.miningweekly.com",
+        "www.nist.gov",
+        "www.northernminer.com",
+        "www.powermag.com",
+        "www.renewableenergyworld.com",
+        "www.semiconductor-digest.com",
+        "www.servethehome.com",
+        "www.supplychain247.com",
+        "www.supplychainbrain.com",
+        "www.supplychaindive.com",
+        "www.tomshardware.com",
+        "www.usgs.gov"
+      ],
+      "definition": "Explicit same-TARGET original confirmations on frozen existing operating publisher domains from session start",
+      "T_global": "UNKNOWN"
+    },
+    "rows": [
+      {
+        "target_id": "us-defense-qualified-tungsten",
+        "target": "미국 국방용 텅스텐",
+        "candidate_first_detected_at": "2026-10-04T04:05:59.562011+00:00",
+        "first_scope_confirmation_at": null,
+        "T_global": "UNKNOWN",
+        "lead_time_days": null,
+        "status": "OPEN"
+      },
+      {
+        "target_id": "us-ghost-r-geo-isr",
+        "target": "GHOST-R",
+        "candidate_first_detected_at": "2026-10-04T04:05:59.562011+00:00",
+        "first_scope_confirmation_at": null,
+        "T_global": "UNKNOWN",
+        "lead_time_days": null,
+        "status": "OPEN"
+      },
+      {
+        "target_id": "us-lng-liquefaction",
+        "target": "미국 LNG",
+        "candidate_first_detected_at": null,
+        "first_scope_confirmation_at": null,
+        "T_global": "UNKNOWN",
+        "lead_time_days": null,
+        "status": "DATA_WAIT"
+      }
+    ],
+    "overall_performance_PASS": null,
+    "note": "Individual scoped results only; no global firstness or aggregate performance PASS claim.",
+    "objective_version": "bct-objective-1",
+    "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  },
+  "legacy_prospective_hash": "fdfb986050dee5de75c1741a819e1e3f1de503c678452f3f3190cf12aa81e6d8",
+  "legacy_prospective_bytes_available": false,
+  "overall": "BLOCKED",
+  "block_reason": "Current engine SHA differs from engine pinned in existing LIVE session; session and protected engine not modified.",
+  "no_bulk_or_news_collection": true
+}
