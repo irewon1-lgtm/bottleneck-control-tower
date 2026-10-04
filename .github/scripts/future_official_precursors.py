@@ -1,6 +1,7 @@
 """One bounded manual collection using BCT's existing acquisition and body cache."""
 import argparse
 import base64
+import importlib.util
 import shutil
 import subprocess
 import tempfile
@@ -256,6 +257,9 @@ def main():
         raise ValueError('prior objective/extractor mismatch')
     snapshot = collect(manifest, args.output, args.cache_dir, run_id=run_id, prior=prior)
     snapshot['pdf_parser_installed'] = bool(shutil.which('pdftotext'))
+    snapshot['pdf_parser_capabilities'] = {
+        'commands': {name: bool(shutil.which(name)) for name in ('pdftotext', 'pdfinfo', 'pdf2txt.py', 'mutool', 'gs')},
+        'python_modules': {name: bool(importlib.util.find_spec(name)) for name in ('pypdf', 'PyPDF2', 'pdfminer', 'fitz')}}
     args.output.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + '\n')
     print(json.dumps(snapshot['summary']))
     if args.publish:
