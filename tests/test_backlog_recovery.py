@@ -60,3 +60,20 @@ def test_cache_from_another_source_version_is_not_used(tmp_path):
     r = _acquire_with_cache_snapshot('https://example.org/a', 'v2', {}, tmp_path,
         lambda _: (_ for _ in ()).throw(AssertionError('no network')), prior_record=prior, trigger='FILTER_CHANGED')
     assert r['body'] == '' and r['blocked'] == 'CACHE_UNAVAILABLE'
+
+
+def test_existing_screening_locations_structured_without_inventing_target_quantity_or_dates():
+    from bct.future_bottleneck import screen, _screening_scope_facts
+    text = 'The factory plans an expansion.\nCustomers signed a transformer purchase contract.'
+    facts = _screening_scope_facts(text, screen(text), [])
+    assert facts and {'DEMAND', 'RELIEF'} <= {f['role'] for f in facts}
+    assert all(f['quantity'] is None and f['need_date'] is None and f['available_date'] is None for f in facts)
+    assert all(f['period'] == 'UNKNOWN' and not f['actual_statement'] and not f['coverage_complete'] for f in facts)
+    assert any(f['target'] == 'UNKNOWN' for f in facts)
+    assert _screening_scope_facts(text, screen(text), facts) == facts
+
+
+def test_screening_confirmation_does_not_seed_new_precursor_facts():
+    from bct.future_bottleneck import screen, _screening_scope_facts
+    text = 'A shortage of power transformers delays orders as demand increases.'
+    assert _screening_scope_facts(text, screen(text), []) == []

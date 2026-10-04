@@ -63,7 +63,7 @@ jobs:
             --candidates "$RUNNER_TEMP/recovery-input/future-candidates.json" \
             --tracking "$RUNNER_TEMP/recovery-input/future-tracking.json" \
             --cache "$RUNNER_TEMP/private-future-body-cache" --request .github/backlog-body-recovery.json \
-            --output "$RUNNER_TEMP/recovery-output" --publish
+            --output "$RUNNER_TEMP/recovery-output" --publish --cache-only
           sha256sum --check "$RUNNER_TEMP/recovery-db.sha256"
       - uses: actions/upload-artifact@v4
         if: always()

@@ -261,6 +261,45 @@ def screen(body, tracked_terms=()):
             "target_status": "EXTRACTED_UNVERIFIED" if targets else "UNRESOLVED", "final_bottleneck": None}
 
 
+def _screening_scope_facts(body, screening, facts):
+    """Project existing exact screening locators into unresolved scope facts.
+
+    These are extraction leads, not confirmed quantities, dates or TARGET
+    relations. Keep the strict parser's facts and previous observations intact.
+    """
+    from copy import deepcopy
+    from .forecast_discovery import PUBLIC_CONFIRMATION
+    result = deepcopy(facts)
+    if PUBLIC_CONFIRMATION.search(body):
+        return result  # Confirmation material cannot seed forecast discovery.
+    for role in ("DEMAND", "SUPPLY", "RELIEF"):
+        for loc in screening.get("evidence_locations", {}).get(role, []):
+            start, end = loc["start"], loc["end"]
+            if not 0 <= start < end <= len(body):
+                continue
+            if any(isinstance(f.get("period"), dict)
+                   and all(f.get(k, "UNKNOWN") != "UNKNOWN" for k in ("specification", "region", "supply_pool", "basis"))
+                   and f["locator"]["start"] <= start and end <= f["locator"]["end"] for f in facts):
+                continue  # Fully scoped strict facts already own this statement.
+            text = body[start:end]
+            names = list(dict.fromkeys(t["name"] for t in screening.get("targets", [])
+                                      if t["name"].casefold() in text.casefold())) or ["UNKNOWN"]
+            for name in names:
+                # The strict parser may cover a paragraph containing this
+                # sentence. Do not duplicate its same-target/role claim.
+                if any(f["role"] == role and f["target"].casefold() == name.casefold()
+                       and f["locator"]["start"] <= start and end <= f["locator"]["end"] for f in result):
+                    continue
+                result.append({"target": name, "role": role, "locator": {"start": start, "end": end},
+                    "specification": "UNKNOWN", "region": "UNKNOWN", "supply_pool": "UNKNOWN",
+                    "period": "UNKNOWN", "basis": "UNKNOWN", "quantity": None, "unit": "UNKNOWN",
+                    "need_date": None, "available_date": None, "actual_statement": False,
+                    "scope_ambiguous": True, "change_confirmed": False, "coverage_complete": False,
+                    "explicit_public_constraint": False, "transaction_id": None,
+                    "extraction_status": "SCREENING_LEAD_UNVERIFIED", "target_relation_verified": False})
+    return result
+
+
 def _acquire_with_cache_snapshot(url, source_version, ledger, cache_dir, fetcher, *, prior_record, **kwargs):
     """Recover a verified same-source snapshot without rewriting acquisition history."""
     from copy import deepcopy
@@ -378,6 +417,15 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
             result.update(screener(body, tracked_terms=sorted(terms)) if terms else screener(body))
             from .future_hypothesis import extract_facts
             result.update(extract_facts(body, result))
+            result["scope_facts"] = _screening_scope_facts(body, result, result["scope_facts"])
+            if prior.get("current_body_sha256", prior.get("body_sha256")) == meta.get("body_sha256"):
+                # Enrich the current snapshot; do not rewrite existing TRUE or
+                # UNKNOWN facts from a previous parser/reviewer observation.
+                old_facts = prior.get("scope_facts", [])
+                identities = {(f["target"].casefold(), f["role"], f["locator"]["start"], f["locator"]["end"])
+                              for f in old_facts}
+                result["scope_facts"] = old_facts + [f for f in result["scope_facts"] if
+                    (f["target"].casefold(), f["role"], f["locator"]["start"], f["locator"]["end"]) not in identities]
             if result.get('candidate'):
                 result['first_candidate_at'] = prior.get('first_candidate_at', now.isoformat())
             result['publication_precision'] = 'TIMESTAMP' if row.get('published_at') and 'T' in row['published_at'] else 'DAY' if row.get('published_at') else 'UNKNOWN'
