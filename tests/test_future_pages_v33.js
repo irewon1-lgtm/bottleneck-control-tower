@@ -148,7 +148,7 @@ test("ranking starts with the objective, explains the early-detection flow, and 
   assert.match(objective.textContent, /공급이 못 따라올 조짐/);
   assert.match(objective.textContent, /미래병목 후보 등록/);
   assert.match(objective.textContent, /확인 불가/);
-  assert.match(objective.textContent, /LIVE 후보 freeze와 T_scope 성적이 없습니다/);
+  assert.match(objective.textContent, /실제 후보를 처음 기록한 시각과 공개 병목 확인 시각 데이터가 아직 이 화면에 연결되지 않았습니다/);
   const focus = headingPanel(page.content, "지금 무엇을 보고 있나");
   assert.match(focus.textContent, /미래 TARGET/);
   assert.match(focus.textContent, /지금 부족한 것/);
