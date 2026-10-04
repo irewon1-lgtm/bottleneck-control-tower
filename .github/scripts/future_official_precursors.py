@@ -183,7 +183,7 @@ def collect(manifest, output, cache_dir, *, fetcher=fetch, run_id='LOCAL', prior
     for source in manifest['documents'] + manifest.get('supplemental_documents', []):
         at = datetime.now(timezone.utc).isoformat()
         old = prior_by_url.get(source['url'])
-        if old and not (source.get('refresh_locator', False) and old.get('http_status') == 200) and (source['target_id'] not in manifest.get('collection_target_ids', [source['target_id']]) or not (old.get('http_status') == 200 and old.get('body_status') == 'BLOCKED')):
+        if old and not (source.get('refresh_locator', False) and old.get('http_status') == 200) and (source['target_id'] not in manifest.get('collection_target_ids', [source['target_id']]) or old.get('blocked_reason') == 'BODY_TOO_LARGE' or not (old.get('http_status') == 200 and old.get('body_status') == 'BLOCKED')):
             responses.append((source, at, {'reused_record': old}))
             continue
         try:
