@@ -1,0 +1,144 @@
+"""One bounded manual collection using BCT's existing acquisition and body cache."""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+from urllib.error import HTTPError
+from urllib.parse import urlsplit
+from urllib.request import Request, build_opener
+from datetime import datetime, timezone
+from collections import Counter
+
+from bct.future_bottleneck import PublicRedirect, public_url
+from bct.future_body import acquire_document, read_cached_body
+from bct.future_github import GitHubTransport
+
+
+def manifest_at(path):
+    manifest = json.loads(Path(path).read_text())
+    documents = manifest['documents']
+    if len(documents) != 21 or len({d['url'] for d in documents}) != 21:
+        raise ValueError('exactly 21 unique frozen URLs required')
+    if any(not d.get('official_document') or not d.get('required_roles') for d in documents):
+        raise ValueError('official document and needed role required')
+    if set(manifest['allowed_domains']) != {urlsplit(d['url']).hostname for d in documents}:
+        raise ValueError('domain scope mismatch')
+    from bct import future_body
+    if hashlib.sha256(Path(future_body.__file__).read_bytes()).hexdigest() != manifest['extractor_sha256']:
+        raise ValueError('existing extractor changed')
+    if not re.fullmatch(r'[a-f0-9]{64}', manifest['objective_sha256']):
+        raise ValueError('objective hash required')
+    return manifest
+
+
+def fetch(url, domains):
+    """Keep BCT public-IP/redirect/TLS guards; retain response metadata."""
+    if urlsplit(url).hostname not in domains:
+        raise ValueError('source domain outside frozen manifest')
+    public_url(url)
+
+    class ScopedRedirect(PublicRedirect):
+        def redirect_request(self, req, fp, code, msg, headers, newurl):
+            if urlsplit(newurl).hostname not in domains:
+                raise ValueError('redirect domain outside frozen manifest')
+            return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+    request = Request(url, headers={
+        'User-Agent': 'Mozilla/5.0 (compatible; BottleneckControlTower/0.1)',
+        'Accept': 'text/html,application/xhtml+xml'})
+    with build_opener(ScopedRedirect()).open(request, timeout=8) as response:
+        payload = response.read(2_000_001)
+        result = {'status': response.status, 'final_url': response.geturl(),
+                  'content_type': response.headers.get_content_type()}
+        if len(payload) > 2_000_000:
+            return {**result, 'blocked_reason': 'BODY_TOO_LARGE'}
+        if result['content_type'] == 'application/pdf' or payload.startswith(b'%PDF'):
+            return {**result, 'blocked_reason': 'EXISTING_HTML_EXTRACTOR_DOES_NOT_SUPPORT_PDF'}
+        result['html'] = payload.decode(response.headers.get_content_charset() or 'utf-8', errors='replace')
+        return result
+
+
+def publication_dates(html):
+    # Candidates only: no inferred dates from paths, collection time or headers.
+    dates = re.findall(r'"datePublished"\s*:\s*"([^"]+)"', html)
+    dates += re.findall(r'<meta[^>]+(?:property|name)=["\x27](?:article:published_time|DC.date.issued)["\x27][^>]+content=["\x27]([^"\x27]+)', html, re.I)
+    return sorted(set(dates))
+
+
+def collect(manifest, output, cache_dir, *, fetcher=fetch, run_id='LOCAL'):
+    binding = {k: manifest[k] for k in ('objective_version', 'objective_sha256')}
+    documents, responses = [], []
+    domains = set(manifest['allowed_domains'])
+    # First perform the bounded HTTP trial. Never substitute another URL/source.
+    for source in manifest['documents']:
+        at = datetime.now(timezone.utc).isoformat()
+        try:
+            response = fetcher(source['url'], domains)
+        except Exception as exc:
+            response = {'error': type(exc).__name__, 'blocked_reason': 'NETWORK_ACCESS_FAILED',
+                        'status': exc.code if isinstance(exc, HTTPError) else None,
+                        'final_url': exc.geturl() if isinstance(exc, HTTPError) else None}
+        responses.append((source, at, response))
+    # Extract only responses actually received, with unchanged BCT acquisition.
+    for source, at, response in responses:
+        document_id = 'official-' + hashlib.sha256(source['url'].encode()).hexdigest()
+        record = {'document_id': document_id, 'original_url': source['url'],
+                  'url': source['url'], 'final_url': response.get('final_url'),
+                  'source_domain': source['host'], 'target_id': source['target_id'],
+                  'target': source['target'], 'source_organization': source['organization'],
+                  'required_roles': source['required_roles'], 'collected_at': at,
+                  'publication_timestamp': 'UNKNOWN', 'http_status': response.get('status'),
+                  'content_type': response.get('content_type'), 'body': '',
+                  'body_sha256': None, 'body_status': 'BLOCKED',
+                  'independence_verified': False, 'original_source': True}
+        if response.get('blocked_reason'):
+            record.update(blocked_reason=response['blocked_reason'], error=response.get('error'))
+        else:
+            acquired = acquire_document(source['url'], 'official-source-v1', None,
+                                        cache_dir, lambda url: response,
+                                        trigger='USER', trigger_id=run_id, now=at)
+            record.update(acquired['metadata'], body=acquired['body'], acquisition_ledger=acquired['ledger'])
+            if not record['body']:
+                record['body_status'] = 'BLOCKED'
+                record['blocked_reason'] = 'NO_READABLE_BODY_WITH_EXISTING_EXTRACTOR'
+            else:
+                assert read_cached_body(cache_dir, record['body_sha256']) == record['body']
+            dates = publication_dates(response.get('html', ''))
+            record['publication_timestamp_candidates'] = dates
+            if len(dates) == 1:
+                record['publication_timestamp'] = dates[0]
+                record['publication_verification'] = 'SOURCE_HTML_METADATA_REQUIRES_REVIEW'
+        documents.append(record)
+    snapshot = {'format': 'bct-official-precursor-snapshot-v1', **binding,
+                'run_id': run_id, 'extractor_sha256': manifest['extractor_sha256'],
+                'manifest_sha256': hashlib.sha256(json.dumps(manifest, sort_keys=True, ensure_ascii=False).encode()).hexdigest(),
+                'documents': documents, 'summary': dict(Counter(d['body_status'] for d in documents)),
+                'operating_records_modified': False, 'raw_html_retained': False}
+    Path(output).parent.mkdir(parents=True, exist_ok=True)
+    Path(output).write_text(json.dumps(snapshot, ensure_ascii=False, indent=2, allow_nan=False) + '\n')
+    return snapshot
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--manifest', type=Path, required=True)
+    parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--cache-dir', type=Path, required=True)
+    parser.add_argument('--publish', action='store_true')
+    args = parser.parse_args()
+    manifest = manifest_at(args.manifest)
+    run_id = 'actions-' + os.environ.get('GITHUB_RUN_ID', 'LOCAL') + '-' + os.environ.get('GITHUB_RUN_ATTEMPT', '1')
+    snapshot = collect(manifest, args.output, args.cache_dir, run_id=run_id)
+    print(json.dumps(snapshot['summary']))
+    if args.publish:
+        # Create once, conditional GitHub contents write. Never overwrite live sidecars.
+        transport = GitHubTransport(os.environ['GITHUB_REPOSITORY'], 'future-bottleneck-data', os.environ['GITHUB_TOKEN'])
+        path = 'official-precursors/' + run_id + '.json'
+        sha = transport.write(path, snapshot, None)
+        print(json.dumps({'snapshot_path': path, 'blob_sha': sha}))
+
+
+if __name__ == '__main__':
+    main()
