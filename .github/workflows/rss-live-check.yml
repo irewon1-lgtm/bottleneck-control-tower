@@ -16,7 +16,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: ${{ inputs.live_snapshot_only && format('rss-live-readonly-{0}', github.run_id) || 'rss-canonical-data' }}
+  group: rss-canonical-data
   cancel-in-progress: false
 jobs:
   collect:
