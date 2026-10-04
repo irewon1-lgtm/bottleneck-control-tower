@@ -59,6 +59,20 @@ def test_missing_or_incomplete_content_is_partial(html, reason):
     assert reason in result['reasons']
 
 
+def test_scoped_nested_div_text_is_retained_as_partial_not_dropped():
+    html = '<article><div><span>' + ('Qualified production capacity expands in 2028. ' * 8) + '</span></div></article>'
+    result = extract_document(html)
+    assert result['body_status'] == 'PARTIAL'
+    assert result['body']
+    assert 'UNSTRUCTURED_ARTICLE_TEXT' in result['reasons']
+
+
+def test_unscoped_navigation_like_nested_text_is_not_promoted_to_scoped_article():
+    html = '<div><span>' + ('Menu account newsletter links. ' * 12) + '</span></div>'
+    result = extract_document(html)
+    assert result['body_status'] != 'FULL'
+
+
 def test_jsonld_article_and_body_div_are_supported():
     ld = '<script type="application/ld+json">' + json.dumps({'@graph': [{'@type': 'NewsArticle', 'articleBody': 'A signed contract needs qualified supply in 2028.'}]}) + '</script>'
     assert extract_document(ld)['body_status'] == 'FULL'
