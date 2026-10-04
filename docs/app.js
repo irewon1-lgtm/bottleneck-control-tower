@@ -318,6 +318,19 @@
      ["정밀 검토 대기", queue.deep_pending], ["추가 자료 대기", queue.candidate_data_wait],
      ["원문 확보 대기", queue.material_pending], ["판독 완료", queue.completed_documents]].forEach(([label, value]) => metrics.append(metric(label, value)));
     box.append(metrics, node("p", `최장 대기 ${queue.oldest_wait_hours == null ? "데이터 없음" : Number(queue.oldest_wait_hours).toFixed(1) + "시간"} · 사건 ${number(queue.event_count)}개`, "panel-caption"));
+    const guide = node("div", null, "queue-guide");
+    [
+      ["자동으로 걸린 문서", "규칙이 관심 문서로 표시했습니다. 병목 확정이라는 뜻은 아닙니다."],
+      ["1차 읽기 대기", "본문은 있지만 아직 내용 분류가 끝나지 않았습니다."],
+      ["원문 확보 대기", "본문이 없거나 일부만 있어 먼저 원문을 확보해야 합니다."],
+      ["정밀 검토 대기", "1차 검토 뒤 수요·공급을 더 깊게 비교해야 합니다."],
+      ["추가 자료 대기", "문서는 읽었지만 수량·날짜·독립 근거가 부족합니다."]
+    ].forEach(([label, note]) => {
+      const item = node("div", null, "queue-guide-item");
+      item.append(node("strong", label), node("span", note));
+      guide.append(item);
+    });
+    box.append(guide);
     const preview = node("ul", null, "compact-list");
     (queue.preview || []).slice(0, 5).forEach(item => {
       const record = futureCandidates.results?.[item.document_id] || {};
@@ -476,8 +489,8 @@
 
     const flow = node("div", null, "objective-flow");
     [
-      ["01", "수요가 늘어날 조짐", "주문·CAPEX·로드맵·예약"],
-      ["02", "공급이 못 따라올 조짐", "생산능력·납기·인증·ramp"],
+      ["01", "수요가 늘어날 조짐", "주문·투자계획·제품계획·예약"],
+      ["02", "공급이 못 따라올 조짐", "생산량·납기·고객인증·생산확대"],
       ["03", "미래병목 후보 등록", "명시적 병목 뉴스가 나오기 전"],
       ["04", "나중에 실제 확인", "후보일 → 공개확인일 선행일수 측정"]
     ].forEach(([num,title,note], index) => {
@@ -499,12 +512,12 @@
       healthCopy.append(node("h3", "LIVE 선행탐지 성적표가 연결되어 있습니다."),
         node("p", "후보 생성 시각과 공개 확인 시각을 비교한 기록만 성과로 봅니다."));
       const metrics = node("div", null, "objective-mini-metrics");
-      [["공개 확인 전 후보", open], ["선행탐지 성공", success], ["늦게 잡은 후보", missed]].forEach(([label,value]) => metrics.append(metric(label, value, "LIVE prospective 기록")));
+      [["공개 확인 전 후보", open], ["선행탐지 성공", success], ["늦게 잡은 후보", missed]].forEach(([label,value]) => metrics.append(metric(label, value, "선행탐지 기록")));
       health.append(healthCopy, metrics);
     } else {
       health.classList.add("needs-link");
       healthCopy.append(node("h3", "선행탐지 성적표는 아직 이 화면 데이터와 연결되지 않았습니다."),
-        node("p", "현재 화면에는 추적·가설·검토 기록은 있지만 LIVE 후보 freeze와 T_scope 성적이 없습니다. 따라서 이 화면만 보고 ‘미리 잡았다’고 판정하지 않습니다."));
+        node("p", "실제 후보를 처음 기록한 시각과 공개 병목 확인 시각 데이터가 아직 이 화면에 연결되지 않았습니다. 그래서 이 화면만 보고 ‘미리 잡았다’고 표시하지 않습니다."));
       const mark = node("div", null, "health-mark");
       mark.append(node("strong", "확인 불가"), node("span", "성과 데이터 연결 필요"));
       health.append(healthCopy, mark);
@@ -517,7 +530,7 @@
     const current = rows.filter(row => row.status === "CURRENT").length;
     const drafts = futureCandidates ? view.hypotheses(futureCandidates).filter(row => row.named).length : null;
     [
-      ["추적 기록상 미래 판단", future, "FUTURE로 저장된 TARGET"],
+      ["미래 병목으로 보는 대상", future, "저장된 판단 기준"],
       ["관찰·자료보충 중", watching, "아직 부족 확정 전"],
       ["이미 발생한 대상", current, "미래 후보와 분리해서 봄"],
       ["저장된 가설 초안", drafts, "성과가 아니라 검토 재료"]
