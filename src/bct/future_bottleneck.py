@@ -356,7 +356,9 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
         db.row_factory = sqlite3.Row
         columns = {r['name'] for r in db.execute('PRAGMA table_info(radar_items)')}
         publication = ',published_at' if 'published_at' in columns else ',NULL AS published_at'
-        rows = [dict(r) for r in db.execute("SELECT id,title,url,source,collected_at,updated_at" + publication + " FROM radar_items WHERE status='active' ORDER BY collected_at,id")]
+        source_inputs = ''.join(',' + name if name in columns else ',NULL AS ' + name
+                                for name in ('external_id', 'snippet'))
+        rows = [dict(r) for r in db.execute("SELECT id,title,url,source,collected_at,updated_at" + publication + source_inputs + " FROM radar_items WHERE status='active' ORDER BY collected_at,id")]
     # A processing bound never limits retention or the discovery window.
     scoped = rows
     now = datetime.now(timezone.utc)

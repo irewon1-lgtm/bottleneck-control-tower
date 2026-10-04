@@ -45,3 +45,27 @@ def test_source_inputs_preserve_metadata_and_exact_cache(tmp_path):
     cache.write_bytes(b'corrupted cache')
     with pytest.raises(ValueError, match='snapshot body hash mismatch'):
         snapshot.preserve_source_inputs(db, output, result, ['doc'], 'pinned-revision')
+
+
+def test_collection_retains_existing_feed_id_and_snippet(tmp_path):
+    from bct.future_bottleneck import run
+
+    db = tmp_path / 'source.sqlite3'
+    with sqlite3.connect(db) as conn:
+        conn.execute('CREATE TABLE radar_items (id, title, url, source, collected_at, '
+                     'updated_at, status, external_id, snippet, published_at)')
+        conn.execute('INSERT INTO radar_items VALUES (?,?,?,?,?,?,?,?,?,?)',
+                     ('doc', 'Original title', 'https://example.org/article', 'example.org',
+                      '2026-10-01T10:00:00Z', 'v1', 'active', 'original-feed-id',
+                      'Original feed summary', '2026-10-01'))
+    before = db.read_bytes()
+    result = run(db, tmp_path / 'result.json', limit=1, workers=1,
+                 document_ids=['doc'],
+                 fetcher=lambda url: '<article><p>Original source paragraph.</p></article>')
+    record = result['results']['doc']
+    assert record['external_id'] == 'original-feed-id'
+    assert record['snippet'] == 'Original feed summary'
+    assert record['published_at'] == '2026-10-01'
+    assert record['origin_publisher'] is None
+    assert record['provenance_verified'] is False
+    assert db.read_bytes() == before

@@ -16,7 +16,7 @@ from typing import Callable, Mapping, Protocol
 
 
 COLLECTION_FIELDS = frozenset({
-    "id", "title", "url", "source", "source_type", "collected_at", "updated_at",
+    "id", "external_id", "snippet", "title", "url", "source", "source_type", "collected_at", "updated_at",
     "fingerprint", "attempts", "checked_at", "body_status", "extraction_method",
     "body_chars", "body_sha256", "candidate", "decision", "reason", "evidence",
     "targets", "target_status", "final_bottleneck", "error", "retry_after",
