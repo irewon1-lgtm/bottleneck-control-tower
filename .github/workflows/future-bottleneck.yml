@@ -4,6 +4,11 @@ on:
     branches: [main, codex/future-bottleneck, codex/bct-v33-implementation]
     paths: ['src/bct/future_*.py', 'tests/test_future*.py', '.github/scripts/future*.py', 'docs/v33-quality-*.json', '.github/workflows/future-bottleneck.yml']
   workflow_dispatch:
+    inputs:
+      backlog_body_recovery:
+        description: Recover a frozen operational body selection through the existing pipeline
+        type: boolean
+        default: false
   workflow_run:
     workflows: ['RSS live environment check']
     types: [completed]
@@ -17,6 +22,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   candidates:
+    if: ${{ !inputs.backlog_body_recovery }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -225,3 +231,52 @@ jobs:
             ${{ runner.temp }}/future-output/quality/*.json
           if-no-files-found: warn
           retention-days: 14
+
+  backlog-body-recovery:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.backlog_body_recovery }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify existing extraction and store regressions
+        run: |
+          python -m pip install -e '.[test]'
+          python -m pytest -q tests/test_future_body_v33.py tests/test_future_store.py tests/test_future_light_prd.py
+      - name: Restore operational inputs using existing verified snapshot loader
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch --no-tags origin data
+          mkdir -p "$RUNNER_TEMP/recovery-input" "$RUNNER_TEMP/recovery-output"
+          for name in canonical.sqlite3 canonical.previous.sqlite3 state.json; do
+            git show "FETCH_HEAD:$name" > "$RUNNER_TEMP/recovery-input/$name"
+          done
+          python .github/scripts/rss_state.py load "$RUNNER_TEMP/recovery-input" "$RUNNER_TEMP/recovery.sqlite3"
+          sha256sum "$RUNNER_TEMP/recovery.sqlite3" > "$RUNNER_TEMP/recovery-db.sha256"
+          python - <<'PYCODE'
+          import os,json
+          from pathlib import Path
+          from bct.future_github import GitHubTransport
+          root=Path(os.environ['RUNNER_TEMP'])/'recovery-input'
+          transport=GitHubTransport(os.environ['GITHUB_REPOSITORY'],'future-bottleneck-data',os.environ['GITHUB_TOKEN'])
+          for name in ('future-candidates.json','future-tracking.json'):
+              (root/name).write_text(json.dumps(transport.read(name).document,ensure_ascii=False))
+          PYCODE
+          python .github/scripts/future_backlog_recovery.py --db "$RUNNER_TEMP/recovery.sqlite3" \
+            --candidates "$RUNNER_TEMP/recovery-input/future-candidates.json" \
+            --tracking "$RUNNER_TEMP/recovery-input/future-tracking.json" \
+            --cache "$RUNNER_TEMP/private-future-body-cache" --request .github/backlog-body-recovery.json \
+            --output "$RUNNER_TEMP/recovery-output"
+          sha256sum --check "$RUNNER_TEMP/recovery-db.sha256"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backlog-body-recovery
+          path: |
+            ${{ runner.temp }}/recovery-output/*.json
+            ${{ runner.temp }}/private-future-body-cache/*.txt
+          retention-days: 1
+          if-no-files-found: error
