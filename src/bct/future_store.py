@@ -141,6 +141,9 @@ def deep_merge(existing, changes, *, _path=()):
 
 
 def validate_ownership(owner, patch, *, extra_collection_fields=()):
+    if isinstance(patch, dict) and any(k in patch for k in ('objective_version', 'objective_sha256')):
+        from .objective_lock import require_objective
+        require_objective(patch)
     if owner not in OWNER_ROOTS or not isinstance(patch, dict):
         raise PatchError("unknown owner or non-object patch")
     if not set(patch) <= OWNER_ROOTS[owner]:

@@ -231,8 +231,10 @@ def main():
                           previous=json.loads(args.previous.read_text()) if args.previous else None)
     except (ObjectiveBlocked, ValueError, KeyError, TypeError, OSError) as exc:
         print(json.dumps({'state': 'BLOCKED', 'reason': str(exc)})); raise SystemExit(1)
-    from .future_manual_review import _private_write
-    _private_write(args.output, result)
+    from .future_store import LocalJSONTransport
+    require_objective(result)
+    transport = LocalJSONTransport()
+    transport.write(args.output, result, transport.read(args.output).sha)
 
 
 if __name__ == '__main__':
