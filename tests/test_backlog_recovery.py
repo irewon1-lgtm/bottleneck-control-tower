@@ -95,4 +95,4 @@ def test_demand_only_and_supply_only_never_generate_forecast_candidate():
                 'period': {'start': '2031-01-01', 'end': '2031-12-31'}, 'locator': {'start': 0, 'end': len(body)},
                 'quantity': 'UNKNOWN', 'unit': 'UNKNOWN', 'basis': 'total', 'qualified': True})
         result = discover(stamp_export({'documents': documents, 'signals': signals}), mode='SYNTHETIC', now='2026-10-04T00:00:00Z')
-        assert result['candidates'] == [] and result['rejected'] == []
+        assert result['candidates'] == [] and result['rejected_inputs'] == []
