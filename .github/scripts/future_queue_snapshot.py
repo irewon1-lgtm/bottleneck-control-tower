@@ -23,6 +23,17 @@ def main():
     retained_before = set(candidates.get('results', {}))
     tracking = json.loads(args.tracking.read_text())
     bundle_patch = ensure_bundle(candidates, tracking, now=clock)
+    # A projection can return to a previously seen state. Its content-derived
+    # generation ID then repeats, but this is a new transition/time, not an
+    # edit to the immutable prior history entry.
+    for hypothesis_id, changes in bundle_patch.get('hypotheses', {}).items():
+        prior = {entry['id']: entry for entry in
+                 candidates.get('hypotheses', {}).get(hypothesis_id, {}).get('history', [])
+                 if 'id' in entry}
+        for entry in changes.get('history', []):
+            identity = entry.get('id', '')
+            if identity.startswith('generation-') and identity in prior and prior[identity] != entry:
+                entry['id'] = 'generation-' + str(uuid.uuid4())
     op = 'bundle-' + str(uuid.uuid4())
     result = patch_json(args.candidates, owner='bundle', patch=bundle_patch, operation_id=op,
                         prepared_document=candidates)

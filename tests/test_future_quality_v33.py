@@ -16,6 +16,34 @@ import pytest
 from bct.future_quality import evaluate, observation_status
 
 
+@pytest.mark.parametrize('repeated_time', [False, True])
+def test_queue_snapshot_preserves_generation_history_on_repeated_state(tmp_path, monkeypatch, repeated_time):
+    original = {'id': 'generation-same-state', 'at': '2026-10-01T00:00:00+00:00',
+                'old': {'stage': 'S1'}, 'new': {'stage': 'S2'}}
+    repeated = deepcopy(original)
+    if repeated_time:
+        repeated.update(at='2026-10-04T00:00:00+00:00', old={'stage': 'S3'})
+    candidates = {'results': {}, 'hypotheses': {'h': {
+        'current': {'stage': 'S1'}, 'history': [original]}}}
+    candidate_path, tracking_path = tmp_path / 'candidates.json', tmp_path / 'tracking.json'
+    candidate_path.write_text(json.dumps(candidates))
+    tracking_path.write_text('{}')
+    script = runpy.run_path(str(Path(__file__).parents[1] / '.github/scripts/future_queue_snapshot.py'))
+    monkeypatch.setitem(script['main'].__globals__, 'ensure_bundle', lambda *a, **k: {
+        'bundles': {}, 'hypotheses': {'h': {'current': {'stage': 'S2'}, 'history': [deepcopy(repeated)]}}})
+    monkeypatch.setattr(sys, 'argv', ['future_queue_snapshot.py', '--candidates', str(candidate_path),
+                                    '--tracking', str(tracking_path), '--output-dir', str(tmp_path)])
+    script['main']()
+    saved = json.loads(candidate_path.read_text())
+    history = saved['hypotheses']['h']['history']
+    assert history[0] == original
+    assert len(history) == (2 if repeated_time else 1)
+    if repeated_time:
+        assert history[1]['id'] != original['id']
+        assert {k: v for k, v in history[1].items() if k != 'id'} == {k: v for k, v in repeated.items() if k != 'id'}
+    assert saved['summary']['review_queue']['computed_at']
+
+
 def fixture():
     manifest = {
         "sample_id": "fixture-not-live-performance", "filter_freeze": {"sha256": "frozen-filter"},
