@@ -1,0 +1,88 @@
+name: REVIEW_LEAD SHADOW intake
+on:
+  workflow_run:
+    workflows: [New precursor evidence acquisition]
+    types: [completed]
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: review-lead-shadow-state
+  cancel-in-progress: false
+jobs:
+  shadow:
+    if: >-
+      ${{ vars.BCT_REVIEW_SHADOW_ENABLED == 'true' &&
+          github.event.workflow_run.head_branch == 'main' &&
+          github.event.workflow_run.head_repository.full_name == github.repository &&
+          github.event.workflow_run.event != 'pull_request' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: Receive the existing saved-source artifact, not LIVE state
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ACQUISITION_RUN_ID: ${{ github.event.workflow_run.id }}
+          ACQUISITION_STARTED_AT: ${{ github.event.workflow_run.created_at }}
+        run: |
+          set -euo pipefail
+          mkdir -p var/review-handoff var/review-state var/review-source-cache
+          gh run download "$ACQUISITION_RUN_ID" --name precursor-private-cache --dir var/review-source-cache
+          python - <<'PYTHON'
+          import json, os
+          from pathlib import Path
+          Path('var/review-window.json').write_text(json.dumps({
+              'collection_started_at':os.environ['ACQUISITION_STARTED_AT'],
+              'documents':[], 'source':'actual upstream workflow_run.created_at'}))
+          PYTHON
+          python -m bct.review_shadow handoff --delta var/review-window.json --cache var/review-source-cache --output var/review-handoff
+          test -f var/review-handoff/input.json
+      - name: Restore only the dedicated review state branch
+        if: always()
+        run: |
+          set -euo pipefail
+          review_sha=$(git ls-remote origin refs/heads/review-lead-shadow-state | cut -f1)
+          echo "BASE_REVIEW_SHA=$review_sha" >> "$GITHUB_ENV"
+          if [[ -n "$review_sha" ]]; then
+            git fetch --no-tags origin review-lead-shadow-state
+            test "$(git rev-parse FETCH_HEAD)" = "$review_sha"
+            git ls-tree -r "$review_sha" > var/review-state-tree.txt
+            python - <<'PYTHON'
+          from pathlib import Path
+          for line in Path('var/review-state-tree.txt').read_text().splitlines():
+              header, name = line.split('\t', 1)
+              assert header.split()[:2] == ['100644', 'blob'], 'review tree symlink/submodule forbidden'
+              assert name.startswith('review-lead-shadow/') and '..' not in name.split('/'), 'foreign review path'
+          PYTHON
+            git archive "$review_sha" | tar -x -C var/review-state
+          fi
+      - name: Apply frozen REVIEW_LEAD intake in SHADOW
+        run: >-
+          python -m bct.review_shadow run
+          --input var/review-handoff/input.json
+          --state var/review-state/review-lead-shadow
+      - name: Preserve append-only review state in its own branch
+        if: always()
+        run: python .github/scripts/persist_review_shadow.py
+      - name: Preserve audit and important updates
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-lead-shadow-audit
+          path: var/review-state/review-lead-shadow/
+          include-hidden-files: true
+          retention-days: 30
+          if-no-files-found: warn
+      - name: Publish only important review updates to run summary
+        if: always()
+        run: |
+          if [[ -f var/review-state/review-lead-shadow/summary.md ]]; then
+            cat var/review-state/review-lead-shadow/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
