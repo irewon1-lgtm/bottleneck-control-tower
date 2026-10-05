@@ -1,0 +1,41 @@
+{
+  "version": "BCT_V2_PRIMARY_SOURCE_CATALOG_1",
+  "sources": [
+    {
+      "id": "sec-current-8k",
+      "kind": "sec_atom",
+      "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=8-K&owner=exclude&count=10&output=atom",
+      "article_hosts": ["www.sec.gov"],
+      "limit": 3
+    },
+    {
+      "id": "usaspending-manufacturing-awards",
+      "kind": "usaspending",
+      "query": "manufacturing",
+      "limit": 3
+    },
+    {
+      "id": "official-contract-ir-amkor",
+      "kind": "official_index",
+      "url": "https://ir.amkor.com/press-releases",
+      "article_hosts": ["ir.amkor.com"],
+      "article_path_pattern": "/news-releases/news-release-details/",
+      "limit": 2
+    },
+    {
+      "id": "official-capacity-eaton",
+      "kind": "official_index",
+      "url": "https://www.eaton.com/us/en-us/company/news-insights/news-releases.html",
+      "article_hosts": ["www.eaton.com"],
+      "article_path_pattern": "/news-insights/news-releases/20[0-9]{2}/",
+      "limit": 2
+    },
+    {
+      "id": "official-energy-capacity-eia",
+      "kind": "official_feed",
+      "url": "https://www.eia.gov/rss/todayinenergy.xml",
+      "article_hosts": ["www.eia.gov"],
+      "limit": 2
+    }
+  ]
+}

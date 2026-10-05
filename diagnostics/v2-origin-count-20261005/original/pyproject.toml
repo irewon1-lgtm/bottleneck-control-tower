@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bottleneck-control-tower"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = ["SQLAlchemy>=2.0,<2.1", "alembic>=1.13,<2", "PyYAML>=6,<7"]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<9"]
+
+[project.scripts]
+bct = "bct.cli:main"
+bct-sec = "bct.collectors.sec.cli:main"
+bct-usaspending = "bct.collectors.usaspending.cli:main"
+bct-federal-register = "bct.collectors.federal_register.cli:main"
+bct-radar = "bct.collectors.radar.cli:main"
+bct-media-cloud = "bct.collectors.media_cloud.cli:main"
+bct-rss = "bct.collectors.rss.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
