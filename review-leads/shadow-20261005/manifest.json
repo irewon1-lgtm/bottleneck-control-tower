@@ -1,0 +1,50 @@
+{
+  "status": "READY_TO_ACTIVATE",
+  "prepared_at": "2026-10-05T22:12:38.159576+00:00",
+  "baseline_commit": "83aaf61734b3b29ad75890af0f47d378f754fbb3",
+  "protected_commits": [
+    "0b66095",
+    "ba7d112",
+    "84b6ba9",
+    "83aaf61"
+  ],
+  "existing_files_changed": 0,
+  "production_activation": false,
+  "remote_review_state_created": false,
+  "new_workflow_flag": "BCT_REVIEW_SHADOW_ENABLED == true",
+  "main_before": "6db6efcf8624a3edc8dcba16590ff0e07f8a3f0b",
+  "LIVE_before": "21e1be03b522d81a20d95e79694617967d8a608a",
+  "tests": {
+    "passed": 237,
+    "skipped": 1,
+    "skip_reason": "Independent frozen real pre-public holdout/archived precursor facts unavailable; no performance PASS"
+  },
+  "safety_tests": {
+    "1": "PASS",
+    "2": "PASS",
+    "3": "PASS",
+    "4": "PASS",
+    "5": "PASS",
+    "6": "PASS",
+    "7": "PASS",
+    "8": "PASS"
+  },
+  "new_path": "Existing precursor-private-cache artifact -> new standalone workflow -> saved proof loader -> frozen 83aaf61 intake -> separate state Git ref",
+  "runtime_not_verified": "Real GitHub workflow execution/GITHUB_TOKEN state branch policy to verify after explicit main/flag approval",
+  "files_sha256": {
+    "review-leads/shadow-20261005/READY_TO_ACTIVATE.md": "4886ad1d66510b0c4c58e90c73d364f11f65da062878b40b72fdb2c4a3ac897b",
+    "review-leads/shadow-20261005/additional-regressions.xml": "b99b16dc0ccfea6699a6829fd1990739db5c871bf5d73f244e339f0f88a95a21",
+    "review-leads/shadow-20261005/baseline-hashes.json": "0fabb09f64149c2a32b2c2d0fd20e98790060ae2e5cb6e5b5b9ebd18c404679d",
+    "review-leads/shadow-20261005/tests.xml": "3771247b662a04793ccb7df6858b2640b253190b534f9c8b016a3a449a909b65",
+    "review-leads/shadow-20261005/validate.py": "d2828c10ef189f678025f13976b33754f3e0e9abf0e9c6e76cf6b1ea58d3cb24",
+    "review-leads/shadow-20261005/verification.json": "ec4a991d87dcb4b0dc1ea8cc7ee59c24ebe8bc03483eae357b99496ed692ef69"
+  },
+  "implementation_sha256": {
+    "src/bct/review_shadow.py": "0d64caf4a6666515d31a974689e9c90e0b2050cf7e764ff9fcafae2bbca5f17d",
+    ".github/scripts/persist_review_shadow.py": "a6efa014254161c411e6fd1817c9fec8edab63baab6b926ba40e88582311d733",
+    ".github/workflows/review-lead-shadow.yml": "55187d88ed0fef10e36b64865e308d9f89c9d15637d17266534d53b4d9263d23",
+    "tests/test_review_shadow.py": "2379e83342367a3a9c8d446ef0c738252a3e822351416dbba21347e7683b3b36"
+  },
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+}
