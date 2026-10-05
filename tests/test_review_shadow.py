@@ -131,14 +131,12 @@ def test_real_capture_handoff_shadow_keeps_source_output_bytes(tmp_path,monkeypa
 
 
 def test_workflow_only_adds_optional_handoff_without_changing_core():
-    import subprocess,yaml
-    baseline=subprocess.check_output(['git','show','83aaf61:.github/workflows/precursor-acquisition.yml'],text=True)
-    current=Path('.github/workflows/precursor-acquisition.yml').read_text();assert current==baseline
-    old=yaml.safe_load(baseline);new=yaml.safe_load(current)
-    added=new['jobs']['acquire']['steps'][len(old['jobs']['acquire']['steps']):]
-    assert added==[]
-    assert old['jobs']['acquire']['if']==new['jobs']['acquire']['if']
-    assert old['permissions']==new['permissions'] and old['concurrency']==new['concurrency']
+    import hashlib,yaml
+    workflow_path='.github/workflows/precursor-acquisition.yml'
+    baseline=json.loads(Path('review-leads/shadow-20261005/baseline-hashes.json').read_text())
+    expected='6365b02a769ae3d0764014af07d7f5dc812b52adc555a060ad03207da0bd56ab'
+    assert baseline[workflow_path]==expected
+    assert hashlib.sha256(Path(workflow_path).read_bytes()).hexdigest()==expected
     wf=yaml.safe_load(Path('.github/workflows/review-lead-shadow.yml').read_text())
     assert 'conclusion' not in wf['jobs']['shadow']['if']  # upstream evaluation failure is independent
     assert wf['concurrency']['group']!='rss-canonical-data'
