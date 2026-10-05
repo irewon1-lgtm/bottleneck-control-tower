@@ -1,0 +1,752 @@
+{
+  "intake_version": "BCT_REVIEW_INTAKE_1",
+  "records": [
+    {
+      "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+      "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+      "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+      "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+      "applies_from": "2026-10-05T15:24:06.650413+00:00",
+      "document_id": "d9b2fbb1-9d0a-4aee-9303-9b7690b1207d",
+      "body_sha256": "0c64404f56968687bf19adaea8b3a2ed93c47d06c5d03c9162d18ed36c6638ed",
+      "origin_id": "https://theloadstar.com/where-freight-forwarders-actually-lose-money/#article",
+      "origin_url": "https://theloadstar.com/where-freight-forwarders-actually-lose-money/",
+      "provenance_verified": true,
+      "automatic_extraction": {
+        "version": "BCT_PRECURSOR_V2_SHADOW_2",
+        "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+        "events": [],
+        "facts_verified_semantically": false
+      },
+      "semantic_review": {
+        "status": "COMPLETED",
+        "annotation_method": "AI_SOURCE_READING_STAGE1_SEMANTIC",
+        "annotator": "Codex assistant reading entire preserved body; not deterministic extraction truth or independent gold labels",
+        "annotated_at": "2026-10-05T16:31:11.531863+00:00",
+        "manual_or_ai_semantic_review": true,
+        "annotation_sha256": "dd109c2c43849170ea83d78b7c6c5da4bc60b4484f3875fc398ba92ae267c4db"
+      },
+      "final_status": "EXCLUDED",
+      "reason": "NO_FACTUAL_PRECURSOR_CHANGE",
+      "formal_TARGET_id": null,
+      "EARLY_success": false,
+      "target": "Portcast Freight Audit 홍보·의견",
+      "hypothesis": {
+        "link_assessment": "GENERIC_ONLY",
+        "affected_fact_ids": [
+          "f0"
+        ],
+        "mechanism": "업무 비용·AI 도구 홍보이며 특정 생산능력의 미래 수요/공급 변화가 아니다.",
+        "assumptions": [
+          "No target-level obligated demand/supply gap inferred; all missing allocation/need dates remain UNKNOWN."
+        ]
+      },
+      "UNKNOWN": [
+        {
+          "field": "target-specific demand and qualified availability comparison",
+          "status": "UNKNOWN",
+          "question": "구체 고객의 확정 구매·납기 또는 적격 공급 변화가 원문에 있는가?"
+        }
+      ],
+      "refutation_conditions": [
+        "Verified target-specific sufficient usable capacity at actual need date, or no identified applicable demand."
+      ],
+      "next_questions": [
+        "구체 고객의 확정 구매·납기 또는 적격 공급 변화가 원문에 있는가?"
+      ],
+      "confirmation": {
+        "document": "NO",
+        "same_TARGET": "NO",
+        "references": [],
+        "method": "AI whole preserved body reading; no same target actual shortage identified, not exhaustive T search"
+      },
+      "source_supported_scope": {
+        "product": {
+          "value": "Freight Audit",
+          "reference": {
+            "document_id": "d9b2fbb1-9d0a-4aee-9303-9b7690b1207d",
+            "body_sha256": "0c64404f56968687bf19adaea8b3a2ed93c47d06c5d03c9162d18ed36c6638ed",
+            "quote": "Freight Audit",
+            "locator": {
+              "start": 3251,
+              "end": 3264
+            }
+          }
+        }
+      },
+      "review_id": "review-aab6c512e74d4cf11c18e724",
+      "intake_version": "BCT_REVIEW_INTAKE_1",
+      "annotation_sha256": "dd109c2c43849170ea83d78b7c6c5da4bc60b4484f3875fc398ba92ae267c4db",
+      "mode": "BACKFILL",
+      "recorded_at": "2026-10-05T16:31:11.599374+00:00",
+      "source_document": {
+        "document_id": "d9b2fbb1-9d0a-4aee-9303-9b7690b1207d",
+        "body": "© Khunaspix Dreamstime.\nBy By Nidhi Gupta,founder & CEO, Portcast\n5 October 2026\nMore often than not, a forwarder closes a clean month and still watches the margins come in light. Most forwarders already know where it went: into the charges that were never recovered and the costs that were never meant to happen. A demurrage charge that was never passed on to the customer. A haulier dispatched before the container cleared, paid in full for a collection that couldn’t happen. An amendment fee on a booking that changed after cut-off. Across hundreds of shipments a month, they add up to a real hole in the year’s margin.\nCarrier invoices is one place where the leak shows most clearly. Invoices come in from various carriers in different formats, and each charge has to be checked against the agreed rate, the free time applied, and what actually happened on the shipment. Doing that properly for a single invoice is tedious, manual work. But doing that week over week across a full book of invoices, that’s where things slip, as it’s hard to catch everything every time, so charges above the contracted rate, detention counted against the wrong free time, and accessorials that were never agreed get paid. That is margin, already earned, handed straight back to carriers.\nIt is easy to blame the operator for the miss, but that’s not the right solution. One operator typically juggles 50 to 120 live shipments, each at a different stage, across ports and carriers that all follow their own rules. Take demurrage and detention (D&D), for example. Every port and carrier sets its own milestones, free time, and charges, and those sit on top of customer, standard, and FAK rates, each with different terms of when D&D starts applying. Expecting one person to apply the right rule to every container, every time, and then reconstruct the evidence weeks later to dispute a wrong invoice, isn’t practical. The current method guarantees the misses, and the forwarder pays for them.\nHere is where our industry usually reaches for its favourite answer. More data. Another dashboard. And now, more AI. I run a logistics tech company, and I will still say plainly that a dashboard an operator has no time to open is one more place to miss the ten shipments that matter while three hundred others sit there looking fine. Forwarders already have more data than they can read. What they lack is the room to act on the right risk while the window is still open. Margin is protected before the window closes. Everything after is just a record of money already gone.\nSo, the job is narrower than what most tech pitches: flag the handful of shipments where an unexpected charge is about to be incurred, whether that is demurrage building, a customs delay, port congestion that holds up haulage, or a misinterpreted contract, and put them in front of the operator early enough for them to act. Then the demurrage is passed on to the customer on time, the wrong invoice is disputed while the evidence is fresh, and the operator’s day goes back to the shipments and the customers that need judgment. At Portcast, this is the problem we have built for. Command Center surfaces the risks, the AI agents take routine tracking and reconciling off the operator’s plate, and Freight Audit checks carrier invoices against the contract and the actual shipment, so overcharges and miscalculated D&D are caught before they are paid rather than written off after. If the result doesn’t put margin back, it hasn’t earned its place on their screen. The principle holds whoever supplies the tooling: surface the risk that matters early enough to act, and stop treating visibility as the finish line when it is only the start.\nThere is a second payoff that rarely makes it to the business case. When a delay is caught early, the customer hears about it from their forwarder before they have to ask, with a plan already moving. BCOs are already benchmarking their forwarders on exactly that, and it is often the difference between an account that renews and one that goes out to tender. Margin protection, done well, is also retention.\nSo, when the planning conversation turns to growth, I’d ask a different question. How much of last year’s margin leaked through charges and errors nobody caught?\nFor most forwarders, the honest answer is uncomfortable, and it is also the easiest money they will find all year. It is already theirs. The task is to stop it from slipping.\nThis article was sponsored by Portcast.",
+        "body_sha256": "0c64404f56968687bf19adaea8b3a2ed93c47d06c5d03c9162d18ed36c6638ed",
+        "version": "0c64404f56968687bf19adaea8b3a2ed93c47d06c5d03c9162d18ed36c6638ed",
+        "origin_id": "https://theloadstar.com/where-freight-forwarders-actually-lose-money/#article",
+        "origin_url": "https://theloadstar.com/where-freight-forwarders-actually-lose-money/",
+        "origin_publisher": "The Loadstar",
+        "provenance_verified": true,
+        "published_at": "2026-10-04T23:01:16+00:00",
+        "publication_precision": "TIMESTAMP",
+        "available_at": "2026-10-05T02:31:52.954588+00:00",
+        "acquired_at": "2026-10-05T02:31:52.954588+00:00"
+      },
+      "T": "UNKNOWN",
+      "T_scope": "UNKNOWN",
+      "strict_candidate_first_met_at": "UNKNOWN",
+      "leading_detection_success": false
+    },
+    {
+      "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+      "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+      "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+      "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+      "applies_from": "2026-10-05T15:24:06.650413+00:00",
+      "document_id": "new-feed-e05299e3bf12c7171cd76d22afa8976071138d19f08afe46918775c0aef59b5d",
+      "body_sha256": "9259d857b03cdccbc47151cf7091888a2048fa353704a63e31169aaa3b06a17d",
+      "origin_id": "https://www.defensenews.com/global/mideast-africa/2026/10/04/yemeni-government-launches-offensive-to-seize-all-areas-from-iran-backed-houthis/",
+      "origin_url": "https://www.defensenews.com/global/mideast-africa/2026/10/04/yemeni-government-launches-offensive-to-seize-all-areas-from-iran-backed-houthis/",
+      "provenance_verified": true,
+      "automatic_extraction": {
+        "version": "BCT_PRECURSOR_V2_SHADOW_2",
+        "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+        "events": [],
+        "facts_verified_semantically": false
+      },
+      "semantic_review": {
+        "status": "COMPLETED",
+        "annotation_method": "AI_SOURCE_READING_STAGE1_SEMANTIC",
+        "annotator": "Codex assistant reading entire preserved body; not deterministic extraction truth or independent gold labels",
+        "annotated_at": "2026-10-05T16:31:11.531939+00:00",
+        "manual_or_ai_semantic_review": true,
+        "annotation_sha256": "84dce394f4abedd65c28b3ed73037324b43737b3c9dfa17b2fd052a3db377c1e"
+      },
+      "final_status": "EXCLUDED",
+      "reason": "NO_FACTUAL_PRECURSOR_CHANGE",
+      "formal_TARGET_id": null,
+      "EARLY_success": false,
+      "target": "Yemen 군사 캠페인 보도",
+      "hypothesis": {
+        "link_assessment": "GENERIC_ONLY",
+        "affected_fact_ids": [
+          "f0"
+        ],
+        "mechanism": "군사 작전·해운 경로 사건을 특정 모델의 수요/공급 계약으로 확대하지 않는다.",
+        "assumptions": [
+          "No target-level obligated demand/supply gap inferred; all missing allocation/need dates remain UNKNOWN."
+        ]
+      },
+      "UNKNOWN": [
+        {
+          "field": "target-specific demand and qualified availability comparison",
+          "status": "UNKNOWN",
+          "question": "특정 제품·모델·계약의 신규 수요 또는 공급 변화가 명시돼 있는가?"
+        }
+      ],
+      "refutation_conditions": [
+        "Verified target-specific sufficient usable capacity at actual need date, or no identified applicable demand."
+      ],
+      "next_questions": [
+        "특정 제품·모델·계약의 신규 수요 또는 공급 변화가 명시돼 있는가?"
+      ],
+      "confirmation": {
+        "document": "NO",
+        "same_TARGET": "NO",
+        "references": [],
+        "method": "AI whole preserved body reading; no same target actual shortage identified, not exhaustive T search"
+      },
+      "source_supported_scope": {
+        "project": {
+          "value": "Bab el-Mandeb strait",
+          "reference": {
+            "document_id": "new-feed-e05299e3bf12c7171cd76d22afa8976071138d19f08afe46918775c0aef59b5d",
+            "body_sha256": "9259d857b03cdccbc47151cf7091888a2048fa353704a63e31169aaa3b06a17d",
+            "quote": "Bab el-Mandeb strait",
+            "locator": {
+              "start": 870,
+              "end": 890
+            }
+          }
+        }
+      },
+      "review_id": "review-6c57aaac2a08c2148a1556b5",
+      "intake_version": "BCT_REVIEW_INTAKE_1",
+      "annotation_sha256": "84dce394f4abedd65c28b3ed73037324b43737b3c9dfa17b2fd052a3db377c1e",
+      "mode": "BACKFILL",
+      "recorded_at": "2026-10-05T16:31:11.624234+00:00",
+      "source_document": {
+        "document_id": "new-feed-e05299e3bf12c7171cd76d22afa8976071138d19f08afe46918775c0aef59b5d",
+        "body": "Yemen’s Saudi-backed, internationally recognized government said on Sunday it was launching a major military campaign to recapture all areas of the country controlled by the Iran-backed Houthis .\nThe government’s armed forces would press the offensive “until the country is liberated from the grip of the terrorist militia,” Yemeni President Rashad al-Alimi said in a televised address. A military spokesman later called on the Houthis to lay down their weapons.\nThe Houthis, known formally as Ansar Allah, have held Yemen’s capital Sanaa and vast parts of the northwest, where most of the population live, since 2014. They have so far withstood a series of attacks over the years by Saudi Arabia, the UAE and their Western allies, and have updated their weaponry with the help of Iran.\nThe movement launched a surprise offensive last month which captured the strategic Bab el-Mandeb strait and some 90 miles of coast on the Red Sea in a matter of weeks, giving the Houthis new leverage over the international shipping route.\nThat advance also opened a new front in the wider U.S.-Israeli war launched in February against Iran, to which Tehran’s responses included choking oil shipping through the Strait of Hormuz, to the other side of the Arabian Peninsula.\nHOUTHIS SAY THEY STRUCK SAUDI ARABIA\nAs the Yemeni government, known as the Presidential Leadership Council, made its announcement, the Houthis said they had launched ballistic missiles and drones at Saudi Aramco sites in Riyadh and the Khurais area of Saudi Arabia.\nThey claimed the attacks caused major fires and were in response to what they said were 50 Saudi-led air and missile strikes in Yemen in the past 12 hours.\nThere was no immediate confirmation from Saudi Arabia.\nAlimi said the decision to launch the counteroffensive came after all chances of de-escalating the conflict had been exhausted.\nHe thanked Saudi Arabia for its support and called on Yemen’s regional allies and international partners to support PLC forces and institutions.\nRegional and Western officials told Reuters earlier this week that Saudi Arabia and its Yemeni allies were planning to launch an assault on the Houthis, with the Saudis leading aerial combat and Yemeni forces fighting on the ground.\nNEW FRONT IN MIDEAST WAR\nThe U.S. is already providing intelligence to support Riyadh’s operations in Yemen, while some regional and European nations are providing mainly defensive military aid to the kingdom, six people with knowledge of the Saudi preparations told Reuters.\nHouthi supporters rally to celebrate advances by Houthi forces along the Red Sea coastline in Sanaa, Yemen, Sept. 18, 2026. (Adel Al Khader/Reuters)\nThe United States’ war on Iran has decimated a layer of Iranian military and political leadership, but has also entangled Washington in a new engagement in the Middle East and depleted crucial military hardware.\nYemen has been mired in conflict for years, with an array of local armed groups and factions backed by competing regional and international actors.\nAfter a popular uprising that was part of the Arab Spring movements in 2011, the Houthis, an armed group of Zaidi Shi’ite Muslims, captured Sanaa.\nThe Saudi-backed PLC, which is also recognized by the United Nations, has, since the Houthi takeover, controlled the south and east of the country, based in the former South Yemen capital of Aden.\nSaudi Arabia entered Yemen’s civil war in 2015 at the head of an Arab coalition in support of the PLC, but failed to defeat the Houthis.\nA truce agreed between the warring parties in 2022 largely held until this year, when the Houthis launched missile and drone attacks on Saudi shipping and oil infrastructure in a spillover from the Iran war.\nHOUTHIS ON FRONT FOOT\nThe Houthis have maintained the initiative on the ground since seizing control of the Bab el-Mandeb Strait in their lightning offensive last month that saw government forces collapse.\nBab el-Mandeb is the southern exit passage of the Red Sea, a key shipping route between the Mediterranean and Asia that has assumed even more importance this year as an alternative to the Strait of Hormuz.\nIn the last 48 hours, the Houthis have also made gains against government and local forces on strategic hilltops near Yemen’s Taiz, military sources said, advancing on the last road between the city and Aden on the southern coast.\nHouthi control over the Taiz-Aden road would lead to an effective siege of the city, Yemen’s third-largest, inhabited by hundreds of thousands of civilians and where thousands of government forces are also stationed.\nThe city is important not just for its strategic location; Alimi is from the region, and a siege of Taiz would amplify an already-dire humanitarian situation in the country.\nThree in four ​families in parts of Yemen are going hungry from the impact of the surge in fighting, ‌which has displaced tens of thousands of people and disrupted supplies to millions, the World Food Programme said last week.\nShare:\nMore In Mideast Africa\nTrust between operators, CCAs starts with simulations: Former Air Force secretary\nSimulations and exercises will be key to boosting trust between operators and CCAs, according to former U.S. Air Force secretary Frank Kendall.\nCelebrating 40 years of Defense News\nSince 1986, Defense News has been the authoritative voice for the world's defense decision-makers.\nGuardsman learns to fly autonomous Black Hawk in less than an hour\nIn a training first, an Army National Guardsman used a tablet to control Sikorsky's optionally piloted Black Hawk and plan its task during an exercise.\nRecap: Highlights from the US Army’s 2025 conference in Washington\nThe Army continues to transform, with efforts focused on next-gen weaponry, long-range artillery, unmanned systems and much more.\nPentagon stages first ‘Top Drone’ school for operators to hone skills\nIndustry and military drone operators flew tethered and untethered first-person drones through a course designed to test endurance and maneuverability.",
+        "body_sha256": "9259d857b03cdccbc47151cf7091888a2048fa353704a63e31169aaa3b06a17d",
+        "version": "9259d857b03cdccbc47151cf7091888a2048fa353704a63e31169aaa3b06a17d",
+        "origin_id": "https://www.defensenews.com/global/mideast-africa/2026/10/04/yemeni-government-launches-offensive-to-seize-all-areas-from-iran-backed-houthis/",
+        "origin_url": "https://www.defensenews.com/global/mideast-africa/2026/10/04/yemeni-government-launches-offensive-to-seize-all-areas-from-iran-backed-houthis/",
+        "origin_publisher": "Defense News",
+        "provenance_verified": true,
+        "published_at": "2026-10-04T19:50:12.528000+00:00",
+        "publication_precision": "TIMESTAMP",
+        "available_at": "2026-10-05T02:01:46.509684+00:00",
+        "acquired_at": "2026-10-05T02:01:46.509684+00:00"
+      },
+      "T": "UNKNOWN",
+      "T_scope": "UNKNOWN",
+      "strict_candidate_first_met_at": "UNKNOWN",
+      "leading_detection_success": false
+    },
+    {
+      "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+      "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+      "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+      "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+      "applies_from": "2026-10-05T15:24:06.650413+00:00",
+      "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+      "body_sha256": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+      "origin_id": "https://www.freightwaves.com/news/dockworkers-protest-at-port-of-vancouver-over-automation-ai",
+      "origin_url": "https://www.freightwaves.com/news/dockworkers-protest-at-port-of-vancouver-over-automation-ai",
+      "provenance_verified": true,
+      "automatic_extraction": {
+        "version": "BCT_PRECURSOR_V2_SHADOW_2",
+        "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+        "events": [
+          {
+            "event_id": "5d015fe39b16b4b0044db4fea99cb7aa8e80e0e53310e4318e13d582ea3b062a",
+            "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+            "role": "SUPPLY",
+            "kind": "READINESS_OR_QUANTITY",
+            "reference": {
+              "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+              "body_sha256": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+              "locator": {
+                "start": 2937,
+                "end": 3179
+              },
+              "quote": "In a major modernization program, DP World says the completed Centerm expansion lifted annual container-handling capacity from 900,000 to 1.5 million TEUs, while adding rail capacity, electrifying equipment and supporting larger vessel calls."
+            },
+            "fields": {},
+            "context_references": [
+              {
+                "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+                "body_sha256": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+                "locator": {
+                  "start": 2937,
+                  "end": 3179
+                },
+                "quote": "In a major modernization program, DP World says the completed Centerm expansion lifted annual container-handling capacity from 900,000 to 1.5 million TEUs, while adding rail capacity, electrifying equipment and supporting larger vessel calls."
+              }
+            ],
+            "direct_origin": true,
+            "facts": {},
+            "period": null
+          },
+          {
+            "event_id": "b990f5a0fb3cd3f81e99d8f9a5b7e24a289b890d5d9b6b9c81cf94d43b695f49",
+            "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+            "role": "SUPPLY",
+            "kind": "READINESS_OR_QUANTITY",
+            "reference": {
+              "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+              "body_sha256": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+              "locator": {
+                "start": 4122,
+                "end": 4298
+              },
+              "quote": "The union’s broader concern is that terminal technology can alter staffing, dispatching and job classifications even where it raises capacity or improves equipment performance."
+            },
+            "fields": {},
+            "context_references": [
+              {
+                "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+                "body_sha256": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+                "locator": {
+                  "start": 4122,
+                  "end": 4298
+                },
+                "quote": "The union’s broader concern is that terminal technology can alter staffing, dispatching and job classifications even where it raises capacity or improves equipment performance."
+              }
+            ],
+            "direct_origin": true,
+            "facts": {},
+            "period": null
+          },
+          {
+            "event_id": "21668470615ec7e8a1a7d5702f55c6fa8434ae1295b7cdabd0eaeb93b5393b9f",
+            "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+            "role": "SUPPLY",
+            "kind": "READINESS_OR_QUANTITY",
+            "reference": {
+              "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+              "body_sha256": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+              "locator": {
+                "start": 4581,
+                "end": 4742
+              },
+              "quote": "Maritime Employers Association have portrayed the Centerm upgrade as evidence that terminal modernization can grow both cargo capacity and waterfront employment."
+            },
+            "fields": {},
+            "context_references": [
+              {
+                "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+                "body_sha256": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+                "locator": {
+                  "start": 4581,
+                  "end": 4742
+                },
+                "quote": "Maritime Employers Association have portrayed the Centerm upgrade as evidence that terminal modernization can grow both cargo capacity and waterfront employment."
+              }
+            ],
+            "direct_origin": true,
+            "facts": {},
+            "period": null
+          },
+          {
+            "event_id": "e30d7ec2d95e6c78b2f4c7fa1e28137c71d27b7a58416a5a4a90a6e9fc4af40d",
+            "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+            "role": "SUPPLY",
+            "kind": "READINESS_OR_QUANTITY",
+            "reference": {
+              "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+              "body_sha256": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+              "locator": {
+                "start": 4743,
+                "end": 4953
+              },
+              "quote": "A KPMG report released Oct. 1 for the BCMEA said Centerm’s capacity increased 65%, to 1.5 million TEUs, from 900,000 TEUs, while waterfront payroll hours rose 59%, from 835,000 in 2019 to 1.328 million in 2025."
+            },
+            "fields": {},
+            "context_references": [
+              {
+                "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+                "body_sha256": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+                "locator": {
+                  "start": 4743,
+                  "end": 4953
+                },
+                "quote": "A KPMG report released Oct. 1 for the BCMEA said Centerm’s capacity increased 65%, to 1.5 million TEUs, from 900,000 TEUs, while waterfront payroll hours rose 59%, from 835,000 in 2019 to 1.328 million in 2025."
+              }
+            ],
+            "direct_origin": true,
+            "facts": {
+              "quantity": {
+                "value": 900000.0,
+                "reference": {
+                  "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+                  "body_sha256": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+                  "locator": {
+                    "start": 4852,
+                    "end": 4864
+                  },
+                  "quote": "900,000 TEUs"
+                }
+              },
+              "unit": {
+                "value": "teus",
+                "reference": {
+                  "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+                  "body_sha256": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+                  "locator": {
+                    "start": 4852,
+                    "end": 4864
+                  },
+                  "quote": "900,000 TEUs"
+                }
+              }
+            },
+            "period": null
+          }
+        ],
+        "facts_verified_semantically": false
+      },
+      "semantic_review": {
+        "status": "COMPLETED",
+        "annotation_method": "AI_SOURCE_READING_STAGE1_SEMANTIC",
+        "annotator": "Codex assistant reading entire preserved body; not deterministic extraction truth or independent gold labels",
+        "annotated_at": "2026-10-05T16:31:11.532024+00:00",
+        "manual_or_ai_semantic_review": true,
+        "annotation_sha256": "6f8267902362fd2495fbd76703fb9ca2dda481451ef7ddf7bd5ef139e4ea4c64"
+      },
+      "final_status": "HOLD",
+      "reason": "SCOPE_RELATION_UNKNOWN",
+      "formal_TARGET_id": null,
+      "EARLY_success": false,
+      "target": "Vancouver Centerm 노동·자동화/수요 연결 검토",
+      "hypothesis": {
+        "link_assessment": "GENERIC_ONLY",
+        "affected_fact_ids": [
+          "f0",
+          "f1",
+          "f2"
+        ],
+        "mechanism": "BC 계약 만료와 수입 경로 변화는 확인되지만 Vancouver/Prince Rupert 물량을 Centerm 수요로 배정할 근거가 없어 조사 가설 연결은 HOLD.",
+        "assumptions": [
+          "No target-level obligated demand/supply gap inferred; all missing allocation/need dates remain UNKNOWN."
+        ]
+      },
+      "UNKNOWN": [
+        {
+          "field": "target-specific demand and qualified availability comparison",
+          "status": "UNKNOWN",
+          "question": "Centerm에 실제 배정되는 diverted cargo와 2027 계약 협상에 따른 운영변화가 확인되는가?"
+        }
+      ],
+      "refutation_conditions": [
+        "Verified target-specific sufficient usable capacity at actual need date, or no identified applicable demand."
+      ],
+      "next_questions": [
+        "Centerm에 실제 배정되는 diverted cargo와 2027 계약 협상에 따른 운영변화가 확인되는가?"
+      ],
+      "confirmation": {
+        "document": "NO",
+        "same_TARGET": "NO",
+        "references": [],
+        "method": "AI whole preserved body reading; no same target actual shortage identified, not exhaustive T search"
+      },
+      "source_supported_scope": {
+        "facility": {
+          "value": "Centerm",
+          "reference": {
+            "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+            "body_sha256": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+            "quote": "Centerm",
+            "locator": {
+              "start": 122,
+              "end": 129
+            }
+          }
+        },
+        "region": {
+          "value": "Vancouver",
+          "reference": {
+            "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+            "body_sha256": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+            "quote": "Vancouver",
+            "locator": {
+              "start": 164,
+              "end": 173
+            }
+          }
+        }
+      },
+      "review_id": "review-64596d75fd282105b9fa4280",
+      "intake_version": "BCT_REVIEW_INTAKE_1",
+      "annotation_sha256": "6f8267902362fd2495fbd76703fb9ca2dda481451ef7ddf7bd5ef139e4ea4c64",
+      "mode": "BACKFILL",
+      "recorded_at": "2026-10-05T16:31:11.686819+00:00",
+      "source_document": {
+        "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+        "body": "About 100 dockworker union delegates from Canada, the United States, Australia and New Zealand rallied outside DP World’s Centerm container terminal at the Port of Vancouver last week, launching an international campaign against what they describe as job-threatening automation and artificial intelligence at ports.\nThe protest followed the International Dockworkers Anti-Automation Summit, held at Vancouver’s Maritime Labour Centre in late September. Delegates marched to the DP World terminal Sept. 23 after adopting a shared position that accepts technology intended to improve safety and port communities but rejects its use to cut jobs, outsource work, expand surveillance, undermine unions or erode safety standards.\nThe current British Columbia longshore agreement is set to expire in March 2027, and the question of how automation affects jobs, work rules and bargaining rights is expected to be a prominent issue.\nTom Doran, president of International Longshore and Warehouse Union Canada, said the participating unions had organized around what he characterized as a common threat from employers introducing automation and AI. He singled out Dubai-based DP World, whose operations include the Centerm terminal in Vancouver, as a company at the center of longshore labor’s concerns.\n“Dock workers are united and determined to hold the line on destructive automation in our ports, no matter where those ports are,” Doran said in the union’s announcement.\nDP World is also backing a major container project at the Port of Montreal, as well as expansion at Port Saint John on Canada’s east coast.\nA global labor campaign\nThe summit brought together representatives from ILWU Canada and the U.S.-based International Longshore and Warehouse Union; the International Longshoremen’s Association in Canada and the U.S.; the Maritime Union of Australia; the Maritime Union of New Zealand; New Zealand’s Rail and Maritime Transport Union; Montreal’s CUPE Local 375; the International Transport Workers’ Federation; and the International Dockworkers Council.\nThe group’s joint campaign calls for technological changes to be negotiated before implementation. Its principles oppose:\nAutomation used as a union-busting tool\nNew technology introduced without a “social dividend” for workers\nTechnology-driven job cuts or reductions in wages and benefits\nAutomation that reduces safety protections or replaces secure waterfront work without negotiated safeguards\nDennis Daggett, president of the ILA Atlantic Coast District and general coordinator of the International Dockworkers Council, said waterfront job losses extend beyond terminals, affecting businesses and communities supported by port workers’ incomes.\nVancouver’s Centerm dispute\nThe rally focused attention on DP World’s Centerm facility, one of the Port of Vancouver’s major container gateways and a critical link between Asian trade lanes and Canadian and U.S. inland markets.\nIn a major modernization program, DP World says the completed Centerm expansion lifted annual container-handling capacity from 900,000 to 1.5 million TEUs, while adding rail capacity, electrifying equipment and supporting larger vessel calls. The terminal includes two berths, 15,000 feet of on-dock rail, 19 rubber-tired gantry cranes and five electrically powered semi-autonomous rail-mounted gantry cranes.\nThe Trump administration’s tariff and trade policies have fueled a shift of containerized import traffic away from U.S. West Coast hubs and through Vancouver and the port of Prince Rupert, also in British Columbia, for entry into the American market via intermodal rail.\nThe modernization upgrades have made Centerm an important symbol in the automation debate.\nIn 2024, ILWU Local 514, representing ship and dock forepersons, accused DP World of planning to introduce automation at Centerm’s rail intermodal yard without first bargaining over the technological change. The dispute was among the factors behind a strike notice directed at DP World before the Canada Industrial Relations Board ruled that the union’s strike vote was unlawful and ordered the notice withdrawn.\nThe union’s broader concern is that terminal technology can alter staffing, dispatching and job classifications even where it raises capacity or improves equipment performance. Employers, meanwhile, have argued that investments in digital systems, automated gates, rail operations and remote equipment can increase throughput, improve safety and preserve the competitiveness of Canada’s Pacific gateway.\nCompeting views of modernization\nDP World and the B.C. Maritime Employers Association have portrayed the Centerm upgrade as evidence that terminal modernization can grow both cargo capacity and waterfront employment. A KPMG report released Oct. 1 for the BCMEA said Centerm’s capacity increased 65%, to 1.5 million TEUs, from 900,000 TEUs, while waterfront payroll hours rose 59%, from 835,000 in 2019 to 1.328 million in 2025. The report attributed the gains to combined investment in terminal infrastructure, technology, process improvements and workforce skills.\nThe unions point out that their positions aren’t a wholesale rejection of technology. Delegates said the benefits of automation must be shared with workers and communities, and any operational changes must be subject to meaningful collective bargaining.\nRead more articles by Stuart Chirls here .\nRead more:\nSavannah port project passes 60% complete mark\nNew California law clouds Trump-backed Oakland coal export terminal project\nPort of Oakland August volumes fall year over year as exports edge up from July\nOcean rates highest in a year amid US-China trade truce\nONE restructures in key ocean region\nUpcoming FreightWaves Events\nCompliance\nBrokerage Compliance Symposium\nThe day before F3. Every compliance issue you face - fraud exposure, carrier liability, FMCSA rules, cargo theft, insurance gaps - navigated by attorneys and operators defining best practices in a changing industry.\nOctober 26, 2026\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN\nRegister Now\nAwards\nF3 Awards Dinner\nThe night before F3. FreightTech100 companies honored. FreightTech 25 and Shipper of Choice winners revealed live. Cocktail reception into dinner and live music - 300 industry leaders in one purpose-built room.\nOctober 26, 2026\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN\nRegister Now\nFreightTech\nF3: Future of Freight Festival\nIndustry-defining keynotes, rapid-fire technology demos, and industry leaders networking in experiences across Chattanooga - plus the inaugural F3 Awards Dinner featuring the FreightTech and Shipper of Choice reveals.\nOctober 27, 2026 – October 28, 2026\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN\nRegister Now\nCompliance Brokerage Compliance Symposium Oct 26 • The Signal at Chattanooga Choo Choo • Chattanooga, TN\nThe day before F3. Every compliance issue you face - fraud exposure, carrier liability, FMCSA rules, cargo theft, insurance gaps - navigated by attorneys and operators defining best practices in a changing industry.\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN Register Now\nAwards F3 Awards Dinner Oct 26 • The Signal at Chattanooga Choo Choo • Chattanooga, TN\nThe night before F3. FreightTech100 companies honored. FreightTech 25 and Shipper of Choice winners revealed live. Cocktail reception into dinner and live music - 300 industry leaders in one purpose-built room.\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN Register Now\nFreightTech F3: Future of Freight Festival Oct 27 – Oct 28 • The Signal at Chattanooga Choo Choo • Chattanooga, TN\nIndustry-defining keynotes, rapid-fire technology demos, and industry leaders networking in experiences across Chattanooga - plus the inaugural F3 Awards Dinner featuring the FreightTech and Shipper of Choice reveals.\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN Register Now",
+        "body_sha256": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+        "version": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+        "origin_id": "https://www.freightwaves.com/news/dockworkers-protest-at-port-of-vancouver-over-automation-ai",
+        "origin_url": "https://www.freightwaves.com/news/dockworkers-protest-at-port-of-vancouver-over-automation-ai",
+        "origin_publisher": "FreightWaves",
+        "provenance_verified": true,
+        "published_at": "2026-10-02T12:00:00+00:00",
+        "publication_precision": "TIMESTAMP",
+        "available_at": "2026-10-05T03:02:22.627905+00:00",
+        "acquired_at": "2026-10-05T03:02:22.627905+00:00"
+      },
+      "T": "UNKNOWN",
+      "T_scope": "UNKNOWN",
+      "strict_candidate_first_met_at": "UNKNOWN",
+      "leading_detection_success": false
+    },
+    {
+      "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+      "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+      "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+      "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+      "applies_from": "2026-10-05T15:24:06.650413+00:00",
+      "document_id": "c2198ed962fd169a808734ab5344152756cd6d103aed1b8951afe27dc8f91f56",
+      "body_sha256": "1b38bedac86252274c3bc3e1684bbd49d3e1798a30ca87f60e216c21cc2e9bf5",
+      "origin_id": "https://www.freightwaves.com/news/cbp-finds-6m-in-cocaine-hidden-under-floor-of-empty-semi-trailer-bound-for-canada",
+      "origin_url": "https://www.freightwaves.com/news/cbp-finds-6m-in-cocaine-hidden-under-floor-of-empty-semi-trailer-bound-for-canada",
+      "provenance_verified": true,
+      "automatic_extraction": {
+        "version": "BCT_PRECURSOR_V2_SHADOW_2",
+        "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+        "events": [],
+        "facts_verified_semantically": false
+      },
+      "semantic_review": {
+        "status": "COMPLETED",
+        "annotation_method": "AI_SOURCE_READING_STAGE1_SEMANTIC",
+        "annotator": "Codex assistant reading entire preserved body; not deterministic extraction truth or independent gold labels",
+        "annotated_at": "2026-10-05T16:31:11.532058+00:00",
+        "manual_or_ai_semantic_review": true,
+        "annotation_sha256": "bdfaa077d2e6748f8dbe2f106a41907ef6d02e0ed023126f598d7a52dde82c32"
+      },
+      "final_status": "EXCLUDED",
+      "reason": "NO_FACTUAL_PRECURSOR_CHANGE",
+      "formal_TARGET_id": null,
+      "EARLY_success": false,
+      "target": "Lewiston Bridge 적발 사건",
+      "hypothesis": {
+        "link_assessment": "GENERIC_ONLY",
+        "affected_fact_ids": [
+          "f0"
+        ],
+        "mechanism": "단일 불법 화물 적발 사건을 미래 적격 공급공백의 신호로 취급하지 않는다.",
+        "assumptions": [
+          "No target-level obligated demand/supply gap inferred; all missing allocation/need dates remain UNKNOWN."
+        ]
+      },
+      "UNKNOWN": [
+        {
+          "field": "target-specific demand and qualified availability comparison",
+          "status": "UNKNOWN",
+          "question": "합법적 특정 제품의 미래 수요·적격 공급능력 변화가 명시돼 있는가?"
+        }
+      ],
+      "refutation_conditions": [
+        "Verified target-specific sufficient usable capacity at actual need date, or no identified applicable demand."
+      ],
+      "next_questions": [
+        "합법적 특정 제품의 미래 수요·적격 공급능력 변화가 명시돼 있는가?"
+      ],
+      "confirmation": {
+        "document": "NO",
+        "same_TARGET": "NO",
+        "references": [],
+        "method": "AI whole preserved body reading; no same target actual shortage identified, not exhaustive T search"
+      },
+      "source_supported_scope": {
+        "facility": {
+          "value": "Lewiston Bridge",
+          "reference": {
+            "document_id": "c2198ed962fd169a808734ab5344152756cd6d103aed1b8951afe27dc8f91f56",
+            "body_sha256": "1b38bedac86252274c3bc3e1684bbd49d3e1798a30ca87f60e216c21cc2e9bf5",
+            "quote": "Lewiston Bridge",
+            "locator": {
+              "start": 188,
+              "end": 203
+            }
+          }
+        }
+      },
+      "review_id": "review-2343cdfaf822d30b2c75467b",
+      "intake_version": "BCT_REVIEW_INTAKE_1",
+      "annotation_sha256": "bdfaa077d2e6748f8dbe2f106a41907ef6d02e0ed023126f598d7a52dde82c32",
+      "mode": "BACKFILL",
+      "recorded_at": "2026-10-05T16:31:11.740338+00:00",
+      "source_document": {
+        "document_id": "c2198ed962fd169a808734ab5344152756cd6d103aed1b8951afe27dc8f91f56",
+        "body": "An empty semi-trailer headed toward Canada concealed approximately 450 pounds of cocaine beneath its floor. U.S. Customs and Border Protection officers discovered the shipment Sept. 22 at Lewiston Bridge in New York. The narcotics carried an estimated street value of about $6 million. Investigators ultimately uncovered 174 vacuum-sealed packages inside the modified structure.\nThe encounter began in an outbound lane at the Port of Buffalo crossing. A 21-year-old Canadian man drove the commercial truck and trailer toward the border. Officers conducted an initial physical inspection and noticed modifications to the floor. A CBP canine searched the vacant equipment and alerted to narcotics.\nAuthorities then escorted the vehicle to secondary inspection for additional examination. Officers used nonintrusive technology to look further into the equipment. That screening revealed anomalies within the floor. A follow-up search exposed the concealed packages.\nCBP officers uncovered packages of cocaine concealed beneath the modified floor of an empty commercial trailer at New York’s Lewiston Bridge. (Photo: U.S. Customs and Border Protection)\n174 packages found beneath trailer floor\nInvestigators tested the suspected substance after removing the vacuum-sealed bundles. Field testing returned a positive result for cocaine. CBP placed the approximate combined weight at 450 pounds. The agency valued the narcotics at roughly $6 million on the street.\nCBP referred the matter to Homeland Security Investigations Buffalo for investigational review. The Sept. 29 announcement did not identify the driver by name. Officials provided no additional information about the equipment’s ownership. The release also offered no further details about the shipment’s origin.\nSharon Swiatek, acting port director for the Area Port of Buffalo, credited personnel involved with the discovery. “This significant seizure highlights the exceptional vigilance, advanced training and relentless dedication of our CBP officers and canine teams,” Swiatek said. She specifically referenced personnel working at the Lewiston Bridge border crossing. Her statement also highlighted the agency’s outbound enforcement mission.\nCBP highlights outbound inspections\n“While a large focus of our border security mission is on inbound threats,” Swiatek said. She added that personnel “remain equally sharp during outbound operations.” Those efforts target transborder criminal networks and disrupt narcotics movement, according to her statement. Swiatek also referenced protecting communities on both sides of the border.\nCBP screens international travelers and cargo moving through U.S. ports of entry. Those operations cover inbound and outbound traffic. Personnel search for narcotics, unreported currency, weapons and counterfeit consumer goods. Their mission also covers prohibited agriculture, invasive pests and other illicit products.\nThe Lewiston discovery was not the first recent case involving contraband concealed beneath commercial equipment. In August, CBP officers in California found more than $20 million in cocaine beneath a trailer’s floorboards. That seizure involved 1,002 pounds discovered during an inspection at the Otay Mesa Port of Entry. Authorities uncovered the narcotics after screening revealed anomalies within the structure.\nWhy it matters\nAn empty trailer gave officers no visible cargo to inspect, but the equipment itself concealed 450 pounds of cocaine. The seizure shows why commercial vehicle inspections must look beyond what appears on the trailer floor.\nClick here for more articles on cargo theft and freight fraud by Phil Brink.\nThieves clone $60K shipment, redirect 41,000 pounds of glycerin in Illinois – FreightWaves\nLA jury convicts 2 in $2M nationwide cargo theft ring using purchased trucking companies – FreightWaves\nThieves steal PlusAI trailers with NVIDIA branding, get 40,000 pounds of sand instead – FreightWaves\nUpcoming FreightWaves Events\nCompliance\nBrokerage Compliance Symposium\nThe day before F3. Every compliance issue you face - fraud exposure, carrier liability, FMCSA rules, cargo theft, insurance gaps - navigated by attorneys and operators defining best practices in a changing industry.\nOctober 26, 2026\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN\nRegister Now\nAwards\nF3 Awards Dinner\nThe night before F3. FreightTech100 companies honored. FreightTech 25 and Shipper of Choice winners revealed live. Cocktail reception into dinner and live music - 300 industry leaders in one purpose-built room.\nOctober 26, 2026\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN\nRegister Now\nFreightTech\nF3: Future of Freight Festival\nIndustry-defining keynotes, rapid-fire technology demos, and industry leaders networking in experiences across Chattanooga - plus the inaugural F3 Awards Dinner featuring the FreightTech and Shipper of Choice reveals.\nOctober 27, 2026 – October 28, 2026\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN\nRegister Now\nCompliance Brokerage Compliance Symposium Oct 26 • The Signal at Chattanooga Choo Choo • Chattanooga, TN\nThe day before F3. Every compliance issue you face - fraud exposure, carrier liability, FMCSA rules, cargo theft, insurance gaps - navigated by attorneys and operators defining best practices in a changing industry.\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN Register Now\nAwards F3 Awards Dinner Oct 26 • The Signal at Chattanooga Choo Choo • Chattanooga, TN\nThe night before F3. FreightTech100 companies honored. FreightTech 25 and Shipper of Choice winners revealed live. Cocktail reception into dinner and live music - 300 industry leaders in one purpose-built room.\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN Register Now\nFreightTech F3: Future of Freight Festival Oct 27 – Oct 28 • The Signal at Chattanooga Choo Choo • Chattanooga, TN\nIndustry-defining keynotes, rapid-fire technology demos, and industry leaders networking in experiences across Chattanooga - plus the inaugural F3 Awards Dinner featuring the FreightTech and Shipper of Choice reveals.\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN Register Now",
+        "body_sha256": "1b38bedac86252274c3bc3e1684bbd49d3e1798a30ca87f60e216c21cc2e9bf5",
+        "version": "1b38bedac86252274c3bc3e1684bbd49d3e1798a30ca87f60e216c21cc2e9bf5",
+        "origin_id": "https://www.freightwaves.com/news/cbp-finds-6m-in-cocaine-hidden-under-floor-of-empty-semi-trailer-bound-for-canada",
+        "origin_url": "https://www.freightwaves.com/news/cbp-finds-6m-in-cocaine-hidden-under-floor-of-empty-semi-trailer-bound-for-canada",
+        "origin_publisher": "FreightWaves",
+        "provenance_verified": true,
+        "published_at": "2026-10-02T11:26:52+00:00",
+        "publication_precision": "TIMESTAMP",
+        "available_at": "2026-10-05T03:02:22.734442+00:00",
+        "acquired_at": "2026-10-05T03:02:22.734442+00:00"
+      },
+      "T": "UNKNOWN",
+      "T_scope": "UNKNOWN",
+      "strict_candidate_first_met_at": "UNKNOWN",
+      "leading_detection_success": false
+    },
+    {
+      "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+      "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+      "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+      "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+      "applies_from": "2026-10-05T15:24:06.650413+00:00",
+      "document_id": "7e9f94980861bc9ce1919ff9ab4acd82526b6fd13a79f74834b21806251a2588",
+      "body_sha256": "802d3445ecb9483875110b6a684eabf6f9ac93f27bf3b64d77173b2384a745db",
+      "origin_id": "https://www.freightwaves.com/news/savannah-port-project-passes-60-complete-mark",
+      "origin_url": "https://www.freightwaves.com/news/savannah-port-project-passes-60-complete-mark",
+      "provenance_verified": true,
+      "automatic_extraction": {
+        "version": "BCT_PRECURSOR_V2_SHADOW_2",
+        "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+        "events": [
+          {
+            "event_id": "17f469bae1f5387d5a8b638348ce4080f142d2b85d1432915d732b47f25c010c",
+            "document_id": "7e9f94980861bc9ce1919ff9ab4acd82526b6fd13a79f74834b21806251a2588",
+            "role": "SUPPLY",
+            "kind": "READINESS_OR_QUANTITY",
+            "reference": {
+              "document_id": "7e9f94980861bc9ce1919ff9ab4acd82526b6fd13a79f74834b21806251a2588",
+              "body_sha256": "802d3445ecb9483875110b6a684eabf6f9ac93f27bf3b64d77173b2384a745db",
+              "locator": {
+                "start": 196,
+                "end": 429
+              },
+              "quote": "The project will expand Ocean Terminal’s annual capacity from 200,000 twenty-foot equivalent units to 1.75 million TEUs, forming a central component of Georgia Ports’ strategy to add capacity in Savannah ahead of future cargo growth."
+            },
+            "fields": {},
+            "context_references": [
+              {
+                "document_id": "7e9f94980861bc9ce1919ff9ab4acd82526b6fd13a79f74834b21806251a2588",
+                "body_sha256": "802d3445ecb9483875110b6a684eabf6f9ac93f27bf3b64d77173b2384a745db",
+                "locator": {
+                  "start": 196,
+                  "end": 429
+                },
+                "quote": "The project will expand Ocean Terminal’s annual capacity from 200,000 twenty-foot equivalent units to 1.75 million TEUs, forming a central component of Georgia Ports’ strategy to add capacity in Savannah ahead of future cargo growth."
+              }
+            ],
+            "direct_origin": true,
+            "facts": {},
+            "period": null
+          },
+          {
+            "event_id": "fa8e8f60fce74b9bad9985a117ad8b6e145a862fb9dd5fcee2274e45583c90a2",
+            "document_id": "7e9f94980861bc9ce1919ff9ab4acd82526b6fd13a79f74834b21806251a2588",
+            "role": "SUPPLY",
+            "kind": "READINESS_OR_QUANTITY",
+            "reference": {
+              "document_id": "7e9f94980861bc9ce1919ff9ab4acd82526b6fd13a79f74834b21806251a2588",
+              "body_sha256": "802d3445ecb9483875110b6a684eabf6f9ac93f27bf3b64d77173b2384a745db",
+              "locator": {
+                "start": 1300,
+                "end": 1327
+              },
+              "quote": "Part of wider capacity plan"
+            },
+            "fields": {},
+            "context_references": [
+              {
+                "document_id": "7e9f94980861bc9ce1919ff9ab4acd82526b6fd13a79f74834b21806251a2588",
+                "body_sha256": "802d3445ecb9483875110b6a684eabf6f9ac93f27bf3b64d77173b2384a745db",
+                "locator": {
+                  "start": 1300,
+                  "end": 1327
+                },
+                "quote": "Part of wider capacity plan"
+              }
+            ],
+            "direct_origin": true,
+            "facts": {},
+            "period": null
+          },
+          {
+            "event_id": "e9f4b5787c4acfa9be5ec224174b1595b24cbe1faae8d08bbfe1cc55b59b5a81",
+            "document_id": "7e9f94980861bc9ce1919ff9ab4acd82526b6fd13a79f74834b21806251a2588",
+            "role": "SUPPLY",
+            "kind": "READINESS_OR_QUANTITY",
+            "reference": {
+              "document_id": "7e9f94980861bc9ce1919ff9ab4acd82526b6fd13a79f74834b21806251a2588",
+              "body_sha256": "802d3445ecb9483875110b6a684eabf6f9ac93f27bf3b64d77173b2384a745db",
+              "locator": {
+                "start": 1328,
+                "end": 1473
+              },
+              "quote": "The Ocean Terminal redevelopment is included in GPA’s 10-year port master plan, which calls for approximately $5 billion in capacity investments."
+            },
+            "fields": {},
+            "context_references": [
+              {
+                "document_id": "7e9f94980861bc9ce1919ff9ab4acd82526b6fd13a79f74834b21806251a2588",
+                "body_sha256": "802d3445ecb9483875110b6a684eabf6f9ac93f27bf3b64d77173b2384a745db",
+                "locator": {
+                  "start": 1328,
+                  "end": 1473
+                },
+                "quote": "The Ocean Terminal redevelopment is included in GPA’s 10-year port master plan, which calls for approximately $5 billion in capacity investments."
+              }
+            ],
+            "direct_origin": true,
+            "facts": {},
+            "period": null
+          }
+        ],
+        "facts_verified_semantically": false
+      },
+      "semantic_review": {
+        "status": "COMPLETED",
+        "annotation_method": "AI_SOURCE_READING_STAGE1_SEMANTIC",
+        "annotator": "Codex assistant reading entire preserved body; not deterministic extraction truth or independent gold labels",
+        "annotated_at": "2026-10-05T16:31:11.532088+00:00",
+        "manual_or_ai_semantic_review": true,
+        "annotation_sha256": "e574ad93316d4e025748a8776c38a1c176c441cbfe3598d81b36413da56e5a2d"
+      },
+      "final_status": "HOLD",
+      "reason": "TARGET_SPECIFIC_RESEARCH_LINK_INSUFFICIENT",
+      "formal_TARGET_id": null,
+      "EARLY_success": false,
+      "target": "Savannah Ocean Terminal 단계적 증설",
+      "hypothesis": {
+        "link_assessment": "GENERIC_ONLY",
+        "affected_fact_ids": [
+          "f0",
+          "f1"
+        ],
+        "mechanism": "구체 시설·단계적 증설은 있지만 미래 cargo growth만으로 해당 시설의 구속된 필요물량/시점을 확인할 수 없어 HOLD.",
+        "assumptions": [
+          "No target-level obligated demand/supply gap inferred; all missing allocation/need dates remain UNKNOWN."
+        ]
+      },
+      "UNKNOWN": [
+        {
+          "field": "target-specific demand and qualified availability comparison",
+          "status": "UNKNOWN",
+          "question": "새 berth에 대응하는 확정 대형선박 처리 수요가 yard 준비보다 먼저 발생하는가?"
+        }
+      ],
+      "refutation_conditions": [
+        "Verified target-specific sufficient usable capacity at actual need date, or no identified applicable demand."
+      ],
+      "next_questions": [
+        "새 berth에 대응하는 확정 대형선박 처리 수요가 yard 준비보다 먼저 발생하는가?"
+      ],
+      "confirmation": {
+        "document": "NO",
+        "same_TARGET": "NO",
+        "references": [],
+        "method": "AI whole preserved body reading; no same target actual shortage identified, not exhaustive T search"
+      },
+      "source_supported_scope": {
+        "facility": {
+          "value": "Ocean Terminal",
+          "reference": {
+            "document_id": "7e9f94980861bc9ce1919ff9ab4acd82526b6fd13a79f74834b21806251a2588",
+            "body_sha256": "802d3445ecb9483875110b6a684eabf6f9ac93f27bf3b64d77173b2384a745db",
+            "quote": "Ocean Terminal",
+            "locator": {
+              "start": 56,
+              "end": 70
+            }
+          }
+        }
+      },
+      "review_id": "review-6ef50a196929f851bfb1eddc",
+      "intake_version": "BCT_REVIEW_INTAKE_1",
+      "annotation_sha256": "e574ad93316d4e025748a8776c38a1c176c441cbfe3598d81b36413da56e5a2d",
+      "mode": "BACKFILL",
+      "recorded_at": "2026-10-05T16:31:11.794406+00:00",
+      "source_document": {
+        "document_id": "7e9f94980861bc9ce1919ff9ab4acd82526b6fd13a79f74834b21806251a2588",
+        "body": "Georgia Ports Authority’s $1.6 billion redevelopment of Ocean Terminal has surpassed the 60% completion mark, with a 2,650-foot berth now finished and capable of handling large container vessels.\nThe project will expand Ocean Terminal’s annual capacity from 200,000 twenty-foot equivalent units to 1.75 million TEUs, forming a central component of Georgia Ports’ strategy to add capacity in Savannah ahead of future cargo growth.\nThe authority plans to keep working smaller vessels at the terminal until the first phase of its container-yard redevelopment is completed in mid-fall 2027. Full completion of the yard is scheduled for the end of 2028.\nBerth and gate upgrades advance\n“The renovated berth is fully completed and ready for big ships,” GPA Chief Executive Griff Lynch said at the authority’s board meeting Tuesday.\nThe terminal’s truck gate is fully operational and ultimately will include 12 inbound lanes and six outbound lanes. GPA also funded a $29 million overpass that sends departing trucks directly to U.S. 17 and Interstate 16, avoiding neighborhood streets near the terminal.\nAlec Poitevint, chairman of the GPA board, said transforming the 200-acre terminal while continuing port operations represented a major undertaking for the authority, its contractors and other partners.\nPart of wider capacity plan\nThe Ocean Terminal redevelopment is included in GPA’s 10-year port master plan, which calls for approximately $5 billion in capacity investments. The authority plans to add five container berths in Savannah and one roll-on/roll-off berth in Brunswick under the plan.\nThe investment comes as Savannah recorded volume of 529,523 TEUs in August. Loaded exports totaled 117,242 TEUs, an increase of about 4.2% from a year earlier, while import loads rose 1.5% to 265,859 TEUs, according to GPA.\nCanal developments may aid cargo flows\nGPA also pointed to improving conditions at the Panama Canal, where stronger September rainfall has raised Gatun Lake water levels. The Panama Canal Authority expects vessel draft limits to increase through November and return to the 50-foot maximum, while adding one Neopanamax booking slot on Sept. 28.\nSeparately, the Georgia authority noted that some ocean carriers are beginning to test renewed Suez Canal routings for U.S.-bound cargo. GPA said Maersk’s (OTC: AMKBY ) MECL service and CMA CGM’s Indamex service are among the offerings involved. Routing between India and Savannah through Suez can cut 10 to 14 days from transit times compared with longer alternatives, the authority said.\nGPA will outline its fiscal 2026 performance, infrastructure program and strategic outlook at its Savannah State of the Port event Oct. 14 at the Savannah Convention Center.\nRead more articles by Stuart Chirls here .\nRead more:\nNew California law clouds Trump-backed Oakland coal export terminal project\nPort of Oakland August volumes fall year over year as exports edge up from July\nOcean rates highest in a year amid US-China trade truce\nONE restructures in key ocean region\nPort Houston container volumes edge higher as steel imports surge 54%\nUpcoming FreightWaves Events\nCompliance\nBrokerage Compliance Symposium\nThe day before F3. Every compliance issue you face - fraud exposure, carrier liability, FMCSA rules, cargo theft, insurance gaps - navigated by attorneys and operators defining best practices in a changing industry.\nOctober 26, 2026\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN\nRegister Now\nAwards\nF3 Awards Dinner\nThe night before F3. FreightTech100 companies honored. FreightTech 25 and Shipper of Choice winners revealed live. Cocktail reception into dinner and live music - 300 industry leaders in one purpose-built room.\nOctober 26, 2026\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN\nRegister Now\nFreightTech\nF3: Future of Freight Festival\nIndustry-defining keynotes, rapid-fire technology demos, and industry leaders networking in experiences across Chattanooga - plus the inaugural F3 Awards Dinner featuring the FreightTech and Shipper of Choice reveals.\nOctober 27, 2026 – October 28, 2026\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN\nRegister Now\nCompliance Brokerage Compliance Symposium Oct 26 • The Signal at Chattanooga Choo Choo • Chattanooga, TN\nThe day before F3. Every compliance issue you face - fraud exposure, carrier liability, FMCSA rules, cargo theft, insurance gaps - navigated by attorneys and operators defining best practices in a changing industry.\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN Register Now\nAwards F3 Awards Dinner Oct 26 • The Signal at Chattanooga Choo Choo • Chattanooga, TN\nThe night before F3. FreightTech100 companies honored. FreightTech 25 and Shipper of Choice winners revealed live. Cocktail reception into dinner and live music - 300 industry leaders in one purpose-built room.\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN Register Now\nFreightTech F3: Future of Freight Festival Oct 27 – Oct 28 • The Signal at Chattanooga Choo Choo • Chattanooga, TN\nIndustry-defining keynotes, rapid-fire technology demos, and industry leaders networking in experiences across Chattanooga - plus the inaugural F3 Awards Dinner featuring the FreightTech and Shipper of Choice reveals.\nThe Signal at Chattanooga Choo Choo • Chattanooga, TN Register Now",
+        "body_sha256": "802d3445ecb9483875110b6a684eabf6f9ac93f27bf3b64d77173b2384a745db",
+        "version": "802d3445ecb9483875110b6a684eabf6f9ac93f27bf3b64d77173b2384a745db",
+        "origin_id": "https://www.freightwaves.com/news/savannah-port-project-passes-60-complete-mark",
+        "origin_url": "https://www.freightwaves.com/news/savannah-port-project-passes-60-complete-mark",
+        "origin_publisher": "FreightWaves",
+        "provenance_verified": true,
+        "published_at": "2026-10-02T11:00:00+00:00",
+        "publication_precision": "TIMESTAMP",
+        "available_at": "2026-10-05T03:02:22.772662+00:00",
+        "acquired_at": "2026-10-05T03:02:22.772662+00:00"
+      },
+      "T": "UNKNOWN",
+      "T_scope": "UNKNOWN",
+      "strict_candidate_first_met_at": "UNKNOWN",
+      "leading_detection_success": false
+    }
+  ],
+  "counts": {
+    "REVIEW_LEAD": 0,
+    "HOLD": 2,
+    "EXCLUDED": 3,
+    "CONFIRMATION": 0
+  },
+  "EARLY_success_count": 0,
+  "LIVE_writes": 0,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+}

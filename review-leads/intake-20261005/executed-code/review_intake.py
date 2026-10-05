@@ -30,7 +30,7 @@ def source_key(doc):
 
 def scope_key(annotation):
     # Only literal, verified scope fields. No name similarity, UNKNOWN or aliases.
-    fields = {k:v for k,v in annotation['scope_fields'].items() if v['value'].strip().upper()!='UNKNOWN'}
+    fields = annotation['scope_fields']
     return review.digest([sorted((k, ' '.join(v['value'].casefold().split()))
         for k,v in fields.items()), annotation['hypothesis_key']])
 
@@ -69,8 +69,6 @@ def screen(doc, packet, docs):
     # A human/AI must supply the specific mechanism, concrete question and source
     # assessment; machine keywords never imply a signed contract or confirmation.
     generic = {'additional research needed','추가 조사 필요','추가조사 필요'}
-    if state=='REVIEW_LEAD' and not any(f['value'].strip().upper()!='UNKNOWN' for f in a['scope_fields'].values()):
-        state,reasons='HOLD',['NO_CONCRETE_SOURCE_BOUND_SCOPE']
     if state=='REVIEW_LEAD' and any(q.strip().casefold() in generic for q in a['questions']):
         state,reasons='HOLD',['NON_FALSIFIABLE_GENERIC_QUESTION']
     item.update(final_status=state, reason=';'.join(reasons),
@@ -79,8 +77,7 @@ def screen(doc, packet, docs):
             'manual_or_ai_semantic_review':True,'annotation_sha256':review.digest(a)},
         target=a['target'], hypothesis=a['hypothesis'], UNKNOWN=a['unknowns'],
         refutation_conditions=a['refutation_conditions'], next_questions=a['questions'],
-        confirmation=a['confirmation'], source_supported_scope=a['scope_fields'],
-        source_observations=a['facts'], counter_evidence=a.get('counter_evidence',[]))
+        confirmation=a['confirmation'], source_supported_scope=a['scope_fields'])
     return item, a
 
 
@@ -118,7 +115,7 @@ def process(bundle, contract, root, *, semantic_packets=(), prospective=False):
             annotation_sha=review.digest(a) if a else None
             if processed.exists():
                 old=review.sealed_read(processed)
-                if old['document_id']!=doc['document_id'] or old['annotation_sha256']==annotation_sha:
+                if old['annotation_sha256']==annotation_sha:
                     results.append({**old,'delivery':'DUPLICATE'});continue
                 if old['annotation_sha256'] is not None:
                     raise ValueError('PROCESSED_SOURCE_REQUIRES_APPEND_REVIEW_NOT_OVERWRITE')
@@ -147,17 +144,12 @@ def process(bundle, contract, root, *, semantic_packets=(), prospective=False):
                     c=review.sealed_read(p)
                     if c.get('intake_scope_key')==key and c.get('source_supported_scope'):
                         match=c;break
-                if match and a['scope_relation']=='MATCH':
+                if match and item['final_status'] in ('REVIEW_LEAD','CONFIRMATION'):
                     rid=match['review_id']
                     # Avoid recursive lock: append after this context exits.
                     item['append_to_existing']=rid
                 else:
-                    # Existing card renderer expects string publication metadata.
-                    # Null/missing metadata is represented as UNKNOWN, never a date.
-                    card_docs=deepcopy(docs)
-                    for source in card_docs.values():
-                        if not isinstance(source.get('published_at'),str):source['published_at']='UNKNOWN'
-                    card=review.make_card(a,card_docs,contract)
+                    card=review.make_card(a,docs,contract)
                     card.update(status=item['final_status'],reasons=[item['reason']],mode=mode,
                         intake_version=VERSION,intake_scope_key=key,
                         processing_method={'automatic_extraction':extraction.VERSION,
@@ -189,16 +181,7 @@ def render(output):
         lines += [f"## {r.get('target',r['document_id'])} — {r['final_status']}",
             r['reason'], 'Semantic review: '+r['semantic_review']['status'],
             'Hypothesis: '+r.get('hypothesis',{}).get('mechanism','UNKNOWN — semantic review pending'),
-            'Questions: '+ '; '.join(r.get('next_questions',[])),
-            'UNKNOWN: '+json.dumps(r.get('UNKNOWN',[]),ensure_ascii=False),
-            'Refutation: '+ '; '.join(r.get('refutation_conditions',[])),
-            'Confirmation: '+json.dumps(r.get('confirmation',{'document':'UNKNOWN','same_TARGET':'UNKNOWN'}),ensure_ascii=False),
-            'Mode/recorded: '+r.get('mode','UNKNOWN')+' / '+r.get('recorded_at','UNKNOWN'), '']
-        d=r.get('source_document',{})
-        lines += ['Source: '+str(d.get('origin_url','UNKNOWN'))+' / SHA256 '+r['body_sha256'],
-                  'Published/acquired: '+str(d.get('published_at','UNKNOWN'))+' / '+str(d.get('acquired_at','UNKNOWN')), '']
-        for f in r.get('source_observations',[]):
-            ref=f['reference'];lines += [f['description'], '> '+ref['quote'], 'Locator: '+json.dumps(ref['locator']), '']
+            'Questions: '+ '; '.join(r.get('next_questions',[])), '']
     return '\n'.join(lines)
 
 

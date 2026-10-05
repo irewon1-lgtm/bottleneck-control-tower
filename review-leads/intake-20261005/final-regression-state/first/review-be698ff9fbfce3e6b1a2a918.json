@@ -1,0 +1,149 @@
+{
+  "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+  "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+  "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+  "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+  "applies_from": "2026-10-05T15:24:06.650413+00:00",
+  "format": "bct-research-review-record-v1",
+  "review_id": "review-be698ff9fbfce3e6b1a2a918",
+  "formal_TARGET_id": null,
+  "target": "eActros 600 — 기존 수요 이벤트 판독 제외",
+  "source_supported_scope": {
+    "model": {
+      "value": "eActros 600",
+      "reference": {
+        "document_id": "3b19f7a6dad4a8964f0af31f91f4a929143f234018997386924f44b051a8ffb9",
+        "body_sha256": "ebbcfa567e34cee818407f23c4829488248e550201f6dd169ca6d6234660399f",
+        "locator": {
+          "start": 562,
+          "end": 573
+        },
+        "quote": "eActros 600"
+      }
+    }
+  },
+  "sources": [
+    {
+      "document_id": "3b19f7a6dad4a8964f0af31f91f4a929143f234018997386924f44b051a8ffb9",
+      "origin_id": "https://www.freightwaves.com/news/daimler-truck-scale-electric-trucks-europe",
+      "origin_url": "https://www.freightwaves.com/news/daimler-truck-scale-electric-trucks-europe",
+      "origin_publisher": "FreightWaves",
+      "body_sha256": "ebbcfa567e34cee818407f23c4829488248e550201f6dd169ca6d6234660399f",
+      "published_at": "2026-10-02T12:00:00+00:00",
+      "publication_precision": "TIMESTAMP",
+      "acquired_at": "2026-10-05T03:02:22.753185+00:00",
+      "available_at": "2026-10-05T03:02:22.753185+00:00"
+    }
+  ],
+  "source_observations": [
+    {
+      "fact_id": "eactros-rhetorical-order",
+      "role": "DEMAND",
+      "evidence_kind": "NON_FACTUAL",
+      "modality": "RHETORICAL",
+      "reference": {
+        "document_id": "3b19f7a6dad4a8964f0af31f91f4a929143f234018997386924f44b051a8ffb9",
+        "body_sha256": "ebbcfa567e34cee818407f23c4829488248e550201f6dd169ca6d6234660399f",
+        "locator": {
+          "start": 5836,
+          "end": 5896
+        },
+        "quote": "in order to build the ecosystem around those electric trucks"
+      },
+      "description": "in order to는 목적을 말하는 수사적 표현이며 구매 주문 사실이 아님.",
+      "scope_fields": {
+        "model": {
+          "value": "eActros 600",
+          "reference": {
+            "document_id": "3b19f7a6dad4a8964f0af31f91f4a929143f234018997386924f44b051a8ffb9",
+            "body_sha256": "ebbcfa567e34cee818407f23c4829488248e550201f6dd169ca6d6234660399f",
+            "locator": {
+              "start": 562,
+              "end": 573
+            },
+            "quote": "eActros 600"
+          }
+        }
+      }
+    }
+  ],
+  "confirmed_facts": [],
+  "analysis_hypothesis": {
+    "link_assessment": "UNKNOWN",
+    "affected_fact_ids": [
+      "eactros-rhetorical-order"
+    ],
+    "mechanism": "기존 pair의 수요 근거는 실제 주문이 아니므로 같은 eActros 600의 미래 공급공백 가설을 이 근거로 만들지 않는다.",
+    "assumptions": [
+      "실제 주문 증가·납품 필요일은 현재 근거로 확인되지 않음"
+    ]
+  },
+  "UNKNOWN": [
+    {
+      "field": "real_order",
+      "status": "UNKNOWN",
+      "question": "eActros 600의 실제 확정 미래 주문은 현재 근거에서 미확인"
+    }
+  ],
+  "period_expressions": [],
+  "counter_evidence": [],
+  "refutation_conditions": [
+    "실제 주문 근거 없이 수사적 in order to를 주문으로 사용하는 해석은 기각"
+  ],
+  "next_questions": [
+    "별도 지시가 있을 때만 eActros 600의 실제 확정 주문 근거가 있는지 확인. 이번에는 추가 조사하지 않음."
+  ],
+  "source_status": {
+    "observed_origin_count": 1,
+    "single_source": true,
+    "independent_origin_verification": "UNKNOWN",
+    "republication": "Company statements reported by FreightWaves; no second independent original"
+  },
+  "confirmation": {
+    "document": "NO",
+    "same_TARGET": "NO",
+    "method": "Full preserved source-body reading; absence here is not global T proof",
+    "references": []
+  },
+  "existing_v2_reference": {
+    "source": "Unchanged original V2 decisions, not rerun",
+    "archive": "diagnostics/v2-origin-count-20261005/original/immutable-run.json.gz",
+    "pair_ids": [
+      "bd70faf154c761a12a08d9055427dc97c8d4a6e853f3e71106bf5cdefa8e92aa"
+    ],
+    "states": [
+      "DATA_WAIT"
+    ],
+    "original_evaluated_at": "2026-10-05T10:46:04.796837+00:00",
+    "formal_TARGET_ids": [],
+    "first_strict_condition_met_at": "UNKNOWN"
+  },
+  "status": "EXCLUDED",
+  "reasons": [
+    "NO_FACTUAL_PRECURSOR_CHANGE"
+  ],
+  "mode": "BACKFILL",
+  "first_review_recorded_at": "2026-10-05T16:35:02.876150+00:00",
+  "strict_candidate_first_met_at": "UNKNOWN",
+  "T": "UNKNOWN",
+  "T_scope": "UNKNOWN",
+  "annotation": {
+    "annotation_method": "MANUAL_SOURCE_READING_BY_ASSISTANT_USER_NOT_YET_VERIFIED",
+    "annotator": "Codex: preserved full-source reading; not automatic extraction or independent gold",
+    "annotated_at": "2026-10-05T15:31:44.455557+00:00"
+  },
+  "annotation_sha256": "a2f77ee0e99fcaa1d14437021a09559ce3a2177d09140675898180f15f19c9b4",
+  "EARLY_success": false,
+  "leading_detection_success": false,
+  "performance_evaluation": false,
+  "LIVE_writes": 0,
+  "intake_version": "BCT_REVIEW_INTAKE_1",
+  "intake_scope_key": "4cd2e144040945366d84a899aca772b7a1e96d860c4f03818629c600893cb7df",
+  "processing_method": {
+    "automatic_extraction": "BCT_PRECURSOR_V2_SHADOW_2",
+    "manual_or_ai_semantic_review": true
+  },
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "record_sha256": "728c3547d2355a917da9a91a0bb7da81215ad129d6e4d83530b05ae920177a2f"
+}

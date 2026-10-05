@@ -1,0 +1,210 @@
+diff --git a/.github/scripts/review_lead_intake.py b/.github/scripts/review_lead_intake.py
+index 927be6f..04c35b8 100644
+--- a/.github/scripts/review_lead_intake.py
++++ b/.github/scripts/review_lead_intake.py
+@@ -7,17 +7,46 @@ Failures are recorded separately and do not fail collection/V2 execution.
+ import json
+ import os
+ from pathlib import Path
+-from bct import review_intake
++from bct import review_intake, target_acquisition as acquisition
+ from bct.objective_lock import stamp_export
+ 
+-def run(input_path, store, output, semantic=None, prospective=False):
++def load_saved_delta(delta_path, cache):
++    """Read only successful captures named in this RSS delta, never the corpus."""
++    delta=json.loads(Path(delta_path).read_text());cache=Path(cache);docs=[];skipped=[]
++    rows=delta.get('documents',[])
++    if len(rows)>100:raise ValueError('REVIEW_INTAKE_BATCH_TOO_LARGE')
++    completed=json.loads(Path('config/precursor-completed-exclusions.json').read_text())
++    baseline=json.loads(Path('config/precursor-baseline-exclusions.json').read_text())
++    excluded_ids=set(completed['document_ids'])|set(baseline['document_ids'])
++    excluded_urls=set(completed['urls'])|set(baseline['urls'])
++    for row in rows:
++        did=row['document_id']
++        try:
++            if did in excluded_ids or row['url'] in excluded_urls:
++                skipped.append({'document_id':did,'reason':'EXISTING_CORPUS_EXCLUDED'});continue
++            d=json.loads((cache/'captures'/(acquisition.digest(row['url'])+'.json')).read_text())
++            if d['document_id']!=did:raise ValueError('DELTA_CAPTURE_ID_MISMATCH')
++            if d.get('provenance')!='PASS':raise ValueError('CAPTURE_PROVENANCE_NOT_PASS')
++            raw=(cache/'raw'/(d['raw_sha256']+'.html')).read_bytes()
++            if acquisition.digest(raw)!=d['raw_sha256']:raise ValueError('CAPTURE_RAW_HASH_MISMATCH')
++            proof=acquisition.verify(raw,d['origin_url'],d['origin_url'],d['acquired_at'])
++            keys=('origin_id','origin_url','origin_publisher','published_at','publication_precision','body_sha256','version')
++            if proof['provenance']!='PASS' or any(proof[k]!=d[k] for k in keys):
++                raise ValueError('CAPTURE_SOURCE_BINDING_MISMATCH')
++            docs.append(d)
++        except Exception as error:skipped.append({'document_id':did,'final_status':'EXCLUDED','reason':str(error),'EARLY_success':False})
++    return stamp_export({'documents':docs}),skipped
++
++
++def run(input_path, store, output, semantic=None, prospective=False, cache=None):
+     output=Path(output);output.parent.mkdir(parents=True,exist_ok=True)
+     try:
+-        bundle=json.loads(Path(input_path).read_text())
++        bundle,skipped=load_saved_delta(input_path,cache) if cache else (json.loads(Path(input_path).read_text()),[])
+         packets=json.loads(Path(semantic).read_text()) if semantic else stamp_export({'packets':[]})
+         review_intake.require_objective(packets)
+         result=review_intake.process(bundle,json.loads(Path('review-leads/contract.json').read_text()),
+             store,semantic_packets=packets['packets'],prospective=prospective)
++        result['skipped_delta_documents']=skipped
+     except Exception as error:
+         result=stamp_export({'review_intake_status':'BLOCKED','reason':str(error),'collector_failed_by_review':False,
+                             'EARLY_success_count':0,'LIVE_writes':0})
+@@ -27,6 +56,6 @@ def run(input_path, store, output, semantic=None, prospective=False):
+ 
+ if __name__=='__main__':
+     result=run(os.environ['BCT_REVIEW_NEW_DOCUMENTS'],os.environ['BCT_REVIEW_STORE'],os.environ['BCT_REVIEW_OUTPUT'],
+-        os.environ.get('BCT_REVIEW_SEMANTIC'),os.environ.get('BCT_REVIEW_PROSPECTIVE')=='1')
++        os.environ.get('BCT_REVIEW_SEMANTIC'),os.environ.get('BCT_REVIEW_PROSPECTIVE')=='1',os.environ.get('BCT_REVIEW_CACHE'))
+     print(json.dumps({'review_intake_status':result.get('review_intake_status','COMPLETED'),
+                       'counts':result.get('counts',{}),'LIVE_writes':0}))
+diff --git a/src/bct/review_intake.py b/src/bct/review_intake.py
+index ac11936..0dca692 100644
+--- a/src/bct/review_intake.py
++++ b/src/bct/review_intake.py
+@@ -30,7 +30,7 @@ def source_key(doc):
+ 
+ def scope_key(annotation):
+     # Only literal, verified scope fields. No name similarity, UNKNOWN or aliases.
+-    fields = annotation['scope_fields']
++    fields = {k:v for k,v in annotation['scope_fields'].items() if v['value'].strip().upper()!='UNKNOWN'}
+     return review.digest([sorted((k, ' '.join(v['value'].casefold().split()))
+         for k,v in fields.items()), annotation['hypothesis_key']])
+ 
+@@ -69,6 +69,8 @@ def screen(doc, packet, docs):
+     # A human/AI must supply the specific mechanism, concrete question and source
+     # assessment; machine keywords never imply a signed contract or confirmation.
+     generic = {'additional research needed','추가 조사 필요','추가조사 필요'}
++    if state=='REVIEW_LEAD' and not any(f['value'].strip().upper()!='UNKNOWN' for f in a['scope_fields'].values()):
++        state,reasons='HOLD',['NO_CONCRETE_SOURCE_BOUND_SCOPE']
+     if state=='REVIEW_LEAD' and any(q.strip().casefold() in generic for q in a['questions']):
+         state,reasons='HOLD',['NON_FALSIFIABLE_GENERIC_QUESTION']
+     item.update(final_status=state, reason=';'.join(reasons),
+@@ -77,7 +79,8 @@ def screen(doc, packet, docs):
+             'manual_or_ai_semantic_review':True,'annotation_sha256':review.digest(a)},
+         target=a['target'], hypothesis=a['hypothesis'], UNKNOWN=a['unknowns'],
+         refutation_conditions=a['refutation_conditions'], next_questions=a['questions'],
+-        confirmation=a['confirmation'], source_supported_scope=a['scope_fields'])
++        confirmation=a['confirmation'], source_supported_scope=a['scope_fields'],
++        source_observations=a['facts'], counter_evidence=a.get('counter_evidence',[]))
+     return item, a
+ 
+ 
+@@ -115,7 +118,7 @@ def process(bundle, contract, root, *, semantic_packets=(), prospective=False):
+             annotation_sha=review.digest(a) if a else None
+             if processed.exists():
+                 old=review.sealed_read(processed)
+-                if old['annotation_sha256']==annotation_sha:
++                if old['document_id']!=doc['document_id'] or old['annotation_sha256']==annotation_sha:
+                     results.append({**old,'delivery':'DUPLICATE'});continue
+                 if old['annotation_sha256'] is not None:
+                     raise ValueError('PROCESSED_SOURCE_REQUIRES_APPEND_REVIEW_NOT_OVERWRITE')
+@@ -144,12 +147,17 @@ def process(bundle, contract, root, *, semantic_packets=(), prospective=False):
+                     c=review.sealed_read(p)
+                     if c.get('intake_scope_key')==key and c.get('source_supported_scope'):
+                         match=c;break
+-                if match and item['final_status'] in ('REVIEW_LEAD','CONFIRMATION'):
++                if match and a['scope_relation']=='MATCH':
+                     rid=match['review_id']
+                     # Avoid recursive lock: append after this context exits.
+                     item['append_to_existing']=rid
+                 else:
+-                    card=review.make_card(a,docs,contract)
++                    # Existing card renderer expects string publication metadata.
++                    # Null/missing metadata is represented as UNKNOWN, never a date.
++                    card_docs=deepcopy(docs)
++                    for source in card_docs.values():
++                        if not isinstance(source.get('published_at'),str):source['published_at']='UNKNOWN'
++                    card=review.make_card(a,card_docs,contract)
+                     card.update(status=item['final_status'],reasons=[item['reason']],mode=mode,
+                         intake_version=VERSION,intake_scope_key=key,
+                         processing_method={'automatic_extraction':extraction.VERSION,
+@@ -181,7 +189,16 @@ def render(output):
+         lines += [f"## {r.get('target',r['document_id'])} — {r['final_status']}",
+             r['reason'], 'Semantic review: '+r['semantic_review']['status'],
+             'Hypothesis: '+r.get('hypothesis',{}).get('mechanism','UNKNOWN — semantic review pending'),
+-            'Questions: '+ '; '.join(r.get('next_questions',[])), '']
++            'Questions: '+ '; '.join(r.get('next_questions',[])),
++            'UNKNOWN: '+json.dumps(r.get('UNKNOWN',[]),ensure_ascii=False),
++            'Refutation: '+ '; '.join(r.get('refutation_conditions',[])),
++            'Confirmation: '+json.dumps(r.get('confirmation',{'document':'UNKNOWN','same_TARGET':'UNKNOWN'}),ensure_ascii=False),
++            'Mode/recorded: '+r.get('mode','UNKNOWN')+' / '+r.get('recorded_at','UNKNOWN'), '']
++        d=r.get('source_document',{})
++        lines += ['Source: '+str(d.get('origin_url','UNKNOWN'))+' / SHA256 '+r['body_sha256'],
++                  'Published/acquired: '+str(d.get('published_at','UNKNOWN'))+' / '+str(d.get('acquired_at','UNKNOWN')), '']
++        for f in r.get('source_observations',[]):
++            ref=f['reference'];lines += [f['description'], '> '+ref['quote'], 'Locator: '+json.dumps(ref['locator']), '']
+     return '\n'.join(lines)
+ 
+ 
+diff --git a/tests/test_review_intake.py b/tests/test_review_intake.py
+index 29b0954..c0b2b58 100644
+--- a/tests/test_review_intake.py
++++ b/tests/test_review_intake.py
+@@ -87,3 +87,64 @@ def test_optional_hook_failure_does_not_fail_collector(tmp_path):
+     spec=importlib.util.spec_from_file_location('hook','.github/scripts/review_lead_intake.py');hook=importlib.util.module_from_spec(spec);spec.loader.exec_module(hook)
+     result=hook.run(tmp_path/'absent',tmp_path/'store',tmp_path/'out')
+     assert result['review_intake_status']=='BLOCKED' and not result['collector_failed_by_review']
++
++
++def test_repost_different_document_id_is_duplicate(tmp_path):
++    b,c,_=fixture();intake.process(b,c,tmp_path,semantic_packets=packets(b))
++    b['documents'][0]['document_id']='repost'
++    def rebind(x):
++        if isinstance(x,dict):
++            if 'locator' in x:x['document_id']='repost'
++            for v in x.values():rebind(v)
++        elif isinstance(x,list):
++            for v in x:rebind(v)
++    rebind(b['annotations']);out=intake.process(b,c,tmp_path,semantic_packets=packets(b))
++    assert out['records'][0]['delivery']=='DUPLICATE'
++    assert len(r.load_store(tmp_path)['records'])==1 and not any(out['counts'].values())
++
++
++def test_unknown_scope_cannot_promote(tmp_path):
++    b,c,_=fixture();d=b['documents'][0];d['body']+=' UNKNOWN';d['body_sha256']=d['version']=r.digest(d['body'].encode())
++    a=b['annotations'][0]
++    def update(x):
++        if isinstance(x,dict):
++            if 'locator' in x:x['body_sha256']=d['body_sha256']
++            for v in x.values():update(v)
++        elif isinstance(x,list):
++            for v in x:update(v)
++    update(a);i=d['body'].index('UNKNOWN');a['scope_fields']={'facility':{'value':'UNKNOWN','reference':{'document_id':d['document_id'],'body_sha256':d['body_sha256'],'quote':'UNKNOWN','locator':{'start':i,'end':i+7}}}}
++    a['facts'][0]['scope_fields']={}
++    assert intake.process(b,c,tmp_path,semantic_packets=packets(b))['counts']['HOLD']==1
++
++
++def test_saved_delta_reads_only_named_capture_not_corpus(tmp_path,monkeypatch):
++    spec=importlib.util.spec_from_file_location('hook','.github/scripts/review_lead_intake.py');hook=importlib.util.module_from_spec(spec);spec.loader.exec_module(hook)
++    b,c,_=fixture();d=b['documents'][0];raw=b'synthetic HTML controlled fixture'
++    d.update(provenance='PASS',raw_sha256=hook.acquisition.digest(raw))
++    cache=tmp_path/'cache';(cache/'raw').mkdir(parents=True);(cache/'captures').mkdir()
++    (cache/'raw'/(d['raw_sha256']+'.html')).write_bytes(raw)
++    (cache/'captures'/(hook.acquisition.digest(d['origin_url'])+'.json')).write_text(json.dumps(d))
++    # Unrelated corrupt cached input must never be read.
++    (cache/'captures'/'unrelated.json').write_text('corrupt')
++    delta=tmp_path/'delta.json';delta.write_text(json.dumps({'documents':[{'document_id':d['document_id'],'url':d['origin_url']},{'document_id':'missing','url':'https://missing.example'}]}))
++    monkeypatch.setattr(hook.acquisition,'verify',lambda *args:d)
++    out,skipped=hook.load_saved_delta(delta,cache)
++    assert [x['document_id'] for x in out['documents']]==[d['document_id']]
++    assert len(skipped)==1 and skipped[0]['document_id']=='missing'
++
++
++def test_unverified_missing_publication_remains_hold(tmp_path):
++    b,c,_=fixture();b['documents'][0].update(provenance_verified=False,published_at=None)
++    out=intake.process(b,c,tmp_path,semantic_packets=packets(b))
++    assert out['counts']['HOLD']==1
++    card=r.load_store(tmp_path)['records'][0]['first'];assert card['sources'][0]['published_at']=='UNKNOWN'
++    assert card['mode']=='BACKFILL'
++
++
++def test_four_preserved_semantic_readings_current_code():
++    b=json.loads(Path('review-leads/examples-20261005/input.json').read_text());docs=r.documents(b)
++    ps=json.loads(Path('review-leads/intake-20261005/regression-semantic.json').read_text())['packets']
++    counts={s:0 for s in ('REVIEW_LEAD','HOLD','EXCLUDED','CONFIRMATION')}
++    for packet in ps:
++        item,_=intake.screen(docs[packet['document_id']],packet,docs);counts[item['final_status']]+=1
++    assert counts=={'REVIEW_LEAD':2,'HOLD':1,'EXCLUDED':1,'CONFIRMATION':0}
