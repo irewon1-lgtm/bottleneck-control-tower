@@ -6,7 +6,7 @@ Never writes canonical data, reviews, hypotheses or prediction ledgers.
 import argparse
 from contextlib import contextmanager
 from copy import deepcopy
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 import fcntl
 import hashlib
 import json
@@ -127,6 +127,8 @@ def _doc(document):
     if document.get('published_at') is None and document.get('publication_precision') == 'UNKNOWN':
         if engine.clock(document['public_snapshot_observed_at']) > engine.clock(document['available_at']):
             raise Blocked('PUBLICATION_BOUND_AFTER_AVAILABILITY')
+    elif document.get('publication_precision') == 'DATE':
+        date.fromisoformat(document['published_at'])  # Keep a date; never invent a timestamp.
     else:
         engine.clock(document['published_at'])
     return document
@@ -191,7 +193,15 @@ def run(root, batch, *, early=False):
         previous = latest['engine_result'] if latest else None
         if early:
             from . import early_forecast
-            result = early_forecast.discover(batch, mode='LIVE')
+            if batch.get('precursor_discovery') is True:
+                from . import precursor_discovery
+                previous_first = {record['target_id']: record['candidate_first_detected_at']
+                                  for record in (_read(path) for path in (root / 'candidates').glob('*.json'))}
+                result, batch = precursor_discovery.discover(batch, mode='LIVE', previous_first=previous_first,
+                    confirmation_domains=session['confirmation_source_universe']['source_domains'])
+                result['precursor_engine_sha256'] = hashlib.sha256(Path(precursor_discovery.__file__).read_bytes()).hexdigest()
+            else:
+                result = early_forecast.discover(batch, mode='LIVE')
             result['early_engine_sha256'] = hashlib.sha256(Path(early_forecast.__file__).read_bytes()).hexdigest()
             for candidate in result['candidates']:
                 path = root / 'candidates' / (_id(candidate['target_id']) + '.json')
@@ -350,6 +360,13 @@ def _report(root):
                 status = eo['state']
         if not c and not t and status == 'OPEN':
             status = eo.get('state', 'DATA_WAIT')
+        if c and c.get('candidate_as_generated', {}).get('discovery_strategy') == 'PRECURSOR_SYNTHESIS_V1':
+            when = eo.get('confirmation_at')
+            if eo.get('state') == 'CONFIRMED' and when and engine.clock(when) > engine.clock(c['candidate_first_detected_at']):
+                status = 'CONFIRMED'
+                days = (engine.clock(when) - engine.clock(c['candidate_first_detected_at'])).total_seconds() / 86400
+            elif status == 'SUCCESS':
+                status = 'CONFIRMED'
         rows.append({'target_id': tid, 'target': (c or t or eo).get('target', tid),
                      'candidate_first_detected_at': c['candidate_first_detected_at'] if c else None,
                      'first_scope_confirmation_at': t['first_scope_confirmation_at'] if t else None,
@@ -370,13 +387,13 @@ def main():
     parser.add_argument('--store', type=Path, required=True)
     commands = parser.add_subparsers(dest='command', required=True)
     init = commands.add_parser('start'); init.add_argument('--feeds', type=Path, default=Path('rss_feeds.yaml'))
-    for name in ('run', 'run-early', 'observe'):
+    for name in ('run', 'run-early', 'run-precursors', 'observe'):
         command = commands.add_parser(name); command.add_argument('--input', type=Path, required=True)
     commands.add_parser('report')
     args = parser.parse_args()
     try:
         value = start(args.store, args.feeds) if args.command == 'start' else report(args.store) if args.command == 'report' else (
-            (lambda root, batch: run(root, batch, early=True)) if args.command == 'run-early' else run if args.command == 'run' else observe)(args.store, json.loads(args.input.read_text()))
+            (lambda root, batch: run(root, {**batch, 'precursor_discovery': True}, early=True)) if args.command == 'run-precursors' else (lambda root, batch: run(root, batch, early=True)) if args.command == 'run-early' else run if args.command == 'run' else observe)(args.store, json.loads(args.input.read_text()))
         print(json.dumps(value, ensure_ascii=False, indent=2))
     except (ValueError, OSError, KeyError, TypeError) as exc:
         print(json.dumps({'state': 'BLOCKED', 'reason': str(exc)})); raise SystemExit(1)

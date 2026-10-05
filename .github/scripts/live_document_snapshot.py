@@ -40,12 +40,16 @@ def preserve_source_inputs(db_path, output, result, document_ids, revision):
                 if hashlib.sha256(path.read_bytes()).hexdigest() != digest:
                     raise ValueError('snapshot body hash mismatch')
                 body_path = relative
+            from bct.precursor_discovery import extract_events
+            precursor_events = extract_events({'document_id': document_id, 'body': path.read_text()}) if body_path else []
             documents.append({
                 'document_id': document_id,
                 'upstream_row': dict(row),
                 'snapshot_metadata': {k: v for k, v in record.items()
                                       if k not in ('body', 'full_text')},
                 'body_path': body_path,
+                'precursor_events': precursor_events,
+                'precursor_policy': 'Source-addressed leads only; no inferred scope/provenance or S upgrade',
             })
     with (output / 'source-inputs.json').open('x', encoding='utf-8') as stream:
         json.dump(stamp_export({

@@ -1,0 +1,115 @@
+name: New precursor evidence acquisition
+on:
+  workflow_run:
+    workflows: [RSS live environment check]
+    types: [completed]
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: rss-canonical-data
+  cancel-in-progress: false
+jobs:
+  acquire:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.event != 'pull_request' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: Restore new-only private evidence state and receive RSS delta
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RSS_RUN_ID: ${{ github.event.workflow_run.id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p var/rss-delta var/new-precursors
+          gh run download "$RSS_RUN_ID" --name rss-live-result --dir var/rss-delta
+          test -f var/rss-delta/new-document-manifest.json
+          data_sha=$(git ls-remote origin refs/heads/data | cut -f1)
+          test -n "$data_sha"
+          echo "BASE_DATA_SHA=$data_sha" >> "$GITHUB_ENV"
+          git fetch --no-tags origin data
+          if git cat-file -e "$data_sha:precursor-index.json" 2>/dev/null; then
+            git show "$data_sha:precursor-index.json" > var/prior-precursor-index.json
+            prior_run=$(python -c 'import json; v=json.load(open("var/prior-precursor-index.json"))["cache_run_id"]; assert str(v).isdigit(); print(v)')
+            gh run download "$prior_run" --name precursor-private-cache --dir var/new-precursors
+            test -f var/new-precursors/activation.json
+          fi
+      - name: Restore the existing LIVE session byte for byte
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin live-state
+          live_sha=$(git rev-parse FETCH_HEAD)
+          echo "BASE_LIVE_SHA=$live_sha" >> "$GITHUB_ENV"
+          sudo install -d -m 0755 -o "$(id -u)" -g "$(id -g)" /workspace/bct-live-state
+          git archive "$live_sha" | tar -x -C /workspace/bct-live-state
+          test -f /workspace/bct-live-state/live-state/bct-live-20261004T120019Z-e74254ee4bca/store/session.json
+          python - <<'PYTHON'
+          import hashlib, json
+          from pathlib import Path
+          root=Path('/workspace/bct-live-state')
+          before={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in root.rglob('*') if p.is_file()}
+          Path('var/live-before.json').write_text(json.dumps(before))
+          PYTHON
+      - name: Acquire new precursor scope and independent opposite-side evidence
+        env:
+          PRECURSOR_MANIFEST: var/rss-delta/new-document-manifest.json
+          PRECURSOR_STATE: var/new-precursors
+          PRECURSOR_SUMMARY: var/precursor-index.json
+          PRECURSOR_SEARCH_ENDPOINT: ${{ vars.BCT_PRECURSOR_SEARCH_ENDPOINT }}
+          BCT_EXISTING_LIVE_STORE: /workspace/bct-live-state/live-state/bct-live-20261004T120019Z-e74254ee4bca/store
+        run: python .github/scripts/new_precursor_cycle.py
+      - uses: actions/upload-artifact@v4
+        id: private_cache
+        with:
+          name: precursor-private-cache
+          path: var/new-precursors/
+          include-hidden-files: true
+          retention-days: 30
+          if-no-files-found: error
+      - name: Persist aggregate index without rewriting canonical database or LIVE state
+        shell: bash
+        run: |
+          set -euo pipefail
+          current_sha=$(git ls-remote origin refs/heads/data | cut -f1)
+          test "$current_sha" = "$BASE_DATA_SHA"
+          export GIT_INDEX_FILE="$RUNNER_TEMP/precursor-git-index"
+          git read-tree "$BASE_DATA_SHA"
+          blob=$(git hash-object -w var/precursor-index.json)
+          git update-index --add --cacheinfo "100644,$blob,precursor-index.json"
+          tree=$(git write-tree)
+          commit=$(git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit-tree "$tree" -p "$BASE_DATA_SHA" -m "Persist new-only precursor index from run $GITHUB_RUN_ID")
+          git push origin "$commit:refs/heads/data"
+      - name: Persist only newly appended LIVE records with compare and swap
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PYTHON'
+          import hashlib, json
+          from pathlib import Path
+          root=Path('/workspace/bct-live-state')
+          before=json.loads(Path('var/live-before.json').read_text())
+          assert all((root/p).is_file() and hashlib.sha256((root/p).read_bytes()).hexdigest()==h for p,h in before.items()), 'existing LIVE files changed'
+          added=[str(p.relative_to(root)) for p in root.rglob('*.json') if str(p.relative_to(root)) not in before]
+          assert all(p.startswith('live-state/bct-live-20261004T120019Z-e74254ee4bca/store/') and not p.endswith('/session.json') for p in added)
+          Path('var/new-live-files.txt').write_text(''.join(p+'\n' for p in added))
+          PYTHON
+          if [[ -s var/new-live-files.txt ]]; then
+            current_sha=$(git ls-remote origin refs/heads/live-state | cut -f1)
+            test "$current_sha" = "$BASE_LIVE_SHA"
+            export GIT_INDEX_FILE="$RUNNER_TEMP/precursor-live-git-index"
+            git read-tree "$BASE_LIVE_SHA"
+            while IFS= read -r path; do
+              blob=$(git hash-object -w "/workspace/bct-live-state/$path")
+              git update-index --add --cacheinfo "100644,$blob,$path"
+            done < var/new-live-files.txt
+            tree=$(git write-tree)
+            commit=$(git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit-tree "$tree" -p "$BASE_LIVE_SHA" -m "Append new precursor EARLY records from run $GITHUB_RUN_ID")
+            git push origin "$commit:refs/heads/live-state"
+          fi

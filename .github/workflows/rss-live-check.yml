@@ -68,6 +68,8 @@ jobs:
           migrate(settings)
           with sqlite3.connect(settings.db_path) as db:
               initial_articles = db.execute('SELECT count(*) FROM radar_items').fetchone()[0]
+              initial_rows = db.execute('SELECT id, url FROM radar_items').fetchall()
+          collection_started_at = datetime.now(timezone.utc).isoformat()
           collector = RSSCollector(settings, RSSTransport(timeout_seconds=8))
           run_key = 'actions-${{ github.run_id }}-${{ github.run_attempt }}'
           rows = []
@@ -90,6 +92,15 @@ jobs:
           assert len(rows) == len(feeds)
           with sqlite3.connect(settings.db_path) as db:
               final_articles = db.execute('SELECT count(*) FROM radar_items').fetchone()[0]
+              prior_ids = {r[0] for r in initial_rows}
+              new_rows = [{'document_id': r[0], 'url': r[1], 'collected_at': r[2]}
+                          for r in db.execute('SELECT id, url, collected_at FROM radar_items')
+                          if r[0] not in prior_ids]
+          Path('new-document-manifest.json').write_text(json.dumps({
+              'format': 'bct-new-rss-delta-v1', 'collection_started_at': collection_started_at,
+              'preexisting_document_ids': sorted(prior_ids),
+              'preexisting_urls': sorted({r[1] for r in initial_rows}),
+              'documents': new_rows}, ensure_ascii=False, indent=2) + '\n')
           summary = {'registered': len(rows),
                      'initial_articles': initial_articles,
                      'final_articles': final_articles,
@@ -140,6 +151,7 @@ jobs:
           name: rss-live-result
           path: |
             rss-live-result.json
+            new-document-manifest.json
           if-no-files-found: warn
 
   live-snapshot:

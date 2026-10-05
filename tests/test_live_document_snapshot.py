@@ -69,3 +69,22 @@ def test_collection_retains_existing_feed_id_and_snippet(tmp_path):
     assert record['origin_publisher'] is None
     assert record['provenance_verified'] is False
     assert db.read_bytes() == before
+
+
+def test_precursor_events_survive_without_known_target_or_provenance(tmp_path):
+    db=tmp_path/'source.sqlite3'
+    with sqlite3.connect(db) as conn:
+        conn.execute('CREATE TABLE radar_items (id TEXT, external_id TEXT, url TEXT)')
+        conn.execute('INSERT INTO radar_items VALUES (?,?,?)',('doc','feed-id','https://example.org/source'))
+    body='A government DPA investment funds a new production line in 2031.\nOrigin restrictions become effective in 2031.'
+    digest=hashlib.sha256(body.encode()).hexdigest()
+    output=tmp_path/'artifact';(output/'body-cache').mkdir(parents=True)
+    (output/'body-cache'/f'{digest}.txt').write_text(body)
+    record={'id':'doc','body_sha256':digest,'provenance_verified':False,'targets':[]}
+    before=db.read_bytes()
+    snapshot.preserve_source_inputs(db,output,{'results':{'doc':record}},['doc'],'revision')
+    stored=json.loads((output/'source-inputs.json').read_text())['documents'][0]
+    assert stored['snapshot_metadata']==record
+    assert {t for e in stored['precursor_events'] for t in e['event_types']} >= {'CAPACITY_INVESTMENT','REGULATION'}
+    assert all(e['quantity']=='UNKNOWN' for e in stored['precursor_events'])
+    assert db.read_bytes()==before
