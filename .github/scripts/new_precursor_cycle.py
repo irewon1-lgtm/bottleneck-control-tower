@@ -7,7 +7,9 @@ from bct import precursor_collection as collection
 
 
 def run(manifest, root, *, search_endpoint=None, live_store=None):
-    docs=manifest.get('documents',[]);summaries=[]
+    completed=collection.read(Path(__file__).resolve().parents[2]/'config/precursor-completed-exclusions.json')
+    ids=set(completed['document_ids']);urls=set(completed['urls'])
+    docs=[d for d in manifest.get('documents',[]) if d['document_id'] not in ids and d['url'] not in urls];summaries=[]
     for start in range(0,max(1,len(docs)),100):
         batch={**manifest,'documents':docs[start:start+100],'batch_number':start//100+1}
         summaries.append(collection.cycle(root,batch,search_endpoint=search_endpoint,live_store=live_store))

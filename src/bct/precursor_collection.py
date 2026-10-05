@@ -211,7 +211,9 @@ def cited_urls(request,documents):
 def capture(root,url,document_id,activation,*,collected_at=None):
     root=Path(root);key=acquisition.digest(url);path=root/'captures'/(key+'.json')
     if path.exists():return read(path)
-    if document_id in activation['excluded_document_ids'] or url in activation['excluded_urls']:
+    completed=read(Path(__file__).resolve().parents[2]/'config/precursor-completed-exclusions.json')
+    if (document_id in activation['excluded_document_ids'] or url in activation['excluded_urls']
+            or document_id in completed['document_ids'] or url in completed['urls']):
         return {'status':'EXISTING_CORPUS_EXCLUDED','url':url}
     if collected_at and forecast_discovery.clock(collected_at)<forecast_discovery.clock(activation['new_document_cutover']):
         return {'status':'BEFORE_NEW_COLLECTION_CUTOVER','url':url}

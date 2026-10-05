@@ -66,6 +66,20 @@ def test_old_ids_urls_and_pre_cutover_never_fetch(tmp_path,transport):
     assert not calls and r['new_verified_documents']==0
 
 
+def test_completed_history_is_excluded_after_existing_cache_activation(tmp_path,transport):
+    calls,_=transport
+    activation=c.init(tmp_path,manifest([]))
+    completed=c.read(Path(__file__).resolve().parents[1]/'config/precursor-completed-exclusions.json')
+    historic_id=next(x for x in completed['document_ids'] if x not in activation['excluded_document_ids'])
+    historic_url=next(x for x in completed['urls'] if x not in activation['excluded_urls'])
+    before=(tmp_path/'activation.json').read_bytes()
+    assert c.capture(tmp_path,'https://buyer.example/doc',historic_id,activation)['status']=='EXISTING_CORPUS_EXCLUDED'
+    assert c.capture(tmp_path,historic_url,'new-rss-id',activation)['status']=='EXISTING_CORPUS_EXCLUDED'
+    assert not calls
+    assert (tmp_path/'activation.json').read_bytes()==before
+    assert c.capture(tmp_path,'https://buyer.example/doc','buyer',activation,collected_at='2026-10-05T02:00:00Z')['status']=='CAPTURED'
+
+
 def test_missing_scope_no_domain_or_query_imputation(tmp_path,transport):
     calls,source=transport
     source['buyer']=html('buyer','The customer signed firm new orders in 2031.',{'product':'precision components'})
