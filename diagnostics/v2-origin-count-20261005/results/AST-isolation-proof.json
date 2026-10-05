@@ -1,0 +1,13 @@
+{
+  "changed_predicate_count": 1,
+  "all_other_AST_nodes_identical": true,
+  "observed_independence_unchanged": true,
+  "production_module_mutation": false,
+  "retained_checks": [
+    "document eligibility/provenance",
+    "direct_origin",
+    "distinct source quote",
+    "all non-origin pair gates"
+  ],
+  "function_diff": "--- A_original_function\n+++ B_diagnostic_function\n@@ -25,7 +25,7 @@\n     if not fact(supply, 'qualification_bound'):\n         out['scope_verified'] = False\n         out['reasons'].append('QUALIFIED_READINESS_BINDING_UNVERIFIED')\n-    if not out['independent']:\n+    if not out['independent'] and _retained_source_checks_failed(demand, supply):\n         out['reasons'].append('INDEPENDENT_ORIGINS_MISSING')\n     if demand['role'] != 'DEMAND' or not fact(demand, 'committed'):\n         out['reasons'].append('COMMITTED_DEMAND_MISSING')\n"
+}

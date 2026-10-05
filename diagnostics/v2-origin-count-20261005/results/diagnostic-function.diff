@@ -1,0 +1,11 @@
+--- A_original_function
++++ B_diagnostic_function
+@@ -25,7 +25,7 @@
+     if not fact(supply, 'qualification_bound'):
+         out['scope_verified'] = False
+         out['reasons'].append('QUALIFIED_READINESS_BINDING_UNVERIFIED')
+-    if not out['independent']:
++    if not out['independent'] and _retained_source_checks_failed(demand, supply):
+         out['reasons'].append('INDEPENDENT_ORIGINS_MISSING')
+     if demand['role'] != 'DEMAND' or not fact(demand, 'committed'):
+         out['reasons'].append('COMMITTED_DEMAND_MISSING')
