@@ -1,0 +1,47 @@
+{
+  "frozen_at": "2026-10-05T16:29:39.181269+00:00",
+  "selection": "Latest five by stored published_at descending then document_id; PASS flag, exclude four manual REVIEW_LEAD examples; no outcome selection",
+  "sample_sha256": "c1411ba819460d50b1796f83ed65776a921054067f26f1adadda0a80578bb004",
+  "documents": [
+    {
+      "document_id": "d9b2fbb1-9d0a-4aee-9303-9b7690b1207d",
+      "body_sha256": "0c64404f56968687bf19adaea8b3a2ed93c47d06c5d03c9162d18ed36c6638ed",
+      "published_at": "2026-10-04T23:01:16+00:00",
+      "acquired_at": "2026-10-05T02:31:52.954588+00:00"
+    },
+    {
+      "document_id": "new-feed-e05299e3bf12c7171cd76d22afa8976071138d19f08afe46918775c0aef59b5d",
+      "body_sha256": "9259d857b03cdccbc47151cf7091888a2048fa353704a63e31169aaa3b06a17d",
+      "published_at": "2026-10-04T19:50:12.528000+00:00",
+      "acquired_at": "2026-10-05T02:01:46.509684+00:00"
+    },
+    {
+      "document_id": "c6cfb34e0148f5f7014f3b23cee27cd4b5ce89d7cbd0297c07bd221d252c8d17",
+      "body_sha256": "f5495288ad3dfcbb12af57ba4d50cfb9216583386462a5dc0e1d3166e5ca2271",
+      "published_at": "2026-10-02T12:00:00+00:00",
+      "acquired_at": "2026-10-05T03:02:22.627905+00:00"
+    },
+    {
+      "document_id": "c2198ed962fd169a808734ab5344152756cd6d103aed1b8951afe27dc8f91f56",
+      "body_sha256": "1b38bedac86252274c3bc3e1684bbd49d3e1798a30ca87f60e216c21cc2e9bf5",
+      "published_at": "2026-10-02T11:26:52+00:00",
+      "acquired_at": "2026-10-05T03:02:22.734442+00:00"
+    },
+    {
+      "document_id": "7e9f94980861bc9ce1919ff9ab4acd82526b6fd13a79f74834b21806251a2588",
+      "body_sha256": "802d3445ecb9483875110b6a684eabf6f9ac93f27bf3b64d77173b2384a745db",
+      "published_at": "2026-10-02T11:00:00+00:00",
+      "acquired_at": "2026-10-05T03:02:22.772662+00:00"
+    }
+  ],
+  "known_limitations": "Latest relative to preserved local input, not claimed current live feed. PASS is existing stored flag. No external refetch/revalidation. BACKFILL, not prospective. Original publication/body date discrepancies preserved.",
+  "code_sha256": {
+    "src/bct/review_intake.py": "f4c831013c4aa61655cb375df8ae5da2e790aa40d68d15007d18afed65b0aeb2",
+    "src/bct/precursor_v2.py": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+    "src/bct/review_leads.py": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e"
+  },
+  "run_limit": "One fixed small-sample execution; no outcome tuning",
+  "expected_EARLY_runs": 0,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+}
