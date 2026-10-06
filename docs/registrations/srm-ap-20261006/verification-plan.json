@@ -1,0 +1,24 @@
+{
+  "steps": [
+    {
+      "step": "append preserving patch",
+      "pass_condition": "22 TARGET IDs unchanged; AP prior3 histories unchanged; +1 history; unrelated JSON unchanged"
+    },
+    {
+      "step": "idempotence and UNKNOWN",
+      "pass_condition": "identical operation replay no changes; all2027/28/29 APquantities UNKNOWN; computedgap null; no promotion"
+    },
+    {
+      "step": "store and supply_gap existing regressions",
+      "pass_condition": "existing tests PASS"
+    },
+    {
+      "step": "remote write/readback",
+      "pass_condition": "fresh SHA guard and exact persisted history content; existing remote history preserved"
+    },
+    {
+      "step": "main artifact reflection",
+      "pass_condition": "only research docs added; fresh main checked; stored artifact exact readback"
+    }
+  ]
+}
