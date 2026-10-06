@@ -259,6 +259,36 @@ def validate_draft(directory):
     return sha((directory/config['authoritative_document']).read_bytes())
 
 
+def validate_approved(directory):
+    directory=Path(directory)
+    config=json.loads((directory/'approved-config.json').read_text())
+    manifest=json.loads((directory/'approved-manifest.json').read_text())
+    raw=(directory/'PREREGISTRATION_APPROVED.md').read_bytes()
+    if config['status']!='APPROVED_A_ONLY' or manifest['preregistration_sha256']!=sha(raw):
+        raise ValueError('APPROVED_DOCUMENT_BINDING_FAILED')
+    for filename,key in [('approved-config.json','config_sha256'),
+                         ('APPROVAL_RECORD.md','approval_evidence_sha256'),
+                         ('PREREGISTRATION_DRAFT.md','original_draft_sha256')]:
+        if sha((directory/filename).read_bytes())!=manifest[key]:raise ValueError('APPROVAL_HASH_MISMATCH')
+    if config['checkpoint_days']!=[7,14] or config['formal_protocol_approved']:
+        raise ValueError('APPROVAL_SCOPE_MISMATCH')
+    validate_state_ref(config['state_ref'])
+    return manifest
+
+
+def validate_epoch(value,directory='review-leads/evaluation-a'):
+    approved=validate_approved(directory)
+    if value['preregistration_sha256']!=approved['preregistration_sha256'] or value['version']!=approved['version']:
+        raise ValueError('EPOCH_DOCUMENT_MISMATCH')
+    event=value['server_event']
+    if event['head_branch']!='main' or event['head_sha']!=value['main_sha'] or event['created_at']!=value['t0'] or event['event']!='push':
+        raise ValueError('SERVER_EVENT_BINDING_FAILED')
+    t0=datetime.fromisoformat(value['t0'].replace('Z','+00:00'))
+    if t0.tzinfo is None or not event['id']:raise ValueError('SERVER_TIME_REQUIRED')
+    if value['formal_evaluation_started'] or value['B_stage_started']:raise ValueError('B_NOT_APPROVED')
+    return value
+
+
 def guard_output(parent):
     parent=Path(parent)
     if parent.name!='evaluation-a' or parent.is_symlink():raise ValueError('A_OUTPUT_NAMESPACE_ONLY')
@@ -289,11 +319,27 @@ def append_sidecar(parent,record):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True)
     p.add_argument('--observer-id',default=None);p.add_argument('--prior-report',type=Path)
+    p.add_argument('--epoch',type=Path)
     a=p.parse_args()
-    guard_output(a.output.parent)
+    if a.output.parent.name=='reports':
+        guard_output(a.output.parent.parent)
+        if a.output.parent.is_symlink():raise ValueError('SYMLINK_FORBIDDEN')
+    else:guard_output(a.output.parent)
     if a.output.exists():raise ValueError('IMMUTABLE_REPORT_ALREADY_EXISTS')
     prior=json.loads(a.prior_report.read_text()) if a.prior_report else None
     report=collect(a.observer_id or 'local-'+uuid.uuid4().hex,prior)
+    if a.epoch:
+        epoch=validate_epoch(json.loads(a.epoch.read_text()))
+        report['evaluation_link']={'phase':'SHAKEDOWN_OBSERVATION','epoch':epoch['epoch'],
+            't0':epoch['t0'],'preregistration_sha256':epoch['preregistration_sha256'],
+            'note':'Observer linkage only; no card mode/cohort/activation is rewritten.'}
+    report['runtime']='github_actions' if __import__('os').environ.get('GITHUB_ACTIONS')=='true' else 'cloud_tool'
+    rss=report['diagnosis']['RSS']['last_run']
+    report['actual_RSS_schedule_delay_seconds']=UNKNOWN
+    if isinstance(rss,dict) and rss.get('event')=='schedule':
+        slot=scheduled_slot(rss['created_at']).get('last_RSS_nominal_UTC')
+        if slot:
+            report['actual_RSS_schedule_delay_seconds']=(datetime.fromisoformat(rss['created_at'].replace('Z','+00:00'))-datetime.fromisoformat(slot)).total_seconds()
     a.output.parent.mkdir(parents=True,exist_ok=True)
     with a.output.open('x') as f:json.dump(report,f,ensure_ascii=False,indent=2)
 

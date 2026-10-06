@@ -1,0 +1,48 @@
+name: BCT read-only evaluation observer
+on:
+  schedule:
+    - cron: '30 3,15 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write # only dedicated evaluation-state persistence uses this permission
+  actions: read
+concurrency:
+  group: review-lead-evaluation-state
+  cancel-in-progress: false
+jobs:
+  observe:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: Restore only separate evaluation observations
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          base=$(python tools/review_evaluation_state.py restore --root var/evaluation-a)
+          echo "BASE_EVALUATION_SHA=$base" >> "$GITHUB_ENV"
+          test -f var/evaluation-a/epoch.json
+          previous=$(python tools/review_evaluation_state.py prior --root var/evaluation-a)
+          echo "PRIOR_OBSERVATION=$previous" >> "$GITHUB_ENV"
+      - name: Observe without executing acquisition or semantic reading
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python tools/review_evaluation_a.py --observer-id "$GITHUB_RUN_ID" --prior-report "$PRIOR_OBSERVATION" --epoch var/evaluation-a/epoch.json --output "var/evaluation-a/reports/$GITHUB_RUN_ID.json"
+          python tools/review_evaluation_state.py checkpoint --root var/evaluation-a --report "var/evaluation-a/reports/$GITHUB_RUN_ID.json"
+      - name: Append observations to evaluation state only
+        run: python tools/review_evaluation_state.py persist --root var/evaluation-a --base "$BASE_EVALUATION_SHA"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evaluation-observer-audit
+          path: var/evaluation-a/
+          retention-days: 30
+          if-no-files-found: warn
