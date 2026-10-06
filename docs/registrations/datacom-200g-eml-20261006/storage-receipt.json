@@ -1,0 +1,58 @@
+{
+  "recorded_at": "2026-10-06T13:45:35.789146+00:00",
+  "operation_id": "append-datacom-200g-eml-deep-primary-research-20261006",
+  "target_id": "datacom-200g-eml-qualified-die-capacity",
+  "final_status": "OBSERVE",
+  "tracking_commit": "58a57b42fe627e9ef58eae6f0111a8acd887a952",
+  "tracking_blob": "2f469f3e8536c3809e0bd222e5df3b4ce491f5ac",
+  "ledger_sha256": "7db460615aa35bb546d6987473094c35be1eeaacb0b65e2fc5e53e53b96322f8",
+  "ledger_location": "future-bottleneck-data:future-tracking.json",
+  "main_evidence_commit": "8a20f2805b8eb989fb0a0d36269d0128647b03ae",
+  "main_evidence_location": "main:docs/registrations/datacom-200g-eml-20261006/",
+  "registration_patch": "main:docs/registrations/20261006-datacom-200g-eml-deep.json",
+  "main_reflected": true,
+  "storage_result": "PASS_REMOTE_GIT_AND_CONNECTOR_BYTE_READBACK",
+  "artifacts_verified_before_receipt": [
+    {
+      "path": "docs/registrations/20261006-datacom-200g-eml-deep.json",
+      "sha256": "c32f0249246d53d220192f474da84049248fe9b0ba44665af845e2b50d83444e",
+      "status": "PASS_PINNED_MAIN_BYTES"
+    },
+    {
+      "path": "docs/registrations/datacom-200g-eml-20261006/REPORT.md",
+      "sha256": "3da28084a13a0b884e66185081b332ef15d8b7e4ae3890c9b70649a898ec110a",
+      "status": "PASS_PINNED_MAIN_BYTES"
+    },
+    {
+      "path": "docs/registrations/datacom-200g-eml-20261006/sources.json",
+      "sha256": "c203b2b2e27c84969929765abb59b16beb672ca29449b728a286181fb41c55ad",
+      "status": "PASS_PINNED_MAIN_BYTES"
+    },
+    {
+      "path": "docs/registrations/datacom-200g-eml-20261006/history-append.json",
+      "sha256": "51e512e775e9b51a05c1cf3b56996bd4ae252400ff8cc4e0e80d35c4454df6e8",
+      "status": "PASS_PINNED_MAIN_BYTES"
+    },
+    {
+      "path": "docs/registrations/datacom-200g-eml-20261006/verification.json",
+      "sha256": "80d2436e52c279febd1b88ac503a27d32aa66204196953bf65adafcf915feb5f",
+      "status": "PASS_PINNED_MAIN_BYTES"
+    }
+  ],
+  "existing_target_count": 22,
+  "new_targets": 0,
+  "prior_target_history_count": 1,
+  "appended_target_history_count": 1,
+  "all_prior_histories_preserved": true,
+  "target_metadata_preserved": true,
+  "idempotence_verified": true,
+  "future_gap_proven": false,
+  "strict_provenance_claim": false,
+  "forecast_performance_claim": false,
+  "tests": {
+    "command": "PYTHONPATH=src python -m pytest -q tests/test_future_store.py tests/test_future_github.py",
+    "passed": 22
+  },
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+}
