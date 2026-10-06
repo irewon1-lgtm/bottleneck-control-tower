@@ -77,6 +77,9 @@ def diagnose(snapshot):
 
 def scheduled_slot(observed):
     dt=datetime.fromisoformat(observed)
+    if dt.utcoffset() is None:
+        raise ValueError('observed timestamp must include timezone')
+    dt=dt.astimezone(timezone.utc)
     path=Path('.github/workflows/rss-live-check.yml');raw=path.read_bytes()
     crons=re.findall(r"cron:\s*['\"]([^'\"]+)['\"]",raw.decode())
     times=[]
