@@ -1,0 +1,811 @@
+{
+  "review_id": "on-demand-20261006-cpo-els-garnet-qualified-supply",
+  "reviewed_on": "2026-10-06",
+  "mode": "on_demand",
+  "status": "OBSERVE",
+  "reason": "2027~2029 미국 AI 데이터센터 CPO/ELS의 고객인증 isolator 필요량과 같은 규격・기간의 실제 적격 공급량이 모두 UNKNOWN이다. 제품 및 양산 경로는 존재하지만 부족・초과 예약・고객 납기 미충족・단계별 산출량 제한이 입증되지 않아 승격하지 않는다.",
+  "outcome": "SUPPLY_SHORTAGE_NOT_PROVEN; demand_exceeds_supply=UNKNOWN; OBSERVE 유지",
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "research_scope": {
+    "question": "2027~2029 미국 AI 데이터센터용 CPO/ELS 양산 증가가 실제 고객인증 optical isolator 공급보다 빨라 병목이 생기는가?",
+    "investment_analysis": false,
+    "cutoff": "2026-10-06",
+    "method": "공식 발표・기술 사양・실적/SEC 공시・제품 매뉴얼・특허・연구 원문 28건의 관련 구간을 읽고 기존 판단 재검증. 공개자료 조사이며 미공개 고객명・수량・승인・수율 추정 금지.",
+    "source_read_limit": "전 자료 전체 텍스트 완독 주장이 아님. 아래 manifest에 읽은 관련 구간과 짧은 발췌를 남김. 제품 카탈로그는 고객별 qualification 증거가 아님."
+  },
+  "sources": [
+    "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+    "https://developer.nvidia.com/blog/how-industry-collaboration-fosters-nvidia-co-packaged-optics",
+    "https://blogs.nvidia.com/blog/nvidia-gtc-taipei-computex-2026-news/",
+    "https://nvidianews.nvidia.com/news/nvidia-and-coherent-announce-strategic-partnership-to-develop-optics-technology-to-scale-next-generation-data-center-architecture",
+    "https://www.sec.gov/Archives/edgar/data/820318/000082031826000020/iivi-20260630.htm",
+    "https://www.smm.co.jp/en/news/release/uploaded_files/20260622_PressRelease_EN.pdf",
+    "https://www.smm.co.jp/en/ir/event/meeting/pdf/2025/260114_meeting_E.pdf",
+    "https://www.smm.co.jp/en/news/release/uploaded_files/20230731_E.pdf",
+    "https://www.coherent.com/content/dam/coherent/site/en/resources/datasheet/optics/magneto-optic-lpe-garnet-faraday-rotator-crystals-ds.pdf",
+    "https://www.granopt.jp/en/product.html",
+    "https://www.granopt.jp/en/images/GRANOPT-G005-E.pdf",
+    "https://www.shinetsu.co.jp/en/products/functional-materials/optical-isolators/",
+    "https://www.microsi.com/applications-solutions/optical-isolators/",
+    "https://patents.google.com/patent/US12012668B2/en",
+    "https://www.kohokukogyo.co.jp/assets/doc/ir/20221202_company_profile_en.pdf",
+    "https://www.glsunmall.com/fiber-optic-articles/why-ai-networks-need-optical-isolators.html",
+    "https://www.oiforum.com/wp-content/uploads/OIF-ELSFP-02.0.pdf",
+    "https://docs.broadcom.com/doc/ARLM-96F8DMZ-Product-Brief",
+    "https://investors.broadcom.com/news-releases/news-release-details/broadcom-announces-third-generation-co-packaged-optics-cpo",
+    "https://investors.broadcom.com/news-releases/news-release-details/broadcom-showcases-industry-leading-quality-and-reliability-co",
+    "https://patents.google.com/patent/US20260118611A1/en",
+    "https://global.kyocera.com/newsroom/news/2026/001197.html",
+    "https://community.intel.com/t5/Blogs/Tech-Innovation/Data-Center/Intel-Presents-Latest-Integrated-Photonics-Developments-at-2024/post/1583194",
+    "https://opg.optica.org/abstract.cfm?uri=CLEO_SI-2024-JTh5D.2",
+    "https://arxiv.org/abs/2212.01945",
+    "https://ayarlabs.com/supernova",
+    "https://www.coherent.com/networking/communication-components/passive-components/receptacle-isolator",
+    "https://ir.coherent.com/news-releases/news-release-details/coherent-announces-chips-letter-intent-50-million-expand-world"
+  ],
+  "source_manifest_path": "docs/registrations/cpo-els-garnet/sources-20261006.json",
+  "demand_timing": "2027 확장 계획은 존재. 2028 확정 연간 수량 UNKNOWN. 2029/2030 chip-to-chip 계획은 발표상 미래 배치일이며 2029 미국 주문량 아님.",
+  "supply_timing": "기존 상용 소재・isolator 경로 확인. 신규 ELS는 샘플과 인증 완료를 분리. GRANOPT 3배 계획은 2028-03-31까지이며 즉시 적격 완제품 공급량으로 산입 불가.",
+  "necessity_and_bom": {
+    "functional_need": "일반 InP CW 레이저 기반 ELS에서 반사광 보호가 설계상 중요하며 Coherent ELS BOM에는 isolator가 포함된다. 모든 CPO가 개별 garnet isolator를 반드시 쓰는 보편 규칙은 확인되지 않는다.",
+    "standards_limit": "OIF-ELSFP-02.0(2025-01-08)은 인터페이스・출력・환경/시험 조건을 정의한다. isolator 소재나 내부 부품 개수 의무를 확인하지 못했다. 인터페이스 준수만으로 BOM 산정 불가.",
+    "count_evidence": [
+      {
+        "architecture": "NVIDIA published ELS",
+        "facts": "ELS당 레이저 8개. Spectrum-X single-ASIC 16 ELS・quad-ASIC 64 ELS.",
+        "derived": "레이저 수 128/512는 곱셈으로 산출 가능.",
+        "isolator_finished_parts": "UNKNOWN",
+        "warning": "8 lasers != 8 finished isolators. 실제 garnet die 수・array 채널・단계 수・예비품은 미공개.",
+        "evidence": [
+          {
+            "source_id": "S02",
+            "url": "https://developer.nvidia.com/blog/how-industry-collaboration-fosters-nvidia-co-packaged-optics",
+            "locator": "ELS section, L61–68"
+          }
+        ]
+      },
+      {
+        "architecture": "Broadcom ARLM-96F8DMZ",
+        "facts": "8 lanes, lane당 100mW, 8 PM 출력 광섬유 및 CWDM 파장 구성.",
+        "isolator_finished_parts": "UNKNOWN",
+        "warning": "출력 포트 수・lane 수는 isolator BOM 공개가 아님.",
+        "evidence": [
+          {
+            "source_id": "S18",
+            "url": "https://docs.broadcom.com/doc/ARLM-96F8DMZ-Product-Brief",
+            "locator": "p1–2"
+          }
+        ]
+      },
+      {
+        "architecture": "Optilab published patent",
+        "facts": "청구항에서 채널별 isolator array 또는 WDM/AWG 결합 뒤 단일 isolator를 제시.",
+        "isolator_finished_parts": "structure-dependent; actual customer product UNKNOWN",
+        "warning": "개별 광경로용 element 여러 개를 한 array assembly로 패키징할 수 있고 공유 isolator 구조도 존재. 특허는 상용 인증/양산 증거가 아님.",
+        "evidence": [
+          {
+            "source_id": "S21",
+            "url": "https://patents.google.com/patent/US20260118611A1/en",
+            "locator": "claim 4; figures 3–6"
+          }
+        ]
+      },
+      {
+        "architecture": "Ayar SuperNova",
+        "facts": "다파장 광원 제품 구조는 공개.",
+        "isolator_finished_parts": "UNKNOWN",
+        "warning": "파장 수・data channel 수를 isolator 부품 수로 등치하지 않음.",
+        "evidence": [
+          {
+            "source_id": "S26",
+            "url": "https://ayarlabs.com/supernova",
+            "locator": "product features"
+          }
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "source_id": "S01",
+        "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+        "locator": "slides 12,14,30–33,40–44"
+      },
+      {
+        "source_id": "S17",
+        "url": "https://www.oiforum.com/wp-content/uploads/OIF-ELSFP-02.0.pdf",
+        "locator": "optical interface, module capability section"
+      },
+      {
+        "source_id": "S21",
+        "url": "https://patents.google.com/patent/US20260118611A1/en",
+        "locator": "claim 4; figures 3–6"
+      },
+      {
+        "source_id": "S23",
+        "url": "https://community.intel.com/t5/Blogs/Tech-Innovation/Data-Center/Intel-Presents-Latest-Integrated-Photonics-Developments-at-2024/post/1583194",
+        "locator": "QD laser section L44–46"
+      },
+      {
+        "source_id": "S24",
+        "url": "https://opg.optica.org/abstract.cfm?uri=CLEO_SI-2024-JTh5D.2",
+        "locator": "abstract"
+      }
+    ]
+  },
+  "annual_comparison": [
+    {
+      "year": 2027,
+      "geography": "US AI data centers; published system roadmaps are global unless specified",
+      "unit": "customer-qualified finished isolator assemblies/year; array channel and garnet die counts tracked separately",
+      "firm_required_isolators": "UNKNOWN",
+      "qualified_deliverable_isolators": "UNKNOWN",
+      "qualified_inventory": "UNKNOWN",
+      "allocated_capacity": "UNKNOWN",
+      "residual_unreserved_capacity": "UNKNOWN",
+      "demand_exceeds_supply": "UNKNOWN",
+      "ramp_evidence": "Coherent scale-out Q4 CY2026・scale-up 2H CY2027 계획. NVIDIA Spectrum-X CPO는 2026-06-01 full production 발표. 이미 존재하는 초기 양산과 2027 확장 계획을 구분. 미국 고객별 확정 출하량은 미공개.",
+      "evidence": [
+        {
+          "source_id": "S01",
+          "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+          "locator": "slides 12,14,30–33,40–44"
+        },
+        {
+          "source_id": "S03",
+          "url": "https://blogs.nvidia.com/blog/nvidia-gtc-taipei-computex-2026-news/",
+          "locator": "Spectrum production update L176–194"
+        },
+        {
+          "source_id": "S19",
+          "url": "https://investors.broadcom.com/news-releases/news-release-details/broadcom-announces-third-generation-co-packaged-optics-cpo",
+          "locator": "TH5 volume-production / ecosystem"
+        }
+      ]
+    },
+    {
+      "year": 2028,
+      "geography": "US AI data centers; published system roadmaps are global unless specified",
+      "unit": "customer-qualified finished isolator assemblies/year; array channel and garnet die counts tracked separately",
+      "firm_required_isolators": "UNKNOWN",
+      "qualified_deliverable_isolators": "UNKNOWN",
+      "qualified_inventory": "UNKNOWN",
+      "allocated_capacity": "UNKNOWN",
+      "residual_unreserved_capacity": "UNKNOWN",
+      "demand_exceeds_supply": "UNKNOWN",
+      "ramp_evidence": "미국 CPO/ELS 연간 확정 양산 수량 또는 isolator 발주 수량 확인 불가. GRANOPT FY2027 종료(2028-03-31)까지 3배 FR CAPA 계획은 공급 측 일정이며 수요 ramp 확정 근거가 아님.",
+      "evidence": [
+        {
+          "source_id": "S06",
+          "url": "https://www.smm.co.jp/en/news/release/uploaded_files/20260622_PressRelease_EN.pdf",
+          "locator": "p1 L0–18"
+        }
+      ]
+    },
+    {
+      "year": 2029,
+      "geography": "US AI data centers; published system roadmaps are global unless specified",
+      "unit": "customer-qualified finished isolator assemblies/year; array channel and garnet die counts tracked separately",
+      "firm_required_isolators": "UNKNOWN",
+      "qualified_deliverable_isolators": "UNKNOWN",
+      "qualified_inventory": "UNKNOWN",
+      "allocated_capacity": "UNKNOWN",
+      "residual_unreserved_capacity": "UNKNOWN",
+      "demand_exceeds_supply": "UNKNOWN",
+      "ramp_evidence": "Coherent chip-to-chip deployment 약 2029/2030 계획은 미래 응용 일정. 2029 미국 양산 수량・고객 주문・ELS 구조・isolator 수량은 미공개.",
+      "evidence": [
+        {
+          "source_id": "S01",
+          "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+          "locator": "slides 12,14,30–33,40–44"
+        }
+      ]
+    }
+  ],
+  "supplier_qualification": [
+    {
+      "supplier": "Coherent",
+      "stage": "LPE garnet/Faraday rotator・isolator・ELS",
+      "public_status": "ESTABLISHED_SERIAL_COMPONENTS; NEW_ELS_CUSTOMER_SAMPLES",
+      "qualified_customer_cpo_els": "UNKNOWN",
+      "qualified_annual_capacity": "UNKNOWN",
+      "evidence": [
+        {
+          "source_id": "S01",
+          "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+          "locator": "slides 12,14,30–33,40–44"
+        },
+        {
+          "source_id": "S09",
+          "url": "https://www.coherent.com/content/dam/coherent/site/en/resources/datasheet/optics/magneto-optic-lpe-garnet-faraday-rotator-crystals-ds.pdf",
+          "locator": "p1–5"
+        },
+        {
+          "source_id": "S27",
+          "url": "https://www.coherent.com/networking/communication-components/passive-components/receptacle-isolator",
+          "locator": "L131–144"
+        }
+      ],
+      "notes": "기존 상용 부품 공급과 CPO 고객인증을 구분. 누적 700M isolators/garnet은 전 기간・복합 분류로, 연산량이나 CPO 전용 수량이 아님. 신규 ELS 고객 샘플 납입은 인증 완료를 뜻하지 않음."
+    },
+    {
+      "supplier": "GRANOPT / Sumitomo Metal Mining",
+      "stage": "synthetic garnet Faraday rotator upstream",
+      "public_status": "ESTABLISHED_SERIAL_UPSTREAM; EXPANSION_PLANNED",
+      "qualified_customer_cpo_els": "UNKNOWN",
+      "qualified_annual_capacity": "UNKNOWN",
+      "evidence": [
+        {
+          "source_id": "S06",
+          "url": "https://www.smm.co.jp/en/news/release/uploaded_files/20260622_PressRelease_EN.pdf",
+          "locator": "p1 L0–18"
+        },
+        {
+          "source_id": "S07",
+          "url": "https://www.smm.co.jp/en/ir/event/meeting/pdf/2025/260114_meeting_E.pdf",
+          "locator": "slides 14–15 L219–259"
+        },
+        {
+          "source_id": "S10",
+          "url": "https://www.granopt.jp/en/product.html",
+          "locator": "RIG series product description"
+        }
+      ],
+      "notes": "FY2025 대비 FY2027(2028-03-31 종료)까지 FR 생산능력 3배 계획. 절대 개수・CPO 배분・신규 라인 고객 승인 미공개. 완제품 isolator 공급량으로 합산 금지."
+    },
+    {
+      "supplier": "Shin-Etsu Chemical / MicroSi",
+      "stage": "garnet/Faraday rotator/isolator",
+      "public_status": "ESTABLISHED_SERIAL_TELECOM_PRODUCTS",
+      "qualified_customer_cpo_els": "UNKNOWN",
+      "qualified_annual_capacity": "UNKNOWN",
+      "evidence": [
+        {
+          "source_id": "S12",
+          "url": "https://www.shinetsu.co.jp/en/products/functional-materials/optical-isolators/",
+          "locator": "product description L101–112"
+        },
+        {
+          "source_id": "S13",
+          "url": "https://www.microsi.com/applications-solutions/optical-isolators/",
+          "locator": "L49–59"
+        },
+        {
+          "source_id": "S14",
+          "url": "https://patents.google.com/patent/US12012668B2/en",
+          "locator": "example / fabrication sequence"
+        }
+      ],
+      "notes": "통신용 제품・수직통합은 확인. 미국 고출력 O-band ELS 지정 SKU와 고객 승인・가용 수량 미확인."
+    },
+    {
+      "supplier": "Kohoku Kogyo",
+      "stage": "garnet/precision optics/isolator assembly and inspection",
+      "public_status": "ESTABLISHED_SERIAL_COMMUNICATION_PRODUCTS",
+      "qualified_customer_cpo_els": "UNKNOWN",
+      "qualified_annual_capacity": "UNKNOWN",
+      "evidence": [
+        {
+          "source_id": "S15",
+          "url": "https://www.kohokukogyo.co.jp/assets/doc/ir/20221202_company_profile_en.pdf",
+          "locator": "slide 10–11"
+        }
+      ],
+      "notes": "해저통신 등의 기존 isolator 공급을 CPO/ELS용 적격 공급으로 자동 전환하지 않음."
+    },
+    {
+      "supplier": "GLSUN",
+      "stage": "isolator/array and optical assembly",
+      "public_status": "VENDOR_REPORTED_VOLUME_TRANSCEIVER_COMPONENTS; CPO_R_AND_D",
+      "qualified_customer_cpo_els": "UNKNOWN",
+      "qualified_annual_capacity": "UNKNOWN",
+      "evidence": [
+        {
+          "source_id": "S16",
+          "url": "https://www.glsunmall.com/fiber-optic-articles/why-ai-networks-need-optical-isolators.html",
+          "locator": "L200–224"
+        }
+      ],
+      "notes": "회사 주장 월 10KK(1,000만개 초과)는 범용/혼합 제품 범위. CPO는 연구개발 문맥이며 미국 CPO 고객인증 수량의 근거로 제외."
+    },
+    {
+      "supplier": "NVIDIA ELS ecosystem / TFC / Foxconn; Broadcom ARLM ecosystem",
+      "stage": "ELS module/system",
+      "public_status": "SYSTEM_PRODUCTION_OR_PRODUCT_EVIDENCE",
+      "qualified_customer_cpo_els": "ISOLATOR_VENDOR_AND_BOM_UNKNOWN",
+      "qualified_annual_capacity": "UNKNOWN",
+      "evidence": [
+        {
+          "source_id": "S02",
+          "url": "https://developer.nvidia.com/blog/how-industry-collaboration-fosters-nvidia-co-packaged-optics",
+          "locator": "ELS section, L61–68"
+        },
+        {
+          "source_id": "S03",
+          "url": "https://blogs.nvidia.com/blog/nvidia-gtc-taipei-computex-2026-news/",
+          "locator": "Spectrum production update L176–194"
+        },
+        {
+          "source_id": "S18",
+          "url": "https://docs.broadcom.com/doc/ARLM-96F8DMZ-Product-Brief",
+          "locator": "p1–2"
+        },
+        {
+          "source_id": "S19",
+          "url": "https://investors.broadcom.com/news-releases/news-release-details/broadcom-announces-third-generation-co-packaged-optics-cpo",
+          "locator": "TH5 volume-production / ecosystem"
+        }
+      ],
+      "notes": "시스템/모듈 양산은 어떤 공급 경로가 존재함을 보여주지만 isolator 공급자・SKU・고객별 승인・잔여 생산능력은 역산 불가."
+    }
+  ],
+  "qualification_boundary": {
+    "publicly_named_customer_qualified_isolator_supplier_sku_pairs": "UNKNOWN",
+    "reason": "완성 CPO 시스템 양산 사실은 일부 적격 공급의 존재를 지지하지만 isolator 공급자-SKU-고객 승인 완료 조합과 실제 공급 가능 개수는 공개되지 않았다. UNKNOWN은 공급자가 0개라는 뜻이 아니다.",
+    "no_capacity_sum": "업스트림 FR・완제품 isolator・ELS 모듈 CAPA를 합산하지 않는다. 범용 C-band・해저 inline 제품을 UHP O-band PM ELS에 자동 전용하지 않는다."
+  },
+  "process_stage_review": [
+    {
+      "stage": "원료/특수 seed substrate",
+      "established": "합성 Bi 치환 희토류 iron garnet(BIG/RIG)이 광학 활성층. GGG/SGGG 계열 seed는 별도 벌크 결정 성장 경로. 천연 연마재 garnet・InP wafer와 구분.",
+      "constraint_evidence": "UNKNOWN",
+      "yield": "UNKNOWN",
+      "lead_time": "UNKNOWN",
+      "capacity": "UNKNOWN",
+      "evidence": [
+        {
+          "source_id": "S09",
+          "url": "https://www.coherent.com/content/dam/coherent/site/en/resources/datasheet/optics/magneto-optic-lpe-garnet-faraday-rotator-crystals-ds.pdf",
+          "locator": "p1–5"
+        },
+        {
+          "source_id": "S10",
+          "url": "https://www.granopt.jp/en/product.html",
+          "locator": "RIG series product description"
+        },
+        {
+          "source_id": "S14",
+          "url": "https://patents.google.com/patent/US12012668B2/en",
+          "locator": "example / fabrication sequence"
+        }
+      ]
+    },
+    {
+      "stage": "BIG/RIG LPE growth / wafer-crystal preparation",
+      "established": "기판 위 액상에피택시 및 조성・두께・흡수・Faraday rotation 관리. 특허 공정 난이도는 현 공급 부족 증거가 아님.",
+      "constraint_evidence": "UNKNOWN",
+      "yield": "UNKNOWN",
+      "lead_time": "UNKNOWN",
+      "capacity": "UNKNOWN",
+      "evidence": [
+        {
+          "source_id": "S09",
+          "url": "https://www.coherent.com/content/dam/coherent/site/en/resources/datasheet/optics/magneto-optic-lpe-garnet-faraday-rotator-crystals-ds.pdf",
+          "locator": "p1–5"
+        },
+        {
+          "source_id": "S11",
+          "url": "https://www.granopt.jp/en/images/GRANOPT-G005-E.pdf",
+          "locator": "chapters 5,9,10 (pp6–24)"
+        },
+        {
+          "source_id": "S14",
+          "url": "https://patents.google.com/patent/US12012668B2/en",
+          "locator": "example / fabrication sequence"
+        }
+      ],
+      "relief": "GRANOPT 기존 라인 가동률・생산효율 개선 포함 3배 계획; 적격 절대 산출량 UNKNOWN"
+    },
+    {
+      "stage": "polishing / CMP / AR coating / dicing",
+      "established": "워핑 완화・두께 정밀도・흡수 및 코팅 손상・유효 aperture 내 결함・칩핑 관리가 필요. 제품 기술 매뉴얼 확인.",
+      "constraint_evidence": "UNKNOWN",
+      "yield": "UNKNOWN",
+      "lead_time": "UNKNOWN",
+      "capacity": "UNKNOWN",
+      "evidence": [
+        {
+          "source_id": "S11",
+          "url": "https://www.granopt.jp/en/images/GRANOPT-G005-E.pdf",
+          "locator": "chapters 5,9,10 (pp6–24)"
+        }
+      ]
+    },
+    {
+      "stage": "polarizer / magnet / optical path assembly",
+      "established": "편광・Faraday 회전・광축 정렬・고출력 손실/열 특성・PM 결합을 규격 내로 조립. Faraday rotator 조각과 완성 isolator/array를 중복 합산하지 않음.",
+      "constraint_evidence": "UNKNOWN",
+      "yield": "UNKNOWN",
+      "lead_time": "UNKNOWN",
+      "capacity": "UNKNOWN",
+      "evidence": [
+        {
+          "source_id": "S11",
+          "url": "https://www.granopt.jp/en/images/GRANOPT-G005-E.pdf",
+          "locator": "chapters 5,9,10 (pp6–24)"
+        },
+        {
+          "source_id": "S12",
+          "url": "https://www.shinetsu.co.jp/en/products/functional-materials/optical-isolators/",
+          "locator": "product description L101–112"
+        },
+        {
+          "source_id": "S15",
+          "url": "https://www.kohokukogyo.co.jp/assets/doc/ir/20221202_company_profile_en.pdf",
+          "locator": "slide 10–11"
+        },
+        {
+          "source_id": "S21",
+          "url": "https://patents.google.com/patent/US20260118611A1/en",
+          "locator": "claim 4; figures 3–6"
+        }
+      ]
+    },
+    {
+      "stage": "test / reliability / customer qualification",
+      "established": "부품・모듈・시스템 인증은 서로 다름. O-band/CWDM/고출력・온도 범위・reflection immunity・장기 신뢰성에 따른 지정 SKU/고객 승인이 필요.",
+      "constraint_evidence": "UNKNOWN",
+      "yield": "UNKNOWN",
+      "lead_time": "UNKNOWN",
+      "capacity": "UNKNOWN",
+      "evidence": [
+        {
+          "source_id": "S01",
+          "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+          "locator": "slides 12,14,30–33,40–44"
+        },
+        {
+          "source_id": "S17",
+          "url": "https://www.oiforum.com/wp-content/uploads/OIF-ELSFP-02.0.pdf",
+          "locator": "optical interface, module capability section"
+        },
+        {
+          "source_id": "S18",
+          "url": "https://docs.broadcom.com/doc/ARLM-96F8DMZ-Product-Brief",
+          "locator": "p1–2"
+        },
+        {
+          "source_id": "S27",
+          "url": "https://www.coherent.com/networking/communication-components/passive-components/receptacle-isolator",
+          "locator": "L131–144"
+        }
+      ]
+    }
+  ],
+  "actual_bottleneck_stage": "UNKNOWN — 완제품, BIG LPE, 특수 seed 성장, AR coating, 조립, 검사, 고객인증 중 어느 단계가 현재/2027~2029 산출량을 제한하는지 미확인",
+  "substage_candidates": [
+    {
+      "candidate": "고출력 O-band ELS용 BIG/RIG Faraday rotator의 적격 LPE 산출량",
+      "status": "UNPROVEN_WATCH_ITEM",
+      "new_target_created": false,
+      "reason": "GRANOPT 증설과 기술 공정 의존성은 관찰 가치가 있으나 고객인증된 공급 부족 또는 성장 단계 제한 수율 증거는 없다.",
+      "evidence": [
+        {
+          "source_id": "S06",
+          "url": "https://www.smm.co.jp/en/news/release/uploaded_files/20260622_PressRelease_EN.pdf",
+          "locator": "p1 L0–18"
+        },
+        {
+          "source_id": "S09",
+          "url": "https://www.coherent.com/content/dam/coherent/site/en/resources/datasheet/optics/magneto-optic-lpe-garnet-faraday-rotator-crystals-ds.pdf",
+          "locator": "p1–5"
+        },
+        {
+          "source_id": "S11",
+          "url": "https://www.granopt.jp/en/images/GRANOPT-G005-E.pdf",
+          "locator": "chapters 5,9,10 (pp6–24)"
+        }
+      ]
+    }
+  ],
+  "contracts_and_allocation": {
+    "coherent_isolator_ltas": "Coherent가 복수 고객 isolator LTA를 발표. 고객별 물량・시작/종료・제품 규격・최소 구매・예약 비율・남은 CAPA는 UNKNOWN.",
+    "nvidia_agreement": "2026-03-02 발표 및 FY2026 10-K: 비독점 계약, 광학제품 구매 약정과 미래 생산능력 접근권. isolator 전용 예약 수량/비율로 읽지 않음.",
+    "reservation_quantities": "UNKNOWN",
+    "accounting_rule": "총 고객 필요량은 동일 고객 배정분을 포함한 총 적격 공급과 비교. 미배정 증분 필요량은 미예약 잔여 적격 공급과 비교. 예약된 수요를 총수요에 넣고 예약 CAPA를 공급에서 차감해 허위 격차를 만들지 않음.",
+    "evidence": [
+      {
+        "source_id": "S01",
+        "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+        "locator": "slides 12,14,30–33,40–44"
+      },
+      {
+        "source_id": "S04",
+        "url": "https://nvidianews.nvidia.com/news/nvidia-and-coherent-announce-strategic-partnership-to-develop-optics-technology-to-scale-next-generation-data-center-architecture",
+        "locator": "strategic agreement announcement"
+      },
+      {
+        "source_id": "S05",
+        "url": "https://www.sec.gov/Archives/edgar/data/820318/000082031826000020/iivi-20260630.htm",
+        "locator": "Agreements with NVIDIA L1048–50; risk L587–93"
+      }
+    ]
+  },
+  "relief_evidence": [
+    {
+      "route": "GRANOPT Faraday rotator 3x",
+      "maturity": "ANNOUNCED_EXPANSION_OF_ESTABLISHED_UPSTREAM",
+      "timeline": "FY2027 ending 2028-03-31; FY2025 baseline",
+      "facts": "2026-06-22 발표. FY2024 가동한 두 번째 공장 및 기존 라인의 가동률・효율 향상 활용.",
+      "relief_volume": "UNKNOWN",
+      "customer_qualification_complete_on": "UNKNOWN",
+      "constraint": "절대 CAPA・고출력 O-band/CPO 배분・완제품 후공정 가용량 미공개. 2027 초의 3배 가용 공급으로 간주 금지.",
+      "evidence": [
+        {
+          "source_id": "S06",
+          "url": "https://www.smm.co.jp/en/news/release/uploaded_files/20260622_PressRelease_EN.pdf",
+          "locator": "p1 L0–18"
+        },
+        {
+          "source_id": "S07",
+          "url": "https://www.smm.co.jp/en/ir/event/meeting/pdf/2025/260114_meeting_E.pdf",
+          "locator": "slides 14–15 L219–259"
+        },
+        {
+          "source_id": "S08",
+          "url": "https://www.smm.co.jp/en/news/release/uploaded_files/20230731_E.pdf",
+          "locator": "p1–2"
+        }
+      ]
+    },
+    {
+      "route": "Coherent integrated supply chain",
+      "maturity": "ESTABLISHED_INTEGRATION",
+      "timeline": "기존 경로",
+      "relief_volume": "UNKNOWN",
+      "constraint": "수직통합은 신규 isolator CAPA나 인증 완료 일정을 제공하지 않는다. Sherman InP 증설은 garnet 증설과 구분.",
+      "evidence": [
+        {
+          "source_id": "S01",
+          "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+          "locator": "slides 12,14,30–33,40–44"
+        },
+        {
+          "source_id": "S28",
+          "url": "https://ir.coherent.com/news-releases/news-release-details/coherent-announces-chips-letter-intent-50-million-expand-world",
+          "locator": "Sherman expansion announcement"
+        }
+      ]
+    },
+    {
+      "route": "isolator array / shared WDM isolator",
+      "maturity": "PATENT_OR_VENDOR_PRODUCT_ARCHITECTURE",
+      "timeline": "customer-specific qualification UNKNOWN",
+      "relief_volume": "UNKNOWN",
+      "constraint": "패키지 개수 감소와 garnet 활성 면적/채널 수 감소는 다름. 지정 고객의 실제 적용 BOM 없음.",
+      "evidence": [
+        {
+          "source_id": "S16",
+          "url": "https://www.glsunmall.com/fiber-optic-articles/why-ai-networks-need-optical-isolators.html",
+          "locator": "L200–224"
+        },
+        {
+          "source_id": "S21",
+          "url": "https://patents.google.com/patent/US20260118611A1/en",
+          "locator": "claim 4; figures 3–6"
+        }
+      ]
+    },
+    {
+      "route": "reflection-tolerant quantum-dot / isolator-less laser",
+      "maturity": "RESEARCH_DEMONSTRATION",
+      "timeline": "2027~2029 qualified mass adoption UNKNOWN",
+      "relief_volume": "UNKNOWN",
+      "constraint": "Intel/Optica 연구는 feedback 내성을 보이나 기존 UHP CW ELS 규격과 고객 승인・신뢰성・열/출력 요구를 모두 대체했다는 증거 없음.",
+      "evidence": [
+        {
+          "source_id": "S23",
+          "url": "https://community.intel.com/t5/Blogs/Tech-Innovation/Data-Center/Intel-Presents-Latest-Integrated-Photonics-Developments-at-2024/post/1583194",
+          "locator": "QD laser section L44–46"
+        },
+        {
+          "source_id": "S24",
+          "url": "https://opg.optica.org/abstract.cfm?uri=CLEO_SI-2024-JTh5D.2",
+          "locator": "abstract"
+        }
+      ]
+    },
+    {
+      "route": "Kyocera/Tohoku integrated garnet isolator",
+      "maturity": "RESEARCH_PROTOTYPE",
+      "timeline": "commercial ramp UNKNOWN",
+      "relief_volume": "UNKNOWN",
+      "constraint": "2026-09-10 발표, 13.6dB isolation 시제품. garnet 사용은 유지되며 packaging 감소 가능성과 원료 대체를 구분.",
+      "evidence": [
+        {
+          "source_id": "S22",
+          "url": "https://global.kyocera.com/newsroom/news/2026/001197.html",
+          "locator": "device demonstration / Future Development"
+        }
+      ]
+    },
+    {
+      "route": "nonmagnetic electro-optic isolator",
+      "maturity": "RESEARCH_PROTOTYPE",
+      "timeline": "qualified O-band high-power ELS ramp UNKNOWN",
+      "relief_volume": "UNKNOWN",
+      "constraint": "LiNbO3 RF-driven 연구는 주로 1510~1630nm로 기존 1311nm 고출력 ELS 적격 대체 입증 아님. magnetless latching garnet도 garnet-free와 다름.",
+      "evidence": [
+        {
+          "source_id": "S25",
+          "url": "https://arxiv.org/abs/2212.01945",
+          "locator": "abstract"
+        },
+        {
+          "source_id": "S10",
+          "url": "https://www.granopt.jp/en/product.html",
+          "locator": "RIG series product description"
+        }
+      ]
+    }
+  ],
+  "decisive_unknowns": [
+    "미국 고객/플랫폼별 2027・2028・2029 확정 CPO 시스템 수・ELS 수・발주/필요일・예비품・채널/array/단일부품 BOM",
+    "고객-SKU-공장별 isolator 승인 완료・변경/신규 공급자 재인증 일정",
+    "규격별 연간 또는 월별 좋은 제품 산출량・공정별 수율・uptime・라인 전환・lead time・재고",
+    "LTA별 예약/배정 물량 및 미예약 잔여 적격 CAPA, 동일 예약 고객의 실수요",
+    "GRANOPT 기준 절대 FR CAPA・공정증설 시점・신규 산출물 고객 승인・isolator 후공정의 대응 수량",
+    "garnet seed/LPE/AR coating/조립/검사 중 rate-limiting 단계와 제품별 fail 원인",
+    "대체/중국 공급 경로의 실제 미국 고객 승인 및 납기; 지리만으로 적격 공급을 배제하지 않음"
+  ],
+  "comparison_inputs": {
+    "current": {
+      "state": "UNRESOLVED",
+      "basis": "동일 제품/고객/기간의 부족 실증이 없다.",
+      "evidence": []
+    },
+    "demand": {
+      "balance_basis": "total",
+      "scope": "2027~2029 US AI DC CPO/ELS; customer-qualified garnet isolator assemblies",
+      "unit": "개/년",
+      "min": null,
+      "max": null,
+      "period_start": "2027-01-01",
+      "period_end": "2029-12-31",
+      "basis": "글로벌 ramp 계획은 확인되지만 미국 확정 시스템/ELS 수・isolator BOM 미공개.",
+      "evidence": [
+        {
+          "source_id": "S01",
+          "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+          "locator": "slides 12,14,30–33,40–44"
+        },
+        {
+          "source_id": "S02",
+          "url": "https://developer.nvidia.com/blog/how-industry-collaboration-fosters-nvidia-co-packaged-optics",
+          "locator": "ELS section, L61–68"
+        },
+        {
+          "source_id": "S03",
+          "url": "https://blogs.nvidia.com/blog/nvidia-gtc-taipei-computex-2026-news/",
+          "locator": "Spectrum production update L176–194"
+        },
+        {
+          "source_id": "S18",
+          "url": "https://docs.broadcom.com/doc/ARLM-96F8DMZ-Product-Brief",
+          "locator": "p1–2"
+        },
+        {
+          "source_id": "S19",
+          "url": "https://investors.broadcom.com/news-releases/news-release-details/broadcom-announces-third-generation-co-packaged-optics-cpo",
+          "locator": "TH5 volume-production / ecosystem"
+        }
+      ]
+    },
+    "supply": {
+      "balance_basis": "total",
+      "scope": "same customers/specifications/years as demand",
+      "unit": "개/년",
+      "kind": "QUALIFIED_DELIVERABLE",
+      "coverage": "PARTIAL",
+      "min": null,
+      "max": null,
+      "period_start": "2027-01-01",
+      "period_end": "2029-12-31",
+      "basis": "연간 적격 공급량 UNKNOWN. 누적 출하・범용 CAPA・상대 증설배수・모듈 양산 사실을 해당 수량으로 대체하지 않음.",
+      "evidence": [
+        {
+          "source_id": "S01",
+          "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+          "locator": "slides 12,14,30–33,40–44"
+        },
+        {
+          "source_id": "S06",
+          "url": "https://www.smm.co.jp/en/news/release/uploaded_files/20260622_PressRelease_EN.pdf",
+          "locator": "p1 L0–18"
+        },
+        {
+          "source_id": "S12",
+          "url": "https://www.shinetsu.co.jp/en/products/functional-materials/optical-isolators/",
+          "locator": "product description L101–112"
+        },
+        {
+          "source_id": "S15",
+          "url": "https://www.kohokukogyo.co.jp/assets/doc/ir/20221202_company_profile_en.pdf",
+          "locator": "slide 10–11"
+        },
+        {
+          "source_id": "S16",
+          "url": "https://www.glsunmall.com/fiber-optic-articles/why-ai-networks-need-optical-isolators.html",
+          "locator": "L200–224"
+        }
+      ]
+    },
+    "timing": {
+      "coverage": "PARTIAL",
+      "earliest_qualified_supply": null,
+      "required_by": null,
+      "basis": "고객 필요일과 공급 승인/납기 대응은 UNKNOWN",
+      "evidence": [
+        {
+          "source_id": "S01",
+          "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+          "locator": "slides 12,14,30–33,40–44"
+        },
+        {
+          "source_id": "S06",
+          "url": "https://www.smm.co.jp/en/news/release/uploaded_files/20260622_PressRelease_EN.pdf",
+          "locator": "p1 L0–18"
+        }
+      ]
+    },
+    "shortage_window": {
+      "start": null,
+      "end": null,
+      "basis": "ramp/증설 발표일을 부족 발생일로 대체하지 않음",
+      "evidence": []
+    },
+    "relief": {
+      "review_complete": true,
+      "basis": "이번 공개 원문 범위에서 증설・대체구조・isolator-less 반증을 점검. 비공개 승인/절대 수량 때문에 효과는 UNKNOWN; 전 세계 공급자 전수조사 완료 주장은 아님.",
+      "evidence": [
+        {
+          "source_id": "S06",
+          "url": "https://www.smm.co.jp/en/news/release/uploaded_files/20260622_PressRelease_EN.pdf",
+          "locator": "p1 L0–18"
+        },
+        {
+          "source_id": "S21",
+          "url": "https://patents.google.com/patent/US20260118611A1/en",
+          "locator": "claim 4; figures 3–6"
+        },
+        {
+          "source_id": "S22",
+          "url": "https://global.kyocera.com/newsroom/news/2026/001197.html",
+          "locator": "device demonstration / Future Development"
+        },
+        {
+          "source_id": "S23",
+          "url": "https://community.intel.com/t5/Blogs/Tech-Innovation/Data-Center/Intel-Presents-Latest-Integrated-Photonics-Developments-at-2024/post/1583194",
+          "locator": "QD laser section L44–46"
+        },
+        {
+          "source_id": "S24",
+          "url": "https://opg.optica.org/abstract.cfm?uri=CLEO_SI-2024-JTh5D.2",
+          "locator": "abstract"
+        },
+        {
+          "source_id": "S25",
+          "url": "https://arxiv.org/abs/2212.01945",
+          "locator": "abstract"
+        }
+      ]
+    }
+  },
+  "supply_gap": {
+    "version": "supply-gap-v1",
+    "as_of": "2026-10-06",
+    "gap_status": "UNRESOLVED",
+    "gap_range": null,
+    "route": null,
+    "objective_fit": "UNRESOLVED",
+    "blockers": [
+      "동일 기간・규격・지역・고객의 필요한 수량 UNKNOWN",
+      "실제 고객인증 완료 공급 가능 수량 UNKNOWN",
+      "현재 또는 미래 고객 납기 실패와 원인 공정 UNKNOWN",
+      "증설과 대체 경로가 공급 부족을 해소하는 절대 수량/시점 UNKNOWN"
+    ],
+    "non_investment_review": true
+  },
+  "next_check": "고객-SKU 승인 완료 자료, 실제 연도별 주문/출하/BOM, 공정별 좋은 제품 산출량・수율・납기, 예약/미예약 분리 수량, GRANOPT 3배 계획 실행과 승인 완료를 확보할 때 재판정. 수요 > 적격 공급 입증 전 승격 금지."
+}
+
