@@ -1,0 +1,37 @@
+{
+  "as_of": "2026-10-06",
+  "actual_executed_checks": {
+    "objective_binding": "PASS",
+    "prior_target_history_immutable": "PASS",
+    "other_21_targets_immutable": "PASS",
+    "no_duplicate_TARGET": "PASS",
+    "root_fields_preserved": "PASS",
+    "existing_operations_preserved": "PASS",
+    "same_operation_idempotent": "PASS",
+    "annual_collision_unproven_all_three": "PASS",
+    "equity_analysis_excluded": "PASS"
+  },
+  "canonical_remote_readback": "PASS",
+  "tests": {
+    "python_pytest_storage_github": {
+      "command": "PYTHONPATH=src python -m pytest -q tests/test_future_store.py tests/test_future_github.py",
+      "passed": 22,
+      "failed": 0
+    },
+    "js_readable_view_model": {
+      "command": "node --test tests/test_readable_view_model.js",
+      "passed": 8,
+      "failed": 0
+    },
+    "target_view_latest_history": {
+      "status": "PASS",
+      "sector": "핵연료",
+      "latest_status": "OBSERVE",
+      "history_count": 2,
+      "source_count": 34
+    },
+    "initial_invocation_correction": "unittest discovered zero pytest functions; exit5; reran correct pytest command and passed22. Zero-test run not counted as PASS."
+  },
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+}

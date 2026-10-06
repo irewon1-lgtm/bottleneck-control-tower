@@ -1,0 +1,532 @@
+{
+  "owner": "review",
+  "operation_id": "append-primary-unobligated-haleu-research-20261006-v1",
+  "patch": {
+    "targets": [
+      {
+        "id": "unobligated-haleu-us-qualified-supply",
+        "history": [
+          {
+            "id": "primary-haleu-qualified-supply-20261006-v1",
+            "review_id": "primary-haleu-qualified-supply-20261006-v1",
+            "formal_TARGET_id": "unobligated-haleu-us-qualified-supply",
+            "reviewed_on": "2026-10-06",
+            "recorded_at": "2026-10-06T15:16:55.938Z",
+            "mode": "on_demand",
+            "status": "OBSERVE",
+            "analysis_scope": "USABLE_UNOBLIGATED_QUALIFIED_HALEU_ONLY_NO_EQUITY_ANALYSIS",
+            "research_horizon": {
+              "start": "2027-01-01",
+              "end": "2029-12-31"
+            },
+            "research_judgment": "DATA_INSUFFICIENT",
+            "early_detection_claim": false,
+            "strict_pass_claim": false,
+            "performance_claim": false,
+            "forecast_qualification": false,
+            "reason": "정부·SEC 계약·사업자 원문 재조사. Antares 1MTU firm TRISO와 Janus 2028 목표는 확인되지만 연도별 kgU·unobligated 필요·잔여 적격 공급 비교 불가. GAO는 현재 시범 cascade의 외국 부품 및 DoD microreactor의 unobligated 의무 미결정을 명시. DOE 요청 대비 부족 전망은 이 TARGET의 동일기간 확정 수요>적격 잔여 공급 증명이 아니므로 OBSERVE.",
+            "outcome": "2027/2028/2029 MATCHED_PERIOD_COLLISION_UNPROVEN; UNKNOWN은 0이 아님; 기존 OBSERVE를 전제하지 않은 새 조사",
+            "summary": "확정 계약 존재·적격성 불일치·deconversion 위험 확인. 연도별 확정 수요 및 실제 배정 후 unobligated 양품 공급 UNKNOWN. 승격하지 않음.",
+            "target_scope": {
+              "material": "HALEU (>5% and <20% U235), customer assay/form specific",
+              "eligibility": "미국에서 실제 사용 가능한 물량 중 프로젝트별 외국 평화적 사용 의무가 없고 해당 assay·형상·batch 품질·수령/운송 승인이 충족되는 물량",
+              "demand_not_assumed_unobligated": [
+                "civil advanced reactors",
+                "Army installation electricity microreactors",
+                "NASA SR1"
+              ],
+              "scope_conflict": "S01: DoD/DOE는 군사용 microreactor 연료의 unobligated 필요 여부 미결정. 안보 용도란 표현만으로 의무를 부여하지 않음.",
+              "unit_rule": "kg UF6 ≠ kgU; MTU=uranium mass. 필요한 assay와 oxide/metal/TRISO 형태 별개. gross feed ≠ accepted fuel.",
+              "new_targets_created": 0
+            },
+            "demand_timing": "2027 Antares 발전 계획; 2028 Janus 최초 원자로 Sep 목표 및 NASA late-2028 발사; 2029 기존 계약의 decade-end까지 인도 시작 가능 범위. 연도별 core/refuel kgU와 강제 unobligated 조항 UNKNOWN. Antares–Standard 기본1MTU firm +7MTU optional은 다년 합계로만 공개.",
+            "supply_timing": "현재 상업적 재가동·외국 부품 대체·unobligated batch release는 UNKNOWN. Centrus 첫 증설 2029는 계획,12MT/년 초기규모는 full-year qualified deliveries가 아님. DOE CLIN1 최초 1MTU19.75% 수령 deadline2032-07-05(더 이른 상업운전 가능). 2027–2029 usable residual UNKNOWN.",
+            "contracts": [
+              {
+                "project": "Antares–Standard Nuclear",
+                "type": "DEFINITIVE_FIRM_PLUS_CUSTOMER_OPTION",
+                "firm_quantity": 1,
+                "unit": "MTU HALEU in TRISO",
+                "optional_quantity": 7,
+                "delivery_period": "next several years; annual split UNKNOWN",
+                "unobligated_required": "UNKNOWN",
+                "source_ids": [
+                  "S09"
+                ],
+                "double_count_rule": "Centrus enrichment, Standard fabrication, DOE feed allocation 같은 코어의 단계별 계약은 수요 중복 가산 금지"
+              },
+              {
+                "project": "Centrus–Antares",
+                "type": "DEFINITIVE_MULTI_YEAR_PREPAYMENT",
+                "firm_annual_kgU": "UNKNOWN",
+                "delivery_period": "start before end of decade",
+                "unobligated_batch_eligibility": "UNKNOWN",
+                "source_ids": [
+                  "S02"
+                ]
+              },
+              {
+                "project": "Army Janus",
+                "type": "OTHER_TRANSACTION_MILESTONE_AWARDS",
+                "quantity": "5 사업자; >20 reactors 기대치, 연도별 확정 대수 UNKNOWN",
+                "funding_ceiling": "up to USD2.2bn; FY2027–2031 milestone funding",
+                "first_operation": "September2028 target",
+                "firm_annual_kgU": "UNKNOWN",
+                "source_ids": [
+                  "S06"
+                ]
+              },
+              {
+                "project": "Radiant Janus",
+                "type": "ARMY_AWARD_UP_TO_USD750M",
+                "quantity": "15 Kaleidos by2030; not15 in2028",
+                "firm_annual_kgU": "UNKNOWN",
+                "source_ids": [
+                  "S07"
+                ]
+              },
+              {
+                "project": "Radiant–Standard Nuclear",
+                "type": "DEFINITIVE_FABRICATION_AGREEMENT",
+                "delivery_period": "early2030s deployment support",
+                "firm_annual_kgU": "UNKNOWN",
+                "source_ids": [
+                  "S08",
+                  "S09"
+                ],
+                "double_count_rule": "May2026 term sheet→August definitive agreement는 하나의 계약. Centrus 원료계약·DOE 배정과 같은 최종수요 중복 금지"
+              },
+              {
+                "project": "Centrus–Radiant",
+                "type": "BINDING_LONG_TERM_PREPAYMENT",
+                "delivery_period": "before decade-end start",
+                "firm_annual_kgU": "UNKNOWN",
+                "source_ids": [
+                  "S12"
+                ]
+              },
+              {
+                "project": "Centrus–X-energy",
+                "type": "DEFINITIVE_LEU_AND_HALEU_ENRICHMENT_PREPAYMENT",
+                "firm_annual_kgU": "UNKNOWN",
+                "scope": "LEU와HALEU 품목별 공개수량 없음",
+                "source_ids": [
+                  "S13"
+                ]
+              },
+              {
+                "project": "Kairos Hermes",
+                "type": "FINALIZED_DOE_FUEL_AGREEMENT",
+                "delivery_period": "Hermes startup/operation; LANL fabrication",
+                "firm_annual_kgU": "UNKNOWN",
+                "unobligated_required": "NOT_ESTABLISHED",
+                "source_ids": [
+                  "S17",
+                  "S18"
+                ]
+              },
+              {
+                "project": "NASA SR1 Freedom",
+                "type": "DOE_CONDITIONAL_ALLOCATION_AND_MISSION_PLAN",
+                "delivery_period": "late2028 launch,2029 arrival",
+                "firm_annual_kgU": "UNKNOWN",
+                "source_ids": [
+                  "S14",
+                  "S16"
+                ],
+                "double_count_rule": "2029 arrival does not create a second initial-core purchase"
+              },
+              {
+                "project": "DOE ACO task order89243226FNE400212",
+                "type": "SIGNED_FIXED_PRICE_CLIN1",
+                "period": "2026-07-06/2036-07-05",
+                "firm_quantity": 1,
+                "unit": "MTU nominal19.75% UF6 delivered and accepted",
+                "due": "2032-07-05",
+                "funding": "CLIN1 USD900m",
+                "options": "CLIN2/3 each5MTU not exercised",
+                "scope": "support of NNSA missions not required by task order; domestic location alone not unobligated",
+                "source_ids": [
+                  "S05"
+                ]
+              }
+            ],
+            "demand_by_year": [
+              {
+                "year": 2027,
+                "strong_need": "Antares 첫 발전 회사 계획; Janus milestone funding 시작. Antares firm1MTU의2027 몫 미공개.",
+                "firm_required_kgU": "UNKNOWN",
+                "firm_unobligated_required_kgU": "UNKNOWN",
+                "required_assay": "UNKNOWN",
+                "required_fuel_in_hand_date": "UNKNOWN",
+                "source_ids": [
+                  "S02",
+                  "S06",
+                  "S09"
+                ]
+              },
+              {
+                "year": 2028,
+                "strong_need": "Army Janus 최초 원자로2028-09 목표; Antares 초기군사배치계획; NASA late2028 발사. 발전/발사 전에 연료 필요하나 정확한 고객별 loading·fab input일 미공개.",
+                "firm_required_kgU": "UNKNOWN",
+                "firm_unobligated_required_kgU": "UNKNOWN",
+                "required_assay": "UNKNOWN",
+                "required_fuel_in_hand_date": "UNKNOWN",
+                "source_ids": [
+                  "S02",
+                  "S06",
+                  "S07",
+                  "S14",
+                  "S16"
+                ]
+              },
+              {
+                "year": 2029,
+                "strong_need": "Janus 2030 목표를 향한 ramp와 민간 공급계약 인도 시작 범위. 확정2029 core 대수·kgU·새 NASA refuel 의무는 미공개.",
+                "firm_required_kgU": "UNKNOWN",
+                "firm_unobligated_required_kgU": "UNKNOWN",
+                "required_assay": "UNKNOWN",
+                "required_fuel_in_hand_date": "UNKNOWN",
+                "source_ids": [
+                  "S02",
+                  "S07",
+                  "S08",
+                  "S12",
+                  "S13"
+                ]
+              }
+            ],
+            "supply_evidence": [
+              {
+                "stage": "enrichment_current",
+                "supplier": "Centrus Piketon demonstration",
+                "operating_evidence": "16 centrifuges; cumulative>1900kg HALEU UF6 byJune2026, DOE-owned",
+                "qualification": "GAO current configuration contains foreignpart; not unobligated. Subsequent replacement and eligible batch release UNKNOWN.",
+                "nameplate_vs_product": "900kgUF6 demonstration annual lot ≈600kgU per GAO explanation; does not establish600kg/year residual accepted fuel.",
+                "ramp": "July–September2026 maintenance/storage NO production option; postSept30 commercial restart UNKNOWN",
+                "residual_unallocated_kgU_by_year": "UNKNOWN",
+                "source_ids": [
+                  "S01",
+                  "S03",
+                  "S04"
+                ]
+              },
+              {
+                "stage": "enrichment_expansion",
+                "supplier": "Centrus ACO",
+                "nameplate": "initial expansion12metrictons/year HALEU company plan; unit/customer allocation/accepted ramp output UNKNOWN",
+                "timing": "first new capacity expected2029; not proof12MTU usable for full2029",
+                "qualification": "NRC/DOE approval of actual operating configuration and batch unobligated release UNKNOWN",
+                "contract_constraint": "CLIN1 installation+readiness+1MTU nominal19.75 accepted by2032-07-05. May operate earlier commercially. Optional10MTU not firm purchase.",
+                "residual_unallocated_kgU_by_year": "UNKNOWN",
+                "source_ids": [
+                  "S03",
+                  "S04",
+                  "S05"
+                ]
+              },
+              {
+                "stage": "enrichment_other",
+                "supplier": "General Matter",
+                "timing": "first NRC license application2026-09-28; HanfordFMEF facility lease/evaluation",
+                "qualification": "application ≠ authorization ≠ commissioning ≠ accepted19.75 batch",
+                "qualified_output_2027_2028_2029": "UNKNOWN",
+                "source_ids": [
+                  "S28",
+                  "S29"
+                ]
+              },
+              {
+                "stage": "assay_specific_alternatives",
+                "supplier": "Urenco / Framatome",
+                "operating_scope": "UUSA conventional LEU and up-to10%LEU+; Richland license<10%, not19.75%",
+                "timing": "Urenco higher-assay UK supply2031 is outside horizon; RichlandJV2027 target",
+                "qualification": "foreigntechnology/peacefuluse obligations and assay-specific reactor redesign unresolved",
+                "qualified_19_75_unobligated_residual": "UNKNOWN",
+                "source_ids": [
+                  "S27",
+                  "S09"
+                ]
+              },
+              {
+                "stage": "DOE_inventory",
+                "supplier": "DOE HALEU Availability Program",
+                "forecast": "Apr2026 projection21.2MTU cumulativelybyend2028,23.4MTUbyend2030",
+                "qualification": "not annual production; not free residual; batch obligations/form/yield/release/customer allocation unknown",
+                "allocation": "2025rounds include Antares/Standard etc;2026round includes NASA/RadiantBuckley. Conditional awards≠physically delivered fuel. Existing allocations not count again.",
+                "actual_delivery_relief": "Radiant feed receivedDec2025 and core fabricated; Kairos DOE agreement finalized",
+                "residual_unallocated_kgU_by_year": "UNKNOWN",
+                "source_ids": [
+                  "S01",
+                  "S14",
+                  "S15",
+                  "S17",
+                  "S11"
+                ]
+              },
+              {
+                "stage": "stockpile_recovery",
+                "supplier": "NNSA/Japan/Savannah River",
+                "facts": "Japan1.7metricton shipment actualMay2026 requiresreconstitution; SRS usedfuel recovery restart potentialup-to19metrictons;2025ROD2.2MTHEU→3.1MTHALEU downblend decision",
+                "qualification": "mass basis, usablebatch, provenance, annual release and overlap with21.2MTU forecast UNKNOWN; no summation",
+                "residual_unallocated_kgU_by_year": "UNKNOWN",
+                "source_ids": [
+                  "S24",
+                  "S25",
+                  "S26"
+                ]
+              },
+              {
+                "stage": "deconversion",
+                "supplier": "six DOE IDIQ holders",
+                "facts": "S01 acknowledges HALEU UF6 deconversion not established at commercialscale; six awards confer right tobidtaskorders, not six qualified plants; June2026ACO deconv bids not awards",
+                "qualification": "separate oxide and metal processes; customer assay andacceptance notpublic",
+                "qualified_annual_kgU": "UNKNOWN",
+                "source_ids": [
+                  "S01",
+                  "S23",
+                  "S04"
+                ]
+              },
+              {
+                "stage": "fabrication_TRISO",
+                "supplier": "BWXT / Standard Nuclear / TRISO-X / LANL",
+                "facts": "BWXT actualPelecore2025; NNSAscrap→AntaresprototypeTRISOcriticalityJun2026. StandardSN-0 up-to0.5MTU/y;50kgU Radiant deliveredQ2 plusremainingcorelater (totalUNKNOWN). SN-TN/SN-ID each1MTU/y initial targetauthorizationQ42026; TRISO-X Part70licenseFeb2026 expectedoperationearly2028.",
+                "qualification": "fabrication exists, cannot claim allHALEUfab absent; futurelicense/operatingacceptance/customerlineallocations unknown. GAOstakeholders generallynotlimitedbyfabrication.",
+                "qualified_annual_unreserved_kgU": "UNKNOWN",
+                "source_ids": [
+                  "S19",
+                  "S20",
+                  "S09",
+                  "S11",
+                  "S21",
+                  "S01"
+                ]
+              },
+              {
+                "stage": "fabrication_metal",
+                "supplier": "Framatome–TerraPower",
+                "facts": "2025metalpucksuccess useddepleteduranium; not proof19.75HALEUacceptedcommercialthroughput",
+                "qualified_annual_kgU": "UNKNOWN",
+                "source_ids": [
+                  "S22"
+                ]
+              },
+              {
+                "stage": "transport_availability",
+                "supplier": "existing qualified package routes / NAC development",
+                "facts": "DOE lists licensedUF6/TRISOpackages; actualRadiantfeedshipment proves somepath works. NAC2026newpackageagreements aredevelopment.",
+                "qualification": "customer-specific form/assay/packagecertificate/sitepossessionapproval andschedule remainUNKNOWN",
+                "qualified_annual_residual_kgU": "UNKNOWN",
+                "source_ids": [
+                  "S31",
+                  "S30",
+                  "S11",
+                  "S20"
+                ]
+              }
+            ],
+            "annual_comparison": [
+              {
+                "year": 2027,
+                "firm_unobligated_demand_kgU": "UNKNOWN",
+                "usable_unobligated_qualified_supply_kgU": "UNKNOWN",
+                "unreserved_supply_after_allocations_kgU": "UNKNOWN",
+                "assay_and_form": "CUSTOMER_SPECIFIC_UNKNOWN",
+                "gap_kgU": "UNKNOWN",
+                "collision": "NOT_ESTABLISHED",
+                "promotion": false
+              },
+              {
+                "year": 2028,
+                "firm_unobligated_demand_kgU": "UNKNOWN",
+                "usable_unobligated_qualified_supply_kgU": "UNKNOWN",
+                "unreserved_supply_after_allocations_kgU": "UNKNOWN",
+                "assay_and_form": "CUSTOMER_SPECIFIC_UNKNOWN",
+                "gap_kgU": "UNKNOWN",
+                "collision": "NOT_ESTABLISHED",
+                "promotion": false
+              },
+              {
+                "year": 2029,
+                "firm_unobligated_demand_kgU": "UNKNOWN",
+                "usable_unobligated_qualified_supply_kgU": "UNKNOWN",
+                "unreserved_supply_after_allocations_kgU": "UNKNOWN",
+                "assay_and_form": "CUSTOMER_SPECIFIC_UNKNOWN",
+                "gap_kgU": "UNKNOWN",
+                "collision": "NOT_ESTABLISHED",
+                "promotion": false
+              }
+            ],
+            "narrowest_constraint": {
+              "confirmed_systemwide_bottleneck": "UNKNOWN",
+              "most_specific_qualification_gate": "foreignpart-free enrichment configuration + project/batch unobligated provenance",
+              "physical_stage_watch": "19.75% UF6→oxide/metal deconversion and customer-specific accepted fuel release",
+              "comparison": "deconversion capacity limitation documented, but same-period stage throughput and demands unavailable. Fabrication not proved narrower than enrichment; transport packages already exist.",
+              "source_ids": [
+                "S01",
+                "S04",
+                "S09",
+                "S21",
+                "S23",
+                "S31"
+              ]
+            },
+            "sub_candidates": [
+              {
+                "stage": "unobligated cascade/component qualification",
+                "candidate_status": "OBSERVE_WITHIN_PARENT",
+                "collision": "UNKNOWN",
+                "new_TARGET": false
+              },
+              {
+                "stage": "19.75% UF6→oxide/metal commercial deconversion",
+                "candidate_status": "OBSERVE_WITHIN_PARENT",
+                "collision": "UNKNOWN",
+                "new_TARGET": false
+              },
+              {
+                "stage": "customer-specific TRISO/metal acceptance + shipment/site receipt",
+                "candidate_status": "UNPROVEN_STAGE_RISK_WITHIN_PARENT",
+                "collision": "UNKNOWN",
+                "new_TARGET": false
+              }
+            ],
+            "alternatives": [
+              {
+                "route": "ordinary LEU→HALEU by blending",
+                "result": "NOT_PHYSICALLY_SUFFICIENT",
+                "reason": "전 투입물이 목표 assay 이하이면 단순혼합으로19.75%를 만들 수 없음. 재농축 또는 목표보다 고농축 재고 필요. 재농축은 이 TARGET의enrichment/qualification을 우회하지 못함.",
+                "evidence_type": "isotopic mass balance; no proprietary yield estimate"
+              },
+              {
+                "route": "HEU downblend / recovery of existing HALEU",
+                "result": "CONDITIONAL_RELIEF",
+                "reason": "실제 경로 존재. batchorigin·미예약재고·방사성불순물·형상·연도별release 미공개. 정부방출허가 필요; naval/tritium 재고를 임의 이용가능물량으로 세지 않음.",
+                "source_ids": [
+                  "S24",
+                  "S25",
+                  "S26",
+                  "S32"
+                ]
+              },
+              {
+                "route": "Russian supply",
+                "result": "NOT_COUNTED_AS_FIRM_TARGET_RELIEF",
+                "reason": "PL118-62 상업수입금지 및waiver2028-01-01종료; DOE국가안보/비확산수입예외는 존재. 하지만 이TARGET용 실제계약·수출허가·unobligated provenance·annual acceptedkg 없음. 일괄불가능/무제한가용 모두판정금지.",
+                "source_ids": [
+                  "S33",
+                  "S34"
+                ]
+              },
+              {
+                "route": "allied/foreign LEU+/HALEU",
+                "result": "CUSTOMER_SPECIFIC_CONDITIONAL",
+                "reason": "미국사용가능·비러시아·unobligated는 서로다른요건. 10%license가19.75%qualifiedfuel을보장하지않음; plant/tech/feed obligations 별도확인.",
+                "source_ids": [
+                  "S01",
+                  "S27",
+                  "S09"
+                ]
+              }
+            ],
+            "relief_evidence": "DOE 누적 공급 전망/실제초기core납품/HEUdownblend/회수/2026Q4·2028fabrication확장/2029enrichment계획은 relief 근거. 다만 배정·형상·unobligated release가 검증되지 않은 물량을 잔여 공급으로 더하지 않음. 발전·허가·배치 일정이 뒤로 이동하면 같은기간 필요량도 감소하며 최초criticality를 미래새core로 중복계산하지 않음.",
+            "decisive_unknowns": [
+              "DoD Janus/Pele/Antares 및 NASA에 실제 적용되는 unobligated 필수 조항·판정",
+              "2027/2028/2029 프로젝트별 core/refuel kgU, assay, form, fab-feed due date and binding delivery date",
+              "firm1MTU Antares contract의 연도별 release/납기; 옵션7MTU 행사 여부",
+              "DOE21.2MTU 전망의 stockpile/새enrichment별중복,배정,이미사용량,batchobligations,잔여release",
+              "Centrus Sept30이후commercialoperation agreement/restart; foreignpart replacement and eligiblebatch certificate",
+              "2029HALEU별cascade 설치·DOEreadiness·NRC변경승인·ramp·양품yield와고객예약",
+              "deconversion oxide/metal line별19.75%실효kgU/년, 개별taskorderaward,leadtime,yield",
+              "TRISO/metal 고객qual·fabricatorline별미예약량,package/site허가와수령일",
+              "Japan/SRS 실제fuelmass basis·재처리완료일·회수yield·연도별누적전망과의중복"
+            ],
+            "next_check": "우선 DoD의 unobligated 적용 결정을 확인. 이후 firmprojectkgU/due date와 동일assay/form eligible residual batch/slot를 matching. Centrus 재가동·외국부품대체·2029ramp, DOE연도별배정잔량, deconversionTO award/acceptance를 추적. shortagewindow가 증명되기 전 승격 없음.",
+            "sources": [
+              "https://files.gao.gov/reports/GAO-26-107385/index.html",
+              "https://www.centrusenergy.com/news/centrus-and-antares-sign-multi-year-haleu-supply-contract/",
+              "https://www.centrusenergy.com/news/centrus-signs-contract-with-department-of-energy-for-900-million-award-intends-to-transition-haleu-production-cascade-to-commercial-operation/",
+              "https://www.sec.gov/Archives/edgar/data/1065059/000162828026053863/leu-20260630.htm",
+              "https://www.sec.gov/Archives/edgar/data/1065059/000162828026053863/exhibit_103x063026xhaleu.htm",
+              "https://www.army.mil/article-amp/294891/army_reaches_agreement_with_private_industry_for_nuclear_micro_reactors",
+              "https://www.radiantnuclear.com/news/radiant-wins-750m-janus-army-contract",
+              "https://radiantnuclear.com/news/radiant-locks-triso-fuel-supply-through-early-2030s",
+              "https://ir.standardnuclear.com/sec-filings/all-sec-filings/content/0001628280-26-059143/q2_2026xearningsxpr.htm",
+              "https://ir.standardnuclear.com/news-events/press-releases/detail/102/standard-nuclear-reports-second-quarter-and-year-to-date-2026-results",
+              "https://ir.standardnuclear.com/news-events/press-releases/detail/87/standard-nuclear-first-to-receive-haleu-feedstock-for-production-of-triso-fuel-to-support-2026-reactor-demonstration",
+              "https://www.centrusenergy.com/news/centrus-and-radiant-announce-long-term-partnership-for-domestic-haleu-to-supply-kaleidos-microreactors/",
+              "https://www.sec.gov/Archives/edgar/data/1065059/000162828026053897/ex991_080626x-energypr.htm",
+              "https://www.energy.gov/ne/articles/energy-department-distribute-third-round-haleu-nasa-and-radiant",
+              "https://www.energy.gov/articles/us-department-energy-distribute-next-round-haleu-us-nuclear-industry",
+              "https://www.nasa.gov/mission/space-reactor-1-freedom/",
+              "https://www.kairospower.com/updates/u-s-department-of-energy-to-provide-haleu-for-hermes-demonstration-reactor",
+              "https://www.kairospower.com/updates/kairos-power-breaks-ground-on-hermes-2-demonstration-plant",
+              "https://www.bwxt.com/bwxt-manufactures-triso-fuel-enabling-first-new-reactor-criticality-under-doe-program/",
+              "https://investors.bwxt.com/news-releases/news-release-details/bwxt-key-player-meeting-july-4-executive-order-criticality-goal",
+              "https://www.energy.gov/ne/articles/triso-x-receives-nrc-special-nuclear-material-license-advanced-fuel-fabrication",
+              "https://www.terrapower.com/framatome-and-terrapower-achieve-breakthrough-in-uranium-metallization-for-advanced-reactor-fuel-commercialization",
+              "https://www.energy.gov/ne/haleu-deconversion-services",
+              "https://www.energy.gov/nnsa/articles/us-secures-largest-ever-haleu-shipment-power-american-nuclear-industry",
+              "https://www.energy.gov/em/articles/does-office-environmental-management-restarts-uranium-recovery-south-carolina-support",
+              "https://www.energy.gov/nepa/articles/doeeis-0240-and-doeeis-0279-amended-record-decision-april-2025",
+              "https://www.urenco.com/news/usa/2026/urenco-usa-congratulates-advanced-reactor-companies-achieving-initial-criticality",
+              "https://generalmatter.com/news/",
+              "https://generalmatter.com/news/reactivating-hanford-washington/",
+              "https://nacintl.com/newsroom/nac-news/nac-international-executes-two-u-s-department-of-energy-cooperative-agreements-to-advance-haleu-transportation-infrastructure",
+              "https://www.energy.gov/ne/articles/finding-better-way-transport-haleu",
+              "https://www.whitehouse.gov/presidential-actions/2025/05/deploying-advanced-nuclear-reactor-technologies-for-national-security/",
+              "https://www.govinfo.gov/content/pkg/PLAW-118publ62/html/PLAW-118publ62.htm",
+              "https://www.govinfo.gov/content/pkg/BILLS-119hr5334enr/html/BILLS-119hr5334enr.htm"
+            ],
+            "source_ids": [
+              "S01",
+              "S02",
+              "S03",
+              "S04",
+              "S05",
+              "S06",
+              "S07",
+              "S08",
+              "S09",
+              "S10",
+              "S11",
+              "S12",
+              "S13",
+              "S14",
+              "S15",
+              "S16",
+              "S17",
+              "S18",
+              "S19",
+              "S20",
+              "S21",
+              "S22",
+              "S23",
+              "S24",
+              "S25",
+              "S26",
+              "S27",
+              "S28",
+              "S29",
+              "S30",
+              "S31",
+              "S32",
+              "S33",
+              "S34"
+            ],
+            "source_package": "docs/registrations/unobligated-haleu-20261006/sources.json",
+            "report_path": "docs/registrations/unobligated-haleu-20261006/REPORT.md",
+            "companies": [],
+            "equity_analysis_performed": false,
+            "objective_binding_method": "bct.objective_lock.stamp_export",
+            "objective_version": "bct-objective-1",
+            "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+          }
+        ]
+      }
+    ]
+  },
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+}
