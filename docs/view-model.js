@@ -18,7 +18,14 @@
     "ai-package-tglass": "반도체·소재", "unobligated-haleu-us-qualified-supply": "핵연료",
     "inp-qualified-exportable-substrates": "광통신·기판", "cpo-qualified-cw-lasers": "광통신·레이저",
     "cpo-optical-electrical-volume-test": "광통신·검사", "silicon-photonics-wafer-level-burn-in": "광통신·검사",
-    "cpo-els-garnet-optical-isolators": "광통신·부품"
+    "cpo-els-garnet-optical-isolators": "광통신·부품",
+    "photonics-soi-qualified-300mm-allocation": "광통신·기판",
+    "siph-pic-qualified-foundry-slots": "광통신·파운드리",
+    "optical-200g-sige-tia-driver-qualified-slots": "광통신·전자칩",
+    "cpo-pic-eic-qualified-hybrid-bonding": "광통신·패키징",
+    "cpo-fau-qualified-attach-alignment": "광통신·광섬유 접합",
+    "us-ai-dc-high-density-fiber-cable-qualified-allocation": "광통신·케이블",
+    "datacom-200g-eml-qualified-die-capacity": "광통신·레이저"
   };
   const latest = target => target.history?.at(-1) || {};
   const status = value => statuses[value] || [value || "판단 미기록", "분류 설명이 아직 없습니다", 5];
