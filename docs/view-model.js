@@ -9,6 +9,7 @@
     CURRENT: ["현재 병목", "이미 발생한 부족으로, 미래 병목과 별도 표시", 4]
   };
   const groups = {
+    "us-defense-feoc-independent-high-energy-suas-cells": "미국 방산·드론 배터리",
     "large-gas-turbine-slots": "전력·발전", "uk-regional-grid-connections": "전력·계통",
     "novalt16-qualified-production-slots": "전력·발전",
     "compliant-non-china-tungsten": "방산·소재", "srm-ammonium-perchlorate": "방산·소재",

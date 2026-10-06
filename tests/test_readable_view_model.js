@@ -3,6 +3,21 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const view = require("../docs/view-model.js");
 
+test("manual sUAS cell target stays OBSERVE with attributed companies and UNKNOWN quantities", () => {
+  const registration = require("../docs/registrations/20261006-suas-cells.json");
+  const target = registration.patch.targets[0], before = JSON.stringify(target);
+  const row = view.targets({targets:[target]},null)[0];
+  assert.equal(row.status,"OBSERVE");
+  assert.equal(row.sector,"미국 방산·드론 배터리");
+  assert.deepEqual(row.latest.companies.map(c=>c.ticker),["AMPX","SES"]);
+  assert.equal(row.latest.EARLY_success,false);
+  assert.equal(row.latest.supply_gap.gap_status,"UNKNOWN");
+  assert(Object.values(row.latest.unknowns).every(v=>v==="UNKNOWN"));
+  assert.equal(row.latest.excluded_claims[0].use_as_confirmed_shortage,false);
+  assert.equal(row.latest.source_verification,"UNKNOWN");
+  assert.equal(JSON.stringify(target),before);
+});
+
 test("latest tracking judgment overrides frozen status, and current is distinct from future", () => {
   const tracking = {targets: [{id:"a",target:"A",history:[{status:"FUTURE"},{status:"CURRENT"}]},
     {id:"b",target:"B",history:[{status:"FUTURE"}]}]};
