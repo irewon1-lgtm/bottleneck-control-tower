@@ -506,6 +506,7 @@
   const readableStatus = value => ({
     FUTURE: "미래 병목 후보",
     EMERGING: "가능성 높아지는 중",
+    REVIEW_LEAD: "조사 대상",
     OBSERVE: "관찰 중",
     UNRESOLVED: "자료 부족",
     CURRENT: "이미 발생"
@@ -564,7 +565,7 @@
 
     const counts = node("div", null, "objective-counts");
     const future = rows.filter(row => row.status === "FUTURE").length;
-    const watching = rows.filter(row => ["EMERGING","OBSERVE","UNRESOLVED"].includes(row.status)).length;
+    const watching = rows.filter(row => ["REVIEW_LEAD","EMERGING","OBSERVE","UNRESOLVED"].includes(row.status)).length;
     const current = rows.filter(row => row.status === "CURRENT").length;
     const drafts = futureCandidates ? view.hypotheses(futureCandidates).filter(row => row.named).length : null;
     [
@@ -635,7 +636,7 @@
     const bar = node("div", null, "toolbar"), filters = node("div", null, "filters");
     const list = node("div", null, "rank-list"), count = node("p", null, "record-meta");
     const buttons = [];
-    const filterKeys = key === "review" ? ["전체", "OBSERVE", "EMERGING", "UNRESOLVED"] : ["전체", "FUTURE", "EMERGING", "OBSERVE", "CURRENT"];
+    const filterKeys = key === "review" ? ["전체", "REVIEW_LEAD", "OBSERVE", "EMERGING", "UNRESOLVED"] : ["전체", "FUTURE", "EMERGING", "REVIEW_LEAD", "OBSERVE", "CURRENT"];
     for (const value of filterKeys) {
       const button = node("button", value === "전체" ? "전체" : view.status(value)[0], "filter"); button.type = "button";
       button.setAttribute("aria-pressed", String(state.filter === value));
@@ -646,7 +647,7 @@
     search.addEventListener("input", () => {state.query = search.value; draw();});
     bar.append(filters, search); box.append(bar, count, list);
     function draw() {
-      const rows = all.filter(row => (key !== "review" || ["OBSERVE", "EMERGING", "UNRESOLVED"].includes(row.status)) && (state.filter === "전체" || state.filter === row.status) && matches(row, state));
+      const rows = all.filter(row => (key !== "review" || ["REVIEW_LEAD", "OBSERVE", "EMERGING", "UNRESOLVED"].includes(row.status)) && (state.filter === "전체" || state.filter === row.status) && matches(row, state));
       buttons.forEach(([button,value]) => button.setAttribute("aria-pressed", String(state.filter === value)));
       count.textContent = `${number(rows.length)}개 대상 · 필터 후에도 전체 표시 순서를 유지합니다.`;
       list.replaceChildren();
