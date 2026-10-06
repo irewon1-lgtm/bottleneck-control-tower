@@ -35,7 +35,20 @@ jobs:
           done
           python .github/scripts/rss_state.py load \
             "$RUNNER_TEMP/ai-prior" var/canonical/canonical.sqlite3
+      - name: Check AI annotation configuration
+        id: ai_config
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        shell: bash
+        run: |
+          if [[ -n "$OPENAI_API_KEY" ]]; then
+            echo 'enabled=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'enabled=false' >> "$GITHUB_OUTPUT"
+            echo 'AI annotation skipped: OPENAI_API_KEY is not configured.' >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Annotate up to 20 unprocessed signal articles
+        if: steps.ai_config.outputs.enabled == 'true'
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           RSS_AI_MODEL: ${{ vars.RSS_AI_MODEL || 'gpt-5-mini' }}
@@ -63,7 +76,7 @@ jobs:
               'AI_PROCESSED=' + str(result['processed']) + '\n')
           PY
       - name: Persist AI results in existing data branch
-        if: env.AI_PROCESSED != '0'
+        if: steps.ai_config.outputs.enabled == 'true' && env.AI_PROCESSED != '0'
         shell: bash
         run: |
           set -euo pipefail

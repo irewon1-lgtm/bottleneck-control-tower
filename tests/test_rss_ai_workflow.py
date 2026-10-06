@@ -1,6 +1,8 @@
 import importlib.util
 import json
+import os
 import sqlite3
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -23,12 +25,38 @@ def test_workflow_is_separate_and_uses_existing_write_lock():
     steps = WORKFLOW['jobs']['annotate']['steps']
     ai = next(s for s in steps if s.get('name', '').startswith('Annotate'))
     assert ai['env']['OPENAI_API_KEY'] == '${{ secrets.OPENAI_API_KEY }}'
-    assert sum('OPENAI_API_KEY' in s.get('env', {}) for s in steps) == 1
+    check = next(s for s in steps if s.get('id') == 'ai_config')
+    assert check['env']['OPENAI_API_KEY'] == ai['env']['OPENAI_API_KEY']
+    assert sum('OPENAI_API_KEY' in s.get('env', {}) for s in steps) == 2
+    assert ai['if'] == "steps.ai_config.outputs.enabled == 'true'"
+    restore = next(s for s in steps if s.get('name') == 'Restore existing verified database')
+    assert 'if' not in restore
+    assert steps.index(restore) < steps.index(check) < steps.index(ai)
     publish = steps[-1]['run']
     assert '"$current_sha" != "$BASE_DATA_SHA"' in publish
     assert '--force' not in publish
     assert 'rss_state.py save' in publish
-    assert steps[-1]['if'] == "env.AI_PROCESSED != '0'"
+    assert steps[-1]['if'] == "steps.ai_config.outputs.enabled == 'true' && env.AI_PROCESSED != '0'"
+
+
+@pytest.mark.parametrize('key', ['', 'synthetic-key-do-not-log'])
+def test_workflow_config_check_succeeds_without_calling_ai(key, tmp_path):
+    check = next(s for s in WORKFLOW['jobs']['annotate']['steps'] if s.get('id') == 'ai_config')
+    output = tmp_path / 'output'
+    summary = tmp_path / 'summary'
+    result = subprocess.run(['bash', '-e', '-u', '-o', 'pipefail', '-c', check['run']],
+        env={'PATH': os.defpath, 'OPENAI_API_KEY': key,
+             'GITHUB_OUTPUT': str(output), 'GITHUB_STEP_SUMMARY': str(summary)},
+        capture_output=True, text=True)
+    assert result.returncode == 0
+    assert output.read_text() == ('enabled=true\n' if key else 'enabled=false\n')
+    assert not result.stdout and not result.stderr
+    if key:
+        assert key not in output.read_text()
+        assert not summary.exists()
+    else:
+        assert summary.read_text() == 'AI annotation skipped: OPENAI_API_KEY is not configured.\n'
+    assert all('continue-on-error' not in s for s in WORKFLOW['jobs']['annotate']['steps'])
 
 
 def test_batch_limit_error_continuation_and_snapshot_resume(setup, tmp_path):
@@ -84,6 +112,25 @@ def test_workflow_missing_secret_does_not_process(monkeypatch, capsys):
     with pytest.raises(SystemExit, match='no articles processed'):
         exec(compile(script, '<workflow>', 'exec'), {})
     assert not capsys.readouterr().out
+
+
+def test_workflow_configured_annotation_failure_still_fails(monkeypatch, tmp_path, capsys):
+    import bct.rss_ai
+    import bct.config
+    monkeypatch.setenv('OPENAI_API_KEY', 'synthetic-key-do-not-log')
+    monkeypatch.setenv('RSS_AI_MODEL', 'test-model')
+    env_file = tmp_path / 'env'
+    monkeypatch.setenv('GITHUB_ENV', str(env_file))
+    monkeypatch.setattr(bct.config, 'load_settings', lambda path: object())
+    def fail(*args, **kwargs):
+        raise RuntimeError('synthetic-key-do-not-log')
+    monkeypatch.setattr(bct.rss_ai, 'run', fail)
+    script = next(s['run'] for s in WORKFLOW['jobs']['annotate']['steps']
+                  if s.get('name', '').startswith('Annotate')).split("python - <<'PY'\n", 1)[1].rsplit('\nPY', 1)[0]
+    with pytest.raises(SystemExit, match='AI batch failed; database publication skipped'):
+        exec(compile(script, '<workflow>', 'exec'), {})
+    assert not capsys.readouterr().out
+    assert not env_file.exists()
 
 
 def test_workflow_persists_article_errors_without_logging_key(monkeypatch, tmp_path, capsys):
