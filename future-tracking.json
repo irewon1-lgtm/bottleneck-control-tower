@@ -2277,6 +2277,11 @@
       "owner": "review",
       "patch_sha256": "cf2b9ef43d32325a2c157089aa5b7b2decb6bb199aee95f80c8c9ec7341f9d75",
       "applied_at": "2026-10-06T13:42:42.636925+00:00"
+    },
+    "append-200g-eml-contract-qualification-delta-20261006": {
+      "owner": "review",
+      "patch_sha256": "dc5bb85389f0cd80868280bf4261af425c9dae96e6c73c03da152517a84c35d7",
+      "applied_at": "2026-10-06T13:57:04.695530+00:00"
     }
   },
   "policy": {
@@ -24676,6 +24681,675 @@
               "FUTURE": "notproven",
               "DROP": "notappropriatewhileactual200GdemandandcurrentEMLpressureexist"
             }
+          }
+        },
+        {
+          "id": "contract-qualification-delta-20261006-200g-eml",
+          "review_id": "on-demand-contract-qualification-delta-20261006-200g-eml",
+          "formal_TARGET_id": "datacom-200g-eml-qualified-die-capacity",
+          "reviewed_on": "2026-10-06",
+          "recorded_at": "2026-10-06T13:57:04.665060+00:00",
+          "status": "OBSERVE",
+          "mode": "BACKFILL",
+          "research_judgment": "PRIMARY_DELTA_NO_TARGET_SPECIFIC_SHORTAGE_PROOF",
+          "early_detection_claim": false,
+          "strict_pass_claim": false,
+          "performance_claim": false,
+          "forecast_qualification": "NOT_CLAIMED — original sources rechecked; current broad shortages do not prove2027–2029 target shortage",
+          "linked_review_ids": [
+            "on-demand-deep-primary-20261006-datacom-200g-eml-qualified-die-capacity"
+          ],
+          "target_detail": "미국 AI DC 2027~2029 고객인증 200G/lane datacom EML laser die 공급능력; 기존 TARGET 범위 안에서1.6T와관련3.2T전환경로 검토",
+          "reason": "新增合同pilot/ramp及redacted月度capacity表、新供应商200G客户验证中、LC2027中InP短缺forecast。更具体futurepressure但非US200G-onlymatchedgap，未升格。",
+          "demand_evidence": "新增LCJuly2027中全InPlaser压力forecast；原有2027moduleorders保留引用，但backlog存在doubleordering不可视firm200Gdie。2028–29ZR增长属coherentDCI排除。",
+          "constraint_evidence": "AXT-Coherent合同生效时6-inchsubstrateprogram是pilot，规模化yield/crystalgrowth/export风险；2027起月度义务但数量全删节。具体200G用途与actualmissUNKNOWN。",
+          "relief_evidence": "新增supplier不自动等于qualifiedsupply：YuanjieAug30的200G仍customer验证；CW/100G实际出货分开。LC广义supplier2–3→5–7不能算200G供应者数。",
+          "decisive_unknown": "REDACTED：AXT月度capacity/MOQ/specs；未从当前披露取得：Lumentum完整合同；验证中：Yuanjie200G客户approvedrelease；USfirm200Gneed与approvedoutput仍UNKNOWN。",
+          "strengthening_conditions": "동일고객·파장/온도/baud·월/분기에서 firmrequired200Gqualifieddie > 배정포함qualifieddelivery가 확인되거나 고객필요일보다 실제200G적격납기 지연,relief후에도지속.",
+          "breaking_conditions": "200G적격라인증설·yield개선·승인된다중소싱·SiPh/CW전환으로필요일의수요충족. 모듈제조사의공급완화/납기정상화및gap해소확인.",
+          "demand_timing": "Calendar2027/2028/2029 each analyzed; firm200GUSneeddate UNKNOWN",
+          "supply_timing": "확인된200Gcommercialsupply는이미존재.증설nominalramp와고객qualifiedrelease분리;새로운200G적격공급완료일 UNKNOWN",
+          "next_check": "合同公开月度数字或后续materialdeliverymiss/primeyield；Yuanjie验证完成及USapprovedSKU出货；2027中前实际需求与allocation/acceptedoutput，doubleorder调整。",
+          "outcome": "UNRESOLVED — incremental evidence narrowsquestions,notquantified200Gshortage",
+          "summary": "仅新增证据：AXT6-inch合同pilot+2027月度履约门槛；Yuanjie200G客户验证中；LC把全InPlaser风险延至2027中并指出doubleordering。没有200G-onlyUS供需冲突新证明，OBSERVE不升格。",
+          "related_target_ids": [
+            "cpo-qualified-cw-lasers",
+            "inp-qualified-exportable-substrates"
+          ],
+          "comparison_inputs": {
+            "current": {
+              "state": "UNRESOLVED_FOR_TARGET",
+              "basis": "current broad EML constraints established;200G-onlycurrent gap quantity UNKNOWN",
+              "evidence": [
+                {
+                  "url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926027677/ex_996841.htm",
+                  "locator": "§2,3,4; ExhibitA,B",
+                  "published_on": "2026-08-07"
+                },
+                {
+                  "url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926024883/axti20260715_8k.htm",
+                  "locator": "Item1.01 last paragraph",
+                  "published_on": "2026-07-29"
+                },
+                {
+                  "url": "https://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-8/2026-08-31/12576098.DOCX",
+                  "locator": "Aug30 meeting;200Gprogress /2027–28capacity /waferdiameter Q&A",
+                  "published_on": "2026-08-31"
+                },
+                {
+                  "url": "https://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-8/2026-08-29/12568498.PDF",
+                  "locator": "PDFpp12,17–18 productcatalog/EMLintegration",
+                  "published_on": "2026-08-29"
+                },
+                {
+                  "url": "https://lightcounting.com/newsletter/en/january-2026-optics-for-ai-clusters-366",
+                  "locator": "L22,25–28",
+                  "published_on": "2026-01"
+                },
+                {
+                  "url": "https://lightcounting.com/newsletter/en/april-2026-market-forecast-379",
+                  "locator": "L23–26,28",
+                  "published_on": "2026-04"
+                },
+                {
+                  "url": "https://lightcounting.com/newsletter/en/july-2026-cloud-data-center-optics-385",
+                  "locator": "L24–31",
+                  "published_on": "2026-07"
+                },
+                {
+                  "url": "https://www.lightcounting.com/newsletter/en/august-2026-more-suppliers-switch-to-the-fast-lane-as-ai-boom-continues-452",
+                  "locator": "L25–29",
+                  "published_on": "2026-08-13"
+                },
+                {
+                  "url": "https://www.lightcounting.com/newsletter/en/september-2026-quarterly-market-update-371",
+                  "locator": "L23–26,32–33",
+                  "published_on": "2026-09"
+                }
+              ]
+            },
+            "demand": {
+              "balance_basis": "total",
+              "min": null,
+              "max": null,
+              "period_start": "2027-01-01",
+              "period_end": "2029-12-31",
+              "unit": "customer-qualified 200G/lane datacom EML die",
+              "scope": "US AI DC; approved specific module architecture and customer need-date",
+              "basis": "annual quantities UNKNOWN; global shipments/forecasts are notUSfirm die demand",
+              "evidence": [
+                {
+                  "url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926027677/ex_996841.htm",
+                  "locator": "§2,3,4; ExhibitA,B",
+                  "published_on": "2026-08-07"
+                },
+                {
+                  "url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926024883/axti20260715_8k.htm",
+                  "locator": "Item1.01 last paragraph",
+                  "published_on": "2026-07-29"
+                },
+                {
+                  "url": "https://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-8/2026-08-31/12576098.DOCX",
+                  "locator": "Aug30 meeting;200Gprogress /2027–28capacity /waferdiameter Q&A",
+                  "published_on": "2026-08-31"
+                },
+                {
+                  "url": "https://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-8/2026-08-29/12568498.PDF",
+                  "locator": "PDFpp12,17–18 productcatalog/EMLintegration",
+                  "published_on": "2026-08-29"
+                },
+                {
+                  "url": "https://lightcounting.com/newsletter/en/january-2026-optics-for-ai-clusters-366",
+                  "locator": "L22,25–28",
+                  "published_on": "2026-01"
+                },
+                {
+                  "url": "https://lightcounting.com/newsletter/en/april-2026-market-forecast-379",
+                  "locator": "L23–26,28",
+                  "published_on": "2026-04"
+                },
+                {
+                  "url": "https://lightcounting.com/newsletter/en/july-2026-cloud-data-center-optics-385",
+                  "locator": "L24–31",
+                  "published_on": "2026-07"
+                },
+                {
+                  "url": "https://www.lightcounting.com/newsletter/en/august-2026-more-suppliers-switch-to-the-fast-lane-as-ai-boom-continues-452",
+                  "locator": "L25–29",
+                  "published_on": "2026-08-13"
+                },
+                {
+                  "url": "https://www.lightcounting.com/newsletter/en/september-2026-quarterly-market-update-371",
+                  "locator": "L23–26,32–33",
+                  "published_on": "2026-09"
+                }
+              ]
+            },
+            "supply": {
+              "balance_basis": "total",
+              "kind": "QUALIFIED_DELIVERABLE",
+              "coverage": "PARTIAL",
+              "min": null,
+              "max": null,
+              "period_start": "2027-01-01",
+              "period_end": "2029-12-31",
+              "unit": "customer-qualified 200G/lane datacom EML die",
+              "scope": "same customer/product/period; allocated+unallocated accepted output",
+              "basis": "commercialproductexists;global200Gcustomer-qualifieddeliverablequantityUNKNOWN",
+              "evidence": [
+                {
+                  "url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926027677/ex_996841.htm",
+                  "locator": "§2,3,4; ExhibitA,B",
+                  "published_on": "2026-08-07"
+                },
+                {
+                  "url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926024883/axti20260715_8k.htm",
+                  "locator": "Item1.01 last paragraph",
+                  "published_on": "2026-07-29"
+                },
+                {
+                  "url": "https://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-8/2026-08-31/12576098.DOCX",
+                  "locator": "Aug30 meeting;200Gprogress /2027–28capacity /waferdiameter Q&A",
+                  "published_on": "2026-08-31"
+                },
+                {
+                  "url": "https://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-8/2026-08-29/12568498.PDF",
+                  "locator": "PDFpp12,17–18 productcatalog/EMLintegration",
+                  "published_on": "2026-08-29"
+                },
+                {
+                  "url": "https://lightcounting.com/newsletter/en/january-2026-optics-for-ai-clusters-366",
+                  "locator": "L22,25–28",
+                  "published_on": "2026-01"
+                },
+                {
+                  "url": "https://lightcounting.com/newsletter/en/april-2026-market-forecast-379",
+                  "locator": "L23–26,28",
+                  "published_on": "2026-04"
+                },
+                {
+                  "url": "https://lightcounting.com/newsletter/en/july-2026-cloud-data-center-optics-385",
+                  "locator": "L24–31",
+                  "published_on": "2026-07"
+                },
+                {
+                  "url": "https://www.lightcounting.com/newsletter/en/august-2026-more-suppliers-switch-to-the-fast-lane-as-ai-boom-continues-452",
+                  "locator": "L25–29",
+                  "published_on": "2026-08-13"
+                },
+                {
+                  "url": "https://www.lightcounting.com/newsletter/en/september-2026-quarterly-market-update-371",
+                  "locator": "L23–26,32–33",
+                  "published_on": "2026-09"
+                }
+              ]
+            },
+            "timing": {
+              "coverage": "PARTIAL",
+              "required_by": null,
+              "earliest_qualified_supply": null,
+              "basis": "already commercial supply exists; incrementalcustomerqualifieddeliverydate UNKNOWN",
+              "evidence": [
+                {
+                  "url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926027677/ex_996841.htm",
+                  "locator": "§2,3,4; ExhibitA,B",
+                  "published_on": "2026-08-07"
+                },
+                {
+                  "url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926024883/axti20260715_8k.htm",
+                  "locator": "Item1.01 last paragraph",
+                  "published_on": "2026-07-29"
+                },
+                {
+                  "url": "https://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-8/2026-08-31/12576098.DOCX",
+                  "locator": "Aug30 meeting;200Gprogress /2027–28capacity /waferdiameter Q&A",
+                  "published_on": "2026-08-31"
+                },
+                {
+                  "url": "https://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-8/2026-08-29/12568498.PDF",
+                  "locator": "PDFpp12,17–18 productcatalog/EMLintegration",
+                  "published_on": "2026-08-29"
+                },
+                {
+                  "url": "https://lightcounting.com/newsletter/en/january-2026-optics-for-ai-clusters-366",
+                  "locator": "L22,25–28",
+                  "published_on": "2026-01"
+                },
+                {
+                  "url": "https://lightcounting.com/newsletter/en/april-2026-market-forecast-379",
+                  "locator": "L23–26,28",
+                  "published_on": "2026-04"
+                },
+                {
+                  "url": "https://lightcounting.com/newsletter/en/july-2026-cloud-data-center-optics-385",
+                  "locator": "L24–31",
+                  "published_on": "2026-07"
+                },
+                {
+                  "url": "https://www.lightcounting.com/newsletter/en/august-2026-more-suppliers-switch-to-the-fast-lane-as-ai-boom-continues-452",
+                  "locator": "L25–29",
+                  "published_on": "2026-08-13"
+                },
+                {
+                  "url": "https://www.lightcounting.com/newsletter/en/september-2026-quarterly-market-update-371",
+                  "locator": "L23–26,32–33",
+                  "published_on": "2026-09"
+                }
+              ]
+            },
+            "relief": {
+              "review_complete": true,
+              "basis": "primary relief/counterevidence assessed; magnitude and exact approval timing remainUNKNOWN",
+              "evidence": [
+                {
+                  "url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926027677/ex_996841.htm",
+                  "locator": "§2,3,4; ExhibitA,B",
+                  "published_on": "2026-08-07"
+                },
+                {
+                  "url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926024883/axti20260715_8k.htm",
+                  "locator": "Item1.01 last paragraph",
+                  "published_on": "2026-07-29"
+                },
+                {
+                  "url": "https://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-8/2026-08-31/12576098.DOCX",
+                  "locator": "Aug30 meeting;200Gprogress /2027–28capacity /waferdiameter Q&A",
+                  "published_on": "2026-08-31"
+                },
+                {
+                  "url": "https://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-8/2026-08-29/12568498.PDF",
+                  "locator": "PDFpp12,17–18 productcatalog/EMLintegration",
+                  "published_on": "2026-08-29"
+                },
+                {
+                  "url": "https://lightcounting.com/newsletter/en/january-2026-optics-for-ai-clusters-366",
+                  "locator": "L22,25–28",
+                  "published_on": "2026-01"
+                },
+                {
+                  "url": "https://lightcounting.com/newsletter/en/april-2026-market-forecast-379",
+                  "locator": "L23–26,28",
+                  "published_on": "2026-04"
+                },
+                {
+                  "url": "https://lightcounting.com/newsletter/en/july-2026-cloud-data-center-optics-385",
+                  "locator": "L24–31",
+                  "published_on": "2026-07"
+                },
+                {
+                  "url": "https://www.lightcounting.com/newsletter/en/august-2026-more-suppliers-switch-to-the-fast-lane-as-ai-boom-continues-452",
+                  "locator": "L25–29",
+                  "published_on": "2026-08-13"
+                },
+                {
+                  "url": "https://www.lightcounting.com/newsletter/en/september-2026-quarterly-market-update-371",
+                  "locator": "L23–26,32–33",
+                  "published_on": "2026-09"
+                }
+              ]
+            },
+            "shortage_window": {
+              "start": null,
+              "end": null,
+              "basis": "study calendar2027–2029 does not establish shortage dates",
+              "evidence": []
+            },
+            "economic_capture": {
+              "state": "NOT_ASSESSED",
+              "basis": "outside user purpose",
+              "evidence": []
+            },
+            "market_awareness": {
+              "state": "NOT_ASSESSED",
+              "basis": "outside user purpose",
+              "evidence": []
+            }
+          },
+          "annual_comparison": [
+            {
+              "year": 2027,
+              "period_start": "2027-01-01",
+              "period_end": "2027-12-31",
+              "unit": "customer-qualified 200G/lane datacom EML die/year",
+              "demand_evidence": "InnoLight 주요고객 guidance/orders와 800G/1.6T 빠른 증가 확인. 미국 EML200 전용 주문수량/need-date는 UNKNOWN. NPO/CPO H2 ramp는 CW/VCSEL 경로도 포함.",
+              "supply_evidence": "Lumentum CY26말 all-EML +50% 계획의 carry-in 및 Coherent 2027 InP doubling 계획. 200G 고객적격 완료일/월출하/예약률은 UNKNOWN.",
+              "evidence": [
+                {
+                  "url": "https://lightcounting.com/newsletter/en/july-2026-cloud-data-center-optics-385",
+                  "locator": "L24–31",
+                  "published_on": "2026-07"
+                }
+              ],
+              "firm_required_quantity": "UNKNOWN",
+              "qualified_accepted_supply": "UNKNOWN",
+              "incremental_unallocated_firm_need": "UNKNOWN",
+              "residual_unreserved_qualified_slots": "UNKNOWN",
+              "demand_exceeds_supply": "UNKNOWN",
+              "gap_range": null,
+              "timing_collision": "UNKNOWN",
+              "supplement": "LCJuly全球InPlasershortage可能延至2027中。非200G-onlyUSfirmdie，demand/supply仍UNKNOWN。"
+            },
+            {
+              "year": 2028,
+              "period_start": "2028-01-01",
+              "period_end": "2028-12-31",
+              "unit": "customer-qualified 200G/lane datacom EML die/year",
+              "demand_evidence": "InnoLight 신제품/NPO 더 큰 출하 예상과 global 1.6T/3.2T 시장 전망. 미국 고객의 확정 200G EML die 최소필요수량은 UNKNOWN.",
+              "supply_evidence": "기존 fab/증설 성숙도·Mitsubishi/SEI 계획 및 경쟁소싱은 relief 가능성. Greensboro mid-2028 CW 공장은 직접 EML 공급에서 제외.",
+              "evidence": [
+                {
+                  "url": "https://lightcounting.com/newsletter/en/july-2026-cloud-data-center-optics-385",
+                  "locator": "L24–31",
+                  "published_on": "2026-07"
+                }
+              ],
+              "firm_required_quantity": "UNKNOWN",
+              "qualified_accepted_supply": "UNKNOWN",
+              "incremental_unallocated_firm_need": "UNKNOWN",
+              "residual_unreserved_qualified_slots": "UNKNOWN",
+              "demand_exceeds_supply": "UNKNOWN",
+              "gap_range": null,
+              "timing_collision": "UNKNOWN",
+              "supplement": "新增资料未给同年US200Gdie firmquantity或qualifiedoutput；coherentZR/NPO需求不能全部视200GEML。"
+            },
+            {
+              "year": 2029,
+              "period_start": "2029-01-01",
+              "period_end": "2029-12-31",
+              "unit": "customer-qualified 200G/lane datacom EML die/year",
+              "demand_evidence": "1.6T/3.2T/optical scale-up 확장 전망은 있으나 firm US 200G EML 주문량/need-date 없음. Coherent chip-to-chip2029/30은 CW/VCSEL 등으로 EML 수요로 계상하지 않음.",
+              "supply_evidence": "Mitsubishi FY30 목표로 가는 all-EML 증설 및 기타 InP 확장. calendar2029 실제200G qualified output은 UNKNOWN.",
+              "evidence": [
+                {
+                  "url": "https://lightcounting.com/newsletter/en/july-2026-cloud-data-center-optics-385",
+                  "locator": "L24–31",
+                  "published_on": "2026-07"
+                }
+              ],
+              "firm_required_quantity": "UNKNOWN",
+              "qualified_accepted_supply": "UNKNOWN",
+              "incremental_unallocated_firm_need": "UNKNOWN",
+              "residual_unreserved_qualified_slots": "UNKNOWN",
+              "demand_exceeds_supply": "UNKNOWN",
+              "gap_range": null,
+              "timing_collision": "UNKNOWN",
+              "supplement": "新增资料未给同年US200Gdie firmquantity或qualifiedoutput；coherentZR/NPO需求不能全部视200GEML。"
+            }
+          ],
+          "supply_gap": {
+            "version": "supply-gap-v1",
+            "as_of": "2026-10-06",
+            "gap_status": "UNRESOLVED",
+            "gap_range": null,
+            "objective_fit": "UNRESOLVED",
+            "investment_status": "NOT_ASSESSED",
+            "economic_capture": "NOT_ASSESSED",
+            "market_awareness": "NOT_ASSESSED",
+            "route": null,
+            "blockers": [
+              "동기간US고객별200G EML required vs qualifieddeliverable수량 UNKNOWN",
+              "전체EML/InP 및CW증설을200G전용적격CAPA로 분리할정보부족",
+              "실제좁은공정restriction과need-datecollision미확인"
+            ]
+          },
+          "sources": [
+            {
+              "id": "S01",
+              "publisher": "AXT / Coherent executed contract SEC Exhibit10.3",
+              "published_on": "2026-08-07",
+              "url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926027677/ex_996841.htm",
+              "locator": "§2,3,4; ExhibitA,B",
+              "finding": "契約生效June25/签署June25–26: AXT6-inch项目当时development/pilot。2026–28扩大crystalgrowthfurnaces和substratelines。2027起月度交付缺口需60天内补足或退相应预付。specs和总capacitytable全部[***]。",
+              "limitation": "原始签约时点状态≠Oct2026现状。60天是违约补救上限≠制造leadtime。contractrisk不等于actualmiss。200G用途/primeyield/数量UNKNOWN。",
+              "evidence_type": "PRIMARY"
+            },
+            {
+              "id": "S02",
+              "publisher": "AXT July2026 8-K",
+              "published_on": "2026-07-29",
+              "url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926024883/axti20260715_8k.htm",
+              "locator": "Item1.01 last paragraph",
+              "finding": "Lumentum fullagreement预计随Sep30季度10-Q作为exhibit披露。当前8-K只有概述，annualminimum数量未给。",
+              "limitation": "不能把quarterend当filingdate。截至Oct6未从所读文件得到该完整exhibit；日期、waferqty和EML分配仍UNKNOWN。",
+              "evidence_type": "PRIMARY"
+            },
+            {
+              "id": "S03",
+              "publisher": "Yuanjie issuer IR record2026-004",
+              "published_on": "2026-08-31",
+              "url": "https://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-8/2026-08-31/12576098.DOCX",
+              "locator": "Aug30 meeting;200Gprogress /2027–28capacity /waferdiameter Q&A",
+              "finding": "CW70/100mW及100G EML已批量交付；200G EML客户验证稳步推进。2027–28产品分配回答仅称高功率比重提高；美国子公司建设中，未来产能重心国内。大wafer需同时考虑substrate供应及设备调试。",
+              "limitation": "发行业者原始DOCX镜像，urllib读取OOXML。200G客户验证中≠完成；无200G acceptedoutput/美国客户资格/2027–28承诺数，不计入当前qualifiedpool。",
+              "evidence_type": "PRIMARY_ISSUER_DOCUMENT_MIRROR"
+            },
+            {
+              "id": "S04",
+              "publisher": "Yuanjie 2026 interim report",
+              "published_on": "2026-08-29",
+              "url": "https://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESH_STOCK/2026/2026-8/2026-08-29/12568498.PDF",
+              "locator": "PDFpp12,17–18 productcatalog/EMLintegration",
+              "finding": "200Gsingle/differential EML在产品目录。2025OFC开发展示与设计定型，集成接口缺陷/晶向不匹配会影响可靠性。",
+              "limitation": "目录和设计定型不证specificcustomerqualification。一般nonhermetic批量供货描述不能反推200G供应。",
+              "evidence_type": "PRIMARY_ISSUER_DOCUMENT_MIRROR"
+            },
+            {
+              "id": "S05",
+              "publisher": "LightCounting original research newsletter",
+              "published_on": "2026-01",
+              "url": "https://lightcounting.com/newsletter/en/january-2026-optics-for-ai-clusters-366",
+              "locator": "L22,25–28",
+              "finding": "当时估计上一年新增InP产能大部分应该已经qualforproduction；CPOscale-up2028–31或高于模型。",
+              "limitation": "研究者估计非各客户lineapproval记录；全InP非200G。后来forecast变化，不能仅依旧relief预期。",
+              "evidence_type": "PRIMARY_RESEARCH_ESTIMATE"
+            },
+            {
+              "id": "S06",
+              "publisher": "LightCounting original market forecast",
+              "published_on": "2026-04",
+              "url": "https://lightcounting.com/newsletter/en/april-2026-market-forecast-379",
+              "locator": "L23–26,28",
+              "finding": "当时估计InPEML/laser生产限制，demand超supply30%，预期2026末缓解；GPU供应超预期可延至2027。2028–29的1.6TZR/ZR+增长另属coherentDCI。",
+              "limitation": "30%并非US200GEML-only比率，不可用其反推D/S。1.6TZR是另种laser结构；该版缓解时点已被July更新。",
+              "evidence_type": "PRIMARY_RESEARCH_ESTIMATE"
+            },
+            {
+              "id": "S07",
+              "publisher": "LightCounting original July research",
+              "published_on": "2026-07",
+              "url": "https://lightcounting.com/newsletter/en/july-2026-cloud-data-center-optics-385",
+              "locator": "L24–31",
+              "finding": "InPlasershortage可能延至2027中。几乎所有高速module组件短缺且doubleordering扩散；2027–28capex放缓情景可软着陆/调整。",
+              "limitation": "futurepressure窗口更具体，但全InP非200G/US。doubleordering使backlog不能视firmenddemand。没有客户certifiedcapacity表。",
+              "evidence_type": "PRIMARY_RESEARCH_ESTIMATE"
+            },
+            {
+              "id": "S08",
+              "publisher": "LightCounting original supplier research",
+              "published_on": "2026-08-13",
+              "url": "https://www.lightcounting.com/newsletter/en/august-2026-more-suppliers-switch-to-the-fast-lane-as-ai-boom-continues-452",
+              "locator": "L25–29",
+              "finding": "原来2–3suppliers现有5–7，qualification/管理新增挑战；广义opticalcomponents缺货及doubleordering。",
+              "limitation": "广泛supplychain不是200GEMLvendor数，不据此加5–7家qualifiedEML。newsource采用可relief也受approvalgate。",
+              "evidence_type": "PRIMARY_RESEARCH_ESTIMATE"
+            },
+            {
+              "id": "S09",
+              "publisher": "LightCounting original Sepmarketupdate",
+              "published_on": "2026-09",
+              "url": "https://www.lightcounting.com/newsletter/en/september-2026-quarterly-market-update-371",
+              "locator": "L23–26,32–33",
+              "finding": "2026年1.6T Ethernet已经volume，legacy100/400/800G仍增长；广义component缺口同时存在。",
+              "limitation": "更新支持1.6T非遥远计划，但产品mix/US/EML-only未披露。不能从alloptical增长算200Gdie。",
+              "evidence_type": "PRIMARY_RESEARCH_ESTIMATE"
+            }
+          ],
+          "source_documents": [
+            {
+              "document_id": "eml-supplement-S01",
+              "origin_url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926027677/ex_996841.htm",
+              "origin_publisher": "AXT / Coherent executed contract SEC Exhibit10.3",
+              "published_at": "2026-08-07",
+              "publication_precision": "DATE",
+              "acquired_at": "2026-10-06T13:57:04.665060+00:00",
+              "body_status": "PARTIAL",
+              "body": "development/pilot production phase",
+              "body_sha256": "46496384ada49257d620682a7c93544a88949f3af29e64b0cd49eac9b4994777",
+              "version": "46496384ada49257d620682a7c93544a88949f3af29e64b0cd49eac9b4994777",
+              "source_locator": "§2,3,4; ExhibitA,B",
+              "extraction_method": "exactboundedexcerptnotfullsnapshot",
+              "factual_reading": "契約生效June25/签署June25–26: AXT6-inch项目当时development/pilot。2026–28扩大crystalgrowthfurnaces和substratelines。2027起月度交付缺口需60天内补足或退相应预付。specs和总capacitytable全部[***]。 原始签约时点状态≠Oct2026现状。60天是违约补救上限≠制造leadtime。contractrisk不等于actualmiss。200G用途/primeyield/数量UNKNOWN。"
+            },
+            {
+              "document_id": "eml-supplement-S07",
+              "origin_url": "https://lightcounting.com/newsletter/en/july-2026-cloud-data-center-optics-385",
+              "origin_publisher": "LightCounting original July research",
+              "published_at": "2026-07",
+              "publication_precision": "MONTH",
+              "acquired_at": "2026-10-06T13:57:04.665060+00:00",
+              "body_status": "PARTIAL",
+              "body": "middle of next year",
+              "body_sha256": "68cc1ee11c774660db197539bf11eab32876a2d6332e2f6604baea9e3012f575",
+              "version": "68cc1ee11c774660db197539bf11eab32876a2d6332e2f6604baea9e3012f575",
+              "source_locator": "L24–31",
+              "extraction_method": "exactboundedexcerptnotfullsnapshot",
+              "factual_reading": "InPlasershortage可能延至2027中。几乎所有高速module组件短缺且doubleordering扩散；2027–28capex放缓情景可软着陆/调整。 futurepressure窗口更具体，但全InP非200G/US。doubleordering使backlog不能视firmenddemand。没有客户certifiedcapacity表。"
+            }
+          ],
+          "source_refs": [
+            {
+              "document_id": "eml-supplement-S01",
+              "body_sha256": "46496384ada49257d620682a7c93544a88949f3af29e64b0cd49eac9b4994777",
+              "locator": {
+                "start": 0,
+                "end": 34
+              },
+              "quote": "development/pilot production phase"
+            },
+            {
+              "document_id": "eml-supplement-S07",
+              "body_sha256": "68cc1ee11c774660db197539bf11eab32876a2d6332e2f6604baea9e3012f575",
+              "locator": {
+                "start": 0,
+                "end": 19
+              },
+              "quote": "middle of next year"
+            }
+          ],
+          "companies": [
+            {
+              "name": "Lumentum",
+              "role": "SUPPLY_CHAIN_EVIDENCE_ONLY_NO_EQUITY_OR_ASP_ANALYSIS"
+            },
+            {
+              "name": "Broadcom",
+              "role": "SUPPLY_CHAIN_EVIDENCE_ONLY_NO_EQUITY_OR_ASP_ANALYSIS"
+            },
+            {
+              "name": "Mitsubishi Electric",
+              "role": "SUPPLY_CHAIN_EVIDENCE_ONLY_NO_EQUITY_OR_ASP_ANALYSIS"
+            },
+            {
+              "name": "Coherent",
+              "role": "SUPPLY_CHAIN_EVIDENCE_ONLY_NO_EQUITY_OR_ASP_ANALYSIS"
+            },
+            {
+              "name": "Sumitomo Electric / SEDI",
+              "role": "SUPPLY_CHAIN_EVIDENCE_ONLY_NO_EQUITY_OR_ASP_ANALYSIS"
+            },
+            {
+              "name": "Source Photonics / Dongshan Precision",
+              "role": "SUPPLY_CHAIN_EVIDENCE_ONLY_NO_EQUITY_OR_ASP_ANALYSIS"
+            },
+            {
+              "name": "Zetta and other emerging suppliers",
+              "role": "SUPPLY_CHAIN_EVIDENCE_ONLY_NO_EQUITY_OR_ASP_ANALYSIS"
+            }
+          ],
+          "objective_version": "bct-objective-1",
+          "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+          "research_detail": {
+            "prior_full_synthesis_review_id": "on-demand-deep-primary-20261006-datacom-200g-eml-qualified-die-capacity",
+            "delta_only": true,
+            "prior_status_assumed": false,
+            "new_primary_documents": 9,
+            "new_findings": [
+              "契約生效June25/签署June25–26: AXT6-inch项目当时development/pilot。2026–28扩大crystalgrowthfurnaces和substratelines。2027起月度交付缺口需60天内补足或退相应预付。specs和总capacitytable全部[***]。",
+              "Lumentum fullagreement预计随Sep30季度10-Q作为exhibit披露。当前8-K只有概述，annualminimum数量未给。",
+              "CW70/100mW及100G EML已批量交付；200G EML客户验证稳步推进。2027–28产品分配回答仅称高功率比重提高；美国子公司建设中，未来产能重心国内。大wafer需同时考虑substrate供应及设备调试。",
+              "200Gsingle/differential EML在产品目录。2025OFC开发展示与设计定型，集成接口缺陷/晶向不匹配会影响可靠性。",
+              "当时估计上一年新增InP产能大部分应该已经qualforproduction；CPOscale-up2028–31或高于模型。",
+              "当时估计InPEML/laser生产限制，demand超supply30%，预期2026末缓解；GPU供应超预期可延至2027。2028–29的1.6TZR/ZR+增长另属coherentDCI。",
+              "InPlasershortage可能延至2027中。几乎所有高速module组件短缺且doubleordering扩散；2027–28capex放缓情景可软着陆/调整。",
+              "原来2–3suppliers现有5–7，qualification/管理新增挑战；广义opticalcomponents缺货及doubleordering。",
+              "2026年1.6T Ethernet已经volume，legacy100/400/800G仍增长；广义component缺口同时存在。"
+            ],
+            "qualified_supply_additions": [],
+            "supplier_qualification_delta": {
+              "Yuanjie": "Aug30:200GPAM4EMLcustomerverificationinprogress;CW70/100mWand100Gbatchshipmentsseparate",
+              "US200gqualifieddiepermonth": "UNKNOWN"
+            },
+            "upstream_capacity_delta": {
+              "AXT6inchstatus_at_contract_effective_date": "DEVELOPMENT_PILOT",
+              "contract_effective_date": "2026-06-25",
+              "current_phase_as_of_oct6": "UNKNOWN",
+              "wafer_growth_and_substrate_line_ramp": "2026–2028",
+              "monthly_delivery_obligation_gate": "2027-01-01",
+              "cure_period_days": 60,
+              "manufacturing_lead_time_days": "UNKNOWN",
+              "capacity_table": "REDACTED",
+              "waferspecifications": "REDACTED",
+              "prime_vs_mechanical_vs_dummy_split": "UNKNOWN",
+              "EML200_allocation": "UNKNOWN",
+              "actual_delivery_breach": "UNKNOWN"
+            },
+            "evidence_limit_classes": {
+              "REDACTED_DECLARED": [
+                "AXTTableAmonthlycapacity/MOQ",
+                "AXTwaferprice/specs",
+                "Additionalcapacityrightpercentage"
+              ],
+              "NOT_RETRIEVED_FROM_CURRENT_DISCLOSURES": [
+                "LumentumcompleteJulyagreementexhibit"
+              ],
+              "QUALIFICATION_IN_PROGRESS": [
+                "Yuanjie200GcustomerverificationAug30"
+              ],
+              "ESTIMATE_NOT_FIRM": [
+                "LC30%alllasersgapApril",
+                "LCpossiblemid2027allInPshortageJuly",
+                "LC2–3to5–7broadvendorsAugust"
+              ]
+            },
+            "narrow_candidate_notes": [
+              {
+                "candidate": "6-inchInPprimewafergrowthandfinishedsubstratequalification/ramp",
+                "related_existing_target_id": "inp-qualified-exportable-substrates",
+                "new_target_created": false,
+                "status": "CONTRACT_RAMP_RISK_NOT_PROVEN_BINDING_STAGE",
+                "EML200_specific_gap": "UNKNOWN"
+              }
+            ],
+            "period_quantities": {
+              "2027": {
+                "US200gfirmdie": "UNKNOWN",
+                "qualifieddie": "UNKNOWN",
+                "D_exceeds_S": "UNKNOWN"
+              },
+              "2028": {
+                "US200gfirmdie": "UNKNOWN",
+                "qualifieddie": "UNKNOWN",
+                "D_exceeds_S": "UNKNOWN"
+              },
+              "2029": {
+                "US200gfirmdie": "UNKNOWN",
+                "qualifieddie": "UNKNOWN",
+                "D_exceeds_S": "UNKNOWN"
+              }
+            },
+            "double_ordering_control": "marketbookings/backlognotfirmdemandminimum;sourceexplicitlywarnsdoubleordering;noarbitraryhaircut",
+            "not_assessed": "companyvaluation/stocks/privateASP/waferquantityestimation",
+            "strict_provenance_claim": false
           }
         }
       ]
