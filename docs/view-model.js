@@ -4,11 +4,13 @@
   const statuses = {
     FUTURE: ["미래 병목", "미래 공급 제약 근거가 있는 대상", 0],
     EMERGING: ["병목 가능성", "변화는 확인됐으나 부족 범위·시점은 추가 확인", 1],
+    REVIEW_LEAD: ["조사 대상", "2차 집중조사 대상 · 병목 미확정", 2],
     OBSERVE: ["관찰 중", "관련 변화가 있지만 공급 부족은 미확인", 2],
     UNRESOLVED: ["판단 보류", "판정에 필요한 자료가 부족한 대상", 3],
     CURRENT: ["현재 병목", "이미 발생한 부족으로, 미래 병목과 별도 표시", 4]
   };
   const groups = {
+    "katy-hydrogen-hyroad-offtake": "미국 수소·산업가스",
     "us-defense-feoc-independent-high-energy-suas-cells": "미국 방산·드론 배터리",
     "large-gas-turbine-slots": "전력·발전", "uk-regional-grid-connections": "전력·계통",
     "novalt16-qualified-production-slots": "전력·발전",
