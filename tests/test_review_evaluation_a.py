@@ -1,5 +1,6 @@
 """Synthetic functional boundaries, not lead accuracy or historical reevaluation."""
 from copy import deepcopy
+from datetime import datetime, timedelta, timezone
 import importlib.util
 import json
 from pathlib import Path
@@ -20,6 +21,45 @@ def test_same_run_never_adds_twice():
     snapshot={'workflows':{'acquisition':listing([run,run])}}
     assert a.diagnose(snapshot)['acquisition']['unique_runs_in_query']==1
     assert a.diagnose(snapshot)==a.diagnose(deepcopy(snapshot))
+
+
+@pytest.mark.parametrize('hour', [3, 7, 11, 15, 19, 23])
+@pytest.mark.parametrize('seconds', [-1, 0, 1])
+def test_scheduled_slot_equal_instants_around_all_six_slots(hour, seconds):
+    kst=timezone(timedelta(hours=9))
+    slot=datetime(2026, 10, 6, hour, tzinfo=kst)
+    observed=slot+timedelta(seconds=seconds)
+    actual=a.scheduled_slot(observed.isoformat())
+    assert actual==a.scheduled_slot(observed.astimezone(timezone.utc).isoformat())
+    previous=slot-timedelta(hours=4) if seconds<0 else slot
+    following=slot if seconds<0 else slot+timedelta(hours=4)
+    assert actual['last_RSS_nominal_UTC']==previous.astimezone(timezone.utc).isoformat()
+    assert actual['next_RSS_nominal_UTC']==following.astimezone(timezone.utc).isoformat()
+
+
+@pytest.mark.parametrize('seconds', [-1, 0, 1])
+def test_scheduled_slot_kst_midnight(seconds):
+    observed=datetime(2026, 10, 6, tzinfo=timezone(timedelta(hours=9)))+timedelta(seconds=seconds)
+    actual=a.scheduled_slot(observed.isoformat())
+    assert actual['last_RSS_nominal_UTC']=='2026-10-05T14:00:00+00:00'
+    assert actual['next_RSS_nominal_UTC']=='2026-10-05T18:00:00+00:00'
+
+
+def test_scheduled_slot_preserves_existing_utc_output():
+    actual=a.scheduled_slot('2026-10-06T03:46:19+00:00')
+    assert actual=={
+        'last_RSS_nominal_UTC':'2026-10-06T02:00:00+00:00',
+        'next_RSS_nominal_UTC':'2026-10-06T06:00:00+00:00',
+        'source_sha256':a.sha(Path('.github/workflows/rss-live-check.yml').read_bytes()),
+        'basis':'checked-out RSS workflow bytes',
+        'acquisition_expected':'After successful RSS completion; no own cron',
+        'shadow_expected':'After acquisition completion; conditional; no own cron',
+        'late_tolerance':'UNAPPROVED', 'zero_alert_threshold':'UNAPPROVED'}
+
+
+def test_scheduled_slot_requires_explicit_timezone():
+    with pytest.raises(ValueError, match='must include timezone'):
+        a.scheduled_slot('2026-10-06T00:00:00')
 
 
 def test_absence_permission_and_artifact_failure_are_distinct():
