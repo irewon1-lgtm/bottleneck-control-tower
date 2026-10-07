@@ -1,1 +1,0 @@
-"""Independent source adapters."""
