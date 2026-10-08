@@ -22,7 +22,7 @@ def verify(cache,output):
     script=Path(__file__).resolve().parents[1]/'.github/scripts/new_precursor_cycle.py'
     spec=importlib.util.spec_from_file_location('operating_wrapper',script);wrapper=importlib.util.module_from_spec(spec);spec.loader.exec_module(wrapper)
     summary=wrapper.run({'collection_started_at':c.acquisition.now(),'documents':[], 'qa_copy_only':True},root,search_endpoint=c.DEFAULT_SEARCH_ENDPOINT)[-1]
-    assert summary['scope_reader_version']=='source-scope-reader-2'
+    assert summary['scope_reader_version']==c.scope_reader.VERSION
     assert summary['backfill_qa_documents']==230 and summary['requests_this_cycle']==0
     assert summary['live_execution']=={'state':'NO_EARLY_CANDIDATE','frozen':0}
     assert snapshot(cache)==before

@@ -20,6 +20,7 @@ from . import early_forecast, forecast_discovery, prospective
 from . import precursor_scope_reader as scope_reader, precursor_temporal as temporal
 from . import precursor_source_search as source_search
 from . import precursor_official_source as official_source
+from . import precursor_evidence_graph as evidence_graph
 from .objective_lock import stamp_export
 from .future_bottleneck import CHANGE_TARGET
 from .future_manual_review import _private_write
@@ -142,6 +143,15 @@ def structure(document, raw=None, *, fresh=False):
         e['raw_period_references']=[{'text':m.group(),'locator':{'start':e['locator']['start']+m.start(),'end':e['locator']['start']+m.end()}}
             for m in re.finditer(r'\b(?:20\d{2}-\d{2}-\d{2}|next year|through 20\d{2}|over the next \d+ months|(?:first|second) half of 20\d{2})\b',e['source_quote'],re.I)]
         e['temporal_facts']=temporal.extract(d,e)
+        # The protected engine only accepts literal YEAR/H/Q windows. Its old
+        # regex could select the inner year of "March 2028" or "early 2028".
+        # Keep the full precision in the sidecar and reject that projection.
+        if e.get('window'):
+            loc=e['window']['locator']
+            containing=[p for p in e['temporal_facts']['periods'] if p['reference']['locator']['start']<=loc['start'] and loc['end']<=p['reference']['locator']['end']]
+            if any(p['reference']['locator']!=loc for p in containing):
+                e['protected_window_blocker']='LITERAL_SOURCE_PRECISION_UNSUPPORTED_BY_PROTECTED_ENGINE'
+                e['window']=None;e['future_period']={'start':UNKNOWN,'end':UNKNOWN}
     scope_reader.validate_references(d,events)
     d['scope_reader_version']=scope_reader.VERSION
     d['scope_read_mode']='LIVE_FRESH' if fresh else 'BACKFILL_QA'
@@ -168,7 +178,9 @@ def stored_documents(root):
             if proof['provenance']!='PASS' or any(proof[k]!=d[k] for k in fields):
                 raise ValueError('stored provenance no longer bound to original HTML')
             # New derived views never overwrite immutable source/version records.
-            fresh=d.get('scope_reader_version')==scope_reader.VERSION and d.get('scope_read_mode')=='LIVE_FRESH'
+            # Parser upgrades can reuse a genuinely captured LIVE original as
+            # context. No old BACKFILL original gains LIVE status or a timestamp.
+            fresh=bool(d.get('scope_reader_version')) and d.get('scope_read_mode')=='LIVE_FRESH'
             docs.append(structure(d,raw,fresh=fresh))
     return docs
 
@@ -304,12 +316,13 @@ def counters(result,prepared):
             'explicit_future_timing_pairs':timing,'temporal_comparison_unknowns':time_unknown}
 
 
-def freeze(root,batch,result,stats,store,activation):
+def freeze(root,batch,result,stats,store,activation,*,new_document_ids=None):
     if not result['candidates']:return {'state':'NO_EARLY_CANDIDATE','frozen':0}
     eligible={p['target_id'] for p in stats['common_future_window_pairs']}
     explicit={p['target_id'] for p in stats.get('explicit_future_timing_pairs',[])}
     tids=set()
     for candidate in result['candidates']:
+        if new_document_ids is not None and not {e.get('document_id') for e in candidate.get('evidence',[])} & new_document_ids:continue
         dw,sw=candidate.get('future_demand_window'),candidate.get('known_supply_window')
         if (candidate['target_id'] in (eligible|explicit) and isinstance(dw,dict) and isinstance(sw,dict)
                 and dw.get('start') and sw.get('start') and (max(dw['start'],sw['start'])<=min(dw['end'],sw['end']) or candidate['target_id'] in explicit)
@@ -331,7 +344,7 @@ def freeze(root,batch,result,stats,store,activation):
     first=[]
     for p in (store/'candidates').glob('*.json'):
         saved=prospective._read(p)
-        if saved['target_id'] in tids:first.append({'target_id':saved['target_id'],'path':str(p),'sha256':acquisition.digest(p.read_bytes()),'first_detected_at':saved['candidate_first_detected_at']})
+        if saved['target_id'] in tids and str(p) not in before:first.append({'target_id':saved['target_id'],'path':str(p),'sha256':acquisition.digest(p.read_bytes()),'first_detected_at':saved['candidate_first_detected_at']})
     return {'state':run.get('state',run.get('engine_state')),'frozen':len(first),'first_records':first}
 
 
@@ -343,6 +356,7 @@ def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,
         if activation['engine_hashes']!=hashes():raise ValueError('frozen engine hash changed')
         receipt=root/'cycles'/(forecast_discovery.digest(manifest)+'.json')
         if receipt.exists():return read(receipt)
+        prior_document_ids={read(p).get('document_id') for p in (root/'documents').glob('*.json')}
         rows={row['url']:row for row in manifest.get('documents',[])[:100] if row['document_id'] not in manifest.get('preexisting_document_ids',[])}
         with ThreadPoolExecutor(max_workers=6) as pool:
             seeds=list(pool.map(lambda row:capture(root,row['url'],row['document_id'],activation,collected_at=row['collected_at']),rows.values()))
@@ -360,8 +374,11 @@ def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,
         for d in docs:d['raw_path']=str(root/'raw'/(d['raw_sha256']+'.html'))
         # Historical cache rereading is QA only, including its search plans.
         # Only fresh captures can initiate a new operational external query.
-        value=evidence_plan([d for d in docs if d.get('scope_read_mode')=='LIVE_FRESH']);requests=[];provider_block=None
+        new_ids={s.get('document_id') for s in seeds if s.get('status')=='CAPTURED'}-prior_document_ids
+        value=evidence_plan([d for d in docs if d['document_id'] in new_ids and d.get('scope_read_mode')=='LIVE_FRESH']);requests=[];provider_block=None
         for req in value['requests']:
+            req=source_search.public_query_request(req,docs,new_ids)
+            if manifest.get('external_query_authorized') is True:req['external_query_authorized']=True
             path=root/'requests'/(req['request_id']+'.json')
             if path.exists():continue
             if len(requests)>=request_limit:break
@@ -369,6 +386,9 @@ def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,
             r={**req,'attempted_at':acquisition.now()}
             if not req.get('search_scope_ready',True):
                 r['search_status']='BLOCKED_SEARCH_SCOPE';r['search_blocker']=req['search_scope_blocker']
+            elif not source_search.external_query_allowed(req):
+                r['search_status']='BLOCKED_PRIVATE_QUERY_DISCLOSURE'
+                r['search_blocker']='EXPLICIT_EXTERNAL_QUERY_PERMISSION_OR_PUBLIC_ONLY_REFERENCES_REQUIRED'
             elif search_endpoint and not provider_block:
                 try:urls+=acquisition.search(req,search_endpoint);r['search_status']='FINISHED'
                 except Exception as exc:
@@ -398,18 +418,46 @@ def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,
                         or any(v['state'] in ('VALID_PRIMARY_EVIDENCE','VALID_ORIGINAL_SCOPE_EVIDENCE') for v in validations.get(d['document_id'],[])))]
         batch=stamp_export({'mode':'LIVE','precursor_discovery':True,'documents':live_docs,'signals':[]})
         result,prepared=pd.discover(batch,mode='LIVE');stats=counters(result,prepared)
-        execution=freeze(root,batch,result,stats,live_store,activation)
+        execution=freeze(root,batch,result,stats,live_store,activation,new_document_ids=new_ids)
+        # Multi-document attributes use the existing EARLY signal contract.
+        # They never enter precursor_discovery._validate with fabricated local
+        # offsets. The graph revalidates every original attribute and edge.
+        new_ids.update(d.get('document_id') for r in requests for d in r['captures'] if d.get('status')=='CAPTURED' and d.get('document_id') not in prior_document_ids)
+        graph=evidence_graph.analyze(live_docs,mode='LIVE',new_document_ids=new_ids)
+        graph_execution=freeze_graph(graph,live_store,activation)
         summary={'format':FORMAT,'completed_at':acquisition.now(),'new_seed_attempts':len(seeds),'new_seed_statuses':{k:sum(s['status']==k for s in seeds) for k in sorted({s['status'] for s in seeds})},
-                 'new_verified_documents':len(docs),'requests_this_cycle':len(requests),'scope_blocked_events':len(value['blocked']),
+                 'new_verified_documents':sum(d['document_id'] in new_ids for d in docs),
+                 'context_verified_documents':len(docs),'requests_this_cycle':len(requests),'scope_blocked_events':len(value['blocked']),
                  **stats,'live_execution':execution,'search_statuses':sorted({r['search_status'] for r in requests}),'existing_corpus_reprocessed':0,'engine_hashes':hashes()}
         summary['backfill_qa_documents']=len(docs)-len(live_docs)
         summary['scope_reader_version']=scope_reader.VERSION
         summary['additional_bodies_acquired']=sum(d.get('status')=='CAPTURED' for r in requests for d in r['captures'])
         summary['valid_additional_primary_documents']=sum(v['state']=='VALID_PRIMARY_EVIDENCE' for r in requests for v in r['capture_validation'])
+        summary['evidence_graph']={k:graph[k] for k in ('version','complete_target_events','independent_pairs','comparable_period_pairs','reference_checks')}
+        summary['graph_early_preflight']=len(graph['protected_result']['candidates'])
+        summary['unique_early_preflight']=len({candidate['target_id'] for candidate in [*result['candidates'],*graph['protected_result']['candidates']]})
+        summary['graph_live_execution']=graph_execution
         summary=stamp_export(summary)
         put(receipt,summary)
-        put(root/'evaluations'/(forecast_discovery.digest(summary)+'.json'),{'summary':summary,'batch':batch,'result':result})
+        put(root/'evaluations'/(forecast_discovery.digest(summary)+'.json'),{'summary':summary,'batch':batch,'result':result,'evidence_graph':graph})
         return summary
+
+
+def freeze_graph(graph,store,activation):
+    candidates=graph['protected_result']['candidates']
+    if not candidates:return {'state':'NO_EARLY_CANDIDATE','frozen':0}
+    if store is None:return {'state':'EXISTING_LIVE_STORE_NOT_CONFIGURED','frozen':0}
+    if activation['engine_hashes']!=hashes():raise ValueError('frozen engine hash changed')
+    store=Path(store)
+    if not (store/'session.json').is_file():raise ValueError('existing LIVE session required; no creation')
+    before={str(p):p.read_bytes() for p in store.rglob('*.json')}
+    prospective.run(store,graph['protected_batch'],early=True)
+    if any(Path(p).read_bytes()!=raw for p,raw in before.items()):raise RuntimeError('existing LIVE history changed')
+    tids={c['target_id'] for c in candidates};first=[]
+    for p in (store/'candidates').glob('*.json'):
+        saved=prospective._read(p)
+        if saved['target_id'] in tids and str(p) not in before:first.append({'target_id':saved['target_id'],'first_detected_at':saved['candidate_first_detected_at'],'sha256':acquisition.digest(p.read_bytes())})
+    return {'state':'FROZEN' if first else 'NO_NEW_RECORD','frozen':len(first),'first_records':first}
 
 
 def main():

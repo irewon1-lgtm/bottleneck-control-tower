@@ -9,13 +9,14 @@ import re
 
 from .precursor_scope_reader import reference
 
-VERSION = 'source-temporal-reader-1'
+VERSION = 'source-temporal-reader-2'
 UNKNOWN = 'UNKNOWN'
 MONTHS = 'January February March April May June July August September October November December'.split()
 MONTH = '|'.join(MONTHS)
 EXPR = re.compile(r'\b(?:20\d{2}-\d{2}-\d{2}|(?:'+MONTH+r')\s+(?:\d{1,2},?\s+)?20\d{2}|(?:first|second) half (?:of )?20\d{2}|(?:first|second|third|fourth) quarter (?:of )?20\d{2}|(?:early|late|end of|by the end of)\s+20\d{2}|(?:Q[1-4]|H[12])\s*20\d{2}|20\d{2}\s*(?:Q[1-4]|H[12]|년\s*(?:상반기|하반기|[1-4]분기|말|초))|20\d{2}(?:\s*[–~-]\s*20\d{2})?|(?:\d+|eighteen|twenty-four)\s+months?\s+(?:after|from|until|to)|(?:after|following)\s+(?:customer\s+)?(?:qualification|certification)(?:\s+completion)?)\b', re.I)
-KOREAN = re.compile(r'20\d{2}년\s*(?:상반기|하반기|[1-4]분기|말까지|말|초)|발주\s*후\s*\d+개월|공급\s*준비까지\s*\d+개월|고객\s*인증\s*완료\s*후')
-AMOUNT = re.compile(r'(?<![\w$€£.,-])(\d+(?:,\d{3})*(?:\.\d+)?)\s*(million|billion)?\s*((?:MW|GW|MWh|GWh|kg|tonnes|tons|units|cells|wafers|slots|pieces|lasers|isolators|turbines|percent|%)(?:\s*(?:/\s*(?:day|month|year)|per\s+(?:day|month|year)|annually))?)(?!\w)', re.I)
+KOREAN = re.compile(r'20\d{2}년\s*(?:상반기|하반기|[1-4]분기|말까지|말|초|\d{1,2}월(?:\s*\d{1,2}일)?)|(?:발주|계약\s*(?:발효|체결))\s*후\s*\d+개월|공급\s*준비까지\s*\d+개월|고객\s*인증\s*완료\s*후')
+RELATIVE = re.compile(r'\b(?:within|over the next|in)\s+(?:\d+|eighteen|twenty-four)\s+months?\b',re.I)
+AMOUNT = re.compile(r'(?<![\w$€£.,-])(\d+(?:,\d{3})*(?:\.\d+)?)\s*(million|billion)?\s*((?:(?:qualified|good)\s+)?(?:MW|GW|MWh|GWh|kg|tonnes|tons|units|cells|wafers|dies|slots|pieces|lasers|isolators|turbines|machines|systems|percent|%)(?:\s*(?:/\s*(?:hour|day|month|year)|per\s+(?:hour|day|month|year)|annually))?)(?!\w)', re.I)
 
 
 def bounds(text, anchor=None):
@@ -35,6 +36,7 @@ def bounds(text, anchor=None):
                 d = date.fromisoformat(anchor['start']); n = d.year*12+d.month-1+months
                 dt = date(n//12,n%12+1,min(d.day,calendar.monthrange(n//12,n%12+1)[1])).isoformat()
                 result.update(start=dt,end=dt,anchor=anchor)
+                if re.search(r'within|over the next',t,re.I):result.update(precision='RELATIVE_WINDOW',start=anchor['start'])
             else: result['unknown_reason'] = 'REFERENCE_EVENT_DATE_NOT_VERIFIED'
         else: result.update(precision='CONDITIONAL',unknown_reason='QUALIFICATION_COMPLETION_DATE_UNKNOWN')
         return result
@@ -42,6 +44,14 @@ def bounds(text, anchor=None):
     half = re.search(r'H([12])|\b(first|second) half|(?:상반기|하반기)', t, re.I)
     quarter = re.search(r'Q([1-4])|([1-4])분기|\b(first|second|third|fourth) quarter', t, re.I)
     month = next((i+1 for i,m in enumerate(MONTHS) if re.search(r'\b'+m+r'\b',t,re.I)), None)
+    korean_month=re.search(r'년\s*(\d{1,2})월(?:\s*(\d{1,2})일)?',t)
+    if korean_month:
+        month=int(korean_month[1])
+        if not 1<=month<=12:return {**result,'unknown_reason':'INVALID_CALENDAR_DATE'}
+        if korean_month[2]:
+            try:value=date(year,month,int(korean_month[2])).isoformat()
+            except ValueError:return {**result,'unknown_reason':'INVALID_CALENDAR_DATE'}
+            return {**result,'precision':'DATE','start':value,'end':value}
     if half:
         first = 1 if (half[1]=='1' or (half[2] or '').lower()=='first' or half[0]=='상반기') else 7; last=first+5; precision='HALF'
     elif quarter:
@@ -70,7 +80,7 @@ def _kind(q, start, end):
     rules = [
         ('DEMAND_CANCELLATION',r'cancel|postpon|defer|demand.{0,25}(?:declin|reduc)'),
         ('QUALIFICATION',r'qualification|certification|customer approval'),
-        ('SUPPLY_READY',r'commercial.{0,20}(?:operation|production)|commission|ready|available|start.{0,20}production|production.{0,20}(?:begin|start)'),
+        ('SUPPLY_READY',r'commercial.{0,20}(?:operation|production)|commission|ready|available|start.{0,20}production|production.{0,20}(?:begin|start)|(?:conversion|construction|expansion).{0,30}(?:complet|finish)|complet.{0,30}(?:conversion|construction|expansion)'),
         ('DEMAND_NEED',r'needed|required|deliver|shipment|due'),
         ('CONTRACT_DATE',r'sign|award|contract.{0,25}(?:date|start|effective)|agreement.{0,25}(?:date|start|effective)'),
         ('CAPEX_DEPLOYMENT',r'capex|invest|deploy|construction'),
@@ -84,7 +94,7 @@ def _kind(q, start, end):
 
 def extract(doc, event):
     q=event['source_quote'];off=event['locator']['start'];periods=[];amounts=[]
-    matches=list(EXPR.finditer(q))+list(KOREAN.finditer(q))
+    matches=list(EXPR.finditer(q))+list(KOREAN.finditer(q))+list(RELATIVE.finditer(q))
     # Keep the longest matching expression, never a convenient inner year.
     chosen=[]
     for m in sorted(matches,key=lambda m:(m.start(),-len(m[0]))):
@@ -96,7 +106,7 @@ def extract(doc, event):
     for p in periods:
         if p['precision']=='RELATIVE_DURATION':
             anchors=[x for x in periods if x['fact_kind']=='CONTRACT_DATE' and x['precision']=='DATE']
-            if len(anchors)==1 and re.search(r'after (?:the )?(?:contract|order)|발주\s*후',q,re.I):
+            if len(anchors)==1 and re.search(r'after (?:the )?(?:contract|order)|(?:발주|계약\s*(?:발효|체결))\s*후',q,re.I):
                 p.update(bounds(p['text'],anchors[0]))
     for m in AMOUNT.finditer(q):
         value=float(m[1].replace(',',''));value*= {'million':1e6,'billion':1e9}.get((m[2] or '').lower(),1)
@@ -108,15 +118,17 @@ def extract(doc, event):
         if re.search(r'nameplate|nominal|design capacity|planned capacity|expected capacity|capacity expansion',context,re.I):kind='NOMINAL_OR_PLANNED_CAPACITY'
         elif re.search(r'\b(?:unallocated|unreserved|unbooked)\b',context,re.I):kind='UNRESERVED_CAPACITY'
         elif re.search(r'\b(?:reserved|allocated|booked)\b',context,re.I):kind='CUSTOMER_ALLOCATION'
-        elif re.search(r'qualified.{0,30}(?:capacity|output|supply)',context,re.I) and not re.search(r'not.{0,10}qualified|pending qualification',context,re.I):kind='QUALIFIED_OUTPUT'
+        elif re.search(r'qualified.{0,30}(?:capacity|output|supply)',context,re.I) and not re.search(r'not.{0,10}qualified|pending qualification|expects? to|will be qualified',context,re.I):kind='QUALIFIED_OUTPUT'
         elif event['role']=='DEMAND':kind='FORECAST_QUANTITY' if re.search(r'forecast|expect|potential',context,re.I) else 'ORDER_QUANTITY' if event.get('demand_status')=='COMMITTED' else 'UNCONFIRMED_QUANTITY'
         if m[3].lower() in ('%','percent'):kind='YIELD_OR_PERCENT_REQUIRES_ATTRIBUTION'
         associated=[p for p in periods if off+clause_start<=p['reference']['locator']['start']<off+clause_end and p['fact_kind']!='CONTRACT_DATE']
         amounts.append({'value':int(value) if value.is_integer() else value,'unit':m[3], 'rate':rate,'fact_kind':kind,
+                       'qualification_status':'PENDING' if re.search(r'not(?: yet)? qualified|pending qualification|before qualification',context,re.I) else 'SOURCE_ASSERTED' if kind=='QUALIFIED_OUTPUT' else UNKNOWN,
+                       'coverage':'COMPLETE' if re.search(r'\b(?:total|all|entire)\b',context,re.I) else 'UNRESERVED' if kind=='UNRESERVED_CAPACITY' else 'OBSERVED_NOT_TOTAL',
                        'reference':reference(doc,off+m.start(),off+m.end()),'period':associated[0] if len(associated)==1 else UNKNOWN})
     financial=[reference(doc,off+m.start(),off+m.end()) for m in re.finditer(r'[$€£]\s*\d[\d,.]*(?:\s*(?:million|billion))?',q,re.I)]
     relief=[]
-    for kind,pattern in [('DEMAND_CANCEL_OR_DELAY',r'cancel\w*|postpon\w*|defer\w*'),('QUALIFIED_SUBSTITUTE',r'(?:qualified|certified) substitute|alternative supplier'),('COMPLETED_CAPACITY',r'(?:already|now) (?:operating|in production)|commercial operations began'),('PENDING_CAPACITY',r'under construction|planned capacity|qualification|commissioning')]:
+    for kind,pattern in [('DEMAND_CANCEL_OR_DELAY',r'cancel\w*|postpon\w*|defer\w*'),('QUALIFIED_SUBSTITUTE',r'(?:qualified|certified) (?:substitute|alternative supplier)'),('UNVERIFIED_SUBSTITUTE',r'(?<!qualified )(?<!certified )alternative supplier'),('COMPLETED_CAPACITY',r'(?:already|now) (?:operating|in production)|commercial operations began'),('PENDING_CAPACITY',r'under construction|planned capacity|qualification|commissioning'),('INVENTORY',r'\binventor(?:y|ies)\b'),('PRODUCTIVITY',r'(?:improv|increas).{0,25}(?:yield|throughput|productivity)'),('DESIGN_CHANGE',r'redesign|design change')]:
         if re.search(pattern,q,re.I):relief.append({'kind':kind,'reference':reference(doc,off,off+len(q))})
     return {'version':VERSION,'periods':periods,'quantities':amounts,'financial_amounts_not_output':financial,'relief':relief,
             'unknown_reasons':sorted({p['unknown_reason'] for p in periods if p.get('unknown_reason')} | ({'NO_SOURCE_PERIOD'} if not periods else set()) | ({'NO_PHYSICAL_QUANTITY'} if not amounts else set()))}
@@ -142,5 +154,14 @@ def compare(demand, supply):
         return {'state':'UNKNOWN','reason':'PHYSICAL_UNIT_OR_RATE_MISMATCH'}
     if UNKNOWN in (d['start'],d['end'],s['start'],s['end']):return {'state':'UNKNOWN','reason':'DATE_ANCHOR_UNKNOWN'}
     if d.get('unknown_reason') or s.get('unknown_reason'):return {'state':'UNKNOWN','reason':'QUALITATIVE_TIME_BOUND'}
+    usable_d=[q for q in dq if q.get('fact_kind')=='ORDER_QUANTITY' and isinstance(q.get('period'),dict)]
+    usable_s=[q for q in sq if q.get('fact_kind') in ('QUALIFIED_OUTPUT','UNRESERVED_CAPACITY') and q.get('qualification_status')!='PENDING' and isinstance(q.get('period'),dict)]
+    if len(usable_d)==len(usable_s)==1:
+        a,b=usable_d[0],usable_s[0]
+        same_period=(a['period']['start'],a['period']['end'])==(b['period']['start'],b['period']['end'])
+        covered=b.get('coverage') in ('COMPLETE','UNRESERVED') and (supply.get('qualified') or b.get('qualification_status')=='SOURCE_ASSERTED')
+        if same_period and covered and a['value']>b['value']:
+            return {'state':'POSSIBLE_QUANTITY_GAP','need':d,'readiness':s,'demand':a,'supply':b,'gap':a['value']-b['value'],'unit':a['unit']}
     if s['start']>d['end']:return {'state':'POSSIBLE_TIMING_GAP','need':d,'readiness':s}
+    if s['end']<d['start']:return {'state':'SUPPLY_BEFORE_NEED','reason':'READINESS_PRECEDES_NEED_NOT_A_SHORTAGE','need':d,'readiness':s}
     return {'state':'UNKNOWN','reason':'OVERLAPPING_WINDOWS_DO_NOT_PROVE_LAG','need':d,'readiness':s}

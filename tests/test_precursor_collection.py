@@ -51,7 +51,9 @@ def test_opposite_side_request_only_and_resume_does_not_refetch(tmp_path,transpo
     reqs=[]
     def search(req,endpoint):reqs.append(req);return ['https://maker.example/doc']
     monkeypatch.setattr(c.acquisition,'search',search)
-    m=manifest(['buyer']);r=c.cycle(tmp_path,m,search_endpoint='https://configured.example/search')
+    # This fixture explicitly authorizes disclosure to its mocked transport.
+    # Production private-cache queries default to blocked.
+    m={**manifest(['buyer']),'external_query_authorized':True};r=c.cycle(tmp_path,m,search_endpoint='https://configured.example/search')
     assert [q['role'] for q in reqs]==['SUPPLY']
     assert reqs[0]['scope']['specification']=='grade z'
     assert r['early_preflight']==1 and len(calls)==2
@@ -162,6 +164,11 @@ def test_actual_wrapper_freeze_on_existing_fixture_session(tmp_path,transport,mo
     assert {e['origin_publisher'] for e in saved['candidate_as_generated']['evidence']}=={'buyer','maker'}
     copied=tmp_path/'copied-first.json';copied.write_bytes(first.read_bytes())
     assert prospective._read(copied)['record_sha256']==saved['record_sha256']
+    evaluation=c.read(next((tmp_path/'collector/evaluations').glob('*.json')))
+    result,prepared=pd.discover(evaluation['batch'],mode='LIVE')
+    repeated=c.freeze(tmp_path/'collector',evaluation['batch'],result,c.counters(result,prepared),store,c.read(tmp_path/'collector/activation.json'))
+    assert repeated['frozen']==0 and repeated['first_records']==[]
+    assert first.read_bytes()==copied.read_bytes()
 
 
 def test_raw_capture_relocation_rebinds_private_paths(tmp_path,transport,monkeypatch):
@@ -170,7 +177,7 @@ def test_raw_capture_relocation_rebinds_private_paths(tmp_path,transport,monkeyp
     shutil.copytree(tmp_path/'first',tmp_path/'second')
     changed={**manifest([]),'batch_number':2}
     r=c.cycle(tmp_path/'second',changed)
-    assert r['new_verified_documents']==1
+    assert r['new_verified_documents']==0 and r['context_verified_documents']==1
 
 
 def test_workflow_consumes_delta_and_preserves_canonical_and_live():
