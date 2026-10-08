@@ -51,7 +51,9 @@ def test_opposite_side_request_only_and_resume_does_not_refetch(tmp_path,transpo
     reqs=[]
     def search(req,endpoint):reqs.append(req);return ['https://maker.example/doc']
     monkeypatch.setattr(c.acquisition,'search',search)
-    m=manifest(['buyer']);r=c.cycle(tmp_path,m,search_endpoint='https://configured.example/search')
+    # This fixture explicitly authorizes disclosure to its mocked transport.
+    # Production private-cache queries default to blocked.
+    m={**manifest(['buyer']),'external_query_authorized':True};r=c.cycle(tmp_path,m,search_endpoint='https://configured.example/search')
     assert [q['role'] for q in reqs]==['SUPPLY']
     assert reqs[0]['scope']['specification']=='grade z'
     assert r['early_preflight']==1 and len(calls)==2
@@ -170,7 +172,7 @@ def test_raw_capture_relocation_rebinds_private_paths(tmp_path,transport,monkeyp
     shutil.copytree(tmp_path/'first',tmp_path/'second')
     changed={**manifest([]),'batch_number':2}
     r=c.cycle(tmp_path/'second',changed)
-    assert r['new_verified_documents']==1
+    assert r['new_verified_documents']==0 and r['context_verified_documents']==1
 
 
 def test_workflow_consumes_delta_and_preserves_canonical_and_live():

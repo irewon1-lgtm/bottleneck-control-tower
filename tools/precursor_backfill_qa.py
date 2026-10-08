@@ -8,6 +8,7 @@ from pathlib import Path
 
 from bct import precursor_collection as c, precursor_discovery as pd
 from bct import precursor_scope_reader as scope, precursor_temporal as temporal
+from bct import precursor_evidence_graph as graph_reader
 from bct.objective_lock import stamp_export
 
 
@@ -63,6 +64,7 @@ def run(root,as_of):
     repeat=[c.structure(d,(root/'raw'/(d['raw_sha256']+'.html')).read_bytes()) for d in original]
     deterministic=digest(new)==digest(repeat)
     references=validate(new)
+    graph=graph_reader.analyze(new,mode='BACKFILL',now=as_of)
     requests=[c.read(p) for p in sorted((root/'requests').glob('*.json'))]
     searches={'baseline_requests':len(requests),'baseline_url_attempts':sum(len(r.get('captures',[])) for r in requests),
               'baseline_bodies_acquired':sum(x.get('status')=='CAPTURED' for r in requests for x in r.get('captures',[])),
@@ -72,6 +74,10 @@ def run(root,as_of):
     assert preserved and deterministic
     return stamp_export({'mode':'BACKFILL_QA','as_of':as_of,'scope_reader_version':scope.VERSION,
             'before':before,'after':after,'search_baseline':searches,
+            'graph_qa':{'version':graph_reader.VERSION,'source_reference_checks':graph['reference_checks'],
+                        'cross_document_edges':sum(e['references'][0]['document_id']!=e['references'][1]['document_id'] for e in graph['edges']),
+                        'complete_target_events':graph['complete_target_events'],'independent_pairs':graph['independent_pairs'],
+                        'comparable_period_pairs':graph['comparable_period_pairs'],'backfill_early_candidates':len(graph['protected_result']['candidates'])},
             'preservation':{'cache_files_unchanged':preserved,'cache_file_count':len(before_hashes),
                             'deterministic_replay':deterministic,'source_reference_checks':'PASS','new_temporal_references_checked':references,
                             'source_input_sha256':digest([{'document_id':d['document_id'],'body_sha256':d['body_sha256'],'raw_sha256':d['raw_sha256']} for d in original]),

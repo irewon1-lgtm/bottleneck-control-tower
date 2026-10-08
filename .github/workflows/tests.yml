@@ -16,15 +16,15 @@ jobs:
       # Fixed-input QA for this cutover only; expiry cannot break later CI.
       # The regular six-per-day RSS schedule and write workflows are untouched.
       - name: Restore fixed real-source QA snapshot
-        if: ${{ github.head_ref == 'fix/precursor-source-pipeline-20261009' || (github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'BCT source pipeline QA')) }}
+        if: ${{ github.head_ref == 'fix/precursor-source-pipeline-20261009' || github.head_ref == 'improve-source-evidence-graph-20261008' || (github.ref == 'refs/heads/main' && (contains(github.event.head_commit.message, 'BCT source pipeline QA') || contains(github.event.head_commit.message, 'BCT evidence graph QA'))) }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh run download 37790294699 --name precursor-private-cache --dir var/fixed-precursor-qa
       - name: Verify 230 originals through the operating wrapper without network or LIVE writes
-        if: ${{ github.head_ref == 'fix/precursor-source-pipeline-20261009' || (github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'BCT source pipeline QA')) }}
+        if: ${{ github.head_ref == 'fix/precursor-source-pipeline-20261009' || github.head_ref == 'improve-source-evidence-graph-20261008' || (github.ref == 'refs/heads/main' && (contains(github.event.head_commit.message, 'BCT source pipeline QA') || contains(github.event.head_commit.message, 'BCT evidence graph QA'))) }}
         run: python tools/precursor_operating_qa.py --cache var/fixed-precursor-qa --output var/qa/operating-report.json
       - uses: actions/upload-artifact@v4
-        if: ${{ github.head_ref == 'fix/precursor-source-pipeline-20261009' || (github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'BCT source pipeline QA')) }}
+        if: ${{ github.head_ref == 'fix/precursor-source-pipeline-20261009' || github.head_ref == 'improve-source-evidence-graph-20261008' || (github.ref == 'refs/heads/main' && (contains(github.event.head_commit.message, 'BCT source pipeline QA') || contains(github.event.head_commit.message, 'BCT evidence graph QA'))) }}
         with:
           name: source-pipeline-qa
           path: var/qa/operating-report.json

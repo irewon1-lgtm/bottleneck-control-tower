@@ -9,6 +9,7 @@ import fcntl
 import json
 from pathlib import Path
 import re
+from urllib.parse import urlsplit
 
 from . import future_body, target_acquisition as a
 from .collectors.sec.collector import parse_listing, validate_filing
@@ -51,7 +52,17 @@ def _metadata(path,root,endpoint,cik):
 
 def verify(raw,url,final,at,status=200,ctype='text/html',*,metadata_record=None,metadata_raw=None):
     ordinary=a.verify(raw,url,final,at,status,ctype)
-    if not SEC.fullmatch(url):return ordinary
+    if not SEC.fullmatch(url):
+        parser=a.Metadata();parser.feed(raw.decode('utf-8',errors='replace'))
+        # Registry URLs may redirect to their publisher's current canonical
+        # address. Only an observed same-host redirect AND matching canonical
+        # closes identity; no arbitrary cross-site redirect is promoted.
+        hosts=[(urlsplit(u).hostname or '').lower().removeprefix('www.') for u in (url,final,parser.canonical or '')]
+        if (all(hosts) and len(set(hosts))==1 and a.norm(final)==a.norm(parser.canonical)):
+            ordinary=a.verify(raw,final,final,at,status,ctype)
+            ordinary['requested_url']=url
+            ordinary['identity_reference']={'requested_url':url,'observed_final_url':final,'observed_canonical_url':parser.canonical,'raw_sha256':a.digest(raw)}
+        return ordinary
     if not metadata_record or metadata_record.get('status')!='CAPTURED' or not metadata_raw:
         return {**ordinary,'official_source_reader':VERSION,'official_blocker':'OFFICIAL_FILING_LISTING_UNAVAILABLE'}
     match=SEC.fullmatch(url)
