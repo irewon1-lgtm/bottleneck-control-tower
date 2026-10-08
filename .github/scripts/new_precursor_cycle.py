@@ -32,5 +32,7 @@ if __name__=='__main__':
             'early_preflight':summaries[-1]['early_preflight'],
             'live_execution_state':summaries[-1]['live_execution']['state'],
             'early_frozen':summaries[-1]['live_execution']['frozen'],'baseline_reprocessed':0}
+    public.update({k:summaries[-1].get(k,'LEGACY_RECEIPT_NO_REPROCESSING' if k=='scope_reader_version' else 0) for k in ('scope_reader_version','backfill_qa_documents',
+                  'additional_bodies_acquired','valid_additional_primary_documents')})
     output.write_text(json.dumps(public,indent=2)+'\n')
     print(json.dumps(public))

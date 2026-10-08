@@ -1,0 +1,304 @@
+{
+  "mode": "BACKFILL_QA",
+  "as_of": "2026-10-08T14:11:35+00:00",
+  "scope_reader_version": "source-scope-reader-2",
+  "before": {
+    "verified_documents": 230,
+    "events": 616,
+    "product": 16,
+    "specification": 0,
+    "region": 65,
+    "customer_group": 0,
+    "supply_pool": 0,
+    "complete_target_events": 0,
+    "independent_pairs": 0,
+    "comparable_period_pairs": 0,
+    "synthesized_targets": 0,
+    "backfill_early_candidates": 0,
+    "new_live_early_candidates": 0,
+    "known_bad_product_events": 2,
+    "taxonomy_region_events": 65,
+    "scope_unknowns": {
+      "product": 600,
+      "specification": 616,
+      "region": 551,
+      "customer_group": 616,
+      "supply_pool": 616
+    },
+    "temporal_unknowns": {},
+    "period_references": 0,
+    "physical_quantity_references": 0,
+    "rejected_inputs": 17,
+    "rejection_reasons": {
+      "PUBLIC_CONFIRMATION_NOT_PRECURSOR": 17
+    }
+  },
+  "after": {
+    "verified_documents": 230,
+    "events": 677,
+    "product": 40,
+    "specification": 3,
+    "region": 7,
+    "customer_group": 0,
+    "supply_pool": 0,
+    "complete_target_events": 0,
+    "independent_pairs": 0,
+    "comparable_period_pairs": 0,
+    "synthesized_targets": 0,
+    "backfill_early_candidates": 0,
+    "new_live_early_candidates": 0,
+    "known_bad_product_events": 0,
+    "taxonomy_region_events": 0,
+    "scope_unknowns": {
+      "product": 637,
+      "specification": 674,
+      "region": 670,
+      "customer_group": 677,
+      "supply_pool": 677
+    },
+    "temporal_unknowns": {
+      "QUALITATIVE_BOUND_NOT_AN_EXACT_DATE": 5,
+      "NO_PHYSICAL_QUANTITY": 628,
+      "NO_SOURCE_PERIOD": 618
+    },
+    "period_references": 75,
+    "physical_quantity_references": 75,
+    "rejected_inputs": 17,
+    "rejection_reasons": {
+      "PUBLIC_CONFIRMATION_NOT_PRECURSOR": 17
+    }
+  },
+  "search_baseline": {
+    "baseline_requests": 28,
+    "baseline_url_attempts": 84,
+    "baseline_bodies_acquired": 4,
+    "baseline_valid_primary_evidence": "UNKNOWN_NOT_RECORDED_BY_OLD_COLLECTOR",
+    "access_failure_statuses": {
+      "SITE_HTTP_BLOCKED": 19,
+      "PROVENANCE_BLOCKED": 61,
+      "CAPTURED": 4
+    }
+  },
+  "preservation": {
+    "cache_files_unchanged": true,
+    "cache_file_count": 2192,
+    "deterministic_replay": true,
+    "source_reference_checks": "PASS",
+    "new_temporal_references_checked": 166,
+    "source_input_sha256": "acd344732f2f087b42767bfe32d9f16d96da6de49a766d6fc73f3c0ed298f9ec",
+    "engine_hashes": {
+      "precursor_discovery.py": "614e841938daf41e34d7e31b97ec636f06f2997c8b7b4252926dd135e5bc2639",
+      "early_forecast.py": "51d90d2265baec516d20383579816c5155e46c69599a8e7b281d329843d17675",
+      "forecast_discovery.py": "5a491f55f14a3fef675c0ca652042bb1cd8b76cb0de40c6f003d55181e2480fd",
+      "prospective.py": "6ca939e378ffb02323feecb869aa1aac0e9f7b56ec5cbc92689233e30d65a153"
+    },
+    "live_write_count": 0
+  },
+  "limitations": [
+    "Backfill candidates are not LIVE detection successes.",
+    "Unsupported literal date expressions remain outside protected-engine windows.",
+    "Absence of fully evidenced eligibility/customer/pool scope cannot be repaired by inference."
+  ],
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "operating_wrapper": {
+    "state": "PASS",
+    "module": ".github/scripts/new_precursor_cycle.py",
+    "scope_reader_version": "source-scope-reader-2",
+    "backfill_qa_documents": 230,
+    "external_requests": 0,
+    "new_live_early_candidates": 0,
+    "live_write_count": 0,
+    "cache_original_unchanged": true
+  },
+  "direct_official_capture": {
+    "mode": "BACKFILL_QA_DIRECT_PUBLIC_URLS",
+    "search_requests": 0,
+    "url_attempts": 6,
+    "bodies_acquired": 6,
+    "provenance_verified_originals": 5,
+    "valid_independent_scope_pairs": 0,
+    "backfill_early_candidates": 0,
+    "new_live_early_candidates": 0,
+    "live_write_count": 0,
+    "results": [
+      {
+        "case": "gas_turbine_slots",
+        "registry": "docs/verified-bottlenecks.json",
+        "origin_url": "https://www.sec.gov/Archives/edgar/data/1996810/000199681026000148/gev-20260630.htm",
+        "status": "CAPTURED",
+        "provenance": "PASS",
+        "body_acquired": true,
+        "full_body": true,
+        "blockers": [],
+        "official_blocker": null,
+        "error": null,
+        "published_at": "2026-07-22",
+        "acquired_at": "2026-10-08T16:30:28.800412+00:00",
+        "body_sha256": "3171f3f5dfa68492facca2c7324c69071fc2fd12e2cc695dde0bca068fe074ae",
+        "raw_sha256": "4a3a7166e811c134c4b3aa72ab2544cedfb40ad8d31d76ad21fd232262e00f97",
+        "events": 144,
+        "complete_target_events": 0,
+        "roles": [
+          "DEMAND",
+          "SUPPLY"
+        ]
+      },
+      {
+        "case": "grid_interconnection",
+        "registry": "docs/verified-bottlenecks.json",
+        "origin_url": "https://www.ofgem.gov.uk/press-release/ofgem-acts-free-grid-capacity-tackling-speculative-data-centre-projects",
+        "status": "PROVENANCE_BLOCKED",
+        "provenance": "BLOCKED",
+        "body_acquired": true,
+        "full_body": true,
+        "blockers": [
+          "original_publication"
+        ],
+        "official_blocker": null,
+        "error": null,
+        "published_at": null,
+        "acquired_at": "2026-10-08T16:30:26.679095+00:00",
+        "body_sha256": "9af8e4ce08b48de41fcbeaeff7538c9aaf38c93229cc29541da575b724deb0b7",
+        "raw_sha256": "625e52274af1459c44d4773294d5464ed959890f53678c9cbb99893d43938aaa",
+        "events": 0,
+        "complete_target_events": 0,
+        "roles": []
+      },
+      {
+        "case": "defense_tungsten",
+        "registry": "docs/registrations/hemerdon-elmt/sources.json",
+        "origin_url": "https://www.sec.gov/Archives/edgar/data/2101698/000121390026102242/ea0306073-8k_elmet.htm",
+        "status": "CAPTURED",
+        "provenance": "PASS",
+        "body_acquired": true,
+        "full_body": true,
+        "blockers": [],
+        "official_blocker": null,
+        "error": null,
+        "published_at": "2026-09-22",
+        "acquired_at": "2026-10-08T16:30:28.712573+00:00",
+        "body_sha256": "af6de01a918249ef547cee922e1ed29737b3eb3d262b09499b542c7b41f29402",
+        "raw_sha256": "265a42ae8c525f661343dbc11da930b4046e3ac3f0711485b0aacdd0d44ee541",
+        "events": 10,
+        "complete_target_events": 0,
+        "roles": [
+          "DEMAND",
+          "SUPPLY"
+        ]
+      },
+      {
+        "case": "suas_batteries",
+        "registry": "docs/registrations/suas-cells-20261007/sources.json",
+        "origin_url": "https://www.sec.gov/Archives/edgar/data/1899287/000189928726000065/ampx-20260923.htm",
+        "status": "CAPTURED",
+        "provenance": "PASS",
+        "body_acquired": true,
+        "full_body": true,
+        "blockers": [],
+        "official_blocker": null,
+        "error": null,
+        "published_at": "2026-09-28",
+        "acquired_at": "2026-10-08T16:30:42.034583+00:00",
+        "body_sha256": "f3f715fc865a4745b8f5b54ecb7e753294d3aff0ff039a4743cff01bfaf53e71",
+        "raw_sha256": "7e9b31d07e21a8f963dfda973f2c637845561f57806b1de3bf88fbaed0af99b2",
+        "events": 5,
+        "complete_target_events": 0,
+        "roles": [
+          "SUPPLY"
+        ]
+      },
+      {
+        "case": "cpo_els_isolators",
+        "registry": "docs/registrations/cpo-els-garnet/sources-20261006.json",
+        "origin_url": "https://developer.nvidia.com/blog/how-industry-collaboration-fosters-nvidia-co-packaged-optics",
+        "status": "CAPTURED",
+        "provenance": "PASS",
+        "body_acquired": true,
+        "full_body": true,
+        "blockers": [],
+        "official_blocker": null,
+        "error": null,
+        "published_at": "2025-08-26T17:00:00+00:00",
+        "acquired_at": "2026-10-08T16:30:37.672350+00:00",
+        "body_sha256": "2d314db39fd42814a9fb572898d59e07de2def1fd1ca05496d8b2e6c4bd1b44d",
+        "raw_sha256": "8851b32403aac2788fc7023cd2998fa176874c0942422e65c55b07b154d57ee7",
+        "events": 4,
+        "complete_target_events": 0,
+        "roles": [
+          "DEMAND",
+          "SUPPLY"
+        ]
+      },
+      {
+        "case": "siph_qualified_testing",
+        "registry": "docs/registrations/siph-cpo-20261006/sources.json",
+        "origin_url": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/",
+        "status": "CAPTURED",
+        "provenance": "PASS",
+        "body_acquired": true,
+        "full_body": true,
+        "blockers": [],
+        "official_blocker": null,
+        "error": null,
+        "published_at": "2026-07-09T11:29:40+00:00",
+        "acquired_at": "2026-10-08T16:30:39.655192+00:00",
+        "body_sha256": "850ee76ba3a99af6d7e0b9c989e8c205e158c091c27f8c7c442e663a4aa8ce8a",
+        "raw_sha256": "a02cb7e8c992432a0a6a2c506e4454f9a9f92572c4f01c9e0050888730c87321",
+        "events": 14,
+        "complete_target_events": 0,
+        "roles": [
+          "DEMAND",
+          "SUPPLY"
+        ]
+      }
+    ]
+  },
+  "integrity": {
+    "objective_lock_file_sha256": "ef5fda64843439694d61f8e73a1162c5e38b4276e6afb4233ac5e18aba821518",
+    "objective_and_engines_unchanged": true,
+    "other_baseline_files_unchanged": true,
+    "changed_baseline_files": [
+      ".github/scripts/new_precursor_cycle.py",
+      ".github/workflows/tests.yml",
+      "src/bct/precursor_collection.py"
+    ],
+    "live_files_unchanged": 172,
+    "live_session_started_at": "2026-10-04T12:00:19.819296+00:00",
+    "engine_hashes": {
+      "precursor_discovery.py": "614e841938daf41e34d7e31b97ec636f06f2997c8b7b4252926dd135e5bc2639",
+      "early_forecast.py": "51d90d2265baec516d20383579816c5155e46c69599a8e7b281d329843d17675",
+      "forecast_discovery.py": "5a491f55f14a3fef675c0ca652042bb1cd8b76cb0de40c6f003d55181e2480fd",
+      "prospective.py": "6ca939e378ffb02323feecb869aa1aac0e9f7b56ec5cbc92689233e30d65a153"
+    },
+    "baseline_refs": {
+      "main": "f2501a4cdc87632fd1c211d5bc27d5a6870d5913",
+      "data": "98a5b3b98bf49feefd7cb2e8694b7352188cdb14",
+      "live-state": "21e1be03b522d81a20d95e79694617967d8a608a",
+      "future-bottleneck-data": "91c5b0d1b62b6a47ad25e69eff9d7be8b5054e62"
+    },
+    "operating_branch_write_count": 0,
+    "bct_stocks_touched": false
+  },
+  "test_results": {
+    "python_before_passed": 609,
+    "python_after_passed": 658,
+    "python_after_skipped": 1,
+    "new_tests_passed": 49,
+    "javascript_passed": 29,
+    "backup_restore_related_passed": 35,
+    "skip_reason": "independent frozen real pre-public holdout and archived precursor facts unavailable"
+  },
+  "outcomes": {
+    "natural_target": "PARTIAL",
+    "noise_and_bad_values": "PASS",
+    "official_evidence_search": "PARTIAL",
+    "time_capacity_relief": "PARTIAL",
+    "actual_source_regression": "PARTIAL"
+  },
+  "evidence_access_limits": [
+    "Automatic review rejected Bing queries derived from private cached source content. No retry or remote-workflow bypass was used. Direct public registry URLs were acquired instead.",
+    "Fixed 230 originals were re-read as BACKFILL QA only. All six direct captures and research excerpts are also QA, never LIVE discoveries.",
+    "Old collector recorded 4 acquired originals from 28 searches/84 attempted URLs, but did not independently record valid primary role evidence. That number remains UNKNOWN."
+  ]
+}
