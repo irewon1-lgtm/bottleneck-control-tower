@@ -164,6 +164,11 @@ def test_actual_wrapper_freeze_on_existing_fixture_session(tmp_path,transport,mo
     assert {e['origin_publisher'] for e in saved['candidate_as_generated']['evidence']}=={'buyer','maker'}
     copied=tmp_path/'copied-first.json';copied.write_bytes(first.read_bytes())
     assert prospective._read(copied)['record_sha256']==saved['record_sha256']
+    evaluation=c.read(next((tmp_path/'collector/evaluations').glob('*.json')))
+    result,prepared=pd.discover(evaluation['batch'],mode='LIVE')
+    repeated=c.freeze(tmp_path/'collector',evaluation['batch'],result,c.counters(result,prepared),store,c.read(tmp_path/'collector/activation.json'))
+    assert repeated['frozen']==0 and repeated['first_records']==[]
+    assert first.read_bytes()==copied.read_bytes()
 
 
 def test_raw_capture_relocation_rebinds_private_paths(tmp_path,transport,monkeypatch):

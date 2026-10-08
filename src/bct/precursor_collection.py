@@ -344,7 +344,7 @@ def freeze(root,batch,result,stats,store,activation,*,new_document_ids=None):
     first=[]
     for p in (store/'candidates').glob('*.json'):
         saved=prospective._read(p)
-        if saved['target_id'] in tids:first.append({'target_id':saved['target_id'],'path':str(p),'sha256':acquisition.digest(p.read_bytes()),'first_detected_at':saved['candidate_first_detected_at']})
+        if saved['target_id'] in tids and str(p) not in before:first.append({'target_id':saved['target_id'],'path':str(p),'sha256':acquisition.digest(p.read_bytes()),'first_detected_at':saved['candidate_first_detected_at']})
     return {'state':run.get('state',run.get('engine_state')),'frozen':len(first),'first_records':first}
 
 
