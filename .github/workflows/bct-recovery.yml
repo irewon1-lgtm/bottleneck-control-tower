@@ -62,6 +62,11 @@ jobs:
         run: python .github/scripts/bct_full_source_recovery.py
       - name: Gate 4 official original verification and evidence holds
         run: python .github/scripts/bct_evidence_recovery.py
+      - name: Stage 5 cost-zero real-source reading pilot (production gate pending)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BCT_PUBLIC_REPOSITORY: ${{ github.event.repository.private == false }}
+        run: python .github/scripts/bct_local_reader_probe.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -76,5 +81,7 @@ jobs:
             ${{ runner.temp }}/bct-recovery/private-evidence-raw/*.bin
             ${{ runner.temp }}/bct-recovery/private-evidence-cache/*.txt
             ${{ runner.temp }}/bct-recovery/private-evidence-search/*.xml
+            ${{ runner.temp }}/bct-recovery/local-reader-*.json
+            ${{ runner.temp }}/bct-recovery/local-reader-*.log
           if-no-files-found: error
           retention-days: 30

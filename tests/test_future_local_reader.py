@@ -1,0 +1,59 @@
+from hashlib import sha256
+import json
+import pytest
+from bct.future_local_reader import LocalCPUQuickReader
+
+
+def payload():
+    body='A customer placed an order. Qualified capacity and readiness are unknown.'
+    return {'body':body,'body_sha256':sha256(body.encode()).hexdigest(),
+            'body_status':'FULL','read_start':0,'expected_read_end':len(body)}
+
+
+def receipt():
+    return {'provider':'local-cpu','weights_verified':True,'build_verified':True,
+            'api_cost_usd':0,'license':'Apache-2.0','files':{'weight':'a'*64},
+            'alias':'local','model':'Qwen','revision':'revision','llama_cpp_sha':'build',
+            'context_tokens':100,'max_output_tokens':10}
+
+
+def inference(value,**overrides):
+    return {'truncated':False,'stop_type':'eos','tokens_evaluated':3,'model':'local',
+            'timings':{'predicted_n':9},'content':json.dumps({'disposition':'DATA_INSUFFICIENT',
+            'reason':'Supply capacity and readiness are absent.','read_end':value['expected_read_end']}),**overrides}
+
+
+def test_real_usage_and_unknown_evidence_remain_distinct_from_forecast():
+    value=payload();calls=[]
+    def request(path,data):
+        calls.append((path,data))
+        return {'tokens':[1,2,3]} if path=='/tokenize' else inference(value)
+    result=LocalCPUQuickReader(receipt(),requester=request)(value)
+    assert result['review']['disposition']=='DATA_INSUFFICIENT'
+    assert result['usage']=={'input_tokens':3,'output_tokens':9}
+    assert calls[1][1]['cache_prompt'] is False and calls[1][1]['prompt']==[1,2,3]
+    assert 'stage' not in result['review'] and result['api_cost_usd']==0
+
+
+@pytest.mark.parametrize('override',[{'truncated':True},{'stop_type':'limit'},
+    {'tokens_evaluated':2},{'model':'other'},{'timings':{'predicted_n':None}}])
+def test_incomplete_or_wrong_model_receipt_never_makes_a_review(override):
+    value=payload()
+    def request(path,data):return {'tokens':[1,2,3]} if path=='/tokenize' else inference(value,**override)
+    with pytest.raises(ValueError):LocalCPUQuickReader(receipt(),requester=request)(value)
+
+
+def test_missing_weight_proof_and_source_hash_fail_before_inference():
+    def no_request(*args):pytest.fail('must not call inference')
+    r=receipt();r['weights_verified']=False
+    with pytest.raises(RuntimeError):LocalCPUQuickReader(r,requester=no_request)(payload())
+    value=payload();value['body']='changed'
+    with pytest.raises(ValueError,match='source hash'):LocalCPUQuickReader(receipt(),requester=no_request)(value)
+
+
+def test_context_limit_never_silently_drops_source_text():
+    calls=[]
+    def request(path,data):calls.append(path);return {'tokens':list(range(95))}
+    with pytest.raises(ValueError,match='context budget'):
+        LocalCPUQuickReader(receipt(),requester=request)(payload())
+    assert calls==['/tokenize']
