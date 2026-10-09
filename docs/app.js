@@ -365,7 +365,7 @@
     const response = await fetch(`${base}${name}?t=${Date.now()}`, options);
     if (!response.ok) throw new Error("Record unavailable");
     const manifest = await response.json();
-    if (manifest?.format !== "bct-sharded-sidecar-v1") return manifest;
+    if (!["bct-sharded-sidecar-v1", "bct-sharded-sidecar-v2"].includes(manifest?.format)) return manifest;
     const value = {}, counts = {}, kinds = {}, stem = name.replace(/\.json$/, "");
     for (const field of manifest.fields) {
       if (Object.hasOwn(kinds, field.name) || !["dict", "list", "value"].includes(field.kind)) throw new Error("Invalid manifest field");
@@ -374,7 +374,10 @@
       Object.defineProperty(counts, field.name, {value: 0, enumerable: true, writable: true});
     }
     for (const [index, part] of manifest.shards.entries()) {
-      if (part.path !== `${stem}.shards/${manifest.document_sha256}/${stem}.part-${String(index + 1).padStart(3, "0")}.json`) throw new Error("Invalid shard path/order");
+      const expectedPath = manifest.format === "bct-sharded-sidecar-v2"
+        ? `${stem}.shards/by-sha256/${part.sha256}.json`
+        : `${stem}.shards/${manifest.document_sha256}/${stem}.part-${String(index + 1).padStart(3, "0")}.json`;
+      if (part.path !== expectedPath) throw new Error("Invalid shard path/order");
       const response = await fetch(`${base}${part.path}`, options);
       if (!response.ok) throw new Error("Shard unavailable");
       const raw = await response.text(), bytes = new TextEncoder().encode(raw);
@@ -401,6 +404,25 @@
     if (Object.keys(counts).length !== Object.keys(manifest.item_counts).length || Object.entries(counts).some(([k, n]) => n !== manifest.item_counts[k]) || Object.values(counts).reduce((a, b) => a + b, 0) !== manifest.total_item_count) throw new Error("Manifest count mismatch");
     return value;
   }
+  async function readDisplayJSON(base, name, options) {
+    if (typeof DecompressionStream !== "function") return readStoredJSON(base, name, options);
+    const response = await fetch(`${base}${name.replace(/\.json$/, ".ui.json.gz")}?t=${Date.now()}`, options);
+    if (response.status === 404) return readStoredJSON(base, name, options);
+    if (!response.ok) throw new Error("Display record unavailable");
+    const raw = await new Response(response.body.pipeThrough(new DecompressionStream("gzip"))).text();
+    const envelope = JSON.parse(raw);
+    if (envelope.format !== "bct-sidecar-display-v1" || typeof envelope.payload !== "string") throw new Error("Invalid display record");
+    const hash = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(envelope.payload))), b => b.toString(16).padStart(2, "0")).join("");
+    if (hash !== envelope.payload_sha256) throw new Error("Display payload hash mismatch");
+    if (name === "future-candidates.json") {
+      const authoritative = await fetch(`${base}${name}?t=${Date.now()}`, options);
+      if (!authoritative.ok) throw new Error("Latest generation unavailable");
+      const root = await authoritative.text(), manifest = JSON.parse(root);
+      const sourceHash = manifest.document_sha256 || Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(root))), b => b.toString(16).padStart(2, "0")).join("");
+      if (sourceHash !== envelope.source_document_sha256) throw new Error("Display generation is stale");
+    }
+    return JSON.parse(envelope.payload);
+  }
   async function loadTracking() {
     if (trackingLoading) return;
     trackingLoading = true;
@@ -408,7 +430,7 @@
     try {
       const base = "https://raw.githubusercontent.com/irewon1-lgtm/bottleneck-control-tower/future-bottleneck-data/";
       const [record, queue] = await Promise.allSettled(["future-tracking.json", "future-candidates.json"].map(async name => {
-        return readStoredJSON(base, name, {cache: "no-store", signal: controller.signal});
+        return readDisplayJSON(base, name, {cache: "no-store", signal: controller.signal});
       }));
       try {
         const value = record.status === "fulfilled" ? record.value : null;

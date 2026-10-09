@@ -13,6 +13,7 @@ from bct.future_body import access_failure, extract_document, cache_body
 from bct.future_bottleneck import fetch_html
 from bct.future_github import GitHubTransport
 from bct.future_review import failure_index
+from bct.recovery_sources import restore_observations, host_cooldowns
 
 
 def main():
@@ -24,16 +25,22 @@ def main():
     tracking=transport.read('future-tracking.json')
     failed=list(failure_index(tracking.document).values())
     urls={r['url'] for r in failed}
+    cache=root/'private-source-cache';cache.mkdir(exist_ok=True)
+    resume=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume'
+    old_checkpoint=json.loads((resume/'checkpoint.json').read_text()) if (resume/'checkpoint.json').exists() else {}
+    restored,pending=restore_observations(resume,cache,
+        retry_errors=bool(old_checkpoint.get('code_sha')) and old_checkpoint['code_sha']!=os.environ['GITHUB_SHA'])
+    restored={u:r for u,r in restored.items() if u in urls}
+    pending={u:r for u,r in pending.items() if u in urls}
     groups=defaultdict(deque)
-    for url in sorted(urls):groups[urlsplit(url).hostname].append(url)
+    for url in sorted(urls-set(restored)):groups[urlsplit(url).hostname].append(url)
     order=[]
     while any(groups.values()):
         for host in groups:
             if groups[host]:order.append(groups[host].popleft())
-    cache=root/'private-source-cache';cache.mkdir(exist_ok=True)
     locks={host:threading.Lock() for host in groups}
     last_access={host:0.0 for host in groups}
-    cooldown={}
+    cooldown=host_cooldowns({**restored,**pending})
     deadline=time.monotonic()+25*60
     def inspect(url):
         host=urlsplit(url).hostname
@@ -70,10 +77,14 @@ def main():
                     result.update(http_request_completed=True,http_status=diagnostic['http_status'])
                 if diagnostic['category']=='HTTP_429':
                     cooldown[host]=time.time()+(diagnostic.get('retry_after_seconds') or 3600)
+                    result['resume_after']=cooldown[host]
             return result
-    observations={}
+    observations=restored.copy()
     journal=root/'source-recovery-attempts.jsonl'
     with journal.open('w') as stream,ThreadPoolExecutor(max_workers=6) as pool:
+        for result in restored.values():
+            stream.write(json.dumps(result,ensure_ascii=False)+'\n')
+        stream.flush()
         futures={pool.submit(inspect,url):url for url in order}
         for future in as_completed(futures):
             result=future.result();observations[result['url']]=result
@@ -98,6 +109,8 @@ def main():
         recovery_url_statuses=dict(Counter(x['status'] for x in observations.values())),
         recovery_exact_versions=recovered,recovery_system_errors=len(source_errors),
         recovery_urls_not_attempted=len(not_attempted),production_source_records_changed=False,
+        recovery_prior_observations_restored=len(restored),
+        recovery_http_executions_this_run=sum(x.get('attempted',False) and not x.get('preserved_from_prior_execution') for x in observations.values()),
         reader_completions_added=0,original_184_completions_preserved=True)
     if source_errors:
         report.update(status='FAIL',gate3='FAIL',error='SOURCE_RECOVERY_TECHNICAL_ERRORS',

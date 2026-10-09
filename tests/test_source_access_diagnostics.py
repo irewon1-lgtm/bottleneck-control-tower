@@ -1,5 +1,6 @@
 import socket
 import ssl
+from http.client import IncompleteRead
 from urllib.error import HTTPError, URLError
 import pytest
 from bct.future_body import access_failure, acquire_document
@@ -14,6 +15,7 @@ from bct.future_body import access_failure, acquire_document
     (HTTPError('https://example.test', 404, 'Not found', {}, None), 'HTTP_404', 'UNAVAILABLE'),
     (HTTPError('https://example.test', 429, 'Limited', {'Retry-After':'90'}, None), 'HTTP_429', 'SOURCE_WAIT'),
     (TypeError('bad adapter'), 'COLLECTOR_ERROR', 'ERROR'),
+    (IncompleteRead(b'partial response',100), 'CONNECTION_INTERRUPTED', 'SOURCE_WAIT'),
 ])
 def test_diagnostic_is_bound_to_real_failure(exc, category, state, tmp_path):
     diagnostic = access_failure(exc)

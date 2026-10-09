@@ -10,6 +10,7 @@ from urllib.parse import quote
 from urllib.request import Request, urlopen
 
 from .future_store import Snapshot, StoreConflict, store_patch
+from .future_ui import display_blob
 
 
 # The connection limits the JSON request, including base64 expansion, to 16MiB.
@@ -349,6 +350,12 @@ class GitHubTransport(LegacyGitHubTransport):
                         'total_item_count': sum(counts.values())})
         root_sha = self._create_verified_blob(raw)
         entries.append({'path': path, 'mode': '100644', 'type': 'blob', 'sha': root_sha})
+        # Publish the display projection in the same tree/ref as its source.
+        # It omits archival repetition without mutating any authoritative data.
+        display=display_blob(path,document,_sha(_raw(document)))
+        display_sha=self._create_verified_blob(display)
+        display_path=path[:-5]+'.ui.json.gz'
+        entries.append({'path':display_path,'mode':'100644','type':'blob','sha':display_sha})
         tree = self.requester('POST', '/git/trees', {'base_tree': commit['tree']['sha'], 'tree': entries})
         saved = self.requester('POST', '/git/commits', {'message': 'Persist verified BCT sidecar generation',
                               'tree': tree['sha'], 'parents': [head]})
@@ -362,6 +369,8 @@ class GitHubTransport(LegacyGitHubTransport):
         # Read the exact published commit, independent of mutable ref visibility.
         if self._root(path, saved['sha'])[1] != root_sha:
             raise ValueError('published root readback mismatch')
+        if self._root(display_path,saved['sha'])[1]!=display_sha:
+            raise ValueError('published display readback mismatch')
         return root_sha
 
 

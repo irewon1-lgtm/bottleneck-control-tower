@@ -85,7 +85,7 @@ def test_atomic_roundtrip_reuses_unchanged_shards_and_one_ref_move(monkeypatch):
     t.write(PATH, document, t.read(PATH).sha)
     assert t.read(PATH).document == document
     delta = remote.calls[calls:]
-    assert sum(m == 'POST' and s == '/git/blobs' for m, s in delta) == 2
+    assert sum(m == 'POST' and s == '/git/blobs' for m, s in delta) == 3
     assert sum(m == 'PATCH' for m, _ in delta) == 1
     assert remote.commits[remote.head]['parents'] == [prior_head]
     assert 'keep.txt' in remote.trees[remote.commits[remote.head]['tree']['sha']]

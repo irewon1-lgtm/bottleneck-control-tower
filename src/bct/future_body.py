@@ -8,6 +8,7 @@ from datetime import datetime, timedelta, timezone
 import hashlib
 from html import unescape
 from html.parser import HTMLParser
+from http.client import IncompleteRead, RemoteDisconnected
 import json
 import os
 from pathlib import Path
@@ -37,6 +38,9 @@ def access_failure(exc):
         return {'category': 'TLS_FAILED', 'state': 'SOURCE_BLOCKED', 'retryable': False}
     if isinstance(reason, (TimeoutError, socket.timeout)):
         return {'category': 'TIMEOUT', 'state': 'SOURCE_WAIT', 'retryable': True}
+    if isinstance(reason, (IncompleteRead, RemoteDisconnected)):
+        return {'category': 'CONNECTION_INTERRUPTED', 'state': 'SOURCE_WAIT', 'retryable': True,
+                'error_type': type(reason).__name__}
     if isinstance(reason, ConnectionError) or isinstance(exc, URLError):
         return {'category': 'CONNECTION_FAILED', 'state': 'SOURCE_WAIT', 'retryable': True}
     known = str(exc) if isinstance(exc, ValueError) and str(exc) in (

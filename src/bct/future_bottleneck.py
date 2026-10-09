@@ -4,15 +4,12 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone, timedelta
 import hashlib
 from html.parser import HTMLParser
-from html import unescape
 import ipaddress
 import json
-import os
 from pathlib import Path
 import re
 import socket
 import sqlite3
-import tempfile
 import uuid
 from urllib.parse import urlsplit
 from urllib.request import Request, HTTPRedirectHandler, build_opener
@@ -335,7 +332,7 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
         cache_dir=None, filter_version=FILTER_VERSION, screener=screen,
         trigger="AUTO", trigger_id=None, patch_output=None, tracking_path=None,
         tracked_terms=(), document_ids=None, detection_mode="LIVE"):
-    from .future_body import acquire_document, read_cached_body
+    from .future_body import read_cached_body
     from .future_store import LocalJSONTransport, store_patch
     if not 1 <= limit <= 1000 or not 1 <= workers <= 8:
         raise ValueError("invalid batch bounds")

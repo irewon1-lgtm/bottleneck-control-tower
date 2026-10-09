@@ -3,20 +3,47 @@ on:
   push:
     branches: [ops/recovery-20261010]
   workflow_dispatch:
+    inputs:
+      resume_run_id:
+        description: Prior recovery artifact run ID, after its recorded resume condition changed
+        required: false
+        default: ''
 permissions:
   contents: write
+  actions: read
 concurrency:
   group: future-bottleneck-results
   cancel-in-progress: false
 jobs:
   storage:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Read preserved recovery request
+        id: request
+        run: |
+          python - <<'PY'
+          import os,json
+          from pathlib import Path
+          p=Path('.github/bct-recovery-request.json')
+          requested=os.environ.get('DISPATCH_RESUME_RUN') or (json.loads(p.read_text()).get('resume_run_id') if p.exists() else '')
+          if requested and not str(requested).isdigit():raise ValueError('invalid recovery run ID')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as output:output.write('resume_run_id='+str(requested or '')+'\n')
+          PY
+        env:
+          DISPATCH_RESUME_RUN: ${{ inputs.resume_run_id }}
+      - name: Restore prior observations and private cache
+        if: steps.request.outputs.resume_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: bct-recovery-checkpoint-${{ steps.request.outputs.resume_run_id }}
+          run-id: ${{ steps.request.outputs.resume_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/bct-recovery-resume
       - name: Verify storage, preserving merge and legacy regressions
         run: |
           python -m pip install -e '.[test]'

@@ -12,6 +12,7 @@ from bct.future_github import GitHubTransport, GitHubRequestError, _raw
 from bct.future_review import queue_summary
 from bct.future_store import store_patch
 from bct.future_worker import _runs, _run_patch
+from bct.recovery_preservation import verify as verify_preservation
 
 
 def command(*args):
@@ -44,6 +45,8 @@ def main():
         transport = GitHubTransport(os.environ['GITHUB_REPOSITORY'], 'future-bottleneck-data', os.environ['GITHUB_TOKEN'])
         original = transport.read('future-candidates.json')
         tracking = transport.read('future-tracking.json')
+        preservation_baseline=json.loads(Path('config/bct-recovery-preservation.json').read_text())
+        report['identity_preservation']=verify_preservation(original.document,tracking.document,preservation_baseline)
         before = queue_summary(original.document, tracking.document)
         # The immutable repair baseline includes these records, regardless of
         # subsequent legitimate inflow/recovery. Never initialize over them.
