@@ -93,10 +93,17 @@ def is_author_metadata_only_body(text):
 def is_video_summary_body(text, url):
     """An observed official video synopsis is not a captured transcript."""
     blocks = str(text).splitlines()
-    return (bool(re.match(r'https://(?:www\.)?datacenterdynamics\.com/en/videos/', str(url)))
-            and bool(blocks and blocks[0].startswith('DCD Studio:'))
-            and 'Tags' in blocks and 'Comments' in blocks
-            and not re.search(r'\btranscript\b', str(text), re.I))
+    dcd = (bool(re.match(r'https://(?:www\.)?datacenterdynamics\.com/en/videos/', str(url)))
+           and bool(blocks and blocks[0].startswith('DCD Studio:'))
+           and 'Tags' in blocks and 'Comments' in blocks)
+    breaking_defense = (
+        bool(re.match(r'https://(?:www\.)?breakingdefense\.com/\d{4}/\d{2}/', str(url)))
+        and bool(blocks and blocks[0].startswith('In this episode of The Pentagon Buzz,'))
+        and 'Breaking Defense Video' in blocks
+        and sum('Watch Now' in block for block in blocks) >= 3
+        and bool(blocks and blocks[-1] == 'Scroll for more video'))
+    return bool((dcd or breaking_defense)
+                and not re.search(r'\btranscript\b', str(text), re.I))
 
 
 def is_membership_landing_body(text, url):

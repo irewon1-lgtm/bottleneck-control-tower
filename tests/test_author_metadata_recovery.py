@@ -76,3 +76,36 @@ def test_video_synopsis_preserves_partial_text_but_never_claims_full_transcript(
     result=extract_document(html)
     assert result['body_status']=='PARTIAL' and result['body']==body
     assert 'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT' in result['reasons']
+
+
+def test_breaking_defense_video_episode_and_related_cards_are_not_a_full_article(tmp_path):
+    body = '\n'.join([
+        'In this episode of The Pentagon Buzz, the host introduces the topic.',
+        'Breaking Defense Video',
+        'First related video', 'Watch Now »',
+        'Second related video', 'Watch Now »',
+        'Third related video', 'Watch Now »',
+        'Scroll for more video',
+    ])
+    url = 'https://breakingdefense.com/2026/10/example-video/'
+    assert is_video_summary_body(body, url)
+    assert not is_video_summary_body(body.replace('Scroll for more video', 'Article conclusion.'), url)
+    assert not is_video_summary_body(body + '\nTranscript\nFull conversation.', url)
+    html = f'<link rel="canonical" href="{url}"><article>' + ''.join(
+        f'<p>{line}</p>' for line in body.splitlines()) + '</article>'
+    result = extract_document(html)
+    assert result['body_status'] == 'PARTIAL'
+    assert result['body'] == body
+    assert 'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT' in result['reasons']
+
+    digest = cache_body(tmp_path / 'private-source-cache', body)
+    original = {'url': url, 'attempted': True, 'body_status': 'FULL',
+                'status': 'FULL', 'body_sha256': digest}
+    (tmp_path / 'source-recovery-attempts.jsonl').write_text(
+        json.dumps(original) + '\n')
+    observed, pending = restore_observations(tmp_path, tmp_path / 'restored')
+    assert not pending
+    assert observed[url]['body_status'] == 'PARTIAL'
+    assert (observed[url]['reclassification_rule'] ==
+            'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT_V1')
+    assert observed[url]['prior_observation_classification']['body_sha256'] == digest
