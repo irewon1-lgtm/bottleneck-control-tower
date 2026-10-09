@@ -15,7 +15,7 @@ from . import forecast_discovery as strict, early_forecast as early
 from . import precursor_source_search as source_search
 from .objective_lock import stamp_export
 
-VERSION = 'source-evidence-graph-1'
+VERSION = 'source-evidence-graph-2'
 FIELDS = reader.FIELDS
 UNKNOWN = 'UNKNOWN'
 
@@ -37,6 +37,7 @@ def observations(document):
     lines,_=reader.allowed_lines(document)
     out=[]
     for line in reader.sentences(document,lines):
+        literal_fields=reader.literal_fields(document,line)
         products=reader._products(document,line);p=reader.bound_product(line,products)
         fields=reader._attributes(document,line,p)
         customer_definition=bool(re.match(r'^(?:This|The) customer is\b',line['quote']))
@@ -69,7 +70,7 @@ def observations(document):
             if re.search(pattern,line['quote'],re.I):stage.append({'kind':kind,'reference':ref})
         out.append({'observation_id':strict.digest([document['document_id'],line['start'],line['end']]),
                     'document_id':document['document_id'],'locator':ref['locator'],'source_quote':line['quote'],
-                    'reference':ref,'fields':fields,'anchors':anchors,'relations':relations,'production_stages':stage,'blocking_reason':conflict})
+                    'reference':ref,'fields':fields,'literal_fields':literal_fields,'anchors':anchors,'relations':relations,'production_stages':stage,'blocking_reason':conflict})
     # Events can carry an exact within-document anaphor/explicit-label proof
     # established by the scope reader. Do not replace the raw observation.
     for event in document.get('retained_collection_events',[]):
@@ -93,6 +94,10 @@ def _conflicts(a,b):
 def join(a,b):
     if a.get('blocking_reason') or b.get('blocking_reason'):return None
     shared={x['key'] for x in a['anchors']} & {x['key'] for x in b['anchors']}
+    if (a['document_id']!=b['document_id']
+        and any(x['fields'].get('customer_group',{}).get('customer_identity_status') for x in (a,b))
+        and not any(key.startswith('contract ') for key in shared)):
+        return None  # relative issuer-local customer descriptions are not identities
     if _conflicts(a,b):return None
     complete=all(k in a['fields'] and k in b['fields'] for k in FIELDS)
     if any(x['fields'].get('customer_group',{}).get('customer_identity_status') for x in (a,b)):complete=False
@@ -145,6 +150,8 @@ def build(documents):
     references=0
     for n in resolved:
         validate_reference(n['reference'],docs);references+=1
+        for facts in n.get('literal_fields',{}).values():
+            for f in facts:validate_reference(f['reference'],docs);references+=1
         for f in n['resolved_fields'].values():
             for r in [f['reference'],*f.get('support_references',[])]:validate_reference(r,docs);references+=1
         for e in n['relationship_proofs']:
@@ -185,6 +192,12 @@ def analyze(documents,*,mode='BACKFILL',now=None,new_document_ids=None):
                 if (source.get('provenance')!='PASS' or not source_search.primary_origin(source,source.get('precursor_events',[]) or [{'source_quote':source['body']}])
                     or strict.PUBLIC_CONFIRMATION.search(source['body'])):
                     invalid.append(source_id)
+                    continue
+                # Every attribute/relation source must have existed at this
+                # cutoff. Checking only the demand and supply documents would
+                # allow future qualification facts to leak into a candidate.
+                try:strict.publication_cutoff(source,at,allow_unknown=True)
+                except (ValueError,TypeError,KeyError):invalid.append(source_id)
             if invalid:
                 blocked.append({'event_id':e['event_id'],'reason':'SUPPORTING_OR_RELATION_SOURCE_NOT_PREPUBLIC_PRIMARY','document_ids':sorted(invalid)});continue
             if not source_search.primary_origin(d,[e]):
@@ -220,7 +233,7 @@ def analyze(documents,*,mode='BACKFILL',now=None,new_document_ids=None):
             for se in supply:
                 independent,reason=_independent(de,se,docs)
                 if not independent:blocked.append({'demand_event':de['event_id'],'supply_event':se['event_id'],'reason':reason});continue
-                comparison=temporal.compare(de,se)
+                comparison=temporal.compare(de,se,require_complete_scope=True)
                 pair={'target_id':tid,'demand_event':de['event_id'],'supply_event':se['event_id'], 'comparison':comparison,
                       'independent':True,'relief_event_ids':[e['event_id'] for e in relief]}
                 pairs.append(pair)

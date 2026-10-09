@@ -9,7 +9,7 @@ import re
 
 from .precursor_scope_reader import reference
 
-VERSION = 'source-temporal-reader-2'
+VERSION = 'source-temporal-reader-3'
 UNKNOWN = 'UNKNOWN'
 MONTHS = 'January February March April May June July August September October November December'.split()
 MONTH = '|'.join(MONTHS)
@@ -76,11 +76,15 @@ def bounds(text, anchor=None):
 def _kind(q, start, end):
     # Verb proximity prevents a contract date from becoming an availability date.
     before=q[max(0,start-110):start].lower();after=q[end:min(len(q),end+60)].lower()
-    clause=re.split(r'[.;]',before)[-1]
+    clause=re.split(r'[.;]|\b(?:but|whereas|while)\b|,\s+(?=[A-Za-z])',before)[-1]
+    if re.search(r'qualif\w*.{0,30}(?:start|begin|commenc)',clause):return 'QUALIFICATION_START'
+    if re.search(r'qualification|certification|customer approval',clause):
+        if re.search(r'complet|finish|pass|achiev|receiv.{0,25}(?:certification|approval)',clause):return 'QUALIFICATION'
+        return 'QUALIFICATION_MILESTONE_UNRESOLVED'
     rules = [
         ('DEMAND_CANCELLATION',r'cancel|postpon|defer|demand.{0,25}(?:declin|reduc)'),
         ('QUALIFICATION',r'qualification|certification|customer approval'),
-        ('SUPPLY_READY',r'commercial.{0,20}(?:operation|production)|commission|ready|available|start.{0,20}production|production.{0,20}(?:begin|start)|(?:conversion|construction|expansion).{0,30}(?:complet|finish)|complet.{0,30}(?:conversion|construction|expansion)'),
+        ('SUPPLY_READY',r'commercial.{0,20}(?:operation|production)|commission|ready|available|start.{0,20}production|production.{0,60}(?:begin|start)|(?:conversion|construction|expansion).{0,30}(?:complet|finish)|complet.{0,30}(?:conversion|construction|expansion)'),
         ('DEMAND_NEED',r'needed|required|deliver|shipment|due'),
         ('CONTRACT_DATE',r'sign|award|contract.{0,25}(?:date|start|effective)|agreement.{0,25}(?:date|start|effective)'),
         ('CAPEX_DEPLOYMENT',r'capex|invest|deploy|construction'),
@@ -106,7 +110,10 @@ def extract(doc, event):
     for p in periods:
         if p['precision']=='RELATIVE_DURATION':
             anchors=[x for x in periods if x['fact_kind']=='CONTRACT_DATE' and x['precision']=='DATE']
-            if len(anchors)==1 and re.search(r'after (?:the )?(?:contract|order)|(?:발주|계약\s*(?:발효|체결))\s*후',q,re.I):
+            position=p['reference']['locator']['start']-off
+            left=q.rfind(';',0,position)+1;right=q.find(';',position);right=len(q) if right<0 else right
+            clause=q[left:right]
+            if len(anchors)==1 and re.search(r'after (?:the )?(?:contract|order)|(?:발주|계약\s*(?:발효|체결))\s*후',clause,re.I):
                 p.update(bounds(p['text'],anchors[0]))
     for m in AMOUNT.finditer(q):
         value=float(m[1].replace(',',''));value*= {'million':1e6,'billion':1e9}.get((m[2] or '').lower(),1)
@@ -123,6 +130,8 @@ def extract(doc, event):
         if m[3].lower() in ('%','percent'):kind='YIELD_OR_PERCENT_REQUIRES_ATTRIBUTION'
         associated=[p for p in periods if off+clause_start<=p['reference']['locator']['start']<off+clause_end and p['fact_kind']!='CONTRACT_DATE']
         amounts.append({'value':int(value) if value.is_integer() else value,'unit':m[3], 'rate':rate,'fact_kind':kind,
+                       'basis':'DELIVERABLE_PHYSICAL_OUTPUT' if kind=='ORDER_QUANTITY' or re.search(r'\b(?:good|deliverable)\b|qualified\s+(?:output|supply|production)',context,re.I) else 'NAMEPLATE_INPUT_UNITS' if kind=='NOMINAL_OR_PLANNED_CAPACITY' else UNKNOWN,
+                       'basis_reference':reference(doc,off+clause_start,off+clause_end),
                        'qualification_status':'PENDING' if re.search(r'not(?: yet)? qualified|pending qualification|before qualification',context,re.I) else 'SOURCE_ASSERTED' if kind=='QUALIFIED_OUTPUT' else UNKNOWN,
                        'coverage':'COMPLETE' if re.search(r'\b(?:total|all|entire)\b',context,re.I) else 'UNRESERVED' if kind=='UNRESERVED_CAPACITY' else 'OBSERVED_NOT_TOTAL',
                        'reference':reference(doc,off+m.start(),off+m.end()),'period':associated[0] if len(associated)==1 else UNKNOWN})
@@ -134,10 +143,19 @@ def extract(doc, event):
             'unknown_reasons':sorted({p['unknown_reason'] for p in periods if p.get('unknown_reason')} | ({'NO_SOURCE_PERIOD'} if not periods else set()) | ({'NO_PHYSICAL_QUANTITY'} if not amounts else set()))}
 
 
-def compare(demand, supply):
-    """Only source-specific need/readiness facts in identical physical scopes."""
+def compare(demand, supply, *, require_complete_scope=False):
+    """Compare provided scopes; discovery additionally requires all dimensions.
+
+    The optional strict check preserves the old primitive comparison interface;
+    the production graph always enables it. Partial examples cannot authorize
+    TARGET synthesis or a discovery signal.
+    """
     def scope(event):return {k:(' '.join(v['value'].casefold().split()) if isinstance(v,dict) else v) for k,v in event.get('scope',{}).items()}
     if scope(demand) != scope(supply):return {'state':'UNKNOWN','reason':'SCOPE_MISMATCH'}
+    if require_complete_scope:
+        from .precursor_scope_reader import FIELDS
+        if any(scope(demand).get(k) in (None,'',UNKNOWN,'unknown') for k in FIELDS):
+            return {'state':'UNKNOWN','reason':'COMPLETE_PHYSICAL_SCOPE_REQUIRED'}
     dt=demand.get('temporal_facts',{});st=supply.get('temporal_facts',{})
     if any(r['kind']=='DEMAND_CANCEL_OR_DELAY' for r in dt.get('relief',[])+st.get('relief',[])):
         return {'state':'RECONCILE_RELIEF','reason':'DEMAND_CANCEL_OR_DELAY'}
@@ -149,7 +167,8 @@ def compare(demand, supply):
     d,s=needs[0],ready[0]
     if s['fact_kind']=='SUPPLY_READY' and not (supply.get('qualified') or re.search(r'\bqualified\b',supply.get('source_quote',''),re.I)):
         return {'state':'UNKNOWN','reason':'QUALIFIED_READINESS_NOT_ESTABLISHED'}
-    dq,sq=dt.get('quantities',[]),st.get('quantities',[])
+    dq=[q for q in dt.get('quantities',[]) if q.get('fact_kind')!='YIELD_OR_PERCENT_REQUIRES_ATTRIBUTION']
+    sq=[q for q in st.get('quantities',[]) if q.get('fact_kind')!='YIELD_OR_PERCENT_REQUIRES_ATTRIBUTION']
     if dq and sq and {(x['unit'].casefold(),x['rate']) for x in dq}!={(x['unit'].casefold(),x['rate']) for x in sq}:
         return {'state':'UNKNOWN','reason':'PHYSICAL_UNIT_OR_RATE_MISMATCH'}
     if UNKNOWN in (d['start'],d['end'],s['start'],s['end']):return {'state':'UNKNOWN','reason':'DATE_ANCHOR_UNKNOWN'}
@@ -158,10 +177,15 @@ def compare(demand, supply):
     usable_s=[q for q in sq if q.get('fact_kind') in ('QUALIFIED_OUTPUT','UNRESERVED_CAPACITY') and q.get('qualification_status')!='PENDING' and isinstance(q.get('period'),dict)]
     if len(usable_d)==len(usable_s)==1:
         a,b=usable_d[0],usable_s[0]
+        # Old primitive fixtures predate basis. New extraction always supplies
+        # an explicit basis or UNKNOWN; production cannot use the legacy fallback.
+        bases=(a.get('basis','LEGACY_TYPED_QUANTITY'),b.get('basis','LEGACY_TYPED_QUANTITY'))
+        if bases[0]!=bases[1] or UNKNOWN in bases or (require_complete_scope and 'LEGACY_TYPED_QUANTITY' in bases):
+            return {'state':'UNKNOWN','reason':'PHYSICAL_OUTPUT_BASIS_UNKNOWN_OR_MISMATCH'}
         same_period=(a['period']['start'],a['period']['end'])==(b['period']['start'],b['period']['end'])
         covered=b.get('coverage') in ('COMPLETE','UNRESERVED') and (supply.get('qualified') or b.get('qualification_status')=='SOURCE_ASSERTED')
         if same_period and covered and a['value']>b['value']:
             return {'state':'POSSIBLE_QUANTITY_GAP','need':d,'readiness':s,'demand':a,'supply':b,'gap':a['value']-b['value'],'unit':a['unit']}
-    if s['start']>d['end']:return {'state':'POSSIBLE_TIMING_GAP','need':d,'readiness':s}
+    if s['start']>d['end']:return {'state':'POSSIBLE_TIMING_GAP','need':d,'readiness':s,'quantitative_shortage':UNKNOWN,'total_qualified_supply':UNKNOWN}
     if s['end']<d['start']:return {'state':'SUPPLY_BEFORE_NEED','reason':'READINESS_PRECEDES_NEED_NOT_A_SHORTAGE','need':d,'readiness':s}
     return {'state':'UNKNOWN','reason':'OVERLAPPING_WINDOWS_DO_NOT_PROVE_LAG','need':d,'readiness':s}

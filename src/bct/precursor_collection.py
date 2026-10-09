@@ -316,7 +316,7 @@ def counters(result,prepared):
             'explicit_future_timing_pairs':timing,'temporal_comparison_unknowns':time_unknown}
 
 
-def freeze(root,batch,result,stats,store,activation,*,new_document_ids=None):
+def freeze(root,batch,result,stats,store,activation,*,new_document_ids=None,verified_gap_target_ids=None):
     if not result['candidates']:return {'state':'NO_EARLY_CANDIDATE','frozen':0}
     eligible={p['target_id'] for p in stats['common_future_window_pairs']}
     explicit={p['target_id'] for p in stats.get('explicit_future_timing_pairs',[])}
@@ -329,6 +329,9 @@ def freeze(root,batch,result,stats,store,activation,*,new_document_ids=None):
                 and min(dw['end'],sw['end'])>acquisition.now()[:10]):
             tids.add(candidate['target_id'])
     if not tids:return {'state':'NO_COMMON_FUTURE_WINDOW','frozen':0}
+    if verified_gap_target_ids is not None:
+        rejected=sorted(tids-set(verified_gap_target_ids));tids &= set(verified_gap_target_ids)
+        if not tids:return {'state':'TARGET_GAP_NOT_VERIFIED','frozen':0,'blocked_target_ids':rejected}
     if store is None:return {'state':'EXISTING_LIVE_STORE_NOT_CONFIGURED','frozen':0,'pending_target_ids':sorted(tids)}
     if activation['engine_hashes']!=hashes():raise ValueError('frozen engine hash changed')
     store=Path(store)
@@ -418,12 +421,16 @@ def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,
                         or any(v['state'] in ('VALID_PRIMARY_EVIDENCE','VALID_ORIGINAL_SCOPE_EVIDENCE') for v in validations.get(d['document_id'],[])))]
         batch=stamp_export({'mode':'LIVE','precursor_discovery':True,'documents':live_docs,'signals':[]})
         result,prepared=pd.discover(batch,mode='LIVE');stats=counters(result,prepared)
-        execution=freeze(root,batch,result,stats,live_store,activation,new_document_ids=new_ids)
         # Multi-document attributes use the existing EARLY signal contract.
         # They never enter precursor_discovery._validate with fabricated local
         # offsets. The graph revalidates every original attribute and edge.
         new_ids.update(d.get('document_id') for r in requests for d in r['captures'] if d.get('status')=='CAPTURED' and d.get('document_id') not in prior_document_ids)
         graph=evidence_graph.analyze(live_docs,mode='LIVE',new_document_ids=new_ids)
+        verified_gap_ids={candidate['target_id'] for candidate in graph['protected_result']['candidates']}
+        # Both reader routes must satisfy the same source-bound TARGET/time
+        # review before writing. The old engine's raw preflight is retained as
+        # a diagnostic, never an alternate route around the graph safeguards.
+        execution=freeze(root,batch,result,stats,live_store,activation,new_document_ids=new_ids,verified_gap_target_ids=verified_gap_ids)
         graph_execution=freeze_graph(graph,live_store,activation)
         summary={'format':FORMAT,'completed_at':acquisition.now(),'new_seed_attempts':len(seeds),'new_seed_statuses':{k:sum(s['status']==k for s in seeds) for k in sorted({s['status'] for s in seeds})},
                  'new_verified_documents':sum(d['document_id'] in new_ids for d in docs),
@@ -436,6 +443,8 @@ def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,
         summary['evidence_graph']={k:graph[k] for k in ('version','complete_target_events','independent_pairs','comparable_period_pairs','reference_checks')}
         summary['graph_early_preflight']=len(graph['protected_result']['candidates'])
         summary['unique_early_preflight']=len({candidate['target_id'] for candidate in [*result['candidates'],*graph['protected_result']['candidates']]})
+        summary['gap_verified_early_preflight']=len(verified_gap_ids)
+        summary['unverified_legacy_preflight']=len({candidate['target_id'] for candidate in result['candidates']}-verified_gap_ids)
         summary['graph_live_execution']=graph_execution
         summary=stamp_export(summary)
         put(receipt,summary)
