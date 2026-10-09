@@ -1,6 +1,6 @@
 {
   "version": "bct-v33-implementation-acceptance-v1",
-  "updated_at": "2026-10-09T14:40:53.912188+00:00",
+  "updated_at": "2026-10-09T14:59:44.224306+00:00",
   "repository": "irewon1-lgtm/bottleneck-control-tower",
   "implementation_commit": "65e75563dc2a130f96ebe9176f5c57c23451c7fc",
   "scope": "APPROVED_V3_3_ONLY",
@@ -244,6 +244,13 @@
           "kind": "FAILED_ATTEMPTS_ARCHIVED_WITH_EVIDENCE",
           "new_reading_completions": 0,
           "failed_unresolved_versions": 3696
+        },
+        {
+          "id": "bct-queue-resolution-publication-fail-20261009",
+          "at": "2026-10-09T14:59:44.224306+00:00",
+          "status": "HOLD",
+          "kind": "CANDIDATE_AUTOMATIC_PUBLICATION_PAUSED_AFTER_HTTP_403",
+          "run_id": 37947357815
         }
       ],
       "queue_resolution": {
@@ -269,12 +276,12 @@
         "prediction_performance": "UNVERIFIED",
         "deployment": {
           "status": "PASS",
-          "code_commit_sha": "7dab4dd2b32206f610ab1b87f64acf7901aa6c28",
-          "run_id": 37946295307,
-          "job_id": 113873299556,
+          "code_commit_sha": "148bfca95f357ba88a94b6fa34810475c46c731f",
+          "run_id": 37947357933,
+          "job_id": 113876987374,
           "publish_step": "success",
           "url": "https://irewon1-lgtm.github.io/bottleneck-control-tower/#tracking",
-          "run_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/37946295307",
+          "run_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/37947357933",
           "environment_protection_preserved": true,
           "obsolete_concurrency_wait_removed": true,
           "live_report_http_status": 200,
@@ -296,6 +303,10 @@
             "failed": 0,
             "immutable_sha_readback": true,
             "corrupt_blob_rejected": true
+          },
+          "github_final_stage0_tests": {
+            "status": "PASS",
+            "run_id": 37947357957
           }
         },
         "collector_attempts": [
@@ -310,12 +321,60 @@
             "run_id": 37946295354,
             "reason": "WRITE_OR_PATCH_FAILED: FileNotFoundError: GitHub object unavailable during shard publication readback. Unchanged job not rerun.",
             "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/37946295354"
+          },
+          {
+            "status": "FAIL",
+            "run_id": 37947357815,
+            "job_id": 113876987824,
+            "code_commit_sha": "148bfca95f357ba88a94b6fa34810475c46c731f",
+            "reason": "First collection publication APPLIED; derived bundle/queue publication failed with HTTP 403 UNCLASSIFIED. Exact authorization/rate cause is unverified. No unchanged rerun.",
+            "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/37947357815",
+            "first_collection_publication": "APPLIED",
+            "first_collection_blob_sha": "d6e10282494cf96c32c1836009f9896fbbc2a55a",
+            "queue_execution": {
+              "computed_at": "2026-10-09T14:55:17.997411+00:00",
+              "quick_pending": 0,
+              "material_pending": 0,
+              "deep_pending": 0,
+              "candidate_data_wait": 0,
+              "failed_versions": 3696,
+              "unresolved_versions": 3696,
+              "completed_documents": 184,
+              "recovery_candidates": 0
+            },
+            "derived_queue_publication": "FAIL_NOT_SAVED",
+            "automatic_execution": "PAUSED_NO_SAME_FAILURE_REPLAY",
+            "resume_condition": "Explicit workflow dispatch after GitHub publication permission/rate or write conditions change; keep previous errors and candidates."
           }
         ],
         "collector_latest": {
-          "status": "REPAIR_PREPARED",
-          "reason": "Newly staged shards now read by returned immutable Git blob SHA, avoiding immediate branch-path readback. One new changed-code validation."
-        }
+          "status": "FAIL",
+          "run_id": 37947357815,
+          "job_id": 113876987824,
+          "code_commit_sha": "148bfca95f357ba88a94b6fa34810475c46c731f",
+          "reason": "First collection publication APPLIED; derived bundle/queue publication failed with HTTP 403 UNCLASSIFIED. Exact authorization/rate cause is unverified. No unchanged rerun.",
+          "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/37947357815",
+          "first_collection_publication": "APPLIED",
+          "first_collection_blob_sha": "d6e10282494cf96c32c1836009f9896fbbc2a55a",
+          "queue_execution": {
+            "computed_at": "2026-10-09T14:55:17.997411+00:00",
+            "quick_pending": 0,
+            "material_pending": 0,
+            "deep_pending": 0,
+            "candidate_data_wait": 0,
+            "failed_versions": 3696,
+            "unresolved_versions": 3696,
+            "completed_documents": 184,
+            "recovery_candidates": 0
+          },
+          "derived_queue_publication": "FAIL_NOT_SAVED",
+          "automatic_execution": "PAUSED_NO_SAME_FAILURE_REPLAY",
+          "resume_condition": "Explicit workflow dispatch after GitHub publication permission/rate or write conditions change; keep previous errors and candidates."
+        },
+        "report_updated_at": "2026-10-09T14:59:44.224306+00:00",
+        "daily_summary_enabled": true,
+        "daily_summary_limit": 2,
+        "rss_collection_unchanged": true
       }
     }
   },

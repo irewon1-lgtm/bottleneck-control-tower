@@ -76,7 +76,11 @@ jobs:
           if-no-files-found: error
 
   candidates:
-    if: ${{ !inputs.backlog_body_recovery }}
+    # 2026-10-09: final publication still returned HTTP 403 after a changed-code
+    # validation. Do not repeat that failed writer automatically. Resume only
+    # with an explicit dispatch after publication conditions have changed.
+    # RSS collection, Pages and the twice-daily summaries are independent.
+    if: ${{ github.event_name == 'workflow_dispatch' && !inputs.backlog_body_recovery }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
