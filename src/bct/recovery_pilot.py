@@ -5,7 +5,7 @@ from typing import Any
 from .future_reader import validate_output
 
 
-def resume_batches(previous,items,config):
+def resume_batches(previous,items,config,*,limits=(1,10,50)):
     if not previous:return []
     if not any(b.get('results') for b in previous.get('batches',[])):return []
     setup=previous.get('model_setup_receipt',{})
@@ -17,9 +17,10 @@ def resume_batches(previous,items,config):
     seen=set();offset=0
     batches: list[dict[str, Any]]=[]
     prior_batches=previous.get('batches',[])
-    if len(prior_batches)>3:raise ValueError('invalid prior reading batch count')
+    if any(type(n) is not int or not 1<=n<=50 for n in limits):raise ValueError('invalid reading batch limit')
+    if len(prior_batches)>len(limits):raise ValueError('invalid prior reading batch count')
     for index,batch in enumerate(prior_batches):
-        count=(1,10,50)[index];results=batch.get('results',[])
+        count=limits[index];results=batch.get('results',[])
         calls=batch.get('actual_model_calls')
         if batch.get('limit')!=count or type(calls) is not int or calls<len(results) or len(results)>count:
             raise ValueError('invalid prior reading batch extent')

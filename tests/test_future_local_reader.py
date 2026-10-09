@@ -32,6 +32,7 @@ def test_real_usage_and_unknown_evidence_remain_distinct_from_forecast():
     assert result['review']['disposition']=='DATA_INSUFFICIENT'
     assert result['usage']=={'input_tokens':3,'output_tokens':9}
     assert calls[1][1]['cache_prompt'] is False and calls[1][1]['prompt']==[1,2,3]
+    assert calls[1][1]['json_schema']['properties']['reason']['maxLength']==500
     assert 'stage' not in result['review'] and result['api_cost_usd']==0
 
 
@@ -68,3 +69,12 @@ def test_failed_validation_still_retains_actual_returned_execution_receipt():
     assert len(receipts)==1 and receipts[0]['truncated'] is True
     assert receipts[0]['body_sha256']==value['body_sha256']
     assert receipts[0]['tokens_evaluated']==3 and len(receipts[0]['response_sha256'])==64
+
+
+def test_model_ignoring_reason_bound_still_fails_without_trimming_output():
+    value=payload()
+    result=inference(value,content=json.dumps({'disposition':'CHANGE','reason':'x'*501,
+                                             'read_end':value['expected_read_end']}))
+    def request(path,data):return {'tokens':[1,2,3]} if path=='/tokenize' else result
+    with pytest.raises(ValueError,match='reason'):
+        LocalCPUQuickReader(receipt(),requester=request)(value)

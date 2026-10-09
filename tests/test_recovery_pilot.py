@@ -33,3 +33,10 @@ def test_changed_or_incomplete_prior_work_is_not_silently_reused(mutation):
     elif mutation=='tokens':r['usage']['input_tokens']=None
     else:r['review'].update(disposition='INCOMPLETE',read_end=5)
     with pytest.raises(ValueError):resume_batches(p,items,c)
+
+
+def test_bounded_production_resume_preserves_actual_calls_without_fake_qualification():
+    p,items,c=fixture();batch=p['batches'][0];batch['limit']=5;p['batches']=[batch]
+    b=resume_batches(p,items,c,limits=(5,))
+    assert b[0]['status']=='RUNNING' and b[0]['actual_model_calls']==1
+    with pytest.raises(ValueError):resume_batches(p,items,c)

@@ -21,6 +21,11 @@ def identity(*parts):
     return hashlib.sha256(json.dumps(parts,separators=(',',':')).encode()).hexdigest()
 
 
+def merge_review_patch(document,patch,run_id):
+    return apply_owned_patch(document,owner='review',patch=patch,
+        operation_id='recovery-review-'+identity(run_id,patch),prepared_document=document)
+
+
 def execute():
     root=Path(os.environ['RUNNER_TEMP'])/'bct-recovery'
     checkpoint=root/'checkpoint.json';report=json.loads(checkpoint.read_text())
@@ -30,11 +35,19 @@ def execute():
     if atomic_probe.get('status')!='PASS' or atomic_probe.get('actual_remote_execution') is not True:
         raise RuntimeError('actual remote interruption and competing-writer proof required')
     pilot=json.loads((root/'local-reader-probe.json').read_text())
-    if (pilot.get('probe_status')!='PASS' or pilot.get('actual_model_calls')!=61
-            or [b.get('limit') for b in pilot['batches']]!=[1,10,50]
+    qualification=pilot.get('qualification_pilot') if pilot.get('mode')=='DRAIN' else pilot
+    if (not qualification or qualification.get('probe_status')!='PASS' or qualification.get('actual_model_calls')!=61
+            or [b.get('limit') for b in qualification['batches']]!=[1,10,50]
             or any(b.get('status')!='PASS' or b.get('actual_model_calls')!=b['limit']
-                   or len(b['results'])!=b['limit'] for b in pilot['batches'])):
+                   or len(b['results'])!=b['limit'] for b in qualification['batches'])):
         raise RuntimeError('real 1/10/50 reading pilot not completed')
+    limits=tuple(pilot.get('batch_limits',[1,10,50]))
+    if (pilot.get('probe_status')!='PASS' or pilot.get('actual_model_calls')!=sum(limits)
+            or [b.get('limit') for b in pilot['batches']]!=list(limits)
+            or any(b.get('status')!='PASS' or b.get('actual_model_calls')!=b['limit']
+                   or len(b['results'])!=b['limit'] for b in pilot['batches'])
+            or pilot.get('mode')=='DRAIN' and (len(limits)>1 or any(not 1<=n<=50 for n in limits))):
+        raise RuntimeError('actual current bounded reading batch incomplete')
     versions=json.loads((root/'source-recovery-versions.json').read_text())
     observations={x['url']:x for x in map(json.loads,(root/'source-recovery-attempts.jsonl').read_text().splitlines())}
     baseline=json.loads(Path('config/bct-recovery-preservation.json').read_text())
@@ -45,16 +58,19 @@ def execute():
     verify(c.document,t.document,baseline)
     candidate_document,added_versions=append_observed_versions(c.document,versions,observations,root/'private-source-cache')
     records={(x['document_id'],x.get('body_sha256')):x for x in _records(candidate_document)}
-    payloads=[]
-    for batch in pilot['batches']:
-        for result in batch['results']:
-            item=records[(result['document_id'],result['body_sha256'])]
-            body=(root/'private-source-cache'/(result['body_sha256']+'.txt')).read_text()
-            payloads.append({'document_id':result['document_id'],'body_sha256':result['body_sha256'],
-                'body':body,'body_status':item['body_status'],'read_start':0,'expected_read_end':len(body)})
-    verified_batches=resume_batches(pilot,payloads,json.loads(Path('config/bct-local-reader.json').read_text()))
-    if len(verified_batches)!=3 or any(b['status']!='PASS' for b in verified_batches):
-        raise ValueError('actual reading checkpoint validation failed')
+    for evidence,expected_limits in ((qualification,(1,10,50)),(pilot,limits)):
+        payloads=[]
+        for batch in evidence['batches']:
+            for result in batch['results']:
+                item=records[(result['document_id'],result['body_sha256'])]
+                body=(root/'private-source-cache'/(result['body_sha256']+'.txt')).read_text()
+                payloads.append({'document_id':result['document_id'],'body_sha256':result['body_sha256'],
+                    'body':body,'body_status':item['body_status'],'read_start':0,'expected_read_end':len(body)})
+                if evidence is qualification and evidence is not pilot and not document_complete(t.document,item):
+                    raise ValueError('qualified pilot production completion disappeared')
+        verified_batches=resume_batches(evidence,payloads,json.loads(Path('config/bct-local-reader.json').read_text()),limits=expected_limits)
+        if len(verified_batches)!=len(expected_limits) or any(b['status']!='PASS' for b in verified_batches):
+            raise ValueError('actual reading checkpoint validation failed')
     tracking=deepcopy(t.document);readings_added=0;accesses_added=0
     patch: dict[str, Any]={'reviews':{},'progress':{}}
     try:
@@ -106,7 +122,7 @@ def execute():
                     patch[field].update(changes.get(field,{}));tracking.setdefault(field,{}).update(changes.get(field,{}))
                 readings_added+=1
         patch['updated_at']=pilot['finished_at']
-        merged=apply_owned_patch(t.document,patch,owner='review',prepared_document=t.document)
+        merged=merge_review_patch(t.document,patch,report['run_id'])
         verify(candidate_document,merged,baseline)
         projection=project(candidate_document,merged,versions,observations,root/'private-source-cache')
         if projection['preserved_failure_versions']!=3696 or projection['completion_failure_state_overlap']!=0:

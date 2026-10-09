@@ -4,6 +4,7 @@ Weights and runtime are pinned. A paid model endpoint is never used. Raw
 inputs/outputs remain private artifact receipts, not candidate promotions.
 """
 from datetime import datetime, timezone
+from copy import deepcopy
 import hashlib
 import json
 import os
@@ -105,12 +106,15 @@ def main():
             with (root/'private-local-reader-execution.jsonl').open('a') as journal:
                 journal.write(json.dumps(value,ensure_ascii=False)+'\n');journal.flush();os.fsync(journal.fileno())
             report['returned_inferences_this_run']=report.get('returned_inferences_this_run',0)+1
-        reader=LocalCPUQuickReader(receipt,receipt_observer=observe_inference);items=[];seen=set()
-        for version in versions:
-            key=version['document_id'],version['old_body_sha256']
-            if not version['exact_version_recovered'] or key in seen:continue
-            seen.add(key);item=version_map.get(key)
-            if not item or item['body_status']!='FULL' or document_complete(tracking.document,item):continue
+        recovered={(v['document_id'],v['old_body_sha256']) for v in versions if v['exact_version_recovered']}
+        observations={x['url']:x for x in map(json.loads,(root/'source-recovery-attempts.jsonl').read_text().splitlines())}
+        reader=LocalCPUQuickReader(receipt,receipt_observer=observe_inference);items=[]
+        for key,item in version_map.items():
+            observation=observations.get(item.get('url'),{})
+            new_observed=(item.get('source_recovery') and observation.get('body_status')=='FULL'
+                          and observation.get('body_sha256')==key[1])
+            if (key not in recovered and not new_observed or item['body_status']!='FULL'
+                    or document_complete(tracking.document,item)):continue
             body=(root/'private-source-cache'/(key[1]+'.txt')).read_text()
             if hashlib.sha256(body.encode()).hexdigest()!=key[1] or len(body)!=item['body_chars']:
                 raise ValueError('real pilot source identity/extent mismatch')
@@ -118,21 +122,33 @@ def main():
                 'body_status':'FULL','read_start':0,'expected_read_end':len(body),'body':body}
             if reader.input_characters(payload)<=12000:items.append(payload)
         items.sort(key=lambda x:(len(x['body']),x['document_id']))
-        if len(items)<61:raise RuntimeError('61 distinct recovered FULL unread pilot documents unavailable')
         report.update(candidate_blob_sha=candidates.sha,tracking_blob_sha=tracking.sha,
                       eligible_real_sources=len(items),model_setup_receipt=receipt)
         previous_path=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume/local-reader-probe.json'
         previous=json.loads(previous_path.read_text()) if previous_path.exists() else {}
         previous_checkpoint=previous_path.parent/'checkpoint.json'
         already_applied=(previous_checkpoint.exists() and json.loads(previous_checkpoint.read_text()).get('gate5')=='PASS')
-        report['batches']=resume_batches(previous,items,config) if not already_applied else []
+        qualification=(previous.get('qualification_pilot') if previous.get('mode')=='DRAIN'
+                       else previous if already_applied else None)
+        qualified=bool(qualification and qualification.get('probe_status')=='PASS'
+                       and [b.get('limit') for b in qualification.get('batches',[])]==[1,10,50])
+        report['mode']='DRAIN' if qualified else 'QUALIFICATION'
+        limits: tuple[int,...]
+        if qualified:
+            report['qualification_pilot']=deepcopy(qualification)
+            limits=(min(50,len(items)),) if items else ()
+        else:
+            if len(items)<61:raise RuntimeError('61 distinct recovered FULL unread pilot documents unavailable')
+            limits=(1,10,50)
+        report['batch_limits']=list(limits)
+        report['batches']=resume_batches(previous,items,config,limits=limits) if not already_applied else []
         report['prior_pilot_already_applied']=already_applied
         report['prior_model_calls_restored']=sum(len(b['results']) for b in report['batches'])
         if previous:
             report['previous_pilot_checkpoint_sha256']=hashlib.sha256(previous_path.read_bytes()).hexdigest()
             report['previous_pilot_run_id']=previous['run_id']
         offset=0;deadline=time.monotonic()+30*60
-        for index,count in enumerate((1,10,50)):
+        for index,count in enumerate(limits):
             if index<len(report['batches']):batch=report['batches'][index]
             else:
                 batch={'limit':count,'actual_model_calls':0,'results':[],'status':'RUNNING'}
@@ -152,7 +168,7 @@ def main():
                     'expected_read_end':payload['expected_read_end']})
                 (root/'local-reader-probe.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
             batch['status']='PASS';offset+=count
-        report.update(probe_status='PASS',actual_model_calls=61,
+        report.update(probe_status='PASS',actual_model_calls=sum(limits),
                       next_requirement='Apply actual readings with immutable bindings and verify production 7-state queue before Gate 5 PASS')
     except Exception as exc:
         report.update(probe_status='FAIL',error_type=type(exc).__name__,

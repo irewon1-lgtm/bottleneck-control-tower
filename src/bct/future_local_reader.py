@@ -5,6 +5,8 @@ The setup owner verifies official weight hashes and the pinned server build.
 """
 import hashlib
 import json
+from copy import deepcopy
+from typing import Any, cast
 from urllib.request import Request, build_opener, HTTPRedirectHandler
 
 from .future_reader import INSTRUCTIONS, SCHEMA, validate_output
@@ -54,7 +56,8 @@ class LocalCPUQuickReader:
         if payload['expected_read_end']!=len(body):raise ValueError('local reader body extent mismatch')
         # The pinned Qwen2.5 ChatML format is tokenized once, then the exact
         # token array is submitted. Numeric prompts do not add a hidden BOS.
-        prompt='<|im_start|>system\n'+INSTRUCTIONS+'<|im_end|>\n<|im_start|>user\n'+json.dumps(payload,ensure_ascii=False)+'<|im_end|>\n<|im_start|>assistant\n'
+        instructions=INSTRUCTIONS+'\nWrite reason in one or two concise sentences, at most 500 characters.\n'
+        prompt='<|im_start|>system\n'+instructions+'<|im_end|>\n<|im_start|>user\n'+json.dumps(payload,ensure_ascii=False)+'<|im_end|>\n<|im_start|>assistant\n'
         tokenized=self.requester('/tokenize',{'content':prompt,'add_special':False,'parse_special':True})
         tokens=tokenized.get('tokens')
         if not isinstance(tokens,list) or not tokens or any(type(t) is not int or t<0 for t in tokens):
@@ -62,7 +65,11 @@ class LocalCPUQuickReader:
         maximum=self.receipt['max_output_tokens']
         if len(tokens)+maximum>self.receipt['context_tokens']:
             raise ValueError('local reader context budget exceeded')
-        result=self.requester('/completion',{'prompt':tokens,'json_schema':SCHEMA,
+        schema=deepcopy(cast(dict[str, Any], SCHEMA))
+        # Match the existing validator. The pinned native grammar supports
+        # string bounds; an overlong reason must never become a completion.
+        schema['properties']['reason'].update(minLength=1,maxLength=500)
+        result=self.requester('/completion',{'prompt':tokens,'json_schema':schema,
             'n_predict':maximum,'temperature':0,'seed':0,'stream':False,'cache_prompt':False})
         if self.receipt_observer is not None:
             # Retain returned inference evidence even when validation fails.
