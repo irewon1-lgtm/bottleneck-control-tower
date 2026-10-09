@@ -33,7 +33,7 @@ def quality(root):
     checked+=['src/bct/future_store.py','src/bct/future_body.py','src/bct/future_review.py',
         'src/bct/future_hypothesis.py','src/bct/future_reader.py','src/bct/future_worker.py',
         'src/bct/future_bottleneck.py','src/bct/future_quality.py']
-    checked+=sorted(str(p) for p in Path('.github/scripts').glob('bct_*recovery.py'))
+    checked+=sorted(str(p) for p in Path('.github/scripts').glob('bct_*.py'))
     commands=[('python',[sys.executable,'-m','pytest','-q','--junitxml='+str(root/'e2e-python.xml')]),
         ('javascript',['node','--test',*sorted(str(p) for p in Path('tests').glob('*.js'))]),
         ('lint',[sys.executable,'-m','ruff','check','--select','F','src','.github/scripts']),
