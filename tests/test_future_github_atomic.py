@@ -136,3 +136,59 @@ def test_response_diagnostics_distinguish_missing_header_and_rate_limit():
     denied = storage.error_details('PUT', '/contents/a', 403, {},
         b'{"message":"Resource not accessible by integration; token secret"}')
     assert denied['category'] == 'ACCESS_DENIED' and 'secret' not in json.dumps(denied)
+
+
+def dual_remote():
+    remote=GitRemote({'results':{}})
+    remote.trees['t0']['future-tracking.json']=remote.blob(storage._raw({'reviews':{}}))
+    return remote
+
+
+def test_restart_and_overlapping_writer_probe_preserves_both_roots():
+    from bct.recovery_storage_probe import verify_atomic_recovery
+    remote = dual_remote()
+    transport = storage.GitHubTransport('owner/repo', 'ops/bct-storage-probe-123',
+                                       'test-token', requester=remote.request)
+    receipt = verify_atomic_recovery(transport, '123')
+    assert receipt['status'] == 'PASS' and receipt['idempotent_replay_mutations'] == 0
+    assert transport.read(PATH).document['summary'] == {
+        'competing_probe_writer': '123', 'atomic_recovery_probe': '123'}
+    assert transport.read('future-tracking.json').document['reviews'] == {}
+    assert receipt['unpublished_commit'] != receipt['recovery_commit']
+
+
+def test_remote_fault_probe_refuses_production_branch():
+    from bct.recovery_storage_probe import verify_atomic_recovery
+    remote = dual_remote()
+    transport = remote.transport()
+    with pytest.raises(ValueError, match='dedicated test branch'):
+        verify_atomic_recovery(transport, '123')
+    assert not remote.calls
+
+
+def test_readings_and_queue_publish_in_one_generation():
+    remote=dual_remote();t=remote.transport()
+    paths=(PATH,'future-tracking.json');expected={p:t.read(p).sha for p in paths}
+    docs={PATH:{'results':{},'summary':{'completed':1}},'future-tracking.json':{'reviews':{'actual':{'read_end':100}}}}
+    roots=t.write_many(docs,expected)
+    assert {p:t.read(p).document for p in paths}==docs
+    assert roots=={p:t.read(p).sha for p in paths}
+    assert sum(m=='PATCH' for m,s in remote.calls)==1
+    assert remote.commits[remote.head]['parents']==['c0']
+
+
+def test_a_stale_tracking_snapshot_cannot_publish_fresh_queue():
+    remote=dual_remote();t=remote.transport();expected={PATH:t.read(PATH).sha,'future-tracking.json':'stale'}
+    with pytest.raises(StoreConflict):
+        t.write_many({PATH:{'results':{},'summary':{'completed':1}},'future-tracking.json':{'reviews':{'r':1}}},expected)
+    assert remote.head=='c0'
+    assert not any(m in ('POST','PATCH') for m,s in remote.calls)
+
+
+def test_multi_document_publication_failure_keeps_both_originals():
+    remote=dual_remote();t=remote.transport();expected={p:t.read(p).sha for p in (PATH,'future-tracking.json')}
+    remote.fail=('POST','/git/trees')
+    with pytest.raises(RuntimeError):
+        t.write_many({PATH:{'results':{},'summary':{'completed':1}},'future-tracking.json':{'reviews':{'r':1}}},expected)
+    assert remote.head=='c0' and t.read(PATH).document=={'results':{}}
+    assert t.read('future-tracking.json').document=={'reviews':{}}

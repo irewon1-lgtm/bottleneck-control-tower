@@ -66,7 +66,7 @@ def host_cooldowns(records, *, now=None):
     """Retain actual Retry-After across runner changes; never erase a limit."""
     from urllib.parse import urlsplit
     at = time.time() if now is None else now
-    result = {}
+    result: dict[str | None,float] = {}
     for record in records.values():
         until = record.get('resume_after', 0)
         if until > at:
@@ -81,7 +81,7 @@ def source_attempt_order(urls, previous):
     A repeatedly rate-limited old URL must not starve every untouched URL on
     its host. This does not shorten a cooldown or authorize parallel requests.
     """
-    groups = defaultdict(deque)
+    groups: dict[str | None,deque[str]] = defaultdict(deque)
     for url in sorted(urls, key=lambda u: (previous.get(u, {}).get('attempted', False), u)):
         groups[urlsplit(url).hostname].append(url)
     ordered = []

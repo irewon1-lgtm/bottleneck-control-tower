@@ -10,11 +10,13 @@ import os
 from pathlib import Path
 import subprocess
 import time
+from typing import Any
 from urllib.request import urlopen
 
 from bct.future_github import GitHubTransport
 from bct.future_local_reader import LocalCPUQuickReader
 from bct.future_review import _records, document_complete
+from bct.recovery_pilot import resume_batches
 
 
 def digest(path):
@@ -71,10 +73,11 @@ def main():
     # Repository billing intent is explicit: never select paid/private runners.
     if os.environ.get('BCT_PUBLIC_REPOSITORY')!='true':
         raise RuntimeError('standard public repository runner required')
-    report={'run_id':os.environ['GITHUB_RUN_ID'],'code_sha':os.environ['GITHUB_SHA'],
+    report: dict[str, Any]={'run_id':os.environ['GITHUB_RUN_ID'],'code_sha':os.environ['GITHUB_SHA'],
             'status':'BLOCKED','gate5':'BLOCKED','full_clean_status':'BLOCKED',
             'reason':'PRODUCTION_QUEUE_RECOVERY_NOT_YET_CONNECTED',
             'api_cost_usd':0,'production_completions_added':0,'batches':[],
+            'model_calls_this_run':0,
             'prediction_performance':'UNVERIFIED','live_early':0}
     process=None
     try:
@@ -97,7 +100,12 @@ def main():
         candidates=transport.read('future-candidates.json');tracking=transport.read('future-tracking.json')
         version_map={(x['document_id'],x['body_sha256']):x for x in _records(candidates.document)}
         versions=json.loads((root/'source-recovery-versions.json').read_text())
-        reader=LocalCPUQuickReader(receipt);items=[];seen=set()
+        def observe_inference(value):
+            value.update(run_id=report['run_id'],observed_at=datetime.now(timezone.utc).isoformat())
+            with (root/'private-local-reader-execution.jsonl').open('a') as journal:
+                journal.write(json.dumps(value,ensure_ascii=False)+'\n');journal.flush();os.fsync(journal.fileno())
+            report['returned_inferences_this_run']=report.get('returned_inferences_this_run',0)+1
+        reader=LocalCPUQuickReader(receipt,receipt_observer=observe_inference);items=[];seen=set()
         for version in versions:
             key=version['document_id'],version['old_body_sha256']
             if not version['exact_version_recovered'] or key in seen:continue
@@ -113,20 +121,34 @@ def main():
         if len(items)<61:raise RuntimeError('61 distinct recovered FULL unread pilot documents unavailable')
         report.update(candidate_blob_sha=candidates.sha,tracking_blob_sha=tracking.sha,
                       eligible_real_sources=len(items),model_setup_receipt=receipt)
+        previous_path=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume/local-reader-probe.json'
+        previous=json.loads(previous_path.read_text()) if previous_path.exists() else {}
+        previous_checkpoint=previous_path.parent/'checkpoint.json'
+        already_applied=(previous_checkpoint.exists() and json.loads(previous_checkpoint.read_text()).get('gate5')=='PASS')
+        report['batches']=resume_batches(previous,items,config) if not already_applied else []
+        report['prior_pilot_already_applied']=already_applied
+        report['prior_model_calls_restored']=sum(len(b['results']) for b in report['batches'])
+        if previous:
+            report['previous_pilot_checkpoint_sha256']=hashlib.sha256(previous_path.read_bytes()).hexdigest()
+            report['previous_pilot_run_id']=previous['run_id']
         offset=0;deadline=time.monotonic()+30*60
-        for count in (1,10,50):
-            batch={'limit':count,'actual_model_calls':0,'results':[],'status':'RUNNING'}
-            report['batches'].append(batch)
-            for payload in items[offset:offset+count]:
+        for index,count in enumerate((1,10,50)):
+            if index<len(report['batches']):batch=report['batches'][index]
+            else:
+                batch={'limit':count,'actual_model_calls':0,'results':[],'status':'RUNNING'}
+                report['batches'].append(batch)
+            for payload in items[offset+len(batch['results']):offset+count]:
                 if time.monotonic()>=deadline:
                     report['reason']='RUNNER_DEADLINE';return 1
                 response=reader(payload)
+                report['model_calls_this_run']+=1
                 batch['actual_model_calls']+=1
                 if response['review']['disposition']=='INCOMPLETE':raise RuntimeError('real local pilot reading incomplete')
                 # Identity, range and real token counters are retained. The
                 # private source itself remains in the hash-verified cache.
                 batch['results'].append({**response,'document_id':payload['document_id'],
                     'body_sha256':payload['body_sha256'],'read_start':0,
+                    'actual_execution_run_id':report['run_id'],
                     'expected_read_end':payload['expected_read_end']})
                 (root/'local-reader-probe.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
             batch['status']='PASS';offset+=count
@@ -136,6 +158,7 @@ def main():
         report.update(probe_status='FAIL',error_type=type(exc).__name__,
                       reason='LOCAL_READER_PROBE_'+type(exc).__name__,
                       resume_condition='Fix the recorded local setup/inference failure; restart Stage 0')
+        if type(exc) in (ValueError,RuntimeError,TimeoutError):report['failure_code']=str(exc)
         # Avoid provider responses containing article text in public logs.
     finally:
         if process is not None:

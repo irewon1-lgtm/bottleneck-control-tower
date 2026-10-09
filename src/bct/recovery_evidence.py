@@ -37,7 +37,7 @@ def assess(document, supplemental=()):
     documents=[document,*supplemental]
     graph=analyze(documents,mode='BACKFILL')
     events=document.get('precursor_events',[])
-    present={k:[] for k in FIELDS}
+    present: dict[str,list[str]]={k:[] for k in FIELDS}
     for event in events:
         identity=event['event_id']
         facts=event.get('temporal_facts',{})

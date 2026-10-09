@@ -48,6 +48,25 @@ jobs:
         run: |
           python -m pip install -e '.[test]'
           python -m pytest -q tests/test_future_github.py tests/test_future_github_shards.py tests/test_future_github_atomic.py tests/test_future_store.py
+      - name: Verify restored checkpoint journal and every source cache hash
+        if: steps.request.outputs.resume_run_id != ''
+        env:
+          BCT_RESUME_RUN: ${{ steps.request.outputs.resume_run_id }}
+        run: |
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          from bct.recovery_restore import verify_restored
+          request=json.loads(Path('.github/bct-recovery-request.json').read_text())
+          if str(request['resume_run_id'])!=os.environ['BCT_RESUME_RUN']:raise ValueError('unverified resume run selected')
+          root=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume'
+          if not request.get('resume_cache_inventory_sha256'):raise ValueError('pinned source cache inventory required')
+          receipt=verify_restored(root,request.get('resume_file_sha256',{}),expected_cache_inventory=request['resume_cache_inventory_sha256'])
+          if str(json.loads((root/'checkpoint.json').read_text())['run_id'])!=os.environ['BCT_RESUME_RUN']:raise ValueError('restored run ID differs')
+          output=Path(os.environ['RUNNER_TEMP'])/'bct-recovery'
+          output.mkdir(exist_ok=True)
+          (output/'restore-verification.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          PY
       - name: Gate 0 then real GitHub storage Gate 1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,17 +81,22 @@ jobs:
         run: python .github/scripts/bct_full_source_recovery.py
       - name: Gate 4 official original verification and evidence holds
         run: python .github/scripts/bct_evidence_recovery.py
-      - name: Stage 5 cost-zero real-source reading pilot (production gate pending)
+      - name: Stage 5 cost-zero real-source reading pilot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BCT_PUBLIC_REPOSITORY: ${{ github.event.repository.private == false }}
         run: python .github/scripts/bct_local_reader_probe.py
+      - name: Gate 5 actual readings and atomic production queue recovery
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/scripts/bct_queue_recovery.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: bct-recovery-checkpoint-${{ github.run_id }}
           path: |
             ${{ runner.temp }}/bct-recovery/checkpoint.json
+            ${{ runner.temp }}/bct-recovery/restore-verification.json
             ${{ runner.temp }}/bct-recovery/*.log
             ${{ runner.temp }}/bct-recovery/source-audit.json
             ${{ runner.temp }}/bct-recovery/source-recovery-*.json*
@@ -83,5 +107,7 @@ jobs:
             ${{ runner.temp }}/bct-recovery/private-evidence-search/*.xml
             ${{ runner.temp }}/bct-recovery/local-reader-*.json
             ${{ runner.temp }}/bct-recovery/local-reader-*.log
+            ${{ runner.temp }}/bct-recovery/queue-recovery-*.json
+            ${{ runner.temp }}/bct-recovery/private-local-reader-execution.jsonl
           if-no-files-found: error
           retention-days: 30

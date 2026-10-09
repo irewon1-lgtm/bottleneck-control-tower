@@ -12,6 +12,7 @@ import os
 from pathlib import Path
 import threading
 import time
+from typing import Any
 from urllib.parse import urlsplit, urlencode
 import xml.etree.ElementTree as ET
 
@@ -34,8 +35,10 @@ def main():
     # Frozen baseline is verified by Gate 0; retain its identity in each receipt.
     baseline_hash=hashlib.sha256(json.dumps(baseline,sort_keys=True).encode()).hexdigest()
     hosts={urlsplit(v['url']).hostname for v in versions}
-    locks={h:threading.Lock() for h in hosts};last={h:0.0 for h in hosts};blocked={}
-    observations={};rows=[];requests={};searches=[];errors=[]
+    locks={h:threading.Lock() for h in hosts};last={h:0.0 for h in hosts}
+    blocked: dict[str | None,dict[str,float]]={}
+    observations={};rows=[];searches=[];errors=[]
+    requests: dict[str,dict[str,Any]]={}
     def acquire(url):
         host=urlsplit(url).hostname
         with locks[host]:

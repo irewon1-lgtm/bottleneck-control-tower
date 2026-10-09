@@ -6,6 +6,7 @@ from pathlib import Path
 import sqlite3
 import subprocess
 import traceback
+from typing import Any
 from datetime import datetime, timezone
 
 from bct.future_github import GitHubTransport, GitHubRequestError, _raw
@@ -13,6 +14,7 @@ from bct.future_review import queue_summary
 from bct.future_store import store_patch
 from bct.future_worker import _runs, _run_patch
 from bct.recovery_preservation import verify as verify_preservation
+from bct.recovery_storage_probe import verify_atomic_recovery
 
 
 def command(*args):
@@ -22,13 +24,13 @@ def command(*args):
 def main():
     root = Path(os.environ['RUNNER_TEMP']) / 'bct-recovery'
     root.mkdir(exist_ok=True)
-    report = {'version': 1, 'status': 'BLOCKED', 'stage': 0,
+    report: dict[str, Any] = {'version': 1, 'status': 'BLOCKED', 'stage': 0,
               'run_id': os.environ['GITHUB_RUN_ID'],
               'code_sha': os.environ['GITHUB_SHA'], 'started_at': datetime.now(timezone.utc).isoformat(),
               'prediction_performance': 'UNVERIFIED', 'live_early': 0}
     try:
         refs = {}
-        for branch in ('main', 'data', 'future-bottleneck-data'):
+        for branch in ('main', 'data', 'future-bottleneck-data', 'ops/recovery-20261010'):
             line = command('git', 'ls-remote', 'origin', 'refs/heads/' + branch)
             if not line:
                 raise RuntimeError('required branch missing: ' + branch)
@@ -79,6 +81,7 @@ def main():
         if probe.read('future-candidates.json').document['summary']['storage_probe_run'] != report['run_id']:
             raise RuntimeError('probe readback failed')
         report['probe_branch'] = probe_branch
+        report['atomic_recovery_probe'] = verify_atomic_recovery(probe, report['run_id'])
         report['probe_commit'] = probe.head()
         # Re-read production after the probe; use the latest preserving patch.
         original = transport.read('future-candidates.json')

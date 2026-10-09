@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from typing import Any
 from urllib.error import HTTPError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
@@ -46,7 +47,9 @@ def _shards(document):
                                     ensure_ascii=False, allow_nan=False, separators=(',', ':')).encode())
     prefix = ('{"format":"' + SHARD_FORMAT + '","items":[').encode()
     suffix = b']}\n'
-    chunks, current, size = [], [], len(prefix) + len(suffix)
+    chunks = []
+    current: list[bytes] = []
+    size = len(prefix) + len(suffix)
     for item in items:
         if len(prefix) + len(item) + len(suffix) > MAX_SHARD_BYTES:
             raise ValueError('one data item exceeds the shard limit; source left unchanged')
@@ -66,7 +69,8 @@ def assemble(manifest, load):
     fields = manifest['fields']
     if len({f['name'] for f in fields}) != len(fields):
         raise ValueError('duplicate manifest field')
-    restored, counts = {}, {}
+    restored: dict[str, Any] = {}
+    counts = {}
     for field in fields:
         name, kind = field['name'], field['kind']
         if kind not in ('dict', 'list', 'value'):
@@ -312,19 +316,13 @@ class GitHubTransport(LegacyGitHubTransport):
         return expected
 
     def write(self, path, document, expected_sha):
+        return self.write_many({path:document},{path:expected_sha})[path]
+
+    def _generation_entries(self,path,document,previous):
         if path not in ('future-candidates.json', 'future-tracking.json'):
             raise ValueError('unapproved sidecar path')
         raw = _raw(document)
         fields, chunks = _shards(document) if len(raw) * 4 // 3 > MAX_REQUEST_BYTES - 1024 else (None, [])
-        head = self.head()
-        prior_raw, actual_sha = self._root(path, head)
-        if actual_sha != expected_sha:
-            raise StoreConflict('sidecar SHA changed')
-        previous = json.loads(prior_raw)
-        if prior_raw == raw or (previous.get('format') in (MANIFEST_FORMAT, ATOMIC_MANIFEST_FORMAT)
-                               and previous['document_sha256'] == _sha(raw)):
-            return expected_sha
-        commit = self.requester('GET', '/git/commits/' + head)
         entries = []
         if chunks:
             known = {p['sha256']: p for p in previous.get('shards', [])}
@@ -356,6 +354,30 @@ class GitHubTransport(LegacyGitHubTransport):
         display_sha=self._create_verified_blob(display)
         display_path=path[:-5]+'.ui.json.gz'
         entries.append({'path':display_path,'mode':'100644','type':'blob','sha':display_sha})
+        return entries,root_sha,display_sha
+
+    def write_many(self,documents,expected_shas):
+        """Publish tracking, queue and UI as one verified generation/ref move."""
+        if (not documents or set(documents)!=set(expected_shas)
+                or set(documents)-{'future-candidates.json','future-tracking.json'}):
+            raise ValueError('unapproved sidecar generation paths')
+        head=self.head();previous={};roots={};changed=[]
+        # Check every source SHA before making any blobs. A stale tracking
+        # base must not publish an independently fresh candidate projection.
+        for path,document in documents.items():
+            prior_raw,actual_sha=self._root(path,head)
+            if actual_sha!=expected_shas[path]:raise StoreConflict('sidecar SHA changed')
+            prior=json.loads(prior_raw);previous[path]=prior;roots[path]=actual_sha
+            raw=_raw(document)
+            unchanged=(prior_raw==raw or (prior.get('format') in (MANIFEST_FORMAT,ATOMIC_MANIFEST_FORMAT)
+                       and prior['document_sha256']==_sha(raw)))
+            if not unchanged:changed.append(path)
+        if not changed:return roots
+        commit=self.requester('GET','/git/commits/'+head)
+        entries=[];displays={}
+        for path in changed:
+            generation,root_sha,display_sha=self._generation_entries(path,documents[path],previous[path])
+            entries.extend(generation);roots[path]=root_sha;displays[path[:-5]+'.ui.json.gz']=display_sha
         tree = self.requester('POST', '/git/trees', {'base_tree': commit['tree']['sha'], 'tree': entries})
         saved = self.requester('POST', '/git/commits', {'message': 'Persist verified BCT sidecar generation',
                               'tree': tree['sha'], 'parents': [head]})
@@ -367,11 +389,13 @@ class GitHubTransport(LegacyGitHubTransport):
             raise ValueError('published ref does not match created commit')
         self.last_commit = saved['sha']
         # Read the exact published commit, independent of mutable ref visibility.
-        if self._root(path, saved['sha'])[1] != root_sha:
-            raise ValueError('published root readback mismatch')
-        if self._root(display_path,saved['sha'])[1]!=display_sha:
-            raise ValueError('published display readback mismatch')
-        return root_sha
+        for path,root_sha in roots.items():
+            if self._root(path,saved['sha'])[1]!=root_sha:
+                raise ValueError('published root readback mismatch')
+        for path,display_sha in displays.items():
+            if self._root(path,saved['sha'])[1]!=display_sha:
+                raise ValueError('published display readback mismatch')
+        return roots
 
 
 def main():

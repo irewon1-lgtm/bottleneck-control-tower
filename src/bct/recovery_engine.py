@@ -11,6 +11,7 @@ from pathlib import Path
 import tempfile
 import time
 import uuid
+from typing import Any
 
 STAGES = tuple(range(8)) + ('FULL',)
 
@@ -37,7 +38,7 @@ def run(stages, *, fingerprint, output, repair=None, deadline=None):
     assertion cannot override the independent fingerprint change check.
     """
     path = Path(output)
-    state = json.loads(path.read_text()) if path.exists() else {'attempts': [], 'clean_streak': 0}
+    state: dict[str, Any] = json.loads(path.read_text()) if path.exists() else {'attempts': [], 'clean_streak': 0}
     current = fingerprint()
     if (state.get('status') in ('FAIL', 'BLOCKED') and state.get('fingerprint') == current
             and state.get('reason') != 'RUNNER_DEADLINE'):

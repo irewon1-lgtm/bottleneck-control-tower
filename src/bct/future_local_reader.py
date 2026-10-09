@@ -16,12 +16,13 @@ class NoRedirect(HTTPRedirectHandler):
 
 
 class LocalCPUQuickReader:
-    def __init__(self, receipt, *, port=8080, timeout=180, requester=None):
+    def __init__(self, receipt, *, port=8080, timeout=180, requester=None, receipt_observer=None):
         if isinstance(port,bool) or not isinstance(port,int) or not 1<=port<=65535:
             raise ValueError('invalid local reader port')
         if not 0<timeout<=600:raise ValueError('invalid local reader timeout')
         self.receipt=receipt;self.base='http://127.0.0.1:'+str(port)
         self.timeout=timeout;self.requester=requester or self._request
+        self.receipt_observer=receipt_observer
 
     def preflight(self):
         r=self.receipt
@@ -63,6 +64,16 @@ class LocalCPUQuickReader:
             raise ValueError('local reader context budget exceeded')
         result=self.requester('/completion',{'prompt':tokens,'json_schema':SCHEMA,
             'n_predict':maximum,'temperature':0,'seed':0,'stream':False,'cache_prompt':False})
+        if self.receipt_observer is not None:
+            # Retain returned inference evidence even when validation fails.
+            # The caller writes private receipts; nothing is printed here.
+            self.receipt_observer({'document_id':payload.get('document_id'),
+                'body_sha256':payload['body_sha256'],'expected_read_end':len(body),
+                'prompt_tokens':len(tokens),'model':result.get('model'),
+                'truncated':result.get('truncated'),'stop_type':result.get('stop_type'),
+                'tokens_evaluated':result.get('tokens_evaluated'),
+                'timings':result.get('timings'),'content':result.get('content'),
+                'response_sha256':hashlib.sha256(json.dumps(result,sort_keys=True).encode()).hexdigest()})
         if (result.get('truncated') is not False or result.get('stop_type') not in ('eos','word')
                 or result.get('tokens_evaluated')!=len(tokens)
                 or result.get('model')!=self.receipt['alias']):

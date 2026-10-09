@@ -5,7 +5,8 @@ from pathlib import Path
 import threading
 import time
 from collections import Counter, deque
-from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
+from concurrent.futures import ThreadPoolExecutor, Future, wait, FIRST_COMPLETED
+from typing import Any
 from datetime import datetime, timezone
 from urllib.parse import urlsplit
 
@@ -81,7 +82,8 @@ def main():
         for result in restored.values():
             stream.write(json.dumps(result,ensure_ascii=False)+'\n')
         stream.flush()
-        remaining=deque(order);futures={};active_hosts=set()
+        remaining=deque(order);active_hosts=set()
+        futures: dict[Future[dict[str,Any]],str | None]={}
         while remaining or futures:
             # Submit one request per host so lock scheduling cannot reorder
             # untouched URLs behind old denials. Other hosts still run in

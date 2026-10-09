@@ -57,3 +57,14 @@ def test_context_limit_never_silently_drops_source_text():
     with pytest.raises(ValueError,match='context budget'):
         LocalCPUQuickReader(receipt(),requester=request)(payload())
     assert calls==['/tokenize']
+
+
+def test_failed_validation_still_retains_actual_returned_execution_receipt():
+    value=payload();receipts=[]
+    def request(path,data):
+        return {'tokens':[1,2,3]} if path=='/tokenize' else inference(value,truncated=True)
+    reader=LocalCPUQuickReader(receipt(),requester=request,receipt_observer=receipts.append)
+    with pytest.raises(ValueError):reader(value)
+    assert len(receipts)==1 and receipts[0]['truncated'] is True
+    assert receipts[0]['body_sha256']==value['body_sha256']
+    assert receipts[0]['tokens_evaluated']==3 and len(receipts[0]['response_sha256'])==64
