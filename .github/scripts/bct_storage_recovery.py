@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from bct.future_github import GitHubTransport, GitHubRequestError, _raw
 from bct.future_review import queue_summary
 from bct.future_store import store_patch
+from bct.future_worker import _runs, _run_patch
 
 
 def command(*args):
@@ -48,7 +49,7 @@ def main():
         # subsequent legitimate inflow/recovery. Never initialize over them.
         if before['completed_documents'] < 184 or before['preserved_versions'] < 4023:
             raise RuntimeError('baseline records missing')
-        failures = [r for r in tracking.document.get('runs', {}).values()
+        failures = [r for r in _runs(tracking.document).values()
                     if isinstance(r, dict) and r.get('type') == 'queue_resolution' and r.get('state') == 'FAIL']
         identities = {(r['document_id'], r.get('body_sha256') or r.get('source_version')) for r in failures}
         if len(identities) < 3696:
@@ -65,9 +66,11 @@ def main():
             patch={'summary': {'storage_probe_run': report['run_id']}}, operation_id='probe-' + report['run_id'])
         if candidate_test.status != 'APPLIED':
             raise RuntimeError('candidate probe pending: ' + str(candidate_test.reason))
+        probe_tracking = probe.read('future-tracking.json').document
         review_test = store_patch(probe, 'future-tracking.json', owner='review',
-            patch={'runs': {'storage-probe-' + report['run_id']: {'type': 'storage_probe', 'state': 'PASS',
-                     'actual_execution': True, 'run_id': report['run_id']}}}, operation_id='probe-review-' + report['run_id'])
+            patch=_run_patch({'runs': {'storage-probe-' + report['run_id']: {'type': 'storage_probe', 'state': 'PASS',
+                     'actual_execution': True, 'run_id': report['run_id']}}}, probe_tracking),
+            prepared_document=probe_tracking, operation_id='probe-review-' + report['run_id'])
         if review_test.status != 'APPLIED':
             raise RuntimeError('tracking probe pending: ' + str(review_test.reason))
         if probe.read('future-candidates.json').document['summary']['storage_probe_run'] != report['run_id']:
