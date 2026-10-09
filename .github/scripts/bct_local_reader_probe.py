@@ -107,6 +107,10 @@ def main():
             with (root/'private-local-reader-execution.jsonl').open('a') as journal:
                 journal.write(json.dumps(value,ensure_ascii=False)+'\n');journal.flush();os.fsync(journal.fileno())
             report['returned_inferences_this_run']=report.get('returned_inferences_this_run',0)+1
+            # A returned invalid inference is still a real native execution.
+            # Count at receipt time, before validation can raise an exception.
+            report['model_calls_this_run']+=1
+            batch['actual_model_calls']+=1
         recovered={(v['document_id'],v['old_body_sha256']) for v in versions if v['exact_version_recovered']}
         observations={x['url']:x for x in map(json.loads,(root/'source-recovery-attempts.jsonl').read_text().splitlines())}
         reader=LocalCPUQuickReader(receipt,receipt_observer=observe_inference);items=[]
@@ -127,6 +131,8 @@ def main():
                       eligible_real_sources=len(items),model_setup_receipt=receipt)
         previous_path=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume/local-reader-probe.json'
         previous=json.loads(previous_path.read_text()) if previous_path.exists() else {}
+        for name in ('previous_qualification_pilot','qualification_source_corrections','qualification_restart_reason'):
+            if name in previous:report[name]=deepcopy(previous[name])
         previous_checkpoint=previous_path.parent/'checkpoint.json'
         already_applied=(previous_checkpoint.exists() and json.loads(previous_checkpoint.read_text()).get('gate5')=='PASS')
         qualification=(previous.get('qualification_pilot') if previous.get('mode')=='DRAIN'
@@ -173,8 +179,6 @@ def main():
                 if time.monotonic()>=deadline:
                     report['reason']='RUNNER_DEADLINE';return 1
                 response=reader(payload)
-                report['model_calls_this_run']+=1
-                batch['actual_model_calls']+=1
                 if response['review']['disposition']=='INCOMPLETE':raise RuntimeError('real local pilot reading incomplete')
                 # Identity, range and real token counters are retained. The
                 # private source itself remains in the hash-verified cache.

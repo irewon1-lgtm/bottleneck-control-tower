@@ -12,6 +12,22 @@ from urllib.request import Request, build_opener, HTTPRedirectHandler
 from .future_reader import INSTRUCTIONS, SCHEMA, validate_output
 
 
+def native_schema(payload):
+    """Encode existing cross-field extent rules; INCOMPLETE stays available."""
+    complete=deepcopy(cast(dict[str,Any],SCHEMA))
+    complete['properties']['reason'].update(minLength=1,maxLength=500)
+    incomplete=deepcopy(complete)
+    complete['properties']['disposition']['enum']=[d for d in complete['properties']['disposition']['enum']
+                                                 if d!='INCOMPLETE']
+    complete['properties']['read_end']={'type':'integer','const':payload['expected_read_end']}
+    incomplete['properties']['disposition']={'type':'string','const':'INCOMPLETE'}
+    incomplete['properties']['read_end']={'type':'integer','minimum':payload['read_start']+1,
+                                         'maximum':payload['expected_read_end']}
+    # The pinned converter cannot mix root properties and oneOf. Both branches
+    # carry the full original schema, including reason bounds and no extra keys.
+    return {'oneOf':[complete,incomplete]}
+
+
 class NoRedirect(HTTPRedirectHandler):
     def redirect_request(self,*args,**kwargs):
         raise ValueError('local reader redirect rejected')
@@ -56,7 +72,11 @@ class LocalCPUQuickReader:
         if payload['expected_read_end']!=len(body):raise ValueError('local reader body extent mismatch')
         # The pinned Qwen2.5 ChatML format is tokenized once, then the exact
         # token array is submitted. Numeric prompts do not add a hidden BOS.
-        instructions=INSTRUCTIONS+'\nWrite reason in one or two concise sentences, at most 500 characters.\n'
+        instructions=INSTRUCTIONS+('\nWrite reason in one or two concise sentences, at most 500 characters.\n'
+            'For a fully read body, copy the supplied expected_read_end integer exactly into read_end. '
+            'Do not estimate/count characters or report the length of a sentence or quote. '
+            'If reading is unfinished, choose INCOMPLETE and record its real ending position; '
+            'never claim a terminal disposition for unfinished reading.\n')
         prompt='<|im_start|>system\n'+instructions+'<|im_end|>\n<|im_start|>user\n'+json.dumps(payload,ensure_ascii=False)+'<|im_end|>\n<|im_start|>assistant\n'
         tokenized=self.requester('/tokenize',{'content':prompt,'add_special':False,'parse_special':True})
         tokens=tokenized.get('tokens')
@@ -65,11 +85,7 @@ class LocalCPUQuickReader:
         maximum=self.receipt['max_output_tokens']
         if len(tokens)+maximum>self.receipt['context_tokens']:
             raise ValueError('local reader context budget exceeded')
-        schema=deepcopy(cast(dict[str, Any], SCHEMA))
-        # Match the existing validator. The pinned native grammar supports
-        # string bounds; an overlong reason must never become a completion.
-        schema['properties']['reason'].update(minLength=1,maxLength=500)
-        result=self.requester('/completion',{'prompt':tokens,'json_schema':schema,
+        result=self.requester('/completion',{'prompt':tokens,'json_schema':native_schema(payload),
             'n_predict':maximum,'temperature':0,'seed':0,'stream':False,'cache_prompt':False})
         if self.receipt_observer is not None:
             # Retain returned inference evidence even when validation fails.

@@ -1,13 +1,12 @@
-"""Same-version real-cache QA. No collection and no LIVE/session/ledger writes."""
+"""Version-bound real-cache QA. No collection or LIVE/session/ledger writes."""
 import argparse
 from collections import Counter
-from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
 
 from bct import precursor_collection as c, precursor_discovery as pd
-from bct import precursor_scope_reader as scope, precursor_temporal as temporal
+from bct import precursor_scope_reader as scope
 from bct import precursor_evidence_graph as graph_reader
 from bct.objective_lock import stamp_export
 
@@ -61,7 +60,13 @@ def run(root,as_of):
     if len(original)>230:raise ValueError('baseline cache limit is 230; select a fixed snapshot')
     new=c.stored_documents(root)
     before,unused=metrics(original,as_of);after,prepared=metrics(new,as_of)
-    repeat=[c.structure(d,(root/'raw'/(d['raw_sha256']+'.html')).read_bytes()) for d in original]
+    repeat=[]
+    for d in original:
+        raw=(root/'raw'/(d['raw_sha256']+'.html')).read_bytes()
+        meta=d.get('sec_filing_metadata')
+        meta_raw=(root/'raw'/(meta['raw_sha256']+'.json')).read_bytes() if meta else None
+        snapshot_document=c.verified_stored_snapshot(d,raw,metadata_record=meta,metadata_raw=meta_raw)
+        repeat.append(c.structure(snapshot_document,raw))
     deterministic=digest(new)==digest(repeat)
     references=validate(new)
     graph=graph_reader.analyze(new,mode='BACKFILL',now=as_of)
@@ -81,7 +86,10 @@ def run(root,as_of):
             'preservation':{'cache_files_unchanged':preserved,'cache_file_count':len(before_hashes),
                             'deterministic_replay':deterministic,'source_reference_checks':'PASS','new_temporal_references_checked':references,
                             'source_input_sha256':digest([{'document_id':d['document_id'],'body_sha256':d['body_sha256'],'raw_sha256':d['raw_sha256']} for d in original]),
-                            'engine_hashes':c.hashes(),'live_write_count':0},
+                            'engine_hashes':c.hashes(),'live_write_count':0,
+                            'same_version_documents':sum(d['body_sha256']==old['body_sha256'] for d,old in zip(new,original)),
+                            'corrected_source_versions':[{'document_id':d['document_id'],**d['source_version_correction']}
+                                                         for d in new if d.get('source_version_correction')]},
             'examples':[{'document_id':d['document_id'],'origin_url':d['origin_url'],'body_sha256':d['body_sha256'],
                          'event_id':e['event_id'],'scope':e['scope'],'missing_scope':e['missing_scope']}
                         for d in new for e in d['retained_collection_events'] if e['scope']][:18],

@@ -220,7 +220,7 @@ def _publisher_body_scopes(nodes):
             scopes.extend(n for n in _nodes(article) if n.tag=='div'
                           and {'post-content','entry-content'} <= set(str(n.attrs.get('class','')).split())
                           and any(c.tag=='p' and _text(c) for c in _nodes(n)))
-        return scopes if len(scopes)==1 else []
+        return _visible_publisher_scopes(scopes,nodes,allow_share_container=True)
     themed=any(n.tag=='body' and 'wp-theme-hpc-theme' in str(n.attrs.get('class','')).split()
                and 'single-post' in str(n.attrs.get('class','')).split() for n in nodes)
     canonical=any(n.tag=='link' and n.attrs.get('rel')=='canonical' and
@@ -234,7 +234,21 @@ def _publisher_body_scopes(nodes):
             if node.tag=='div' and str(node.attrs.get('class','')).split()==['w-100']:
                 if any(n.tag=='p' and _text(n) for n in _nodes(node)):
                     scopes.append(node)
-    return scopes if len(scopes)==1 else []
+    return _visible_publisher_scopes(scopes,nodes)
+
+
+def _visible_publisher_scopes(scopes,nodes,*,allow_share_container=False):
+    """A canonical layout never authorizes hidden or other excluded content."""
+    if len(scopes)!=1:return []
+    scope=scopes[0]
+    for ancestor in nodes:
+        if not any(child is scope for child in _nodes(ancestor)):continue
+        if not _skipped(ancestor):continue
+        allowed=(allow_share_container and ancestor.tag=='div'
+                 and str(ancestor.attrs.get('class','')).split()==['share-container']
+                 and 'hidden' not in ancestor.attrs and ancestor.attrs.get('aria-hidden')!='true')
+        if not allowed:return []
+    return scopes
 
 
 def extract_document(html, *, http_status=200, content_type="text/html"):
@@ -267,6 +281,11 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
               or _BODY_CLASS.search(str(n.attrs.get("class", "")))]
     method = "ARTICLE"
     publisher_scopes=_publisher_body_scopes(nodes)
+    known_publisher_layout=any(n.tag=='body' and 'single-post' in str(n.attrs.get('class','')).split()
+                              and {'wp-theme-hpc-theme','wp-theme-goodlife-wp'} &
+                              set(str(n.attrs.get('class','')).split()) for n in nodes) and any(
+        n.tag=='link' and n.attrs.get('rel')=='canonical' and re.match(
+            r'https://(?:www\.)?(?:hpcwire|semiconductor-digest)\.com/',n.attrs.get('href','')) for n in nodes)
     if publisher_scopes:
         scopes=publisher_scopes
         method='PUBLISHER_BODY'
@@ -319,8 +338,13 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
         if body and paywall:
             status = "PARTIAL"
             reasons.append("PAYWALL_OR_LOGIN_PREVIEW")
-        if body and node and any(_PREVIEW_CLASS.search(str(n.attrs.get("class", "")))
-                                 for n in _nodes(node)):
+        if body and known_publisher_layout and not publisher_scopes:
+            status = "PARTIAL"
+            reasons.append("PUBLISHER_PRIMARY_SCOPE_UNVERIFIED")
+        if body and node and (any(_PREVIEW_CLASS.search(str(n.attrs.get("class", "")))
+                                 for n in _nodes(node)) or
+                             any(_PREVIEW_CLASS.search(str(n.attrs.get('class','')))
+                                 and any(child is node for child in _nodes(n)) for n in nodes)):
             status = "PARTIAL"
             reasons.append("PREVIEW_OR_SUMMARY_CONTENT")
         if body and node and any(n.tag=='article' and 'article-card' in str(n.attrs.get('class','')).split()
