@@ -33,6 +33,9 @@ jobs:
           requested=os.environ.get('DISPATCH_RESUME_RUN') or (json.loads(p.read_text()).get('resume_run_id') if p.exists() else '')
           if requested and not str(requested).isdigit():raise ValueError('invalid recovery run ID')
           with open(os.environ['GITHUB_OUTPUT'],'a') as output:output.write('resume_run_id='+str(requested or '')+'\n')
+          retained=(json.loads(p.read_text()).get('retained_cache') or {}).get('run_id','') if p.exists() else ''
+          if retained and not str(retained).isdigit():raise ValueError('invalid retained cache run ID')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as output:output.write('retained_cache_run_id='+str(retained)+'\n')
           PY
         env:
           DISPATCH_RESUME_RUN: ${{ inputs.resume_run_id }}
@@ -44,6 +47,14 @@ jobs:
           run-id: ${{ steps.request.outputs.resume_run_id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: ${{ runner.temp }}/bct-recovery-resume
+      - name: Restore historical cache hashes absent from latest checkpoint
+        if: steps.request.outputs.retained_cache_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: bct-recovery-checkpoint-${{ steps.request.outputs.retained_cache_run_id }}
+          run-id: ${{ steps.request.outputs.retained_cache_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/bct-recovery-retained-cache
       - name: Verify storage, preserving merge and legacy regressions
         run: |
           python -m pip install -e '.[test]'
@@ -56,7 +67,7 @@ jobs:
           python - <<'PY'
           import json,os
           from pathlib import Path
-          from bct.recovery_restore import verify_restored
+          from bct.recovery_restore import verify_restored,copy_preserved_caches
           request=json.loads(Path('.github/bct-recovery-request.json').read_text())
           if str(request['resume_run_id'])!=os.environ['BCT_RESUME_RUN']:raise ValueError('unverified resume run selected')
           root=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume'
@@ -66,6 +77,14 @@ jobs:
           output=Path(os.environ['RUNNER_TEMP'])/'bct-recovery'
           output.mkdir(exist_ok=True)
           (output/'restore-verification.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          copy_preserved_caches(root,output)
+          retained=request.get('retained_cache')
+          if retained:
+              old=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-retained-cache'
+              if str(json.loads((old/'checkpoint.json').read_text())['run_id'])!=str(retained['run_id']):raise ValueError('retained cache run ID differs')
+              proof=verify_restored(old,retained['file_sha256'],expected_cache_inventory=retained['inventory_sha256'])
+              proof['union']=copy_preserved_caches(old,output)
+              (output/'retained-cache-verification.json').write_text(json.dumps(proof,indent=2)+'\n')
           # Preserve private returned inferences across failed-gate checkpoints.
           import shutil
           for name in ('private-local-reader-execution.jsonl','recovery-preservation-seal.json','queue-recovery-versions.json'):
@@ -116,6 +135,7 @@ jobs:
           path: |
             ${{ runner.temp }}/bct-recovery/checkpoint.json
             ${{ runner.temp }}/bct-recovery/restore-verification.json
+            ${{ runner.temp }}/bct-recovery/retained-cache-verification.json
             ${{ runner.temp }}/bct-recovery/recovery-preservation-seal.json
             ${{ runner.temp }}/bct-recovery/e2e-*.json
             ${{ runner.temp }}/bct-recovery/e2e-*.xml

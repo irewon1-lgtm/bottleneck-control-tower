@@ -99,6 +99,20 @@ def is_video_summary_body(text, url):
             and not re.search(r'\btranscript\b', str(text), re.I))
 
 
+def is_membership_landing_body(text, url):
+    """Hash-preserved Northern Miner access-limit copy is not the news body.
+
+    Observed HTTP200 redirected to subscribe-login with a free-article-limit
+    title. Require both publisher-specific reading gate and member sign-in;
+    a generic newsletter, membership mention or sign-in button is insufficient.
+    """
+    if not re.match(r'https://(?:www\.)?northernminer\.com/(?:news/|subscribe-login/)',str(url)):
+        return False
+    plain=_plain(text)
+    return bool(re.search(r'\bkeep reading The Northern Miner\b.{0,120}\bMembership\b',plain,re.I)
+                and re.search(r'\balready a member\b',plain,re.I))
+
+
 class _Node:
     def __init__(self, tag, attrs=None):
         self.tag, self.attrs, self.children, self.closed = tag, dict(attrs or ()), [], False
@@ -261,6 +275,9 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
     nodes = list(_nodes(doc.root))
     visible = _text(doc.root)
     titles = " ".join(_text(n) for n in nodes if n.tag == "title")
+    membership_landing=any(n.tag=='link' and n.attrs.get('rel')=='canonical'
+        and re.match(r'https://(?:www\.)?northernminer\.com/subscribe-login/?$',n.attrs.get('href',''))
+        and is_membership_landing_body(visible,n.attrs['href']) for n in nodes)
     reasons = []
     articles = []
     for node in nodes:
@@ -301,6 +318,10 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
         status, body, reasons = "UNAVAILABLE", "", [f"HTTP_{http_status}"]
     elif content_type.split(";", 1)[0].lower() not in {"text/html", "application/xhtml+xml"}:
         status, body, reasons = "UNAVAILABLE", "", ["UNSUPPORTED_CONTENT_TYPE"]
+    elif membership_landing:
+        # Retain raw observations outside extraction; login marketing contains
+        # no verified requested article and must never enter the FULL reader.
+        status,body,reasons='UNAVAILABLE','',['PAYWALL_OR_LOGIN_PREVIEW','MEMBERSHIP_ACCESS_LIMIT']
     elif _CHALLENGE.search(titles) or (_CHALLENGE.search(visible) and (
             not body or re.match(r'\s*(?:verify (?:that )?you are human|access denied|checking your browser|just a moment|enable javascript and cookies|captcha verification)\b', body, re.I))):
         status, body, reasons = "UNAVAILABLE", "", ["ACCESS_CHALLENGE"]

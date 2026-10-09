@@ -3,6 +3,35 @@ import hashlib
 import json
 from pathlib import Path, PurePosixPath
 import re
+import shutil
+
+
+def copy_preserved_caches(source, destination):
+    """Union verified historical bytes; never lose an older referenced hash.
+
+    Validate the complete source and every existing destination before copying.
+    Root checkpoints and source journals remain owned by the latest run.
+    """
+    source,destination=Path(source),Path(destination)
+    files=[]
+    for directory,suffix in (('private-source-cache','.txt'),('private-evidence-cache','.txt'),
+                             ('private-evidence-raw','.bin'),('private-source-html','.html')):
+        for path in (source/directory).glob('*'+suffix):
+            target=destination/directory/path.name
+            if (path.is_symlink() or not re.fullmatch(r'[0-9a-f]{64}',path.stem)
+                    or hashlib.sha256(path.read_bytes()).hexdigest()!=path.stem):
+                raise ValueError('historical cache content hash differs')
+            if target.exists() and (target.is_symlink() or target.read_bytes()!=path.read_bytes()):
+                raise ValueError('historical cache destination differs')
+            files.append((path,target))
+    copied=[]
+    for path,target in files:
+        if target.exists():continue
+        target.parent.mkdir(parents=True,exist_ok=True)
+        shutil.copyfile(path,target)
+        copied.append(target.relative_to(destination).as_posix())
+    return {'status':'PASS','verified_files':len(files),'copied_files':copied,
+            'root_metadata_unchanged':True}
 
 
 def verify_restored(root, expected, *, expected_cache_inventory=None):

@@ -7,7 +7,8 @@ from collections import defaultdict, deque
 from urllib.parse import urlsplit
 
 from .future_body import (read_cached_body, cache_body, is_control_only_body,
-                          has_terminal_excerpt_marker, is_author_metadata_only_body, is_video_summary_body)
+                          has_terminal_excerpt_marker, is_author_metadata_only_body, is_video_summary_body,
+                          is_membership_landing_body)
 
 
 def restore_observations(root, cache, *, now=None, retry_errors=False, reinspect_urls=()):
@@ -40,7 +41,17 @@ def restore_observations(root, cache, *, now=None, retry_errors=False, reinspect
                 raise ValueError('preserved source cache hash mismatch')
             if cache_body(cache, body) != digest:
                 raise ValueError('restored source cache hash mismatch')
-            if record.get('body_status') == 'FULL' and is_control_only_body(body):
+            if record.get('body_status') == 'FULL' and is_membership_landing_body(body,url):
+                record['prior_observation_classification']={
+                    key:record.get(key) for key in ('status','body_status','body_sha256','completeness','reasons')}
+                record.update(status='BLOCKED',body_status='UNAVAILABLE',
+                              reclassification_rule='MEMBERSHIP_ACCESS_LIMIT_V1',
+                              classification_corrected_at=datetime.now(timezone.utc).isoformat(),
+                              access_diagnostic={'category':'PAYWALL','state':'SOURCE_BLOCKED','retryable':False})
+                record['reasons']=list(dict.fromkeys([*record.get('reasons',[]),
+                    'PAYWALL_OR_LOGIN_PREVIEW','MEMBERSHIP_ACCESS_LIMIT']))
+                record['completeness']={**record.get('completeness',{}),'assessment':'MEMBERSHIP_LANDING_NOT_ARTICLE'}
+            elif record.get('body_status') == 'FULL' and is_control_only_body(body):
                 # Preserve the original observation and cache, but correct its
                 # classification without requesting an unchanged denied URL.
                 record['prior_observation_classification'] = {

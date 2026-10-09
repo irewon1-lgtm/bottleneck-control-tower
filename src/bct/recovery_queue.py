@@ -21,7 +21,7 @@ def corrected_version(observation,body_hash):
     while isinstance(observation,dict):
         if (observation.get('body_sha256')==body_hash and observation.get('reclassification_rule') in
                 ('ARTICLE_CONTROL_ONLY_V1','ARTICLE_TERMINAL_ELLIPSIS_V1','AUTHOR_METADATA_ONLY_V1',
-                 'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT_V1')):
+                 'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT_V1','MEMBERSHIP_ACCESS_LIMIT_V1')):
             return observation
         observation=observation.get('prior_source_observation')
     return None

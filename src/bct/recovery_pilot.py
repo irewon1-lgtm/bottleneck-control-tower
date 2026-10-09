@@ -20,10 +20,12 @@ def quarantine_corrected_readings(previous, corrections):
             correction=corrections.get(key)
             if correction is None:
                 kept.append(result);continue
-            if (previous.get('mode')!='DRAIN' or correction.get('body_sha256')!=key[1]
+            qualification_gate=(previous.get('mode')=='QUALIFICATION'
+                                and correction.get('reclassification_rule')=='MEMBERSHIP_ACCESS_LIMIT_V1')
+            if (previous.get('mode')!='DRAIN' and not qualification_gate or correction.get('body_sha256')!=key[1]
                     or correction.get('reclassification_rule') not in (
                         'ARTICLE_CONTROL_ONLY_V1','ARTICLE_TERMINAL_ELLIPSIS_V1','AUTHOR_METADATA_ONLY_V1',
-                        'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT_V1')):
+                        'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT_V1','MEMBERSHIP_ACCESS_LIMIT_V1')):
                 raise ValueError('prior reading quarantine requires exact source correction')
             held.append({'result':deepcopy(result),'source_correction':deepcopy(correction),
                          'preserved_from_run_id':previous['run_id'],
