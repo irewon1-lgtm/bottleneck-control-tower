@@ -141,6 +141,10 @@ def run_worker(transport, candidates_path, tracking_path, *, reader, cache_dir,
         for item in queue_items(candidates, tracking)["quick"]:
             work_id = "quick-version-" + _key(item["document_id"], item["body_sha256"], READER_VERSION)
             previous = _runs(tracking).get(work_id, {})
+            # A stopped process can leave an uncertain in-flight reading. Keep
+            # that version claimed until its stopped owner/result is reconciled.
+            if previous.get("state") == "RUNNING":
+                continue
             if previous.get("state") in ("ERROR", "BLOCKED") and not retry_failed:
                 continue
             pending.append((item, work_id))
@@ -158,6 +162,11 @@ def run_worker(transport, candidates_path, tracking_path, *, reader, cache_dir,
                          if x["document_id"] == original["document_id"] and x["body_sha256"] == original["body_sha256"]), None)
             if item is None:
                 continue
+            tracking = _patch(transport, tracking_path, {"runs": {work_id: {
+                "state": "RUNNING", "run_id": run_id,
+                "document_id": item["document_id"], "body_sha256": item["body_sha256"],
+                "read_start": item["resume_at"], "claimed_at": _now(),
+            }}}, run_id + "-claim-" + work_id, tracking)
             review_id = "auto-quick-" + _key(item["document_id"], item["body_sha256"], READER_VERSION, item["resume_at"])
             decision, metadata = None, {}
             try:

@@ -13,7 +13,7 @@ from bct.future_github import GitHubTransport, GitHubRequestError, _raw
 from bct.future_review import queue_summary
 from bct.future_store import store_patch
 from bct.future_worker import _runs, _run_patch
-from bct.recovery_preservation import verify as verify_preservation
+from bct.recovery_preservation import verify as verify_preservation, seal
 from bct.recovery_storage_probe import verify_atomic_recovery
 
 
@@ -49,6 +49,13 @@ def main():
         tracking = transport.read('future-tracking.json')
         preservation_baseline=json.loads(Path('config/bct-recovery-preservation.json').read_text())
         report['identity_preservation']=verify_preservation(original.document,tracking.document,preservation_baseline)
+        request=json.loads(Path('.github/bct-recovery-request.json').read_text())
+        retained_path=Path('config/bct-recovery-retained-seal.json')
+        if request.get('retained_seal_sha256'):
+            if hashlib.sha256(retained_path.read_bytes()).hexdigest()!=request['retained_seal_sha256']:
+                raise ValueError('retained production preservation seal differs')
+            report['retained_identity_preservation']=verify_preservation(
+                original.document,tracking.document,json.loads(retained_path.read_text()))
         recovered_seal=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume/recovery-preservation-seal.json'
         if recovered_seal.exists():
             request=json.loads(Path('.github/bct-recovery-request.json').read_text())
@@ -57,6 +64,9 @@ def main():
                 raise ValueError('recovered preservation seal must be pinned in resume request')
             report['recovered_identity_preservation']=verify_preservation(
                 original.document,tracking.document,json.loads(recovered_seal.read_text()))
+        # A later failed gate must still carry the verified current baseline.
+        (root/'recovery-preservation-seal.json').write_text(
+            json.dumps(seal(original.document,tracking.document),ensure_ascii=False,indent=2)+'\n')
         before = queue_summary(original.document, tracking.document)
         # The immutable repair baseline includes these records, regardless of
         # subsequent legitimate inflow/recovery. Never initialize over them.

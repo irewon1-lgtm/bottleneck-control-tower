@@ -17,6 +17,15 @@ def key(item):
     return item['document_id'],item.get('body_sha256') or item.get('old_body_sha256') or item.get('source_version')
 
 
+def corrected_version(observation,body_hash):
+    while isinstance(observation,dict):
+        if (observation.get('body_sha256')==body_hash and observation.get('reclassification_rule') in
+                ('ARTICLE_CONTROL_ONLY_V1','ARTICLE_TERMINAL_ELLIPSIS_V1')):
+            return observation
+        observation=observation.get('prior_source_observation')
+    return None
+
+
 def project(candidates,tracking,versions,observations,cache):
     records={key(x):x for x in _records(candidates)}
     failures={key(v):v for v in versions}
@@ -45,10 +54,12 @@ def project(candidates,tracking,versions,observations,cache):
             exact=True
         read_result=bool(body_hash and document_complete(tracking,item))
         stored_status=item.get('body_status','UNAVAILABLE')
-        full=stored_status=='FULL' or exact
+        corrected=corrected_version(observation,body_hash) is not None
+        full=stored_status=='FULL' and not corrected or exact
         if read_result and full:state='COMPLETED'
         elif identity in active:state='PROCESSING'
         elif prior and prior['old_failure']=='REQUIRED_EVIDENCE_MISSING':state='EVIDENCE_WAIT'
+        elif corrected:state='SOURCE_WAIT'
         elif exact:state='PENDING'
         elif observation.get('resume_after') is not None:state='RETRY_SCHEDULED'
         elif observation.get('status') in ('SOURCE_BLOCKED','BLOCKED','UNAVAILABLE','ERROR'):state='FAILED'
@@ -61,6 +72,7 @@ def project(candidates,tracking,versions,observations,cache):
         rows.append({'document_id':item['document_id'],'source_version':item.get('source_version'),
             'body_sha256':body_hash,'state':state,'stored_body_status':stored_status,
             'exact_full_source_recovered':exact,'historical_read_result_preserved':read_result,
+            'source_completeness_corrected':corrected,
             'evidence_state':'EVIDENCE_WAIT' if evidence_wait else 'NOT_EVALUATED',
             'old_failure':prior['old_failure'] if prior else None,
             'failure_history_retained':bool(prior),'observed_status':observation.get('status'),

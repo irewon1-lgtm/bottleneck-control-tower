@@ -72,3 +72,22 @@ def test_untouched_urls_do_not_starve_behind_a_due_old_429():
     next_url='https://a.test/zzzz-next'
     previous[untouched]={'attempted':True}
     assert source_attempt_order([denied,untouched,next_url],previous)[0]==next_url
+
+
+def test_closed_article_excerpt_restored_as_partial_without_erasing_history(tmp_path):
+    body='Why AI Inference Infrastructure Fails Differently From Traditional Services\nMost engineers know what an overloaded web service looks like. Latency goes up. Queues start...'
+    digest=cache_body(tmp_path/'private-source-cache',body)
+    write(tmp_path,[{'url':'https://a.test/original','attempted':True,'status':'FULL',
+                    'body_status':'FULL','body_sha256':digest,'body_chars':len(body)}])
+    observed,pending=restore_observations(tmp_path,tmp_path/'restored')
+    row=observed['https://a.test/original']
+    assert not pending and row['status']==row['body_status']=='PARTIAL'
+    assert row['prior_observation_classification']['body_status']=='FULL'
+    assert row['prior_observation_classification']['body_sha256']==digest
+    assert (tmp_path/'restored'/(digest+'.txt')).read_text()==body
+    assert row['reclassification_rule']=='ARTICLE_TERMINAL_ELLIPSIS_V1'
+    with pytest.raises(ValueError,match='changed code'):
+        restore_observations(tmp_path,tmp_path/'retry',reinspect_urls=['https://a.test/original'])
+    observed,pending=restore_observations(tmp_path,tmp_path/'retry',retry_errors=True,
+                                        reinspect_urls=['https://a.test/original'])
+    assert not observed and pending['https://a.test/original']['body_sha256']==digest

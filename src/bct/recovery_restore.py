@@ -17,7 +17,7 @@ def verify_restored(root, expected, *, expected_cache_inventory=None):
             raise ValueError('restored checkpoint file hash differs')
     counts={};inventory=[]
     for directory,suffix in (('private-source-cache','.txt'),('private-evidence-cache','.txt'),
-                             ('private-evidence-raw','.bin')):
+                             ('private-evidence-raw','.bin'),('private-source-html','.html')):
         count=0
         for path in (root/directory).glob('*'+suffix):
             if (not re.fullmatch(r'[0-9a-f]{64}',path.stem)

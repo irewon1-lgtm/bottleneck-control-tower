@@ -1,5 +1,6 @@
 """Gate 3: account for every failed version; never fabricate old full text."""
 import json
+import hashlib
 import os
 from pathlib import Path
 import threading
@@ -29,8 +30,10 @@ def main():
     cache=root/'private-source-cache';cache.mkdir(exist_ok=True)
     resume=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume'
     old_checkpoint=json.loads((resume/'checkpoint.json').read_text()) if (resume/'checkpoint.json').exists() else {}
+    request=json.loads(Path('.github/bct-recovery-request.json').read_text())
     restored,pending=restore_observations(resume,cache,
-        retry_errors=bool(old_checkpoint.get('code_sha')) and old_checkpoint['code_sha']!=os.environ['GITHUB_SHA'])
+        retry_errors=bool(old_checkpoint.get('code_sha')) and old_checkpoint['code_sha']!=os.environ['GITHUB_SHA'],
+        reinspect_urls=request.get('source_scope_reinspection_urls',[]))
     restored={u:r for u,r in restored.items() if u in urls}
     pending={u:r for u,r in pending.items() if u in urls}
     order=source_attempt_order(urls-set(restored),pending)
@@ -43,6 +46,8 @@ def main():
         host=urlsplit(url).hostname
         result={'url':url,'attempted_at':datetime.now(timezone.utc).isoformat(),
                 'environment':'GITHUB_HOSTED_RUNNER','http_request_completed':False}
+        if url in pending and pending[url].get('reclassification_rule'):
+            result['prior_source_observation']=pending[url]
         with locks[host]:
             if time.monotonic()>=deadline:
                 return {**result,'status':'SOURCE_WAIT','reason':'RUNNER_DEADLINE','attempted':False}
@@ -56,6 +61,11 @@ def main():
             try:
                 fetched=fetch_html(url)
                 result.update(http_request_completed=True,http_status=fetched['status'])
+                if url in request.get('source_scope_reinspection_urls',[]):
+                    raw=fetched['html'].encode('utf-8');raw_hash=hashlib.sha256(raw).hexdigest()
+                    raw_cache=root/'private-source-html';raw_cache.mkdir(exist_ok=True)
+                    (raw_cache/(raw_hash+'.html')).write_bytes(raw)
+                    result['utf8_html_sha256']=raw_hash
                 body=extract_document(fetched['html'],http_status=fetched['status'],content_type=fetched['content_type'])
                 if fetched.get('truncated'):
                     if body['body_status']=='FULL':body['body_status']='PARTIAL'

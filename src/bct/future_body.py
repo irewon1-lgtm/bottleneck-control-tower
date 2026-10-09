@@ -73,6 +73,11 @@ def is_control_only_body(text):
     return bool(_CONTROL_ONLY.fullmatch(_plain(text)))
 
 
+def has_terminal_excerpt_marker(text):
+    """An unfinished final sentence cannot prove complete source coverage."""
+    return bool(re.search(r'(?:\.{3}|…)[\s\"”’\x27]*$', str(text)))
+
+
 class _Node:
     def __init__(self, tag, attrs=None):
         self.tag, self.attrs, self.children, self.closed = tag, dict(attrs or ()), [], False
@@ -179,6 +184,24 @@ def _json_articles(value):
             yield from _json_articles(child)
 
 
+def _publisher_body_scopes(nodes):
+    """Verified HPCwire single-post layout separates prose from article cards."""
+    themed=any(n.tag=='body' and 'wp-theme-hpc-theme' in str(n.attrs.get('class','')).split()
+               and 'single-post' in str(n.attrs.get('class','')).split() for n in nodes)
+    canonical=any(n.tag=='link' and n.attrs.get('rel')=='canonical' and
+                  re.match(r'https://(?:www\.)?hpcwire\.com/\d{4}/\d{2}/\d{2}/',n.attrs.get('href','')) for n in nodes)
+    if not themed or not canonical:return []
+    scopes=[]
+    for wrapper in nodes:
+        classes=str(wrapper.attrs.get('class','')).split()
+        if 'article-card-wrapper' not in classes or 'normal-mode' not in classes:continue
+        for node in _nodes(wrapper):
+            if node.tag=='div' and str(node.attrs.get('class','')).split()==['w-100']:
+                if any(n.tag=='p' and _text(n) for n in _nodes(node)):
+                    scopes.append(node)
+    return scopes if len(scopes)==1 else []
+
+
 def extract_document(html, *, http_status=200, content_type="text/html"):
     """Return accessible text, a completeness state and auditable reasons."""
     if not isinstance(html, str):
@@ -208,6 +231,10 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
     scopes = [n for n in visible_nodes if n.tag == "article" or n.attrs.get("itemprop") == "articleBody"
               or _BODY_CLASS.search(str(n.attrs.get("class", "")))]
     method = "ARTICLE"
+    publisher_scopes=_publisher_body_scopes(nodes)
+    if publisher_scopes:
+        scopes=publisher_scopes
+        method='PUBLISHER_BODY'
     if not scopes:
         scopes = [n for n in visible_nodes if n.tag == "main"]
         method = "MAIN"
@@ -261,9 +288,16 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
                                  for n in _nodes(node)):
             status = "PARTIAL"
             reasons.append("PREVIEW_OR_SUMMARY_CONTENT")
+        if body and node and any(n.tag=='article' and 'article-card' in str(n.attrs.get('class','')).split()
+                                  and any(child is node for child in _nodes(n)) for n in nodes):
+            status='PARTIAL'
+            reasons.append('ARTICLE_CARD_SCOPE_UNVERIFIED')
         if body and _MEDIA_SUMMARY.search(body):
             status = "PARTIAL"
             reasons.append("MEDIA_SUMMARY_NOT_FULL_CONTEXT")
+        if body and has_terminal_excerpt_marker(body):
+            status = "PARTIAL"
+            reasons.append("TERMINAL_EXCERPT_MARKER")
         tables = [n for n in _nodes(node or doc.root) if n.tag == "table" and not _skipped(n)]
         table_rows = sum(1 for t in tables for n in _nodes(t) if n.tag == "tr" and _blocks(n))
         if body and (any(not any(n.tag in {"td", "th"} and _text(n) for n in _nodes(t)) for t in tables)

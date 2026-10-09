@@ -11,7 +11,7 @@ from bct.future_github import GitHubTransport
 from bct.future_review import _records, document_complete, review_patch, validate_review, queue_summary, READER_VERSION
 from bct.future_store import apply_owned_patch
 from bct.recovery_preservation import verify,seal
-from bct.recovery_queue import project
+from bct.recovery_queue import project,corrected_version
 from bct.recovery_pilot import resume_batches
 from bct.recovery_versions import append_observed_versions
 from bct.future_worker import _runs, LOCK_ID
@@ -24,6 +24,18 @@ def identity(*parts):
 def merge_review_patch(document,patch,run_id):
     return apply_owned_patch(document,owner='review',patch=patch,
         operation_id='recovery-review-'+identity(run_id,patch),prepared_document=document)
+
+
+def completeness_review(item,observation,run_id,fallback_time):
+    digest=item['body_sha256'];document_id=item['document_id']
+    return {'review_id':'recovered-completeness-'+identity(document_id,digest,observation['reclassification_rule']),
+        'document_id':document_id,'body_sha256':digest,'reader_version':READER_VERSION,
+        'kind':'access','access_status':'BLOCKED','observed_body_sha256':digest,
+        'reviewed_at':observation.get('classification_corrected_at',fallback_time),
+        'reason':'Source completeness corrected; preserved excerpt cannot establish FULL coverage. Prior observation, source hash and decisions retained.',
+        'source_completeness_status':observation['body_status'],
+        'reclassification_rule':observation['reclassification_rule'],
+        'source_recovery_run_id':run_id}
 
 
 def execute():
@@ -77,6 +89,17 @@ def execute():
         # Authenticate source bytes again before reopening any old failed task.
         initial=project(candidate_document,tracking,versions,observations,root/'private-source-cache')
         for row in initial['version_rows']:
+            if row.get('source_completeness_corrected'):
+                document_id=row['document_id'];digest=row['body_sha256']
+                observation=corrected_version(observations[records[(document_id,digest)]['url']],digest)
+                if observation is None:raise ValueError('corrected source observation missing')
+                review=completeness_review(records[(document_id,digest)],observation,report['run_id'],pilot['finished_at'])
+                rid=review['review_id']
+                if rid in tracking.get('reviews',{}):continue
+                view={**candidate_document,'results':{document_id:candidate_document['results'][document_id]}}
+                normalized=validate_review(view,tracking,review)
+                patch['reviews'][rid]=normalized;tracking.setdefault('reviews',{})[rid]=normalized;accesses_added+=1
+                continue
             if not row['exact_full_source_recovered'] or row['state']=='COMPLETED':continue
             document_id=row['document_id'];digest=row['body_sha256'];observation=observations[records[(document_id,digest)]['url']]
             rid='recovered-access-'+identity(document_id,digest,observation['attempted_at'])

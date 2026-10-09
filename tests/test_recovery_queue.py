@@ -53,3 +53,20 @@ def test_full_reading_and_candidate_evidence_wait_are_two_distinct_axes(tmp_path
     result=project(c,t,v,{},tmp_path)
     assert result['counts']['COMPLETED']==1 and result['counts']['EVIDENCE_WAIT']==0
     assert result['candidate_evidence_wait']==1 and result['legacy_read_results']==1
+
+
+@pytest.mark.parametrize('read', [True, False])
+def test_corrected_excerpt_preserves_stored_judgment_without_operating_full_completion(tmp_path,read):
+    c,t,v,body,digest=fixture(status='FULL',read=read)
+    old=dict(c['results']['doc']['versions'][digest])
+    obs={v[0]['url']:{'body_status':'PARTIAL','body_sha256':digest,'status':'PARTIAL',
+                     'reclassification_rule':'ARTICLE_TERMINAL_ELLIPSIS_V1'}}
+    result=project(c,t,v,obs,tmp_path)
+    assert result['counts']['SOURCE_WAIT']==1 and result['counts']['COMPLETED']==0
+    assert result['legacy_read_results']==int(read)
+    assert result['version_rows'][0]['source_completeness_corrected'] is True
+    assert c['results']['doc']['versions'][digest]==old
+    # A newly acquired original body must not revalidate the old related teaser.
+    obs[v[0]['url']]={'body_status':'FULL','body_sha256':'a'*64,'status':'FULL',
+                     'prior_source_observation':obs[v[0]['url']]}
+    assert project(c,t,v,obs,tmp_path)['counts']['SOURCE_WAIT']==1

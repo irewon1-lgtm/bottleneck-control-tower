@@ -1,6 +1,6 @@
 from hashlib import sha256
 import pytest
-from bct.recovery_e2e import trace_source,verify_display_generation
+from bct.recovery_e2e import trace_source,verify_display_generation,confirmed_full_observation
 
 
 def item(body):
@@ -22,6 +22,16 @@ def test_partial_or_changed_source_cannot_be_actual_full_e2e():
     with pytest.raises(ValueError,match='completeness'):trace_source(record,body,{'targets':[]})
     record['body_status']='FULL'
     with pytest.raises(ValueError,match='binding'):trace_source(record,body+' changed',{'targets':[]})
+
+
+def test_old_full_label_cannot_override_a_current_partial_same_hash_observation():
+    record=item('Same preserved bytes, with newly observed missing attachments.')
+    observed={'body_sha256':record['body_sha256'],'body_status':'PARTIAL'}
+    assert not confirmed_full_observation(record,observed)
+    observed['body_status']='FULL'
+    assert confirmed_full_observation(record,observed)
+    observed['body_sha256']='a'*64
+    assert not confirmed_full_observation(record,observed)
 
 
 def test_display_hash_binding_preserves_all_operational_queue_counts():

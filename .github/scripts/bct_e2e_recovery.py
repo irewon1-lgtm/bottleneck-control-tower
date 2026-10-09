@@ -19,7 +19,7 @@ from bct.future_github import GitHubTransport,_raw
 from bct.future_review import _records,document_complete
 from bct.recovery_preservation import verify
 from bct.recovery_queue import project
-from bct.recovery_e2e import trace_source,verify_display_generation
+from bct.recovery_e2e import trace_source,verify_display_generation,confirmed_full_observation
 
 FROZEN={'precursor_discovery.py':'614e841938daf41e34d7e31b97ec636f06f2997c8b7b4252926dd135e5bc2639',
     'early_forecast.py':'51d90d2265baec516d20383579816c5155e46c69599a8e7b281d329843d17675',
@@ -105,7 +105,7 @@ def execute():
         for key,item in records.items():
             observation=observations.get(item.get('url'),{})
             path=root/'private-source-cache'/(key[1]+'.txt')
-            if item['body_status']!='FULL' or observation.get('body_sha256')!=key[1] or not path.exists():continue
+            if not confirmed_full_observation(item,observation) or not path.exists():continue
             trace=trace_source(item,path.read_text(),t.document)
             if key in imported or trace['facts']:
                 traces.append(trace);roles.update(f['role'] for f in trace['facts'])
