@@ -38,7 +38,8 @@ def test_real_usage_and_unknown_evidence_remain_distinct_from_forecast():
     assert complete['properties']['read_end']['const']==value['expected_read_end']
     assert 'INCOMPLETE' not in complete['properties']['disposition']['enum']
     assert incomplete['properties']['disposition']['const']=='INCOMPLETE'
-    assert incomplete['properties']['read_end']['maximum']==value['expected_read_end']
+    assert incomplete['properties']['read_end']['maximum']==value['expected_read_end']-1
+    assert incomplete['properties']['read_end']['maximum']<complete['properties']['read_end']['const']
     assert 'stage' not in result['review'] and result['api_cost_usd']==0
 
 

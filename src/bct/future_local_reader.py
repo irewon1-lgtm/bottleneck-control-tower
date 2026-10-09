@@ -21,8 +21,12 @@ def native_schema(payload):
                                                  if d!='INCOMPLETE']
     complete['properties']['read_end']={'type':'integer','const':payload['expected_read_end']}
     incomplete['properties']['disposition']={'type':'string','const':'INCOMPLETE'}
+    # Reaching expected_read_end means the supplied body was read in full.
+    # Keep INCOMPLETE available for a genuine early stop, but make the two
+    # branches disjoint so the grammar cannot emit the contradictory result
+    # observed in run 17 (INCOMPLETE at exactly expected_read_end).
     incomplete['properties']['read_end']={'type':'integer','minimum':payload['read_start']+1,
-                                         'maximum':payload['expected_read_end']}
+                                         'maximum':payload['expected_read_end']-1}
     # The pinned converter cannot mix root properties and oneOf. Both branches
     # carry the full original schema, including reason bounds and no extra keys.
     return {'oneOf':[complete,incomplete]}
