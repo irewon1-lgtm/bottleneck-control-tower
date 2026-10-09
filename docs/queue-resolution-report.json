@@ -161,9 +161,18 @@
     "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/37942160004"
   },
   "deployment": {
-    "status": "BLOCKED",
-    "reason": "github-pages environment waiting; current_user_can_approve=false",
-    "run_id": 37485937618
+    "status": "PASS",
+    "code_commit_sha": "7dab4dd2b32206f610ab1b87f64acf7901aa6c28",
+    "run_id": 37946295307,
+    "job_id": 113873299556,
+    "publish_step": "success",
+    "url": "https://irewon1-lgtm.github.io/bottleneck-control-tower/#tracking",
+    "run_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/37946295307",
+    "environment_protection_preserved": true,
+    "obsolete_concurrency_wait_removed": true,
+    "live_report_http_status": 200,
+    "live_app_http_status": 200,
+    "live_failure_panel_verified": true
   },
   "data_store_status": "APPLIED_READBACK_VERIFIED",
   "candidate_records_deleted": 0,
@@ -183,6 +192,34 @@
     "pages_tests": 20,
     "full_suite": "PASS",
     "python_full_passed": 716,
-    "python_full_skipped": 1
+    "python_full_skipped": 1,
+    "github_stage0_tests": {
+      "status": "PASS",
+      "run_id": 37946295288
+    },
+    "storage_fix_tests": {
+      "passed": 32,
+      "failed": 0,
+      "immutable_sha_readback": true,
+      "corrupt_blob_rejected": true
+    }
+  },
+  "collector_attempts": [
+    {
+      "status": "FAIL",
+      "run_id": 37942160004,
+      "reason": "Final queue publication rejected: GitHub PUT HTTP 403 UNCLASSIFIED; job summary exceeded 1MB. No unchanged rerun.",
+      "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/37942160004"
+    },
+    {
+      "status": "FAIL",
+      "run_id": 37946295354,
+      "reason": "WRITE_OR_PATCH_FAILED: FileNotFoundError: GitHub object unavailable during shard publication readback. Unchanged job not rerun.",
+      "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/37946295354"
+    }
+  ],
+  "collector_latest": {
+    "status": "REPAIR_PREPARED",
+    "reason": "Newly staged shards now read by returned immutable Git blob SHA, avoiding immediate branch-path readback. One new changed-code validation."
   }
 }

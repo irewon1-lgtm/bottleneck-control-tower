@@ -313,6 +313,10 @@
     }
     if (!futureCandidates) { if (!candidatesError) box.append(empty("대기 기록 확인 중", "최근 파일을 불러옵니다.")); return box; }
     if (!queue) { box.append(empty("검토 대기 집계 준비 중", "기존 후보 기록은 보존돼 있습니다.")); return box; }
+    if (queueResolution?.data_store_status === "APPLIED_READBACK_VERIFIED"
+        && Date.parse(queue.computed_at) < Date.parse(queueResolution.as_of)) {
+      box.append(node("p", "아래는 실패 분리 전의 집계입니다. 처리 후 결과는 ‘정체 작업 처리 결과’에서 확인할 수 있습니다.", "data-note"));
+    }
     box.append(node("p", `수집 완료 ${date(summary.checked_at)} · 대기 집계 ${date(queue.computed_at)}`, "muted"));
     const metrics = node("div", null, "metrics");
     [["자동으로 걸린 문서", queue.automatic_candidates], ["1차 읽기 대기", queue.quick_pending],
@@ -437,7 +441,7 @@
     });
     box.append(list, node("p", `실패 기록 저장: ${report.data_store_status} · 원문 접근 점검 ${number(report.access_checked_urls)}개 URL · 완료된 HTTP 요청 ${number(report.http_requests_completed)}회`, "record-meta"));
     if (report.tracking_url) box.append(articleTitle({title: "문서별 실패 근거와 재개 조건 전체 기록", url: report.tracking_url}));
-    box.append(node("p", `직전 수집 저장 실패: GitHub HTTP 403. 작업 요약도 1MB 한도를 초과했습니다. Pages 배포 확인: ${report.deployment?.status || "미확인"}.`, "data-note"));
+    box.append(node("p", `수집 저장 실패 이력: GitHub HTTP 403, 작업 요약 1MB 초과, 저장 후 객체 재조회 실패. 최신 수집 실행: ${report.collector_latest?.status || "미확인"} · Pages 배포 확인: ${report.deployment?.status || "미확인"}.`, "data-note"));
     return box;
   }
   async function loadResolution() {

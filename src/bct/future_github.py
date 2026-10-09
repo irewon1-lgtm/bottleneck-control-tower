@@ -123,7 +123,7 @@ class GitHubTransport:
                 return json.load(response)
         except HTTPError as exc:
             if exc.code == 404 and method == 'GET':
-                raise FileNotFoundError('GitHub object unavailable') from None
+                raise FileNotFoundError('GitHub GET object unavailable: ' + suffix.split('?', 1)[0]) from None
             if exc.code == 409:
                 raise StoreConflict('sidecar SHA changed') from None
             if exc.code in (403, 429):
@@ -152,6 +152,15 @@ class GitHubTransport:
         if git_sha != blob_sha:
             raise ValueError('GitHub content and SHA disagree')
         return raw, blob_sha
+
+    def _read_blob_bytes(self, blob_sha):
+        """Read a just-created immutable object without a second branch lookup."""
+        value = self.requester('GET', '/git/blobs/' + blob_sha)
+        raw = base64.b64decode(value['content'])
+        actual = hashlib.sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest()
+        if actual != blob_sha or value.get('sha') != blob_sha:
+            raise ValueError('GitHub staged blob and SHA disagree')
+        return raw
 
     def read(self, path):
         if path not in ('future-candidates.json', 'future-tracking.json'):
@@ -196,8 +205,8 @@ class GitHubTransport:
                     del staged['sha']
                     result = self.requester('PUT', '/contents/' + quote(name), staged)
                     sha = result['content']['sha']
-                    saved, confirmed = self._read_bytes(name)
-                    if saved != data or confirmed != sha:
+                    saved = self._read_blob_bytes(sha)
+                    if saved != data:
                         raise ValueError('shard readback mismatch')
                 parts.append({'path': name, 'sha256': _sha(data), 'git_sha': sha, 'item_count': count})
             counts = {f['name']: len(document[f['name']]) if f['kind'] != 'value' else 1 for f in fields}
