@@ -1,6 +1,6 @@
 {
   "version": "bct-v33-implementation-acceptance-v1",
-  "updated_at": "2026-10-02T00:56:34.324974+00:00",
+  "updated_at": "2026-10-09T12:51:53+00:00",
   "repository": "irewon1-lgtm/bottleneck-control-tower",
   "implementation_commit": "65e75563dc2a130f96ebe9176f5c57c23451c7fc",
   "scope": "APPROVED_V3_3_ONLY",
@@ -61,8 +61,8 @@
       "live_browser_queue_verification": "BLOCKED_CLIENT_NETWORK"
     },
     "6": {
-      "status": "PENDING",
-      "reason": "Production first snapshot read back. Actual168hours and daily operating evidence remain pending; automated assessment is enabled.",
+      "status": "HOLD",
+      "reason": "Seven actual elapsed days and complete daily operating snapshots verified. Inflow 2969 exceeds completion 184; pending backlog grew 836 to 3623 and daily backlog continues growing. Operational adoption on hold.",
       "migration_smoke": {
         "status": "PASS",
         "operating_file_written": false,
@@ -76,7 +76,168 @@
       "expected_earliest_finish": "2026-10-09T00:42:25.217219+00:00",
       "scheduled_assessment_at": "2026-10-09T12:47:16Z",
       "scheduled_assessment_timezone": "Asia/Seoul",
-      "scheduled_assessment_local": "2026-10-09T21:47:16+09:00"
+      "scheduled_assessment_local": "2026-10-09T21:47:16+09:00",
+      "operation_assessment": {
+        "version": "bct-v33-seven-day-acceptance-20261009",
+        "assessment_id": "bct-v33-operation-20261009-production",
+        "assessed_at": "2026-10-09T12:50:27.620823+00:00",
+        "status": "HOLD",
+        "adoption": "OPERATIONAL_ADOPTION_ON_HOLD",
+        "source": {
+          "branch": "future-bottleneck-data",
+          "commit_sha": "f6bc4025b1c4f775485b7967937720b69c5a2638",
+          "candidate_manifest_blob_sha": "52671b67b40da5a71e75dd61ca5dc3ff0963f5b5",
+          "tracking_blob_sha": "58cd9de6784ba143d01a1cacf7bcf6f2d15f0708",
+          "candidate_document_sha256": "000e61de69d1277c540be754b69ee0df28b4e92613ded4548c55171c5f396e0e",
+          "shard_count": 9,
+          "all_shard_sha256_and_git_blob_sha_verified": true,
+          "reconstructed_full_document_verified": true,
+          "main_commit_sha": "577c802d42c1d523250bb577731a30be98d2f8cd",
+          "quality_code_blob_sha": "e70278062b5a66cbb01cd44438ee829d6958372c",
+          "test_branches_used": false,
+          "transport": "MCP Git Data blob manifest/tracking; large shard MCP Transport closed, raw Git Data base64 fallback with full byte/hash verification"
+        },
+        "method": "Existing future_quality.observation_status(full production operation_samples, start_at='2026-10-02T00:42:25.217219+00:00', now=actual current UTC)",
+        "observation": {
+          "version": "bct-v33-operation-observation-v1",
+          "status": "HOLD",
+          "start_at": "2026-10-02T00:42:25.217219+00:00",
+          "last_observed_at": "2026-10-09T10:58:08.902378+00:00",
+          "expected_earliest_finish": "2026-10-09T00:42:25.217219+00:00",
+          "elapsed_seconds": 641743.685159,
+          "sample_count": 43,
+          "observed_day_buckets": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "missing_day_buckets": [],
+          "inflow_change": 2969,
+          "completed_change": 184,
+          "continued_backlog_growth": true,
+          "latest": {
+            "recorded_at": "2026-10-09T10:58:08.902378+00:00",
+            "inflow_total": 2969,
+            "completed_total": 184,
+            "quick_pending": 1644,
+            "material_pending": 2547,
+            "deep_pending": 0,
+            "candidate_data_wait": 74,
+            "pending_total": 3623,
+            "oldest_wait_hours": 204.93,
+            "retries": 8524,
+            "user_wait": 1644,
+            "system_wait": 0,
+            "source_wait": 2547
+          },
+          "pending_reasons": [],
+          "hold_reasons": [
+            "Inflow persistently exceeds completion and daily backlog continues growing"
+          ],
+          "invalid_observations": [],
+          "incomplete_observations": [],
+          "limits": [
+            "User waiting and system delays are reported separately.",
+            "Seven-day PASS does not establish long-term stability or prediction accuracy."
+          ]
+        },
+        "baseline": {
+          "recorded_at": "2026-10-02T00:42:25.217219+00:00",
+          "inflow_total": 0,
+          "completed_total": 0,
+          "quick_pending": 609,
+          "material_pending": 748,
+          "deep_pending": 0,
+          "candidate_data_wait": 0,
+          "pending_total": 836,
+          "oldest_wait_hours": 26.67,
+          "retries": 300,
+          "user_wait": 609,
+          "system_wait": 960,
+          "source_wait": 748
+        },
+        "queue_at_assessment": {
+          "computed_at": "2026-10-09T12:50:27.620823+00:00",
+          "reader_version": "bct-v33-reader-1",
+          "documents_total": 2787,
+          "preserved_versions": 3943,
+          "automatic_candidates": 2061,
+          "review_list_versions": 3653,
+          "quick_pending": 1644,
+          "completed_documents": 184,
+          "deep_pending": 0,
+          "candidate_data_wait": 74,
+          "material_pending": 2547,
+          "oldest_wait_hours": 206.81,
+          "event_count": 3743,
+          "pending_events": 3568
+        },
+        "retry_attempts_change": 8224,
+        "queue_metric_units": "document/body-version review references; overlapping queues are not additive",
+        "collector": {
+          "id": 37920436318,
+          "name": "Future bottleneck body candidates",
+          "path": ".github/workflows/future-bottleneck.yml",
+          "sha": "577c802d42c1d523250bb577731a30be98d2f8cd",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-09T10:54:13Z",
+          "updated_at": "2026-10-09T11:02:22Z",
+          "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/37920436318",
+          "snapshot": {
+            "checked_at": "2026-10-09T10:56:13.252728+00:00",
+            "pending_due": 0,
+            "processed_total": 2787,
+            "processed_this_run": 0,
+            "new_documents_this_run": 0
+          }
+        },
+        "pages": {
+          "id": 37918719792,
+          "status": "pending",
+          "conclusion": null,
+          "created_at": "2026-10-09T10:37:18Z",
+          "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/37918719792",
+          "verified_success": false,
+          "observed_jobs": 0,
+          "earlier_current_main_runs": "CANCELLED",
+          "cause": "UNCONFIRMED",
+          "latest_publication_freshness": "UNVERIFIED"
+        },
+        "forecast_performance": "UNVERIFIED",
+        "forecast_reason": "No matured, verifiable real outcomes; production confirmed_results=0 and independent forecast evaluation remains BLOCKED.",
+        "long_term_stability": "UNVERIFIED",
+        "additional_light_prd_review_time": "BLOCKED_MISSING_ACTUAL_REVIEW_SECONDS",
+        "functional_and_initial_quality_results": "PRESERVED_NOT_RERUN",
+        "actions": "Status report only. No candidate removal, filter tightening, source expansion, automatic deep review, S promotion, score changes, new code/database/server or paid AI calls.",
+        "notification_summary": {
+          "automation_id": "6abde64c2ed48191814e7ba4ceefeb27",
+          "enabled": true,
+          "daily_limit": 2,
+          "previously_enabled": false,
+          "restored_existing_automation": true,
+          "existing_prompt_and_schedule_preserved": true,
+          "last_recorded_production_sent_at": "2026-10-03T11:13:04.171998+00:00",
+          "new_delivery_test": "NOT_RUN"
+        }
+      },
+      "status_history": [
+        {
+          "at": "2026-10-02T00:56:34.324974+00:00",
+          "status": "PENDING",
+          "reason": "Production first snapshot read back. Actual168hours and daily operating evidence remain pending; automated assessment is enabled."
+        },
+        {
+          "at": "2026-10-09T12:50:27.620823+00:00",
+          "status": "HOLD",
+          "assessment_id": "bct-v33-operation-20261009-production"
+        }
+      ]
     }
   },
   "tests": {
@@ -296,7 +457,7 @@
         "start_at": "2026-10-02T00:42:25.217219+00:00",
         "last_observed_at": "2026-10-02T00:42:25.217219+00:00",
         "expected_earliest_finish": "2026-10-09T00:42:25.217219+00:00",
-        "elapsed_seconds": 0.0,
+        "elapsed_seconds": 0,
         "sample_count": 1,
         "observed_day_buckets": [
           0
