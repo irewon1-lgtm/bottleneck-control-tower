@@ -24,7 +24,7 @@ jobs:
           from bct.future_bottleneck import fetch_html
           from bct.future_body import extract_document,_Document,_nodes,_blocks,_skipped,_BODY_CLASS
           root=Path(os.environ['RUNNER_TEMP'])/'source-scope';root.mkdir()
-          url='https://www.semiconductor-digest.com/applied-materials-besi-expand-advanced-packaging-partnership-for-ai-scaling/'
+          url='https://www.datacenterdynamics.com/en/videos/dcd-studio-the-uk-data-center-shift-with-allan-bosley-ark-data-centres/'
           fetched=fetch_html(url);raw=fetched['html'].encode('utf-8')
           digest=hashlib.sha256(raw).hexdigest();(root/(digest+'.html')).write_bytes(raw)
           doc=_Document();doc.feed(fetched['html']);doc.close()
