@@ -1,4 +1,4 @@
-"""Conditional sidecar writes through the existing GitHub contents API."""
+"""Preserving sidecars: immutable blobs and one fast-forward publication."""
 import argparse
 import base64
 import hashlib
@@ -17,6 +17,7 @@ from .future_store import Snapshot, StoreConflict, store_patch
 MAX_REQUEST_BYTES = 15 * 1024 * 1024
 MAX_SHARD_BYTES = 10 * 1024 * 1024
 MANIFEST_FORMAT = 'bct-sharded-sidecar-v1'
+ATOMIC_MANIFEST_FORMAT = 'bct-sharded-sidecar-v2'
 SHARD_FORMAT = 'bct-json-shard-v1'
 
 
@@ -101,7 +102,50 @@ def assemble(manifest, load):
     return restored
 
 
-class GitHubTransport:
+class GitHubRequestError(RuntimeError):
+    """Safe diagnostics; never retain credentials or an untrusted error body."""
+    def __init__(self, details):
+        self.details = details
+        retry = details.get('retry_after')
+        suffix = ' RETRY_AFTER=' + retry if retry and retry.isdigit() else ''
+        super().__init__('GitHub request failed: ' + json.dumps(details, sort_keys=True) + suffix)
+
+
+def error_details(method, suffix, status, headers, body):
+    try:
+        message = str(json.loads(body).get('message', '')).casefold()
+    except (ValueError, UnicodeError):
+        message = ''
+    h = {k.casefold(): str(v) for k, v in headers.items()}
+    remaining = h.get('x-ratelimit-remaining')
+    retry = h.get('retry-after')
+    if 'accessible' in message or 'permission' in message or status == 401:
+        category = 'ACCESS_DENIED'
+    elif 'protected branch' in message or 'repository rule' in message:
+        category = 'BRANCH_POLICY'
+    elif status == 429 or remaining == '0':
+        category = 'PRIMARY_RATE_LIMIT' if remaining == '0' else 'SECONDARY_RATE_LIMIT'
+    elif 'secondary rate' in message or 'abuse' in message or (status == 403 and retry):
+        category = 'SECONDARY_RATE_LIMIT'
+    elif 'rate limit' in message:
+        category = 'RATE_LIMIT'
+    elif status == 413 or 'too large' in message:
+        category = 'REQUEST_TOO_LARGE'
+    elif status >= 500:
+        category = 'GITHUB_SERVICE_ERROR'
+    else:
+        category = 'UNCLASSIFIED'
+    # Restrict response values to safe characters and bounded lengths.
+    safe = lambda v: ''.join(c for c in str(v or '') if c.isalnum() or c in '-_.:')[:128] or None
+    return {'method': method, 'endpoint': suffix.split('?', 1)[0], 'status': status,
+            'category': category, 'retry_after': safe(retry),
+            'retry_after_observed': retry is not None,
+            'rate_remaining': safe(remaining), 'rate_reset': safe(h.get('x-ratelimit-reset')),
+            'rate_resource': safe(h.get('x-ratelimit-resource')),
+            'request_id': safe(h.get('x-github-request-id'))}
+
+
+class LegacyGitHubTransport:
     def __init__(self, repository, branch, token, *, requester=None):
         if not token:
             raise ValueError('GitHub token unavailable')
@@ -124,21 +168,10 @@ class GitHubTransport:
         except HTTPError as exc:
             if exc.code == 404 and method == 'GET':
                 raise FileNotFoundError('GitHub GET object unavailable: ' + suffix.split('?', 1)[0]) from None
-            if exc.code == 409:
+            if exc.code == 409 or (exc.code == 422 and method == 'PATCH' and suffix.startswith('/git/refs/')):
                 raise StoreConflict('sidecar SHA changed') from None
-            if exc.code in (403, 429):
-                # Classify GitHub's error without emitting the response body or
-                # credential headers. Authorization failures are never retried.
-                try:
-                    message = str(json.loads(exc.read(4096)).get('message', '')).casefold()
-                except (ValueError, UnicodeError):
-                    message = ''
-                category = 'RATE_LIMIT' if exc.code == 429 or 'rate limit' in message else 'ACCESS_DENIED' if 'accessible' in message or 'permission' in message else 'UNCLASSIFIED'
-                delay = exc.headers.get('Retry-After', '60')
-                delay = delay if delay.isdigit() else '60'
-                raise RuntimeError(f'GitHub {method} failed: HTTP {exc.code} {category} RETRY_AFTER={delay}') from None
-            # Never emit tokens, request headers or remote response bodies.
-            raise RuntimeError(f'GitHub {method} failed: HTTP {exc.code}') from None
+            raise GitHubRequestError(error_details(method, suffix, exc.code,
+                                                   exc.headers, exc.read(4096))) from None
 
     def _read_bytes(self, path):
         value = self.requester('GET', '/contents/' + quote(path) + '?ref=' + quote(self.branch, safe=''))
@@ -218,6 +251,118 @@ class GitHubTransport:
         # Only this final CAS publishes a generation and any SENT/operation markers.
         value = self.requester('PUT', '/contents/' + quote(path), payload)
         return value['content']['sha']
+
+
+class GitHubTransport(LegacyGitHubTransport):
+    """Reuse unchanged blobs; publish a verified generation with one ref move.
+
+    A sibling commit cannot fast-forward over a concurrent writer. A changed
+    ref is a conflict, requiring a fresh preserving merge, never a force push.
+    The Contents writer above exists only to read/test the historical format.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._verified_blobs = {}
+        self.last_commit = None
+
+    def _blob(self, sha):
+        if sha not in self._verified_blobs:
+            raw = self._read_blob_bytes(sha)
+            if sum(map(len, self._verified_blobs.values())) + len(raw) > 128 * 1024 * 1024:
+                self._verified_blobs.clear()
+            self._verified_blobs[sha] = raw
+        return self._verified_blobs[sha]
+
+    def head(self):
+        return self.requester('GET', '/git/ref/heads/' + quote(self.branch, safe=''))['object']['sha']
+
+    def _root(self, path, head):
+        value = self.requester('GET', '/contents/' + quote(path) + '?ref=' + head)
+        raw = (base64.b64decode(value['content']) if value.get('encoding') == 'base64'
+               else self._blob(value['sha']))
+        if hashlib.sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest() != value['sha']:
+            raise ValueError('GitHub content and SHA disagree')
+        return raw, value['sha']
+
+    def read(self, path):
+        if path not in ('future-candidates.json', 'future-tracking.json'):
+            raise ValueError('unapproved sidecar path')
+        raw, sha = self._root(path, self.head())
+        document = json.loads(raw)
+        if not isinstance(document, dict):
+            raise ValueError('sidecar is not an object')
+        if document.get('format') in (MANIFEST_FORMAT, ATOMIC_MANIFEST_FORMAT):
+            stem = path[:-5]
+            for index, part in enumerate(document['shards'], 1):
+                expected = (f"{stem}.shards/by-sha256/{part['sha256']}.json"
+                            if document['format'] == ATOMIC_MANIFEST_FORMAT else
+                            f"{stem}.shards/{document['document_sha256']}/{stem}.part-{index:03d}.json")
+                if part['path'] != expected:
+                    raise ValueError('invalid shard path/order')
+            document = assemble(document, lambda part: self._blob(part['git_sha']))
+        return Snapshot(document, sha)
+
+    def _create_verified_blob(self, raw):
+        expected = hashlib.sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest()
+        value = self.requester('POST', '/git/blobs',
+                               {'encoding': 'base64', 'content': base64.b64encode(raw).decode()})
+        if value['sha'] != expected or self._blob(expected) != raw:
+            raise ValueError('created blob readback mismatch')
+        return expected
+
+    def write(self, path, document, expected_sha):
+        if path not in ('future-candidates.json', 'future-tracking.json'):
+            raise ValueError('unapproved sidecar path')
+        raw = _raw(document)
+        fields, chunks = _shards(document) if len(raw) * 4 // 3 > MAX_REQUEST_BYTES - 1024 else (None, [])
+        head = self.head()
+        prior_raw, actual_sha = self._root(path, head)
+        if actual_sha != expected_sha:
+            raise StoreConflict('sidecar SHA changed')
+        previous = json.loads(prior_raw)
+        if prior_raw == raw or (previous.get('format') in (MANIFEST_FORMAT, ATOMIC_MANIFEST_FORMAT)
+                               and previous['document_sha256'] == _sha(raw)):
+            return expected_sha
+        commit = self.requester('GET', '/git/commits/' + head)
+        entries = []
+        if chunks:
+            known = {p['sha256']: p for p in previous.get('shards', [])}
+            parts = []
+            document_digest = _sha(raw)
+            for index, (data, count) in enumerate(chunks, 1):
+                digest = _sha(data)
+                # Keep the deployed v1 reader contract. New generation paths
+                # reference unchanged immutable blobs without recreating them.
+                name = f'{path[:-5]}.shards/{document_digest}/{path[:-5]}.part-{index:03d}.json'
+                old = known.get(digest)
+                if old:
+                    sha = old['git_sha']
+                    if self._blob(sha) != data:
+                        raise ValueError('reused immutable blob differs')
+                else:
+                    sha = self._create_verified_blob(data)
+                entries.append({'path': name, 'mode': '100644', 'type': 'blob', 'sha': sha})
+                parts.append({'path': name, 'sha256': digest, 'git_sha': sha, 'item_count': count})
+            counts = {f['name']: len(document[f['name']]) if f['kind'] != 'value' else 1 for f in fields}
+            raw = _raw({'format': MANIFEST_FORMAT, 'document_sha256': document_digest,
+                        'fields': fields, 'shards': parts, 'item_counts': counts,
+                        'total_item_count': sum(counts.values())})
+        root_sha = self._create_verified_blob(raw)
+        entries.append({'path': path, 'mode': '100644', 'type': 'blob', 'sha': root_sha})
+        tree = self.requester('POST', '/git/trees', {'base_tree': commit['tree']['sha'], 'tree': entries})
+        saved = self.requester('POST', '/git/commits', {'message': 'Persist verified BCT sidecar generation',
+                              'tree': tree['sha'], 'parents': [head]})
+        if self.head() != head:
+            raise StoreConflict('sidecar branch changed before publication')
+        result = self.requester('PATCH', '/git/refs/heads/' + quote(self.branch, safe=''),
+                                {'sha': saved['sha'], 'force': False})
+        if result['object']['sha'] != saved['sha']:
+            raise ValueError('published ref does not match created commit')
+        self.last_commit = saved['sha']
+        # Read the exact published commit, independent of mutable ref visibility.
+        if self._root(path, saved['sha'])[1] != root_sha:
+            raise ValueError('published root readback mismatch')
+        return root_sha
 
 
 def main():

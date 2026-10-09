@@ -1,0 +1,36 @@
+name: BCT recovery storage gates
+on:
+  push:
+    branches: [ops/recovery-20261010]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: future-bottleneck-results
+  cancel-in-progress: false
+jobs:
+  storage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify storage, preserving merge and legacy regressions
+        run: |
+          python -m pip install -e '.[test]'
+          python -m pytest -q tests/test_future_github.py tests/test_future_github_shards.py tests/test_future_github_atomic.py tests/test_future_store.py
+      - name: Gate 0 then real GitHub storage Gate 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/scripts/bct_storage_recovery.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-recovery-checkpoint-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/bct-recovery/checkpoint.json
+            ${{ runner.temp }}/bct-recovery/*.log
+          if-no-files-found: error
+          retention-days: 30

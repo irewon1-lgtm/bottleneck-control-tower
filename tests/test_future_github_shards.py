@@ -55,7 +55,7 @@ class Remote:
         return {'content': {'sha': sha}}
 
     def transport(self):
-        return storage.GitHubTransport('owner/repo', 'test-data', 'test-token', requester=self.request)
+        return storage.LegacyGitHubTransport('owner/repo', 'test-data', 'test-token', requester=self.request)
 
 
 def payload(megabytes):
@@ -120,7 +120,7 @@ def test_new_shard_readback_uses_returned_immutable_sha_when_branch_lookup_lags(
         if method == 'GET' and '/contents/' in suffix and '.shards/' in suffix:
             raise FileNotFoundError('new branch path not yet visible')
         return original_request(method, suffix, payload)
-    transport = storage.GitHubTransport('owner/repo', 'test-data', 'test-token', requester=lagging_branch)
+    transport = storage.LegacyGitHubTransport('owner/repo', 'test-data', 'test-token', requester=lagging_branch)
     transport.write(PATH, payload(19), transport.read(PATH).sha)
     assert remote.transport().read(PATH).document == payload(19)
 
@@ -132,7 +132,7 @@ def test_staged_immutable_blob_corruption_cannot_publish_manifest():
         if method == 'GET' and '/git/blobs/' in suffix and len(base64.b64decode(value['content'])) > 1024:
             value['content'] = base64.b64encode(b'corrupted').decode()
         return value
-    transport = storage.GitHubTransport('owner/repo', 'test-data', 'test-token', requester=corrupt_staged)
+    transport = storage.LegacyGitHubTransport('owner/repo', 'test-data', 'test-token', requester=corrupt_staged)
     old = remote.files[PATH]
     with pytest.raises(ValueError, match='staged blob'):
         transport.write(PATH, payload(19), transport.read(PATH).sha)

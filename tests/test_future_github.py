@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from bct.future_github import GitHubTransport
+from bct.future_github import LegacyGitHubTransport as GitHubTransport
 from bct.future_store import Snapshot
 
 
