@@ -372,7 +372,7 @@
       value.setAttribute("data-recovery-state",state);
       metrics.append(value);
     });
-    box.append(metrics,node("p",`문서 버전 ${number(recovery.total_queue_versions)}개를 중복 없이 구분했습니다. 과거 실패 ${number(recovery.preserved_failure_versions)}건과 부분 본문 판독 결과 ${number(recovery.legacy_partial_read_results)}건은 이력으로 보존하며 FULL 완료에 더하지 않습니다.`,"data-note"));
+    box.append(metrics,node("p",`문서 버전 ${number(recovery.total_queue_versions)}개를 중복 없이 구분했습니다. 과거 실패 ${number(recovery.preserved_failure_versions)}건과 부분 본문 판독 결과 ${number(recovery.non_full_read_results ?? recovery.legacy_partial_read_results)}건은 이력으로 보존하며 FULL 완료에 더하지 않습니다.`,"data-note"));
     return box;
   }
   async function readStoredJSON(base, name, options) {

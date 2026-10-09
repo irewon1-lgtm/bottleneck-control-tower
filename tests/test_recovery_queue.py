@@ -56,14 +56,18 @@ def test_full_reading_and_candidate_evidence_wait_are_two_distinct_axes(tmp_path
 
 
 @pytest.mark.parametrize('read', [True, False])
-def test_corrected_excerpt_preserves_stored_judgment_without_operating_full_completion(tmp_path,read):
+@pytest.mark.parametrize('rule', ['ARTICLE_TERMINAL_ELLIPSIS_V1','AUTHOR_METADATA_ONLY_V1',
+                                  'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT_V1'])
+def test_corrected_excerpt_preserves_stored_judgment_without_operating_full_completion(tmp_path,read,rule):
     c,t,v,body,digest=fixture(status='FULL',read=read)
     old=dict(c['results']['doc']['versions'][digest])
     obs={v[0]['url']:{'body_status':'PARTIAL','body_sha256':digest,'status':'PARTIAL',
-                     'reclassification_rule':'ARTICLE_TERMINAL_ELLIPSIS_V1'}}
+                     'reclassification_rule':rule}}
     result=project(c,t,v,obs,tmp_path)
     assert result['counts']['SOURCE_WAIT']==1 and result['counts']['COMPLETED']==0
     assert result['legacy_read_results']==int(read)
+    assert result['source_corrected_read_results']==result['non_full_read_results']==int(read)
+    assert result['legacy_partial_read_results']==0
     assert result['version_rows'][0]['source_completeness_corrected'] is True
     assert c['results']['doc']['versions'][digest]==old
     # A newly acquired original body must not revalidate the old related teaser.

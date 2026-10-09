@@ -6,7 +6,8 @@ from datetime import datetime, timezone
 from collections import defaultdict, deque
 from urllib.parse import urlsplit
 
-from .future_body import read_cached_body, cache_body, is_control_only_body, has_terminal_excerpt_marker
+from .future_body import (read_cached_body, cache_body, is_control_only_body,
+                          has_terminal_excerpt_marker, is_author_metadata_only_body, is_video_summary_body)
 
 
 def restore_observations(root, cache, *, now=None, retry_errors=False, reinspect_urls=()):
@@ -48,19 +49,29 @@ def restore_observations(root, cache, *, now=None, retry_errors=False, reinspect
                               reclassification_rule='ARTICLE_CONTROL_ONLY_V1')
                 record['reasons'] = list(dict.fromkeys([*record.get('reasons', []), 'ARTICLE_CONTROL_ONLY']))
                 record['completeness'] = {**record.get('completeness', {}), 'assessment': 'UI_CONTROL_ONLY'}
-            elif record.get('body_status') == 'FULL' and has_terminal_excerpt_marker(body):
+            elif record.get('body_status') == 'FULL' and (has_terminal_excerpt_marker(body)
+                                                        or is_author_metadata_only_body(body)
+                                                        or is_video_summary_body(body,url)):
+                metadata = is_author_metadata_only_body(body)
+                video = is_video_summary_body(body,url)
                 record['prior_observation_classification'] = {
                     key: record.get(key) for key in ('status', 'body_status', 'body_sha256', 'completeness', 'reasons')}
                 record.update(status='PARTIAL', body_status='PARTIAL',
-                              reclassification_rule='ARTICLE_TERMINAL_ELLIPSIS_V1',
+                              reclassification_rule=('AUTHOR_METADATA_ONLY_V1' if metadata else
+                                                     'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT_V1' if video else 'ARTICLE_TERMINAL_ELLIPSIS_V1'),
                               classification_corrected_at=datetime.now(timezone.utc).isoformat())
-                record['reasons'] = list(dict.fromkeys([*record.get('reasons', []), 'TERMINAL_EXCERPT_MARKER']))
-                record['completeness'] = {**record.get('completeness', {}), 'assessment': 'UNFINISHED_EXCERPT'}
+                record['reasons'] = list(dict.fromkeys([*record.get('reasons', []),
+                                                       'AUTHOR_METADATA_ONLY' if metadata else
+                                                       'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT' if video else 'TERMINAL_EXCERPT_MARKER']))
+                record['completeness'] = {**record.get('completeness', {}),
+                                         'assessment': 'AUTHOR_METADATA_ONLY' if metadata else
+                                         'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT' if video else 'UNFINISHED_EXCERPT'}
         reason = record.get('reason')
         category = record.get('access_diagnostic', {}).get('category')
         due = record.get('resume_after', float('inf')) <= at
         if url in reinspect_urls:
-            if not retry_errors or record.get('reclassification_rule')!='ARTICLE_TERMINAL_ELLIPSIS_V1':
+            if not retry_errors or record.get('reclassification_rule') not in (
+                    'ARTICLE_TERMINAL_ELLIPSIS_V1','AUTHOR_METADATA_ONLY_V1'):
                 raise ValueError('source scope reinspection requires changed code and confirmed excerpt defect')
             pending[url]=record
         elif (not record['attempted'] and reason == 'RUNNER_DEADLINE'

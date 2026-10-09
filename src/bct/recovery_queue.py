@@ -20,7 +20,8 @@ def key(item):
 def corrected_version(observation,body_hash):
     while isinstance(observation,dict):
         if (observation.get('body_sha256')==body_hash and observation.get('reclassification_rule') in
-                ('ARTICLE_CONTROL_ONLY_V1','ARTICLE_TERMINAL_ELLIPSIS_V1')):
+                ('ARTICLE_CONTROL_ONLY_V1','ARTICLE_TERMINAL_ELLIPSIS_V1','AUTHOR_METADATA_ONLY_V1',
+                 'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT_V1')):
             return observation
         observation=observation.get('prior_source_observation')
     return None
@@ -82,10 +83,14 @@ def project(candidates,tracking,versions,observations,cache):
     if sum(counts.values())!=len(rows) or set(counts)-set(STATES):
         raise ValueError('operational queue state partition mismatch')
     legacy=[x for x in records.values() if document_complete(tracking,x)]
+    corrected_reads=[x for x in legacy if x.get('body_status')=='FULL'
+                     and corrected_version(observations.get(x.get('url'),{}),x.get('body_sha256'))]
     return {'format':'bct-recovery-queue-v1','version_rows':rows,
             'counts':{s:counts[s] for s in STATES},'total_queue_versions':len(rows),
             'preserved_failure_versions':len(versions),'legacy_read_results':len(legacy),
             'legacy_partial_read_results':sum(x.get('body_status')=='PARTIAL' for x in legacy),
+            'source_corrected_read_results':len(corrected_reads),
+            'non_full_read_results':sum(x.get('body_status')!='FULL' for x in legacy)+len(corrected_reads),
             'historical_completed_failed_overlap':sum(key(x) in failures for x in legacy),
             'candidate_evidence_wait':sum(r['evidence_state']=='EVIDENCE_WAIT' for r in rows),
             'completion_failure_state_overlap':0,'prediction_performance':'UNVERIFIED'}

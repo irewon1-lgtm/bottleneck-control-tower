@@ -5,6 +5,33 @@ from typing import Any
 from .future_reader import validate_output
 
 
+def quarantine_corrected_readings(previous, corrections):
+    """Keep corrected-source receipts as history, never import as completions.
+
+    A changed source inventory must still pass normal order/hash validation.
+    Only explicit, hash-bound completeness corrections can withhold receipts.
+    Qualification history is immutable and cannot be silently requalified.
+    """
+    restored=deepcopy(previous);held=[]
+    for batch in restored.get('batches',[]):
+        kept=[]
+        for result in batch.get('results',[]):
+            key=result['document_id'],result['body_sha256']
+            correction=corrections.get(key)
+            if correction is None:
+                kept.append(result);continue
+            if (previous.get('mode')!='DRAIN' or correction.get('body_sha256')!=key[1]
+                    or correction.get('reclassification_rule') not in (
+                        'ARTICLE_CONTROL_ONLY_V1','ARTICLE_TERMINAL_ELLIPSIS_V1','AUTHOR_METADATA_ONLY_V1',
+                        'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT_V1')):
+                raise ValueError('prior reading quarantine requires exact source correction')
+            held.append({'result':deepcopy(result),'source_correction':deepcopy(correction),
+                         'preserved_from_run_id':previous['run_id'],
+                         'reason':'SOURCE_COMPLETENESS_CORRECTED'})
+        batch['results']=kept
+    return restored,held
+
+
 def resume_batches(previous,items,config,*,limits=(1,10,50)):
     if not previous:return []
     if not any(b.get('results') for b in previous.get('batches',[])):return []

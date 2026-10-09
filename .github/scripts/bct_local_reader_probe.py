@@ -17,7 +17,8 @@ from urllib.request import urlopen
 from bct.future_github import GitHubTransport
 from bct.future_local_reader import LocalCPUQuickReader
 from bct.future_review import _records, document_complete
-from bct.recovery_pilot import resume_batches
+from bct.recovery_pilot import resume_batches,quarantine_corrected_readings
+from bct.recovery_queue import corrected_version
 
 
 def digest(path):
@@ -130,8 +131,18 @@ def main():
         already_applied=(previous_checkpoint.exists() and json.loads(previous_checkpoint.read_text()).get('gate5')=='PASS')
         qualification=(previous.get('qualification_pilot') if previous.get('mode')=='DRAIN'
                        else previous if already_applied else None)
+        corrections={key:correction for key,item in version_map.items()
+                     if (correction:=corrected_version(observations.get(item.get('url'),{}),key[1]))}
+        qualification_corrected=[result for batch in (qualification or {}).get('batches',[])
+                                 for result in batch.get('results',[])
+                                 if (result['document_id'],result['body_sha256']) in corrections]
         qualified=bool(qualification and qualification.get('probe_status')=='PASS'
-                       and [b.get('limit') for b in qualification.get('batches',[])]==[1,10,50])
+                       and [b.get('limit') for b in qualification.get('batches',[])]==[1,10,50]
+                       and not qualification_corrected)
+        if qualification_corrected:
+            report['previous_qualification_pilot']=deepcopy(qualification)
+            report['qualification_source_corrections']=deepcopy(qualification_corrected)
+            report['qualification_restart_reason']='PRIOR_FULL_SOURCE_COMPLETENESS_CORRECTED'
         report['mode']='DRAIN' if qualified else 'QUALIFICATION'
         limits: tuple[int,...]
         if qualified:
@@ -144,7 +155,9 @@ def main():
             if len(items)<61:raise RuntimeError('61 distinct recovered FULL unread pilot documents unavailable')
             limits=(1,10,50)
         report['batch_limits']=list(limits)
-        report['batches']=resume_batches(previous,items,config,limits=limits) if not already_applied else []
+        resumable,held=quarantine_corrected_readings(previous,corrections)
+        report['held_prior_readings']=[*previous.get('held_prior_readings',[]),*held]
+        report['batches']=resume_batches(resumable,items,config,limits=limits) if not already_applied and not qualification_corrected else []
         report['prior_pilot_already_applied']=already_applied
         report['prior_model_calls_restored']=sum(len(b['results']) for b in report['batches'])
         if previous:

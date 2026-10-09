@@ -78,6 +78,27 @@ def has_terminal_excerpt_marker(text):
     return bool(re.search(r'(?:\.{3}|…)[\s\"”’\x27]*$', str(text)))
 
 
+def is_author_metadata_only_body(text):
+    """Observed author biography plus adjacent links is not article prose.
+
+    Require the biography to be the second block, not a mention within an
+    otherwise substantive article. Keep the text and hash as partial evidence.
+    """
+    blocks = str(text).splitlines()
+    return (len(blocks) >= 5 and len(blocks[0].split()) <= 5
+            and bool(re.search(r'\bwrites, edits and produces\b.{0,100}\bnews articles\b', blocks[1]))
+            and 'Previous Article' in blocks and 'Next Article' in blocks)
+
+
+def is_video_summary_body(text, url):
+    """An observed official video synopsis is not a captured transcript."""
+    blocks = str(text).splitlines()
+    return (bool(re.match(r'https://(?:www\.)?datacenterdynamics\.com/en/videos/', str(url)))
+            and bool(blocks and blocks[0].startswith('DCD Studio:'))
+            and 'Tags' in blocks and 'Comments' in blocks
+            and not re.search(r'\btranscript\b', str(text), re.I))
+
+
 class _Node:
     def __init__(self, tag, attrs=None):
         self.tag, self.attrs, self.children, self.closed = tag, dict(attrs or ()), [], False
@@ -185,7 +206,21 @@ def _json_articles(value):
 
 
 def _publisher_body_scopes(nodes):
-    """Verified HPCwire single-post layout separates prose from article cards."""
+    """Verified single-post layouts separate primary prose from UI wrappers."""
+    canonicals=[n.attrs.get('href','') for n in nodes if n.tag=='link' and n.attrs.get('rel')=='canonical']
+    goodlife=any(n.tag=='body' and {'single-post','wp-theme-goodlife-wp'} <=
+                 set(str(n.attrs.get('class','')).split()) for n in nodes)
+    digest_urls=[u for u in canonicals if re.match(r'https://(?:www\.)?semiconductor-digest\.com/[^/]+/',u)]
+    if goodlife and len(digest_urls)==1:
+        # This publisher puts entry-content inside share-container. Do not
+        # globally stop filtering share UI; select only the canonical article.
+        scopes: list[_Node]=[]
+        for article in nodes:
+            if article.tag!='article' or article.attrs.get('data-url')!=digest_urls[0]:continue
+            scopes.extend(n for n in _nodes(article) if n.tag=='div'
+                          and {'post-content','entry-content'} <= set(str(n.attrs.get('class','')).split())
+                          and any(c.tag=='p' and _text(c) for c in _nodes(n)))
+        return scopes if len(scopes)==1 else []
     themed=any(n.tag=='body' and 'wp-theme-hpc-theme' in str(n.attrs.get('class','')).split()
                and 'single-post' in str(n.attrs.get('class','')).split() for n in nodes)
     canonical=any(n.tag=='link' and n.attrs.get('rel')=='canonical' and
@@ -298,6 +333,13 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
         if body and has_terminal_excerpt_marker(body):
             status = "PARTIAL"
             reasons.append("TERMINAL_EXCERPT_MARKER")
+        if body and is_author_metadata_only_body(body):
+            status = "PARTIAL"
+            reasons.append("AUTHOR_METADATA_ONLY")
+        canonical_urls=[n.attrs.get('href','') for n in nodes if n.tag=='link' and n.attrs.get('rel')=='canonical']
+        if body and any(is_video_summary_body(body,u) for u in canonical_urls):
+            status = "PARTIAL"
+            reasons.append("VIDEO_SUMMARY_WITHOUT_TRANSCRIPT")
         tables = [n for n in _nodes(node or doc.root) if n.tag == "table" and not _skipped(n)]
         table_rows = sum(1 for t in tables for n in _nodes(t) if n.tag == "tr" and _blocks(n))
         if body and (any(not any(n.tag in {"td", "th"} and _text(n) for n in _nodes(t)) for t in tables)

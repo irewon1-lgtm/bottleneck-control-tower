@@ -121,6 +121,10 @@ def execute():
                 if key in seen:raise ValueError('duplicate actual pilot reading')
                 seen.add(key);item=records.get(key)
                 if item is None or item['body_status']!='FULL':raise ValueError('pilot source version unavailable or not FULL')
+                observation=observations.get(item.get('url'),{})
+                if (observation.get('body_status')!='FULL' or observation.get('body_sha256')!=key[1]
+                        or corrected_version(observation,key[1])):
+                    raise ValueError('pilot source completeness corrected or actual FULL access missing')
                 body=(root/'private-source-cache'/(key[1]+'.txt')).read_text()
                 if hashlib.sha256(body.encode()).hexdigest()!=key[1] or len(body)!=result['expected_read_end'] or len(body)!=item['body_chars']:
                     raise ValueError('pilot reading binding changed')
