@@ -25,6 +25,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python .github/scripts/bct_storage_recovery.py
+      - name: Gate 2 original source access on GitHub runner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/scripts/bct_source_audit.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -32,5 +36,7 @@ jobs:
           path: |
             ${{ runner.temp }}/bct-recovery/checkpoint.json
             ${{ runner.temp }}/bct-recovery/*.log
+            ${{ runner.temp }}/bct-recovery/source-audit.json
+            ${{ runner.temp }}/bct-recovery/private-source-cache/*.txt
           if-no-files-found: error
           retention-days: 30

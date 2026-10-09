@@ -13,6 +13,34 @@ import os
 from pathlib import Path
 import re
 import tempfile
+import socket
+import ssl
+from urllib.error import HTTPError, URLError
+
+
+def access_failure(exc):
+    """Keep environment/HTTP failures distinct; never infer absent source text."""
+    reason = exc.reason if isinstance(exc, URLError) else exc
+    if isinstance(exc, HTTPError):
+        status = exc.code
+        retry = (exc.headers or {}).get('Retry-After')
+        retry = retry if retry and retry.isdigit() else None
+        state = ('SOURCE_WAIT' if status == 429 or status >= 500 else
+                 'UNAVAILABLE' if status in (404, 410) else 'SOURCE_BLOCKED')
+        return {'category': 'HTTP_' + str(status), 'http_status': status,
+                'state': state, 'retryable': status == 429 or status >= 500,
+                'retry_after_seconds': int(retry) if retry else None}
+    if isinstance(reason, socket.gaierror):
+        return {'category': 'DNS_RESOLUTION_FAILED', 'state': 'SOURCE_WAIT',
+                'retryable': reason.errno == socket.EAI_AGAIN, 'dns_errno': reason.errno}
+    if isinstance(reason, ssl.SSLError):
+        return {'category': 'TLS_FAILED', 'state': 'SOURCE_BLOCKED', 'retryable': False}
+    if isinstance(reason, (TimeoutError, socket.timeout)):
+        return {'category': 'TIMEOUT', 'state': 'SOURCE_WAIT', 'retryable': True}
+    if isinstance(reason, ConnectionError) or isinstance(exc, URLError):
+        return {'category': 'CONNECTION_FAILED', 'state': 'SOURCE_WAIT', 'retryable': True}
+    return {'category': 'COLLECTOR_ERROR', 'state': 'ERROR', 'retryable': False,
+            'error_type': type(exc).__name__}
 
 
 _VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
@@ -326,7 +354,7 @@ def discovery_document(record, body):
 
 def public_metadata(result, *, redistribution_allowed=False):
     """Exclude arbitrary article full text from public sidecars by default."""
-    allowed = {"body_status", "body_sha256", "body_chars", "extraction_method", "reasons", "completeness", "acquisition_status"}
+    allowed = {"body_status", "body_sha256", "body_chars", "extraction_method", "reasons", "completeness", "acquisition_status", "access_diagnostic"}
     source = result.get("metadata", result)
     out = {k: deepcopy(v) for k, v in source.items() if k in allowed}
     out.update(verified_source_metadata(source, source.get('body_sha256')))
@@ -414,8 +442,10 @@ def acquire_document(url, source_version, prior, cache_dir, fetcher, *, trigger=
         else:
             raise TypeError("fetcher must return HTML or an extraction object")
     except Exception as exc:
+        diagnostic = access_failure(exc)
         extraction = {"body": "", "body_status": "UNAVAILABLE", "body_sha256": None, "body_chars": 0,
-                      "extraction_method": "FAILED", "reasons": [type(exc).__name__]}
+                      "extraction_method": "FAILED", "reasons": [diagnostic['category'], type(exc).__name__],
+                      "access_diagnostic": diagnostic}
     body = extraction.get("body", "")
     if body:
         extraction["body_sha256"] = cache_body(cache_dir, body)
