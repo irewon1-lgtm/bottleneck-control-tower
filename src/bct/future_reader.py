@@ -7,11 +7,12 @@ import json
 import math
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
+from typing import Any
 
 from .future_review import FINAL_DISPOSITIONS
 
 
-SCHEMA = {
+SCHEMA: dict[str,Any] = {
     "type": "object",
     "properties": {
         "disposition": {"type": "string", "enum": sorted(FINAL_DISPOSITIONS | {"INCOMPLETE"})},

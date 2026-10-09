@@ -49,6 +49,14 @@ def main():
         tracking = transport.read('future-tracking.json')
         preservation_baseline=json.loads(Path('config/bct-recovery-preservation.json').read_text())
         report['identity_preservation']=verify_preservation(original.document,tracking.document,preservation_baseline)
+        recovered_seal=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume/recovery-preservation-seal.json'
+        if recovered_seal.exists():
+            request=json.loads(Path('.github/bct-recovery-request.json').read_text())
+            expected=request.get('resume_file_sha256',{}).get('recovery-preservation-seal.json')
+            if hashlib.sha256(recovered_seal.read_bytes()).hexdigest()!=expected:
+                raise ValueError('recovered preservation seal must be pinned in resume request')
+            report['recovered_identity_preservation']=verify_preservation(
+                original.document,tracking.document,json.loads(recovered_seal.read_text()))
         before = queue_summary(original.document, tracking.document)
         # The immutable repair baseline includes these records, regardless of
         # subsequent legitimate inflow/recovery. Never initialize over them.

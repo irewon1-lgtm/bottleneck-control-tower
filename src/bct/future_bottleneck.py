@@ -6,6 +6,7 @@ import hashlib
 from html.parser import HTMLParser
 import ipaddress
 import json
+from typing import Any
 from pathlib import Path
 import re
 import socket
@@ -177,7 +178,7 @@ def screen(body, tracked_terms=()):
             start = match.start() + len(match.group()) - len(match.group().lstrip())
             end = start + len(sentence)
             sentence_rows.append((sentence, start, end, body.count("\n", 0, start) + 1))
-    path_indexes = {"DEMAND": set(), "SUPPLY": set(), "RELIEF": set(), "TRACKED_CHANGE": set()}
+    path_indexes: dict[str,set[int]] = {"DEMAND": set(), "SUPPLY": set(), "RELIEF": set(), "TRACKED_CHANGE": set()}
     uncertain_indexes = set()
     digital_noise = False
     for i, (sentence, start, end, paragraph) in enumerate(sentence_rows):
@@ -218,8 +219,8 @@ def screen(body, tracked_terms=()):
     qualifying = set().union(*path_indexes.values())
     candidate = bool(qualifying)
     context_review = candidate and bool(qualifying & uncertain_indexes)
-    locations = {}
-    evidence = {}
+    locations: dict[str,list[dict]] = {}
+    evidence: dict[str,list[str]] = {}
     remaining = 24
     for path, indexes in path_indexes.items():
         if not indexes:
@@ -234,7 +235,7 @@ def screen(body, tracked_terms=()):
                 words = sentence.split()[:min(8, remaining)]
                 evidence[path].append(" ".join(words))
                 remaining -= len(words)
-    targets = {}
+    targets: dict[str,Any] = {}
     # Names remain extraction leads, and never establish a supply-chain relation.
     for i in sorted(qualifying):
         sentence, start, end, paragraph = sentence_rows[i]
@@ -348,7 +349,7 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
     if detection_mode not in ('LIVE', 'BACKFILL', 'SYNTHETIC'):
         raise ValueError('invalid detection mode')
     output = Path(output)
-    state = json.loads(output.read_text()) if output.exists() else {"version": VERSION, "results": {}}
+    state: dict[str,Any] = json.loads(output.read_text()) if output.exists() else {"version": VERSION, "results": {}}
     if state.get("version") not in (VERSION, "body-candidate-v2"):
         raise ValueError("version mismatch; use a separate output")
     terms = set(tracked_terms)

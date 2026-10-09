@@ -300,3 +300,19 @@ test("fresh queue still renders when TARGET refresh fails, with stale TARGET war
   assert(!queue.textContent.includes("최신 대기 기록을 읽지 못했습니다"));
   assert.equal(metricValues(queue)["판독 완료"], "2");
 });
+
+test("operating queue partitions FULL completion and failure without adding partial historical reads", async () => {
+  const data = fixtures();
+  data.candidates.summary.recovery_queue={generation_run_id:"new-run",total_queue_versions:23,
+    counts:{PENDING:7,PROCESSING:1,COMPLETED:3,SOURCE_WAIT:4,EVIDENCE_WAIT:2,FAILED:5,RETRY_SCHEDULED:1},
+    preserved_failure_versions:17,legacy_partial_read_results:2};
+  const before=clone(data), page=await app(data);
+  const queue=headingPanel(page.content,"처리 대기 현황"), values=metricValues(queue);
+  assert.equal(values["FULL 판독 완료"],"3");
+  assert.equal(values["남은 실패"],"5");
+  assert.equal(values["보존된 판독 결과"],"2");
+  assert.equal(values["실제 판독 대기"],"7");
+  assert.equal(walk(queue).find(el=>el.attributes["data-recovery-generation"]).attributes["data-recovery-generation"],"new-run");
+  assert.match(queue.textContent,/부분 본문 판독 결과 2건/);
+  assert.deepEqual(data,before);
+});

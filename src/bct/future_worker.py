@@ -18,7 +18,7 @@ from .future_bottleneck import fetch_html
 from .future_reader import OpenAIQuickReader, estimated_cost, validate_output
 from .future_review import (READER_VERSION, event_groups, queue_items, queue_summary,
                             save_review)
-from .future_store import LocalJSONTransport, store_patch
+from .future_store import LocalJSONTransport, JSONTransport, store_patch
 
 
 LOCK_ID = "future-quick-worker-lock"
@@ -290,6 +290,7 @@ def main(argv=None):
     if args.review_mode == "API_REVIEW":
         reader = OpenAIQuickReader(api_key=os.environ.get("BCT_REVIEW_API_KEY") or os.environ.get("OPENAI_API_KEY"),
                                   model=args.model, provider=args.provider, base_url=args.base_url)
+    transport: JSONTransport
     if args.repository and reader is not None and not reader.preflight():
         from .future_github import GitHubTransport
         transport = GitHubTransport(args.repository, args.branch,

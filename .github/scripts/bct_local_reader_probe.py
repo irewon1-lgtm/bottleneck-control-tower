@@ -136,7 +136,10 @@ def main():
         limits: tuple[int,...]
         if qualified:
             report['qualification_pilot']=deepcopy(qualification)
-            limits=(min(50,len(items)),) if items else ()
+            request=json.loads(Path('.github/bct-recovery-request.json').read_text())
+            maximum=request.get('reader_batch_limit',50)
+            if type(maximum) is not int or not 1<=maximum<=50:raise ValueError('invalid bounded production reader batch size')
+            limits=(min(maximum,len(items)),) if items else ()
         else:
             if len(items)<61:raise RuntimeError('61 distinct recovered FULL unread pilot documents unavailable')
             limits=(1,10,50)

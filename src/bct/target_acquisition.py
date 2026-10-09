@@ -252,7 +252,7 @@ def collect(plan_value, output, *, direct_urls=None, search_endpoint=None, worke
     """100 request batches; completed request files make resumption idempotent."""
     output = Path(output); output.mkdir(parents=True, exist_ok=True)
     direct_urls = direct_urls or {}
-    searches, failures, url_jobs = [], [], {}
+    searches, url_jobs = [], {}
     provider_blocked = None
     for offset in range(0, len(plan_value['requests']), 100):
         batch = plan_value['requests'][offset:offset + 100]

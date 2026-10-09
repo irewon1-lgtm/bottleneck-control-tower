@@ -17,6 +17,7 @@ import tempfile
 import socket
 import ssl
 from urllib.error import HTTPError, URLError
+from typing import Any
 
 
 def access_failure(exc):
@@ -24,7 +25,7 @@ def access_failure(exc):
     reason = exc.reason if isinstance(exc, URLError) else exc
     if isinstance(exc, HTTPError):
         status = exc.code
-        retry = (exc.headers or {}).get('Retry-After')
+        retry = exc.headers.get('Retry-After') if exc.headers else None
         retry = retry if retry and retry.isdigit() else None
         state = ('SOURCE_WAIT' if status == 429 or status >= 500 else
                  'UNAVAILABLE' if status in (404, 410) else 'SOURCE_BLOCKED')
@@ -324,7 +325,7 @@ SOURCE_FIELDS = frozenset({'origin_id', 'origin_url', 'origin_publisher', 'prove
 
 def verified_source_metadata(source, body_sha256):
     """Preserve only explicit verification bound to this body snapshot."""
-    out = {}
+    out: dict[str,Any] = {}
     if not body_sha256:
         return out
     evidence = source.get('provenance_evidence') or {}

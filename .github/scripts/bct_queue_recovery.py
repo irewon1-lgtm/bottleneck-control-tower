@@ -10,7 +10,7 @@ from typing import Any
 from bct.future_github import GitHubTransport
 from bct.future_review import _records, document_complete, review_patch, validate_review, queue_summary, READER_VERSION
 from bct.future_store import apply_owned_patch
-from bct.recovery_preservation import verify
+from bct.recovery_preservation import verify,seal
 from bct.recovery_queue import project
 from bct.recovery_pilot import resume_batches
 from bct.recovery_versions import append_observed_versions
@@ -138,6 +138,8 @@ def execute():
         if confirmed_c.document!=candidates or confirmed_t.document!=merged:
             raise ValueError('queue/reading generation readback differs')
         verify(confirmed_c.document,confirmed_t.document,baseline)
+        retained=seal(confirmed_c.document,confirmed_t.document)
+        (root/'recovery-preservation-seal.json').write_text(json.dumps(retained,ensure_ascii=False,indent=2)+'\n')
         if confirmed_c.document['results']!=candidate_document['results']:
             raise ValueError('queue recovery changed source decisions/scores')
         for field in ('targets','prediction_ledger'):

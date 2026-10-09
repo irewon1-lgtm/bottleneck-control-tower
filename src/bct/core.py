@@ -6,12 +6,11 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from sqlalchemy import select, update
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from .collector import MalformedRecord, SourceRecord
 from .config import Settings
-from .models import AuditLog, CollectorRun, Entity, EvidenceFreeze, Job, RawDocument, new_id, now
+from .models import AuditLog, CollectorRun, Entity, EvidenceFreeze, Job, RawDocument, now
 
 
 def audit(session: Session, event: str, kind: str, object_id: str, details: dict) -> None:

@@ -10,10 +10,11 @@ from copy import deepcopy
 from datetime import date, datetime, timedelta, timezone
 import hashlib
 import json
+from typing import Any
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
-from .future_store import LocalJSONTransport, PatchError, StoreResult, apply_owned_patch, store_patch, validate_version_refs
+from .future_store import LocalJSONTransport, PatchError, StoreResult, store_patch, validate_version_refs
 
 
 READER_VERSION = "bct-v33-reader-1"
@@ -129,7 +130,7 @@ def failure_index(tracking):
     """Explicit failed attempts are archived, never fabricated read completions."""
     runs = tracking.get("runs", {})
     runs = runs.values() if isinstance(runs, dict) else runs
-    index = {}
+    index: dict[tuple,dict] = {}
     for run in runs:
         if not isinstance(run, dict) or run.get("type") != "queue_resolution" or run.get("state") != "FAIL":
             continue
@@ -183,7 +184,8 @@ def queue_items(candidates, tracking, *, now=None, reader_version=READER_VERSION
         if latest.get("disposition") == "DATA_INSUFFICIENT" or latest.get("candidate_state") == "DATA_WAIT":
             data_wait.append(item)
     queues = {"quick": quick, "material": material, "completed": completed, "deep": deep, "data_wait": data_wait}
-    failures, archived = failure_index(tracking), {}
+    failures = failure_index(tracking)
+    archived: dict[tuple,dict] = {}
     for lane in ("quick", "material", "deep", "data_wait"):
         active = []
         for item in queues[lane]:
@@ -225,7 +227,8 @@ def event_groups(candidates):
     """
     records = list(_records(candidates))
     by_reference = {(x["document_id"], x.get("body_sha256")): x for x in records}
-    confirmations, assignments = {}, {}
+    confirmations: dict[tuple,list] = {}
+    assignments: dict[tuple,set] = {}
     # The bundle writer owns events, so persisted confirmations are the normal
     # reachable path. Recollection can update results without deleting these.
     for event_id, stored in candidates.get("events", {}).items():
@@ -244,11 +247,11 @@ def event_groups(candidates):
             key = (ref["document_id"], ref["body_sha256"])
             if key in by_reference:
                 assignments.setdefault(key, set()).add(token)
-    body_tokens = {}
+    body_tokens: dict[str,set] = {}
     for reference, tokens in assignments.items():
         if len(tokens) == 1:
             body_tokens.setdefault(reference[1], set()).update(tokens)
-    groups = {}
+    groups: dict[str,Any] = {}
     for item in records:
         body_hash = item.get("body_sha256")
         tokens = assignments.get((item["document_id"], body_hash), set())
@@ -257,21 +260,21 @@ def event_groups(candidates):
         authoritative = next(iter(tokens)) if len(tokens) == 1 else None
         confirmed = item.get("event_confirmed") is True and item.get("event_key")
         if authoritative:
-            key = ["CONFIRMED_EVENT", *authoritative]
+            event_key_parts = ["CONFIRMED_EVENT", *authoritative]
         elif confirmed and not tokens:
-            key = ["CONFIRMED_EVENT", item["event_key"], item.get("change_kind", "ORIGINAL")]
+            event_key_parts = ["CONFIRMED_EVENT", item["event_key"], item.get("change_kind", "ORIGINAL")]
         elif body_hash:
-            key = ["EXACT_BODY", body_hash]
+            event_key_parts = ["EXACT_BODY", body_hash]
         else:
             canonical = _canonical_url(item.get("canonical_url") or item.get("url"))
-            key = ["UNREAD_DOCUMENT", canonical or item["document_id"], item.get("source_version")]
-        event_id = "event-" + _hash(key)[:24]
+            event_key_parts = ["UNREAD_DOCUMENT", canonical or item["document_id"], item.get("source_version")]
+        event_id = "event-" + _hash(event_key_parts)[:24]
         prior = {}
         if authoritative:
             event_id, prior = min(confirmations[authoritative], key=lambda x: x[0])
-        event = groups.setdefault(event_id, {**deepcopy(prior), "id": event_id, "basis": key[0], "documents": []})
-        if key[0] == "CONFIRMED_EVENT":
-            event.update(confirmed=True, event_key=key[1], change_kind=key[2])
+        event = groups.setdefault(event_id, {**deepcopy(prior), "id": event_id, "basis": event_key_parts[0], "documents": []})
+        if event_key_parts[0] == "CONFIRMED_EVENT":
+            event.update(confirmed=True, event_key=event_key_parts[1], change_kind=event_key_parts[2])
         ref = {"document_id": item["document_id"], "body_sha256": body_hash}
         if not body_hash:
             ref["source_version"] = item.get("source_version")
@@ -337,7 +340,7 @@ def queue_summary(candidates, tracking, *, now=None, reader_version=READER_VERSI
 def full_queue_entries(candidates, tracking, *, now=None, reader_version=READER_VERSION):
     """All real review-list entries, including inaccessible material tasks."""
     queues = queue_items(candidates, tracking, now=now, reader_version=reader_version)
-    entries = {}
+    entries: dict[tuple,dict] = {}
     for name, kind in (("quick", "QUICK"), ("completed", "QUICK"), ("material", "MATERIAL"), ("deep", "DEEP"), ("failed", "MATERIAL")):
         for item in queues[name]:
             key = (item["document_id"], item.get("body_sha256"), item.get("source_version"))
@@ -368,7 +371,8 @@ def build_bundle(candidates, tracking, *, bundle_id=None, max_documents=10, max_
         not any(isinstance(f.get('period'), dict) for f in x.get('scope_facts', [])),
         x.get('queue_entered_at') or '', x['document_id']))
     selected.extend(x for x in priority if x not in selected)
-    refs, budget = [], max_chars
+    refs: list[dict] = []
+    budget = max_chars
     selected = selected[:max_documents]
     for index, item in enumerate(selected):
         if len(refs) >= max_documents or budget <= 0:
@@ -603,7 +607,7 @@ def review_patch(candidates, tracking, review):
                 month = zero_month + 1
                 dates.append(anchor.replace(year=year, month=month, day=min(anchor.day, calendar.monthrange(year, month)[1])).isoformat())
             entry["next_check_dates"] = dates
-        ledger = {"entries": [entry]}
+        ledger: dict[str,Any] = {"entries": [entry]}
         prior_ledger = tracking.get('prediction_ledger', {}).get(target_id, {})
         if not tracking.get("prediction_ledger", {}).get(target_id, {}).get("initial"):
             ledger["initial"] = {**entry, "first_discovered_at": normalized["reviewed_at"], "frozen": True}

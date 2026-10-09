@@ -313,6 +313,7 @@
     }
     if (!futureCandidates) { if (!candidatesError) box.append(empty("대기 기록 확인 중", "최근 파일을 불러옵니다.")); return box; }
     if (!queue) { box.append(empty("검토 대기 집계 준비 중", "기존 후보 기록은 보존돼 있습니다.")); return box; }
+    if (summary.recovery_queue?.counts) box.append(recoveryQueueMetrics(summary.recovery_queue));
     if (queueResolution?.data_store_status === "APPLIED_READBACK_VERIFIED"
         && Date.parse(queue.computed_at) < Date.parse(queueResolution.as_of)) {
       box.append(node("p", "아래는 실패 분리 전의 집계입니다. 처리 후 결과는 ‘정체 작업 처리 결과’에서 확인할 수 있습니다.", "data-note"));
@@ -321,7 +322,7 @@
     const metrics = node("div", null, "metrics");
     [["자동으로 걸린 문서", queue.automatic_candidates], ["1차 읽기 대기", queue.quick_pending],
      ["정밀 검토 대기", queue.deep_pending], ["추가 자료 대기", queue.candidate_data_wait],
-     ["원문 확보 대기", queue.material_pending], ["판독 완료", queue.completed_documents]].forEach(([label, value]) => metrics.append(metric(label, value)));
+     ["원문 확보 대기", queue.material_pending], [summary.recovery_queue?.counts ? "보존된 판독 결과" : "판독 완료", queue.completed_documents]].forEach(([label, value]) => metrics.append(metric(label, value)));
     if (queue.failed_versions != null) metrics.append(metric("실패로 종료한 작업", queue.failed_versions, "미해결이며 판독 완료에 포함하지 않습니다."));
     box.append(metrics, node("p", `최장 대기 ${queue.oldest_wait_hours == null ? "데이터 없음" : Number(queue.oldest_wait_hours).toFixed(1) + "시간"} · 사건 ${number(queue.event_count)}개`, "panel-caption"));
     const guide = node("div", null, "queue-guide");
@@ -359,6 +360,19 @@
       details.append(section);
     });
     box.append(details, articleTitle({title: "전체 문서·묶음 기록 열기", url: "https://github.com/irewon1-lgtm/bottleneck-control-tower/blob/future-bottleneck-data/future-candidates.json"}));
+    return box;
+  }
+  function recoveryQueueMetrics(recovery) {
+    const box = node("div", null, "recovery-queue");
+    box.setAttribute("data-recovery-generation", recovery.generation_run_id || "");
+    const labels = {PENDING:"실제 판독 대기",PROCESSING:"판독 진행 중",COMPLETED:"FULL 판독 완료",SOURCE_WAIT:"원문 대기",EVIDENCE_WAIT:"근거 대기",FAILED:"남은 실패",RETRY_SCHEDULED:"재시도 예약"};
+    const metrics = node("div", null, "metrics");
+    Object.entries(labels).forEach(([state,label]) => {
+      const value = metric(label,recovery.counts[state]);
+      value.setAttribute("data-recovery-state",state);
+      metrics.append(value);
+    });
+    box.append(metrics,node("p",`문서 버전 ${number(recovery.total_queue_versions)}개를 중복 없이 구분했습니다. 과거 실패 ${number(recovery.preserved_failure_versions)}건과 부분 본문 판독 결과 ${number(recovery.legacy_partial_read_results)}건은 이력으로 보존하며 FULL 완료에 더하지 않습니다.`,"data-note"));
     return box;
   }
   async function readStoredJSON(base, name, options) {
@@ -868,11 +882,13 @@
     if (!futureCandidates) {box.append(empty(candidatesError ? "본문·검토 기록을 읽지 못했습니다" : "본문·검토 기록 확인 중", "수집 기사 기록과 별도로 불러옵니다."));return box;}
     if(candidatesError) box.append(node("p","최신 자료를 읽지 못했습니다. 아래는 마지막으로 읽은 집계입니다.","data-note"));
     const summary = futureCandidates.summary || {}, queue = summary.review_queue || {};
+    const recovery = summary.recovery_queue;
+    if (recovery?.counts) box.append(recoveryQueueMetrics(recovery));
     const metrics=node("div",null,"research-stats");
-    [["처리 기록",summary.processed_total,"문서 처리 결과 수"],["자동으로 걸린 문서",queue.automatic_candidates,"미래병목 확정 수와 다름"],["판독 완료",queue.completed_documents,"저장된 완료 문서"],["검토 목록",queue.review_list_versions,"문서 버전 기준"]].forEach(([label,value,note])=>metrics.append(metric(label,value,note)));box.append(metrics);
+    [["처리 기록",summary.processed_total,"문서 처리 결과 수"],["자동으로 걸린 문서",queue.automatic_candidates,"미래병목 확정 수와 다름"],[recovery?.counts ? "보존된 판독 결과" : "판독 완료",queue.completed_documents,"부분 본문 판독을 포함한 과거 이력"],["검토 목록",queue.review_list_versions,"문서 버전 기준"]].forEach(([label,value,note])=>metrics.append(metric(label,value,note)));box.append(metrics);
     const statuses = {}; view.documents(futureCandidates).forEach(record=>{const s=record.body_status;statuses[s]=(statuses[s]||0)+1;});
     const labels={FULL:"본문 확보",PARTIAL:"부분 본문",UNAVAILABLE:"본문 미확보",UNAVAILABLE_THIS_RUN:"이번 실행 미확보"};
-    box.append(table(["본문 확보 상태", "저장된 결과 수"],Object.entries(statuses),([key,value])=>[labels[key]||key,value]));
+    if (!recovery?.counts) box.append(table(["본문 확보 상태", "저장된 결과 수"],Object.entries(statuses),([key,value])=>[labels[key]||key,value]));
     const counts=[["수집 범위 기사",summary.scope_articles],["이번 처리 문서",summary.processed_this_run],["이번 본문 확보",summary.body_ok_this_run],["1차 읽기 대기",queue.quick_pending],["원문 확보 대기",queue.material_pending],["정밀 검토 대기",queue.deep_pending],["보존된 문서 버전",queue.preserved_versions],["고정 검토 묶음",Object.keys(futureCandidates.bundles || {}).length]];
     box.append(node("p", "빠른 검토와 자료 확인 대기는 같은 문서가 겹칠 수 있어 합산하지 않습니다. 본문 캐시는 공개되지 않으며 원문 재접근 가능 여부는 달라질 수 있습니다.","data-note"),table(["확인 항목","저장된 수치"],counts,([label,value])=>[label,number(value)]));
     box.append(node("p",`수집 확인 ${date(summary.checked_at)} KST · 대기 집계 ${date(queue.computed_at)} KST · 최장 대기 ${queue.oldest_wait_hours == null ? "미기록" : queue.oldest_wait_hours+"시간"}`,"record-meta"));

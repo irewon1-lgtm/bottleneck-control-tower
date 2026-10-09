@@ -54,7 +54,7 @@ def bounded_plan(plan):
 
 
 def rank_url(url):
-    host=(urlsplit(url).hostname or '').lower();path=urlsplit(url).path.lower()
+    host=(urlsplit(url).hostname or '').lower()
     if host=='sec.gov' or host.endswith('.sec.gov'):return 0
     if re.search(r'\.gov(?:\.[a-z]{2})?$',host):return 1
     if re.search(r'(?:investor|/ir/|sec-filings|newsroom|press-release)',url,re.I):return 2

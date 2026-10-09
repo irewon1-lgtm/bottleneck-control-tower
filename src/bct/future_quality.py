@@ -111,8 +111,8 @@ def evaluate(
         reference.get("event_mapping_status") == "FROZEN_BEFORE_AUTO_RESULTS"
         or reference.get("event_mapping_frozen") is True
     )
-    metrics = {}
-    uncertain_events = []
+    metrics: dict[str,Any] = {}
+    uncertain_events: list[dict[str,Any]] = []
     full_claims_needing_confirmation = []
     for doc_id in ids:
         result = results.get(doc_id, {})

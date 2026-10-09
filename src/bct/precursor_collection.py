@@ -6,10 +6,8 @@ and EARLY/strict/S3 engines are called, never modified. No session creation.
 from contextlib import contextmanager
 from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
-from datetime import datetime, timezone
 import argparse
 import fcntl
-import hashlib
 import json
 from pathlib import Path
 import re
