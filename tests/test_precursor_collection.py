@@ -41,7 +41,10 @@ def test_new_scope_pair_common_window_and_synthesis(tmp_path,transport):
     r=c.cycle(tmp_path,manifest(['buyer','maker']))
     assert r['scope_complete_events']==2 and len(r['independent_demand_supply_pairs'])==1
     assert len(r['common_future_window_pairs'])==1 and r['synthesized_targets']==1
-    assert r['early_preflight']==1 and r['live_execution']['state']=='EXISTING_LIVE_STORE_NOT_CONFIGURED'
+    # The legacy raw preflight remains observable. Its 2031 demand is outside
+    # the objective's 12–36 month horizon and lacks a delivery need statement.
+    assert r['early_preflight']==1 and r['live_execution']['state']=='TARGET_GAP_NOT_VERIFIED'
+    assert r['gap_verified_early_preflight']==0 and r['unverified_legacy_preflight']==1
     assert r['existing_corpus_reprocessed']==0
     assert c.stored_documents(tmp_path)[0]['version']==c.stored_documents(tmp_path)[0]['body_sha256']
 
@@ -156,6 +159,11 @@ def test_actual_wrapper_freeze_on_existing_fixture_session(tmp_path,transport,mo
     monkeypatch.setattr(prospective,'_now',lambda:'2026-10-05T00:30:00+00:00')
     prospective.start(store,feeds)
     before=(store/'session.json').read_bytes()
+    # A real freeze must use explicit need/readiness inside the objective
+    # horizon. The general transport fixture's 2031/2032 dates cannot prove it.
+    _,source=transport
+    source['buyer']=html('buyer','The buyer signed firm new orders for 100 units; delivery required in 2028 H1.')
+    source['maker']=html('maker','The maker production ramp is delayed; qualification completes in 2028 H2.')
     r=c.cycle(tmp_path/'collector',manifest(['buyer','maker']),live_store=store)
     assert r['live_execution']['frozen']==1
     first=next((store/'candidates').glob('*.json'));saved=prospective._read(first)

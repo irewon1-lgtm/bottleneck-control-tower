@@ -1,0 +1,213 @@
+{
+  "implementation_state": "PASS",
+  "objective_state": "NOT_COMPLETE_PROSPECTIVE_PERFORMANCE_FAILED",
+  "baseline_commit": "ca3ac0b3ffc5ee548b63c9aa75adbbdd798acbc3",
+  "code_manifest_sha256": "e5f2d11ba2559349ad1efd809c6c022edb6914ff918b7f21af25f1a466ff1ee4",
+  "implementation_gates": [
+    {
+      "gate": "0_protected_baseline",
+      "started_at": "2026-10-09T01:16:44.086197+00:00",
+      "state": "PASS",
+      "observed": {
+        "protected_files": 7,
+        "engine_hashes": {
+          "precursor_discovery.py": "614e841938daf41e34d7e31b97ec636f06f2997c8b7b4252926dd135e5bc2639",
+          "early_forecast.py": "51d90d2265baec516d20383579816c5155e46c69599a8e7b281d329843d17675",
+          "forecast_discovery.py": "5a491f55f14a3fef675c0ca652042bb1cd8b76cb0de40c6f003d55181e2480fd",
+          "prospective.py": "6ca939e378ffb02323feecb869aa1aac0e9f7b56ec5cbc92689233e30d65a153"
+        }
+      }
+    },
+    {
+      "gate": "0_all_python_regression",
+      "started_at": "2026-10-09T01:16:44.087360+00:00",
+      "state": "PASS",
+      "observed": {
+        "returncode": 0,
+        "log": "python.log",
+        "tail": [
+          "........................................................................ [ 20%]",
+          "........................................................................ [ 30%]",
+          "........................................................................ [ 40%]",
+          "........................................................................ [ 50%]",
+          "........................................................................ [ 60%]",
+          "........................................................................ [ 70%]",
+          "........................................................................ [ 81%]",
+          "........................................................................ [ 91%]",
+          "..............................................................           [100%]",
+          "709 passed, 1 skipped in 22.28s"
+        ]
+      }
+    },
+    {
+      "gate": "1_frozen_source_recognition",
+      "started_at": "2026-10-09T01:17:07.515049+00:00",
+      "state": "PASS",
+      "observed": {
+        "mode": "FROZEN_SOURCE_REGRESSION",
+        "positive_selected_fields": 28,
+        "literal_recognized": 28,
+        "recognized_at_gold_locator": 26,
+        "exact_values_in_bound_observations": 22,
+        "whole_corpus_precision": "UNKNOWN_NONEXHAUSTIVE_GOLD",
+        "actual_target_link_accuracy": "UNKNOWN_NO_COMPLETE_REAL_GOLD",
+        "state": "PASS_LITERAL_RECOGNITION_ONLY"
+      }
+    },
+    {
+      "gate": "2_3_same_target_and_temporal_falsification",
+      "started_at": "2026-10-09T01:17:13.065201+00:00",
+      "state": "PASS",
+      "observed": {
+        "returncode": 0,
+        "log": "target-gap.log",
+        "tail": [
+          "........................................................................ [ 60%]",
+          "................................................                         [100%]",
+          "120 passed in 0.97s"
+        ]
+      }
+    },
+    {
+      "gate": "4_actual_source_replay_available_subset",
+      "started_at": "2026-10-09T01:17:14.636944+00:00",
+      "state": "PASS",
+      "observed": {
+        "mode": "BACKFILL_REGRESSION_NOT_LIVE",
+        "documents": 19,
+        "source_facts_references_checked": 383,
+        "graph_references_checked": 11853,
+        "input_caches_unchanged": true,
+        "deterministic_replay": true,
+        "complete_target_events": 0,
+        "independent_pairs": 0,
+        "comparable_period_pairs": 0,
+        "cross_document_edges": 0,
+        "backfill_early": 0,
+        "metrics": {
+          "verified_documents": 19,
+          "events": 827,
+          "product": 89,
+          "specification": 74,
+          "region": 58,
+          "customer_group": 62,
+          "supply_pool": 0,
+          "complete_target_events": 0,
+          "independent_pairs": 0,
+          "comparable_period_pairs": 0,
+          "synthesized_targets": 0,
+          "backfill_early_candidates": 0,
+          "new_live_early_candidates": 0,
+          "known_bad_product_events": 0,
+          "taxonomy_region_events": 0,
+          "scope_unknowns": {
+            "product": 738,
+            "specification": 753,
+            "region": 769,
+            "customer_group": 765,
+            "supply_pool": 827
+          },
+          "temporal_unknowns": {
+            "NO_PHYSICAL_QUANTITY": 802,
+            "NO_SOURCE_PERIOD": 644,
+            "REFERENCE_EVENT_DATE_NOT_VERIFIED": 2,
+            "QUALITATIVE_BOUND_NOT_AN_EXACT_DATE": 1
+          },
+          "period_references": 249,
+          "physical_quantity_references": 27,
+          "rejected_inputs": 7,
+          "rejection_reasons": {
+            "PUBLIC_CONFIRMATION_NOT_PRECURSOR": 7
+          }
+        }
+      }
+    },
+    {
+      "gate": "4_javascript_regression",
+      "started_at": "2026-10-09T01:17:26.601737+00:00",
+      "state": "PASS",
+      "observed": {
+        "returncode": 0,
+        "log": "javascript.log",
+        "tail": [
+          "✔ browser reads legacy single and verified shard snapshots (5.66334ms)",
+          "✔ browser rejects missing, corrupted and wrong-count shards (3.90133ms)",
+          "ℹ tests 29",
+          "ℹ suites 0",
+          "ℹ pass 29",
+          "ℹ fail 0",
+          "ℹ cancelled 0",
+          "ℹ skipped 0",
+          "ℹ todo 0",
+          "ℹ duration_ms 158.819236"
+        ]
+      }
+    },
+    {
+      "gate": "4_final_protected_baseline",
+      "started_at": "2026-10-09T01:17:26.820779+00:00",
+      "state": "PASS",
+      "observed": {
+        "protected_files": 7,
+        "engine_hashes": {
+          "precursor_discovery.py": "614e841938daf41e34d7e31b97ec636f06f2997c8b7b4252926dd135e5bc2639",
+          "early_forecast.py": "51d90d2265baec516d20383579816c5155e46c69599a8e7b281d329843d17675",
+          "forecast_discovery.py": "5a491f55f14a3fef675c0ca652042bb1cd8b76cb0de40c6f003d55181e2480fd",
+          "prospective.py": "6ca939e378ffb02323feecb869aa1aac0e9f7b56ec5cbc92689233e30d65a153"
+        }
+      }
+    }
+  ],
+  "full_230_source_replay": "BLOCKED_HTTP_403",
+  "independent_prepublic_holdout": "SKIP_UNRESOLVED",
+  "prospective_trial": {
+    "mode": "ACTUAL_FRESH_RSS_OPERATING_PROBE",
+    "collection_started_at": "2026-10-09T01:17:56.383564+00:00",
+    "rss_publication_filter_not_provenance": "2026-10-08T17:41:09.988696+00:00",
+    "configured_feeds": 125,
+    "attempted_feeds": 125,
+    "new_unique_rss_urls": 47,
+    "attempted_new_urls": 47,
+    "verified_new_bodies": 22,
+    "new_live_early_candidates": 0,
+    "raw_engine_preflight": 0,
+    "frozen_new_live_candidates": 0,
+    "canonical_write_count": 0,
+    "existing_live_store_write_count": 0,
+    "external_search_requests": 0
+  },
+  "feed_statuses": {
+    "FETCHED": 116,
+    "NETWORK_FAILED": 8,
+    "HTTP_403": 1
+  },
+  "new_body_statuses": {
+    "CAPTURED": 22,
+    "HTTP_403": 1,
+    "PROVENANCE_BLOCKED": 24
+  },
+  "new_source_graph": {
+    "version": "source-evidence-graph-2",
+    "complete_target_events": 0,
+    "independent_pairs": 0,
+    "comparable_period_pairs": 0,
+    "reference_checks": 1877
+  },
+  "linked_official_followup": {
+    "statuses": [
+      "HTTP_403",
+      "PROVENANCE_BLOCKED",
+      "PROVENANCE_BLOCKED"
+    ],
+    "graph": {
+      "complete_target_events": 0,
+      "independent_pairs": 0,
+      "comparable_period_pairs": 0,
+      "reference_checks": 1877
+    },
+    "gap_verified_early": 0
+  },
+  "prospective_gate": "FAIL_NOT_DEMONSTRATED",
+  "production_promotion": "NOT_RUN_REQUIRES_PERFORMANCE_PASS",
+  "remote_ci": "NOT_RUN_AT_REPORT_CREATION"
+}

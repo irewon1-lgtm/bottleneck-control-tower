@@ -38,5 +38,7 @@ if __name__=='__main__':
     public['graph_early_preflight']=summaries[-1].get('graph_early_preflight',0)
     public['graph_early_frozen']=summaries[-1].get('graph_live_execution',{}).get('frozen',0)
     public['unique_early_preflight']=summaries[-1].get('unique_early_preflight',summaries[-1]['early_preflight'])
+    public['gap_verified_early_preflight']=summaries[-1].get('gap_verified_early_preflight',0)
+    public['unverified_legacy_preflight']=summaries[-1].get('unverified_legacy_preflight',0)
     output.write_text(json.dumps(public,indent=2)+'\n')
     print(json.dumps(public))

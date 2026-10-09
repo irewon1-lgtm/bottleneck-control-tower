@@ -9,13 +9,13 @@ import re
 
 from . import future_body
 
-VERSION = 'source-scope-reader-3'
+VERSION = 'source-scope-reader-4'
 FIELDS = ('product', 'specification', 'region', 'customer_group', 'supply_pool')
 GENERIC = frozenset('the id company facility product market shares stock revenue cash plant factory system equipment demand supply capacity production project contract customers supplier component components fuel power'.split())
 CLAUSE_WORDS = re.compile(r'\b(?:is|are|was|were|has|have|been|will|would|could|should|said|says|announced|developing|producing|receiving|watching|creates|requires|selling|last|these|those|this|that|which|while|whether|and|or|but|over)\b', re.I)
-HEAD = r'(?:components?|batter(?:y|ies)|cells?|turbines?|isolators?|lasers?(?: die)?|wafers?|substrates?|cables?|fibers?|fibre|tungsten|nickel|lithium|hydrogen|HALEU|fuel|semiconductors?|chips?|motors?|missiles?|vehicles?|trucks?|satellites?|transformers?|reactors?|burn-in|interconnection|alignment|bonding|production slots?|foundry slots?|power|electricity|seekers?|drivers?|TIA|ammonium perchlorate|engines?|interfaces?|connectors?|fiber attach|grid connections?|connection works|integrated testing)'
+HEAD = r'(?:components?|batter(?:y|ies)|cells?|turbines?|isolators?|lasers?(?: die)?|wafer substrates?|wafers?|substrates?|cables?|fibers?|fibre|tungsten(?:\s+(?:concentrate|metal powder|powder|carbide|briquettes?))?|nickel|lithium|hydrogen|HALEU|fuel|semiconductors?|chips?|motors?|missiles?|vehicles?|trucks?|satellites?|transformers?|reactors?|burn-in|interconnection|alignment|bonding|production slots?|foundry slots?|power|electricity|seekers?|drivers?|TIA|ammonium perchlorate|engines?|interfaces?|connectors?|fiber attach|grid connections?|connection works|integrated testing)'
 MODIFIERS = frozenset('precision industrial domestic military-grade high-purity high-performance high-energy-density pouch lithium-ion lithium-iron-phosphate lfp ndaa-compliant feoc-independent non-chinese driverless electric heavy-duty small modular gas steam nuclear large high-density zero-emission ballistic cruise air-launched solid-state ai data center silicon photonics photonics-soi optical external qualified production commercial-scale laser autonomous automated yard critical power photonic wafer-level garnet-based magneto-optical 300mm 200g/lane'.split())
-MODIFIERS = MODIFIERS | frozenset('unobligated enriched uranium high-assay low-enriched solid rocket military defense defence datacom inp sige cpo pic-eic hybrid direct active passive co-packaged integrated optical-electrical high-energy multi-channel single-mode cw eml t-glass transmission distribution grid interconnection construction industrial-scale advanced packaging ammonium perchlorate detachable test fiber'.split())
+MODIFIERS = MODIFIERS | frozenset('unobligated enriched uranium high-assay low-enriched solid rocket military defense defence datacom inp sige cpo pic-eic hybrid direct active passive co-packaged integrated optical-electrical high-energy multi-channel single-mode cw eml t-glass transmission distribution grid interconnection construction industrial-scale advanced packaging ammonium perchlorate detachable test fiber wafer concentrate metal powder carbide briquette briquettes silicon-anode density'.split())
 PRODUCT = re.compile(r'(?<![\w-])(?:[A-Za-z0-9][\w/-]*\s+){0,4}'+HEAD+r'\b', re.I)
 MODEL = re.compile(r'\b(?:ID\.(?:\d\s+[A-Z]{2,}|\s+[A-Z][\w-]*(?:\s+[A-Z]{2,})?)|[A-Z][A-Z0-9-]{1,20}\s+(?!20\d{2}\b)\d{1,4}[A-Za-z]?)\b')
 NAMED_MODEL = re.compile(r'\b(?:[A-Z][a-z]+(?:[A-Z][A-Za-z]*)?\d{1,4}[A-Za-z]*|[A-Z]{2,6}-[A-Z]{2,6})\b')
@@ -145,6 +145,7 @@ def _products(doc, line):
                 suffix=raw[token.start():]
                 if valid_product(suffix):a+=token.start();raw=suffix;break
         if NAMED_MODEL.fullmatch(raw) and not re.search(HEAD, q, re.I): continue
+        if raw.upper()=='CHIPS' and re.match(r'\s+Act\b',q[b:]):continue
         if raw.casefold() in ('alignment','bonding') and not re.search(r'photonic|wafer|laser|fiber|fibre|\bdie\b|chip|semiconductor|optical|\bPIC\b',q,re.I):continue
         if valid_product(raw): found.append(field(doc, line['start']+a, line['start']+b))
     # A model and its physical noun are one identity when the source explicitly
@@ -153,6 +154,8 @@ def _products(doc, line):
     for model in models:
         tail=q[model['locator']['end']-line['start']:]
         noun=re.match(r'(?:™)?\s+(?:gas\s+|industrial\s+|optical\s+)?'+HEAD+r'\b',tail,re.I)
+        if not noun:
+            noun=re.match(r'\s*[®™]?\s*(?:(?:multi-wafer|wafer-level|high-power|fully automated|production)\s+){0,4}burn-in\s+system\b',tail,re.I)
         if not noun:
             candidate=PRODUCT.search(tail)
             if candidate and candidate.start()<4 and valid_product(candidate[0].strip()):noun=candidate
@@ -170,13 +173,42 @@ def bound_product(line, products):
     p=_unique(products,product=True)
     if p:return p
     q=line['quote']
-    for m in re.finditer(r'\b(?:orders?\s+(?:for|of)|purchase\s+of|(?:production|qualified)\s+(?:capacity|output|supply)\s+(?:for|of))\s+',q,re.I):
+    for m in re.finditer(r'\b(?:orders?\s+(?:for|of)|orders?\b.{0,100}?\bcustomer\s+for|purchase\s+of|(?:production|qualified)\s+(?:capacity|output|supply)\s+(?:for|of))\s+',q,re.I):
         end=re.search(r'[,;.]|\b(?:configured to|designed to|which|that|including)\b',q[m.end():],re.I)
         limit=m.end()+end.start() if end else len(q)
         candidates=[f for f in products if line['start']+m.end()<=f['locator']['start']<line['start']+limit]
         p=_unique(candidates,product=True)
         if p:return p
     return None
+
+
+def literal_fields(doc, line):
+    """Recognize source facts without asserting a unique product relationship.
+
+    In multi-product prose all candidates remain inspectable, while only
+    bound_product/_attributes can supply graph fields. Recognition is never
+    substituted for TARGET binding or supplier eligibility.
+    """
+    ps=_products(doc,line);attrs=_attributes(doc,line,None)
+    out={'product':ps}
+    for k,f in attrs.items():
+        if k!='product' and f is not None:out[k]=[f]
+    # Recognize every specification span even when their relationship is
+    # ambiguous. _attributes still refuses a union of competing specs.
+    out['specification']=[field(doc,line['start']+m.start(),line['start']+m.end()) for m in SPEC.finditer(line['quote'])]
+    for pattern in (r'\b(?:from|for|our|its)\s+((?:a |the |its )?(?:lead|major|new|leading)(?:\s+[a-z-]+){0,5}\s+customer)\b',
+                    r'\b(?:This|The) customer is\s+((?:a |the )?[^.;]{5,180}?)(?=\s+and (?:a|the)\b|[.;]|$)',
+                    r'\bcustomer that is\s+((?:a |the )?[^.;]{5,180}?)(?=\s+and (?:a|the)\b|[.;]|$)'):
+        for m in re.finditer(pattern,line['quote']):
+            f=field(doc,line['start']+m.start(1),line['start']+m.end(1))
+            f['customer_identity_status']='UNNAMED_CUSTOMER_NOT_UNIQUE_ACROSS_DOCUMENTS'
+            out.setdefault('customer_group',[]).append(f)
+    # Multiple contract recipients are separate unresolved literal facts.
+    recipients=[]
+    for m in re.finditer(r'\borders?\s+from\s+('+PARTY+r')(?=[,.;]|$)',line['quote']):
+        recipients.append(field(doc,line['start']+m.start(1),line['start']+m.end(1)))
+    out.setdefault('customer_group',[]).extend(recipients)
+    return out
 
 
 def _attributes(doc, line, product):
@@ -211,20 +243,28 @@ def _attributes(doc, line, product):
             for m in re.finditer(pattern,q):customer.append(field(doc,off+m.start(1),off+m.end(1),reference(doc,off,off+len(q))))
         if f := _unique(customer):out['customer_group']=f
     if 'customer_group' not in out:
-        patterns=(r'\b(?:from|for)\s+((?:a |the |its )?(?:lead|major|new|leading)(?:\s+[a-z-]+){0,5}\s+customer)\b',
-                  r'\b(?:This|The) customer is\s+((?:a |the )?[^.;]{5,180}?)(?=\s+and (?:a|the)\b|[.;]|$)')
+        patterns=(r'\b(?:from|for|our|its)\s+((?:a |the |its )?(?:lead|major|new|leading)(?:\s+[a-z-]+){0,5}\s+customer)\b',
+                  r'\b(?:This|The) customer is\s+((?:a |the )?[^.;]{5,180}?)(?=\s+and (?:a|the)\b|[.;]|$)',
+                  r'\bcustomer that is\s+((?:a |the )?[^.;]{5,180}?)(?=\s+and (?:a|the)\b|[.;]|$)')
         for pattern in patterns:
             for m in re.finditer(pattern,q):
                 f=field(doc,off+m.start(1),off+m.end(1),reference(doc,off,off+len(q)))
                 f['customer_identity_status']='UNNAMED_CUSTOMER_NOT_UNIQUE_ACROSS_DOCUMENTS'
                 customer.append(f)
         if f := _unique(customer):out['customer_group']=f
+    if 'customer_group' not in out:
+        # End-use descriptions are literal facts, not named customer identity.
+        for pattern in (r'\b(enterprise AI customers)\b',
+                        r'\b((?:AI )?data centers)\b',
+                        r'\b(defen[cs]e and aerospace programs)\b'):
+            for m in re.finditer(pattern,q):customer.append(field(doc,off+m.start(1),off+m.end(1)))
+        if f := _unique(customer):out['customer_group']=f
     pools = []
     for m in re.finditer(r'\b(?:supplied|manufactured|produced) by\s+([A-Z][\w-]*(?:\s+(?:[A-Z][\w-]*|Energy|Technologies|Inc\.?|Ltd\.?)){0,4})', q):
         # A maker name establishes a supplier relation, not qualification.
         # An explicit qualification statement in this same product statement
         # is required before it can define an eligible observed supply pool.
-        if (re.search(r'\b(?:qualified|certified|eligible)\b', q, re.I)
+        if (re.search(r'\b(?:qualified|certified|eligible)\s+(?:(?:domestic|non-Chinese|NDAA-compliant)\s+)?(?:manufacturer|producer|supplier)\b|\b(?:customer|product|production)\s+(?:qualification|certification|approval)\b|\bqualified\s+(?:supply|capacity|output|production)\b', q, re.I)
                 and not NEGATIVE_QUALIFICATION.search(q)):
             pools.append(field(doc, off+m.start(1), off+m.end(1), reference(doc, off, off+len(q))))
     for m in re.finditer(r'\b((?:qualified|certified|eligible)\s+(?:domestic|non-Chinese|NDAA-compliant)?\s*(?:producers|suppliers|manufacturers))\b', q, re.I):
