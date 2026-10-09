@@ -1,7 +1,7 @@
 import json
 import pytest
 from bct.future_body import cache_body
-from bct.recovery_sources import restore_observations, host_cooldowns
+from bct.recovery_sources import restore_observations, host_cooldowns, source_attempt_order
 
 
 def write(root, records):
@@ -59,3 +59,16 @@ def test_resume_corrects_control_only_full_but_preserves_observation_and_hash(tm
     assert record['prior_observation_classification']['body_sha256'] == digest
     assert (tmp_path/'restored'/(digest+'.txt')).read_text() == 'Save Article'
     assert record['reclassification_rule'] == 'ARTICLE_CONTROL_ONLY_V1'
+
+
+def test_untouched_urls_do_not_starve_behind_a_due_old_429():
+    denied='https://a.test/aaa-old-denied'
+    untouched='https://a.test/zzz-never-attempted'
+    other='https://b.test/new'
+    previous={denied:{'attempted':True},untouched:{'attempted':False}}
+    assert source_attempt_order([denied,untouched,other],previous)==[untouched,other,denied]
+    # After the untouched URL gets its own outcome, the next untouched URL
+    # takes priority without relabeling either old failure as completed.
+    next_url='https://a.test/zzzz-next'
+    previous[untouched]={'attempted':True}
+    assert source_attempt_order([denied,untouched,next_url],previous)[0]==next_url

@@ -3,6 +3,8 @@ from pathlib import Path
 import json
 import time
 from datetime import datetime
+from collections import defaultdict, deque
+from urllib.parse import urlsplit
 
 from .future_body import read_cached_body, cache_body, is_control_only_body
 
@@ -71,3 +73,20 @@ def host_cooldowns(records, *, now=None):
             host = urlsplit(record['url']).hostname
             result[host] = max(result.get(host, 0), until)
     return result
+
+
+def source_attempt_order(urls, previous):
+    """Attempt untouched URLs before due retries; rotate hosts fairly.
+
+    A repeatedly rate-limited old URL must not starve every untouched URL on
+    its host. This does not shorten a cooldown or authorize parallel requests.
+    """
+    groups = defaultdict(deque)
+    for url in sorted(urls, key=lambda u: (previous.get(u, {}).get('attempted', False), u)):
+        groups[urlsplit(url).hostname].append(url)
+    ordered = []
+    while any(groups.values()):
+        for queue in groups.values():
+            if queue:
+                ordered.append(queue.popleft())
+    return ordered

@@ -130,7 +130,8 @@ class PublicRedirect(HTTPRedirectHandler):
         return super().redirect_request(req, fp, code, msg, headers, newurl)
 
 
-def fetch_html(url):
+def fetch_capture(url):
+    """Preserve actual response identity and bytes for provenance verification."""
     public_url(url)
     req = Request(url, headers={"User-Agent": "Mozilla/5.0 (compatible; BottleneckControlTower/0.1)",
                                 "Accept": "text/html,application/xhtml+xml"})
@@ -142,9 +143,17 @@ def fetch_html(url):
         payload = response.read(maximum + 1)
         truncated = len(payload) > maximum
         payload = payload[:maximum]
+        final_url = response.geturl()
+        public_url(final_url)
         return {"html": payload.decode(response.headers.get_content_charset() or "utf-8", errors="replace"),
+                "raw": payload, "final_url": final_url,
                 "status": response.status, "content_type": response.headers.get_content_type(),
                 "truncated": truncated}
+
+
+def fetch_html(url):
+    # Existing collectors keep their JSON-compatible capture contract.
+    return {k:v for k,v in fetch_capture(url).items() if k not in ('raw','final_url')}
 
 
 def fetch_body(url):
