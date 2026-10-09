@@ -61,9 +61,12 @@ def test_only_exact_corrected_drain_receipts_are_quarantined_with_full_history()
     corrections[('1','1')]['body_sha256']='another-hash'
     with pytest.raises(ValueError,match='exact source correction'):
         quarantine_corrected_readings(p,corrections)
+    corrections[('1','1')]['body_sha256']='1'
     p['mode']='QUALIFICATION'
-    with pytest.raises(ValueError,match='exact source correction'):
-        quarantine_corrected_readings(p,{('2','2'):corrections[('2','2')]})
+    resumed, held = quarantine_corrected_readings(
+        p, {('2','2'): corrections[('2','2')]})
+    assert held[0]['result']['body_sha256'] == '2'
+    assert len(resumed['batches'][0]['results']) == 2
 
 
 def test_video_synopsis_preserves_partial_text_but_never_claims_full_transcript():
@@ -91,6 +94,10 @@ def test_breaking_defense_video_episode_and_related_cards_are_not_a_full_article
     assert is_video_summary_body(body, url)
     assert not is_video_summary_body(body.replace('Scroll for more video', 'Article conclusion.'), url)
     assert not is_video_summary_body(body + '\nTranscript\nFull conversation.', url)
+    written_article = '\n'.join([
+        'A complete written article paragraph.' for _ in range(3)
+    ] + body.splitlines()[1:])
+    assert not is_video_summary_body(written_article, url)
     html = f'<link rel="canonical" href="{url}"><article>' + ''.join(
         f'<p>{line}</p>' for line in body.splitlines()) + '</article>'
     result = extract_document(html)

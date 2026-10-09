@@ -96,10 +96,12 @@ def is_video_summary_body(text, url):
     dcd = (bool(re.match(r'https://(?:www\.)?datacenterdynamics\.com/en/videos/', str(url)))
            and bool(blocks and blocks[0].startswith('DCD Studio:'))
            and 'Tags' in blocks and 'Comments' in blocks)
+    video_index = (blocks.index('Breaking Defense Video')
+                   if 'Breaking Defense Video' in blocks else -1)
     breaking_defense = (
         bool(re.match(r'https://(?:www\.)?breakingdefense\.com/\d{4}/\d{2}/', str(url)))
-        and bool(blocks and blocks[0].startswith('In this episode of The Pentagon Buzz,'))
-        and 'Breaking Defense Video' in blocks
+        and 0 < video_index <= 2
+        and sum(len(block) for block in blocks[:video_index]) <= 1200
         and sum('Watch Now' in block for block in blocks) >= 3
         and bool(blocks and blocks[-1] == 'Scroll for more video'))
     return bool((dcd or breaking_defense)
