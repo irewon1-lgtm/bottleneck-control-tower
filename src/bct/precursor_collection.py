@@ -11,6 +11,7 @@ import fcntl
 import json
 from pathlib import Path
 import re
+from typing import Any
 from urllib.parse import urljoin, urlsplit
 
 from . import precursor_discovery as pd, target_acquisition as acquisition
@@ -21,6 +22,7 @@ from . import precursor_official_source as official_source
 from . import precursor_evidence_graph as evidence_graph
 from .objective_lock import stamp_export
 from .future_bottleneck import CHANGE_TARGET
+from . import future_body
 from .future_manual_review import _private_write
 
 UNKNOWN = 'UNKNOWN'
@@ -160,6 +162,44 @@ def structure(document, raw=None, *, fresh=False):
     return d
 
 
+def verified_stored_snapshot(document,raw,*,metadata_record=None,metadata_raw=None):
+    """Rebind a confirmed legacy card extraction without rewriting its record.
+
+    Identity/publication checks remain strict. Only a hash-exact article card
+    in the preserved HTML can be replaced by the verified primary prose from
+    that same HTML. The old snapshot stays explicit history; the new body has
+    its own version and cannot inherit LIVE status or acquisition time.
+    """
+    d=document
+    if (acquisition.digest(d['body'])!=d['body_sha256'] or d['version']!=d['body_sha256']
+            or acquisition.digest(raw)!=d['raw_sha256']):
+        raise ValueError('stored original body/version/HTML changed')
+    proof=official_source.verify(raw,d['origin_url'],d['origin_url'],d['acquired_at'],
+                                metadata_record=metadata_record,metadata_raw=metadata_raw)
+    fields=('origin_id','origin_url','origin_publisher','published_at','publication_precision')
+    if proof['provenance']!='PASS' or any(proof[k]!=d[k] for k in fields):
+        raise ValueError('stored provenance no longer bound to original HTML')
+    if proof['body_sha256']==d['body_sha256'] and proof['version']==d['version']:
+        return deepcopy(d)
+    html=raw.decode('utf-8',errors='replace');extracted=future_body.extract_document(html)
+    dom=future_body._Document();dom.feed(html);dom.close()
+    card_bound=any(n.tag=='article' and 'article-card' in str(n.attrs.get('class','')).split()
+                   and acquisition.digest('\n'.join(future_body._blocks(n)))==d['body_sha256']
+                   for n in future_body._nodes(dom.root))
+    if (not card_bound or not future_body.has_terminal_excerpt_marker(d['body'])
+            or extracted['body_status']!='FULL' or extracted['extraction_method']!='PUBLISHER_BODY'
+            or extracted['body_sha256']!=proof['body_sha256']):
+        raise ValueError('stored provenance no longer bound to original HTML')
+    view=deepcopy(d);view.update(proof)
+    view['prior_source_snapshot']=deepcopy(d)
+    view['source_version_correction']={'rule':'PRESERVED_CARD_TO_PRIMARY_BODY_V1',
+        'prior_body_sha256':d['body_sha256'],'body_sha256':proof['body_sha256'],
+        'raw_sha256':d['raw_sha256'],'prior_completeness':'PARTIAL',
+        'prior_record_preserved':True,'derived_view_only':True}
+    view['scope_read_mode']='BACKFILL_QA'
+    return view
+
+
 def stored_documents(root):
     docs=[]
     for path in sorted((Path(root)/'documents').glob('*.json')):
@@ -171,10 +211,7 @@ def stored_documents(root):
             if acquisition.digest(raw)!=d['raw_sha256']:raise ValueError('stored original HTML changed')
             metadata_record=d.get('sec_filing_metadata')
             metadata_raw=(Path(root)/'raw'/(metadata_record['raw_sha256']+'.json')).read_bytes() if metadata_record else None
-            proof=official_source.verify(raw,d['origin_url'],d['origin_url'],d['acquired_at'],metadata_record=metadata_record,metadata_raw=metadata_raw)
-            fields=('origin_id','origin_url','origin_publisher','published_at','publication_precision','body_sha256','version')
-            if proof['provenance']!='PASS' or any(proof[k]!=d[k] for k in fields):
-                raise ValueError('stored provenance no longer bound to original HTML')
+            d=verified_stored_snapshot(d,raw,metadata_record=metadata_record,metadata_raw=metadata_raw)
             # New derived views never overwrite immutable source/version records.
             # Parser upgrades can reuse a genuinely captured LIVE original as
             # context. No old BACKFILL original gains LIVE status or a timestamp.
@@ -376,7 +413,8 @@ def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,
         # Historical cache rereading is QA only, including its search plans.
         # Only fresh captures can initiate a new operational external query.
         new_ids={s.get('document_id') for s in seeds if s.get('status')=='CAPTURED'}-prior_document_ids
-        value=evidence_plan([d for d in docs if d['document_id'] in new_ids and d.get('scope_read_mode')=='LIVE_FRESH']);requests=[];provider_block=None
+        value=evidence_plan([d for d in docs if d['document_id'] in new_ids and d.get('scope_read_mode')=='LIVE_FRESH'])
+        requests: list[dict[str,Any]]=[];provider_block=None
         for req in value['requests']:
             req=source_search.public_query_request(req,docs,new_ids)
             if manifest.get('external_query_authorized') is True:req['external_query_authorized']=True
@@ -408,7 +446,7 @@ def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,
         docs=stored_documents(root)
         # The URL/capture ledger is not evidence approval. Only independently
         # validated primary additions may close a side in a LIVE batch.
-        validations={}
+        validations: dict[str | None,list[dict[str,Any]]]={}
         for path in sorted((root/'requests').glob('*.json')):
             saved=read(path)
             for captured,validation in zip(saved.get('captures',[]),saved.get('capture_validation',[])):
