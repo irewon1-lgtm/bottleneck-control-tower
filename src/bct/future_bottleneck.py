@@ -341,6 +341,7 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
     if state.get("version") not in (VERSION, "body-candidate-v2"):
         raise ValueError("version mismatch; use a separate output")
     terms = set(tracked_terms)
+    tracking = {}
     if tracking_path:
         tracking = json.loads(Path(tracking_path).read_text())
         for target in tracking.get("targets", []):
@@ -363,12 +364,18 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
     scoped = rows
     now = datetime.now(timezone.utc)
     cache_dir = Path(cache_dir) if cache_dir else output.parent / ".future-body-cache"
-    pending = []
+    from .future_review import failure_index
+    closed_sources = {(r['document_id'], r.get('source_version')) for r in failure_index(tracking).values()
+                      if 'material' in r.get('lanes', [])}
+    pending, closed_attempts = [], 0
     for row in scoped:
         if document_ids is not None and row['id'] not in document_ids:
             continue
         fingerprint = hashlib.sha256((row["url"] + row["updated_at"]).encode()).hexdigest()
         prior = state["results"].get(row["id"], {})
+        if trigger == "AUTO" and (row['id'], fingerprint) in closed_sources:
+            closed_attempts += 1
+            continue
         same_source = prior.get("fingerprint") == fingerprint
         same_filter = (prior.get("filter_version") == filter_version
                        and prior.get("tracking_terms_sha256") == terms_hash)
@@ -548,7 +555,8 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
                         "paired_precursor_documents_total": len(paired_precursor_docs),
                         "body_ok_total": sum(r.get("body_status") == "FULL" for r in live),
                         "candidates_total": sum(bool(r.get("candidate")) for r in live),
-                        "pending_due": max(0, len(pending) - limit), "checked_at": now.isoformat(),
+                        "pending_due": max(0, len(pending) - limit), "closed_failed_sources": closed_attempts,
+                        "checked_at": now.isoformat(),
                         "private_cache": "RUNTIME_ONLY_NOT_PUBLISHED",
                         "detection_mode": detection_mode,
                         "source_wide_scan": document_ids is None,

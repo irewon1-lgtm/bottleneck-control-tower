@@ -40,6 +40,8 @@ RELIEVED는 실제 발생 여부를 FALSE로 바꾸지 않는다. 현재 상태�
 
 이 안내는 확정 설계 v3.3의 기존 JSON·GitHub Pages·알림 경로를 사용하는 운영 절차다. 자동화는 후보 수집·보존·재검토 알림만 수행한다. 사용자가 검토를 요청했을 때 ChatGPT가 원문을 읽고 판단을 저장한다. 유료 AI 자동호출, 새 DB·서버, Core·투자점수 변경은 없다.
 
+2026-10-09 정체 처리 결과는 `queue-resolution-report.json`과 운영 tracking의 `runs`에 저장한다. `type=queue_resolution, state=FAIL`인 실행은 문서·본문 해시·출처 버전·reader 버전과 실패 근거·재개 조건이 일치할 때만 실패 목록으로 분리한다. 원문·후보·이력은 보존하며 `failed_versions`는 미해결 부담에 계속 포함한다. 실패 종결은 판독 완료나 7일 운영 PASS가 아니다. 같은 출처 버전의 원문 확보 실패는 AUTO와 기존 일괄 복구에서 다시 실행하지 않는다. 출처 버전이 바뀌거나 접근·근거 조건이 바뀐 뒤 새 명시적 요청으로 재개할 수 있다. 이후 동일 본문에 대한 실제 AVAILABLE 접근 기록이 저장되면 읽기 대기는 다시 열린다. 기존 하루 최대 2회 요약 알림은 유지한다.
+
 ## 읽을 파일과 고정 참조
 
 저장소는 `irewon1-lgtm/bottleneck-control-tower`, 운영 자료 브랜치는 `future-bottleneck-data`다.

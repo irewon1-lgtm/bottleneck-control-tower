@@ -130,7 +130,8 @@ jobs:
           state = json.loads((Path(os.environ['RUNNER_TEMP']) / 'future-output/future-candidates.json').read_text())
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
               f.write('Candidate screening only; no final bottleneck decision.\n\n')
-              f.write('```json\n' + json.dumps(state['summary'], indent=2) + '\n```\n')
+              compact = {k: v for k, v in state['summary'].items() if not isinstance(v, (dict, list))}
+              f.write('```json\n' + json.dumps(compact, indent=2) + '\n```\n')
           PY
       - name: Frozen 100-document trial on implementation branch only
         if: github.ref == 'refs/heads/codex/bct-v33-implementation'
@@ -202,8 +203,12 @@ jobs:
           python - <<'PY'
           import json, os
           from pathlib import Path
+          from bct.future_review import failure_index
           root = Path(os.environ['RUNNER_TEMP']) / 'future-output'
           state = json.loads((root / 'future-candidates.json').read_text())
+          tracking = json.loads((root / 'future-tracking.json').read_text())
+          closed = {(r['document_id'], r.get('source_version')) for r in failure_index(tracking).values()
+                    if 'material' in r.get('lanes', [])}
           recovery_id = 'body-recovery-v1'
           selected = []
           recoverable = {'NO_ARTICLE_CONTENT', 'TimeoutError', 'LEGACY_COMPLETENESS_UNVERIFIED'}
@@ -215,6 +220,8 @@ jobs:
               if status != 'UNAVAILABLE' and chars > 0:
                   continue
               source_version = record.get('source_version') or record.get('fingerprint')
+              if (document_id, source_version) in closed:
+                  continue
               acquisition = ((record.get('acquisition') or {}).get('versions') or {}).get(source_version, {})
               if recovery_id in (acquisition.get('explicit_checks') or {}):
                   continue
@@ -273,7 +280,8 @@ jobs:
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
               state = json.loads((root / 'future-candidates.json').read_text())
               f.write('\nFinal bounded backlog-drain state:\n\n')
-              f.write('```json\n' + json.dumps(state.get('summary', {}), indent=2) + '\n```\n')
+              compact = {k: v for k, v in state.get('summary', {}).items() if not isinstance(v, (dict, list))}
+              f.write('```json\n' + json.dumps(compact, indent=2) + '\n```\n')
           PY
           python .github/scripts/future_queue_snapshot.py \
             --candidates "$RUNNER_TEMP/future-output/future-candidates.json" \

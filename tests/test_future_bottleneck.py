@@ -8,6 +8,27 @@ import pytest
 from bct.future_bottleneck import extract_body, public_url, run, screen
 
 
+def test_closed_failed_source_skips_auto_without_erasing_history_and_new_version_resumes(tmp_path):
+    path, output, tracking = tmp_path/'db', tmp_path/'c.json', tmp_path/'t.json'
+    with sqlite3.connect(path) as db:
+        db.execute('CREATE TABLE radar_items(id,title,url,source,collected_at,updated_at,status)')
+        db.execute("INSERT INTO radar_items VALUES('d','t','https://example.com/a','s','2026-10-01','v1','active')")
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    version = hashlib.sha256(b'https://example.com/av1').hexdigest()
+    tracking.write_text(json.dumps({'runs': [{'id':'closed', 'type':'queue_resolution', 'state':'FAIL',
+        'document_id':'d', 'source_version':version, 'lanes':['material'], 'reason':'HTTPError',
+        'evidence':{'attempts':3}, 'resume_condition':'changed source'}]}))
+    calls = []
+    fetch = lambda url: calls.append(url) or '<article><p>Demand for power transformers rises.</p></article>'
+    state = run(path, output, tracking_path=tracking, fetcher=fetch)
+    assert not calls and state['summary']['closed_failed_sources'] == 1
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
+    with sqlite3.connect(path) as db:
+        db.execute("UPDATE radar_items SET updated_at='v2'")
+    state = run(path, output, tracking_path=tracking, fetcher=fetch)
+    assert len(calls) == 1 and state['summary']['closed_failed_sources'] == 0
+
+
 @pytest.mark.parametrize("body,target", [
     ("Demand for ammonium perchlorate will rise. Capacity is limited until 2028.", "ammonium perchlorate"),
     ("Power transformers have lead times of 24 months. A new plant is planned.", "power transformers"),

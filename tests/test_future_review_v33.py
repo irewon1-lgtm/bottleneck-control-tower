@@ -25,6 +25,44 @@ def saved_review(doc="d0", body="hash0", start=0, end=100, disposition="CHANGE",
             "reviewed_at": "2026-10-02T00:00:00+00:00"}
 
 
+def failed_attempt(**changes):
+    return {"id": "failed-d0", "type": "queue_resolution", "state": "FAIL", "document_id": "d0",
+            "body_sha256": "hash0", "source_version": "v1", "reader_version": READER_VERSION,
+            "lanes": ["quick", "material"], "reason": "DNS_FAILED", "evidence": {"errno": -3},
+            "resume_condition": "new accessible source", "finished_at": "2026-10-03T00:00:00Z", **changes}
+
+
+def test_failed_attempt_archive_preserves_unresolved_and_frozen_bundle_without_completion():
+    candidates = documents()
+    candidates['results']['d0'].update(source_version='v1', body_status='PARTIAL')
+    fixed = ensure_bundle(candidates, {})
+    candidates.update(fixed)
+    before = deepcopy(candidates)
+    tracking = {'runs': [failed_attempt()]}
+    summary = queue_summary(candidates, tracking)
+    assert summary['quick_pending'] == summary['material_pending'] == summary['completed_documents'] == 0
+    assert summary['failed_versions'] == summary['unresolved_versions'] == summary['review_list_versions'] == 1
+    assert len(full_queue_entries(candidates, tracking)) == 1
+    assert not ensure_bundle(candidates, tracking).get('bundles')
+    assert candidates == before
+
+
+@pytest.mark.parametrize('change', [{'evidence': {}}, {'source_version': 'old'}, {'reader_version': 'old'}])
+def test_failure_does_not_hide_unproven_or_different_version_attempts(change):
+    candidates = documents()
+    candidates['results']['d0']['source_version'] = 'v1'
+    assert queue_summary(candidates, {'runs': [failed_attempt(**change)]})['quick_pending'] == 1
+
+
+def test_verified_later_access_reopens_failed_reading():
+    candidates = documents(); candidates['results']['d0']['source_version'] = 'v1'
+    tracking = {'runs': [failed_attempt()], 'reviews': {'access': {
+        'kind': 'access', 'access_status': 'AVAILABLE', 'reader_version': READER_VERSION,
+        'document_id': 'd0', 'body_sha256': 'hash0', 'reviewed_at': '2026-10-04T00:00:00Z'}}}
+    assert queue_summary(candidates, tracking)['quick_pending'] == 1
+    assert queue_summary(candidates, tracking)['completed_documents'] == 0
+
+
 def test_phase3_queue_has_no_candidate_cap_and_separates_material_wait():
     candidates = documents(51)
     candidates["results"]["partial"] = {"body_status": "PARTIAL", "body_sha256": "p", "body_chars": 10, "candidate": False}

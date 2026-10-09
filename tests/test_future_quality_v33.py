@@ -218,6 +218,14 @@ def test_real_span_and_coverage_pass_without_claiming_prediction_accuracy():
     assert sparse["status"] == "PENDING"
 
 
+def test_archived_failures_cannot_turn_seven_day_operation_into_pass():
+    rows, now = observations()
+    rows[-1]['failed_total'] = 12
+    report = observation_status(rows, now=now)
+    assert report['status'] == 'HOLD'
+    assert any('archive is not completion' in reason for reason in report['hold_reasons'])
+
+
 def test_persistent_backlog_growth_holds_even_when_user_causes_waiting():
     rows, now = observations(growth=True)
     report = observation_status(rows, now=now)

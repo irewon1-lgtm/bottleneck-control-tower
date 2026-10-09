@@ -1,6 +1,6 @@
 {
   "version": "bct-v33-implementation-acceptance-v1",
-  "updated_at": "2026-10-09T12:51:53+00:00",
+  "updated_at": "2026-10-09T14:40:53.912188+00:00",
   "repository": "irewon1-lgtm/bottleneck-control-tower",
   "implementation_commit": "65e75563dc2a130f96ebe9176f5c57c23451c7fc",
   "scope": "APPROVED_V3_3_ONLY",
@@ -236,8 +236,50 @@
           "at": "2026-10-09T12:50:27.620823+00:00",
           "status": "HOLD",
           "assessment_id": "bct-v33-operation-20261009-production"
+        },
+        {
+          "id": "bct-queue-resolution-20261009",
+          "at": "2026-10-09T14:32:28.254215+00:00",
+          "status": "HOLD",
+          "kind": "FAILED_ATTEMPTS_ARCHIVED_WITH_EVIDENCE",
+          "new_reading_completions": 0,
+          "failed_unresolved_versions": 3696
         }
-      ]
+      ],
+      "queue_resolution": {
+        "id": "bct-queue-resolution-20261009",
+        "status": "ARCHIVED_FAILURES_NOT_READING_COMPLETION",
+        "assessed_at": "2026-10-09T14:32:28.254215+00:00",
+        "report": "queue-resolution-report.json",
+        "tracking_commit_sha": "bd5ad7711683cfbc54ee5edc681484376b8965c8",
+        "tracking_blob_sha": "0c630b2c37d278f7ed28f788594f06182dc9708e",
+        "store_status": "APPLIED_READBACK_VERIFIED",
+        "failed_versions": 3696,
+        "unresolved_versions": 3696,
+        "preserved_completed_documents": 184,
+        "new_reading_completions": 0,
+        "failure_reason_counts": {
+          "ENVIRONMENT_DNS_RESOLUTION_FAILED": 1693,
+          "FULL_SOURCE_NOT_OBTAINED": 1929,
+          "REQUIRED_EVIDENCE_MISSING": 74
+        },
+        "all_candidates_and_reviews_preserved": true,
+        "auto_retries_closed_same_source_version": true,
+        "operational_adoption": "HOLD",
+        "prediction_performance": "UNVERIFIED",
+        "deployment": {
+          "status": "BLOCKED",
+          "reason": "github-pages environment waiting; current_user_can_approve=false",
+          "run_id": 37485937618
+        },
+        "verification": {
+          "python_relevant_tests": 100,
+          "pages_tests": 20,
+          "full_suite": "PASS",
+          "python_full_passed": 716,
+          "python_full_skipped": 1
+        }
+      }
     }
   },
   "tests": {

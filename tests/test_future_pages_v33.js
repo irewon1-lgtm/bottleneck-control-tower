@@ -91,6 +91,7 @@ async function app(data, failures = {}, hash = "#tracking") {
       querySelector: () => eyebrow, querySelectorAll: () => nav, addEventListener: () => {}},
     fetch: async (url, options) => {
       calls.push({url, options});
+      if (url.includes('queue-resolution-report.json') && data.resolution) return {ok: true, json: async () => clone(data.resolution)};
       const kind = url.includes("future-tracking.json") ? "tracking" : url.includes("future-candidates.json") ? "candidates" : "other";
       if (kind === "other") return {ok: false};
       if (failures[kind] === "network") throw new Error("fixture network failure");
@@ -132,6 +133,24 @@ test("tracking renders existing TARGET history beside separate queue counts, cap
   assert(walk(targets[0]).filter(el => el.tagName === "A").every(el => !el.href?.startsWith("javascript:")));
   assert(page.calls.filter(call => call.url.includes("future-")).every(call => call.options.cache === "no-store"));
   assert.deepEqual(data, before, "rendering links and opening bundles must not mutate review completion");
+});
+
+test("saved failure report remains visible when large live candidates cannot load and never claims completion", async () => {
+  const data = fixtures();
+  data.resolution = {version:'bct-queue-resolution-v1', as_of:'2026-10-09T14:32:28Z',
+    preserved_completed_documents:184, new_reading_completions:0, unresolved_versions:3696,
+    failure_reason_counts:{ENVIRONMENT_DNS_RESOLUTION_FAILED:1693, FULL_SOURCE_NOT_OBTAINED:1929, REQUIRED_EVIDENCE_MISSING:74},
+    resume_conditions:{REQUIRED_EVIDENCE_MISSING:'새 독립 근거'}, data_store_status:'APPLIED', access_checked_urls:1483,
+    http_requests_completed:0, deployment:{status:'BLOCKED'}};
+  const page = await app(data, {candidates:'network'});
+  const report = headingPanel(page.content, '정체 작업 처리 결과');
+  assert(report);
+  assert.equal(metricValues(report)['이번 신규 판독 완료'], '0');
+  assert.match(report.textContent, /미해결로 계속 계산/);
+  assert.match(report.textContent, /HOLD/);
+  assert.match(report.textContent, /UNVERIFIED/);
+  assert.match(report.textContent, /DNS 해석 오류/);
+  assert.match(report.textContent, /BLOCKED/);
 });
 
 test("ranking starts with the objective, explains the early-detection flow, and does not pretend performance is connected", async () => {

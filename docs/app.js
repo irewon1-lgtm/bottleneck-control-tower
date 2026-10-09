@@ -107,6 +107,7 @@
   let verified = null;
   let verifiedError = false;
   let tracking = null;
+  let queueResolution = null;
   let futureCandidates = null;
   let candidatesError = false;
   let trackingLoading = false;
@@ -317,6 +318,7 @@
     [["자동으로 걸린 문서", queue.automatic_candidates], ["1차 읽기 대기", queue.quick_pending],
      ["정밀 검토 대기", queue.deep_pending], ["추가 자료 대기", queue.candidate_data_wait],
      ["원문 확보 대기", queue.material_pending], ["판독 완료", queue.completed_documents]].forEach(([label, value]) => metrics.append(metric(label, value)));
+    if (queue.failed_versions != null) metrics.append(metric("실패로 종료한 작업", queue.failed_versions, "미해결이며 판독 완료에 포함하지 않습니다."));
     box.append(metrics, node("p", `최장 대기 ${queue.oldest_wait_hours == null ? "데이터 없음" : Number(queue.oldest_wait_hours).toFixed(1) + "시간"} · 사건 ${number(queue.event_count)}개`, "panel-caption"));
     const guide = node("div", null, "queue-guide");
     [
@@ -416,6 +418,37 @@
       } catch { candidatesError = true; }
     } catch { trackingError = true; candidatesError = true; }
     finally { clearTimeout(timeout); trackingLoading = false; if (researchRoutes.includes(route())) render(); }
+  }
+  function resolutionPanel() {
+    const report = queueResolution;
+    if (!report) return null;
+    const box = panel("정체 작업 처리 결과", `확인 ${date(report.as_of)} KST · 고정 운영 자료에 대한 처리 결과입니다.`);
+    const metrics = node("div", null, "metrics");
+    metrics.append(metric("기존 판독 완료 보존", report.preserved_completed_documents),
+      metric("이번 신규 판독 완료", report.new_reading_completions),
+      metric("실패로 종료한 작업", report.unresolved_versions, "원문과 이력은 보존하며 미해결로 계속 계산합니다."));
+    box.append(metrics, node("p", "같은 조건의 실패를 반복하지 않습니다. 실패 작업은 실행 대기에서 분리했으며 운영채택은 HOLD, 예측성능은 UNVERIFIED입니다.", "data-note"));
+    const labels = {ENVIRONMENT_DNS_RESOLUTION_FAILED: "원문 접근 실패: 확인 환경의 DNS 해석 오류",
+      FULL_SOURCE_NOT_OBTAINED: "완전한 원문 확보 실패: 저장된 접근·추출 근거 확인",
+      REQUIRED_EVIDENCE_MISSING: "판단 근거 부족: 저장된 DATA_INSUFFICIENT 판독 확인"};
+    const list = node("ul", null, "compact-list");
+    Object.entries(report.failure_reason_counts || {}).forEach(([reason, count]) => {
+      list.append(node("li", `${labels[reason] || reason} ${number(count)}건 · 재개 조건: ${report.resume_conditions?.[reason] || "새 근거 확인"}`));
+    });
+    box.append(list, node("p", `실패 기록 저장: ${report.data_store_status} · 원문 접근 점검 ${number(report.access_checked_urls)}개 URL · 완료된 HTTP 요청 ${number(report.http_requests_completed)}회`, "record-meta"));
+    if (report.tracking_url) box.append(articleTitle({title: "문서별 실패 근거와 재개 조건 전체 기록", url: report.tracking_url}));
+    box.append(node("p", `직전 수집 저장 실패: GitHub HTTP 403. 작업 요약도 1MB 한도를 초과했습니다. Pages 배포 확인: ${report.deployment?.status || "미확인"}.`, "data-note"));
+    return box;
+  }
+  async function loadResolution() {
+    try {
+      const response = await fetch("./queue-resolution-report.json", {cache: "no-store"});
+      if (!response.ok) return;
+      const value = await response.json();
+      if (value.version !== "bct-queue-resolution-v1") return;
+      queueResolution = value;
+      if (["system", "tracking"].includes(route())) render();
+    } catch { /* Other existing live records remain independently readable. */ }
   }
   const targetRows = () => view.targets(tracking, verified);
   const detailHref = row => `#detail/${encodeURIComponent(row.id)}`;
@@ -841,11 +874,13 @@
     if(key === "situation") {content.append(situationPanel());return;}
     if(key === "insights") {content.append(insightsPanel());return;}
     if (key === "tracking") {
+      const resolution = resolutionPanel(); if (resolution) content.append(resolution);
       content.append(hypothesisPanel(), futureQueuePanel(), trackingPanels());
       if (!tracking && !trackingLoading && !trackingError) loadTracking();
       return;
     }
     if (key === "future") { content.append(verifiedPanels()); return; }
+    if (key === "system") { const resolution = resolutionPanel(); if (resolution) content.append(resolution); }
     if (!snapshot) {
       content.append(empty("데이터 확인 중", "저장된 snapshot을 불러옵니다."));
       if(key === "system") content.append(collectionPanel());
@@ -918,5 +953,5 @@
   window.addEventListener("hashchange", () => {render();if(researchRoutes.includes(route()) && !tracking && !trackingLoading && !trackingError) loadTracking();});
   document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
   setInterval(() => { if (!document.hidden) refresh(); }, 300000);
-  render(); refresh(); loadVerified();
+  render(); refresh(); loadVerified(); loadResolution();
 })();

@@ -267,6 +267,8 @@ def observation_status(samples: list[dict], *, start_at: str | None = None, now:
         pending.append("Unverified execution observations were excluded")
     usable = [(stamp, row) for stamp, row in rows if all(isinstance(row.get(key), (int, float)) and not isinstance(row[key], bool) and row[key] >= 0 for key in required)]
     hold = []
+    if rows[-1][1].get("failed_total", 0) > 0:
+        hold.append("Archived failed attempts remain unresolved; archive is not completion")
     if len(usable) >= 2:
         first, last = usable[0][1], usable[-1][1]
         inflow = last["inflow_total"] - first["inflow_total"]

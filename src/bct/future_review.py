@@ -125,6 +125,22 @@ def _wait_hours(item, now):
         return None
 
 
+def failure_index(tracking):
+    """Explicit failed attempts are archived, never fabricated read completions."""
+    runs = tracking.get("runs", {})
+    runs = runs.values() if isinstance(runs, dict) else runs
+    index = {}
+    for run in runs:
+        if not isinstance(run, dict) or run.get("type") != "queue_resolution" or run.get("state") != "FAIL":
+            continue
+        if not run.get("reason") or not run.get("evidence") or not run.get("resume_condition"):
+            continue
+        key = (run.get("document_id"), run.get("body_sha256") or run.get("source_version"))
+        if run.get("finished_at", "") >= index.get(key, {}).get("finished_at", ""):
+            index[key] = run
+    return index
+
+
 def queue_items(candidates, tracking, *, now=None, reader_version=READER_VERSION):
     clock = _now(now)
     quick, material, completed = [], [], []
@@ -166,7 +182,29 @@ def queue_items(candidates, tracking, *, now=None, reader_version=READER_VERSION
             deep.append(item)
         if latest.get("disposition") == "DATA_INSUFFICIENT" or latest.get("candidate_state") == "DATA_WAIT":
             data_wait.append(item)
-    return {"quick": quick, "material": material, "completed": completed, "deep": deep, "data_wait": data_wait}
+    queues = {"quick": quick, "material": material, "completed": completed, "deep": deep, "data_wait": data_wait}
+    failures, archived = failure_index(tracking), {}
+    for lane in ("quick", "material", "deep", "data_wait"):
+        active = []
+        for item in queues[lane]:
+            key = (item["document_id"], item.get("body_sha256") or item.get("source_version"))
+            failure = failures.get(key)
+            recovered = any(r.get("kind") == "access" and r.get("access_status") == "AVAILABLE"
+                            and r.get("reader_version") == reader_version
+                            and r.get("document_id") == item["document_id"]
+                            and r.get("body_sha256") == item.get("body_sha256")
+                            and r.get("reviewed_at", "") > (failure or {}).get("finished_at", "")
+                            for r in tracking.get("reviews", {}).values())
+            if (not failure or lane not in failure.get("lanes", []) or recovered
+                    or failure.get("source_version") != item.get("source_version")
+                    or failure.get("reader_version") != reader_version):
+                active.append(item)
+                continue
+            entry = archived.setdefault(key, {**item, "failure": failure, "failed_lanes": []})
+            entry["failed_lanes"].append(lane)
+        queues[lane] = active
+    queues["failed"] = list(archived.values())
+    return queues
 
 
 def _canonical_url(value):
@@ -266,7 +304,7 @@ def queue_summary(candidates, tracking, *, now=None, reader_version=READER_VERSI
     clock = _now(now)
     queues = queue_items(candidates, tracking, now=clock, reader_version=reader_version)
     records = list(_records(candidates))
-    waits = [x["wait_hours"] for name in ("quick", "material", "deep", "data_wait") for x in queues[name] if x["wait_hours"] is not None]
+    waits = [x["wait_hours"] for name in ("quick", "material", "deep", "data_wait", "failed") for x in queues[name] if x["wait_hours"] is not None]
     preview = [{k: item.get(k) for k in ("document_id", "body_sha256", "url", "title", "body_status", "discovery_paths", "wait_hours", "resume_at")}
                | {"kind": "quick"} for item in queues["quick"][:5]]
     if len(preview) < 5:
@@ -278,14 +316,21 @@ def queue_summary(candidates, tracking, *, now=None, reader_version=READER_VERSI
     event_by_version = {(ref["document_id"], ref.get("body_sha256")): event_id
                         for event_id, event in events.items() for ref in event["documents"]}
     pending_events = {event_by_version[(item["document_id"], item.get("body_sha256"))]
-                      for name in ("quick", "material", "deep", "data_wait") for item in queues[name]}
+                      for name in ("quick", "material", "deep", "data_wait", "failed") for item in queues[name]}
+    unresolved = {(x["document_id"], x.get("body_sha256") or x.get("source_version"))
+                  for name in ("quick", "material", "deep", "data_wait", "failed") for x in queues[name]}
     return {"computed_at": clock.isoformat(), "reader_version": reader_version,
             "documents_total": len(candidates.get("results", {})), "preserved_versions": len(records),
             "automatic_candidates": sum(bool(x.get("candidate")) for x in records),
-            "review_list_versions": len({(x["document_id"], x.get("body_sha256") or x.get("source_version")) for name in ("quick", "completed", "material") for x in queues[name]}),
+            "review_list_versions": len({(x["document_id"], x.get("body_sha256") or x.get("source_version")) for name in ("quick", "completed", "material", "failed") for x in queues[name]}),
             "quick_pending": len(queues["quick"]), "completed_documents": len(queues["completed"]),
             "deep_pending": len(queues["deep"]), "candidate_data_wait": len(queues["data_wait"]),
             "material_pending": len(queues["material"]), "oldest_wait_hours": max(waits) if waits else 0,
+            "failed_versions": len(queues["failed"]), "unresolved_versions": len(unresolved),
+            "failure_reasons": {reason: sum(x["failure"]["reason"] == reason for x in queues["failed"])
+                                for reason in sorted({x["failure"]["reason"] for x in queues["failed"]})},
+            "failure_preview": [{k: x["failure"].get(k) for k in ("document_id", "reason", "resume_condition", "url")}
+                                for x in queues["failed"][:5]],
             "event_count": len(events), "pending_events": len(pending_events), "preview": preview}
 
 
@@ -293,7 +338,7 @@ def full_queue_entries(candidates, tracking, *, now=None, reader_version=READER_
     """All real review-list entries, including inaccessible material tasks."""
     queues = queue_items(candidates, tracking, now=now, reader_version=reader_version)
     entries = {}
-    for name, kind in (("quick", "QUICK"), ("completed", "QUICK"), ("material", "MATERIAL"), ("deep", "DEEP")):
+    for name, kind in (("quick", "QUICK"), ("completed", "QUICK"), ("material", "MATERIAL"), ("deep", "DEEP"), ("failed", "MATERIAL")):
         for item in queues[name]:
             key = (item["document_id"], item.get("body_sha256"), item.get("source_version"))
             entries.setdefault(key, {"document_id": item["document_id"], "body_sha256": item.get("body_sha256"),
@@ -356,6 +401,7 @@ def ensure_bundle(candidates, tracking, **kwargs):
     reader = kwargs.get("reader_version", READER_VERSION)
     queues = queue_items(candidates, tracking, reader_version=reader)
     blocked = {(x["document_id"], x.get("body_sha256")) for x in queues["material"] if x.get("access_status") in ("BLOCKED", "SOURCE_CHANGED")}
+    blocked.update((x["document_id"], x.get("body_sha256")) for x in queues["failed"])
     for bundle in candidates.get("bundles", {}).values():
         refs = bundle.get("documents", [])
         if not refs or any(ref.get("reader_version") != reader for ref in refs):

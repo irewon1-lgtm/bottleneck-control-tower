@@ -45,7 +45,7 @@ def main():
     queues = queue_items(candidates, tracking, now=clock)
     pending_versions = {
         (item['document_id'], item.get('body_sha256') or item.get('source_version'))
-        for name in ('quick', 'material', 'deep', 'data_wait') for item in queues[name]
+        for name in ('quick', 'material', 'deep', 'data_wait', 'failed') for item in queues[name]
     }
     entries = full_queue_entries(candidates, tracking, now=clock)
     review_version_keys = {
@@ -82,7 +82,8 @@ def main():
               'system_wait': candidates.get('summary', {}).get('pending_due', 0),
               'source_wait': summary['material_pending'],
               'collection_completed_at': collection_completed_at}
-    sample.update(retries=sample['retry_attempts'], material_wait=sample['material_pending'],
+    sample.update(failed_total=summary['failed_versions'],
+                  retries=sample['retry_attempts'], material_wait=sample['material_pending'],
                   pending_total=len(pending_versions),
                   oldest_wait_seconds=(sample['oldest_wait_hours'] or 0) * 3600)
     sample.update(criteria_version=CRITERIA_VERSION, fixed_policy=POLICY,
