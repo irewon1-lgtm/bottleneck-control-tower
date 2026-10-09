@@ -13,6 +13,12 @@ from .future_hypothesis import extract_facts, hypothesis_patch, SCOPE_FIELDS, UN
 from .future_ui import display_blob
 
 
+def confirmed_full_observation(item,observation):
+    return (item.get('body_status')=='FULL' and observation.get('body_status')=='FULL'
+            and item.get('body_sha256')==observation.get('body_sha256')
+            and bool(item.get('body_sha256')))
+
+
 def trace_source(item, body, tracking):
     digest=sha256(body.encode()).hexdigest()
     if digest!=item['body_sha256'] or len(body)!=item['body_chars'] or item['body_status']!='FULL':
