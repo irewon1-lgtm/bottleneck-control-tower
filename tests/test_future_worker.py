@@ -15,6 +15,7 @@ from bct.future_reader import OpenAIQuickReader, estimated_cost
 from bct.future_review import queue_summary
 from bct.future_store import LocalJSONTransport
 from bct.future_worker import LOCK_ID, run_worker
+from bct.recovery_queue import project
 
 
 def sources(tmp_path, count=1, partial=()):
@@ -93,6 +94,40 @@ def test_2_repeat_and_concurrent_workers_do_not_duplicate_reading(tmp_path):
     assert calls==['0'] and len(saved)==1
     assert json.loads(paths[2].read_text())['reviews']==saved
     assert result['counts']=={'SUCCESS':1}
+
+
+def test_document_processing_claim_visible_during_reading(tmp_path):
+    paths = sources(tmp_path)
+    def reader(payload):
+        candidates = json.loads(paths[1].read_text())
+        tracking = json.loads(paths[2].read_text())
+        queue = project(candidates, tracking, [], {}, paths[3])
+        assert queue['counts']['PROCESSING'] == 1
+        assert queue['counts']['COMPLETED'] == 0
+        return reply(payload)
+    result = execute(paths, reader)
+    assert result['counts'] == {'SUCCESS': 1}
+    queue = project(json.loads(paths[1].read_text()), json.loads(paths[2].read_text()), [], {}, paths[3])
+    assert queue['counts']['PROCESSING'] == 0
+    assert queue['counts']['COMPLETED'] == 1
+
+
+def test_interrupted_document_claim_prevents_automatic_duplicate_call(tmp_path):
+    paths = sources(tmp_path)
+    calls = []
+    def interrupted_reader(payload):
+        calls.append(payload['document_id'])
+        raise KeyboardInterrupt()
+    with pytest.raises(KeyboardInterrupt):
+        execute(paths, interrupted_reader)
+    tracking = json.loads(paths[2].read_text())
+    assert tracking['runs'][LOCK_ID]['state'] == 'IDLE'
+    assert any(r.get('state') == 'RUNNING' and r.get('document_id') == '0'
+               for r in tracking['runs'].values())
+    again = execute(paths, interrupted_reader, retry_failed=True)
+    assert again['model_calls'] == again['attempted'] == 0
+    assert calls == ['0']
+    assert tracking.get('reviews', {}) == {}
 
 
 def test_3_full_and_partial_keep_body_state_and_missing_data(tmp_path):
