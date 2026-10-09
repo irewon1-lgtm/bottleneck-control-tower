@@ -1,0 +1,74 @@
+name: BCT recovery storage gates
+on:
+  push:
+    branches: [ops/recovery-20261010]
+  workflow_dispatch:
+    inputs:
+      resume_run_id:
+        description: Prior recovery artifact run ID, after its recorded resume condition changed
+        required: false
+        default: ''
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: future-bottleneck-results
+  cancel-in-progress: false
+jobs:
+  storage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read preserved recovery request
+        id: request
+        run: |
+          python - <<'PY'
+          import os,json
+          from pathlib import Path
+          p=Path('.github/bct-recovery-request.json')
+          requested=os.environ.get('DISPATCH_RESUME_RUN') or (json.loads(p.read_text()).get('resume_run_id') if p.exists() else '')
+          if requested and not str(requested).isdigit():raise ValueError('invalid recovery run ID')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as output:output.write('resume_run_id='+str(requested or '')+'\n')
+          PY
+        env:
+          DISPATCH_RESUME_RUN: ${{ inputs.resume_run_id }}
+      - name: Restore prior observations and private cache
+        if: steps.request.outputs.resume_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: bct-recovery-checkpoint-${{ steps.request.outputs.resume_run_id }}
+          run-id: ${{ steps.request.outputs.resume_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/bct-recovery-resume
+      - name: Verify storage, preserving merge and legacy regressions
+        run: |
+          python -m pip install -e '.[test]'
+          python -m pytest -q tests/test_future_github.py tests/test_future_github_shards.py tests/test_future_github_atomic.py tests/test_future_store.py
+      - name: Gate 0 then real GitHub storage Gate 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/scripts/bct_storage_recovery.py
+      - name: Gate 2 original source access on GitHub runner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/scripts/bct_source_audit.py
+      - name: Gate 3 full failed-source inventory
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/scripts/bct_full_source_recovery.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-recovery-checkpoint-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/bct-recovery/checkpoint.json
+            ${{ runner.temp }}/bct-recovery/*.log
+            ${{ runner.temp }}/bct-recovery/source-audit.json
+            ${{ runner.temp }}/bct-recovery/source-recovery-*.json*
+            ${{ runner.temp }}/bct-recovery/private-source-cache/*.txt
+          if-no-files-found: error
+          retention-days: 30

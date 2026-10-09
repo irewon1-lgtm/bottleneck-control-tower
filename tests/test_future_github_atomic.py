@@ -1,0 +1,138 @@
+"""Publication failures cannot expose partial generations or discard a writer."""
+import base64
+import hashlib
+import json
+from urllib.parse import unquote
+
+import pytest
+
+from bct import future_github as storage
+from bct.future_store import StoreConflict, store_patch
+
+PATH = 'future-candidates.json'
+
+
+class GitRemote:
+    def __init__(self, document):
+        self.blobs = {}
+        self.trees = {'t0': {PATH: self.blob(storage._raw(document)), 'keep.txt': self.blob(b'keep')}}
+        self.commits = {'c0': {'tree': {'sha': 't0'}, 'parents': []}}
+        self.head = 'c0'
+        self.calls = []
+        self.fail = None
+        self.race = False
+        self.corrupt = False
+
+    def blob(self, raw):
+        sha = hashlib.sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest()
+        self.blobs[sha] = raw
+        return sha
+
+    def request(self, method, suffix, payload=None):
+        self.calls.append((method, suffix))
+        if self.fail == (method, suffix):
+            raise RuntimeError('injected service error')
+        if method == 'GET' and suffix.startswith('/git/ref/'):
+            return {'object': {'sha': self.head}}
+        if method == 'GET' and suffix.startswith('/git/commits/'):
+            return self.commits[suffix.rsplit('/', 1)[1]]
+        if method == 'GET' and suffix.startswith('/contents/'):
+            path, ref = suffix[len('/contents/'):].split('?ref=')
+            sha = self.trees[self.commits[ref]['tree']['sha']][unquote(path)]
+            return {'sha': sha, 'encoding': 'none'}
+        if method == 'GET' and suffix.startswith('/git/blobs/'):
+            sha = suffix.rsplit('/', 1)[1]
+            raw = b'corruption' if self.corrupt else self.blobs[sha]
+            return {'sha': sha, 'content': base64.b64encode(raw).decode()}
+        if method == 'POST' and suffix == '/git/blobs':
+            return {'sha': self.blob(base64.b64decode(payload['content']))}
+        if method == 'POST' and suffix == '/git/trees':
+            tree = dict(self.trees[payload['base_tree']])
+            tree.update({e['path']: e['sha'] for e in payload['tree']})
+            key = 't' + str(len(self.trees));self.trees[key] = tree
+            return {'sha': key}
+        if method == 'POST' and suffix == '/git/commits':
+            key = 'c' + str(len(self.commits))
+            self.commits[key] = {'tree': {'sha': payload['tree']}, 'parents': payload['parents']}
+            if self.race:
+                self.race = False
+                self.commits['competitor'] = {'tree': {'sha': 't0'}, 'parents': [self.head]}
+                self.head = 'competitor'
+            return {'sha': key}
+        if method == 'PATCH' and suffix.startswith('/git/refs/'):
+            assert payload['force'] is False
+            if self.commits[payload['sha']]['parents'] != [self.head]:
+                raise StoreConflict('not fast-forward')
+            self.head = payload['sha']
+            return {'object': {'sha': self.head}}
+        raise AssertionError((method, suffix))
+
+    def transport(self):
+        return storage.GitHubTransport('owner/repo', 'test', 'test-token', requester=self.request)
+
+
+def test_atomic_roundtrip_reuses_unchanged_shards_and_one_ref_move(monkeypatch):
+    monkeypatch.setattr(storage, 'MAX_REQUEST_BYTES', 6000)
+    monkeypatch.setattr(storage, 'MAX_SHARD_BYTES', 2000)
+    document = {'results': {str(i): {'id': str(i), 'data': 'x' * 700} for i in range(10)}}
+    remote = GitRemote({});t = remote.transport()
+    t.write(PATH, document, t.read(PATH).sha)
+    assert t.read(PATH).document == document
+    assert sum(m == 'PATCH' for m, _ in remote.calls) == 1
+    prior_head = remote.head
+    calls = len(remote.calls)
+    document['results']['0']['data'] = 'y' * 700
+    t.write(PATH, document, t.read(PATH).sha)
+    assert t.read(PATH).document == document
+    delta = remote.calls[calls:]
+    assert sum(m == 'POST' and s == '/git/blobs' for m, s in delta) == 3
+    assert sum(m == 'PATCH' for m, _ in delta) == 1
+    assert remote.commits[remote.head]['parents'] == [prior_head]
+    assert 'keep.txt' in remote.trees[remote.commits[remote.head]['tree']['sha']]
+    calls = len(remote.calls);t.write(PATH, document, t.read(PATH).sha)
+    assert not any(m in ('POST', 'PATCH', 'PUT') for m, _ in remote.calls[calls:])
+
+
+@pytest.mark.parametrize('endpoint', ['/git/blobs', '/git/trees', '/git/commits', '/git/refs/heads/test'])
+def test_failed_stage_never_publishes_or_marks_saved(endpoint):
+    remote = GitRemote({'results': {}, 'notifications': {'n': {'state': 'READY'}}})
+    before = remote.head
+    remote.fail = ('PATCH' if endpoint.startswith('/git/refs') else 'POST', endpoint)
+    result = store_patch(remote.transport(), PATH, owner='notification',
+                         patch={'notifications': {'n': {'state': 'SENT'}}}, operation_id='n')
+    assert result.status == 'PENDING' and remote.head == before
+    assert remote.transport().read(PATH).document['notifications']['n']['state'] == 'READY'
+
+
+def test_concurrent_ref_move_is_rejected_and_preserving_rebase_succeeds():
+    remote = GitRemote({'results': {}});t = remote.transport();remote.race = True
+    old = t.read(PATH)
+    with pytest.raises(StoreConflict):
+        t.write(PATH, {'results': {}, 'summary': {'x': 1}}, old.sha)
+    assert remote.head == 'competitor'
+    result = store_patch(t, PATH, owner='collection', patch={'summary': {'x': 1}}, operation_id='ours')
+    assert result.status == 'APPLIED'
+    assert remote.commits[remote.head]['parents'] == ['competitor']
+
+
+def test_corrupt_blob_never_publishes():
+    remote = GitRemote({});t = remote.transport();old = t.read(PATH);remote.corrupt = True
+    with pytest.raises(ValueError):
+        t.write(PATH, {'results': {'new': 1}}, old.sha)
+    assert remote.head == 'c0'
+
+
+def test_response_diagnostics_distinguish_missing_header_and_rate_limit():
+    no_header = storage.error_details('PUT', '/contents/a', 403, {}, b'{"message":"Forbidden"}')
+    assert no_header['category'] == 'UNCLASSIFIED'
+    assert no_header['retry_after'] is None and no_header['retry_after_observed'] is False
+    secondary = storage.error_details('POST', '/git/blobs', 403,
+        {'Retry-After': '60', 'X-RateLimit-Remaining': '4999', 'X-GitHub-Request-Id': 'id-1'},
+        b'{"message":"secondary rate limit"}')
+    assert secondary['category'] == 'SECONDARY_RATE_LIMIT' and secondary['request_id'] == 'id-1'
+    primary = storage.error_details('GET', '/contents/a', 403,
+        {'X-RateLimit-Remaining': '0', 'X-RateLimit-Reset': '2000'}, b'{}')
+    assert primary['category'] == 'PRIMARY_RATE_LIMIT'
+    denied = storage.error_details('PUT', '/contents/a', 403, {},
+        b'{"message":"Resource not accessible by integration; token secret"}')
+    assert denied['category'] == 'ACCESS_DENIED' and 'secret' not in json.dumps(denied)
