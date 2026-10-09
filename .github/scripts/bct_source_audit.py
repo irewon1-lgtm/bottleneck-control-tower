@@ -1,5 +1,4 @@
 """Gate 2: original URLs on a real runner, preserving exact-version history."""
-import hashlib
 import json
 import os
 from pathlib import Path
@@ -22,6 +21,7 @@ def main():
         raise RuntimeError('previous gates did not pass')
     transport = GitHubTransport(os.environ['GITHUB_REPOSITORY'], 'future-bottleneck-data', os.environ['GITHUB_TOKEN'])
     original = transport.read('future-candidates.json')
+    report['source_audit_candidate_blob'] = original.sha
     tracking = transport.read('future-tracking.json')
     failures = failure_index(tracking.document)
     selected = {}
@@ -38,6 +38,7 @@ def main():
                 ('www.nist.gov', 'www.eia.gov', 'www.esa.int', 'www.fda.gov')]
     for i, item in enumerate(official[:8]):
         selected['official-' + str(i)] = item
+    selected = {item['url']:item for item in selected.values()}
     cache = root / 'private-source-cache';cache.mkdir(exist_ok=True)
     def inspect(item):
         url = item['url'];host = urlsplit(url).hostname

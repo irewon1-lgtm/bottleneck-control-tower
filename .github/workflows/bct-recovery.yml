@@ -11,7 +11,7 @@ concurrency:
 jobs:
   storage:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -29,6 +29,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python .github/scripts/bct_source_audit.py
+      - name: Gate 3 full failed-source inventory
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/scripts/bct_full_source_recovery.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -37,6 +41,7 @@ jobs:
             ${{ runner.temp }}/bct-recovery/checkpoint.json
             ${{ runner.temp }}/bct-recovery/*.log
             ${{ runner.temp }}/bct-recovery/source-audit.json
+            ${{ runner.temp }}/bct-recovery/source-recovery-*.json*
             ${{ runner.temp }}/bct-recovery/private-source-cache/*.txt
           if-no-files-found: error
           retention-days: 30

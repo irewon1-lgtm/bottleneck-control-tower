@@ -1,6 +1,5 @@
 """Publication failures cannot expose partial generations or discard a writer."""
 import base64
-from copy import deepcopy
 import hashlib
 import json
 from urllib.parse import unquote
