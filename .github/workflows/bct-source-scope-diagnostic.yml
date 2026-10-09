@@ -1,0 +1,46 @@
+name: BCT source scope diagnostic
+on:
+  push:
+    branches: [ops/recovery-e2e-guard-20261010]
+    paths: ['.github/workflows/bct-source-scope-diagnostic.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: One official HTTP capture for observed scope-selection failure
+        run: |
+          python - <<'PY'
+          import os,json,hashlib
+          from pathlib import Path
+          from datetime import datetime,timezone
+          from bct.future_bottleneck import fetch_html
+          from bct.future_body import extract_document,_Document,_nodes,_blocks,_skipped,_BODY_CLASS
+          root=Path(os.environ['RUNNER_TEMP'])/'source-scope';root.mkdir()
+          url='https://www.hpcwire.com/2026/09/29/amd-lands-fei-fei-li-the-godmother-of-ai-in-8-2b-world-labs-buy/'
+          fetched=fetch_html(url);raw=fetched['html'].encode('utf-8')
+          digest=hashlib.sha256(raw).hexdigest();(root/(digest+'.html')).write_bytes(raw)
+          doc=_Document();doc.feed(fetched['html']);doc.close()
+          scopes=[]
+          for n in _nodes(doc.root):
+              if n.tag in ('article','main') or n.attrs.get('itemprop')=='articleBody' or _BODY_CLASS.search(str(n.attrs.get('class',''))):
+                  blocks=_blocks(n)
+                  scopes.append({'tag':n.tag,'attrs':n.attrs,'skipped':_skipped(n),'closed':n.closed,'chars':sum(map(len,blocks))})
+          observation={'url':url,'run_id':os.environ['GITHUB_RUN_ID'],'code_sha':os.environ['GITHUB_SHA'],'captured_at':datetime.now(timezone.utc).isoformat(),'http_status':fetched['status'],'truncated':fetched.get('truncated'),'content_type':fetched['content_type'],'utf8_html_sha256':digest,'scopes':scopes,'extraction':extract_document(fetched['html'],http_status=fetched['status'],content_type=fetched['content_type'])}
+          (root/'source-scope.json').write_text(json.dumps(observation,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps({'http_status':fetched['status'],'utf8_html_sha256':digest,'scope_count':len(scopes)}))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-source-scope-${{ github.run_id }}
+          path: ${{ runner.temp }}/source-scope
+          if-no-files-found: error
+          retention-days: 30
