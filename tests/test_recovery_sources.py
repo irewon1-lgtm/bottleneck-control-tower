@@ -45,3 +45,17 @@ def test_technical_error_requires_changed_code_before_retry(tmp_path):
     write(tmp_path,[{'url':'https://a.test/doc','attempted':True,'status':'ERROR'}])
     assert len(restore_observations(tmp_path,tmp_path/'cache')[0])==1
     assert len(restore_observations(tmp_path,tmp_path/'cache',retry_errors=True)[1])==1
+
+
+def test_resume_corrects_control_only_full_but_preserves_observation_and_hash(tmp_path):
+    digest = cache_body(tmp_path/'private-source-cache', 'Save Article')
+    write(tmp_path, [{'url':'https://a.test/doc','attempted':True,
+                     'body_sha256':digest,'body_status':'FULL','status':'FULL'}])
+    observed, pending = restore_observations(tmp_path, tmp_path/'restored')
+    record = observed['https://a.test/doc']
+    assert not pending
+    assert record['status'] == record['body_status'] == 'UNAVAILABLE'
+    assert record['prior_observation_classification']['status'] == 'FULL'
+    assert record['prior_observation_classification']['body_sha256'] == digest
+    assert (tmp_path/'restored'/(digest+'.txt')).read_text() == 'Save Article'
+    assert record['reclassification_rule'] == 'ARTICLE_CONTROL_ONLY_V1'

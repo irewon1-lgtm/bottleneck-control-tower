@@ -15,6 +15,25 @@ def test_short_structurally_complete_official_article_is_full():
     assert result['completeness']['body_scope_closed']
 
 
+@pytest.mark.parametrize('html', [
+    '<article><p>Save Article</p></article>',
+    '<div class="article-body">Save Article</div>',
+    '<script type="application/ld+json">{"@type":"NewsArticle","articleBody":"Save Article"}</script>',
+])
+def test_publisher_control_inside_article_container_is_not_full(html):
+    result = extract_document(html)
+    assert result['body_status'] == 'UNAVAILABLE'
+    assert result['body_sha256'] is None
+    assert 'ARTICLE_CONTROL_ONLY' in result['reasons']
+
+
+def test_direct_adapter_cannot_promote_a_publisher_control(tmp_path):
+    result = acquire_document('https://example.org/a', 'v1', {}, tmp_path,
+                              lambda u: {'body': 'Save Article', 'status': 'FULL'})
+    assert result['metadata']['body_status'] == 'UNAVAILABLE'
+    assert not result['body']
+
+
 @pytest.mark.parametrize('html,status,reason', [
     ('<nav><p>News Investors Contact Subscribe</p></nav>', 200, 'NO_READABLE_BODY'),
     ('<title>Just a moment</title><p>Enable javascript and cookies</p>', 200, 'ACCESS_CHALLENGE'),

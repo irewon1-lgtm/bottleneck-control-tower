@@ -60,10 +60,16 @@ _TABLE_REF = re.compile(r"\b(?:table (?:below|above|\d+)|(?:following|below|abov
 _NOISE_CLASS = re.compile(r"(?:^|[\s_-])(?:advert|advertisement|ad-slot|related|recommended|cookie|social|share|navigation|breadcrumb)(?:$|[\s_-])", re.I)
 _PREVIEW_CLASS = re.compile(r"(?:^|[\s_-])(?:preview|teaser|excerpt|summary|paywall|subscriber-only)(?:$|[\s_-])", re.I)
 _BODY_CLASS = re.compile(r"(?:article|story|entry|post)[-_ ]?(?:body|content|text)|body[-_ ]?copy", re.I)
+_CONTROL_ONLY = re.compile(r"(?:save|share|print|email|bookmark)\s+(?:this\s+)?article|advertisement", re.I)
 
 
 def _plain(text):
     return " ".join(unescape(str(text)).split())
+
+
+def is_control_only_body(text):
+    """A closed article container can still contain only a publisher control."""
+    return bool(_CONTROL_ONLY.fullmatch(_plain(text)))
 
 
 class _Node:
@@ -229,6 +235,8 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
             reasons.append("UNVERIFIED_BODY_SCOPE")
         if not body or not re.search(r"[\w\uac00-\ud7a3]", body):
             status, body, reasons = "UNAVAILABLE", "", ["NO_READABLE_BODY"]
+        elif is_control_only_body(body):
+            status, body, reasons = "UNAVAILABLE", "", ["ARTICLE_CONTROL_ONLY"]
         elif method != "JSON_LD":
             substantive = [n for n in _nodes(node or doc.root) if n.tag in {"p", "li", "td", "dd", "blockquote"}
                            and not _skipped(n) and _text(n)]
@@ -449,6 +457,9 @@ def acquire_document(url, source_version, prior, cache_dir, fetcher, *, trigger=
             extraction["body_sha256"] = hashlib.sha256(body.encode()).hexdigest() if body else None
             extraction["body_chars"] = len(body)
             extraction.setdefault("reasons", [])
+            if is_control_only_body(body):
+                extraction.update(body="", body_status="UNAVAILABLE", body_sha256=None, body_chars=0)
+                extraction["reasons"].append("ARTICLE_CONTROL_ONLY")
         else:
             raise TypeError("fetcher must return HTML or an extraction object")
     except Exception as exc:
