@@ -138,11 +138,16 @@ def fetch_html(url):
     req = Request(url, headers={"User-Agent": "Mozilla/5.0 (compatible; BottleneckControlTower/0.1)",
                                 "Accept": "text/html,application/xhtml+xml"})
     with build_opener(PublicRedirect()).open(req, timeout=8) as response:
-        payload = response.read(2_000_001)
-        if len(payload) > 2_000_000:
-            raise ValueError("BODY_TOO_LARGE")
+        # Publisher templates/live coverage can exceed the former 2 MB cap.
+        # Fetch more while keeping a bounded download. A truncated response
+        # must never be treated as a FULL source by the extraction adapter.
+        maximum = 8 * 1024 * 1024
+        payload = response.read(maximum + 1)
+        truncated = len(payload) > maximum
+        payload = payload[:maximum]
         return {"html": payload.decode(response.headers.get_content_charset() or "utf-8", errors="replace"),
-                "status": response.status, "content_type": response.headers.get_content_type()}
+                "status": response.status, "content_type": response.headers.get_content_type(),
+                "truncated": truncated}
 
 
 def fetch_body(url):

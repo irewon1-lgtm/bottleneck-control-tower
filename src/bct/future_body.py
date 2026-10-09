@@ -39,8 +39,10 @@ def access_failure(exc):
         return {'category': 'TIMEOUT', 'state': 'SOURCE_WAIT', 'retryable': True}
     if isinstance(reason, ConnectionError) or isinstance(exc, URLError):
         return {'category': 'CONNECTION_FAILED', 'state': 'SOURCE_WAIT', 'retryable': True}
+    known = str(exc) if isinstance(exc, ValueError) and str(exc) in (
+        'BODY_TOO_LARGE', 'NON_PUBLIC_URL', 'INVALID_URL') else None
     return {'category': 'COLLECTOR_ERROR', 'state': 'ERROR', 'retryable': False,
-            'error_type': type(exc).__name__}
+            'error_type': type(exc).__name__, 'error_code': known}
 
 
 _VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
@@ -424,6 +426,10 @@ def acquire_document(url, source_version, prior, cache_dir, fetcher, *, trigger=
         elif isinstance(fetched, dict) and "html" in fetched:
             extraction = extract_document(fetched["html"], http_status=fetched.get("status", 200),
                                           content_type=fetched.get("content_type", "text/html"))
+            if fetched.get('truncated'):
+                if extraction['body_status'] == 'FULL':
+                    extraction['body_status'] = 'PARTIAL'
+                extraction.setdefault('reasons', []).append('BODY_DOWNLOAD_TRUNCATED')
             extraction.update(verified_source_metadata(fetched, extraction.get('body_sha256')))
         elif isinstance(fetched, dict) and ("body_status" in fetched or "status" in fetched) and "body" in fetched:
             extraction = deepcopy(fetched)

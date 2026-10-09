@@ -33,3 +33,31 @@ def test_partial_cache_survives_dns_without_becoming_full(tmp_path):
                               trigger='SCHEDULED', trigger_id='changed-runner')
     assert result['body'] == original['body'] and result['metadata']['body_status'] == 'PARTIAL'
     assert result['metadata']['access_diagnostic']['category'] == 'DNS_RESOLUTION_FAILED'
+
+
+def test_truncated_http_response_cannot_become_full_even_with_closed_article(tmp_path):
+    result = acquire_document('https://example.test', 'v1', {}, tmp_path, lambda _:
+        {'html':'<article><p>Complete visible article.</p></article>', 'truncated':True})
+    assert result['metadata']['body_status']=='PARTIAL'
+    assert 'BODY_DOWNLOAD_TRUNCATED' in result['metadata']['reasons']
+
+
+def test_fetcher_reads_large_templates_and_marks_its_hard_limit(monkeypatch):
+    from bct import future_bottleneck as collector
+    from email.message import Message
+    monkeypatch.setattr(collector, 'public_url', lambda _:None)
+    headers=Message();headers['Content-Type']='text/html; charset=utf-8'
+    class Response:
+        status=200
+        def __init__(self,data):self.data=data;self.headers=headers
+        def __enter__(self):return self
+        def __exit__(self,*args):pass
+        def read(self,maximum):return self.data[:maximum]
+    class Opener:
+        def open(self,*args,**kwargs):return Response(data)
+    monkeypatch.setattr(collector,'build_opener',lambda *args:Opener())
+    data=b'x'*(2_000_000+100)
+    assert collector.fetch_html('https://example.test')['truncated'] is False
+    data=b'x'*(8*1024*1024+1)
+    fetched=collector.fetch_html('https://example.test')
+    assert fetched['truncated'] is True and len(fetched['html'])==8*1024*1024

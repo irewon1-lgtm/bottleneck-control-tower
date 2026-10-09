@@ -51,6 +51,9 @@ def main():
             fetched = fetch_html(url)
             result.update(http_request_completed=True, http_status=fetched['status'])
             body = extract_document(fetched['html'], http_status=fetched['status'], content_type=fetched['content_type'])
+            if fetched.get('truncated'):
+                if body['body_status']=='FULL':body['body_status']='PARTIAL'
+                body.setdefault('reasons',[]).append('BODY_DOWNLOAD_TRUNCATED')
             result.update({k:body.get(k) for k in ('body_status','body_sha256','body_chars','reasons','completeness','extraction_method')})
             if body.get('body'):
                 cache_body(cache, body['body'])
