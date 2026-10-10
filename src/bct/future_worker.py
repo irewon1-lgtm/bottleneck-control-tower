@@ -52,7 +52,7 @@ def _patch(transport, path, patch, operation, baseline):
     result = store_patch(transport, path, owner="review", patch=patch,
                          operation_id=operation, prepared_document=baseline)
     if result.status not in ("APPLIED", "ALREADY_APPLIED"):
-        raise RuntimeError("SIDECAR_WRITE_UNCONFIRMED")
+        raise RuntimeError("SIDECAR_WRITE_UNCONFIRMED:" + str(result.reason or "UNKNOWN"))
     return result.document
 
 
