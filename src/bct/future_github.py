@@ -320,7 +320,11 @@ class GitHubTransport(LegacyGitHubTransport):
         return Snapshot(document, sha)
 
     def read(self, path):
-        return self.read_at(path, self.head())
+        # A ref GET can briefly return the parent immediately after a
+        # successful PATCH.  Keep this transport's verified publication as
+        # the monotonic baseline; exact-commit reads are immutable.  A later
+        # non-fast-forward PATCH still detects a real concurrent writer.
+        return self.read_at(path, self.last_commit or self.head())
 
     def _create_verified_blob(self, raw):
         expected = hashlib.sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest()
@@ -376,7 +380,7 @@ class GitHubTransport(LegacyGitHubTransport):
         if (not documents or set(documents)!=set(expected_shas)
                 or set(documents)-{'future-candidates.json','future-tracking.json'}):
             raise ValueError('unapproved sidecar generation paths')
-        head=self.head();previous={};roots={};changed=[]
+        head=self.last_commit or self.head();previous={};roots={};changed=[]
         # Check every source SHA before making any blobs. A stale tracking
         # base must not publish an independently fresh candidate projection.
         for path,document in documents.items():
@@ -396,10 +400,18 @@ class GitHubTransport(LegacyGitHubTransport):
         tree = self.requester('POST', '/git/trees', {'base_tree': commit['tree']['sha'], 'tree': entries})
         saved = self.requester('POST', '/git/commits', {'message': 'Persist verified BCT sidecar generation',
                               'tree': tree['sha'], 'parents': [head]})
-        if self.head() != head:
-            raise StoreConflict('sidecar branch changed before publication')
-        result = self.requester('PATCH', '/git/refs/heads/' + quote(self.branch, safe=''),
-                                {'sha': saved['sha'], 'force': False})
+        try:
+            # The non-forced ref update is the CAS: a sibling commit produced
+            # by another writer is rejected by GitHub.  A pre-PATCH ref GET is
+            # intentionally avoided because mutable-ref visibility can lag
+            # behind the already verified parent commit.
+            result = self.requester('PATCH', '/git/refs/heads/' + quote(self.branch, safe=''),
+                                    {'sha': saved['sha'], 'force': False})
+        except StoreConflict:
+            # Let store_patch's one preserving rebase read the remote writer,
+            # rather than pinning this transport to our former baseline.
+            self.last_commit = None
+            raise
         if result['object']['sha'] != saved['sha']:
             raise ValueError('published ref does not match created commit')
         self.last_commit = saved['sha']

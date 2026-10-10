@@ -94,15 +94,61 @@ def test_atomic_roundtrip_reuses_unchanged_shards_and_one_ref_move(monkeypatch):
     assert not any(m in ('POST', 'PATCH', 'PUT') for m, _ in remote.calls[calls:])
 
 
-def test_exact_commit_readback_ignores_transient_mutable_ref_lag():
+def test_transport_read_keeps_verified_commit_during_transient_ref_lag():
     remote = GitRemote({});t = remote.transport()
     document = {'results': {'new': {'id': 'new'}}}
     t.write(PATH, document, t.read(PATH).sha)
     published = t.last_commit
     # Simulate an immediately repeated ref read returning the prior head.
     remote.head = 'c0'
-    assert t.read(PATH).document == {}
+    assert t.read(PATH).document == document
     assert t.read_at(PATH, published).document == document
+
+
+def test_sequential_store_patches_use_verified_commit_during_ref_lag():
+    remote = GitRemote({'notifications': {}})
+    original = remote.request
+    stale = []
+
+    def request(method, suffix, payload=None):
+        if method == 'GET' and suffix.startswith('/git/ref/') and stale:
+            return {'object': {'sha': stale.pop(0)}}
+        before = remote.head
+        value = original(method, suffix, payload)
+        if method == 'PATCH' and suffix.startswith('/git/refs/'):
+            stale.extend([before, before])
+        return value
+
+    transport = storage.GitHubTransport(
+        'owner/repo', 'test', 'test-token', requester=request)
+    first = store_patch(transport, PATH, owner='notification',
+                        patch={'notifications': {'n1': {'sent': True}}},
+                        operation_id='n1')
+    second = store_patch(transport, PATH, owner='notification',
+                         patch={'notifications': {'n2': {'sent': True}}},
+                         operation_id='n2')
+    assert first.status == second.status == 'APPLIED'
+    assert transport.read_at(PATH, remote.head).document['notifications'] == {
+        'n1': {'sent': True}, 'n2': {'sent': True}}
+    assert remote.commits[remote.head]['parents'] == ['c1']
+
+
+def test_sequential_transport_still_rebases_a_real_competing_writer():
+    remote = GitRemote({'notifications': {}})
+    transport = remote.transport()
+    first = store_patch(transport, PATH, owner='notification',
+                        patch={'notifications': {'n1': {'sent': True}}},
+                        operation_id='n1')
+    assert first.status == 'APPLIED'
+    # The competing writer starts from the current verified generation.
+    remote.trees['t0'] = dict(remote.trees[remote.commits[remote.head]['tree']['sha']])
+    remote.race = True
+    second = store_patch(transport, PATH, owner='notification',
+                         patch={'notifications': {'n2': {'sent': True}}},
+                         operation_id='n2')
+    assert second.status == 'APPLIED'
+    assert transport.read_at(PATH, remote.head).document['notifications'] == {
+        'n1': {'sent': True}, 'n2': {'sent': True}}
 
 
 @pytest.mark.parametrize('endpoint', ['/git/blobs', '/git/trees', '/git/commits', '/git/refs/heads/test'])

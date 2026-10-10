@@ -1,35 +1,34 @@
 {
-  "resume_run_id": "38048197450",
-  "resume_artifact_id": 11668603690,
-  "resume_artifact_sha256": "3f632820e867c43cdb2424707322aadea9f9928e1213146fe9928195a2dddb9a",
+  "resume_run_id": "38052149222",
+  "resume_artifact_id": 11670072256,
+  "resume_artifact_sha256": "4a5e2e90cbd32d21a43302d2d286596c366c701d3acca11b605d8aa145c19899",
   "resume_file_sha256": {
-    "checkpoint.json": "052f1621c0621f811f74f8c4e15ab955c2c58189c025a51489ef356a1ce9308c",
-    "e2e-recovery.json": "07eac5ea274c69d1de6cbc8d3d8a17d19a1da253a971920344cbafa1b420a1bc",
-    "source-audit.json": "7296ae14276339fc77158e74e6a130cfc4b57fee344853468a71005ceac8767a",
+    "checkpoint.json": "64ae74af58b979cb24118baa63a02853bee9951f44f22e82be7ccabf0c094f64",
+    "source-audit.json": "1560302a5b7e8b73a7854fd965fb9e7cdce013081f260d3b9d914f9542db11de",
     "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
     "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
-    "evidence-recovery-observations.json": "ac627ceeada6efe098c8de7cfc56c9ce2a1f6aeec286b3c02870c78a993b80bd",
+    "evidence-recovery-observations.json": "5c9fca9c93cf31fcc3ab2ba4201a4c01c24f45c1bc062b3e986a9ad6820cecdd",
     "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "evidence-recovery-versions.json": "f05d258a53de518c3ebfcf77fc5dbd7cc1c6e6245bac20ade91cebc798c62c71",
-    "local-reader-setup.json": "8dec231ac2cfe841a84480fefe67dde57297ab6e09925cf76ead1b667367ca96",
-    "local-reader-probe.json": "6958359f9b9f51ee6aa5b07885270df304017aa2b8ffc63c92dc96c5663ad5f2",
-    "private-local-reader-execution.jsonl": "95c873139e34c09261f7b7ee0ffe556a222ec305b7f104ec4652dbbbeb793b8f",
-    "recovery-preservation-seal.json": "a11a176827b8529ccfe5e12a84feadafe8879df6014f3cc1ab093e6ed56309d6",
+    "local-reader-setup.json": "d583f0ec212799bb90a46018ac52ffd67678e7a8cf0e8f7bb2a18b1d7662ff5c",
+    "local-reader-probe.json": "4521599f988856d843ccdee2dee5b24fedd6a0dc97de9f50c2896517deb36759",
+    "private-local-reader-execution.jsonl": "3c90455b2285d4e6533d2f7570b297a72e1504ca5ee86baaf63370261d332f96",
+    "recovery-preservation-seal.json": "854339c28a03159d128e8e8f6324468ee10505ac65b4a0e942acaaa01808b485",
     "queue-recovery-versions.json": "276ba8252d37d17b75a4ffe617e553a64614dea01d104c8fa3e2c7dcd2c78ab4",
     "operating-engine-checkpoint.json": "bab9abe0b87b36871e1edc9536d2410a2ac040616a2c8b2953b5a89fcd7d2c19",
     "operating-publication-request.json": "c44b1c92218b052e7bcc5582d03129b466394dee4e258c0c473babc8e1c5009c",
     "native-claim-recovery.json": "b74699e40516c2241f042aa18e19aeacd9bc3f806dc43ffe8b8cb5743b97fddb",
     "native-claim-history.json": "004960cbdc107380cadba27afd6287025d10197a5b362c94bc43e632418d5d08"
   },
-  "resume_cache_inventory_sha256": "930def56a0fdbd53883bff56480d4823ef705aa5824a3467d5a345ba8d3332eb",
+  "resume_cache_inventory_sha256": "7dbdce55455f0b8cb66d9f35eb20b97fd0af1ea124da72f63b1b50293f7eb0bf",
   "retained_seal_sha256": "0d773cb0c9e16283561a6ff72468c8bb6a02aaf7ba8ec522a47ccb887a8cc58a",
   "reader_batch_limit": 5,
-  "reason": "Run32 completed actual Gates 0-6 and native claim reconciliation, then dispatched candidate run 38049994665. GitHub returned a successful empty 204 that the old requester mis-decoded, and the token-created candidate did not emit a downstream Pages workflow_run. Preserve that exact request and candidate; revalidate the minimal no-content and explicit one-shot Pages-dispatch fixes from Stage 0 without repeating either dispatch.",
+  "reason": "Run33 preserved one valid exact-source native response but blocked before any production completion because consecutive isolated-branch writes observed a stale mutable ref. Resume its fully pinned journals and caches, use the transport's verified immutable commit as the monotonic baseline, and revalidate from Stage 0 without repeating the preserved response as a production completion.",
   "latest_failed_run": {
-    "run_id": "38048197450",
-    "artifact_id": 11668603690,
-    "artifact_sha256": "3f632820e867c43cdb2424707322aadea9f9928e1213146fe9928195a2dddb9a",
-    "status": "GATE7_DISPATCH_204_JSON_AND_PAGES_TRIGGER"
+    "run_id": "38052149222",
+    "artifact_id": 11670072256,
+    "artifact_sha256": "4a5e2e90cbd32d21a43302d2d286596c366c701d3acca11b605d8aa145c19899",
+    "status": "STAGE5_SIDECAR_MUTABLE_REF_VISIBILITY"
   },
   "source_scope_reinspection_urls": [],
   "retained_cache": {
@@ -52,6 +51,6 @@
     },
     "inventory_sha256": "af04dd8ef92789e99ee0eb534da74f0a8c4a654b9421f43504ef6d4ec3ba89fa"
   },
-  "changed_condition": "The exact Run32 failure is fixed: 204 No Content is an acknowledged success, uncertain dispatch receipts are reconciled without duplicate requests, and Pages receives one explicit repository dispatch when the token-created candidate cannot emit workflow_run. Revalidate all normal Gates 0-6 before changing main.",
+  "changed_condition": "The exact Run33 failure is fixed: a transport keeps its own SHA-verified immutable publication as the next read/write baseline, while non-forced ref updates still reject a real concurrent writer and trigger one preserving rebase. Revalidate all normal Gates 0-6 before changing main.",
   "full_pipeline": false
 }
