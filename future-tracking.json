@@ -2442,6 +2442,11 @@
       "owner": "review",
       "patch_sha256": "b4ad2b82e426e76d89afcd61a73e870262fb801f84dab34cfa645b9b016cab39",
       "applied_at": "2026-10-10T11:12:18.027789+00:00"
+    },
+    "finish-quick-worker-3a54bdb21a9f4cac94a42030068618e5": {
+      "owner": "review",
+      "patch_sha256": "f1b12f2e91100ff37a4ee34591c3a00add9355c1f62f04c1cb8886378e8bd4f6",
+      "applied_at": "2026-10-10T11:13:44.845925+00:00"
     }
   },
   "policy": {
@@ -180034,6 +180039,392 @@
       "elapsed_seconds": 108.88524504500015,
       "estimated_cost_usd": 0.0,
       "finished_at": "2026-10-10T11:12:16.823162+00:00"
+    },
+    {
+      "id": "quick-worker-3a54bdb21a9f4cac94a42030068618e5",
+      "started_at": "2026-10-10T11:00:31.323094+00:00",
+      "state": "FINISHED",
+      "limit": 5,
+      "max_input_chars": 12000,
+      "results": [
+        {
+          "document_id": "00352e7b-01e2-418a-84ca-e4603e50c9ee",
+          "body_sha256": "ec591626df6d939899c83b6eb0dccd47ffdb0768c6c5bbc7757170695576503c",
+          "event_id": "event-5980a3c56f8beb27396ba393",
+          "state": "SUCCESS",
+          "input_tokens": 1760,
+          "output_tokens": 50,
+          "input_characters": 8189,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-3cdecd038b4e89f33d4e686695f1f44b",
+          "reused": false,
+          "elapsed_seconds": 152.622444912,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "0230d0a6-621c-4934-b840-ad951809e5a2",
+          "body_sha256": "35dc37614804492f24c7528bcb290733a42481db4a43cf8edd490c8ce0d2d36f",
+          "event_id": "event-e8629733fa31b1f64e116aff",
+          "state": "SUCCESS",
+          "input_tokens": 2019,
+          "output_tokens": 43,
+          "input_characters": 9185,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-f8f112106ba1f6b76ec6d9947334868f",
+          "reused": false,
+          "elapsed_seconds": 168.96663419100003,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "0b5bf250-ff77-4f29-95e2-e115fe75b739",
+          "body_sha256": "87c322b9647e86becf5d3e1021e82d0fc5bf00719b63cdbf5e4359d8049dda95",
+          "event_id": "event-af540fb9b10bed55cbb55070",
+          "state": "SUCCESS",
+          "input_tokens": 993,
+          "output_tokens": 48,
+          "input_characters": 4333,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-80a9b494c31158c68b42182580e17b3c",
+          "reused": false,
+          "elapsed_seconds": 96.63858414900005,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "1153a8cd-53fe-418e-ad0d-833ba8fa7a28",
+          "body_sha256": "8b009d4b7f70561cb1fc0afdaed6d0f15b78e39824a3ac792158f6c54dce14f1",
+          "event_id": "event-5c4c59140eb2e6479a0bf36e",
+          "state": "SUCCESS",
+          "input_tokens": 1192,
+          "output_tokens": 40,
+          "input_characters": 5340,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-19545a033b5632c9e959bcd7e9b76c9c",
+          "reused": false,
+          "elapsed_seconds": 114.3180937919999,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "14dfaf33-8022-487b-84dd-72b0b723ac1d",
+          "body_sha256": "227c2ee379deee0702d8d7f0d1f6d5feaabf961ad72988215938af9169b1826c",
+          "event_id": "event-14baaf8a390f8e77565b67fe",
+          "state": "SUCCESS",
+          "input_tokens": 1169,
+          "output_tokens": 50,
+          "input_characters": 5077,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-9c9f0985290b30a0b8a5238dffccb065",
+          "reused": false,
+          "elapsed_seconds": 108.88524504500015,
+          "estimated_cost_usd": 0.0
+        }
+      ],
+      "model_calls": 5,
+      "execution_mode": "LOCAL_ONLY",
+      "before": {
+        "computed_at": "2026-10-10T11:00:47.464032+00:00",
+        "reader_version": "bct-v33-reader-1",
+        "documents_total": 3002,
+        "preserved_versions": 4669,
+        "automatic_candidates": 2600,
+        "review_list_versions": 4352,
+        "quick_pending": 1251,
+        "completed_documents": 329,
+        "deep_pending": 0,
+        "candidate_data_wait": 47,
+        "material_pending": 345,
+        "oldest_wait_hours": 228.98,
+        "failed_versions": 2849,
+        "unresolved_versions": 4226,
+        "failure_reasons": {
+          "ENVIRONMENT_DNS_RESOLUTION_FAILED": 858,
+          "FULL_SOURCE_NOT_OBTAINED": 1917,
+          "REQUIRED_EVIDENCE_MISSING": 74
+        },
+        "failure_preview": [
+          {
+            "document_id": "e46eb0a1-ff8a-4ad5-af98-e856a0874918",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.nist.gov/blogs/taking-measure/home-gut-microbiome-tests-give-varying-results"
+          },
+          {
+            "document_id": "910c5f41-107c-42dc-b82a-ad2c8d0a854a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/ntcsa-setting-up-market-surveillance-unit-as-part-of-preparations-for-sawem-launch-in-april-2026-09-30"
+          },
+          {
+            "document_id": "773e8c78-ade3-47e4-a58b-96557f538e06",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/sibanye-confirms-wage-agreement-for-east-boulder-workers-strikes-continue-at-stillwater-east-columbus-continue-2026-09-30"
+          },
+          {
+            "document_id": "6da39140-fa09-4c6f-949b-0b4c6461642c",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/kropz-announces-plans-to-increase-nanophos-production-capacity-at-elandsfontein-2026-09-30"
+          },
+          {
+            "document_id": "6297cff1-c51c-4410-8d05-9aaed371a57a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/six-years-after-a-mining-reboot-egypts-gold-ambitions-start-to-take-shape-2026-09-30"
+          }
+        ],
+        "event_count": 4425,
+        "pending_events": 4135,
+        "preview": [
+          {
+            "document_id": "00352e7b-01e2-418a-84ca-e4603e50c9ee",
+            "body_sha256": "ec591626df6d939899c83b6eb0dccd47ffdb0768c6c5bbc7757170695576503c",
+            "url": "https://www.freightwaves.com/news/descartes-launches-ai-agent-for-global-trade-data-research",
+            "title": "Descartes launches AI agent for global trade data research",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 202.32,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "0230d0a6-621c-4934-b840-ad951809e5a2",
+            "body_sha256": "35dc37614804492f24c7528bcb290733a42481db4a43cf8edd490c8ce0d2d36f",
+            "url": "https://www.defensenews.com/global/europe/2026/09/18/french-army-wants-to-keep-adversaries-guessing-on-see-through-battlefield/",
+            "title": "French Army wants to keep adversaries guessing on see-through battlefield",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF"
+            ],
+            "wait_hours": 202.32,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "0b5bf250-ff77-4f29-95e2-e115fe75b739",
+            "body_sha256": "87c322b9647e86becf5d3e1021e82d0fc5bf00719b63cdbf5e4359d8049dda95",
+            "url": "https://theloadstar.com/bridging-the-gaps-in-air-cargo-data-an-ideal-challenge-for-ai/",
+            "title": "Bridging the gaps in air cargo data an ideal challenge for AI",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 202.32,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "1153a8cd-53fe-418e-ad0d-833ba8fa7a28",
+            "body_sha256": "8b009d4b7f70561cb1fc0afdaed6d0f15b78e39824a3ac792158f6c54dce14f1",
+            "url": "https://www.defensenews.com/news/pentagon-congress/2026/09/25/us-appeals-court-upholds-pentagons-blacklisting-of-anthropic/",
+            "title": "US appeals court upholds Pentagon’s blacklisting of Anthropic",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 202.32,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "14dfaf33-8022-487b-84dd-72b0b723ac1d",
+            "body_sha256": "227c2ee379deee0702d8d7f0d1f6d5feaabf961ad72988215938af9169b1826c",
+            "url": "https://www.defensenews.com/global/europe/2026/09/11/polish-prime-minister-poland-to-develop-its-own-starlink/",
+            "title": "Polish prime minister: Poland to develop its own Starlink",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 202.32,
+            "resume_at": 0,
+            "kind": "quick"
+          }
+        ]
+      },
+      "held_prior_version_states": {},
+      "attempted": 5,
+      "elapsed_seconds": 704.168031247,
+      "finished_at": "2026-10-10T11:12:26.265940+00:00",
+      "counts": {
+        "SUCCESS": 5
+      },
+      "mean_seconds": 140.83360624940002,
+      "rates": {
+        "SUCCESS": 1.0,
+        "ERROR": 0.0,
+        "BLOCKED": 0.0
+      },
+      "token_totals": {
+        "input_tokens": 7133,
+        "output_tokens": 231
+      },
+      "estimated_cost_usd": 0.0,
+      "projections": {
+        "10": {
+          "seconds": 1408.336062494,
+          "estimated_cost_usd": 0.0,
+          "basis": "THIS_BATCH_ONLY_NOT_A_BACKLOG_GUARANTEE"
+        },
+        "50": {
+          "seconds": 7041.680312470001,
+          "estimated_cost_usd": 0.0,
+          "basis": "THIS_BATCH_ONLY_NOT_A_BACKLOG_GUARANTEE"
+        },
+        "1278": {
+          "seconds": 179985.34878673323,
+          "estimated_cost_usd": 0.0,
+          "basis": "THIS_BATCH_ONLY_NOT_A_BACKLOG_GUARANTEE"
+        }
+      },
+      "after": {
+        "computed_at": "2026-10-10T11:12:42.861578+00:00",
+        "reader_version": "bct-v33-reader-1",
+        "documents_total": 3002,
+        "preserved_versions": 4669,
+        "automatic_candidates": 2600,
+        "review_list_versions": 4352,
+        "quick_pending": 1246,
+        "completed_documents": 334,
+        "deep_pending": 0,
+        "candidate_data_wait": 47,
+        "material_pending": 345,
+        "oldest_wait_hours": 229.18,
+        "failed_versions": 2849,
+        "unresolved_versions": 4221,
+        "failure_reasons": {
+          "ENVIRONMENT_DNS_RESOLUTION_FAILED": 858,
+          "FULL_SOURCE_NOT_OBTAINED": 1917,
+          "REQUIRED_EVIDENCE_MISSING": 74
+        },
+        "failure_preview": [
+          {
+            "document_id": "e46eb0a1-ff8a-4ad5-af98-e856a0874918",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.nist.gov/blogs/taking-measure/home-gut-microbiome-tests-give-varying-results"
+          },
+          {
+            "document_id": "910c5f41-107c-42dc-b82a-ad2c8d0a854a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/ntcsa-setting-up-market-surveillance-unit-as-part-of-preparations-for-sawem-launch-in-april-2026-09-30"
+          },
+          {
+            "document_id": "773e8c78-ade3-47e4-a58b-96557f538e06",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/sibanye-confirms-wage-agreement-for-east-boulder-workers-strikes-continue-at-stillwater-east-columbus-continue-2026-09-30"
+          },
+          {
+            "document_id": "6da39140-fa09-4c6f-949b-0b4c6461642c",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/kropz-announces-plans-to-increase-nanophos-production-capacity-at-elandsfontein-2026-09-30"
+          },
+          {
+            "document_id": "6297cff1-c51c-4410-8d05-9aaed371a57a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/six-years-after-a-mining-reboot-egypts-gold-ambitions-start-to-take-shape-2026-09-30"
+          }
+        ],
+        "event_count": 4425,
+        "pending_events": 4130,
+        "preview": [
+          {
+            "document_id": "15449c82-0a1b-4806-b8c4-f637f317a6a0",
+            "body_sha256": "0d540ca1a707959593cb7e0d95b771b30383adbe0f6d28e331e42fb2b4cba2c6",
+            "url": "https://www.servethehome.com/nvidia-open-agent-safety-platform-launched/",
+            "title": "NVIDIA Open Agent Safety Platform Launched",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 202.52,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "192e498d-bcef-4018-939e-0861a7f69f11",
+            "body_sha256": "08c9da0f2c4a514f38b212d7053f6c31ad9711df1d764f63e23ce3fb35d35e6d",
+            "url": "https://www.datacenterdynamics.com/en/product-news/magpro-launches-aerolev-1850-to-advance-water-smart-cooling-for-ai-data-centers/",
+            "title": "Sponsored: MagPro launches AeroLev 1850 to advance water-smart cooling for AI data centers",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 202.52,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "1981b129-bc94-4b14-a3d8-c29d9bd68e6c",
+            "body_sha256": "a304c535cbca5fcf4cd133df449adde0fff1db28bd6192db3ebba840b6f069bc",
+            "url": "https://www.defensenews.com/news/pentagon-congress/2026/09/30/why-the-pentagon-just-dropped-450m-on-tungsten-mining/",
+            "title": "Why the Pentagon just dropped $450M on tungsten mining",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 202.52,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "1d826688-028c-4434-81d8-5bbc1e396885",
+            "body_sha256": "77e29315de937331cf074393dea71e3f626e6d61f8185f5c8ce9bf18ba52bb99",
+            "url": "https://theloadstar.com/german-security-agencies-baulk-at-cosco-bid-for-zippel/",
+            "title": "German security agencies baulk at Cosco bid for Zippel",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF"
+            ],
+            "wait_hours": 202.52,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "23bdb407-698b-49f5-bc55-32ca07ff2434",
+            "body_sha256": "07e5e49e5d06d683e765d01245503d0582daba6535e8e7c95d751e4f84d44a13",
+            "url": "https://logisticsviewpoints.com/2026/09/29/descartes-network-context-transportation-execution/",
+            "title": "Descartes Brings Network Context to Transportation Execution",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY"
+            ],
+            "wait_hours": 202.52,
+            "resume_at": 0,
+            "kind": "quick"
+          }
+        ]
+      },
+      "source_records_unchanged": true,
+      "completed_delta": 5,
+      "quick_pending_delta": -5,
+      "pending_event_delta": -5,
+      "duplicate_auto_reviews": 0,
+      "distinct_events_attempted": 5,
+      "summary_saved": true
     }
   ],
   "targets": [
