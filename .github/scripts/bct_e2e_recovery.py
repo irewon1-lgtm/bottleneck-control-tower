@@ -27,6 +27,17 @@ FROZEN={'precursor_discovery.py':'614e841938daf41e34d7e31b97ec636f06f2997c8b7b42
     'prospective.py':'6ca939e378ffb02323feecb869aa1aac0e9f7b56ec5cbc92689233e30d65a153'}
 
 
+def private_source_path(root, body_sha256):
+    """Return a cache path only for a materialized body version.
+
+    Historical unavailable versions intentionally retain a null body hash and
+    must be skipped before any filesystem path is constructed.
+    """
+    if not isinstance(body_sha256, str):
+        return None
+    return root/'private-source-cache'/(body_sha256+'.txt')
+
+
 def quality(root):
     checked=sorted([str(p) for p in Path('src/bct').glob('recovery_*.py')])
     checked+=['src/bct/future_local_reader.py','src/bct/future_github.py','src/bct/future_ui.py']
@@ -105,8 +116,9 @@ def execute():
         traces=[];roles: Counter[str]=Counter()
         for key,item in records.items():
             observation=observations.get(item.get('url'),{})
-            path=root/'private-source-cache'/(key[1]+'.txt')
-            if not confirmed_full_observation(item,observation) or not path.exists():continue
+            path=private_source_path(root,key[1])
+            if (path is None or not confirmed_full_observation(item,observation)
+                    or not path.exists()):continue
             trace=trace_source(item,path.read_text(),t.document)
             if key in imported or trace['facts']:
                 traces.append(trace);roles.update(f['role'] for f in trace['facts'])

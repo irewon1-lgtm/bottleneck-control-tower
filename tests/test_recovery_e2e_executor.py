@@ -8,6 +8,11 @@ spec=importlib.util.spec_from_file_location('e2e_executor',Path(__file__).parent
 module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
 
 
+def test_null_body_hash_is_skipped_before_private_cache_path_construction(tmp_path):
+    assert module.private_source_path(tmp_path,None) is None
+    assert module.private_source_path(tmp_path,'a'*64) == tmp_path/'private-source-cache'/('a'*64+'.txt')
+
+
 @pytest.mark.parametrize('class_name,test_name,reason,blocked',[
     ('tests.test_future_store','test_preserving_merge','environment missing',True),
     ('tests.test_forecast_discovery','test_D_real_pre_public_holdout',
