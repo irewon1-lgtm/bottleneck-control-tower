@@ -428,7 +428,7 @@
     if (envelope.format !== "bct-sidecar-display-v1" || typeof envelope.payload !== "string") throw new Error("Invalid display record");
     const hash = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(envelope.payload))), b => b.toString(16).padStart(2, "0")).join("");
     if (hash !== envelope.payload_sha256) throw new Error("Display payload hash mismatch");
-    if (name === "future-candidates.json") {
+    if (["future-candidates.json", "future-tracking.json"].includes(name)) {
       const authoritative = await fetch(`${base}${name}?t=${Date.now()}`, options);
       if (!authoritative.ok) throw new Error("Latest generation unavailable");
       const root = await authoritative.text(), manifest = JSON.parse(root);

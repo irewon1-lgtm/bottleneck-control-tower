@@ -18,6 +18,7 @@ LATEST_ROOT_STATE = (
     'private-local-reader-execution.jsonl',
     'recovery-preservation-seal.json',
     'queue-recovery-versions.json',
+    'operating-engine-checkpoint.json',
 )
 
 

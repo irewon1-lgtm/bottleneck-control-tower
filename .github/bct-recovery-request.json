@@ -1,24 +1,24 @@
 {
-  "resume_run_id": "38015576136",
-  "resume_artifact_id": 11655983307,
-  "resume_artifact_sha256": "61e09965bcfe388e1d1b9f06768aa49b01e1f5a5f03c8d3f979c28952d0ab2ed",
+  "resume_run_id": "38033299066",
+  "resume_artifact_id": 11663810030,
+  "resume_artifact_sha256": "a2426fa23c07f88ca0c8885f93dd671007b0704810faeb1d87437b4178010742",
   "resume_file_sha256": {
-    "checkpoint.json": "f1be04a69b5ee1746f0b2f6abf397f13fd2032570bea7940f8602c105f21e199",
-    "restore-verification.json": "b73b7a56ef46a2301de1d2a016b61081350ad69d2fd27a39dad525092d577a99",
-    "source-audit.json": "32b4dfc9aedbce31cf1e78d7763b440bcf72552140f236fd9ad9f5299bafe792",
+    "checkpoint.json": "710f519ee69c3c17f1845f907d240d1dc54f7000b9aff89bdbccedb5845c08f8",
+    "restore-verification.json": "41452dbe51c5158f3fcdc6d68a21cdab3153e970c0c6d5169b2521b699f5c15c",
+    "source-audit.json": "72fa05b7e86bf374c4533d3eb25dded8673376750905352fc46cee3470f0a1b3",
     "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
     "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
-    "evidence-recovery-observations.json": "f83db9b6fdfc625ca55132250343315cf69bb62b55da18f86dcbe1167bf29f9a",
+    "evidence-recovery-observations.json": "a50a577a19d2c6af0d479bd34d07bfac29ecf463d6e40ff780dba94d157d1914",
     "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "evidence-recovery-versions.json": "f05d258a53de518c3ebfcf77fc5dbd7cc1c6e6245bac20ade91cebc798c62c71",
-    "local-reader-setup.json": "bc9570d9511e1195b913265c251dcd5e51a02caea576b2d0018ac346fad2add6",
-    "local-reader-probe.json": "9d9f6b4584de5a8e96ddf7c3f51447f1a2ca11825a592e3f5aa9a20e606e8298",
-    "private-local-reader-execution.jsonl": "d658e37facaa75e97e789922139d41938482d7c70a7bc98a354bf6ffecef8ec5",
-    "recovery-preservation-seal.json": "af08ce8ff2ca2327450ad76827c01c5c2fd4f2997c7fff745a8105ff405704a9",
-    "queue-recovery-versions.json": "d0e4beb41990208b01800421cc66b2529b41d7f438328ed1888d2283cdd428cc",
-    "e2e-recovery.json": "cacc8b61502fdfc9622b0f15ce575b41f521ea2dac110d8bd242525b88a53675"
+    "local-reader-setup.json": "3e75bc4918de8697fd1661dfcfb57637ade12584de3c8e0cc9ee1695f14b869a",
+    "local-reader-probe.json": "202ffa12308018f5ef3168c9f3a29b895eff41cacbb9012ccc8c61793fc535c6",
+    "private-local-reader-execution.jsonl": "4586d07165dbf2209d4fc57d53aaf5f217632b77babffe606f8ea69583332b30",
+    "recovery-preservation-seal.json": "b2f39fe54eff1bb2141bdcc007622a1093f232cf07059df902390ecc9c5ef3d4",
+    "queue-recovery-versions.json": "74204f48629cc10e20bc27607087f60451870c770da201dd65a80a1ac4047d9f",
+    "e2e-recovery.json": "aad6d5173bf636ae4624451c586dade8d65c93961eb90d60b3c0dff9d4f156a4"
   },
-  "resume_cache_inventory_sha256": "5d22b4f53e9447aaa52687e2a254c70615b92678eb983b99ff24dab60d5dd50b",
+  "resume_cache_inventory_sha256": "20d0c94131be45b765cc05a6940ab2ae0e77045b906dd64f7640140e3d7134c1",
   "retained_seal_sha256": "0d773cb0c9e16283561a6ff72468c8bb6a02aaf7ba8ec522a47ccb887a8cc58a",
   "reader_batch_limit": 5,
   "reason": "User explicitly authorized recovery resumption on 2026-10-10: remove only the unused objective_binding import and update the active frozen hash bindings. Keep all historical proofs and protected source/decision/cache/history data. Restore Run23 complete checkpoint, source/evidence/native journals and preservation seal with exact SHA pins; the fixed raw forecast engine hash is documented in config/bct-recovery-freeze-amendment.json. Restart Stage0 through Gate6 after this actual code/policy change; no reinspection of previously recovered source URLs. Gate7 and FULL remain unverified until their actual executors complete. Do not count prior PASS receipts as independent FULL CLEAN.",
@@ -49,5 +49,6 @@
       "recovery-preservation-seal.json": "669e382e7f02e52e03806fe86b146e9e7d25ec8d472772c88aa082f42ce82f9d"
     },
     "inventory_sha256": "af04dd8ef92789e99ee0eb534da74f0a8c4a654b9421f43504ef6d4ec3ba89fa"
-  }
+  },
+  "changed_condition": "Fix run24 actual old collector activation hash mismatch with exact approved import-only amendment; retain original activation and source cache. Add operating queue atomic publisher and fresh Pages/Actions verifiers; candidate automation remains guarded until actual Gates0-6 pass and main release proof exists. Restart all stages from0."
 }

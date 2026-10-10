@@ -29,7 +29,8 @@ def checkpoint(path, value):
         Path(temporary).unlink(missing_ok=True)
 
 
-def run(stages, *, fingerprint, output, repair=None, deadline=None):
+def run(stages, *, fingerprint, output, repair=None, deadline=None,
+        single_cycle=False, execution_identity=None, condition=None):
     """Every changed-condition retry begins at 0; require three fresh cycles.
 
     Stage results need status, actual_execution=True, execution_id, evidence
@@ -39,13 +40,22 @@ def run(stages, *, fingerprint, output, repair=None, deadline=None):
     """
     path = Path(output)
     state: dict[str, Any] = json.loads(path.read_text()) if path.exists() else {'attempts': [], 'clean_streak': 0}
+    if single_cycle and not execution_identity:
+        raise ValueError('independent runner execution identity required')
+    if single_cycle and any(a.get('runner_execution_identity') == execution_identity
+                            for a in state['attempts']):
+        # Re-reading a completed/failed run is idempotent, never a new CLEAN.
+        return state
     current = fingerprint()
+    observed_condition = condition() if condition is not None else None
     if (state.get('status') in ('FAIL', 'BLOCKED') and state.get('fingerprint') == current
+            and state.get('verified_condition') == observed_condition
             and state.get('reason') != 'RUNNER_DEADLINE'):
         return state
     if state.get('fingerprint') != current:
         state['clean_streak'] = 0
-    state.update(status='RUNNING', fingerprint=current, resume_stage=0)
+    state.update(status='RUNNING', fingerprint=current, resume_stage=0,
+                 verified_condition=observed_condition)
     while True:
         if deadline is not None and time.monotonic() >= deadline:
             state.update(status='BLOCKED', reason='RUNNER_DEADLINE', resume_stage=0,
@@ -53,6 +63,8 @@ def run(stages, *, fingerprint, output, repair=None, deadline=None):
             checkpoint(path, state);return state
         attempt = {'id': uuid.uuid4().hex, 'started_at': datetime.now(timezone.utc).isoformat(),
                    'fingerprint': fingerprint(), 'stages': []}
+        if single_cycle:
+            attempt['runner_execution_identity'] = execution_identity
         state['attempts'].append(attempt)
         failed = None
         for stage in STAGES:
@@ -99,5 +111,9 @@ def run(stages, *, fingerprint, output, repair=None, deadline=None):
         if state['clean_streak'] == 3:
             state.update(status='PASS', resume_stage=None,
                          prediction_performance='UNVERIFIED')
+            checkpoint(path, state);return state
+        if single_cycle:
+            state.update(status='RUNNING', reason='INDEPENDENT_NEXT_RUN_REQUIRED', resume_stage=0,
+                         resume_condition='A distinct real runner must execute all stages from Stage 0')
             checkpoint(path, state);return state
         checkpoint(path, state)

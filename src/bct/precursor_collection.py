@@ -54,7 +54,20 @@ def init(root, manifest):
     root = Path(root)
     path = root / 'activation.json'
     if path.exists():
-        return read(path)
+        activation = read(path)
+        amendment_path = Path(__file__).resolve().parents[2]/'config/bct-recovery-freeze-amendment.json'
+        if activation['engine_hashes'] != hashes() and amendment_path.exists():
+            from .recovery_freeze import resolve_activation
+            effective = stamp_export(resolve_activation(activation, hashes(), read(amendment_path),
+                Path(forecast_discovery.__file__).read_bytes()))
+            derived = root/'activation-amendments'/(forecast_discovery.digest(effective)+'.json')
+            if derived.exists():
+                if read(derived) != effective:
+                    raise ValueError('preserved activation amendment differs')
+            else:
+                put(derived, effective)
+            return effective
+        return activation
     exclusions=read(Path(__file__).resolve().parents[2]/'config/precursor-baseline-exclusions.json')
     if exclusions['document_count']!=2000:raise ValueError('frozen corpus exclusion manifest invalid')
     started = manifest['collection_started_at']
