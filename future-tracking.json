@@ -2732,6 +2732,11 @@
       "owner": "review",
       "patch_sha256": "83e6fde246b4fae5e2d8a828df23b375b018d904dae0259dda23a66b94d0a1ed",
       "applied_at": "2026-10-10T15:21:10.749241+00:00"
+    },
+    "finish-quick-worker-521ebc2ad76548fa8610f4eb4201d347": {
+      "owner": "review",
+      "patch_sha256": "9087efbef644ce25c05509af29d3944ed6fdd98e3a9cc8a1f8ebc2ca3b41eb67",
+      "applied_at": "2026-10-10T15:22:33.052114+00:00"
     }
   },
   "policy": {
@@ -182895,6 +182900,394 @@
       "elapsed_seconds": 54.12354572000004,
       "estimated_cost_usd": 0.0,
       "finished_at": "2026-10-10T15:21:10.225878+00:00"
+    },
+    {
+      "id": "quick-worker-521ebc2ad76548fa8610f4eb4201d347",
+      "started_at": "2026-10-10T15:14:17.287013+00:00",
+      "state": "FINISHED",
+      "limit": 5,
+      "max_input_chars": 12000,
+      "results": [
+        {
+          "document_id": "422438fa-c8b6-4f32-9c70-75d66e146b87",
+          "body_sha256": "1ca73d6b3d131990b54aac9099a9323477a7c681f7060c587782cb6558dd6731",
+          "event_id": "event-77c6e0c7204ee809ec6e20e9",
+          "state": "SUCCESS",
+          "input_tokens": 1489,
+          "output_tokens": 62,
+          "input_characters": 6357,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-55eb79f88505833842b5be630b240683",
+          "reused": false,
+          "elapsed_seconds": 66.230589539,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "4fc86ca6-00e6-473c-bea8-d0eee10dcde7",
+          "body_sha256": "0201630130c60cfc85bfbad447d435e40f2e7d97be9d769a73a67d0cea0c3427",
+          "event_id": "event-d796a779c12dcb5de41233d7",
+          "state": "SUCCESS",
+          "input_tokens": 1859,
+          "output_tokens": 50,
+          "input_characters": 8170,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-d60904281041d7c18c73e7c27cfe23b1",
+          "reused": false,
+          "elapsed_seconds": 71.27483350700004,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "518b0b58-1383-4540-912f-2533fe874c4a",
+          "body_sha256": "b2ff6375bac98788f431fbcd1d26011ba1239fa6c7f03e5892d53fc21fd812d4",
+          "event_id": "event-e4586e008c3d80914627dbbd",
+          "state": "SUCCESS",
+          "input_tokens": 2903,
+          "output_tokens": 41,
+          "input_characters": 11681,
+          "disposition": "DATA_INSUFFICIENT",
+          "review_id": "auto-quick-3fb65160610a20f7ea5997fbe1ed9a09",
+          "reused": false,
+          "elapsed_seconds": 98.06197373099997,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "59f0cf54-3edb-4000-92d8-6d8472a824a5",
+          "body_sha256": "9419d5d7780f2e2d6081a59af7f31587ca5ebb952add0fe61ba00e4ee007eea9",
+          "event_id": "event-3c45c68e606a4389c7d99639",
+          "state": "SUCCESS",
+          "input_tokens": 1652,
+          "output_tokens": 45,
+          "input_characters": 7393,
+          "disposition": "DATA_INSUFFICIENT",
+          "review_id": "auto-quick-8b2faadab271124f08dfdceda6cb6a08",
+          "reused": false,
+          "elapsed_seconds": 67.12818251700003,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "602df69e-f795-4635-a2f6-7720f6cd622e",
+          "body_sha256": "19f1ac5aaa9c00aee88aa63163c9605ddd10c50c46669629814678b0c079e735",
+          "event_id": "event-d9e13653b6b04b80664d13e3",
+          "state": "SUCCESS",
+          "input_tokens": 1095,
+          "output_tokens": 43,
+          "input_characters": 4415,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-b34af73d138227511e5e42635bf1992b",
+          "reused": false,
+          "elapsed_seconds": 54.12354572000004,
+          "estimated_cost_usd": 0.0
+        }
+      ],
+      "model_calls": 5,
+      "execution_mode": "LOCAL_ONLY",
+      "before": {
+        "computed_at": "2026-10-10T15:14:31.341229+00:00",
+        "reader_version": "bct-v33-reader-1",
+        "documents_total": 3002,
+        "preserved_versions": 4669,
+        "automatic_candidates": 2600,
+        "review_list_versions": 4352,
+        "quick_pending": 1216,
+        "completed_documents": 364,
+        "deep_pending": 0,
+        "candidate_data_wait": 51,
+        "material_pending": 345,
+        "oldest_wait_hours": 233.21,
+        "failed_versions": 2849,
+        "unresolved_versions": 4195,
+        "failure_reasons": {
+          "ENVIRONMENT_DNS_RESOLUTION_FAILED": 858,
+          "FULL_SOURCE_NOT_OBTAINED": 1917,
+          "REQUIRED_EVIDENCE_MISSING": 74
+        },
+        "failure_preview": [
+          {
+            "document_id": "e46eb0a1-ff8a-4ad5-af98-e856a0874918",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.nist.gov/blogs/taking-measure/home-gut-microbiome-tests-give-varying-results"
+          },
+          {
+            "document_id": "910c5f41-107c-42dc-b82a-ad2c8d0a854a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/ntcsa-setting-up-market-surveillance-unit-as-part-of-preparations-for-sawem-launch-in-april-2026-09-30"
+          },
+          {
+            "document_id": "773e8c78-ade3-47e4-a58b-96557f538e06",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/sibanye-confirms-wage-agreement-for-east-boulder-workers-strikes-continue-at-stillwater-east-columbus-continue-2026-09-30"
+          },
+          {
+            "document_id": "6da39140-fa09-4c6f-949b-0b4c6461642c",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/kropz-announces-plans-to-increase-nanophos-production-capacity-at-elandsfontein-2026-09-30"
+          },
+          {
+            "document_id": "6297cff1-c51c-4410-8d05-9aaed371a57a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/six-years-after-a-mining-reboot-egypts-gold-ambitions-start-to-take-shape-2026-09-30"
+          }
+        ],
+        "event_count": 4425,
+        "pending_events": 4104,
+        "preview": [
+          {
+            "document_id": "4190b9e8-ff3a-45f4-bab4-87b5cc9e9782",
+            "body_sha256": "725a4e05a7009e99b059f7288f28c68343690d27a3a5d334aace61e02706d133",
+            "url": "https://logisticsviewpoints.com/2026/09/29/the-global-refining-network-is-becoming-a-logistics-chokepoint/",
+            "title": "The Global Refining Network Is Becoming a Logistics Chokepoint",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 206.55,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "422438fa-c8b6-4f32-9c70-75d66e146b87",
+            "body_sha256": "1ca73d6b3d131990b54aac9099a9323477a7c681f7060c587782cb6558dd6731",
+            "url": "https://www.defensenews.com/industry/techwatch/2026/09/29/us-navy-selects-boeing-to-build-next-generation-fa-xx-fighter/",
+            "title": "US Navy selects Boeing to build next-generation F/A-XX fighter",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF"
+            ],
+            "wait_hours": 206.55,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "4fc86ca6-00e6-473c-bea8-d0eee10dcde7",
+            "body_sha256": "0201630130c60cfc85bfbad447d435e40f2e7d97be9d769a73a67d0cea0c3427",
+            "url": "https://www.defensenews.com/air/2026/09/23/air-force-civilian-staff-dispute-status-of-china-aerospace-studies-institute/",
+            "title": "Air Force, civilian staff dispute status of China Aerospace Studies Institute",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF"
+            ],
+            "wait_hours": 206.55,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "518b0b58-1383-4540-912f-2533fe874c4a",
+            "body_sha256": "b2ff6375bac98788f431fbcd1d26011ba1239fa6c7f03e5892d53fc21fd812d4",
+            "url": "https://www.servethehome.com/amd-takes-the-lid-off-of-next-gen-epyc-9006-venice-as-zen-6-comes-to-servers/",
+            "title": "AMD Takes the Lid off of Next-Gen EPYC 9006 Venice As Zen 6 Comes to Servers",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "SUPPLY",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 206.55,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "59f0cf54-3edb-4000-92d8-6d8472a824a5",
+            "body_sha256": "9419d5d7780f2e2d6081a59af7f31587ca5ebb952add0fe61ba00e4ee007eea9",
+            "url": "https://www.defensenews.com/global/europe/2026/09/25/thales-in-quite-advanced-talks-with-nato-countries-on-ai-powered-command-software/",
+            "title": "Thales in ‘quite advanced’ talks with NATO countries on AI-powered command software",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 206.55,
+            "resume_at": 0,
+            "kind": "quick"
+          }
+        ]
+      },
+      "held_prior_version_states": {},
+      "attempted": 5,
+      "elapsed_seconds": 412.06369373799987,
+      "finished_at": "2026-10-10T15:21:19.156777+00:00",
+      "counts": {
+        "SUCCESS": 5
+      },
+      "mean_seconds": 82.41273874759997,
+      "rates": {
+        "SUCCESS": 1.0,
+        "ERROR": 0.0,
+        "BLOCKED": 0.0
+      },
+      "token_totals": {
+        "input_tokens": 8998,
+        "output_tokens": 241
+      },
+      "estimated_cost_usd": 0.0,
+      "projections": {
+        "10": {
+          "seconds": 824.1273874759997,
+          "estimated_cost_usd": 0.0,
+          "basis": "THIS_BATCH_ONLY_NOT_A_BACKLOG_GUARANTEE"
+        },
+        "50": {
+          "seconds": 4120.636937379999,
+          "estimated_cost_usd": 0.0,
+          "basis": "THIS_BATCH_ONLY_NOT_A_BACKLOG_GUARANTEE"
+        },
+        "1278": {
+          "seconds": 105323.48011943277,
+          "estimated_cost_usd": 0.0,
+          "basis": "THIS_BATCH_ONLY_NOT_A_BACKLOG_GUARANTEE"
+        }
+      },
+      "after": {
+        "computed_at": "2026-10-10T15:21:37.889136+00:00",
+        "reader_version": "bct-v33-reader-1",
+        "documents_total": 3002,
+        "preserved_versions": 4669,
+        "automatic_candidates": 2600,
+        "review_list_versions": 4352,
+        "quick_pending": 1211,
+        "completed_documents": 369,
+        "deep_pending": 0,
+        "candidate_data_wait": 53,
+        "material_pending": 345,
+        "oldest_wait_hours": 233.32,
+        "failed_versions": 2849,
+        "unresolved_versions": 4192,
+        "failure_reasons": {
+          "ENVIRONMENT_DNS_RESOLUTION_FAILED": 858,
+          "FULL_SOURCE_NOT_OBTAINED": 1917,
+          "REQUIRED_EVIDENCE_MISSING": 74
+        },
+        "failure_preview": [
+          {
+            "document_id": "e46eb0a1-ff8a-4ad5-af98-e856a0874918",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.nist.gov/blogs/taking-measure/home-gut-microbiome-tests-give-varying-results"
+          },
+          {
+            "document_id": "910c5f41-107c-42dc-b82a-ad2c8d0a854a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/ntcsa-setting-up-market-surveillance-unit-as-part-of-preparations-for-sawem-launch-in-april-2026-09-30"
+          },
+          {
+            "document_id": "773e8c78-ade3-47e4-a58b-96557f538e06",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/sibanye-confirms-wage-agreement-for-east-boulder-workers-strikes-continue-at-stillwater-east-columbus-continue-2026-09-30"
+          },
+          {
+            "document_id": "6da39140-fa09-4c6f-949b-0b4c6461642c",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/kropz-announces-plans-to-increase-nanophos-production-capacity-at-elandsfontein-2026-09-30"
+          },
+          {
+            "document_id": "6297cff1-c51c-4410-8d05-9aaed371a57a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/six-years-after-a-mining-reboot-egypts-gold-ambitions-start-to-take-shape-2026-09-30"
+          }
+        ],
+        "event_count": 4425,
+        "pending_events": 4101,
+        "preview": [
+          {
+            "document_id": "4190b9e8-ff3a-45f4-bab4-87b5cc9e9782",
+            "body_sha256": "725a4e05a7009e99b059f7288f28c68343690d27a3a5d334aace61e02706d133",
+            "url": "https://logisticsviewpoints.com/2026/09/29/the-global-refining-network-is-becoming-a-logistics-chokepoint/",
+            "title": "The Global Refining Network Is Becoming a Logistics Chokepoint",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 206.66,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "59f33f5f-aef6-47af-8bc7-2d5e0ed69a47",
+            "body_sha256": "6737bf0898d04f0320da746135345b0ee5b7acbb00dc06990f89e8f0c8072aaf",
+            "url": "https://www.renewableenergyworld.com/energy-business/new-project-development/a-bipartisan-spark-for-the-grid-factor-this-brief/",
+            "title": "A bipartisan SPARK for the grid | Factor This Brief",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF"
+            ],
+            "wait_hours": 206.66,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "6e8d0a68-2c78-4b7b-8672-ce0831bf8026",
+            "body_sha256": "76dc81b488216b97ea03e3aec62b84f5867f152776132b4e8925d445499224fc",
+            "url": "https://www.supplychain247.com/article/descartes-datamyne-ai-agent-global-trade-data",
+            "title": "Descartes Adds AI Agent Aims to Speed Up Supplier and Trade Research",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 206.66,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "70ba1dab-13a8-44ad-8d3e-119f94c90ca4",
+            "body_sha256": "1bcc08f0f9805be1b0f869be05563a35a34698be6c9d9b178757f22478a8e001",
+            "url": "https://www.renewableenergyworld.com/power-grid/outage-management/wildfire-detection-from-space-xprize-competition-awards-promising-emerging-resilience-tech/",
+            "title": "Wildfire detection from space? XPRIZE competition awards promising emerging resilience tech",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 206.66,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "78ad5f3c-9b6f-462f-9351-432e80c64a3b",
+            "body_sha256": "ecf7d41182de222b0b4fb3685987ee297dcebc95d0e75c74eb71caaf65664000",
+            "url": "https://www.freightwaves.com/news/flexport-mcp-server-ai-agents-freight-booking",
+            "title": "Flexport launches MCP Server for AI agents to book freight",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 206.66,
+            "resume_at": 0,
+            "kind": "quick"
+          }
+        ]
+      },
+      "source_records_unchanged": true,
+      "completed_delta": 5,
+      "quick_pending_delta": -5,
+      "pending_event_delta": -3,
+      "duplicate_auto_reviews": 0,
+      "distinct_events_attempted": 5,
+      "summary_saved": true
     }
   ],
   "targets": [
