@@ -53,11 +53,11 @@ def main():
         report['identity_preservation']=verify_preservation(original.document,tracking.document,preservation_baseline)
         request=json.loads(Path('.github/bct-recovery-request.json').read_text())
         retained_path=Path('config/bct-recovery-retained-seal.json')
+        retained_baseline=None
         if request.get('retained_seal_sha256'):
             if hashlib.sha256(retained_path.read_bytes()).hexdigest()!=request['retained_seal_sha256']:
                 raise ValueError('retained production preservation seal differs')
-            report['retained_identity_preservation']=verify_preservation(
-                original.document,tracking.document,json.loads(retained_path.read_text()))
+            retained_baseline=json.loads(retained_path.read_text())
         recovered_seal=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume/recovery-preservation-seal.json'
         if recovered_seal.exists():
             request=json.loads(Path('.github/bct-recovery-request.json').read_text())
@@ -82,8 +82,8 @@ def main():
                 if not receipts:
                     raise
                 verify_preservation(repaired,tracking.document,preservation_baseline)
-                if request.get('retained_seal_sha256'):
-                    verify_preservation(repaired,tracking.document,json.loads(retained_path.read_text()))
+                if retained_baseline is not None:
+                    verify_preservation(repaired,tracking.document,retained_baseline)
                 verify_preservation(repaired,tracking.document,recovered_baseline)
                 roots=transport.write_many(
                     {'future-candidates.json':repaired,'future-tracking.json':tracking.document},
@@ -101,6 +101,9 @@ def main():
                     'restored_version_records':receipts,
                     'tracking_unchanged':confirmed_tracking.document==tracking.document}
                 original,tracking=confirmed_candidate,confirmed_tracking
+        if retained_baseline is not None:
+            report['retained_identity_preservation']=verify_preservation(
+                original.document,tracking.document,retained_baseline)
         # A later failed gate must still carry the verified current baseline.
         (root/'recovery-preservation-seal.json').write_text(
             json.dumps(seal(original.document,tracking.document),ensure_ascii=False,indent=2)+'\n')
