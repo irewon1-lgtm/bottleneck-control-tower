@@ -1,6 +1,6 @@
 from copy import deepcopy
 import pytest
-from bct.recovery_preservation import digest,verify,seal
+from bct.recovery_preservation import digest,verify,seal,restore_version_records
 
 
 def inputs():
@@ -38,3 +38,32 @@ def test_recovered_seal_preserves_new_reads_and_version_judgments_beyond_static_
     assert verify(candidates,tracking,baseline)['status']=='PASS'
     candidates['results']['doc']['versions']['body']['score']=8
     with pytest.raises(ValueError,match='version judgment'):verify(candidates,tracking,baseline)
+
+
+def test_restore_sealed_version_only_keeps_new_observation_and_versions():
+    trusted,tracking,_=inputs()
+    trusted['results']['doc']['observation']='old'
+    baseline=seal(trusted,tracking)
+    current=deepcopy(trusted)
+    current['results']['doc']['observation']='new'
+    current['results']['doc']['acquisition']={'history':['new source check']}
+    current['results']['doc']['versions']['body']['score']=99
+    current['results']['doc']['versions']['new-body']={'body_status':'PARTIAL'}
+
+    repaired,receipts=restore_version_records(current,baseline,trusted)
+
+    assert verify(repaired,tracking,baseline)['status']=='PASS'
+    assert repaired['results']['doc']['observation']=='new'
+    assert repaired['results']['doc']['acquisition']=={'history':['new source check']}
+    assert repaired['results']['doc']['versions']['new-body']=={'body_status':'PARTIAL'}
+    assert receipts==[{'document_id':'doc','body_sha256':'body',
+                       'before_sha256':digest(current['results']['doc']['versions']['body']),
+                       'restored_sha256':baseline['version_record_hashes']['doc']['body']}]
+
+
+def test_restore_refuses_untrusted_replacement():
+    trusted,tracking,_=inputs();baseline=seal(trusted,tracking)
+    current=deepcopy(trusted);current['results']['doc']['versions']['body']['score']=99
+    bad=deepcopy(trusted);bad['results']['doc']['versions']['body']['score']=7
+    with pytest.raises(ValueError,match='trusted generation'):
+        restore_version_records(current,baseline,bad)

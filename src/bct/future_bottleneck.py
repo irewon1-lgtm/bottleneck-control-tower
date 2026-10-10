@@ -1,6 +1,7 @@
 """Independent, recall-first body screening. Canonical SQLite is never written."""
 import argparse
 from concurrent.futures import ThreadPoolExecutor
+from copy import deepcopy
 from datetime import datetime, timezone, timedelta
 import hashlib
 from html.parser import HTMLParser
@@ -504,17 +505,21 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
             versions[old_hash]["completeness_unverified"] = True
         body_hash = meta.get("body_sha256")
         if body_hash and body:
-            versions[body_hash] = {k: result[k] for k in (
-                "body_sha256", "body_status", "body_chars", "extraction_method", "reasons",
-                "completeness", "source_version", "checked_at", "filter_version", "candidate",
-                "decision", "evidence", "discovery_paths", "evidence_locations", "context_review",
-                "quoted_word_count", "tracked_matches", "targets", "queue_entered_at", "reaccess_status") if k in result}
-            versions[body_hash].update({k: result[k] for k in ('scope_facts', 'supply_relationships', 'published_at', 'publication_precision', 'publication_verified') if k in result})
-            versions[body_hash].update({k: result[k] for k in SOURCE_FIELDS if k in result})
             if body_hash in prior.get("versions", {}):
                 # Source checks and body versions are different identities. An
-                # unchanged body may be observed under a new source check.
-                versions[body_hash].pop("source_version", None)
+                # unchanged body may be observed under a new source check. Its
+                # immutable judgment stays byte-for-byte unchanged; the new
+                # observation is already retained in the acquisition ledger
+                # and the current top-level projection.
+                versions[body_hash] = deepcopy(prior["versions"][body_hash])
+            else:
+                versions[body_hash] = {k: result[k] for k in (
+                    "body_sha256", "body_status", "body_chars", "extraction_method", "reasons",
+                    "completeness", "source_version", "checked_at", "filter_version", "candidate",
+                    "decision", "evidence", "discovery_paths", "evidence_locations", "context_review",
+                    "quoted_word_count", "tracked_matches", "targets", "queue_entered_at", "reaccess_status") if k in result}
+                versions[body_hash].update({k: result[k] for k in ('scope_facts', 'supply_relationships', 'published_at', 'publication_precision', 'publication_verified') if k in result})
+                versions[body_hash].update({k: result[k] for k in SOURCE_FIELDS if k in result})
             result["current_body_sha256"] = body_hash
             for old_version in prior.get('versions', {}):
                 if (acquired["acquired"] and meta.get("acquisition_status") != "UNAVAILABLE"

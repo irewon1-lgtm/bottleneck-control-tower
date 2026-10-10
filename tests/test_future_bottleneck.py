@@ -151,6 +151,25 @@ def test_read_only_failure_continuation_cache_and_new_articles(tmp_path):
     assert run(path, output, fetcher=fetch)['summary']['processed_this_run'] == 0
 
 
+def test_filter_rescreen_preserves_existing_body_version_judgment(tmp_path):
+    path, output, cache = tmp_path/'db', tmp_path/'results.json', tmp_path/'cache'
+    with sqlite3.connect(path) as db:
+        db.execute('CREATE TABLE radar_items(id,title,url,source,collected_at,updated_at,status)')
+        db.execute("INSERT INTO radar_items VALUES('d','t','https://example.com/a','s','2026-10-01','v1','active')")
+    html = '<article>' + ''.join(
+        '<p>Demand for power transformers is rising while qualified capacity remains limited.</p>'
+        for _ in range(8)) + '</article>'
+    first = run(path, output, cache_dir=cache, fetcher=lambda _: html)
+    body_hash = first['results']['d']['current_body_sha256']
+    preserved = json.loads(json.dumps(first['results']['d']['versions'][body_hash]))
+
+    second = run(path, output, cache_dir=cache, fetcher=lambda _: (_ for _ in ()).throw(
+        AssertionError('unchanged cached body must not be fetched')), tracked_terms=('transformers',))
+
+    assert second['results']['d']['versions'][body_hash] == preserved
+    assert second['results']['d']['tracking_terms_sha256'] != first['results']['d']['tracking_terms_sha256']
+
+
 def test_workflow_is_independent_and_never_writes_canonical_database():
     text = Path('.github/workflows/future-bottleneck.yml').read_text()
     assert 'future-bottleneck-results' in text

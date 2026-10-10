@@ -13,8 +13,9 @@ from bct.future_github import GitHubTransport, GitHubRequestError, _raw
 from bct.future_review import queue_summary
 from bct.future_store import store_patch
 from bct.future_worker import _runs, _run_patch
-from bct.recovery_preservation import verify as verify_preservation, seal
-from bct.recovery_storage_probe import verify_atomic_recovery
+from bct.recovery_preservation import (verify as verify_preservation, seal,
+                                       restore_version_records)
+from bct.recovery_storage_probe import read_generation_at, verify_atomic_recovery
 
 
 def command(*args):
@@ -45,25 +46,64 @@ def main():
         con.close()
         report['database_sha256'] = hashlib.sha256(database.read_bytes()).hexdigest()
         transport = GitHubTransport(os.environ['GITHUB_REPOSITORY'], 'future-bottleneck-data', os.environ['GITHUB_TOKEN'])
-        original = transport.read('future-candidates.json')
-        tracking = transport.read('future-tracking.json')
+        initial_head = transport.head()
+        original = transport.read_at('future-candidates.json', initial_head)
+        tracking = transport.read_at('future-tracking.json', initial_head)
         preservation_baseline=json.loads(Path('config/bct-recovery-preservation.json').read_text())
         report['identity_preservation']=verify_preservation(original.document,tracking.document,preservation_baseline)
         request=json.loads(Path('.github/bct-recovery-request.json').read_text())
         retained_path=Path('config/bct-recovery-retained-seal.json')
+        retained_baseline=None
         if request.get('retained_seal_sha256'):
             if hashlib.sha256(retained_path.read_bytes()).hexdigest()!=request['retained_seal_sha256']:
                 raise ValueError('retained production preservation seal differs')
-            report['retained_identity_preservation']=verify_preservation(
-                original.document,tracking.document,json.loads(retained_path.read_text()))
+            retained_baseline=json.loads(retained_path.read_text())
         recovered_seal=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume/recovery-preservation-seal.json'
         if recovered_seal.exists():
             request=json.loads(Path('.github/bct-recovery-request.json').read_text())
             expected=request.get('resume_file_sha256',{}).get('recovery-preservation-seal.json')
             if hashlib.sha256(recovered_seal.read_bytes()).hexdigest()!=expected:
                 raise ValueError('recovered preservation seal must be pinned in resume request')
-            report['recovered_identity_preservation']=verify_preservation(
-                original.document,tracking.document,json.loads(recovered_seal.read_text()))
+            recovered_baseline=json.loads(recovered_seal.read_text())
+            try:
+                report['recovered_identity_preservation']=verify_preservation(
+                    original.document,tracking.document,recovered_baseline)
+            except ValueError as exc:
+                if str(exc) != 'preserved source version judgment changed':
+                    raise
+                checkpoint_path=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume/checkpoint.json'
+                checkpoint=json.loads(checkpoint_path.read_text())
+                trusted_commit=checkpoint.get('queue_recovery_commit')
+                if not isinstance(trusted_commit,str) or len(trusted_commit)!=40:
+                    raise ValueError('sealed trusted generation commit missing') from exc
+                trusted=transport.read_at('future-candidates.json',trusted_commit)
+                repaired,receipts=restore_version_records(
+                    original.document,recovered_baseline,trusted.document)
+                if not receipts:
+                    raise
+                verify_preservation(repaired,tracking.document,preservation_baseline)
+                if retained_baseline is not None:
+                    verify_preservation(repaired,tracking.document,retained_baseline)
+                verify_preservation(repaired,tracking.document,recovered_baseline)
+                roots=transport.write_many(
+                    {'future-candidates.json':repaired,'future-tracking.json':tracking.document},
+                    {'future-candidates.json':original.sha,'future-tracking.json':tracking.sha})
+                repaired_commit=transport.last_commit
+                confirmed_candidate=transport.read_at('future-candidates.json',repaired_commit)
+                confirmed_tracking=transport.read_at('future-tracking.json',repaired_commit)
+                if confirmed_candidate.document!=repaired or confirmed_tracking.document!=tracking.document:
+                    raise ValueError('immutable preservation repair readback differs')
+                report['recovered_identity_preservation']=verify_preservation(
+                    confirmed_candidate.document,confirmed_tracking.document,recovered_baseline)
+                report['preservation_repair']={
+                    'status':'PASS','trusted_commit':trusted_commit,
+                    'published_commit':repaired_commit,'root_shas':roots,
+                    'restored_version_records':receipts,
+                    'tracking_unchanged':confirmed_tracking.document==tracking.document}
+                original,tracking=confirmed_candidate,confirmed_tracking
+        if retained_baseline is not None:
+            report['retained_identity_preservation']=verify_preservation(
+                original.document,tracking.document,retained_baseline)
         # A later failed gate must still carry the verified current baseline.
         (root/'recovery-preservation-seal.json').write_text(
             json.dumps(seal(original.document,tracking.document),ensure_ascii=False,indent=2)+'\n')
@@ -101,9 +141,14 @@ def main():
         report['probe_branch'] = probe_branch
         report['atomic_recovery_probe'] = verify_atomic_recovery(probe, report['run_id'])
         report['probe_commit'] = probe.head()
-        # Re-read production after the probe; use the latest preserving patch.
-        original = transport.read('future-candidates.json')
-        tracking = transport.read('future-tracking.json')
+        # Keep both roots on the already verified immutable generation. GitHub
+        # may briefly return the pre-repair document through the mutable ref;
+        # the final CAS safely rejects a real concurrent writer instead of
+        # composing a queue projection from that stale view.
+        production_base = transport.last_commit if report.get('preservation_repair') else initial_head
+        generation = read_generation_at(transport, production_base)
+        original = generation['future-candidates.json']
+        tracking = generation['future-tracking.json']
         candidates_path, tracking_path = root / 'future-candidates.json', root / 'future-tracking.json'
         candidates_path.write_bytes(_raw(original.document));tracking_path.write_bytes(_raw(tracking.document))
         subprocess.run(['python', '.github/scripts/future_queue_snapshot.py', '--candidates', str(candidates_path),

@@ -9,6 +9,11 @@ class PublicationInterrupted(RuntimeError):
     pass
 
 
+def read_generation_at(transport, commit, paths=('future-candidates.json', 'future-tracking.json')):
+    """Read one immutable generation; never mix in a stale mutable-ref view."""
+    return {path: transport.read_at(path, commit) for path in paths}
+
+
 def observe_published_head(transport, expected, prior_heads):
     """Wait only for a known published ref to become visible; never retry writes.
 
