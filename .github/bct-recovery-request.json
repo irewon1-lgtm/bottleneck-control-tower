@@ -1,10 +1,10 @@
 {
-  "resume_run_id": "38035596782",
-  "resume_artifact_id": 11663844099,
-  "resume_artifact_sha256": "c494dc0eec9807c4c260256c99bb4a4cb4b9d6959a5397c5e93399f450f3d639",
+  "resume_run_id": "38037501270",
+  "resume_artifact_id": 11665240035,
+  "resume_artifact_sha256": "e5270cd6cb9004ad15a8366774876cae1a2adaf5062bc89060d04a219056b34d",
   "resume_file_sha256": {
-    "checkpoint.json": "431cd1e9002946da75c25830d754f4f542d0accbc31b87b3615ccb03d9be94d9",
-    "restore-verification.json": "1e7e468ce5f6cc92535d259970fab4a7d7ab4985349a351facffefce3828dd82",
+    "checkpoint.json": "e3506aa30f16b1ac968e0b2bbbe7e7fc2b5695710d3670d3ddddfc63aac0b28a",
+    "restore-verification.json": "9bfc343c50b4549317a70385cf063f1aa9fe722d5fc6aa5c210ad7c8d8d0a2fe",
     "source-audit.json": "2a937cc718097784b507ab4e14f271009fc3c15eea8617fe96b291543d2a4ef9",
     "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
     "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
@@ -15,19 +15,18 @@
     "local-reader-probe.json": "6f734e071d48577f2da531d218669174f41745f0e7ec557513748b9c8345b47c",
     "private-local-reader-execution.jsonl": "87812330c540b6940998b917876d6b0406ccf61649af6a213f3cbaa8c47922bd",
     "recovery-preservation-seal.json": "053d50574750930afa951f068f7062b3c09ff990d0146e0ff256f3ebbf34ccf7",
-    "queue-recovery-versions.json": "e8d1ada67c9e12284f1db514d9e8a1c8fc2d8008ed6e82da9cc89fa8c016bc12",
-    "e2e-recovery.json": "bfce95f3bc025effd716e4ed17870e29e3568cb9747326210a3c0b40df00b914"
+    "queue-recovery-versions.json": "e8d1ada67c9e12284f1db514d9e8a1c8fc2d8008ed6e82da9cc89fa8c016bc12"
   },
   "resume_cache_inventory_sha256": "a19868446b9ed250dc6bac99dbc04dc971cea103f2050bf3115317ac021f937e",
   "retained_seal_sha256": "0d773cb0c9e16283561a6ff72468c8bb6a02aaf7ba8ec522a47ccb887a8cc58a",
   "reader_batch_limit": 5,
-  "reason": "Run25 actual Gates0-6 PASS. Preserve exact latest journals, all caches, and dynamic seal; validate the new actual native claim interruption/reconciliation executor and guarded automatic CPU reader/publication workflow from Stage0 before any main release. No refetch of recovered source URLs; no paid inference or raw-response rewrite.",
+  "reason": "Restore complete Run26 early-failure state and historical cache union. Run26 Gate0 PASS, Gate1 dedicated restart probe failed on a mutable post-publish ref read; no new source or native calls and production unchanged. Exact immutable readback plus bounded read-only visibility observation fixes the actual probe; no write retries or permission/rate-limit bypass. Restart from Stage0.",
   "latest_failed_run": {
-    "run_id": "38015576136",
-    "artifact_id": 11655983307,
-    "artifact_sha256": "61e09965bcfe388e1d1b9f06768aa49b01e1f5a5f03c8d3f979c28952d0ab2ed",
-    "checkpoint_sha256": "f1be04a69b5ee1746f0b2f6abf397f13fd2032570bea7940f8602c105f21e199",
-    "status": "BLOCKED_STAGE_6_FROZEN_UNUSED_IMPORT_NOW_AUTHORIZED"
+    "run_id": "38037501270",
+    "artifact_id": 11665240035,
+    "artifact_sha256": "e5270cd6cb9004ad15a8366774876cae1a2adaf5062bc89060d04a219056b34d",
+    "checkpoint_sha256": "e3506aa30f16b1ac968e0b2bbbe7e7fc2b5695710d3670d3ddddfc63aac0b28a",
+    "status": "STAGE1_PROBE_MUTABLE_REF_VISIBILITY_LAG"
   },
   "source_scope_reinspection_urls": [],
   "retained_cache": {
@@ -50,6 +49,6 @@
     },
     "inventory_sha256": "af04dd8ef92789e99ee0eb534da74f0a8c4a654b9421f43504ef6d4ec3ba89fa"
   },
-  "changed_condition": "Implement actual stopped-owner/native-result reconciliation, bounded automatic FULL-source CPU reading, 7-state failed-claim accounting, immutable production readback, and operating Stage0-FULL workflow adapter. Run26 is normal Gates0-6 validation; main remains guarded until exact new code passes.",
+  "changed_condition": "Dedicated actual atomic restart probe now uses exact published commit roots and known PATCH commit, with bounded read-only exponential visibility checks that reject unrelated writers/API errors and stop on timeout. Regression recreates two stale ref reads and verifies zero replay mutations. New operating/native claim code remains unverified until full Gates0-6 actual run.",
   "full_pipeline": false
 }

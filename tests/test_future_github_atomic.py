@@ -177,6 +177,49 @@ def test_remote_fault_probe_refuses_production_branch():
     assert not remote.calls
 
 
+def test_restarted_probe_verifies_immutable_commit_and_waits_for_ref_visibility(monkeypatch):
+    from bct import recovery_storage_probe as probe
+    remote = dual_remote()
+    original = remote.request
+    delayed = []
+    publications = 0
+    def request(method, suffix, payload=None):
+        nonlocal publications
+        if method == 'GET' and suffix.startswith('/git/ref/') and delayed:
+            return {'object': {'sha': delayed.pop(0)}}
+        before = remote.head
+        value = original(method, suffix, payload)
+        if method == 'PATCH' and suffix.startswith('/git/refs/'):
+            publications += 1
+            if publications == 2:
+                delayed.extend([before, before])
+        return value
+    slept = []
+    monkeypatch.setattr(probe.time, 'sleep', slept.append)
+    transport = storage.GitHubTransport('owner/repo', 'ops/bct-storage-probe-123',
+                                       'test-token', requester=request)
+    receipt = probe.verify_atomic_recovery(transport, '123')
+    assert receipt['status'] == 'PASS' and receipt['immutable_generation_readback']
+    assert receipt['recovery_commit'] == remote.head
+    assert receipt['recovered_ref_observations'] == [
+        receipt['competing_writer_commit'], receipt['competing_writer_commit'], remote.head]
+    assert slept == [1, 2]
+    assert receipt['idempotent_replay_mutations'] == 0
+    assert publications == 2
+
+
+def test_probe_visibility_deadline_and_unrelated_writer_do_not_retry_writes(monkeypatch):
+    from bct import recovery_storage_probe as probe
+    remote = dual_remote(); transport = remote.transport()
+    with pytest.raises(StoreConflict, match='another writer'):
+        probe.observe_published_head(transport, 'known', {'previous'})
+    ticks = iter([0, 31])
+    monkeypatch.setattr(probe.time, 'monotonic', lambda: next(ticks))
+    with pytest.raises(TimeoutError, match='visibility still delayed'):
+        probe.observe_published_head(transport, 'known', {'c0'})
+    assert not any(method in ('POST', 'PATCH', 'PUT', 'DELETE') for method, _ in remote.calls)
+
+
 def test_readings_and_queue_publish_in_one_generation():
     remote=dual_remote();t=remote.transport()
     paths=(PATH,'future-tracking.json');expected={p:t.read(p).sha for p in paths}
