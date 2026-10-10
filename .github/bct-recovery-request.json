@@ -1,29 +1,29 @@
 {
-  "resume_run_id": "38052149222",
-  "resume_artifact_id": 11670072256,
-  "resume_artifact_sha256": "4a5e2e90cbd32d21a43302d2d286596c366c701d3acca11b605d8aa145c19899",
+  "resume_run_id": "38053921394",
+  "resume_artifact_id": 11671455747,
+  "resume_artifact_sha256": "29d2b442d876f32955c3a4a4976dae835ecadf7373b176e7aae1b1d848dc508a",
   "resume_file_sha256": {
-    "checkpoint.json": "64ae74af58b979cb24118baa63a02853bee9951f44f22e82be7ccabf0c094f64",
-    "source-audit.json": "1560302a5b7e8b73a7854fd965fb9e7cdce013081f260d3b9d914f9542db11de",
+    "checkpoint.json": "980482ea8aa85ae9284e5a9f0d8adf7bfeaab598378e386e4ec11c02146d67eb",
+    "source-audit.json": "14dad9c7ec9d0079b1e4ddebe50afa20b3d61eedbdac313960a14e2c3d96469f",
     "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
     "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
-    "evidence-recovery-observations.json": "5c9fca9c93cf31fcc3ab2ba4201a4c01c24f45c1bc062b3e986a9ad6820cecdd",
+    "evidence-recovery-observations.json": "c660023aede045b1b1d70cafdc905b0c9dc1d5bc71798a35dce8fd038dfe19c2",
     "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "evidence-recovery-versions.json": "f05d258a53de518c3ebfcf77fc5dbd7cc1c6e6245bac20ade91cebc798c62c71",
-    "local-reader-setup.json": "d583f0ec212799bb90a46018ac52ffd67678e7a8cf0e8f7bb2a18b1d7662ff5c",
-    "local-reader-probe.json": "4521599f988856d843ccdee2dee5b24fedd6a0dc97de9f50c2896517deb36759",
-    "private-local-reader-execution.jsonl": "3c90455b2285d4e6533d2f7570b297a72e1504ca5ee86baaf63370261d332f96",
-    "recovery-preservation-seal.json": "854339c28a03159d128e8e8f6324468ee10505ac65b4a0e942acaaa01808b485",
-    "queue-recovery-versions.json": "276ba8252d37d17b75a4ffe617e553a64614dea01d104c8fa3e2c7dcd2c78ab4",
+    "local-reader-setup.json": "e7f11e7c058cc59d3a631328e2d32efb0afa1c2d189ee274af357bbdd025158f",
+    "local-reader-probe.json": "aa8f04265859d580d561d6700f6388dcceeff820545bffecce54e09885ab3366",
+    "private-local-reader-execution.jsonl": "e26c50003a1b155f6a0b453488d493714744d1a0b423aba971d28af9bff34ac0",
+    "recovery-preservation-seal.json": "d3aa4e1b5edc4a62b05a895667917ab4e2f5db45a5a6fe75569dea5c7833f911",
+    "queue-recovery-versions.json": "56581f36d15cc8bff40f7e8bcb7934378266a4817e4404f98f915d8f937665bb",
     "operating-engine-checkpoint.json": "bab9abe0b87b36871e1edc9536d2410a2ac040616a2c8b2953b5a89fcd7d2c19",
     "operating-publication-request.json": "c44b1c92218b052e7bcc5582d03129b466394dee4e258c0c473babc8e1c5009c",
-    "native-claim-recovery.json": "b74699e40516c2241f042aa18e19aeacd9bc3f806dc43ffe8b8cb5743b97fddb",
-    "native-claim-history.json": "004960cbdc107380cadba27afd6287025d10197a5b362c94bc43e632418d5d08"
+    "native-claim-recovery.json": "fe13ab89471f5a571f66edc430bf5f7858137d315138cba8309e81cc44f6030b",
+    "native-claim-history.json": "1f5a961b76122be3de05e5ade55f4f2205083c5eb861c7bb2a09513573be649f"
   },
-  "resume_cache_inventory_sha256": "7dbdce55455f0b8cb66d9f35eb20b97fd0af1ea124da72f63b1b50293f7eb0bf",
+  "resume_cache_inventory_sha256": "e6d7e9f23d9a56902f8d17c64d90a51ba4207d693bc8f145a55dd09b2d0f80b7",
   "retained_seal_sha256": "0d773cb0c9e16283561a6ff72468c8bb6a02aaf7ba8ec522a47ccb887a8cc58a",
   "reader_batch_limit": 5,
-  "reason": "Run33 preserved one valid exact-source native response but blocked before any production completion because consecutive isolated-branch writes observed a stale mutable ref. Resume its fully pinned journals and caches, use the transport's verified immutable commit as the monotonic baseline, and revalidate from Stage 0 without repeating the preserved response as a production completion.",
+  "reason": "Run34 completed actual Gates 0-6 with verified native claim interruption/reconciliation, five new exact-source readings, atomic production commit 451467110a2959677f53bab34d85b341d4e7509e, and all required regressions. Start independent FULL CLEAN cycle 1 from this exact pinned checkpoint.",
   "latest_failed_run": {
     "run_id": "38052149222",
     "artifact_id": 11670072256,
@@ -51,6 +51,6 @@
     },
     "inventory_sha256": "af04dd8ef92789e99ee0eb534da74f0a8c4a654b9421f43504ef6d4ec3ba89fa"
   },
-  "changed_condition": "The exact Run33 failure is fixed: a transport keeps its own SHA-verified immutable publication as the next read/write baseline, while non-forced ref updates still reject a real concurrent writer and trigger one preserving rebase. Revalidate all normal Gates 0-6 before changing main.",
-  "full_pipeline": false
+  "changed_condition": "Actual Gates 0-6 now pass on the stale-ref fix. Full mode is newly enabled and must execute the connected Stage 0-to-FULL executor, automatic candidate publication, actual Pages deployment, UI SHA/count verification, and an independent CLEAN receipt.",
+  "full_pipeline": true
 }
