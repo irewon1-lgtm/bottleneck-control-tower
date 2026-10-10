@@ -1,27 +1,27 @@
 {
-  "resume_run_id": "38040970825",
-  "resume_artifact_id": 11666452511,
-  "resume_artifact_sha256": "2bbca0ef5238afd91dda0d2f59f580e77f066feb4b3f6540e106aa970f5144bf",
+  "resume_run_id": "38044655272",
+  "resume_artifact_id": 11667054888,
+  "resume_artifact_sha256": "d022f3c71c16ff8426158f3863ad32a7f52b980c07d58ebc7b6493ad5dc066fe",
   "resume_file_sha256": {
-    "checkpoint.json": "40e0693cab8c77e3a8dedbec0a982c993fda35fdcdfea966ee73b9abd0194d9c",
-    "source-audit.json": "45e1f721c1b8b3c38aee14a124d225e54a61b4de82f316352e5774ab599d67f2",
+    "checkpoint.json": "66e8f38730ed7fd52382ea21bf3d803495e4040ad0bbfc49efebf1928e32dd60",
+    "source-audit.json": "242ae7b7be6bed8b164e30f7ae4a1985d368cb5714487e1c22f5e701c49b6b4e",
     "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
     "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
-    "evidence-recovery-observations.json": "508f7f4235b46f86e7b4cb4feed1d59c4c59c5214efdb86712b41596a9496f64",
+    "evidence-recovery-observations.json": "0763c98f27b7a5ad49950e0347b69d476cdbf39c394591ee8b10bb22281b0aaf",
     "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "evidence-recovery-versions.json": "f05d258a53de518c3ebfcf77fc5dbd7cc1c6e6245bac20ade91cebc798c62c71",
-    "local-reader-setup.json": "0a2e6c1d06d20f64bbd1161c3e0b113f0e3f95d2350ce23250e1d29b1343d8cf",
-    "local-reader-probe.json": "36541e3b0deb69cae1a0351bcc6d55ab31f6fb821381a2b924a1e7a130c3a0c7",
-    "private-local-reader-execution.jsonl": "09c8fb0b7cfaab19a1313ea847c75ef64e7e1726d0b87a6ba4ae0d781d8c699a",
-    "recovery-preservation-seal.json": "44a3f76921b2d3aa3bd432dceab8bf24da4eebd8c1e1070580e8943d7f91d8c7",
-    "queue-recovery-versions.json": "78fa14d6f88d5ee3a6776a84e5b41cd9a0345d44ae174f170b2f0aa9c7e332fd",
-    "native-claim-recovery.json": "df32b1f50ae70001e5caa05350096edcc80e0c464199777024587ec11ce17786",
-    "native-claim-history.json": "a0ede030c9571a7339e568c7d0faac1a67349b52d12204f6d916db24aaea6db6"
+    "local-reader-setup.json": "a7a8b394c77546b722a2fad8af667137ae7143d62e835b7bbba2e095fb128beb",
+    "local-reader-probe.json": "15615119e1afd75e779d8762d33f72ce2640b77032d2e430aa990a70a12c8541",
+    "private-local-reader-execution.jsonl": "34ba2e1edba9765886b5140ec67b907f778cd5ef54badacfc513e95b3db259db",
+    "recovery-preservation-seal.json": "2eeda2716fbc9e7dbcd50c11882720b6fe5555bdb7cd810b59b6bb9c69efcb8d",
+    "queue-recovery-versions.json": "e242f812743b0438980d8cfb1ca412e817832f1f39fbfe0611ef0a54981d3578",
+    "native-claim-recovery.json": "0e16e90dc4773ff536c55cbf9fde83820fe89abd07479cb961dcb6bcdac2a5ca",
+    "native-claim-history.json": "af295701360e2c808e56a3a511f59024ff28dd9742f077f9b0766dd1d777f6dc"
   },
-  "resume_cache_inventory_sha256": "b1f2204ec43662e62925d0cef922dab5bc029674b22d21afabaa374a270cdea9",
+  "resume_cache_inventory_sha256": "176d752f4bc529d5de02e87c6cdae3c81da5233966cc7bc2878cff65badef9f2",
   "retained_seal_sha256": "0d773cb0c9e16283561a6ff72468c8bb6a02aaf7ba8ec522a47ccb887a8cc58a",
   "reader_batch_limit": 5,
-  "reason": "Restore complete Run28 state. Run30 restored the eight sealed body-version judgments and published the verified repair, but its later queue projection read the briefly stale mutable branch ref and correctly failed because preserved_versions no longer matched the repaired baseline. Read both queue roots from the exact immutable repair commit and let the final CAS reject any real concurrent writer. Restart from Stage0.",
+  "reason": "Run31 completed actual Gates 0-6 on code c452aa3. Guarded main 07eae2a then completed automatic candidate run 38046341179, atomic queue commit 07d0e9c, and Pages run 38047943183 with rendered seven-state counts. Start the first independent Stage0-to-FULL operating cycle from the exact Run31 checkpoint.",
   "latest_failed_run": {
     "run_id": "38043688598",
     "artifact_id": 11667336433,
@@ -49,6 +49,6 @@
     },
     "inventory_sha256": "af04dd8ef92789e99ee0eb534da74f0a8c4a654b9421f43504ef6d4ec3ba89fa"
   },
-  "changed_condition": "The exact eight-record preservation repair remains strict and verified. After that repair, Gate1 now builds its projection from the immutable published repair commit rather than a possibly stale mutable-ref response. A real concurrent writer is still rejected by the existing expected-blob CAS; no write is retried and no source history, score, decision, or model result is rewritten.",
-  "full_pipeline": false
+  "changed_condition": "Actual normal Gates 0-6, guarded main release, fresh automatic CPU reading, atomic operating queue publication, and real Pages deployment all completed. Full mode is newly enabled and must execute actual native claim interruption/reconciliation plus fresh Stage7 publication.",
+  "full_pipeline": true
 }
