@@ -169,7 +169,16 @@ class LegacyGitHubTransport:
                           data=data, headers=headers, method=method)
         try:
             with urlopen(request, timeout=30) as response:
-                return json.load(response)
+                raw = response.read()
+                # Successful GitHub endpoints such as repository_dispatch
+                # intentionally return 204 No Content.  Treat that as an
+                # acknowledged empty result instead of failing JSON decoding
+                # after the external mutation has already happened.
+                if not raw:
+                    if response.status == 204:
+                        return {}
+                    raise ValueError('GitHub success response body unavailable')
+                return json.loads(raw)
         except HTTPError as exc:
             if exc.code == 404 and method == 'GET':
                 raise FileNotFoundError('GitHub GET object unavailable: ' + suffix.split('?', 1)[0]) from None

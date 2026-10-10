@@ -1,6 +1,7 @@
 """Publication failures cannot expose partial generations or discard a writer."""
 import base64
 import hashlib
+import io
 import json
 from urllib.parse import unquote
 
@@ -147,6 +148,21 @@ def test_response_diagnostics_distinguish_missing_header_and_rate_limit():
     denied = storage.error_details('PUT', '/contents/a', 403, {},
         b'{"message":"Resource not accessible by integration; token secret"}')
     assert denied['category'] == 'ACCESS_DENIED' and 'secret' not in json.dumps(denied)
+
+
+def test_repository_dispatch_204_is_an_acknowledged_success(monkeypatch):
+    class NoContent(io.BytesIO):
+        status = 204
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+    monkeypatch.setattr(storage, 'urlopen', lambda *args, **kwargs: NoContent(b''))
+    transport = storage.GitHubTransport('owner/repository', 'future-bottleneck-data', 'token')
+    assert transport._request('POST', '/dispatches', {'event_type': 'bct'}) == {}
 
 
 def dual_remote():

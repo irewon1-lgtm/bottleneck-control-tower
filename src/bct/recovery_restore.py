@@ -19,6 +19,8 @@ LATEST_ROOT_STATE = (
     'recovery-preservation-seal.json',
     'queue-recovery-versions.json',
     'operating-engine-checkpoint.json',
+    'operating-publication-request.json',
+    'operating-publication-history.json',
     'native-claim-recovery.json',
     'native-claim-history.json',
 )

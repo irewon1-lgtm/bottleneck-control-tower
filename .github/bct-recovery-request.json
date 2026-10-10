@@ -1,32 +1,35 @@
 {
-  "resume_run_id": "38044655272",
-  "resume_artifact_id": 11667054888,
-  "resume_artifact_sha256": "d022f3c71c16ff8426158f3863ad32a7f52b980c07d58ebc7b6493ad5dc066fe",
+  "resume_run_id": "38048197450",
+  "resume_artifact_id": 11668603690,
+  "resume_artifact_sha256": "3f632820e867c43cdb2424707322aadea9f9928e1213146fe9928195a2dddb9a",
   "resume_file_sha256": {
-    "checkpoint.json": "66e8f38730ed7fd52382ea21bf3d803495e4040ad0bbfc49efebf1928e32dd60",
-    "source-audit.json": "242ae7b7be6bed8b164e30f7ae4a1985d368cb5714487e1c22f5e701c49b6b4e",
+    "checkpoint.json": "052f1621c0621f811f74f8c4e15ab955c2c58189c025a51489ef356a1ce9308c",
+    "e2e-recovery.json": "07eac5ea274c69d1de6cbc8d3d8a17d19a1da253a971920344cbafa1b420a1bc",
+    "source-audit.json": "7296ae14276339fc77158e74e6a130cfc4b57fee344853468a71005ceac8767a",
     "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
     "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
-    "evidence-recovery-observations.json": "0763c98f27b7a5ad49950e0347b69d476cdbf39c394591ee8b10bb22281b0aaf",
+    "evidence-recovery-observations.json": "ac627ceeada6efe098c8de7cfc56c9ce2a1f6aeec286b3c02870c78a993b80bd",
     "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "evidence-recovery-versions.json": "f05d258a53de518c3ebfcf77fc5dbd7cc1c6e6245bac20ade91cebc798c62c71",
-    "local-reader-setup.json": "a7a8b394c77546b722a2fad8af667137ae7143d62e835b7bbba2e095fb128beb",
-    "local-reader-probe.json": "15615119e1afd75e779d8762d33f72ce2640b77032d2e430aa990a70a12c8541",
-    "private-local-reader-execution.jsonl": "34ba2e1edba9765886b5140ec67b907f778cd5ef54badacfc513e95b3db259db",
-    "recovery-preservation-seal.json": "2eeda2716fbc9e7dbcd50c11882720b6fe5555bdb7cd810b59b6bb9c69efcb8d",
-    "queue-recovery-versions.json": "e242f812743b0438980d8cfb1ca412e817832f1f39fbfe0611ef0a54981d3578",
-    "native-claim-recovery.json": "0e16e90dc4773ff536c55cbf9fde83820fe89abd07479cb961dcb6bcdac2a5ca",
-    "native-claim-history.json": "af295701360e2c808e56a3a511f59024ff28dd9742f077f9b0766dd1d777f6dc"
+    "local-reader-setup.json": "8dec231ac2cfe841a84480fefe67dde57297ab6e09925cf76ead1b667367ca96",
+    "local-reader-probe.json": "6958359f9b9f51ee6aa5b07885270df304017aa2b8ffc63c92dc96c5663ad5f2",
+    "private-local-reader-execution.jsonl": "95c873139e34c09261f7b7ee0ffe556a222ec305b7f104ec4652dbbbeb793b8f",
+    "recovery-preservation-seal.json": "a11a176827b8529ccfe5e12a84feadafe8879df6014f3cc1ab093e6ed56309d6",
+    "queue-recovery-versions.json": "276ba8252d37d17b75a4ffe617e553a64614dea01d104c8fa3e2c7dcd2c78ab4",
+    "operating-engine-checkpoint.json": "bab9abe0b87b36871e1edc9536d2410a2ac040616a2c8b2953b5a89fcd7d2c19",
+    "operating-publication-request.json": "c44b1c92218b052e7bcc5582d03129b466394dee4e258c0c473babc8e1c5009c",
+    "native-claim-recovery.json": "b74699e40516c2241f042aa18e19aeacd9bc3f806dc43ffe8b8cb5743b97fddb",
+    "native-claim-history.json": "004960cbdc107380cadba27afd6287025d10197a5b362c94bc43e632418d5d08"
   },
-  "resume_cache_inventory_sha256": "176d752f4bc529d5de02e87c6cdae3c81da5233966cc7bc2878cff65badef9f2",
+  "resume_cache_inventory_sha256": "930def56a0fdbd53883bff56480d4823ef705aa5824a3467d5a345ba8d3332eb",
   "retained_seal_sha256": "0d773cb0c9e16283561a6ff72468c8bb6a02aaf7ba8ec522a47ccb887a8cc58a",
   "reader_batch_limit": 5,
-  "reason": "Run31 completed actual Gates 0-6 on code c452aa3. Guarded main 07eae2a then completed automatic candidate run 38046341179, atomic queue commit 07d0e9c, and Pages run 38047943183 with rendered seven-state counts. Start the first independent Stage0-to-FULL operating cycle from the exact Run31 checkpoint.",
+  "reason": "Run32 completed actual Gates 0-6 and native claim reconciliation, then dispatched candidate run 38049994665. GitHub returned a successful empty 204 that the old requester mis-decoded, and the token-created candidate did not emit a downstream Pages workflow_run. Preserve that exact request and candidate; revalidate the minimal no-content and explicit one-shot Pages-dispatch fixes from Stage 0 without repeating either dispatch.",
   "latest_failed_run": {
-    "run_id": "38043688598",
-    "artifact_id": 11667336433,
-    "artifact_sha256": "7885fa08b63b0f2cfbe9dd9362e81bdfb53d08dc83b91b405a5ce21bbe1badbb",
-    "status": "GATE1_STALE_MUTABLE_REF_AFTER_VERIFIED_REPAIR"
+    "run_id": "38048197450",
+    "artifact_id": 11668603690,
+    "artifact_sha256": "3f632820e867c43cdb2424707322aadea9f9928e1213146fe9928195a2dddb9a",
+    "status": "GATE7_DISPATCH_204_JSON_AND_PAGES_TRIGGER"
   },
   "source_scope_reinspection_urls": [],
   "retained_cache": {
@@ -49,6 +52,6 @@
     },
     "inventory_sha256": "af04dd8ef92789e99ee0eb534da74f0a8c4a654b9421f43504ef6d4ec3ba89fa"
   },
-  "changed_condition": "Actual normal Gates 0-6, guarded main release, fresh automatic CPU reading, atomic operating queue publication, and real Pages deployment all completed. Full mode is newly enabled and must execute actual native claim interruption/reconciliation plus fresh Stage7 publication.",
-  "full_pipeline": true
+  "changed_condition": "The exact Run32 failure is fixed: 204 No Content is an acknowledged success, uncertain dispatch receipts are reconciled without duplicate requests, and Pages receives one explicit repository dispatch when the token-created candidate cannot emit workflow_run. Revalidate all normal Gates 0-6 before changing main.",
+  "full_pipeline": false
 }
