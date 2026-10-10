@@ -93,6 +93,17 @@ def test_atomic_roundtrip_reuses_unchanged_shards_and_one_ref_move(monkeypatch):
     assert not any(m in ('POST', 'PATCH', 'PUT') for m, _ in remote.calls[calls:])
 
 
+def test_exact_commit_readback_ignores_transient_mutable_ref_lag():
+    remote = GitRemote({});t = remote.transport()
+    document = {'results': {'new': {'id': 'new'}}}
+    t.write(PATH, document, t.read(PATH).sha)
+    published = t.last_commit
+    # Simulate an immediately repeated ref read returning the prior head.
+    remote.head = 'c0'
+    assert t.read(PATH).document == {}
+    assert t.read_at(PATH, published).document == document
+
+
 @pytest.mark.parametrize('endpoint', ['/git/blobs', '/git/trees', '/git/commits', '/git/refs/heads/test'])
 def test_failed_stage_never_publishes_or_marks_saved(endpoint):
     remote = GitRemote({'results': {}, 'notifications': {'n': {'state': 'READY'}}})
@@ -136,3 +147,102 @@ def test_response_diagnostics_distinguish_missing_header_and_rate_limit():
     denied = storage.error_details('PUT', '/contents/a', 403, {},
         b'{"message":"Resource not accessible by integration; token secret"}')
     assert denied['category'] == 'ACCESS_DENIED' and 'secret' not in json.dumps(denied)
+
+
+def dual_remote():
+    remote=GitRemote({'results':{}})
+    remote.trees['t0']['future-tracking.json']=remote.blob(storage._raw({'reviews':{}}))
+    return remote
+
+
+def test_restart_and_overlapping_writer_probe_preserves_both_roots():
+    from bct.recovery_storage_probe import verify_atomic_recovery
+    remote = dual_remote()
+    transport = storage.GitHubTransport('owner/repo', 'ops/bct-storage-probe-123',
+                                       'test-token', requester=remote.request)
+    receipt = verify_atomic_recovery(transport, '123')
+    assert receipt['status'] == 'PASS' and receipt['idempotent_replay_mutations'] == 0
+    assert transport.read(PATH).document['summary'] == {
+        'competing_probe_writer': '123', 'atomic_recovery_probe': '123'}
+    assert transport.read('future-tracking.json').document['reviews'] == {}
+    assert receipt['unpublished_commit'] != receipt['recovery_commit']
+
+
+def test_remote_fault_probe_refuses_production_branch():
+    from bct.recovery_storage_probe import verify_atomic_recovery
+    remote = dual_remote()
+    transport = remote.transport()
+    with pytest.raises(ValueError, match='dedicated test branch'):
+        verify_atomic_recovery(transport, '123')
+    assert not remote.calls
+
+
+def test_restarted_probe_verifies_immutable_commit_and_waits_for_ref_visibility(monkeypatch):
+    from bct import recovery_storage_probe as probe
+    remote = dual_remote()
+    original = remote.request
+    delayed = []
+    publications = 0
+    def request(method, suffix, payload=None):
+        nonlocal publications
+        if method == 'GET' and suffix.startswith('/git/ref/') and delayed:
+            return {'object': {'sha': delayed.pop(0)}}
+        before = remote.head
+        value = original(method, suffix, payload)
+        if method == 'PATCH' and suffix.startswith('/git/refs/'):
+            publications += 1
+            if publications == 2:
+                delayed.extend([before, before])
+        return value
+    slept = []
+    monkeypatch.setattr(probe.time, 'sleep', slept.append)
+    transport = storage.GitHubTransport('owner/repo', 'ops/bct-storage-probe-123',
+                                       'test-token', requester=request)
+    receipt = probe.verify_atomic_recovery(transport, '123')
+    assert receipt['status'] == 'PASS' and receipt['immutable_generation_readback']
+    assert receipt['recovery_commit'] == remote.head
+    assert receipt['recovered_ref_observations'] == [
+        receipt['competing_writer_commit'], receipt['competing_writer_commit'], remote.head]
+    assert slept == [1, 2]
+    assert receipt['idempotent_replay_mutations'] == 0
+    assert publications == 2
+
+
+def test_probe_visibility_deadline_and_unrelated_writer_do_not_retry_writes(monkeypatch):
+    from bct import recovery_storage_probe as probe
+    remote = dual_remote(); transport = remote.transport()
+    with pytest.raises(StoreConflict, match='another writer'):
+        probe.observe_published_head(transport, 'known', {'previous'})
+    ticks = iter([0, 31])
+    monkeypatch.setattr(probe.time, 'monotonic', lambda: next(ticks))
+    with pytest.raises(TimeoutError, match='visibility still delayed'):
+        probe.observe_published_head(transport, 'known', {'c0'})
+    assert not any(method in ('POST', 'PATCH', 'PUT', 'DELETE') for method, _ in remote.calls)
+
+
+def test_readings_and_queue_publish_in_one_generation():
+    remote=dual_remote();t=remote.transport()
+    paths=(PATH,'future-tracking.json');expected={p:t.read(p).sha for p in paths}
+    docs={PATH:{'results':{},'summary':{'completed':1}},'future-tracking.json':{'reviews':{'actual':{'read_end':100}}}}
+    roots=t.write_many(docs,expected)
+    assert {p:t.read(p).document for p in paths}==docs
+    assert roots=={p:t.read(p).sha for p in paths}
+    assert sum(m=='PATCH' for m,s in remote.calls)==1
+    assert remote.commits[remote.head]['parents']==['c0']
+
+
+def test_a_stale_tracking_snapshot_cannot_publish_fresh_queue():
+    remote=dual_remote();t=remote.transport();expected={PATH:t.read(PATH).sha,'future-tracking.json':'stale'}
+    with pytest.raises(StoreConflict):
+        t.write_many({PATH:{'results':{},'summary':{'completed':1}},'future-tracking.json':{'reviews':{'r':1}}},expected)
+    assert remote.head=='c0'
+    assert not any(m in ('POST','PATCH') for m,s in remote.calls)
+
+
+def test_multi_document_publication_failure_keeps_both_originals():
+    remote=dual_remote();t=remote.transport();expected={p:t.read(p).sha for p in (PATH,'future-tracking.json')}
+    remote.fail=('POST','/git/trees')
+    with pytest.raises(RuntimeError):
+        t.write_many({PATH:{'results':{},'summary':{'completed':1}},'future-tracking.json':{'reviews':{'r':1}}},expected)
+    assert remote.head=='c0' and t.read(PATH).document=={'results':{}}
+    assert t.read('future-tracking.json').document=={'reviews':{}}

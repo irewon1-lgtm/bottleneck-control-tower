@@ -13,10 +13,13 @@ on:
     workflows: ['RSS live environment check']
     types: [completed]
     branches: [main]
+  repository_dispatch:
+    types: [bct-operating-publication]
   schedule:
     - cron: '45 22,10 * * *'  # 07:45 / 19:45 KST; retries if RSS is delayed
 permissions:
   contents: write
+  actions: read
 concurrency:
   group: future-bottleneck-results
   cancel-in-progress: false
@@ -76,18 +79,23 @@ jobs:
           if-no-files-found: error
 
   candidates:
-    # 2026-10-09: final publication still returned HTTP 403 after a changed-code
-    # validation. Do not repeat that failed writer automatically. Resume only
-    # with an explicit dispatch after publication conditions have changed.
-    # RSS collection, Pages and the twice-daily summaries are independent.
-    if: ${{ github.event_name == 'workflow_dispatch' && !inputs.backlog_body_recovery }}
+    # Main release is guarded by a pinned real Gates 0–6 run and code tree.
+    # Existing RSS and twice-daily summaries retain their own workflows.
+    if: ${{ (github.event_name == 'workflow_dispatch' && !inputs.backlog_body_recovery) || (github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'))) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Verify actual code release gates before automatic candidates
+        if: github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python -m pip install -e .
+          python .github/scripts/bct_release_guard.py
       - name: Run full regression suite
         run: |
           python -m pip install -e '.[test]'
@@ -114,8 +122,10 @@ jobs:
           from pathlib import Path
           from bct.future_github import GitHubTransport
           transport = GitHubTransport(os.environ['GITHUB_REPOSITORY'], 'future-bottleneck-data', os.environ['GITHUB_TOKEN'])
+          head = transport.head()
           for name in ('future-candidates.json', 'future-tracking.json'):
-              (Path(os.environ['RUNNER_TEMP']) / 'future-output' / name).write_text(json.dumps(transport.read(name).document, ensure_ascii=False))
+              snapshot = transport.read_at(name, head)
+              (Path(os.environ['RUNNER_TEMP']) / 'future-output' / name).write_text(json.dumps(snapshot.document, ensure_ascii=False))
           PYREAD
           fi
       - name: Screen article bodies without any AI API
@@ -162,6 +172,13 @@ jobs:
             --reference-sufficient \
             --output "$RUNNER_TEMP/future-output/quality/quality-report.json"
           sha256sum --check "$RUNNER_TEMP/future-db.sha256"
+      - name: Restore preserved source classifications for operating queue
+        if: github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python .github/scripts/bct_restore_operating_state.py \
+            --output "$RUNNER_TEMP/operating-recovery-state"
       - name: Publish candidate sidecar only
         if: github.ref == 'refs/heads/main'
         env:
@@ -272,6 +289,17 @@ jobs:
               "$RUNNER_TEMP/future-output/pending-final-audit.json"
           fi
 
+      - name: Read FULL sources with pinned cost-zero CPU reader
+        if: github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BCT_PUBLIC_REPOSITORY: ${{ github.event.repository.private == false }}
+        run: python .github/scripts/bct_auto_reader.py
+      - name: Publish atomic operating queue
+        if: github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
           python - <<'PY'
           import json, os
           from pathlib import Path
@@ -291,11 +319,9 @@ jobs:
             --candidates "$RUNNER_TEMP/future-output/future-candidates.json" \
             --tracking "$RUNNER_TEMP/future-output/future-tracking.json" \
             --output-dir "$RUNNER_TEMP/future-output"
-          for name in bundle queue; do
-            python -m bct.future_github --path future-candidates.json \
-              --change "$RUNNER_TEMP/future-output/$name-change.json" \
-              --pending "$RUNNER_TEMP/future-output/pending-$name.json"
-          done
+          python .github/scripts/bct_publish_operating_queue.py \
+            --output-dir "$RUNNER_TEMP/future-output" \
+            --recovery-state "$RUNNER_TEMP/operating-recovery-state"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -303,5 +329,10 @@ jobs:
           path: |
             ${{ runner.temp }}/future-output/*.json
             ${{ runner.temp }}/future-output/quality/*.json
+            ${{ runner.temp }}/automatic-local-reader/automatic-reader-report.json
+            ${{ runner.temp }}/automatic-local-reader/private-auto-native-execution.jsonl
+            ${{ runner.temp }}/automatic-local-reader/local-reader-setup.json
+            ${{ runner.temp }}/automatic-local-reader/private-source-cache/*.txt
+            ${{ runner.temp }}/private-future-body-cache/*.txt
           if-no-files-found: warn
           retention-days: 14

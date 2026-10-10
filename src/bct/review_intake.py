@@ -140,7 +140,8 @@ def process(bundle, contract, root, *, semantic_packets=(), prospective=False):
                 except (KeyError,ValueError,TypeError):pass
             # Unreviewed inputs have no invented scope or hypothesis. Hold records
             # are separately sealed intake items, not fictitious strict TARGETs.
-            rid=None;match=None
+            rid=None
+            match=None
             if a:
                 key=scope_key(a)
                 for p in existing:

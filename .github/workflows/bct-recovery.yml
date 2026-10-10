@@ -8,16 +8,20 @@ on:
         description: Prior recovery artifact run ID, after its recorded resume condition changed
         required: false
         default: ''
+      full_pipeline:
+        description: Execute real operating Stage 0 through FULL after guarded main release
+        type: boolean
+        default: false
 permissions:
   contents: write
   actions: read
 concurrency:
-  group: future-bottleneck-results
+  group: bct-recovery-validation
   cancel-in-progress: false
 jobs:
   storage:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -33,9 +37,17 @@ jobs:
           requested=os.environ.get('DISPATCH_RESUME_RUN') or (json.loads(p.read_text()).get('resume_run_id') if p.exists() else '')
           if requested and not str(requested).isdigit():raise ValueError('invalid recovery run ID')
           with open(os.environ['GITHUB_OUTPUT'],'a') as output:output.write('resume_run_id='+str(requested or '')+'\n')
+          retained=(json.loads(p.read_text()).get('retained_cache') or {}).get('run_id','') if p.exists() else ''
+          if retained and not str(retained).isdigit():raise ValueError('invalid retained cache run ID')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as output:output.write('retained_cache_run_id='+str(retained)+'\n')
+          configured_full=json.loads(p.read_text()).get('full_pipeline',False) if p.exists() else False
+          if type(configured_full) is not bool:raise ValueError('full_pipeline must be a boolean')
+          full=os.environ.get('DISPATCH_FULL')=='true' or configured_full
+          with open(os.environ['GITHUB_OUTPUT'],'a') as output:output.write('full_pipeline='+str(full).lower()+'\n')
           PY
         env:
           DISPATCH_RESUME_RUN: ${{ inputs.resume_run_id }}
+          DISPATCH_FULL: ${{ inputs.full_pipeline }}
       - name: Restore prior observations and private cache
         if: steps.request.outputs.resume_run_id != ''
         uses: actions/download-artifact@v4
@@ -44,31 +56,135 @@ jobs:
           run-id: ${{ steps.request.outputs.resume_run_id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: ${{ runner.temp }}/bct-recovery-resume
+      - name: Restore historical cache hashes absent from latest checkpoint
+        if: steps.request.outputs.retained_cache_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: bct-recovery-checkpoint-${{ steps.request.outputs.retained_cache_run_id }}
+          run-id: ${{ steps.request.outputs.retained_cache_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/bct-recovery-retained-cache
       - name: Verify storage, preserving merge and legacy regressions
         run: |
           python -m pip install -e '.[test]'
           python -m pytest -q tests/test_future_github.py tests/test_future_github_shards.py tests/test_future_github_atomic.py tests/test_future_store.py
+      - name: Verify restored checkpoint journal and every source cache hash
+        if: steps.request.outputs.resume_run_id != ''
+        env:
+          BCT_RESUME_RUN: ${{ steps.request.outputs.resume_run_id }}
+        run: |
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          from bct.recovery_restore import verify_restored,copy_preserved_caches,copy_latest_root_state
+          request=json.loads(Path('.github/bct-recovery-request.json').read_text())
+          if str(request['resume_run_id'])!=os.environ['BCT_RESUME_RUN']:raise ValueError('unverified resume run selected')
+          root=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume'
+          if not request.get('resume_cache_inventory_sha256'):raise ValueError('pinned source cache inventory required')
+          receipt=verify_restored(root,request.get('resume_file_sha256',{}),expected_cache_inventory=request['resume_cache_inventory_sha256'])
+          if str(json.loads((root/'checkpoint.json').read_text())['run_id'])!=os.environ['BCT_RESUME_RUN']:raise ValueError('restored run ID differs')
+          output=Path(os.environ['RUNNER_TEMP'])/'bct-recovery'
+          output.mkdir(exist_ok=True)
+          (output/'restore-verification.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          copy_preserved_caches(root,output)
+          retained=request.get('retained_cache')
+          if retained:
+              old=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-retained-cache'
+              if str(json.loads((old/'checkpoint.json').read_text())['run_id'])!=str(retained['run_id']):raise ValueError('retained cache run ID differs')
+              proof=verify_restored(old,retained['file_sha256'],expected_cache_inventory=retained['inventory_sha256'])
+              proof['union']=copy_preserved_caches(old,output)
+              (output/'retained-cache-verification.json').write_text(json.dumps(proof,indent=2)+'\n')
+          # Preserve latest root journals before any later gate can replace
+          # them. Historical cache unioning above never owns these files.
+          import shutil
+          copy_latest_root_state(root,output)
+          if (root/'private-source-html').exists():shutil.copytree(root/'private-source-html',output/'private-source-html',dirs_exist_ok=True)
+          PY
       - name: Gate 0 then real GitHub storage Gate 1
+        if: steps.request.outputs.full_pipeline != 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python .github/scripts/bct_storage_recovery.py
       - name: Gate 2 original source access on GitHub runner
+        if: steps.request.outputs.full_pipeline != 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python .github/scripts/bct_source_audit.py
       - name: Gate 3 full failed-source inventory
+        if: steps.request.outputs.full_pipeline != 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python .github/scripts/bct_full_source_recovery.py
+      - name: Gate 4 official original verification and evidence holds
+        if: steps.request.outputs.full_pipeline != 'true'
+        run: python .github/scripts/bct_evidence_recovery.py
+      - name: Stage 5 cost-zero real-source reading pilot
+        if: steps.request.outputs.full_pipeline != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BCT_PUBLIC_REPOSITORY: ${{ github.event.repository.private == false }}
+        run: python .github/scripts/bct_local_reader_probe.py
+      - name: Gate 5 actual readings and atomic production queue recovery
+        if: steps.request.outputs.full_pipeline != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/scripts/bct_queue_recovery.py
+      - name: Restore original 230-source regression corpus
+        uses: actions/download-artifact@v4
+        with:
+          name: precursor-private-cache
+          run-id: 37790294699
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/bct-recovery/fixed-precursor-qa
+      - name: Gate 6 real source E2E and required whole regressions
+        if: steps.request.outputs.full_pipeline != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python -m pip install ruff mypy build
+          python .github/scripts/bct_e2e_recovery.py
+      - name: Install actual browser and operating quality dependencies
+        if: steps.request.outputs.full_pipeline == 'true'
+        run: |
+          python -m pip install ruff mypy build
+          npm install --prefix "$RUNNER_TEMP/bct-browser" --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/bct-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Execute actual Stage 0 through FULL recovery engine
+        if: steps.request.outputs.full_pipeline == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BCT_PUBLIC_REPOSITORY: ${{ github.event.repository.private == false }}
+          BCT_PLAYWRIGHT_MODULE: ${{ runner.temp }}/bct-browser/node_modules/playwright
+        run: python .github/scripts/bct_operating_recovery.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: bct-recovery-checkpoint-${{ github.run_id }}
           path: |
             ${{ runner.temp }}/bct-recovery/checkpoint.json
+            ${{ runner.temp }}/bct-recovery/operating-*.json
+            ${{ runner.temp }}/bct-recovery/operating-*.png
+            ${{ runner.temp }}/bct-recovery/restore-verification.json
+            ${{ runner.temp }}/bct-recovery/retained-cache-verification.json
+            ${{ runner.temp }}/bct-recovery/recovery-preservation-seal.json
+            ${{ runner.temp }}/bct-recovery/e2e-*.json
+            ${{ runner.temp }}/bct-recovery/e2e-*.xml
+            ${{ runner.temp }}/bct-recovery/e2e-original-230/operating-report.json
             ${{ runner.temp }}/bct-recovery/*.log
             ${{ runner.temp }}/bct-recovery/source-audit.json
             ${{ runner.temp }}/bct-recovery/source-recovery-*.json*
             ${{ runner.temp }}/bct-recovery/private-source-cache/*.txt
+            ${{ runner.temp }}/bct-recovery/private-source-html/*.html
+            ${{ runner.temp }}/bct-recovery/evidence-recovery-*.json
+            ${{ runner.temp }}/bct-recovery/private-evidence-raw/*.bin
+            ${{ runner.temp }}/bct-recovery/private-evidence-cache/*.txt
+            ${{ runner.temp }}/bct-recovery/private-evidence-search/*.xml
+            ${{ runner.temp }}/bct-recovery/local-reader-*.json
+            ${{ runner.temp }}/bct-recovery/local-reader-*.log
+            ${{ runner.temp }}/bct-recovery/queue-recovery-*.json
+            ${{ runner.temp }}/bct-recovery/private-local-reader-execution.jsonl
+            ${{ runner.temp }}/bct-recovery/native-claim-recovery.json
+            ${{ runner.temp }}/bct-recovery/native-claim-history.json
+            ${{ runner.temp }}/bct-recovery/private-native-claim/**/*
           if-no-files-found: error
           retention-days: 30

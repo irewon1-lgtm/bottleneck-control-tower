@@ -2,12 +2,16 @@
 from pathlib import Path
 import json
 import time
-from datetime import datetime
+from datetime import datetime, timezone
+from collections import defaultdict, deque
+from urllib.parse import urlsplit
 
-from .future_body import read_cached_body, cache_body, is_control_only_body
+from .future_body import (read_cached_body, cache_body, is_control_only_body,
+                          has_terminal_excerpt_marker, is_author_metadata_only_body, is_video_summary_body,
+                          is_membership_landing_body)
 
 
-def restore_observations(root, cache, *, now=None, retry_errors=False):
+def restore_observations(root, cache, *, now=None, retry_errors=False, reinspect_urls=()):
     """An artifact is evidence, never a new HTTP execution or read completion.
 
     Retain prior denied/unavailable results. Retry only requests not executed,
@@ -37,7 +41,17 @@ def restore_observations(root, cache, *, now=None, retry_errors=False):
                 raise ValueError('preserved source cache hash mismatch')
             if cache_body(cache, body) != digest:
                 raise ValueError('restored source cache hash mismatch')
-            if record.get('body_status') == 'FULL' and is_control_only_body(body):
+            if record.get('body_status') == 'FULL' and is_membership_landing_body(body,url):
+                record['prior_observation_classification']={
+                    key:record.get(key) for key in ('status','body_status','body_sha256','completeness','reasons')}
+                record.update(status='BLOCKED',body_status='UNAVAILABLE',
+                              reclassification_rule='MEMBERSHIP_ACCESS_LIMIT_V1',
+                              classification_corrected_at=datetime.now(timezone.utc).isoformat(),
+                              access_diagnostic={'category':'PAYWALL','state':'SOURCE_BLOCKED','retryable':False})
+                record['reasons']=list(dict.fromkeys([*record.get('reasons',[]),
+                    'PAYWALL_OR_LOGIN_PREVIEW','MEMBERSHIP_ACCESS_LIMIT']))
+                record['completeness']={**record.get('completeness',{}),'assessment':'MEMBERSHIP_LANDING_NOT_ARTICLE'}
+            elif record.get('body_status') == 'FULL' and is_control_only_body(body):
                 # Preserve the original observation and cache, but correct its
                 # classification without requesting an unchanged denied URL.
                 record['prior_observation_classification'] = {
@@ -46,10 +60,32 @@ def restore_observations(root, cache, *, now=None, retry_errors=False):
                               reclassification_rule='ARTICLE_CONTROL_ONLY_V1')
                 record['reasons'] = list(dict.fromkeys([*record.get('reasons', []), 'ARTICLE_CONTROL_ONLY']))
                 record['completeness'] = {**record.get('completeness', {}), 'assessment': 'UI_CONTROL_ONLY'}
+            elif record.get('body_status') == 'FULL' and (has_terminal_excerpt_marker(body)
+                                                        or is_author_metadata_only_body(body)
+                                                        or is_video_summary_body(body,url)):
+                metadata = is_author_metadata_only_body(body)
+                video = is_video_summary_body(body,url)
+                record['prior_observation_classification'] = {
+                    key: record.get(key) for key in ('status', 'body_status', 'body_sha256', 'completeness', 'reasons')}
+                record.update(status='PARTIAL', body_status='PARTIAL',
+                              reclassification_rule=('AUTHOR_METADATA_ONLY_V1' if metadata else
+                                                     'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT_V1' if video else 'ARTICLE_TERMINAL_ELLIPSIS_V1'),
+                              classification_corrected_at=datetime.now(timezone.utc).isoformat())
+                record['reasons'] = list(dict.fromkeys([*record.get('reasons', []),
+                                                       'AUTHOR_METADATA_ONLY' if metadata else
+                                                       'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT' if video else 'TERMINAL_EXCERPT_MARKER']))
+                record['completeness'] = {**record.get('completeness', {}),
+                                         'assessment': 'AUTHOR_METADATA_ONLY' if metadata else
+                                         'VIDEO_SUMMARY_WITHOUT_TRANSCRIPT' if video else 'UNFINISHED_EXCERPT'}
         reason = record.get('reason')
         category = record.get('access_diagnostic', {}).get('category')
         due = record.get('resume_after', float('inf')) <= at
-        if (not record['attempted'] and reason == 'RUNNER_DEADLINE'
+        if url in reinspect_urls:
+            if not retry_errors or record.get('reclassification_rule') not in (
+                    'ARTICLE_TERMINAL_ELLIPSIS_V1','AUTHOR_METADATA_ONLY_V1'):
+                raise ValueError('source scope reinspection requires changed code and confirmed excerpt defect')
+            pending[url]=record
+        elif (not record['attempted'] and reason == 'RUNNER_DEADLINE'
                 or (reason == 'HOST_RATE_LIMIT' or category == 'HTTP_429') and due
                 or record.get('status') == 'ERROR' and retry_errors):
             pending[url] = record
@@ -64,10 +100,27 @@ def host_cooldowns(records, *, now=None):
     """Retain actual Retry-After across runner changes; never erase a limit."""
     from urllib.parse import urlsplit
     at = time.time() if now is None else now
-    result = {}
+    result: dict[str | None,float] = {}
     for record in records.values():
         until = record.get('resume_after', 0)
         if until > at:
             host = urlsplit(record['url']).hostname
             result[host] = max(result.get(host, 0), until)
     return result
+
+
+def source_attempt_order(urls, previous):
+    """Attempt untouched URLs before due retries; rotate hosts fairly.
+
+    A repeatedly rate-limited old URL must not starve every untouched URL on
+    its host. This does not shorten a cooldown or authorize parallel requests.
+    """
+    groups: dict[str | None,deque[str]] = defaultdict(deque)
+    for url in sorted(urls, key=lambda u: (previous.get(u, {}).get('attempted', False), u)):
+        groups[urlsplit(url).hostname].append(url)
+    ordered = []
+    while any(groups.values()):
+        for queue in groups.values():
+            if queue:
+                ordered.append(queue.popleft())
+    return ordered

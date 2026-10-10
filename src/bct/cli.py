@@ -4,7 +4,7 @@ import logging
 import sys
 from pathlib import Path
 
-from .backup import create_backup, restore_backup, verify_backup
+from .backup import create_backup, restore_backup
 from .config import load_settings
 from .db import migrate
 from .health import health, rebuild_derived

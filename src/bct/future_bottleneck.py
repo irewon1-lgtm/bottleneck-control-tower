@@ -6,6 +6,7 @@ import hashlib
 from html.parser import HTMLParser
 import ipaddress
 import json
+from typing import Any
 from pathlib import Path
 import re
 import socket
@@ -130,7 +131,8 @@ class PublicRedirect(HTTPRedirectHandler):
         return super().redirect_request(req, fp, code, msg, headers, newurl)
 
 
-def fetch_html(url):
+def fetch_capture(url):
+    """Preserve actual response identity and bytes for provenance verification."""
     public_url(url)
     req = Request(url, headers={"User-Agent": "Mozilla/5.0 (compatible; BottleneckControlTower/0.1)",
                                 "Accept": "text/html,application/xhtml+xml"})
@@ -142,9 +144,17 @@ def fetch_html(url):
         payload = response.read(maximum + 1)
         truncated = len(payload) > maximum
         payload = payload[:maximum]
+        final_url = response.geturl()
+        public_url(final_url)
         return {"html": payload.decode(response.headers.get_content_charset() or "utf-8", errors="replace"),
+                "raw": payload, "final_url": final_url,
                 "status": response.status, "content_type": response.headers.get_content_type(),
                 "truncated": truncated}
+
+
+def fetch_html(url):
+    # Existing collectors keep their JSON-compatible capture contract.
+    return {k:v for k,v in fetch_capture(url).items() if k not in ('raw','final_url')}
 
 
 def fetch_body(url):
@@ -168,7 +178,7 @@ def screen(body, tracked_terms=()):
             start = match.start() + len(match.group()) - len(match.group().lstrip())
             end = start + len(sentence)
             sentence_rows.append((sentence, start, end, body.count("\n", 0, start) + 1))
-    path_indexes = {"DEMAND": set(), "SUPPLY": set(), "RELIEF": set(), "TRACKED_CHANGE": set()}
+    path_indexes: dict[str,set[int]] = {"DEMAND": set(), "SUPPLY": set(), "RELIEF": set(), "TRACKED_CHANGE": set()}
     uncertain_indexes = set()
     digital_noise = False
     for i, (sentence, start, end, paragraph) in enumerate(sentence_rows):
@@ -209,8 +219,8 @@ def screen(body, tracked_terms=()):
     qualifying = set().union(*path_indexes.values())
     candidate = bool(qualifying)
     context_review = candidate and bool(qualifying & uncertain_indexes)
-    locations = {}
-    evidence = {}
+    locations: dict[str,list[dict]] = {}
+    evidence: dict[str,list[str]] = {}
     remaining = 24
     for path, indexes in path_indexes.items():
         if not indexes:
@@ -225,7 +235,7 @@ def screen(body, tracked_terms=()):
                 words = sentence.split()[:min(8, remaining)]
                 evidence[path].append(" ".join(words))
                 remaining -= len(words)
-    targets = {}
+    targets: dict[str,Any] = {}
     # Names remain extraction leads, and never establish a supply-chain relation.
     for i in sorted(qualifying):
         sentence, start, end, paragraph = sentence_rows[i]
@@ -339,7 +349,7 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
     if detection_mode not in ('LIVE', 'BACKFILL', 'SYNTHETIC'):
         raise ValueError('invalid detection mode')
     output = Path(output)
-    state = json.loads(output.read_text()) if output.exists() else {"version": VERSION, "results": {}}
+    state: dict[str,Any] = json.loads(output.read_text()) if output.exists() else {"version": VERSION, "results": {}}
     if state.get("version") not in (VERSION, "body-candidate-v2"):
         raise ValueError("version mismatch; use a separate output")
     terms = set(tracked_terms)

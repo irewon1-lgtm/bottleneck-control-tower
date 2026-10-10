@@ -1,6 +1,6 @@
 from copy import deepcopy
 import pytest
-from bct.recovery_preservation import digest,verify
+from bct.recovery_preservation import digest,verify,seal
 
 
 def inputs():
@@ -29,3 +29,12 @@ def test_new_inflow_allowed_but_old_versions_must_remain():
     assert verify(candidates,tracking,baseline)['preserved_candidates']==1
     candidates['results']['doc']['versions'].clear()
     with pytest.raises(ValueError,match='version missing'):verify(candidates,tracking,baseline)
+
+
+def test_recovered_seal_preserves_new_reads_and_version_judgments_beyond_static_baseline():
+    candidates,tracking,_=inputs()
+    candidates['results']['doc']['versions']['body']['score']=7
+    baseline=seal(candidates,tracking)
+    assert verify(candidates,tracking,baseline)['status']=='PASS'
+    candidates['results']['doc']['versions']['body']['score']=8
+    with pytest.raises(ValueError,match='version judgment'):verify(candidates,tracking,baseline)

@@ -123,19 +123,19 @@ def deep_merge(existing, changes, *, _path=()):
             merged[key] = deep_merge(existing[key], value, _path=(*_path, key)) if key in existing else deepcopy(value)
         return merged
     if isinstance(existing, list) and isinstance(changes, list):
-        merged = deepcopy(existing)
+        merged_list = deepcopy(existing)
         for item in changes:
             identity = _identity(item)
-            index = next((i for i, prior in enumerate(merged) if identity and _identity(prior) == identity), None)
+            index = next((i for i, prior in enumerate(merged_list) if identity and _identity(prior) == identity), None)
             if index is not None:
                 if _path and _path[-1] in ("history", "entries"):
-                    if not _contains(merged[index], item):
+                    if not _contains(merged_list[index], item):
                         raise PatchError("existing history entries are immutable; append a new review")
                 else:
-                    merged[index] = deep_merge(merged[index], item, _path=_path)
-            elif item not in merged:
-                merged.append(deepcopy(item))
-        return merged
+                    merged_list[index] = deep_merge(merged_list[index], item, _path=_path)
+            elif item not in merged_list:
+                merged_list.append(deepcopy(item))
+        return merged_list
     if isinstance(existing, (dict, list)) != isinstance(changes, (dict, list)):
         raise PatchError("container replacement is not a preserving patch")
     return deepcopy(changes)
@@ -183,7 +183,8 @@ def validate_version_refs(candidate_state, refs, *, current_only=False):
             raise PatchError("invalid reader version")
         if "start" in ref or "end" in ref:
             start, end = ref.get("start"), ref.get("end")
-            if any(isinstance(x, bool) or not isinstance(x, int) for x in (start, end)) or not 0 <= start <= end:
+            if (not isinstance(start,int) or isinstance(start,bool)
+                    or not isinstance(end,int) or isinstance(end,bool) or not 0 <= start <= end):
                 raise PatchError("invalid document reading range")
             chars = version.get("body_chars") if isinstance(version, dict) else None
             if chars is None and current == body_hash:

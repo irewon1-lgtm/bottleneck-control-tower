@@ -10,7 +10,7 @@ import re
 import uuid
 from urllib.parse import urlsplit
 
-from .objective_lock import ObjectiveBlocked, objective_binding, require_objective, stamp_export
+from .objective_lock import ObjectiveBlocked, require_objective, stamp_export
 
 PUBLIC_CONFIRMATION = re.compile(r'\b(?:shortages?|bottlenecks?|scarcity|tight[- ]supply|supply (?:is |remains? )?tight)\b|병목|공급\s*부족|품귀|공급난', re.I)
 DEMAND_TYPES = {'customer_roadmap', 'committed_order', 'reservation', 'capex', 'deployment', 'product_transition'}

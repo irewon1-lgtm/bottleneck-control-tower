@@ -17,6 +17,7 @@ import tempfile
 import socket
 import ssl
 from urllib.error import HTTPError, URLError
+from typing import Any
 
 
 def access_failure(exc):
@@ -24,7 +25,7 @@ def access_failure(exc):
     reason = exc.reason if isinstance(exc, URLError) else exc
     if isinstance(exc, HTTPError):
         status = exc.code
-        retry = (exc.headers or {}).get('Retry-After')
+        retry = exc.headers.get('Retry-After') if exc.headers else None
         retry = retry if retry and retry.isdigit() else None
         state = ('SOURCE_WAIT' if status == 429 or status >= 500 else
                  'UNAVAILABLE' if status in (404, 410) else 'SOURCE_BLOCKED')
@@ -70,6 +71,55 @@ def _plain(text):
 def is_control_only_body(text):
     """A closed article container can still contain only a publisher control."""
     return bool(_CONTROL_ONLY.fullmatch(_plain(text)))
+
+
+def has_terminal_excerpt_marker(text):
+    """An unfinished final sentence cannot prove complete source coverage."""
+    return bool(re.search(r'(?:\.{3}|…)[\s\"”’\x27]*$', str(text)))
+
+
+def is_author_metadata_only_body(text):
+    """Observed author biography plus adjacent links is not article prose.
+
+    Require the biography to be the second block, not a mention within an
+    otherwise substantive article. Keep the text and hash as partial evidence.
+    """
+    blocks = str(text).splitlines()
+    return (len(blocks) >= 5 and len(blocks[0].split()) <= 5
+            and bool(re.search(r'\bwrites, edits and produces\b.{0,100}\bnews articles\b', blocks[1]))
+            and 'Previous Article' in blocks and 'Next Article' in blocks)
+
+
+def is_video_summary_body(text, url):
+    """An observed official video synopsis is not a captured transcript."""
+    blocks = str(text).splitlines()
+    dcd = (bool(re.match(r'https://(?:www\.)?datacenterdynamics\.com/en/videos/', str(url)))
+           and bool(blocks and blocks[0].startswith('DCD Studio:'))
+           and 'Tags' in blocks and 'Comments' in blocks)
+    video_index = (blocks.index('Breaking Defense Video')
+                   if 'Breaking Defense Video' in blocks else -1)
+    breaking_defense = (
+        bool(re.match(r'https://(?:www\.)?breakingdefense\.com/\d{4}/\d{2}/', str(url)))
+        and 0 < video_index <= 2
+        and sum(len(block) for block in blocks[:video_index]) <= 1200
+        and sum('Watch Now' in block for block in blocks) >= 3
+        and bool(blocks and blocks[-1] == 'Scroll for more video'))
+    return bool((dcd or breaking_defense)
+                and not re.search(r'\btranscript\b', str(text), re.I))
+
+
+def is_membership_landing_body(text, url):
+    """Hash-preserved Northern Miner access-limit copy is not the news body.
+
+    Observed HTTP200 redirected to subscribe-login with a free-article-limit
+    title. Require both publisher-specific reading gate and member sign-in;
+    a generic newsletter, membership mention or sign-in button is insufficient.
+    """
+    if not re.match(r'https://(?:www\.)?northernminer\.com/(?:news/|subscribe-login/)',str(url)):
+        return False
+    plain=_plain(text)
+    return bool(re.search(r'\bkeep reading The Northern Miner\b.{0,120}\bMembership\b',plain,re.I)
+                and re.search(r'\balready a member\b',plain,re.I))
 
 
 class _Node:
@@ -178,6 +228,52 @@ def _json_articles(value):
             yield from _json_articles(child)
 
 
+def _publisher_body_scopes(nodes):
+    """Verified single-post layouts separate primary prose from UI wrappers."""
+    canonicals=[n.attrs.get('href','') for n in nodes if n.tag=='link' and n.attrs.get('rel')=='canonical']
+    goodlife=any(n.tag=='body' and {'single-post','wp-theme-goodlife-wp'} <=
+                 set(str(n.attrs.get('class','')).split()) for n in nodes)
+    digest_urls=[u for u in canonicals if re.match(r'https://(?:www\.)?semiconductor-digest\.com/[^/]+/',u)]
+    if goodlife and len(digest_urls)==1:
+        # This publisher puts entry-content inside share-container. Do not
+        # globally stop filtering share UI; select only the canonical article.
+        scopes: list[_Node]=[]
+        for article in nodes:
+            if article.tag!='article' or article.attrs.get('data-url')!=digest_urls[0]:continue
+            scopes.extend(n for n in _nodes(article) if n.tag=='div'
+                          and {'post-content','entry-content'} <= set(str(n.attrs.get('class','')).split())
+                          and any(c.tag=='p' and _text(c) for c in _nodes(n)))
+        return _visible_publisher_scopes(scopes,nodes,allow_share_container=True)
+    themed=any(n.tag=='body' and 'wp-theme-hpc-theme' in str(n.attrs.get('class','')).split()
+               and 'single-post' in str(n.attrs.get('class','')).split() for n in nodes)
+    canonical=any(n.tag=='link' and n.attrs.get('rel')=='canonical' and
+                  re.match(r'https://(?:www\.)?hpcwire\.com/\d{4}/\d{2}/\d{2}/',n.attrs.get('href','')) for n in nodes)
+    if not themed or not canonical:return []
+    scopes=[]
+    for wrapper in nodes:
+        classes=str(wrapper.attrs.get('class','')).split()
+        if 'article-card-wrapper' not in classes or 'normal-mode' not in classes:continue
+        for node in _nodes(wrapper):
+            if node.tag=='div' and str(node.attrs.get('class','')).split()==['w-100']:
+                if any(n.tag=='p' and _text(n) for n in _nodes(node)):
+                    scopes.append(node)
+    return _visible_publisher_scopes(scopes,nodes)
+
+
+def _visible_publisher_scopes(scopes,nodes,*,allow_share_container=False):
+    """A canonical layout never authorizes hidden or other excluded content."""
+    if len(scopes)!=1:return []
+    scope=scopes[0]
+    for ancestor in nodes:
+        if not any(child is scope for child in _nodes(ancestor)):continue
+        if not _skipped(ancestor):continue
+        allowed=(allow_share_container and ancestor.tag=='div'
+                 and str(ancestor.attrs.get('class','')).split()==['share-container']
+                 and 'hidden' not in ancestor.attrs and ancestor.attrs.get('aria-hidden')!='true')
+        if not allowed:return []
+    return scopes
+
+
 def extract_document(html, *, http_status=200, content_type="text/html"):
     """Return accessible text, a completeness state and auditable reasons."""
     if not isinstance(html, str):
@@ -188,6 +284,9 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
     nodes = list(_nodes(doc.root))
     visible = _text(doc.root)
     titles = " ".join(_text(n) for n in nodes if n.tag == "title")
+    membership_landing=any(n.tag=='link' and n.attrs.get('rel')=='canonical'
+        and re.match(r'https://(?:www\.)?northernminer\.com/subscribe-login/?$',n.attrs.get('href',''))
+        and is_membership_landing_body(visible,n.attrs['href']) for n in nodes)
     reasons = []
     articles = []
     for node in nodes:
@@ -207,6 +306,15 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
     scopes = [n for n in visible_nodes if n.tag == "article" or n.attrs.get("itemprop") == "articleBody"
               or _BODY_CLASS.search(str(n.attrs.get("class", "")))]
     method = "ARTICLE"
+    publisher_scopes=_publisher_body_scopes(nodes)
+    known_publisher_layout=any(n.tag=='body' and 'single-post' in str(n.attrs.get('class','')).split()
+                              and {'wp-theme-hpc-theme','wp-theme-goodlife-wp'} &
+                              set(str(n.attrs.get('class','')).split()) for n in nodes) and any(
+        n.tag=='link' and n.attrs.get('rel')=='canonical' and re.match(
+            r'https://(?:www\.)?(?:hpcwire|semiconductor-digest)\.com/',n.attrs.get('href','')) for n in nodes)
+    if publisher_scopes:
+        scopes=publisher_scopes
+        method='PUBLISHER_BODY'
     if not scopes:
         scopes = [n for n in visible_nodes if n.tag == "main"]
         method = "MAIN"
@@ -219,6 +327,10 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
         status, body, reasons = "UNAVAILABLE", "", [f"HTTP_{http_status}"]
     elif content_type.split(";", 1)[0].lower() not in {"text/html", "application/xhtml+xml"}:
         status, body, reasons = "UNAVAILABLE", "", ["UNSUPPORTED_CONTENT_TYPE"]
+    elif membership_landing:
+        # Retain raw observations outside extraction; login marketing contains
+        # no verified requested article and must never enter the FULL reader.
+        status,body,reasons='UNAVAILABLE','',['PAYWALL_OR_LOGIN_PREVIEW','MEMBERSHIP_ACCESS_LIMIT']
     elif _CHALLENGE.search(titles) or (_CHALLENGE.search(visible) and (
             not body or re.match(r'\s*(?:verify (?:that )?you are human|access denied|checking your browser|just a moment|enable javascript and cookies|captcha verification)\b', body, re.I))):
         status, body, reasons = "UNAVAILABLE", "", ["ACCESS_CHALLENGE"]
@@ -256,13 +368,32 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
         if body and paywall:
             status = "PARTIAL"
             reasons.append("PAYWALL_OR_LOGIN_PREVIEW")
-        if body and node and any(_PREVIEW_CLASS.search(str(n.attrs.get("class", "")))
-                                 for n in _nodes(node)):
+        if body and known_publisher_layout and not publisher_scopes:
+            status = "PARTIAL"
+            reasons.append("PUBLISHER_PRIMARY_SCOPE_UNVERIFIED")
+        if body and node and (any(_PREVIEW_CLASS.search(str(n.attrs.get("class", "")))
+                                 for n in _nodes(node)) or
+                             any(_PREVIEW_CLASS.search(str(n.attrs.get('class','')))
+                                 and any(child is node for child in _nodes(n)) for n in nodes)):
             status = "PARTIAL"
             reasons.append("PREVIEW_OR_SUMMARY_CONTENT")
+        if body and node and any(n.tag=='article' and 'article-card' in str(n.attrs.get('class','')).split()
+                                  and any(child is node for child in _nodes(n)) for n in nodes):
+            status='PARTIAL'
+            reasons.append('ARTICLE_CARD_SCOPE_UNVERIFIED')
         if body and _MEDIA_SUMMARY.search(body):
             status = "PARTIAL"
             reasons.append("MEDIA_SUMMARY_NOT_FULL_CONTEXT")
+        if body and has_terminal_excerpt_marker(body):
+            status = "PARTIAL"
+            reasons.append("TERMINAL_EXCERPT_MARKER")
+        if body and is_author_metadata_only_body(body):
+            status = "PARTIAL"
+            reasons.append("AUTHOR_METADATA_ONLY")
+        canonical_urls=[n.attrs.get('href','') for n in nodes if n.tag=='link' and n.attrs.get('rel')=='canonical']
+        if body and any(is_video_summary_body(body,u) for u in canonical_urls):
+            status = "PARTIAL"
+            reasons.append("VIDEO_SUMMARY_WITHOUT_TRANSCRIPT")
         tables = [n for n in _nodes(node or doc.root) if n.tag == "table" and not _skipped(n)]
         table_rows = sum(1 for t in tables for n in _nodes(t) if n.tag == "tr" and _blocks(n))
         if body and (any(not any(n.tag in {"td", "th"} and _text(n) for n in _nodes(t)) for t in tables)
@@ -324,7 +455,7 @@ SOURCE_FIELDS = frozenset({'origin_id', 'origin_url', 'origin_publisher', 'prove
 
 def verified_source_metadata(source, body_sha256):
     """Preserve only explicit verification bound to this body snapshot."""
-    out = {}
+    out: dict[str,Any] = {}
     if not body_sha256:
         return out
     evidence = source.get('provenance_evidence') or {}

@@ -7,6 +7,7 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlsplit
 from datetime import datetime, timezone
+from typing import Any
 
 from bct.future_body import access_failure, extract_document, cache_body
 from bct.future_bottleneck import fetch_html, screen
@@ -24,7 +25,7 @@ def main():
     report['source_audit_candidate_blob'] = original.sha
     tracking = transport.read('future-tracking.json')
     failures = failure_index(tracking.document)
-    selected = {}
+    selected: dict[str | None,dict[str,Any]] = {}
     # Cover every failed DNS host and official sources; a sample is never
     # presented as recovery of all 1,693 original document versions.
     for item in failures.values():

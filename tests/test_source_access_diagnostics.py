@@ -55,6 +55,7 @@ def test_fetcher_reads_large_templates_and_marks_its_hard_limit(monkeypatch):
         def __enter__(self):return self
         def __exit__(self,*args):pass
         def read(self,maximum):return self.data[:maximum]
+        def geturl(self):return 'https://example.test/final'
     class Opener:
         def open(self,*args,**kwargs):return Response(data)
     monkeypatch.setattr(collector,'build_opener',lambda *args:Opener())
@@ -63,3 +64,6 @@ def test_fetcher_reads_large_templates_and_marks_its_hard_limit(monkeypatch):
     data=b'x'*(8*1024*1024+1)
     fetched=collector.fetch_html('https://example.test')
     assert fetched['truncated'] is True and len(fetched['html'])==8*1024*1024
+    captured=collector.fetch_capture('https://example.test')
+    assert captured['raw']==data[:8*1024*1024]
+    assert captured['final_url']=='https://example.test/final'

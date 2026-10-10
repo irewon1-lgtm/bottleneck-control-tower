@@ -31,7 +31,7 @@ def test_cross_document_scope_and_unchanged_protected_engine_positive():
 
 
 def before_hashes():
-    return {'precursor_discovery.py':'614e841938daf41e34d7e31b97ec636f06f2997c8b7b4252926dd135e5bc2639','early_forecast.py':'51d90d2265baec516d20383579816c5155e46c69599a8e7b281d329843d17675','forecast_discovery.py':'5a491f55f14a3fef675c0ca652042bb1cd8b76cb0de40c6f003d55181e2480fd','prospective.py':'6ca939e378ffb02323feecb869aa1aac0e9f7b56ec5cbc92689233e30d65a153'}
+    return {'precursor_discovery.py':'614e841938daf41e34d7e31b97ec636f06f2997c8b7b4252926dd135e5bc2639','early_forecast.py':'51d90d2265baec516d20383579816c5155e46c69599a8e7b281d329843d17675','forecast_discovery.py':'f6bf9bf94a43949dd82bd55e2acb5b63f944158309679127e49427469c061c37','prospective.py':'6ca939e378ffb02323feecb869aa1aac0e9f7b56ec5cbc92689233e30d65a153'}
 
 
 def test_product_only_same_company_or_geography_does_not_link():

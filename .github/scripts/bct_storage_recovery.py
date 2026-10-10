@@ -6,13 +6,15 @@ from pathlib import Path
 import sqlite3
 import subprocess
 import traceback
+from typing import Any
 from datetime import datetime, timezone
 
 from bct.future_github import GitHubTransport, GitHubRequestError, _raw
 from bct.future_review import queue_summary
 from bct.future_store import store_patch
 from bct.future_worker import _runs, _run_patch
-from bct.recovery_preservation import verify as verify_preservation
+from bct.recovery_preservation import verify as verify_preservation, seal
+from bct.recovery_storage_probe import verify_atomic_recovery
 
 
 def command(*args):
@@ -22,13 +24,13 @@ def command(*args):
 def main():
     root = Path(os.environ['RUNNER_TEMP']) / 'bct-recovery'
     root.mkdir(exist_ok=True)
-    report = {'version': 1, 'status': 'BLOCKED', 'stage': 0,
+    report: dict[str, Any] = {'version': 1, 'status': 'BLOCKED', 'stage': 0,
               'run_id': os.environ['GITHUB_RUN_ID'],
               'code_sha': os.environ['GITHUB_SHA'], 'started_at': datetime.now(timezone.utc).isoformat(),
               'prediction_performance': 'UNVERIFIED', 'live_early': 0}
     try:
         refs = {}
-        for branch in ('main', 'data', 'future-bottleneck-data'):
+        for branch in ('main', 'data', 'future-bottleneck-data', 'ops/recovery-20261010'):
             line = command('git', 'ls-remote', 'origin', 'refs/heads/' + branch)
             if not line:
                 raise RuntimeError('required branch missing: ' + branch)
@@ -47,6 +49,24 @@ def main():
         tracking = transport.read('future-tracking.json')
         preservation_baseline=json.loads(Path('config/bct-recovery-preservation.json').read_text())
         report['identity_preservation']=verify_preservation(original.document,tracking.document,preservation_baseline)
+        request=json.loads(Path('.github/bct-recovery-request.json').read_text())
+        retained_path=Path('config/bct-recovery-retained-seal.json')
+        if request.get('retained_seal_sha256'):
+            if hashlib.sha256(retained_path.read_bytes()).hexdigest()!=request['retained_seal_sha256']:
+                raise ValueError('retained production preservation seal differs')
+            report['retained_identity_preservation']=verify_preservation(
+                original.document,tracking.document,json.loads(retained_path.read_text()))
+        recovered_seal=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume/recovery-preservation-seal.json'
+        if recovered_seal.exists():
+            request=json.loads(Path('.github/bct-recovery-request.json').read_text())
+            expected=request.get('resume_file_sha256',{}).get('recovery-preservation-seal.json')
+            if hashlib.sha256(recovered_seal.read_bytes()).hexdigest()!=expected:
+                raise ValueError('recovered preservation seal must be pinned in resume request')
+            report['recovered_identity_preservation']=verify_preservation(
+                original.document,tracking.document,json.loads(recovered_seal.read_text()))
+        # A later failed gate must still carry the verified current baseline.
+        (root/'recovery-preservation-seal.json').write_text(
+            json.dumps(seal(original.document,tracking.document),ensure_ascii=False,indent=2)+'\n')
         before = queue_summary(original.document, tracking.document)
         # The immutable repair baseline includes these records, regardless of
         # subsequent legitimate inflow/recovery. Never initialize over them.
@@ -79,6 +99,7 @@ def main():
         if probe.read('future-candidates.json').document['summary']['storage_probe_run'] != report['run_id']:
             raise RuntimeError('probe readback failed')
         report['probe_branch'] = probe_branch
+        report['atomic_recovery_probe'] = verify_atomic_recovery(probe, report['run_id'])
         report['probe_commit'] = probe.head()
         # Re-read production after the probe; use the latest preserving patch.
         original = transport.read('future-candidates.json')
@@ -96,10 +117,13 @@ def main():
         if final['results'] != original.document['results']:
             raise RuntimeError('source records changed during storage repair')
         transport.write('future-candidates.json', final, original.sha)
-        confirmed = transport.read('future-candidates.json')
+        # GitHub may briefly serve the old mutable ref after a successful
+        # fast-forward. Verify the immutable commit returned by the atomic
+        # publisher; write_many already verified the ref-update response.
+        confirmed = transport.read_at('future-candidates.json', transport.last_commit)
         if confirmed.document != final:
             raise RuntimeError('production generation readback differs')
-        if transport.read('future-tracking.json').document != tracking.document:
+        if transport.read_at('future-tracking.json', transport.last_commit).document != tracking.document:
             raise RuntimeError('tracking changed during storage repair')
         after = queue_summary(confirmed.document, tracking.document)
         for key in ('completed_documents', 'failed_versions', 'failure_reasons', 'preserved_versions'):

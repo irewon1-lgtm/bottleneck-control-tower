@@ -1,11 +1,13 @@
 """Gate 3: account for every failed version; never fabricate old full text."""
 import json
+import hashlib
 import os
 from pathlib import Path
 import threading
 import time
-from collections import Counter, defaultdict, deque
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from collections import Counter, deque
+from concurrent.futures import ThreadPoolExecutor, Future, wait, FIRST_COMPLETED
+from typing import Any
 from datetime import datetime, timezone
 from urllib.parse import urlsplit
 
@@ -13,7 +15,7 @@ from bct.future_body import access_failure, extract_document, cache_body
 from bct.future_bottleneck import fetch_html
 from bct.future_github import GitHubTransport
 from bct.future_review import failure_index
-from bct.recovery_sources import restore_observations, host_cooldowns
+from bct.recovery_sources import restore_observations, host_cooldowns, source_attempt_order
 
 
 def main():
@@ -28,24 +30,24 @@ def main():
     cache=root/'private-source-cache';cache.mkdir(exist_ok=True)
     resume=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume'
     old_checkpoint=json.loads((resume/'checkpoint.json').read_text()) if (resume/'checkpoint.json').exists() else {}
+    request=json.loads(Path('.github/bct-recovery-request.json').read_text())
     restored,pending=restore_observations(resume,cache,
-        retry_errors=bool(old_checkpoint.get('code_sha')) and old_checkpoint['code_sha']!=os.environ['GITHUB_SHA'])
+        retry_errors=bool(old_checkpoint.get('code_sha')) and old_checkpoint['code_sha']!=os.environ['GITHUB_SHA'],
+        reinspect_urls=request.get('source_scope_reinspection_urls',[]))
     restored={u:r for u,r in restored.items() if u in urls}
     pending={u:r for u,r in pending.items() if u in urls}
-    groups=defaultdict(deque)
-    for url in sorted(urls-set(restored)):groups[urlsplit(url).hostname].append(url)
-    order=[]
-    while any(groups.values()):
-        for host in groups:
-            if groups[host]:order.append(groups[host].popleft())
-    locks={host:threading.Lock() for host in groups}
-    last_access={host:0.0 for host in groups}
+    order=source_attempt_order(urls-set(restored),pending)
+    hosts={urlsplit(url).hostname for url in order}
+    locks={host:threading.Lock() for host in hosts}
+    last_access={host:0.0 for host in hosts}
     cooldown=host_cooldowns({**restored,**pending})
     deadline=time.monotonic()+25*60
     def inspect(url):
         host=urlsplit(url).hostname
         result={'url':url,'attempted_at':datetime.now(timezone.utc).isoformat(),
                 'environment':'GITHUB_HOSTED_RUNNER','http_request_completed':False}
+        if url in pending and pending[url].get('reclassification_rule'):
+            result['prior_source_observation']=pending[url]
         with locks[host]:
             if time.monotonic()>=deadline:
                 return {**result,'status':'SOURCE_WAIT','reason':'RUNNER_DEADLINE','attempted':False}
@@ -59,6 +61,11 @@ def main():
             try:
                 fetched=fetch_html(url)
                 result.update(http_request_completed=True,http_status=fetched['status'])
+                if url in request.get('source_scope_reinspection_urls',[]):
+                    raw=fetched['html'].encode('utf-8');raw_hash=hashlib.sha256(raw).hexdigest()
+                    raw_cache=root/'private-source-html';raw_cache.mkdir(exist_ok=True)
+                    (raw_cache/(raw_hash+'.html')).write_bytes(raw)
+                    result['utf8_html_sha256']=raw_hash
                 body=extract_document(fetched['html'],http_status=fetched['status'],content_type=fetched['content_type'])
                 if fetched.get('truncated'):
                     if body['body_status']=='FULL':body['body_status']='PARTIAL'
@@ -85,10 +92,23 @@ def main():
         for result in restored.values():
             stream.write(json.dumps(result,ensure_ascii=False)+'\n')
         stream.flush()
-        futures={pool.submit(inspect,url):url for url in order}
-        for future in as_completed(futures):
-            result=future.result();observations[result['url']]=result
-            stream.write(json.dumps(result,ensure_ascii=False)+'\n');stream.flush()
+        remaining=deque(order);active_hosts=set()
+        futures: dict[Future[dict[str,Any]],str | None]={}
+        while remaining or futures:
+            # Submit one request per host so lock scheduling cannot reorder
+            # untouched URLs behind old denials. Other hosts still run in
+            # parallel; a real 429 is recorded before the next host request.
+            for _ in range(len(remaining)):
+                if len(futures)>=6:break
+                url=remaining.popleft();host=urlsplit(url).hostname
+                if host in active_hosts:
+                    remaining.append(url);continue
+                active_hosts.add(host);futures[pool.submit(inspect,url)]=host
+            done,_=wait(futures,return_when=FIRST_COMPLETED)
+            for future in done:
+                active_hosts.remove(futures.pop(future))
+                result=future.result();observations[result['url']]=result
+                stream.write(json.dumps(result,ensure_ascii=False)+'\n');stream.flush()
     versions=[]
     for prior in failed:
         result=observations[prior['url']]

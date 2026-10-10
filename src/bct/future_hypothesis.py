@@ -8,6 +8,7 @@ from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 import hashlib
 import json
+from typing import Any
 import re
 import uuid
 
@@ -86,8 +87,8 @@ def extract_facts(body, screening):
         scope = {}
         for field, label in [('specification', r'spec(?:ification)?'), ('region', 'region'),
                              ('supply_pool', 'supply pool')]:
-            match = re.search(r'\b' + label + r'\s*[:=]\s*([^;().\n]+)', text, re.I)
-            scope[field] = match[1].strip() if match else UNKNOWN
+            scope_match = re.search(r'\b' + label + r'\s*[:=]\s*([^;().\n]+)', text, re.I)
+            scope[field] = scope_match[1].strip() if scope_match else UNKNOWN
         period = re.search(r'\bperiod\s*[:=]\s*(\d{4}-\d{2}-\d{2})\s+(?:to|through)\s+(\d{4}-\d{2}-\d{2})', text, re.I)
         scope['period'] = {'start': period[1], 'end': period[2], 'precision': 'DAY'} if period else UNKNOWN
         basis = re.search(r'\bbasis\s*[:=]\s*(total|additional|unallocated)\b', text, re.I)
@@ -221,7 +222,7 @@ def hypothesis_patch(candidates, tracking, *, now=None, mode='LIVE'):
     if mode not in ('LIVE', 'BACKFILL', 'SYNTHETIC'):
         raise ValueError('invalid detection mode')
     clock = _clock(now).isoformat()
-    groups = {}
+    groups: dict[str,Any] = {}
     for fact in _evidence_rows(candidates):
         key, scope = _scope_key(fact, tracking)
         group = groups.setdefault(key, {'scope': scope, 'facts': []})
@@ -231,7 +232,9 @@ def hypothesis_patch(candidates, tracking, *, now=None, mode='LIVE'):
         if not any(f.get('dedup_key') == list(identity) for f in group['facts']):
             group['facts'].append({**fact, 'dedup_key': list(identity)})
     previous = candidates.get('hypotheses', {})
-    by_key, by_anchor, relations = {}, {}, {}
+    by_key: dict[str,set] = {}
+    by_anchor: dict[str,set] = {}
+    relations: dict[str,list] = {}
     for eid, h in previous.items():
         by_key.setdefault(h.get('candidate_key'), set()).add(eid)
         for anchor in h.get('anchors', []): by_anchor.setdefault(anchor, set()).add(eid)
@@ -242,7 +245,8 @@ def hypothesis_patch(candidates, tracking, *, now=None, mode='LIVE'):
             for name in (rel['component'], rel['product']): relations.setdefault(name.casefold(), []).append(ref)
     changed_products = {f['target'].casefold() for g in groups.values() for f in g['facts']
                         if f['role'] == 'DEMAND' and candidates['results'][f['document_id']].get('candidate')}
-    patch, assigned = {}, set()
+    patch: dict[str,Any] = {}
+    assigned: set[str] = set()
     for key, group in groups.items():
         facts, scope = group['facts'], group['scope']
         has_change = any(candidates['results'][f['document_id']].get('candidate') for f in facts)
@@ -431,7 +435,7 @@ def operation_report(samples, *, now=None):
 
 def performance_report(hypotheses, *, now=None, cohort=None, reference=None):
     """Event-level measurements only; missing denominators remain unmeasured."""
-    report = {'status': 'BLOCKED', 'accuracy': None, 'recall': None,
+    report: dict[str,Any] = {'status': 'BLOCKED', 'accuracy': None, 'recall': None,
               'confirmed_results': 0, 'unresolved_results': None,
               'forecast_pass': None, 'reason': '고정 전향 후보군·독립 사건군·사전 성능 기준 필요'}
     if not cohort or cohort.get('frozen_before_evaluation') is not True:

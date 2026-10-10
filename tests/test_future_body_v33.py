@@ -213,6 +213,33 @@ def test_normal_article_discussing_access_checks_remains_readable():
     assert result['body_status'] == 'FULL'
 
 
+@pytest.mark.parametrize('ending', ['...', '…'])
+def test_closed_related_article_excerpt_is_never_full(ending):
+    result=extract_document('<article><h3>Related story</h3><p>The queued work starts'+ending+'</p></article>')
+    assert result['body_status']=='PARTIAL'
+    assert 'TERMINAL_EXCERPT_MARKER' in result['reasons']
+    assert result['body'].endswith(ending)
+
+
+def test_verified_publisher_layout_selects_primary_prose_instead_of_related_article_cards():
+    html='<html><head><link rel="canonical" href="https://www.hpcwire.com/2026/09/29/source/"></head>'
+    html+='<body class="single-post wp-theme-hpc-theme"><main><div class="article-card-wrapper normal-mode">'
+    html+='<div class="row"><div class="w-100"><p>Official source reports qualified supply.</p><p>The full article ends here.</p></div></div></div>'
+    html+='<article class="article-card"><div class="article-content"><h3>Different story</h3><p>Other prose stops...</p></div></article></main></body></html>'
+    result=extract_document(html)
+    assert result['body_status']=='FULL' and result['extraction_method']=='PUBLISHER_BODY'
+    assert 'qualified supply' in result['body'] and 'Different story' not in result['body']
+    # Generic class names alone do not authenticate a publisher body scope.
+    generic=extract_document(html.replace('wp-theme-hpc-theme','unknown-theme'))
+    assert generic['extraction_method']!='PUBLISHER_BODY'
+
+
+def test_article_cards_alone_never_establish_original_body_coverage():
+    result=extract_document('<article class="article-card"><div class="article-content"><p>An unrelated news teaser.</p></div></article>')
+    assert result['body_status']=='PARTIAL'
+    assert 'ARTICLE_CARD_SCOPE_UNVERIFIED' in result['reasons']
+
+
 def test_subscriber_access_notice_outside_closed_preview_is_partial():
     html = '<article><p>A visible introduction reports a new contract.</p><p>The remaining sentence stops ...</p></article>'
     html += '<section><h3>Subscriber Access</h3><p>For uninterrupted access, sign in, subscribe or upgrade to Daily News.</p></section>'

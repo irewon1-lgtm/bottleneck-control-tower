@@ -47,3 +47,45 @@ def test_reused_success_cannot_count_as_new_operating_execution(tmp_path):
     state = run(stages, fingerprint=lambda:'same', output=tmp_path/'checkpoint.json')
     assert state['status'] == 'FAIL' and state['clean_streak'] == 0
     assert state['last_stage'] == 0 and len(state['attempts']) == 2
+
+
+def test_three_distinct_runners_are_required_and_duplicate_run_never_increments(tmp_path):
+    calls = []
+    stages = {s: executor(calls, s) for s in STAGES}
+    output = tmp_path/'external-cycles.json'
+    for runner, expected in [('run1',1), ('run1',1), ('run2',2), ('run3',3)]:
+        state = run(stages, fingerprint=lambda:'verified-code', output=output,
+                    single_cycle=True, execution_identity=runner)
+        assert state['clean_streak'] == expected
+        assert len(state['attempts']) == expected
+    assert len(calls) == 3 * len(STAGES) and state['status'] == 'PASS'
+
+
+def test_missing_runner_identity_and_a_changed_code_cannot_extend_an_old_clean_streak(tmp_path):
+    import pytest
+    stages = {s: executor([], s) for s in STAGES}
+    output = tmp_path/'external-cycles.json'
+    with pytest.raises(ValueError, match='runner execution identity'):
+        run(stages, fingerprint=lambda:'version1', output=output, single_cycle=True)
+    run(stages, fingerprint=lambda:'version1', output=output, single_cycle=True, execution_identity='run1')
+    state = run(stages, fingerprint=lambda:'version2', output=output,
+                single_cycle=True, execution_identity='run2')
+    assert state['clean_streak'] == 1 and state['status'] != 'PASS'
+
+
+def test_verified_external_condition_change_restarts_zero_without_cached_pass(tmp_path):
+    calls = []
+    condition = [False]
+    stages = {s: executor(calls, s, (lambda: not condition[0]) if s == 7 else None) for s in STAGES}
+    output = tmp_path/'external-block.json'
+    state = run(stages, fingerprint=lambda:'same-code', condition=lambda:condition[0],
+                output=output, single_cycle=True, execution_identity='before')
+    assert state['status'] == 'FAIL' and state['last_stage'] == 7
+    length = len(calls)
+    run(stages, fingerprint=lambda:'same-code', condition=lambda:condition[0],
+        output=output, single_cycle=True, execution_identity='same-condition')
+    assert len(calls) == length
+    condition[0] = True
+    state = run(stages, fingerprint=lambda:'same-code', condition=lambda:condition[0],
+        output=output, single_cycle=True, execution_identity='condition-restored')
+    assert calls[length] == 0 and state['clean_streak'] == 1
