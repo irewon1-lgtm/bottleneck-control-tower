@@ -5,6 +5,25 @@ from typing import Any
 from .future_reader import validate_output
 
 
+def prior_results_applied(previous, records, corrections, is_complete):
+    """Prove that a restored pilot's usable results already reached storage.
+
+    A later run can fail before Gate 5 and therefore replace the checkpoint
+    carrying ``gate5=PASS`` while still preserving the earlier reader report.
+    The authoritative proof in that case is the exact document/body version
+    and its complete immutable review in the current tracking generation.
+    Corrected-source results are quarantined separately and do not need to be
+    replayed.  Empty reports are never treated as applied.
+    """
+    results=[result for batch in previous.get('batches',[])
+             for result in batch.get('results',[])]
+    if not results:return False
+    keys=[(result['document_id'],result['body_sha256']) for result in results]
+    if len(set(keys))!=len(keys):raise ValueError('duplicate prior reading receipt')
+    usable=[key for key in keys if key not in corrections]
+    return all(key in records and is_complete(records[key]) for key in usable)
+
+
 def quarantine_corrected_readings(previous, corrections):
     """Keep corrected-source receipts as history, never import as completions.
 

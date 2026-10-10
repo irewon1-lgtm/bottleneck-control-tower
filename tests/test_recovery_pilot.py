@@ -1,6 +1,8 @@
 from copy import deepcopy
+
 import pytest
-from bct.recovery_pilot import resume_batches
+
+from bct.recovery_pilot import prior_results_applied, resume_batches
 
 
 def fixture():
@@ -40,3 +42,25 @@ def test_bounded_production_resume_preserves_actual_calls_without_fake_qualifica
     b=resume_batches(p,items,c,limits=(5,))
     assert b[0]['status']=='RUNNING' and b[0]['actual_model_calls']==1
     with pytest.raises(ValueError):resume_batches(p,items,c)
+
+
+def test_prior_results_use_exact_storage_proof_when_newer_checkpoint_failed_early():
+    p,items,_=fixture();p['batches']=p['batches'][:1]
+    records={(item['document_id'],item['body_sha256']):item for item in items}
+    assert prior_results_applied(p,records,{},lambda record:record is items[0]) is True
+    assert prior_results_applied(p,records,{},lambda record:False) is False
+
+
+def test_corrected_prior_result_is_held_without_replay_and_empty_is_not_applied():
+    p,items,_=fixture();p['batches']=p['batches'][:1]
+    key=items[0]['document_id'],items[0]['body_sha256']
+    records={key:items[0]}
+    assert prior_results_applied(p,records,{key:{'status':'PARTIAL'}},lambda record:False) is True
+    assert prior_results_applied({'batches':[]},records,{},lambda record:True) is False
+
+
+def test_duplicate_prior_receipt_cannot_be_used_as_storage_proof():
+    p,items,_=fixture();p['batches'][0]['results']*=2;p['batches']=p['batches'][:1]
+    records={(items[0]['document_id'],items[0]['body_sha256']):items[0]}
+    with pytest.raises(ValueError,match='duplicate prior reading receipt'):
+        prior_results_applied(p,records,{},lambda record:True)

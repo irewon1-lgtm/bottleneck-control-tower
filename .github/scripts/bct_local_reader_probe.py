@@ -3,8 +3,8 @@
 Weights and runtime are pinned. A paid model endpoint is never used. Raw
 inputs/outputs remain private artifact receipts, not candidate promotions.
 """
-from datetime import datetime, timezone
 from copy import deepcopy
+from datetime import datetime, timezone
 import hashlib
 import json
 import os
@@ -17,7 +17,11 @@ from urllib.request import urlopen
 from bct.future_github import GitHubTransport
 from bct.future_local_reader import LocalCPUQuickReader
 from bct.future_review import _records, document_complete
-from bct.recovery_pilot import resume_batches,quarantine_corrected_readings
+from bct.recovery_pilot import (
+    prior_results_applied,
+    quarantine_corrected_readings,
+    resume_batches,
+)
 from bct.recovery_queue import corrected_version
 
 
@@ -134,11 +138,20 @@ def main():
         for name in ('previous_qualification_pilot','qualification_source_corrections','qualification_restart_reason'):
             if name in previous:report[name]=deepcopy(previous[name])
         previous_checkpoint=previous_path.parent/'checkpoint.json'
-        already_applied=(previous_checkpoint.exists() and json.loads(previous_checkpoint.read_text()).get('gate5')=='PASS')
-        qualification=(previous.get('qualification_pilot') if previous.get('mode')=='DRAIN'
-                       else previous if already_applied else None)
         corrections={key:correction for key,item in version_map.items()
                      if (correction:=corrected_version(observations.get(item.get('url'),{}),key[1]))}
+        checkpoint_applied=(previous_checkpoint.exists()
+                            and json.loads(previous_checkpoint.read_text()).get('gate5')=='PASS')
+        storage_applied=prior_results_applied(
+            previous,version_map,corrections,
+            lambda record:document_complete(tracking.document,record))
+        already_applied=checkpoint_applied or storage_applied
+        report['prior_pilot_application_proof']={
+            'checkpoint_gate5_pass':checkpoint_applied,
+            'exact_results_complete_in_storage':storage_applied,
+        }
+        qualification=(previous.get('qualification_pilot') if previous.get('mode')=='DRAIN'
+                       else previous if already_applied else None)
         qualification_corrected=[result for batch in (qualification or {}).get('batches',[])
                                  for result in batch.get('results',[])
                                  if (result['document_id'],result['body_sha256']) in corrections]

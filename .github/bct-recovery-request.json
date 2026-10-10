@@ -1,32 +1,32 @@
 {
-  "resume_run_id": "38037501270",
-  "resume_artifact_id": 11665240035,
-  "resume_artifact_sha256": "e5270cd6cb9004ad15a8366774876cae1a2adaf5062bc89060d04a219056b34d",
+  "resume_run_id": "38038222290",
+  "resume_artifact_id": 11664787791,
+  "resume_artifact_sha256": "7310e9e6e1992c41e42bee2c309bb6337de00531ef76abf743a4a56a637698d1",
   "resume_file_sha256": {
-    "checkpoint.json": "e3506aa30f16b1ac968e0b2bbbe7e7fc2b5695710d3670d3ddddfc63aac0b28a",
-    "restore-verification.json": "9bfc343c50b4549317a70385cf063f1aa9fe722d5fc6aa5c210ad7c8d8d0a2fe",
-    "source-audit.json": "2a937cc718097784b507ab4e14f271009fc3c15eea8617fe96b291543d2a4ef9",
+    "checkpoint.json": "957a08c3387a8cb50ce9702cc4fb72f7d9d2b4fd821fac1f96695b33852126eb",
+    "restore-verification.json": "5f816facc928facad74ad2b0f91d8b2c2c35886831bdbf1533a1f65790d52b29",
+    "source-audit.json": "df817da11b8606289d84732ac59d018bf13442ea1db0de81cedfa56569349425",
     "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
     "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
-    "evidence-recovery-observations.json": "2d998215012fad2cf155773afa750974b4168b73d0e04287121936b3ded11ac2",
+    "evidence-recovery-observations.json": "6da4ee9369aabf3ad044be38b6af1cdbff8b09a5cd16be9b81c0158cc998ebd8",
     "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "evidence-recovery-versions.json": "f05d258a53de518c3ebfcf77fc5dbd7cc1c6e6245bac20ade91cebc798c62c71",
-    "local-reader-setup.json": "c73d5b0965c55796efe9c456e8a466920219a82b9e47f50ae57846619917bc3e",
-    "local-reader-probe.json": "6f734e071d48577f2da531d218669174f41745f0e7ec557513748b9c8345b47c",
+    "local-reader-setup.json": "ba7bc2d05f3bccdb4624b1d1cdee2d56c898bfe9759556260189185fc6b5e783",
+    "local-reader-probe.json": "7e38ab6d75b8be059d016643c0fbe8ba76aff3d51d43f8c2570e7cf1e67c5ecf",
     "private-local-reader-execution.jsonl": "87812330c540b6940998b917876d6b0406ccf61649af6a213f3cbaa8c47922bd",
     "recovery-preservation-seal.json": "053d50574750930afa951f068f7062b3c09ff990d0146e0ff256f3ebbf34ccf7",
     "queue-recovery-versions.json": "e8d1ada67c9e12284f1db514d9e8a1c8fc2d8008ed6e82da9cc89fa8c016bc12"
   },
-  "resume_cache_inventory_sha256": "a19868446b9ed250dc6bac99dbc04dc971cea103f2050bf3115317ac021f937e",
+  "resume_cache_inventory_sha256": "13f7446c98f89f5cde56f9bd146aee75920a0174cb4e5b40fe6783847afa73c9",
   "retained_seal_sha256": "0d773cb0c9e16283561a6ff72468c8bb6a02aaf7ba8ec522a47ccb887a8cc58a",
   "reader_batch_limit": 5,
-  "reason": "Restore complete Run26 early-failure state and historical cache union. Run26 Gate0 PASS, Gate1 dedicated restart probe failed on a mutable post-publish ref read; no new source or native calls and production unchanged. Exact immutable readback plus bounded read-only visibility observation fixes the actual probe; no write retries or permission/rate-limit bypass. Restart from Stage0.",
+  "reason": "Restore complete Run27 state and historical cache union. Run27 Gates0-4 passed and Stage5 made no native calls, but an already-published DRAIN batch was mistaken for unapplied work because the newer early-failure checkpoint no longer carried gate5=PASS. Prove application from exact document/body bindings and complete immutable reviews in the current tracking generation; corrected-source receipts remain quarantined. Restart from Stage0.",
   "latest_failed_run": {
-    "run_id": "38037501270",
-    "artifact_id": 11665240035,
-    "artifact_sha256": "e5270cd6cb9004ad15a8366774876cae1a2adaf5062bc89060d04a219056b34d",
-    "checkpoint_sha256": "e3506aa30f16b1ac968e0b2bbbe7e7fc2b5695710d3670d3ddddfc63aac0b28a",
-    "status": "STAGE1_PROBE_MUTABLE_REF_VISIBILITY_LAG"
+    "run_id": "38038222290",
+    "artifact_id": 11664787791,
+    "artifact_sha256": "7310e9e6e1992c41e42bee2c309bb6337de00531ef76abf743a4a56a637698d1",
+    "checkpoint_sha256": "957a08c3387a8cb50ce9702cc4fb72f7d9d2b4fd821fac1f96695b33852126eb",
+    "status": "STAGE5_ALREADY_PUBLISHED_DRAIN_RESTORE_BINDING"
   },
   "source_scope_reinspection_urls": [],
   "retained_cache": {
@@ -49,6 +49,6 @@
     },
     "inventory_sha256": "af04dd8ef92789e99ee0eb534da74f0a8c4a654b9421f43504ef6d4ec3ba89fa"
   },
-  "changed_condition": "Dedicated actual atomic restart probe now uses exact published commit roots and known PATCH commit, with bounded read-only exponential visibility checks that reject unrelated writers/API errors and stop on timeout. Regression recreates two stale ref reads and verifies zero replay mutations. New operating/native claim code remains unverified until full Gates0-6 actual run.",
+  "changed_condition": "Reader resume now proves an earlier batch is applied from exact document/body identities and a complete immutable review in current tracking even when a later pre-Gate5 failure replaced the checkpoint. Corrected receipts are held, empty or duplicate receipts cannot satisfy the proof, and no prior inference is replayed. Native claim and full Gates0-6 remain unverified until the new actual run.",
   "full_pipeline": false
 }
