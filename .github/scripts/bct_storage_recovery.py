@@ -13,7 +13,8 @@ from bct.future_github import GitHubTransport, GitHubRequestError, _raw
 from bct.future_review import queue_summary
 from bct.future_store import store_patch
 from bct.future_worker import _runs, _run_patch
-from bct.recovery_preservation import verify as verify_preservation, seal
+from bct.recovery_preservation import (verify as verify_preservation, seal,
+                                       restore_version_records)
 from bct.recovery_storage_probe import verify_atomic_recovery
 
 
@@ -45,8 +46,9 @@ def main():
         con.close()
         report['database_sha256'] = hashlib.sha256(database.read_bytes()).hexdigest()
         transport = GitHubTransport(os.environ['GITHUB_REPOSITORY'], 'future-bottleneck-data', os.environ['GITHUB_TOKEN'])
-        original = transport.read('future-candidates.json')
-        tracking = transport.read('future-tracking.json')
+        initial_head = transport.head()
+        original = transport.read_at('future-candidates.json', initial_head)
+        tracking = transport.read_at('future-tracking.json', initial_head)
         preservation_baseline=json.loads(Path('config/bct-recovery-preservation.json').read_text())
         report['identity_preservation']=verify_preservation(original.document,tracking.document,preservation_baseline)
         request=json.loads(Path('.github/bct-recovery-request.json').read_text())
@@ -62,8 +64,43 @@ def main():
             expected=request.get('resume_file_sha256',{}).get('recovery-preservation-seal.json')
             if hashlib.sha256(recovered_seal.read_bytes()).hexdigest()!=expected:
                 raise ValueError('recovered preservation seal must be pinned in resume request')
-            report['recovered_identity_preservation']=verify_preservation(
-                original.document,tracking.document,json.loads(recovered_seal.read_text()))
+            recovered_baseline=json.loads(recovered_seal.read_text())
+            try:
+                report['recovered_identity_preservation']=verify_preservation(
+                    original.document,tracking.document,recovered_baseline)
+            except ValueError as exc:
+                if str(exc) != 'preserved source version judgment changed':
+                    raise
+                checkpoint_path=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume/checkpoint.json'
+                checkpoint=json.loads(checkpoint_path.read_text())
+                trusted_commit=checkpoint.get('queue_recovery_commit')
+                if not isinstance(trusted_commit,str) or len(trusted_commit)!=40:
+                    raise ValueError('sealed trusted generation commit missing') from exc
+                trusted=transport.read_at('future-candidates.json',trusted_commit)
+                repaired,receipts=restore_version_records(
+                    original.document,recovered_baseline,trusted.document)
+                if not receipts:
+                    raise
+                verify_preservation(repaired,tracking.document,preservation_baseline)
+                if request.get('retained_seal_sha256'):
+                    verify_preservation(repaired,tracking.document,json.loads(retained_path.read_text()))
+                verify_preservation(repaired,tracking.document,recovered_baseline)
+                roots=transport.write_many(
+                    {'future-candidates.json':repaired,'future-tracking.json':tracking.document},
+                    {'future-candidates.json':original.sha,'future-tracking.json':tracking.sha})
+                repaired_commit=transport.last_commit
+                confirmed_candidate=transport.read_at('future-candidates.json',repaired_commit)
+                confirmed_tracking=transport.read_at('future-tracking.json',repaired_commit)
+                if confirmed_candidate.document!=repaired or confirmed_tracking.document!=tracking.document:
+                    raise ValueError('immutable preservation repair readback differs')
+                report['recovered_identity_preservation']=verify_preservation(
+                    confirmed_candidate.document,confirmed_tracking.document,recovered_baseline)
+                report['preservation_repair']={
+                    'status':'PASS','trusted_commit':trusted_commit,
+                    'published_commit':repaired_commit,'root_shas':roots,
+                    'restored_version_records':receipts,
+                    'tracking_unchanged':confirmed_tracking.document==tracking.document}
+                original,tracking=confirmed_candidate,confirmed_tracking
         # A later failed gate must still carry the verified current baseline.
         (root/'recovery-preservation-seal.json').write_text(
             json.dumps(seal(original.document,tracking.document),ensure_ascii=False,indent=2)+'\n')
