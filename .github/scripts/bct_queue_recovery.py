@@ -161,7 +161,10 @@ def execute():
         # Both authoritative roots and both display projections publish together.
         transport.write_many({'future-candidates.json':candidates,'future-tracking.json':merged},
             {'future-candidates.json':c.sha,'future-tracking.json':t.sha})
-        confirmed_c=transport.read('future-candidates.json');confirmed_t=transport.read('future-tracking.json')
+        # Verify the immutable generation just returned by the ref update;
+        # a mutable-ref GET can briefly lag after a successful publication.
+        confirmed_c=transport.read_at('future-candidates.json',transport.last_commit)
+        confirmed_t=transport.read_at('future-tracking.json',transport.last_commit)
         if confirmed_c.document!=candidates or confirmed_t.document!=merged:
             raise ValueError('queue/reading generation readback differs')
         verify(confirmed_c.document,confirmed_t.document,baseline)

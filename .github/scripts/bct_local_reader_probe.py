@@ -178,7 +178,18 @@ def main():
             for payload in items[offset+len(batch['results']):offset+count]:
                 if time.monotonic()>=deadline:
                     report['reason']='RUNNER_DEADLINE';return 1
-                response=reader(payload)
+                record=version_map[(payload['document_id'],payload['body_sha256'])]
+                if (not report.get('native_claim_verified')
+                        and (record.get('candidate') or record.get('tracked_matches'))):
+                    # One fresh pilot input exercises the real worker, remote
+                    # PROCESSING claim, controlled interruption and stopped
+                    # owner reconciliation. Its same returned response is
+                    # imported once by normal Gate 5; there is no second call.
+                    from bct_native_claim_probe import execute as claim_probe
+                    response,_=claim_probe(root,payload,record,receipt,observe_inference)
+                    report['native_claim_verified']=True
+                else:
+                    response=reader(payload)
                 if response['review']['disposition']=='INCOMPLETE':raise RuntimeError('real local pilot reading incomplete')
                 # Identity, range and real token counters are retained. The
                 # private source itself remains in the hash-verified cache.

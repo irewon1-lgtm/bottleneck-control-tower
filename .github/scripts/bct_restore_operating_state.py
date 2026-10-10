@@ -19,7 +19,7 @@ from urllib.parse import urlparse
 from urllib.request import HTTPRedirectHandler, Request, build_opener, urlopen
 import zipfile
 
-from bct.recovery_restore import verify_restored
+from bct.recovery_restore import verify_restored, LATEST_ROOT_STATE
 
 
 class NoRedirect(HTTPRedirectHandler):
@@ -112,6 +112,8 @@ def main():
     required = ('checkpoint.json', 'source-recovery-attempts.jsonl',
                 'source-recovery-versions.json', 'recovery-preservation-seal.json')
     pins = {name: hashlib.sha256((args.output/name).read_bytes()).hexdigest() for name in required}
+    pins.update({name: hashlib.sha256((args.output/name).read_bytes()).hexdigest()
+                 for name in LATEST_ROOT_STATE if (args.output/name).exists()})
     receipt = verify_restored(args.output, pins)
     receipt.update(artifact_id=artifact['id'], artifact_sha256=digest.hexdigest(),
         artifact_run_id=selected['id'], actual_execution=True,

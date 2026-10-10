@@ -42,7 +42,9 @@ def execute(root, candidate_run, pages_run):
                 'Run full regression suite',
                 'Read existing canonical database and prior candidate sidecar',
                 'Screen article bodies without any AI API',
-                'Publish candidate sidecar only'], True),
+                'Publish candidate sidecar only',
+                'Read FULL sources with pinned cost-zero CPU reader',
+                'Publish atomic operating queue'], True),
             ('pages_execution', pages_run, 'publish', [
                 'Read canonical data branch and generate UI-only snapshot',
                 'Publish static UI'], False)):

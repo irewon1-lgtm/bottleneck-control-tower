@@ -36,6 +36,8 @@ def project(candidates,tracking,versions,observations,cache):
     for lane in queues.values():included.update(key(x) for x in lane)
     active={key(r) for r in _runs(tracking).values() if isinstance(r,dict)
             and r.get('state')=='RUNNING' and r.get('document_id')}
+    worker_failures = {key(r): r for r in _runs(tracking).values() if isinstance(r,dict)
+                       and r.get('state') in ('ERROR', 'BLOCKED') and r.get('document_id')}
     rows=[]
     for identity in sorted(included,key=lambda x:(x[0],str(x[1]))):
         item=records.get(identity);prior=failures.get(identity)
@@ -59,6 +61,7 @@ def project(candidates,tracking,versions,observations,cache):
         full=stored_status=='FULL' and not corrected or exact
         if read_result and full:state='COMPLETED'
         elif identity in active:state='PROCESSING'
+        elif identity in worker_failures:state='FAILED'
         elif prior and prior['old_failure']=='REQUIRED_EVIDENCE_MISSING':state='EVIDENCE_WAIT'
         elif corrected:state='SOURCE_WAIT'
         elif exact:state='PENDING'
@@ -76,6 +79,7 @@ def project(candidates,tracking,versions,observations,cache):
             'source_completeness_corrected':corrected,
             'evidence_state':'EVIDENCE_WAIT' if evidence_wait else 'NOT_EVALUATED',
             'old_failure':prior['old_failure'] if prior else None,
+            'worker_failure_reason':worker_failures.get(identity,{}).get('reason'),
             'failure_history_retained':bool(prior),'observed_status':observation.get('status'),
             'observed_body_sha256':observation.get('body_sha256'),
             'resume_after':observation.get('resume_after')})

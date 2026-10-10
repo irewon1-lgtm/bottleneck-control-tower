@@ -13,10 +13,13 @@ on:
     workflows: ['RSS live environment check']
     types: [completed]
     branches: [main]
+  repository_dispatch:
+    types: [bct-operating-publication]
   schedule:
     - cron: '45 22,10 * * *'  # 07:45 / 19:45 KST; retries if RSS is delayed
 permissions:
   contents: write
+  actions: read
 concurrency:
   group: future-bottleneck-results
   cancel-in-progress: false
@@ -78,9 +81,9 @@ jobs:
   candidates:
     # Main release is guarded by a pinned real Gates 0–6 run and code tree.
     # Existing RSS and twice-daily summaries retain their own workflows.
-    if: ${{ (github.event_name == 'workflow_dispatch' && !inputs.backlog_body_recovery) || (github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'))) }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && !inputs.backlog_body_recovery) || (github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'))) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -286,6 +289,17 @@ jobs:
               "$RUNNER_TEMP/future-output/pending-final-audit.json"
           fi
 
+      - name: Read FULL sources with pinned cost-zero CPU reader
+        if: github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BCT_PUBLIC_REPOSITORY: ${{ github.event.repository.private == false }}
+        run: python .github/scripts/bct_auto_reader.py
+      - name: Publish atomic operating queue
+        if: github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
           python - <<'PY'
           import json, os
           from pathlib import Path
@@ -315,5 +329,10 @@ jobs:
           path: |
             ${{ runner.temp }}/future-output/*.json
             ${{ runner.temp }}/future-output/quality/*.json
+            ${{ runner.temp }}/automatic-local-reader/automatic-reader-report.json
+            ${{ runner.temp }}/automatic-local-reader/private-auto-native-execution.jsonl
+            ${{ runner.temp }}/automatic-local-reader/local-reader-setup.json
+            ${{ runner.temp }}/automatic-local-reader/private-source-cache/*.txt
+            ${{ runner.temp }}/private-future-body-cache/*.txt
           if-no-files-found: warn
           retention-days: 14

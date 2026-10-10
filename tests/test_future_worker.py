@@ -112,6 +112,17 @@ def test_document_processing_claim_visible_during_reading(tmp_path):
     assert queue['counts']['COMPLETED'] == 1
 
 
+def test_failed_actual_worker_is_failed_in_operating_partition(tmp_path):
+    paths = sources(tmp_path)
+    def rejected(_): raise ValueError('invalid fixture reply')
+    result = execute(paths, rejected)
+    assert result['counts'] == {'ERROR': 1}
+    queue = project(json.loads(paths[1].read_text()), json.loads(paths[2].read_text()), [], {}, paths[3])
+    assert queue['counts']['FAILED'] == 1
+    assert queue['counts']['PENDING'] == queue['counts']['COMPLETED'] == 0
+    assert queue['version_rows'][0]['worker_failure_reason'] == 'ValueError'
+
+
 def test_interrupted_document_claim_prevents_automatic_duplicate_call(tmp_path):
     paths = sources(tmp_path)
     calls = []
@@ -126,6 +137,7 @@ def test_interrupted_document_claim_prevents_automatic_duplicate_call(tmp_path):
                for r in tracking['runs'].values())
     again = execute(paths, interrupted_reader, retry_failed=True)
     assert again['model_calls'] == again['attempted'] == 0
+    assert again['held_prior_version_states'] == {'RUNNING': 1}
     assert calls == ['0']
     assert tracking.get('reviews', {}) == {}
 
@@ -167,6 +179,7 @@ def test_4_one_provider_failure_does_not_stop_other_cases(tmp_path,failure):
     assert len(json.loads(paths[2].read_text())['reviews'])==1
     again=execute(paths,reader)
     assert again['attempted']==0  # Failed items need an explicit bounded retry.
+    assert again['held_prior_version_states'] == {'ERROR': 1}
     assert calls==['0','1']
 
 

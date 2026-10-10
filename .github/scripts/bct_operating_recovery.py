@@ -13,6 +13,7 @@ import subprocess
 import sys
 import time
 import uuid
+from typing import Any
 
 from bct.future_github import GitHubTransport
 from bct.recovery_engine import run
@@ -43,13 +44,20 @@ def main():
         'observed_main': observed_main,
         # Resume artifact IDs/hashes are new checkpoints, not changed code.
         'reader_batch_limit': request.get('reader_batch_limit', 50)}, sort_keys=True).encode()).hexdigest()
-    external_runs = {}
+    external_runs: dict[str, Any] = {}
     for name in ('BCT_CANDIDATE_RUN_ID', 'BCT_PAGES_RUN_ID'):
         selected = os.environ.get(name)
         if selected:
             value = transport.requester('GET', '/actions/runs/'+str(int(selected)))
             external_runs[name] = {key: value.get(key) for key in
                 ('id', 'head_sha', 'event', 'status', 'conclusion', 'created_at')}
+    # A previously unfinished external run actually completing changes the
+    # resume condition. Merely starting another identical runner does not.
+    recent = transport.requester('GET', '/actions/runs?branch=main&per_page=20')['workflow_runs']
+    external_runs['recent_operating_runs'] = [{key: value.get(key) for key in
+        ('id', 'head_sha', 'event', 'status', 'conclusion', 'created_at')}
+        for value in recent if value.get('path') in
+        ('.github/workflows/future-bottleneck.yml', '.github/workflows/ui-pages.yml')][:4]
     condition = hashlib.sha256(json.dumps(external_runs, sort_keys=True).encode()).hexdigest()
     def receipt(stage, status, paths, reason=None):
         return {'status': status, 'actual_execution': True, 'criteria_met': status == 'PASS',
@@ -100,8 +108,12 @@ def main():
         candidate = os.environ.get('BCT_CANDIDATE_RUN_ID')
         pages = os.environ.get('BCT_PAGES_RUN_ID')
         if not candidate or not pages:
-            return {'status': 'BLOCKED', 'reason': 'ACTUAL_MAIN_PUBLICATION_AND_FRESH_ACTIONS_REQUIRED',
-                'resume_condition': 'Promote only after this cycle Gates 0–6 pass, then obtain fresh automatic candidate/Pages run IDs'}
+            from bct_wait_publication import dispatch_and_wait
+            try:
+                candidate, pages = dispatch_and_wait(root, transport, deadline=time.monotonic()+45*60)
+            except (FileNotFoundError, TimeoutError) as exc:
+                return {'status': 'BLOCKED', 'reason': type(exc).__name__,
+                    'resume_condition': 'Require released exact main code and fresh completed candidate/Pages; preserve pending dispatch before resuming'}
         from importlib.util import module_from_spec, spec_from_file_location
         spec = spec_from_file_location('publication_executor', '.github/scripts/bct_verify_publication.py')
         if spec is None or spec.loader is None:
@@ -140,7 +152,7 @@ def main():
         4: standard(4, 'bct_evidence_recovery'), 5: reading,
         6: standard(6, 'bct_e2e_recovery'), 7: publication, 'FULL': full}
     state = run(stages, fingerprint=lambda: fingerprint,
-        output=root/'operating-engine-checkpoint.json', deadline=time.monotonic()+50*60,
+        output=root/'operating-engine-checkpoint.json', deadline=time.monotonic()+85*60,
         condition=lambda: condition,
         single_cycle=True, execution_identity=run_id+':'+os.environ.get('GITHUB_RUN_ATTEMPT', '1'))
     checkpoint = root/'checkpoint.json'

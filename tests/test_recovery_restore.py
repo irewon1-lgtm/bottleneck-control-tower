@@ -1,4 +1,5 @@
 from hashlib import sha256
+import json
 import pytest
 from bct.recovery_restore import copy_latest_root_state, verify_restored
 
@@ -59,3 +60,24 @@ def test_latest_root_journals_never_overwrite_conflicting_bytes(tmp_path):
     (destination / 'source-recovery-attempts.jsonl').write_text('different\n')
     with pytest.raises(ValueError, match='destination differs'):
         copy_latest_root_state(source, destination)
+
+
+def test_native_claim_private_results_must_be_pinned_and_preserved(tmp_path):
+    from bct.recovery_restore import copy_preserved_caches
+    source, destination = tmp_path/'source', tmp_path/'destination'
+    source.mkdir()
+    expected = pinned(source)
+    name = 'private-native-claim/123/response.json'
+    private = source/name; private.parent.mkdir(parents=True); private.write_text('{"review":"kept"}')
+    history = source/'native-claim-history.json'
+    history.write_text(json.dumps([{'private_file_sha256': {name: sha256(private.read_bytes()).hexdigest()}}]))
+    with pytest.raises(ValueError, match='history must be pinned'):
+        verify_restored(source, expected)
+    expected[history.name] = sha256(history.read_bytes()).hexdigest()
+    assert verify_restored(source, expected)['verified_cache_files']['private-native-claim'] == 1
+    copy_preserved_caches(source, destination)
+    assert (destination/name).read_bytes() == private.read_bytes()
+    assert copy_preserved_caches(source, destination)['copied_files'] == []
+    private.write_text('changed')
+    with pytest.raises(ValueError, match='native claim private receipt hash'):
+        verify_restored(source, expected)

@@ -98,7 +98,7 @@ def recover_body(item, cache_dir, fetcher=fetch_html):
 def run_worker(transport, candidates_path, tracking_path, *, reader, cache_dir,
                limit=10, max_input_chars=12000, retry_failed=False,
                input_rate=None, output_rate=None, fetcher=fetch_html, require_pilot_gates=False,
-               review_mode="MANUAL_REVIEW"):
+               review_mode="MANUAL_REVIEW", source_eligible=None):
     if not 1 <= limit <= 50 or not 1 <= max_input_chars <= 12000:
         raise ValueError("invalid worker batch/input limit")
     # Validate explicit prices before claims or API calls.
@@ -138,18 +138,24 @@ def run_worker(transport, candidates_path, tracking_path, *, reader, cache_dir,
         event_by_version = {(ref["document_id"], ref.get("body_sha256")): event_id
                             for event_id, event in event_groups(candidates).items() for ref in event["documents"]}
         pending = []
+        held_states: Counter[str] = Counter()
         for item in queue_items(candidates, tracking)["quick"]:
+            if source_eligible is not None and not source_eligible(item):
+                continue
             work_id = "quick-version-" + _key(item["document_id"], item["body_sha256"], READER_VERSION)
             previous = _runs(tracking).get(work_id, {})
             # A stopped process can leave an uncertain in-flight reading. Keep
             # that version claimed until its stopped owner/result is reconciled.
             if previous.get("state") == "RUNNING":
+                held_states['RUNNING'] += 1
                 continue
             if previous.get("state") in ("ERROR", "BLOCKED") and not retry_failed:
+                held_states[previous['state']] += 1
                 continue
             pending.append((item, work_id))
             if len(pending) == limit:
                 break
+        report['held_prior_version_states'] = dict(held_states)
         for original, work_id in pending:
             case_started = perf_counter()
             result = {"document_id": original["document_id"], "body_sha256": original["body_sha256"],

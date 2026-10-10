@@ -19,7 +19,33 @@ LATEST_ROOT_STATE = (
     'recovery-preservation-seal.json',
     'queue-recovery-versions.json',
     'operating-engine-checkpoint.json',
+    'native-claim-recovery.json',
+    'native-claim-history.json',
 )
+
+
+def claim_files(root):
+    """Private claim receipts are pinned through their append-only proof list."""
+    root = Path(root)
+    history = root/'native-claim-history.json'
+    if not history.exists(): return []
+    if history.is_symlink(): raise ValueError('native claim history symlink rejected')
+    files: dict[str, str] = {}
+    for proof in json.loads(history.read_text()):
+        for name, digest in proof['private_file_sha256'].items():
+            relative = PurePosixPath(name)
+            if (relative.is_absolute() or '..' in relative.parts or '\\' in name
+                    or not name.startswith('private-native-claim/')
+                    or not re.fullmatch(r'[0-9a-f]{64}', digest)):
+                raise ValueError('unsafe native claim receipt binding')
+            path = root/name
+            if (any((root/Path(*relative.parts[:i])).is_symlink() for i in range(1, len(relative.parts)+1))
+                    or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest):
+                raise ValueError('native claim private receipt hash differs')
+            if name in files and files[name] != digest:
+                raise ValueError('conflicting native claim receipt binding')
+            files[name] = digest
+    return [root/name for name in sorted(files)]
 
 
 def copy_latest_root_state(source, destination):
@@ -59,6 +85,11 @@ def copy_preserved_caches(source, destination):
             if target.exists() and (target.is_symlink() or target.read_bytes()!=path.read_bytes()):
                 raise ValueError('historical cache destination differs')
             files.append((path,target))
+    for path in claim_files(source):
+        target = destination/path.relative_to(source)
+        if target.exists() and (target.is_symlink() or target.read_bytes() != path.read_bytes()):
+            raise ValueError('native claim historical destination differs')
+        files.append((path, target))
     copied=[]
     for path,target in files:
         if target.exists():continue
@@ -77,7 +108,7 @@ def verify_restored(root, expected, *, expected_cache_inventory=None):
         path=PurePosixPath(name)
         if path.is_absolute() or '..' in path.parts or not re.fullmatch(r'[0-9a-f]{64}',digest):
             raise ValueError('invalid recovery restore hash binding')
-        if hashlib.sha256((root/name).read_bytes()).hexdigest()!=digest:
+        if (root/name).is_symlink() or hashlib.sha256((root/name).read_bytes()).hexdigest()!=digest:
             raise ValueError('restored checkpoint file hash differs')
     counts={};inventory=[]
     for directory,suffix in (('private-source-cache','.txt'),('private-evidence-cache','.txt'),
@@ -90,6 +121,12 @@ def verify_restored(root, expected, *, expected_cache_inventory=None):
             count+=1
             inventory.append(path.relative_to(root).as_posix())
         counts[directory]=count
+    if (root/'native-claim-history.json').exists():
+        if 'native-claim-history.json' not in expected:
+            raise ValueError('native claim history must be pinned before restore')
+        private_claims = claim_files(root)
+        counts['private-native-claim'] = len(private_claims)
+        inventory.extend(path.relative_to(root).as_posix() for path in private_claims)
     inventory_digest=hashlib.sha256(json.dumps(sorted(inventory),separators=(',',':')).encode()).hexdigest()
     if expected_cache_inventory is not None and inventory_digest!=expected_cache_inventory:
         raise ValueError('restored private source inventory differs')
