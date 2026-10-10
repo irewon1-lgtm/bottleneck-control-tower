@@ -19,7 +19,14 @@
   "resume_cache_inventory_sha256": "b332580cc009c89d74ad39034e94c328b37227a3673e6a7e8a0a92f8a17f88b1",
   "retained_seal_sha256": "0d773cb0c9e16283561a6ff72468c8bb6a02aaf7ba8ec522a47ccb887a8cc58a",
   "reader_batch_limit": 5,
-  "reason": "Run21 Gates0-5 PASS. Fresh qualification1/10/50 completed with 61 exact-hash real-source readings, then Gate5 atomically published them and the corrected seven-state queue as commit febbe5dd75eb0362e75f1c0ffeda68bee7332420; SHA reread and zero-mutation checks passed. Gate6 failed before quality commands because the E2E executor constructed a private-cache path for a preserved historical record whose body_sha256 is intentionally null. Fix only that TypeError by skipping unmaterialized versions before path construction; do not delete or coerce the null history. Restore run21 pinned12/dynamic seal/full union cache (source1669/evidence75/raw371/html8), all79 native journal rows, queue versions and immutable reviews. Re-run Stage0 onward; no HTTP refetch, raw rewrite, score/decision change, or main deployment before Gates0-6 PASS. Preserve candidates2865, original184 completions, all305 current read histories, failure versions3696, reviews1493 and every cache/hash/report. Frozen engines and known whole-lint failure remain visible.",
+  "reason": "Run22 restored and hash-verified the complete Run21 state, then Gate0 passed and the actual GitData generation was published as commit 7932cd94dbbcab01363195c1b5b02b2103ea356c. The immediate verification falsely failed because a repeated mutable-ref GET briefly returned the prior generation even though the PATCH response and immutable published commit were correct; the remote branch subsequently converged to 7932cd94. Verify the exact immutable publication commit instead of a mutable ref, while retaining the existing CAS/ref-response/root/shard checks. Run22 stopped before source or reader work, so resume the last complete Run21 source journals and identical cache union (source1669/evidence75/raw371/html8), all79 native journal rows, queue versions and immutable reviews. Also copy the latest pinned root source/evidence/reader journals into every early-failure checkpoint so a Gate1 failure cannot produce an unusable artifact. Re-run Stage0 onward; no HTTP refetch, raw rewrite, score/decision change, or main deployment before Gates0-6 PASS. Preserve candidates2865, original184 completions, all305 current read histories, failure versions3696, reviews1493 and every cache/hash/report. Frozen engines and known whole-lint failure remain visible.",
+  "latest_failed_run": {
+    "run_id": "38012934804",
+    "artifact_id": 11654807138,
+    "artifact_sha256": "cf54578f710b2ae7e916e6391534ba388b34cefbc1064e0e5780a3bdd861df8e",
+    "checkpoint_sha256": "ef3f8973530151c61f27370ae47c01b20c6b9749045c061f1fa95441e70ab176",
+    "status": "BLOCKED_STAGE_1_MUTABLE_REF_VISIBILITY"
+  },
   "source_scope_reinspection_urls": [],
   "retained_cache": {
     "run_id": "37993032600",

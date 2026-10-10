@@ -93,6 +93,17 @@ def test_atomic_roundtrip_reuses_unchanged_shards_and_one_ref_move(monkeypatch):
     assert not any(m in ('POST', 'PATCH', 'PUT') for m, _ in remote.calls[calls:])
 
 
+def test_exact_commit_readback_ignores_transient_mutable_ref_lag():
+    remote = GitRemote({});t = remote.transport()
+    document = {'results': {'new': {'id': 'new'}}}
+    t.write(PATH, document, t.read(PATH).sha)
+    published = t.last_commit
+    # Simulate an immediately repeated ref read returning the prior head.
+    remote.head = 'c0'
+    assert t.read(PATH).document == {}
+    assert t.read_at(PATH, published).document == document
+
+
 @pytest.mark.parametrize('endpoint', ['/git/blobs', '/git/trees', '/git/commits', '/git/refs/heads/test'])
 def test_failed_stage_never_publishes_or_marks_saved(endpoint):
     remote = GitRemote({'results': {}, 'notifications': {'n': {'state': 'READY'}}})

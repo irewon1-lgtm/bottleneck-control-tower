@@ -289,10 +289,13 @@ class GitHubTransport(LegacyGitHubTransport):
             raise ValueError('GitHub content and SHA disagree')
         return raw, value['sha']
 
-    def read(self, path):
+    def read_at(self, path, commit_sha):
+        """Read one immutable commit, avoiding transient mutable-ref lag."""
         if path not in ('future-candidates.json', 'future-tracking.json'):
             raise ValueError('unapproved sidecar path')
-        raw, sha = self._root(path, self.head())
+        if not commit_sha:
+            raise ValueError('commit SHA required')
+        raw, sha = self._root(path, commit_sha)
         document = json.loads(raw)
         if not isinstance(document, dict):
             raise ValueError('sidecar is not an object')
@@ -306,6 +309,9 @@ class GitHubTransport(LegacyGitHubTransport):
                     raise ValueError('invalid shard path/order')
             document = assemble(document, lambda part: self._blob(part['git_sha']))
         return Snapshot(document, sha)
+
+    def read(self, path):
+        return self.read_at(path, self.head())
 
     def _create_verified_blob(self, raw):
         expected = hashlib.sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest()

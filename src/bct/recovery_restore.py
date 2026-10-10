@@ -6,6 +6,40 @@ import re
 import shutil
 
 
+LATEST_ROOT_STATE = (
+    'source-audit.json',
+    'source-recovery-attempts.jsonl',
+    'source-recovery-versions.json',
+    'evidence-recovery-observations.json',
+    'evidence-recovery-searches.json',
+    'evidence-recovery-versions.json',
+    'local-reader-setup.json',
+    'local-reader-probe.json',
+    'private-local-reader-execution.jsonl',
+    'recovery-preservation-seal.json',
+    'queue-recovery-versions.json',
+)
+
+
+def copy_latest_root_state(source, destination):
+    """Carry verified latest journals through failures before their gate runs."""
+    source, destination = Path(source), Path(destination)
+    copied = []
+    for name in LATEST_ROOT_STATE:
+        path, target = source / name, destination / name
+        if not path.exists():
+            continue
+        if path.is_symlink() or not path.is_file():
+            raise ValueError('latest recovery root state is not a regular file')
+        if target.exists() and (target.is_symlink() or target.read_bytes() != path.read_bytes()):
+            raise ValueError('latest recovery root state destination differs')
+        if not target.exists():
+            destination.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(path, target)
+            copied.append(name)
+    return {'status': 'PASS', 'copied_files': copied}
+
+
 def copy_preserved_caches(source, destination):
     """Union verified historical bytes; never lose an older referenced hash.
 

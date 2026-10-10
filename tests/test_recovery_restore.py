@@ -1,6 +1,6 @@
 from hashlib import sha256
 import pytest
-from bct.recovery_restore import verify_restored
+from bct.recovery_restore import copy_latest_root_state, verify_restored
 
 
 def pinned(tmp_path):
@@ -38,3 +38,24 @@ def test_unpinned_or_path_traversing_restore_is_rejected(tmp_path):
     with pytest.raises(ValueError,match='pinned'):verify_restored(tmp_path,{})
     expected=pinned(tmp_path);expected['../other']='a'*64
     with pytest.raises(ValueError,match='invalid recovery'):verify_restored(tmp_path,expected)
+
+
+def test_latest_root_journals_survive_an_early_gate_failure(tmp_path):
+    source, destination = tmp_path / 'source', tmp_path / 'destination'
+    source.mkdir()
+    (source / 'source-recovery-attempts.jsonl').write_text('{"url":"kept"}\n')
+    (source / 'private-local-reader-execution.jsonl').write_text('{"result":"kept"}\n')
+    receipt = copy_latest_root_state(source, destination)
+    assert receipt['status'] == 'PASS'
+    assert (destination / 'source-recovery-attempts.jsonl').read_bytes() == (source / 'source-recovery-attempts.jsonl').read_bytes()
+    assert (destination / 'private-local-reader-execution.jsonl').read_bytes() == (source / 'private-local-reader-execution.jsonl').read_bytes()
+    assert copy_latest_root_state(source, destination)['copied_files'] == []
+
+
+def test_latest_root_journals_never_overwrite_conflicting_bytes(tmp_path):
+    source, destination = tmp_path / 'source', tmp_path / 'destination'
+    source.mkdir(); destination.mkdir()
+    (source / 'source-recovery-attempts.jsonl').write_text('new\n')
+    (destination / 'source-recovery-attempts.jsonl').write_text('different\n')
+    with pytest.raises(ValueError, match='destination differs'):
+        copy_latest_root_state(source, destination)

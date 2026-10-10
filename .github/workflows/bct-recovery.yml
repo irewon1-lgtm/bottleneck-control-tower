@@ -67,7 +67,7 @@ jobs:
           python - <<'PY'
           import json,os
           from pathlib import Path
-          from bct.recovery_restore import verify_restored,copy_preserved_caches
+          from bct.recovery_restore import verify_restored,copy_preserved_caches,copy_latest_root_state
           request=json.loads(Path('.github/bct-recovery-request.json').read_text())
           if str(request['resume_run_id'])!=os.environ['BCT_RESUME_RUN']:raise ValueError('unverified resume run selected')
           root=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume'
@@ -85,11 +85,10 @@ jobs:
               proof=verify_restored(old,retained['file_sha256'],expected_cache_inventory=retained['inventory_sha256'])
               proof['union']=copy_preserved_caches(old,output)
               (output/'retained-cache-verification.json').write_text(json.dumps(proof,indent=2)+'\n')
-          # Preserve private returned inferences across failed-gate checkpoints.
+          # Preserve latest root journals before any later gate can replace
+          # them. Historical cache unioning above never owns these files.
           import shutil
-          for name in ('private-local-reader-execution.jsonl','recovery-preservation-seal.json','queue-recovery-versions.json'):
-              source=root/name
-              if source.exists():shutil.copyfile(source,output/name)
+          copy_latest_root_state(root,output)
           if (root/'private-source-html').exists():shutil.copytree(root/'private-source-html',output/'private-source-html',dirs_exist_ok=True)
           PY
       - name: Gate 0 then real GitHub storage Gate 1

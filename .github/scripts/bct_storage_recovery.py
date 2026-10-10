@@ -117,10 +117,13 @@ def main():
         if final['results'] != original.document['results']:
             raise RuntimeError('source records changed during storage repair')
         transport.write('future-candidates.json', final, original.sha)
-        confirmed = transport.read('future-candidates.json')
+        # GitHub may briefly serve the old mutable ref after a successful
+        # fast-forward. Verify the immutable commit returned by the atomic
+        # publisher; write_many already verified the ref-update response.
+        confirmed = transport.read_at('future-candidates.json', transport.last_commit)
         if confirmed.document != final:
             raise RuntimeError('production generation readback differs')
-        if transport.read('future-tracking.json').document != tracking.document:
+        if transport.read_at('future-tracking.json', transport.last_commit).document != tracking.document:
             raise RuntimeError('tracking changed during storage repair')
         after = queue_summary(confirmed.document, tracking.document)
         for key in ('completed_documents', 'failed_versions', 'failure_reasons', 'preserved_versions'):
