@@ -13,6 +13,31 @@ def test_null_body_hash_is_skipped_before_private_cache_path_construction(tmp_pa
     assert module.private_source_path(tmp_path,'a'*64) == tmp_path/'private-source-cache'/('a'*64+'.txt')
 
 
+class GenerationTransport:
+    def __init__(self,heads):
+        self.heads=iter(heads);self.reads=[]
+    def head(self):return next(self.heads)
+    def read_at(self,path,commit):
+        self.reads.append((path,commit))
+        return SimpleNamespace(path=path,commit=commit)
+
+
+def test_atomic_generation_reads_both_roots_from_one_commit():
+    transport=GenerationTransport(['generation-a'])
+    commit,candidates,tracking=module.read_atomic_generation(transport)
+    assert commit=='generation-a'
+    assert candidates.commit==tracking.commit==commit
+    assert transport.reads==[('future-candidates.json',commit),('future-tracking.json',commit)]
+
+
+def test_latest_generation_accepts_one_advance_but_rejects_a_moving_ref():
+    transport=GenerationTransport(['generation-b','generation-b'])
+    commit,candidates,tracking=module.read_latest_stable_generation(transport)
+    assert commit==candidates.commit==tracking.commit=='generation-b'
+    with pytest.raises(RuntimeError,match='changed repeatedly'):
+        module.read_latest_stable_generation(GenerationTransport(['generation-b','generation-c']))
+
+
 @pytest.mark.parametrize('class_name,test_name,reason,blocked',[
     ('tests.test_future_store','test_preserving_merge','environment missing',True),
     ('tests.test_forecast_discovery','test_D_real_pre_public_holdout',

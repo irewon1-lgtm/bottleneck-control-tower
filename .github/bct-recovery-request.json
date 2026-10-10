@@ -1,30 +1,36 @@
 {
-  "resume_run_id": "38060140270",
-  "resume_artifact_id": 11673939169,
-  "resume_artifact_sha256": "d1e5e4cda4f7d18bd00ce25c57eda755bf5840b3359235a4d8842bfc77df864b",
+  "resume_run_id": "38064145207",
+  "resume_artifact_id": 11675168080,
+  "resume_artifact_sha256": "e8795b58fae88502a7226457dad4cdb67914bd6162e9e997b83e6a5ef99149c1",
   "resume_file_sha256": {
-    "checkpoint.json": "0788736366b65d889af79fa93d1e523b8e431e6d534acf17865a24e54e2267a7",
-    "source-audit.json": "b942262b28711374ebbba49d4578e34d7fa4937dfe12cd3d182f13fdb2c2d70a",
+    "checkpoint.json": "9785a8f052936a28f48acd797b6fc365e4c57bd913f5e5cf0201beec247c7dfe",
+    "source-audit.json": "90d7b0b0de6da1626f886123ad0f51fe31be5d11e9066ee76f2222f73a995733",
     "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
     "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
-    "evidence-recovery-observations.json": "2027ca4a8679764ff119f4c22b48c92dac3d751690b2f03a0f3139c1ffacd7bd",
+    "evidence-recovery-observations.json": "1d88f74171fdf5d341bb75c2b75a857965fff31adcc6ada9fb6701df99849067",
     "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "evidence-recovery-versions.json": "f05d258a53de518c3ebfcf77fc5dbd7cc1c6e6245bac20ade91cebc798c62c71",
-    "local-reader-setup.json": "ac73568005de84ba254732e3d92ad480fdec4f2d67f9c0da8b01123ff9a835f7",
-    "local-reader-probe.json": "7af3380f03bf072980a98fc3029a2023a8ed85cc25832fe014066e383fad9c60",
-    "private-local-reader-execution.jsonl": "d5d5a4d47dd0e73c0c154a6a7a0ec3990f64ba6bd6c1d908196b55d04b935c77",
-    "recovery-preservation-seal.json": "74a4130e143b44d7a605970ea29405375f35b3bcade8f8af3daa2f6f6a54329d",
-    "queue-recovery-versions.json": "c823d925bed528c13528c233ce1defc968499b5a6a33d90a8bd2ce85f58c5ecc",
-    "operating-engine-checkpoint.json": "65a78a63b7a78fb3c3003451557136676885c1c6a7e6587cab921dbd24cc8d44",
+    "local-reader-setup.json": "1ae2ab89f738df474e6b73df5f8006150c97537a9fc0645ac8d22f696a544fb5",
+    "local-reader-probe.json": "5682ad22978c30e48a6e3c5487191831f1df305cf375efd7e16c5b936f7ac42e",
+    "private-local-reader-execution.jsonl": "d0270d6abe607bd20984cddfaa3f9b0a40fe1b5f4cc94552e4c054aa772a8117",
+    "recovery-preservation-seal.json": "9932d2f387459875cf7cfb45013eddaa92a621fc5ea12d705963198aaeb6b192",
+    "queue-recovery-versions.json": "8fa2c1f1982eec5efd7d93ced29e2b2ccb7cf631ea40363e2a8c92e60aa0f5ef",
+    "operating-engine-checkpoint.json": "206e84863662f697d01e20b3c05b28ea101abbfd153a1cb583cecc5aeb123b19",
     "operating-publication-request.json": "b4cc4009ea89b64df39ff13d4e7dade18edb40a488bbaad9ec59853564367b70",
     "operating-publication-history.json": "413b219280f800f3ab784da36edadab441be05e2dc08eb0e6fad5e4e931e2d48",
-    "native-claim-recovery.json": "5475267459419e4d8480b88e31542b21c1afff9e4a25b185592f4b2d34a593da",
-    "native-claim-history.json": "cd822057933c1b9964688774cad1f5edacd6e680d22753c4d8e6023d18a78332"
+    "native-claim-recovery.json": "2f8bd23a9a1159e04f39cf7ebdb527ed1553d678d52a112eb7e72370996ab8f5",
+    "native-claim-history.json": "cd1a58ea8679dff5bae2a090bdb63e8d045897499cb373c84ade512214d4b0fb"
   },
-  "resume_cache_inventory_sha256": "6cabcd79fb2f11995289b4bccdc27a9d937f6ea31d3b864d6bcc86b8682e9fd0",
+  "resume_cache_inventory_sha256": "c256fd25b9628c2b7ff5d5a0237e3d09ab414d3908737948534e502a42336edf",
   "retained_seal_sha256": "0d773cb0c9e16283561a6ff72468c8bb6a02aaf7ba8ec522a47ccb887a8cc58a",
   "reader_batch_limit": 5,
-  "reason": "Run36 executed actual Stage 0 through FULL on a fresh runner, including a fresh automatic candidate publication and real Pages browser SHA/count verification. It established independent CLEAN streak 1 of 3 and explicitly requires a distinct real runner to restart from Stage 0 for the next independent cycle.",
+  "reason": "Run37 preserved all source, evidence, reading and claim histories but failed Gate 6 because a scheduled automatic candidate atomically advanced the sidecar generation while the independent quality suite was running. The fix binds both roots to immutable commits and accepts a descendant generation only after revalidating preservation, seven-state queue integrity, imported reading hashes and display hashes on one stable latest commit.",
+  "latest_failed_run": {
+    "run_id": "38064145207",
+    "artifact_id": 11675168080,
+    "artifact_sha256": "e8795b58fae88502a7226457dad4cdb67914bd6162e9e997b83e6a5ef99149c1",
+    "status": "GATE6_CONCURRENT_ATOMIC_GENERATION_ADVANCE"
+  },
   "source_scope_reinspection_urls": [],
   "retained_cache": {
     "run_id": "37993032600",
@@ -46,6 +52,6 @@
     },
     "inventory_sha256": "af04dd8ef92789e99ee0eb534da74f0a8c4a654b9421f43504ef6d4ec3ba89fa"
   },
-  "changed_condition": "Run36 completed the first actual independent FULL CLEAN. The engine checkpoint now authorizes only a distinct real runner identity to restart at Stage 0 and attempt the second independent FULL CLEAN; this is a new execution condition, not an unchanged-failure retry.",
-  "full_pipeline": true
+  "changed_condition": "Gate 6 no longer compares two mutable reads after the long quality suite. It now reads both roots at one immutable commit, revalidates an atomic descendant generation if a scheduled writer advances the ref, and rejects mixed, repeatedly moving, non-preserving or queue-inconsistent generations. Revalidate the changed code through actual Gates 0-6 before any main release or another FULL attempt.",
+  "full_pipeline": false
 }

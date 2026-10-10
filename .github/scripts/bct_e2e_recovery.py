@@ -38,6 +38,21 @@ def private_source_path(root, body_sha256):
     return root/'private-source-cache'/(body_sha256+'.txt')
 
 
+def read_atomic_generation(transport):
+    """Bind both authoritative roots to one immutable sidecar commit."""
+    commit=transport.head()
+    return commit,transport.read_at('future-candidates.json',commit),transport.read_at(
+        'future-tracking.json',commit)
+
+
+def read_latest_stable_generation(transport):
+    """Read the newest immutable generation and reject another in-read advance."""
+    commit,candidates,tracking=read_atomic_generation(transport)
+    if transport.head()!=commit:
+        raise RuntimeError('generation changed repeatedly during independent E2E validation')
+    return commit,candidates,tracking
+
+
 def quality(root):
     checked=sorted([str(p) for p in Path('src/bct').glob('recovery_*.py')])
     checked+=['src/bct/future_local_reader.py','src/bct/future_github.py','src/bct/future_ui.py']
@@ -95,7 +110,7 @@ def execute():
         if hashes!=FROZEN:raise ValueError('frozen prediction engine raw hashes changed')
         proof['frozen_engine_hashes']=hashes
         transport=GitHubTransport(os.environ['GITHUB_REPOSITORY'],'future-bottleneck-data',os.environ['GITHUB_TOKEN'])
-        c=transport.read('future-candidates.json');t=transport.read('future-tracking.json')
+        generation,c,t=read_atomic_generation(transport)
         verify(c.document,t.document,json.loads(Path('config/bct-recovery-preservation.json').read_text()))
         retained=json.loads((root/'recovery-preservation-seal.json').read_text())
         verify(c.document,t.document,retained)
@@ -130,16 +145,37 @@ def execute():
             production_readings_verified=len(imported),queue_partition=queue['counts'],
             history_preservation='PASS',source_binding_checks='PASS',
             target_linking_validation='SOURCE_LOCATORS_AND_EXISTING_NEGATIVE_REGRESSION_ONLY',
-            semantic_target_accuracy='UNVERIFIED_WITHOUT_GOLDEN',
-            display=[verify_display_generation(path,s.document,hashlib.sha256(_raw(s.document)).hexdigest())
-                     for path,s in (('future-candidates.json',c),('future-tracking.json',t))])
+            semantic_target_accuracy='UNVERIFIED_WITHOUT_GOLDEN')
         proof['regression']=quality(root)
         if any(x['status']!='PASS' for x in proof['regression']['checks']):
             raise RuntimeError('required regression or quality check failed; see e2e logs')
         if proof['regression']['typescript'].startswith('BLOCKED'):raise RuntimeError('required TypeScript check missing')
-        # Read again after all checks. A changed generation needs another Stage 0.
-        if transport.read('future-candidates.json').sha!=c.sha or transport.read('future-tracking.json').sha!=t.sha:
-            raise RuntimeError('generation changed during independent E2E validation')
+        # A scheduled automatic run may publish a newer atomic generation while
+        # the independent quality suite runs. Re-read both roots from exactly
+        # that immutable commit and validate it; never approve a mixed or moving
+        # pair, and never treat a valid descendant generation as data loss.
+        latest_generation,latest_c,latest_t=read_latest_stable_generation(transport)
+        verify(latest_c.document,latest_t.document,
+               json.loads(Path('config/bct-recovery-preservation.json').read_text()))
+        verify(latest_c.document,latest_t.document,retained)
+        latest_queue=project(latest_c.document,latest_t.document,versions,observations,
+                             root/'private-source-cache')
+        latest_saved=latest_c.document['summary']['recovery_queue']
+        if (latest_saved['counts']!=latest_queue['counts']
+                or latest_queue['completion_failure_state_overlap']!=0):
+            raise RuntimeError('newer generation queue differs after independent E2E validation')
+        latest_records={(x['document_id'],x['body_sha256']):x
+                        for x in _records(latest_c.document)}
+        if any(key not in latest_records or not document_complete(latest_t.document,
+                   latest_records[key]) for key in imported):
+            raise RuntimeError('newer generation lost an independently validated reading')
+        proof.update(validated_generation_commit=latest_generation,
+            concurrent_generation_advance=(latest_generation!=generation),
+            queue_partition=latest_queue['counts'],
+            display=[verify_display_generation(path,s.document,
+                hashlib.sha256(_raw(s.document)).hexdigest())
+                for path,s in (('future-candidates.json',latest_c),
+                               ('future-tracking.json',latest_t))])
         proof['status']='PASS'
         report.update(stage=6,status='PASS',gate6='PASS',next_stage=7,
             e2e_execution_id=proof['execution_id'],full_clean_status='BLOCKED',
