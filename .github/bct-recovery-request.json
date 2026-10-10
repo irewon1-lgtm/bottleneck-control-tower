@@ -21,12 +21,12 @@
   "resume_cache_inventory_sha256": "b1f2204ec43662e62925d0cef922dab5bc029674b22d21afabaa374a270cdea9",
   "retained_seal_sha256": "0d773cb0c9e16283561a6ff72468c8bb6a02aaf7ba8ec522a47ccb887a8cc58a",
   "reader_batch_limit": 5,
-  "reason": "Restore complete Run28 state. Run28 Gates0-6 and native interruption/reconciliation passed. The first released automatic candidate run then changed eight existing body-version judgments during an unchanged-body source recheck and correctly failed the retained seal. Preserve each existing body-version record byte-for-byte while keeping the new source observation in the acquisition ledger and current projection. Restart from Stage0.",
+  "reason": "Restore complete Run28 state. Run30 restored the eight sealed body-version judgments and published the verified repair, but its later queue projection read the briefly stale mutable branch ref and correctly failed because preserved_versions no longer matched the repaired baseline. Read both queue roots from the exact immutable repair commit and let the final CAS reject any real concurrent writer. Restart from Stage0.",
   "latest_failed_run": {
-    "run_id": "38042467771",
-    "artifact_id": 11666198778,
-    "artifact_sha256": "2a6bbd310f8fb66a3830d4d41ba1a6b5a3b338f31763855032096a19e6d40155",
-    "status": "AUTOMATIC_READER_RETAINED_VERSION_MUTATION"
+    "run_id": "38043688598",
+    "artifact_id": 11667336433,
+    "artifact_sha256": "7885fa08b63b0f2cfbe9dd9362e81bdfb53d08dc83b91b405a5ce21bbe1badbb",
+    "status": "GATE1_STALE_MUTABLE_REF_AFTER_VERIFIED_REPAIR"
   },
   "source_scope_reinspection_urls": [],
   "retained_cache": {
@@ -49,6 +49,6 @@
     },
     "inventory_sha256": "af04dd8ef92789e99ee0eb534da74f0a8c4a654b9421f43504ef6d4ec3ba89fa"
   },
-  "changed_condition": "Unchanged-body collection rechecks now preserve an existing immutable version judgment exactly. The exact failed main artifact had eight version-record hash changes; replaying its prepared document and patch with the fix restores all eight and passes both the original and dynamic preservation seals. No source history, score, decision, or model result is rewritten.",
+  "changed_condition": "The exact eight-record preservation repair remains strict and verified. After that repair, Gate1 now builds its projection from the immutable published repair commit rather than a possibly stale mutable-ref response. A real concurrent writer is still rejected by the existing expected-blob CAS; no write is retried and no source history, score, decision, or model result is rewritten.",
   "full_pipeline": false
 }

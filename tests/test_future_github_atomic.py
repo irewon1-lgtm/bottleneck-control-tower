@@ -220,6 +220,19 @@ def test_probe_visibility_deadline_and_unrelated_writer_do_not_retry_writes(monk
     assert not any(method in ('POST', 'PATCH', 'PUT', 'DELETE') for method, _ in remote.calls)
 
 
+def test_queue_projection_reads_one_immutable_generation_not_stale_mutable_ref():
+    from bct.recovery_storage_probe import read_generation_at
+    remote = dual_remote()
+    transport = remote.transport()
+    immutable = transport.head()
+    original_read = transport.read
+    transport.read = lambda path: (_ for _ in ()).throw(
+        AssertionError('mutable ref must not be used for the repaired queue baseline'))
+    generation = read_generation_at(transport, immutable)
+    assert generation[PATH].document == original_read(PATH).document
+    assert generation['future-tracking.json'].document == original_read('future-tracking.json').document
+
+
 def test_readings_and_queue_publish_in_one_generation():
     remote=dual_remote();t=remote.transport()
     paths=(PATH,'future-tracking.json');expected={p:t.read(p).sha for p in paths}

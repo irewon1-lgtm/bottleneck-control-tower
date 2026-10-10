@@ -15,7 +15,7 @@ from bct.future_store import store_patch
 from bct.future_worker import _runs, _run_patch
 from bct.recovery_preservation import (verify as verify_preservation, seal,
                                        restore_version_records)
-from bct.recovery_storage_probe import verify_atomic_recovery
+from bct.recovery_storage_probe import read_generation_at, verify_atomic_recovery
 
 
 def command(*args):
@@ -141,9 +141,14 @@ def main():
         report['probe_branch'] = probe_branch
         report['atomic_recovery_probe'] = verify_atomic_recovery(probe, report['run_id'])
         report['probe_commit'] = probe.head()
-        # Re-read production after the probe; use the latest preserving patch.
-        original = transport.read('future-candidates.json')
-        tracking = transport.read('future-tracking.json')
+        # Keep both roots on the already verified immutable generation. GitHub
+        # may briefly return the pre-repair document through the mutable ref;
+        # the final CAS safely rejects a real concurrent writer instead of
+        # composing a queue projection from that stale view.
+        production_base = transport.last_commit if report.get('preservation_repair') else initial_head
+        generation = read_generation_at(transport, production_base)
+        original = generation['future-candidates.json']
+        tracking = generation['future-tracking.json']
         candidates_path, tracking_path = root / 'future-candidates.json', root / 'future-tracking.json'
         candidates_path.write_bytes(_raw(original.document));tracking_path.write_bytes(_raw(tracking.document))
         subprocess.run(['python', '.github/scripts/future_queue_snapshot.py', '--candidates', str(candidates_path),
