@@ -1,6 +1,6 @@
 from copy import deepcopy
 import pytest
-from bct.recovery_preservation import digest,verify,seal,restore_version_records
+from bct.recovery_preservation import digest,verify,seal,restore_version_records,quarantine_changed_version_judgments
 
 
 def inputs():
@@ -67,3 +67,37 @@ def test_restore_refuses_untrusted_replacement():
     bad=deepcopy(trusted);bad['results']['doc']['versions']['body']['score']=7
     with pytest.raises(ValueError,match='trusted generation'):
         restore_version_records(current,baseline,bad)
+
+
+def test_guarded_quarantine_isolates_only_mutated_version_not_baseline_judgments():
+    trusted,tracking,_=inputs()
+    original=seal(trusted,tracking)
+    current=deepcopy(trusted)
+    current['results']['doc']['versions']['body']['score']=99
+    current['results']['doc']['versions']['brand-new']={'body_status':'FULL'}
+    with pytest.raises(ValueError,match='version judgment'):
+        verify(current,tracking,original)
+    guarded,held=quarantine_changed_version_judgments(current,tracking,original)
+    assert len(held)==1
+    assert held[0]['document_id']=='doc' and held[0]['body_sha256']=='body'
+    assert held[0]['expected_record_sha256']==original['version_record_hashes']['doc']['body']
+    assert held[0]['observed_record_sha256']==digest(current['results']['doc']['versions']['body'])
+    assert guarded['version_hashes']['doc']==original['version_hashes']['doc']
+    assert guarded['review_hashes']==original['review_hashes']
+    assert verify(current,tracking,guarded)['status']=='PASS'
+    # Old reviewer state is still immutable; quarantine may not hide this.
+    changed=deepcopy(tracking)
+    changed['reviews']['review']['disposition']='DATA_INSUFFICIENT'
+    with pytest.raises(ValueError,match='review changed'):
+        quarantine_changed_version_judgments(current,changed,original)
+    # Nor may it hide a disappeared original source version.
+    removed=deepcopy(current);del removed['results']['doc']['versions']['body']
+    with pytest.raises(ValueError,match='source/body version missing'):
+        quarantine_changed_version_judgments(removed,tracking,original)
+
+
+def test_guarded_quarantine_clean_input_preserves_all_hash_checks():
+    candidates,tracking,_=inputs()
+    original=seal(candidates,tracking)
+    guarded,held=quarantine_changed_version_judgments(candidates,tracking,original)
+    assert not held and guarded==original
