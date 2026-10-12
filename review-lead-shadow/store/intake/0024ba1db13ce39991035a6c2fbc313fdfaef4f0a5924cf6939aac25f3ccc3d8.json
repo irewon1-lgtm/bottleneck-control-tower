@@ -1,0 +1,272 @@
+{
+  "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+  "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+  "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+  "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+  "applies_from": "2026-10-05T15:24:06.650413+00:00",
+  "document_id": "fd22503f-eb47-40ac-8c3e-e44f05d9e54b",
+  "body_sha256": "1467f7f3941c489fbf1fe45ab10a025e7e20210f7bd478c7025f17cd6bd5047e",
+  "origin_id": "https://www.hpcwire.com/2026/10/12/the-missing-operational-layer-in-large-scale-ai-training/#article",
+  "origin_url": "https://www.hpcwire.com/2026/10/12/the-missing-operational-layer-in-large-scale-ai-training/",
+  "provenance_verified": true,
+  "automatic_extraction": {
+    "version": "BCT_PRECURSOR_V2_SHADOW_2",
+    "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+    "events": [
+      {
+        "event_id": "e36bccfc8951187a088b67894a6f1c57bc31c7f00eef1a18a5824fe9c2a24c16",
+        "document_id": "fd22503f-eb47-40ac-8c3e-e44f05d9e54b",
+        "role": "SUPPLY",
+        "kind": "READINESS_OR_QUANTITY",
+        "reference": {
+          "document_id": "fd22503f-eb47-40ac-8c3e-e44f05d9e54b",
+          "body_sha256": "1467f7f3941c489fbf1fe45ab10a025e7e20210f7bd478c7025f17cd6bd5047e",
+          "locator": {
+            "start": 971,
+            "end": 1119
+          },
+          "quote": "HPCwire has examined the operational complexity AI brings to HPC sites and the gap between acquiring GPU capacity and turning it into productivity ."
+        },
+        "fields": {},
+        "context_references": [
+          {
+            "document_id": "fd22503f-eb47-40ac-8c3e-e44f05d9e54b",
+            "body_sha256": "1467f7f3941c489fbf1fe45ab10a025e7e20210f7bd478c7025f17cd6bd5047e",
+            "locator": {
+              "start": 971,
+              "end": 1119
+            },
+            "quote": "HPCwire has examined the operational complexity AI brings to HPC sites and the gap between acquiring GPU capacity and turning it into productivity ."
+          }
+        ],
+        "direct_origin": true,
+        "facts": {},
+        "period": null
+      },
+      {
+        "event_id": "d7323889a4443315d0c7dd52ecddc504b0916d141deafa6248546eee5c35473f",
+        "document_id": "fd22503f-eb47-40ac-8c3e-e44f05d9e54b",
+        "role": "CONFIRMATION",
+        "kind": "ACTUAL",
+        "reference": {
+          "document_id": "fd22503f-eb47-40ac-8c3e-e44f05d9e54b",
+          "body_sha256": "1467f7f3941c489fbf1fe45ab10a025e7e20210f7bd478c7025f17cd6bd5047e",
+          "locator": {
+            "start": 3299,
+            "end": 3441
+          },
+          "quote": "Viewed separately, they suggest competing culprits: a network bottleneck, inefficient collectives, overloaded storage or poorly tuned kernels."
+        },
+        "fields": {},
+        "context_references": [
+          {
+            "document_id": "fd22503f-eb47-40ac-8c3e-e44f05d9e54b",
+            "body_sha256": "1467f7f3941c489fbf1fe45ab10a025e7e20210f7bd478c7025f17cd6bd5047e",
+            "locator": {
+              "start": 3299,
+              "end": 3441
+            },
+            "quote": "Viewed separately, they suggest competing culprits: a network bottleneck, inefficient collectives, overloaded storage or poorly tuned kernels."
+          }
+        ],
+        "direct_origin": true,
+        "facts": {},
+        "period": null
+      }
+    ],
+    "facts_verified_semantically": false
+  },
+  "semantic_review": {
+    "status": "PENDING",
+    "annotation_method": null,
+    "annotator": null
+  },
+  "final_status": "HOLD",
+  "reason": "SEMANTIC_REVIEW_REQUIRED",
+  "formal_TARGET_id": null,
+  "EARLY_success": false,
+  "review_id": null,
+  "intake_version": "BCT_REVIEW_INTAKE_1",
+  "annotation_sha256": null,
+  "mode": "PROSPECTIVE_REVIEW",
+  "recorded_at": "2026-10-12T21:59:27.807904+00:00",
+  "source_document": {
+    "document_id": "fd22503f-eb47-40ac-8c3e-e44f05d9e54b",
+    "origin_url": "https://www.hpcwire.com/2026/10/12/the-missing-operational-layer-in-large-scale-ai-training/",
+    "collected_at": "2026-10-12T21:56:52.628095+00:00",
+    "origin_id": "https://www.hpcwire.com/2026/10/12/the-missing-operational-layer-in-large-scale-ai-training/#article",
+    "canonical_url": "https://www.hpcwire.com/2026/10/12/the-missing-operational-layer-in-large-scale-ai-training/",
+    "origin_publisher": "HPCwire",
+    "published_at": "2026-10-12T19:43:12+00:00",
+    "published_at_raw": "2026-10-12T19:43:12+00:00",
+    "publication_precision": "TIMESTAMP",
+    "acquired_at": "2026-10-12T21:58:08.008443+00:00",
+    "available_at": "2026-10-12T21:58:08.008443+00:00",
+    "body": "A GPU cluster can be healthy and a job running while the model makes little useful progress. Seeing why requires observability built around the training run, not isolated infrastructure components.\nA large-scale training job can look healthy to nearly every conventional monitoring tool while quietly wasting much of its GPU allocation.\nThe nodes are up. Slurm reports that the job is running. Kubernetes shows healthy containers. GPU utilization is high. Network traffic is flowing. No CUDA out-of-memory errors have appeared, and the loss keeps getting logged.\nNevertheless, step times may have doubled. One rank may be holding back hundreds of others. GPUs may be occupied by communication kernels without moving the training run forward. The input pipeline may be starving the accelerators.\nEach tool accurately describes the part of the system it was designed to observe. But distributed training does not live inside any one of those parts.\nIt crosses all of them.\nHPCwire has examined the operational complexity AI brings to HPC sites and the gap between acquiring GPU capacity and turning it into productivity . Observability is one of the missing layers between the two.\n( Frame-Stock-Footage/Shutterstock)\nFilling that gap takes more than adding infrastructure metrics to a dashboard; observability itself must be rethought for how large-scale training behaves.\nFour Views of the Same Training Run\nTraditional observability grew around stable abstractions such as hosts, services, containers and requests, which work well when components can be examined separately.\nDistributed training is different. A job temporarily assembles thousands of accelerators, processes, network links and storage paths into one synchronized system, where a slowdown anywhere can set the pace of the whole job.\nInfrastructure monitoring, through tools such as NVIDIA’s Data Center GPU Manager , sees GPU activity, memory, power, temperature, clocks, hardware errors and interconnect traffic at low overhead.\nSchedulers and orchestrators see allocations, queues, job states, container health, resource requests and placement decisions.\nRuntime tools sit closer to the application: CUPTI exposes CUDA API calls, kernel activity and memory operations, and NCCL logs and profiler interfaces show communicator setup, collectives, topology and transport choices.\nML experiment tracking sees steps, epochs, throughput, loss, learning rate, checkpoints and model outputs.\nEach view is valuable, but they are split by identifiers, time models, retention policies and owners. Infrastructure teams think in nodes and GPUs, platform teams in Slurm jobs or Kubernetes pods, ML engineers in experiments, runs and checkpoints.\nWhen Accurate Metrics Become Misleading\nConsider a distributed data-parallel job in which one training process begins receiving data more slowly than its peers.\nIt reaches gradient synchronization late, and the other ranks wait for it inside the collective. Their GPUs look active because NCCL kernels are resident, so cluster-wide utilization may still look respectable.\n(Digineer Station/Shutterstock)\nThe infrastructure dashboard therefore shows busy GPUs. The communication dashboard shows long collectives. The training log shows slower steps. The storage dashboard may show elevated latency.\nViewed separately, they suggest competing culprits: a network bottleneck, inefficient collectives, overloaded storage or poorly tuned kernels.\nOn one timeline, compared by rank, the sequence is clear: one process hit an input delay, arrived late and made its peers wait.\nThe distinction matters because the long collective is not necessarily the original problem. It is where the problem became visible across the cluster.\nThe reverse also happens. During a planned checkpoint, quiet GPUs and heavy storage activity are correct, but a phase-blind alert will flag them as an incident.\nAverages hide problems too. If a different rank straggles each step, every device’s average utilization can look the same; the imbalance shows only at rank and step granularity.\nThen there are problems that infrastructure monitoring cannot recognize at all. A job can run without crashes, maintain high GPU activity and exit with code zero while the loss remains flat, diverges or becomes numerically invalid. Operationally, the workload succeeded. Scientifically, it failed.\nHealth is contextual: a metric means something only relative to the other ranks, the training phase and the model’s progress.\nThe Training Run Must Become the Primary Entity\nObservability must treat the training run as a first-class entity, tying together at minimum:\nNvidia NVL72\nExperiment and run IDs;\nScheduler jobs and execution attempts;\nNodes and accelerators;\nProcesses, devices and ranks;\nContainers and runtimes;\nSteps, phases and checkpoints.\nThis context must travel with the telemetry or be reconstructed. Otherwise an NVLink spike is just a device event, a long collective a runtime event, a slow step an application event.\nTied to the same run, rank and interval, they become evidence of one condition.\nDistributed tracing does this for microservices, linking many services into one request path. Training needs the equivalent, but its critical path runs through steps, ranks, collectives, data delivery and synchronization barriers, not HTTP calls.\nStandards like OpenTelemetry can transport and correlate the data, but a transport format does not supply training semantics. The industry still needs shared conventions for runs, ranks, devices, collectives, phases and model progress.\nFrom GPU Utilization to Training Goodput\nHPCwire has explored why GPU utilization is the wrong north star for AI inference . The same holds for training, where the outcome is valid model progress rather than served requests.\nGPU utilization alone does not establish how much of the allocation contributed to useful training.\nA better measure is training goodput: the share of allocated accelerator time spent on valid forward passes, backward passes and optimizer steps at the expected rate.\nNo single metric captures it, but several make it visible:\nSamples or tokens processed per allocated GPU-hour;\nStep-time distributions and changes from a comparable baseline;\nTime spent computing, communicating, waiting for data or checkpointing;\nArrival skew and execution differences among ranks;\nWork discarded because of failures, restarts or invalid results;\nLoss, gradient and checkpoint progression correlated with resource consumption.\nThey don’t replace hardware telemetry; they give it operational meaning.\nThe important question changes from “Were the GPUs busy?” to “What progress did the training run achieve with the GPU time it consumed?”\nCorrelation Is Necessary, But Not Sufficient\n(AntonKhrupinArt/Shutterstock)\nPlacing signals on one timeline helps, but correlation alone does not prove causation.\nA storage-latency spike during a slow step may be the cause, a side effect or someone else’s workload. A hardware error may explain a straggler, or be a corrected event with no effect on the job.\nDiagnosis needs additional context: which signal changed first, how the affected rank compares with its peers, which phase the job was in, and what topology, configuration and comparable past runs suggest.\nRules, statistical baselines, causal graphs or ML models can do this analysis. AI assistants can help navigate the evidence but cannot compensate for missing identity and context.\nThe output should also remain explainable. Instead of declaring that “the network is slow,” a diagnostic system should be able to trace the chain from the straggler example above: one late rank, its peers waiting, the fabric healthy throughout.\nThat evidence chain is more useful than an anomaly score because engineers can verify it and choose the appropriate action.\nObservability Must Not Become the Failure\nCollecting deeper training information introduces another challenge: the observer is often closer to the workload than it is in conventional infrastructure monitoring.\nCUDA is asynchronous, so host API time is not device time. As NVIDIA describes , an NCCL collective spans application calls, runtime queues, kernel launches and GPU execution; measuring one part gives a precise-looking but misleading result.\nInstrumentation can also compete for buffers, hardware counters and profiler interfaces, add overhead, lose records or behave differently across CUDA, NCCL and framework versions.\nThat argues for a progressive collection model rather than enabling every possible profiler across an entire fleet.\nA broad, low-overhead infrastructure baseline can remain active continuously. Runtime-level signals can add information about CUDA calls, collective state and rank behavior. Detailed device tracing can be enabled selectively for jobs that require it. Hardware-counter profiling can remain an explicit diagnostic operation rather than an unattended default.\nThe collection path must be observable too. Missing kernel records can mean no kernels ran, or that instrumentation failed; a trustworthy system must tell “no activity” from “no coverage.”\nThe safest design collects not the most data but enough independent evidence to diagnose the workload without unacceptable risk to the run.\nA New Operational Discipline\nThe missing layer, then, is not GPU monitoring, experiment tracking or profiling alone, but the system that connects their evidence around what organizations care about: the training run.\nBuilding it is a new discipline, spanning SRE, HPC performance engineering, distributed systems and machine learning; none has the whole answer alone.\nWhen a thousand GPUs spend an hour waiting for one delayed rank, the cluster has not experienced a thousand independent utilization problems. It has experienced one distributed training problem expressed across a thousand devices.\nThe next generation of observability must be designed to see the difference.\nAbout the author: Evgeny Potapov is a software engineer and technology founder with 25 years of experience in performance engineering, SRE, DevOps and distributed systems. He is a co-founder of RidgeScope , which develops observability and diagnostic technology for large-scale AI training.",
+    "body_sha256": "1467f7f3941c489fbf1fe45ab10a025e7e20210f7bd478c7025f17cd6bd5047e",
+    "version": "1467f7f3941c489fbf1fe45ab10a025e7e20210f7bd478c7025f17cd6bd5047e",
+    "raw_sha256": "e7ec18cfb0496f6a71e8a81319f4e764e297b4cee445ef6b3ded984686b4172a",
+    "checks": {
+      "http_success": true,
+      "original_identity": true,
+      "publisher_observed": true,
+      "attribution_consistent": true,
+      "original_publication": true,
+      "available_at_recorded": true,
+      "full_accessible_body": true,
+      "not_republication": true,
+      "body_hash_matches": true,
+      "publication_before_acquisition": true
+    },
+    "provenance": "PASS",
+    "provenance_verified": true,
+    "provenance_blockers": [],
+    "body_status": "FULL",
+    "raw_path": "var/new-precursors/raw/e7ec18cfb0496f6a71e8a81319f4e764e297b4cee445ef6b3ded984686b4172a.html",
+    "status": "CAPTURED",
+    "scope_reader_version": "source-scope-reader-4",
+    "scope_read_mode": "LIVE_FRESH",
+    "excluded_page_regions": [
+      {
+        "document_id": "fd22503f-eb47-40ac-8c3e-e44f05d9e54b",
+        "body_sha256": "1467f7f3941c489fbf1fe45ab10a025e7e20210f7bd478c7025f17cd6bd5047e",
+        "origin_id": "https://www.hpcwire.com/2026/10/12/the-missing-operational-layer-in-large-scale-ai-training/#article",
+        "locator": {
+          "start": 9930,
+          "end": 10220
+        },
+        "source_quote": "About the author: Evgeny Potapov is a software engineer and technology founder with 25 years of experience in performance engineering, SRE, DevOps and distributed systems. He is a co-founder of RidgeScope , which develops observability and diagnostic technology for large-scale AI training.",
+        "origin_url": "https://www.hpcwire.com/2026/10/12/the-missing-operational-layer-in-large-scale-ai-training/",
+        "origin_publisher": "HPCwire",
+        "published_at": "2026-10-12T19:43:12+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-12T21:58:08.008443+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "PAGE_CHROME_OR_TAXONOMY"
+      }
+    ],
+    "retained_collection_events": [
+      {
+        "event_id": "8af762d34d602a570646f0dbf0fd761c82a21cebd83e8df7d640717cb0252c9a",
+        "document_id": "fd22503f-eb47-40ac-8c3e-e44f05d9e54b",
+        "kind": "CONFIRMATION",
+        "event_types": [
+          "CONFIRMATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 3299,
+          "end": 3441
+        },
+        "source_quote": "Viewed separately, they suggest competing culprits: a network bottleneck, inefficient collectives, overloaded storage or poorly tuned kernels.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "precursor_events": [
+      {
+        "event_id": "8af762d34d602a570646f0dbf0fd761c82a21cebd83e8df7d640717cb0252c9a",
+        "document_id": "fd22503f-eb47-40ac-8c3e-e44f05d9e54b",
+        "kind": "CONFIRMATION",
+        "event_types": [
+          "CONFIRMATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 3299,
+          "end": 3441
+        },
+        "source_quote": "Viewed separately, they suggest competing culprits: a network bottleneck, inefficient collectives, overloaded storage or poorly tuned kernels.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "objective_version": "bct-objective-1",
+    "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  },
+  "T": "UNKNOWN",
+  "T_scope": "UNKNOWN",
+  "strict_candidate_first_met_at": "UNKNOWN",
+  "leading_detection_success": false,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "record_sha256": "6c492956a485e0f404c269ddde68102606a546b09c52379d158cf6070e99c278"
+}
