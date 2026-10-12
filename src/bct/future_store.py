@@ -20,7 +20,7 @@ COLLECTION_FIELDS = frozenset({
     "fingerprint", "attempts", "checked_at", "body_status", "extraction_method",
     "body_chars", "body_sha256", "candidate", "decision", "reason", "evidence",
     "targets", "target_status", "final_bottleneck", "error", "retry_after",
-    "versions", "current_body_sha256", "acquisition", "source_version",
+    "versions", "version_access", "version_judgment_holds", "current_body_sha256", "acquisition", "source_version",
     "filter_version", "discovery_paths", "tracked_matches", "queue_entered_at",
     "body_versions", "body_history", "canonical_url", "last_seen_at",
     "reasons", "completeness", "cache_access", "reproducibility",
@@ -218,6 +218,11 @@ def _immutable_records(existing, patch):
     # Source body versions and prediction/review history are append-only records.
     for document_id, changes in patch.get("results", {}).items():
         prior = existing.get("results", {}).get(document_id, {})
+        for body_hash, checks in changes.get("version_access", {}).items():
+            for observed_at, observation in checks.items():
+                old_check = prior.get("version_access", {}).get(body_hash, {}).get(observed_at)
+                if old_check is not None and old_check != observation:
+                    raise PatchError("saved version access observation is immutable")
         for body_hash, version in changes.get("versions", {}).items():
             old = prior.get("versions", {}).get(body_hash, {})
             for field in ("body_sha256", "source_version"):
