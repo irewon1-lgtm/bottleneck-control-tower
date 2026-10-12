@@ -7,6 +7,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import resource
 import subprocess
 import sys
 import time
@@ -56,12 +57,14 @@ def child(label):
     if input_hashes != setup['input_sha256']:
         raise ValueError('same-input measurement binding differs')
     calls.clear()
+    rss_before_write = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
     tracemalloc.start()
     start = time.perf_counter()
     roots = tr.write_many(documents, {p: s.sha for p, s in snapshots.items()})
     elapsed = time.perf_counter() - start
     peak = tracemalloc.get_traced_memory()[1]
     tracemalloc.stop()
+    rss_through_write = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
     write_calls = dict(calls)
     saved = tr.last_commit
     if not saved:
@@ -81,6 +84,10 @@ def child(label):
               'branch': branch, 'commit': saved, 'roots': roots,
               'input_sha256': input_hashes, 'write_seconds': elapsed,
               'write_peak_python_allocation_bytes': peak,
+              'resident_peak_before_write_bytes': rss_before_write,
+              'resident_peak_through_write_bytes': rss_through_write,
+              'resident_peak_after_readback_bytes': resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+              'resident_peak_scope': 'Linux ru_maxrss, whole fresh child process including initial baseline/input load; measured through write and after readback; excludes parent driver and CPU model',
               'write_api_calls': write_calls, 'write_api_call_total': sum(write_calls.values()),
               'readback_inclusive_api_call_total': sum(calls.values()),
               'notification_state': 'READY', 'same_notification_suppressed': True,
