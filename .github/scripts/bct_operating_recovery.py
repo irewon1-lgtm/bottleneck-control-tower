@@ -60,12 +60,15 @@ def main():
         ('.github/workflows/future-bottleneck.yml', '.github/workflows/ui-pages.yml')][:4]
     condition = hashlib.sha256(json.dumps(external_runs, sort_keys=True).encode()).hexdigest()
     def receipt(stage, status, paths, reason=None):
+        print(json.dumps({'operating_stage': stage, 'status': status,
+                          'run_id': run_id, 'actual_execution': True}), flush=True)
         return {'status': status, 'actual_execution': True, 'criteria_met': status == 'PASS',
             'execution_id': run_id+'-'+str(stage)+'-'+uuid.uuid4().hex,
             'evidence': [{'path': path.name, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
                          for path in paths if path.exists()],
             'reason': reason, 'observed_at': datetime.now(timezone.utc).isoformat()}
     def command(name):
+        print(json.dumps({'operating_command': name, 'state': 'STARTING', 'run_id': run_id}), flush=True)
         log = root/('operating-command-'+name+'.log')
         with log.open('w') as stream:
             code = subprocess.run([sys.executable, '.github/scripts/'+name+'.py'],
