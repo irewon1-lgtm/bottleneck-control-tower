@@ -1,0 +1,32 @@
+name: BCT actual same-input storage and notification audit
+on:
+  push:
+    branches: [ops/bct-storage-metrics-20261013]
+    paths: [.github/scripts/bct_real_storage_audit.py, .github/workflows/bct-real-storage-audit.yml]
+permissions:
+  contents: write
+jobs:
+  actual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: Actual same-input old and new GitHub transport and READY notification
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python .github/scripts/bct_real_storage_audit.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-real-storage-audit-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/bct-real-storage-audit/receipt.json
+            ${{ runner.temp }}/bct-real-storage-audit/before.json
+            ${{ runner.temp }}/bct-real-storage-audit/after.json
+            ${{ runner.temp }}/bct-real-storage-audit/warmup.json
+          retention-days: 30
+          if-no-files-found: error
