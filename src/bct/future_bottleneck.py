@@ -498,7 +498,7 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
         result["attempts"] = acquired["ledger"].get("versions", {}).get(fingerprint, {}).get("automatic_attempts", 0)
         result["retry_after"] = (now + timedelta(hours=6)).isoformat() if result["material_check_required"] else ""
         versions = {}
-        version_access = {}
+        version_access: dict[str, dict[str, dict]] = {}
         def record_access(version_hash, status):
             # Access observations belong to the acquisition timeline, not to
             # the immutable judgment of the original HTML/body version.
