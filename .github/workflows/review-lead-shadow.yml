@@ -85,7 +85,9 @@ jobs:
         if: always()
         run: python .github/scripts/persist_review_shadow.py
       - name: Preserve audit and important updates
-        if: always()
+        # An upstream failure without any source cache has no audit bytes to
+        # upload. Avoid copying the same historical shadow store repeatedly.
+        if: always() && env.BCT_REVIEW_HANDOFF_AVAILABLE == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: review-lead-shadow-audit
