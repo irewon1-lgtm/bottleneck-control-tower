@@ -83,3 +83,35 @@ def restore_version_records(candidates, baseline, trusted_candidates):
                              'restored_sha256': expected})
             versions[body_hash] = deepcopy(trusted)
     return restored, receipts
+
+
+def quarantine_changed_version_judgments(candidates, tracking, baseline):
+    """Hold untrusted historical changes without discarding immutability gates.
+
+    A prior sealed version has changed when its whole-record digest differs.
+    The exact identity, original expected digest and observed digest are
+    recorded. ONLY that version's historic judgment-digest assertion is
+    isolated; the original version identity, all old reviews, old failures,
+    completed reading receipts and confirmed targets still have to verify.
+
+    This does not restore or approve the changed judgment. Automatic readers
+    must exclude all held versions and verify they have not changed again.
+    """
+    guarded=deepcopy(baseline)
+    hashes=guarded.get('version_record_hashes', {})
+    held=[]
+    for document_id, versions in hashes.items():
+        observed=candidates.get('results',{}).get(document_id,{}).get('versions',{})
+        for body_sha256, expected in list(versions.items()):
+            current=digest(observed.get(body_sha256))
+            if current != expected:
+                held.append({'document_id':document_id,'body_sha256':body_sha256,
+                             'expected_record_sha256':expected,
+                             'observed_record_sha256':current,
+                             'status':'UNVERIFIED_PREEXISTING_JUDGMENT_DRIFT',
+                             'promoted_to_completion':False})
+                del versions[body_sha256]
+    # Unmodified requirements still pass. Crucially, a missing version or
+    # altered previously completed review MUST still fail closed.
+    verify(candidates,tracking,guarded)
+    return guarded, held
