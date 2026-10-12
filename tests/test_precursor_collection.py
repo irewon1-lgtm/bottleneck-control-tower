@@ -272,3 +272,27 @@ def test_stored_documents_clean_quarantine_mode_matches_strict_mode(tmp_path,tra
     strict=c.stored_documents(tmp_path)
     assert holds==[]
     assert tolerant==strict
+
+
+def test_wrapper_empty_rss_delta_skips_corpus_but_qa_replays_existing_snapshot(tmp_path,monkeypatch):
+    import importlib.util
+    script=Path(__file__).resolve().parents[1]/'.github/scripts/new_precursor_cycle.py'
+    spec=importlib.util.spec_from_file_location('empty_precursor_wrapper',script)
+    wrapper=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(wrapper)
+    calls=[]
+    def cycle(root,manifest,**kwargs):
+        calls.append(manifest.copy())
+        return {'scope_reader_version':c.scope_reader.VERSION,
+                'backfill_qa_documents':230,'requests_this_cycle':0,
+                'live_execution':{'state':'NO_EARLY_CANDIDATE','frozen':0}}
+    monkeypatch.setattr(wrapper.collection,'cycle',cycle)
+    result=wrapper.run({'collection_started_at':'2026-10-05T02:00:00Z','documents':[]},tmp_path)
+    assert result[0]['live_execution']['state']=='NO_NEW_DOCUMENTS'
+    assert result[0]['source_integrity_state']=='NOT_SCANNED_NO_NEW_DOCUMENTS'
+    assert not calls
+    frozen=wrapper.run({'collection_started_at':'2026-10-05T02:00:00Z',
+                        'documents':[],'qa_copy_only':True},tmp_path)
+    assert frozen[0]['scope_reader_version']==c.scope_reader.VERSION
+    assert frozen[0]['backfill_qa_documents']==230
+    assert len(calls)==1 and calls[0]['documents']==[]
