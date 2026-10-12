@@ -8,6 +8,7 @@ import subprocess
 import time
 from urllib.error import HTTPError
 from urllib.request import urlopen
+from typing import Any
 from bct.future_github import GitHubTransport
 from bct.future_local_reader import LocalCPUQuickReader, native_schema
 from bct.future_worker import _runs
@@ -35,6 +36,8 @@ def main():
     before_source,blob=transport._root('src/bct/future_local_reader.py','367bf477717561380282d1b9f5ca46fc82f11323')
     path=root/'baseline.py';path.write_bytes(before_source)
     spec=importlib.util.spec_from_file_location('bct.extent_baseline',path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError('baseline reader module unavailable')
     baseline=importlib.util.module_from_spec(spec);spec.loader.exec_module(baseline)
     old_range=baseline.native_schema(payload)['oneOf'][1]['properties']['read_end']
     assert old_range['minimum']>old_range['maximum']
@@ -67,7 +70,7 @@ def main():
                 proof['before']={'status':'FAIL','error_type':'HTTPError','http_status':exc.code,
                                  'response_sha256':hashlib.sha256(raw).hexdigest()}
             else:raise ValueError('baseline did not reproduce original failure')
-            observations=[]
+            observations: list[dict[str,Any]]=[]
             result=LocalCPUQuickReader(verified,timeout=600,receipt_observer=observations.append)(payload)
             assert result['review']['read_end']==5535 and result['review']['disposition']!='INCOMPLETE'
             assert len(observations)==1 and observations[0]['truncated'] is False
