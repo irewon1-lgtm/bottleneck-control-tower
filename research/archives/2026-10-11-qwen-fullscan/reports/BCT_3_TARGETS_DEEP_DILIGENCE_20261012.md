@@ -1,5 +1,47 @@
 # BCT 연구 5차 — AIB/CLT1, ELMT/APT, GFS/CoWoS 심층 재검증
 
+
+## 6차 검증 추가·정정 (2026-10-12, 과거 발표 소급 발견 / **LIVE 신규신호 아님**)
+
+> **기존 5차 보고서의 ‘Masan→Elmet 정량 할당량 미공개’ 진술을 정정한다.** 2026-10-01 Masan 공식 발표를 이번 조사에서 찾아 계약 자체의 연간 WO3 기준 물량을 확인했다. 이것은 **이미 공개된 정보의 뒤늦은 발견(BACKFILL)**이며, 2026-10-12에 새 공시가 나온 것이 아니다. S3/EARLY 판정·운영 알림으로 승격하지 않는다.
+
+| TARGET | 6차 수집된 공식 사실 | 여전히 미확인 | RESEARCH GATE |
+|---|---|---|---|
+| ELMT–Masan, Vietnam WO3 supply/conversion | **약 1,250 tonnes WO3 equivalent / year, 8년 초과 계약**, 2026-10-01 발효; Masan 지분 4.99% 거래 동일일 종료 | 특정 ELMT 공장에 **실제 납품되는 순가용 APT 제품 톤수**, 연도별 배정/가공 경로/품질·수율/납기 | **S1 근거 개선 / S2 PARTIAL / S3 0** |
+| ELMT–Springer, Nevada APT | 정부 투자계약 Annex I: phase-one 2,000 tons/year; Springer 9/11 binding JV Section 9: phase-one **목표** 4,000 tons **APT**/year. JV Section 10은 첫 5년 원료투입능력 Springer 최대 75%, EQ 25%(EQ 연 1,000t 상한). | 동일 'Phase 1'에 대한 설계범위·생산물·용량 2k/4k 정합성, 실제 설치·시운전·인증·수율·고객 할당 | **실제 가동 0 verified / S3 0** |
+| AIB–Nebius, Spartanburg County SC CLT1 | SEC 기존 10-Q: 종전 40MW 비트코인 시설 **2026-06-05 비통전**, 2026-08-13까지 재개 증빙 없음. 2026-09 투자자료에서 허가용 full construction design **제출만**; 2026-10-07 CEO 서한은 project-level financing 확보를 추진 중이라고 설명. SEC 디렉터리상 2026-10-07이 2026-10-12 현재 최신 공시. | 이후 실제 통전, 25MW×2 건축허가 발급·대출 서명·인출·현장시공·고객 검수, 2027-08/12 수취 | **수요 50MW 확정 / 시공·자금 0 verified / S3 0** |
+| GFS–TSMC, NY Malta interposer | GF 2026-10-08 계약 $2B, 5년, 2028 H1 'volume ramp 기대'만 공식 확인. TSMC 2026-10-05~14 quiet period, Q3 통화 예정 10/15 | 2028~29 제품·노드·인터포저 사이즈·고객 주문 wafers/month, GF 월간 qualified WPM 및 수율·검수 | **공급확대 RELIEF / S3 0** |
+
+### 정량 근거: Elmet–Masan (새로 확보한 핵심)
+- Masan 2026-10-01 공식 보도자료: https://www.masangroup.com/news/press-releases/msr-completes-elmet-strategic-partnership-and-announces-new-dividends-of-vnd5000-per-share/
+- 위 발표는 지분 4.99% 인수 **완료**, 공급·tolling 계약 **발효**, 연간 **approximately 1,250 tonnes of WO3**, 기간 **over eight years**를 명시.
+- 이는 **WO3 환산 계약 총범위**이지 APT 완제품 t/year, 특정 미국 공장 Elmet 전용 net deliverable 또는 고객 인도증명이 아니다.
+- Masan은 산화텅스텐 생산능력을 **more than 8,000 tonnes WO3 per annum으로 확대할 계획**이라고 표현. Elmet 투자자료의 약 8k tpa 'operating today' 발표와 시점/정의가 명확히 맞지 않음; 현 이용 가능 8k로 확정하지 않는다.
+- September 2026 Elmet–Masan 8-K는 offtake committee가 연도별 물량·일정·규격·고객을 조정하도록 규정. **내부 allocation reporting은 공개 검증 불가능**.
+- Masan 1,250t WO3 계약과 Hemerdon 1,000t WO3 함유량 오프테이크는 **같은 광물이 Masan에서 가공될 수 있어 두 수치를 최종 공급량으로 중복 합산 금지**.
+- SPRINGER 2k/4k 두 숫자는 생산설비 'phase one'의 서로 다른 문서 정의: 확인된 차이는 사실이나 정상 재가동시점·정량 출력에서 4k 인도를 약속했다고 볼 수 없음.
+
+### 계약 원문 및 기준 출처
+1. Masan 거래 종료+1,250t WO3: https://www.masangroup.com/news/press-releases/msr-completes-elmet-strategic-partnership-and-announces-new-dividends-of-vnd5000-per-share/
+2. 미국 정부 투자계약 Annex I (2,000 tpa): https://investors.theelmetgroup.com/sec-filings/content/0001213900-26-099734/ea030468201ex10-1.htm
+3. Springer JV Section 9, 10 (4,000 tpa + input 75/25): https://investors.theelmetgroup.com/sec-filings/content/0001213900-26-099734/ea030468201ex10-4.htm
+4. AIB 2026-06-30 10-Q (Spartanburg / de-energized legacy site): https://www.sec.gov/Archives/edgar/data/2070542/000121390026089151/ea0301093-10q_aibdata.htm
+5. AIB 2026-09-30 SEC investor material (permit submitted, illustrative loans): https://www.sec.gov/Archives/edgar/data/2070542/000121390026105249/ea030723301ex99-1.htm
+6. AIB CEO SEC 2026-10-07: https://www.sec.gov/Archives/edgar/data/2070542/000121390026107421/ea030792301ex99-1.htm
+7. SEC AIB recent filing directory (10-07 latest at time checked): https://www.sec.gov/Archives/edgar/data/2070542/
+8. GF official 2026-10-08 announcement: https://gf.com/news-and-events/news/globalfoundries-reaches-agreement-to-establish-us-based-supply-of-silicon-interposers-for-advanced-ai-packaging/
+9. TSMC official 2026 Q3 conference schedule, 10/5–14 quiet period: https://investor.tsmc.com/english/quarterly-results/2026/q3
+
+### 재개 조건(우선순위)
+1. **ELMT:** Masan 1,250 t-WO3/y의 delivery schedule/grade/conversion specification과 net APT supply allocation + Springer 2k/4k 용량 정의를 대조. 공급부족이 아닌 **공급확보/RELIEF** 대조군으로 유지.
+2. **AIB:** 2026-10-01 ESA 실제 통전, 건축허가 발급, financing close/drawdown 및 2027-08/12 hall commissioning/acceptance 공시. 계약/공사비 일치 없는 단순자금 부족액 생성 금지.
+3. **GFS:** TSMC 10/15 발표 후 **same-target** 인터포저 예약 주문량 및 GF qualified wafer/month를 확인. 전체 CoWoS WPM을 GF 인터포저 숫자로 대용하지 않음.
+
+**연구 정합성:** 기존 ZIP/원본을 보존, 기존 후보·tracking·BCT 자동 알림·예측 등급·운영 코드 변경 없음. 보도자료 인용 및 날짜는 발견시점(10/12)과 출처 공개시점(10/01 등)을 별도로 기록. **Quantitative S3 verified=0, EARLY verified=0.**
+
+---
+
+
 **As of** 2026-10-12 Asia/Seoul. **운영 영향:** 0 (연구 보고서만 추가). **Horizon:** 2027-10-12~2029-10-12 (12~36개월).  
 **결론:** 공식 계약·CAPA 계획 일부 확보, 세 TARGET 모두 동일 규격/지역/시점의 DEMAND > qualified SUPPLY를 정량 입증하지 못함. **S3 VERIFIED=0, EARLY VERIFIED=0.** 
 **Status:** RESEARCH_ONLY / PARTIAL_VERIFICATION / DO_NOT_PROMOTE. 과거 저장 원문의 body SHA 매칭 미검증.
