@@ -442,7 +442,7 @@ def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,
             row=read(path)
             if (root/'captures'/(acquisition.digest(row['url'])+'.json')).exists():continue
             seeds.append(capture(root,row['url'],row['document_id'],activation,collected_at=row['collected_at']))
-        source_holds=[]
+        source_holds: list[dict[str, Any]]=[]
         docs=stored_documents(root,quarantine_invalid=True,holds=source_holds)
         # Absolute raw-cache paths are rebound after artifact relocation, not evidence values.
         for d in docs:d['raw_path']=str(root/'raw'/(d['raw_sha256']+'.html'))
