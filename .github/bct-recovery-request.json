@@ -1,27 +1,28 @@
 {
-  "resume_run_id": "38278297145",
-  "resume_artifact_id": 11760399472,
-  "resume_artifact_sha256": "f9584cd242b0eb526646e33b53055c574b34ee2b395ef07531a0d1882eb5d8a1",
+  "resume_run_id": "38283327099",
+  "resume_artifact_id": 11763795989,
+  "resume_artifact_sha256": "503f9a4240443d7a28bb416f0db7c062998175fe3b51847d774bad8728e5e48a",
   "resume_file_sha256": {
-    "checkpoint.json": "94c86f991ef15625194a28439531580a22d851bcab76a8772d8469380d11d049",
-    "source-audit.json": "647891aa7e90d5d9cb27d7a08b7ec3faefe5ee25a633e288a3128ec17bf40e98",
+    "checkpoint.json": "9e4433c98e79e404cf087199a184292743507452c0e0f9569c4335ab0938260d",
+    "e2e-recovery.json": "55361d7cfcc8b3366d510426f26cf768306997833a4468853f944386bb901978",
+    "source-audit.json": "c600e7a7454143485789a7aa956f7c4754fa2ee77779a0a1df87d792ba1e5403",
     "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
     "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
-    "evidence-recovery-observations.json": "3eca97133f74ebe8427ebd9f3815d7c22fc5355bee86324f216d76e170700f0a",
+    "evidence-recovery-observations.json": "8075b24fe3c51a718194801da06f6ae520f4738cd80b6e853e9d8d09e7f2ecf3",
     "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "evidence-recovery-versions.json": "6106da2c81412c9723db1a97fdd36a3b0e366dc0c52410bcb3cca3bb1a7dd8ec",
-    "local-reader-setup.json": "3381297b647e43732b0e5706de2f788185aa4ffe5a817923a5e8e6c6f918dda8",
-    "local-reader-probe.json": "f1a3c928efd1943c61891661fd0809204c84255c1e34cf47f914672b096e992e",
-    "private-local-reader-execution.jsonl": "d4c360a2ab81373604aadb8a6ecbddad7f1fe71ae836d7d2a90c27b7b0f1eb31",
-    "recovery-preservation-seal.json": "08379ed4eebf9b9d97c5680fae144f6594abd604f6642fe619b7b0e569bdef30",
-    "queue-recovery-versions.json": "cd5024454d08076b29e4b3bf0ec3bed65a66d461ceba30f1640544ee17eefe9b",
+    "local-reader-setup.json": "93efc04b01a534fc316fbd50da0e30b86d1dbb8f96efbd948f57ea49b879250b",
+    "local-reader-probe.json": "7542d2d8304ca0004663ca2a97ff44fc491455c5fcbcc9a558cff9bff4250dfe",
+    "private-local-reader-execution.jsonl": "3c23d932bddcd5431d1571c5609eca29f344ed4004c00ceac842dbbcdd14e8b4",
+    "recovery-preservation-seal.json": "f39f46234c66300737e07fd00c76cc1f782a7a1fa512ec9a58ddb58b2fe681db",
+    "queue-recovery-versions.json": "553546f9f172889d3f56f69e7f8c641aa2b491820f6ace628cf5c3c6eb714960",
     "operating-engine-checkpoint.json": "e99813f098e5e35f40714e0152559d2c0c223cd41fedca65a2d3781ab07dba61",
     "operating-publication-request.json": "b4cc4009ea89b64df39ff13d4e7dade18edb40a488bbaad9ec59853564367b70",
     "operating-publication-history.json": "413b219280f800f3ab784da36edadab441be05e2dc08eb0e6fad5e4e931e2d48",
-    "native-claim-recovery.json": "c35545bd7f7ec50f8d53908125861e80678a1ca81c86c27ad8d966d909b2d819",
-    "native-claim-history.json": "d85e62d8ae34b91b06bd6c95817af8559b753fcc51f8b50add61933516822ecc"
+    "native-claim-recovery.json": "38c16093f799233a895c2aa9e5811db1d271e0f3963e74fcf54a5df05e6b4206",
+    "native-claim-history.json": "b2eeb85d998fffd5e4c5c9f8c75fee2f672d1d81efcd23779a2cbba1cec6aa42"
   },
-  "resume_cache_inventory_sha256": "6a41e75b39e5993c247210d571cad5ce68bc4432780c38e94598f87a4c8fd293",
+  "resume_cache_inventory_sha256": "d60e4a05dc066d65300f3da9e5fb074ced4554b647e01d93e238b8a4c845676a",
   "retained_seal_sha256": "0d773cb0c9e16283561a6ff72468c8bb6a02aaf7ba8ec522a47ccb887a8cc58a",
   "reader_batch_limit": 5,
   "reason": "Resume pinned existing journals and source caches; validate linked-blob recovery and bounded immutable metadata cache on standard public CPU runner; no paid APIs.",
@@ -52,7 +53,12 @@
     },
     "inventory_sha256": "af04dd8ef92789e99ee0eb534da74f0a8c4a654b9421f43504ef6d4ec3ba89fa"
   },
-  "changed_condition": "Normal main candidate writer 38278110747 completed successfully at 2026-10-12T17:02:19Z; no active candidate writers observed before resumption. Preserve the actual failed FULL checkpoint/journals. Next-cycle completed-publication request reuse reproduced FAIL and fixed by archiving completed prior requests; uncertain unfinished request reconciliation still passes. Validate revised code Gates 0–6, then conditionally release.",
-  "full_pipeline": false,
-  "repair_fix_head_sha": "21d2ff161bd2517a0069e079ca4a4a83d65f7533"
+  "changed_condition": "Actual Gates 0–6 passed on exact final publication code. Released main 367bf477717561380282d1b9f5ca46fc82f11323. Completed prior publication requests archive on distinct cycles; uncertain requests remain no-duplicate. Await observed completion of all normal main candidate writers before starting the operating FULL cycle; retain latest checkpoint/journals and every source hash.",
+  "full_pipeline": true,
+  "repair_fix_head_sha": "a5b30552c032fcfbeeb859eeda431ed06d849942",
+  "writer_quiescence": {
+    "observed_at": "2026-10-12T17:54:11.017Z",
+    "active_candidate_runs": [],
+    "latest_completed_candidate": 38278110747
+  }
 }
