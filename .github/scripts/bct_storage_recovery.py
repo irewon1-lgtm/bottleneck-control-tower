@@ -6,6 +6,7 @@ from pathlib import Path
 import sqlite3
 import subprocess
 import traceback
+import time
 from typing import Any
 from datetime import datetime, timezone
 
@@ -36,7 +37,15 @@ def main():
             if not line:
                 raise RuntimeError('required branch missing: ' + branch)
             refs[branch] = line.split()[0]
-            subprocess.run(['git', 'fetch', '--no-tags', 'origin', refs[branch]], check=True)
+            started = time.monotonic()
+            # Gate 0 reads this exact commit's files, not its ancestry. Fetching
+            # the full operational history pulls obsolete shard generations.
+            # Shallow local snapshots never rewrite/delete remote Git history.
+            subprocess.run(['git', 'fetch', '--no-tags', '--depth=1', 'origin', refs[branch]], check=True)
+            report.setdefault('snapshot_fetches', []).append({
+                'branch': branch, 'sha': refs[branch],
+                'seconds': round(time.monotonic() - started, 3), 'depth': 1})
+            print(json.dumps({'snapshot_fetch': report['snapshot_fetches'][-1]}), flush=True)
         report['baseline_heads'] = refs
         database = root / 'canonical.sqlite3'
         database.write_bytes(subprocess.check_output(['git', 'show', refs['data'] + ':canonical.sqlite3']))
