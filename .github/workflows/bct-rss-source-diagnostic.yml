@@ -46,7 +46,7 @@ jobs:
                 row['feed_dates'] = [x.text for x in root.iter() if x.tag.rsplit('}',1)[-1] in ('pubDate','published','updated','date')][:20]
               except ET.ParseError:
                 row['xml_state'] = 'INVALID_XML'
-              items = parse_feed(raw, 20)
+              items = parse_feed(raw, 10)
               row.update(state='AVAILABLE', parsed_entries=len(items))
             except Exception as exc:
               row.update(error_type=type(exc).__name__, error=str(exc)[:500])
