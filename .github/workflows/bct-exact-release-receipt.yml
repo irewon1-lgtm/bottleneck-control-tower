@@ -47,7 +47,7 @@ jobs:
           pins={n:hashlib.sha256((root/n).read_bytes()).hexdigest() for n in ('checkpoint.json','e2e-recovery.json',*LATEST_ROOT_STATE) if (root/n).exists()}
           proof=verify_restored(root,pins)
           receipt={'status':'PASS','actual_execution':True,'release':release,'code':verified,'pins':pins,'proof':proof,'checkpoint':{k:v for k,v in c.items() if not isinstance(v,(dict,list))},'production_writes':0,'prediction_performance':'UNVERIFIED'}
-          p=Path(os.environ['RUNNER_TEMP'])/'release-receipt.json';p.write_text(json.dumps(receipt,indent=2)+'\\n')
+          p=Path(os.environ['RUNNER_TEMP'])/'release-receipt.json';p.write_text(json.dumps(receipt,indent=2))
           print('RELEASE_VALIDATED_JSON='+json.dumps(receipt,separators=(',',':')))
           PY
       - uses: actions/upload-artifact@v4
