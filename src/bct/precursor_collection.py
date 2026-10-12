@@ -213,25 +213,47 @@ def verified_stored_snapshot(document,raw,*,metadata_record=None,metadata_raw=No
     return view
 
 
-def stored_documents(root):
-    docs=[]
-    for path in sorted((Path(root)/'documents').glob('*.json')):
-        d=read(path)
-        if d.get('provenance')=='PASS':
+def stored_documents(root, *, quarantine_invalid=False, holds=None):
+    """Verify stored originals. Keep a broken source out of LIVE evidence.
+
+    Ordinary callers retain fail-closed semantics. An automated intake may
+    explicitly quarantine a bad legacy document, record the exact file hash
+    and reason, then continue with independent valid documents. It must never
+    silently treat a failed provenance check as a verified source.
+    """
+    root=Path(root);docs=[]
+    for path in sorted((root/'documents').glob('*.json')):
+        try:
+            d=read(path)
+            if d.get('provenance')!='PASS':
+                continue
             if acquisition.digest(d['body'])!=d['body_sha256'] or d['version']!=d['body_sha256']:
                 raise ValueError('stored original body/version changed')
-            raw=(Path(root)/'raw'/(d['raw_sha256']+'.html')).read_bytes()
-            if acquisition.digest(raw)!=d['raw_sha256']:raise ValueError('stored original HTML changed')
+            raw=(root/'raw'/(d['raw_sha256']+'.html')).read_bytes()
+            if acquisition.digest(raw)!=d['raw_sha256']:
+                raise ValueError('stored original HTML changed')
             metadata_record=d.get('sec_filing_metadata')
-            metadata_raw=(Path(root)/'raw'/(metadata_record['raw_sha256']+'.json')).read_bytes() if metadata_record else None
-            d=verified_stored_snapshot(d,raw,metadata_record=metadata_record,metadata_raw=metadata_raw)
-            # New derived views never overwrite immutable source/version records.
-            # Parser upgrades can reuse a genuinely captured LIVE original as
-            # context. No old BACKFILL original gains LIVE status or a timestamp.
-            fresh=bool(d.get('scope_reader_version')) and d.get('scope_read_mode')=='LIVE_FRESH'
-            docs.append(structure(d,raw,fresh=fresh))
+            metadata_raw=(root/'raw'/(metadata_record['raw_sha256']+'.json')).read_bytes() if metadata_record else None
+            view=verified_stored_snapshot(d,raw,metadata_record=metadata_record,metadata_raw=metadata_raw)
+            # Preserve old immutable bytes. Even a corrected derived view never
+            # inherits a new LIVE timestamp or a previous positive S3 verdict.
+            fresh=bool(view.get('scope_reader_version')) and view.get('scope_read_mode')=='LIVE_FRESH'
+            docs.append(structure(view,raw,fresh=fresh))
+        except (ValueError, KeyError, FileNotFoundError, UnicodeError) as exc:
+            if not quarantine_invalid:
+                raise
+            # A content-bound receipt is append-only. A new bad version is a
+            # distinct receipt; the original saved document remains unchanged.
+            held={'status':'UNVERIFIED_SOURCE_HOLD','source_file':path.name,
+                  'stored_document_sha256':acquisition.digest(path.read_bytes()),
+                  'exception_type':type(exc).__name__,'reason':str(exc)[:512],
+                  'approved_as_evidence':False,'promoted_to_live':False}
+            receipt=root/'source-holds'/(acquisition.digest(json.dumps(held,sort_keys=True,separators=(',',':')))+'.json')
+            if not receipt.exists():
+                put(receipt,held)
+            if holds is not None:
+                holds.append(held)
     return docs
-
 
 def evidence_plan(documents):
     """Complete side is not reacquired; same-source pairs do not complete a side."""
@@ -420,7 +442,8 @@ def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,
             row=read(path)
             if (root/'captures'/(acquisition.digest(row['url'])+'.json')).exists():continue
             seeds.append(capture(root,row['url'],row['document_id'],activation,collected_at=row['collected_at']))
-        docs=stored_documents(root)
+        source_holds: list[dict[str, Any]]=[]
+        docs=stored_documents(root,quarantine_invalid=True,holds=source_holds)
         # Absolute raw-cache paths are rebound after artifact relocation, not evidence values.
         for d in docs:d['raw_path']=str(root/'raw'/(d['raw_sha256']+'.html'))
         # Historical cache rereading is QA only, including its search plans.
@@ -456,7 +479,11 @@ def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,
                 pending=root/'pending'/(req['request_id']+'.json')
                 if not pending.exists():put(pending,r)
             requests.append(r)
-        docs=stored_documents(root)
+        # Avoid a second corpus-wide verified read when no new secondary
+        # original was acquired. The first source-bound views are reusable.
+        if any(d.get('status')=='CAPTURED' for r in requests for d in r['captures']):
+            source_holds=[]
+            docs=stored_documents(root,quarantine_invalid=True,holds=source_holds)
         # The URL/capture ledger is not evidence approval. Only independently
         # validated primary additions may close a side in a LIVE batch.
         validations: dict[str | None,list[dict[str,Any]]]={}
@@ -485,6 +512,10 @@ def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,
                  'new_verified_documents':sum(d['document_id'] in new_ids for d in docs),
                  'context_verified_documents':len(docs),'requests_this_cycle':len(requests),'scope_blocked_events':len(value['blocked']),
                  **stats,'live_execution':execution,'search_statuses':sorted({r['search_status'] for r in requests}),'existing_corpus_reprocessed':0,'engine_hashes':hashes()}
+        # HOLD is not PASS. Visible in the public run summary and preserved
+        # privately with the offending bytes' digest for forensic recovery.
+        summary['unverified_source_holds']=len(source_holds)
+        summary['source_integrity_state']='PARTIAL_HOLD' if source_holds else 'VERIFIED_INPUTS'
         summary['backfill_qa_documents']=len(docs)-len(live_docs)
         summary['scope_reader_version']=scope_reader.VERSION
         summary['additional_bodies_acquired']=sum(d.get('status')=='CAPTURED' for r in requests for d in r['captures'])
