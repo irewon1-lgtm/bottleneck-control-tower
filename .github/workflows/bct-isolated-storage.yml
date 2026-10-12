@@ -2,6 +2,10 @@ name: BCT isolated storage and source validation
 on:
   push:
     branches: [fix/bct-storage-linked-verification-20261012]
+    paths:
+      - src/bct/future_github.py
+      - tests/test_future_github_atomic.py
+      - .github/scripts/bct_isolated_storage_validation.py
   workflow_dispatch:
 permissions:
   contents: write
@@ -42,6 +46,10 @@ jobs:
         if: always()
         with:
           name: bct-isolated-storage-${{ github.run_id }}
-          path: ${{ runner.temp }}/bct-isolated-storage/
+          # QA creates a temporary corpus copy beside its report. Its original
+          # archived input is already preserved; upload only the two receipts.
+          path: |
+            ${{ runner.temp }}/bct-isolated-storage/receipt.json
+            ${{ runner.temp }}/bct-isolated-storage/source-230.json
           retention-days: 30
           if-no-files-found: error
