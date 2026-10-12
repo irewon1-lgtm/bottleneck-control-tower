@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 
 from bct.future_github import GitHubTransport, GitHubRequestError, _raw
 from bct.future_review import queue_summary
-from bct.future_store import store_patch
+from bct.future_store import store_patch, StoreConflict
 from bct.future_worker import _runs, _run_patch
 from bct.recovery_preservation import (verify as verify_preservation, seal,
                                        restore_version_records)
@@ -21,6 +21,44 @@ from bct.recovery_storage_probe import read_generation_at, verify_atomic_recover
 
 def command(*args):
     return subprocess.check_output(args, text=True).strip()
+
+
+def restore_generation(transport, original, tracking, recovered_baseline, trusted, baselines):
+    """Rebase a sealed-record restoration without losing a normal writer."""
+    conflicts: list[dict[str, Any]] = []
+    for attempt in range(3):
+        repaired, receipts = restore_version_records(original.document, recovered_baseline, trusted)
+        for baseline in (*baselines, recovered_baseline):
+            verify_preservation(repaired, tracking.document, baseline)
+        if not receipts:
+            return original, tracking, {'status': 'PASS', 'restored_version_records': [],
+                                        'concurrent_conflicts': conflicts, 'tracking_unchanged': True}
+        try:
+            roots = transport.write_many(
+                {'future-candidates.json': repaired, 'future-tracking.json': tracking.document},
+                {'future-candidates.json': original.sha, 'future-tracking.json': tracking.sha})
+        except (StoreConflict, ValueError) as exc:
+            if not isinstance(exc, StoreConflict) and str(exc) != 'sidecar SHA changed':
+                raise
+            if attempt == 2:
+                raise
+            conflicts.append({'attempt': attempt + 1, 'reason': str(exc)})
+            head = transport.head()
+            original = transport.read_at('future-candidates.json', head)
+            tracking = transport.read_at('future-tracking.json', head)
+            transport.last_commit = head
+            continue
+        saved = transport.last_commit
+        candidate = transport.read_at('future-candidates.json', saved)
+        confirmed_tracking = transport.read_at('future-tracking.json', saved)
+        if candidate.document != repaired or confirmed_tracking.document != tracking.document:
+            raise ValueError('immutable preservation repair readback differs')
+        for baseline in (*baselines, recovered_baseline):
+            verify_preservation(candidate.document, confirmed_tracking.document, baseline)
+        return candidate, confirmed_tracking, {'status': 'PASS', 'published_commit': saved,
+            'root_shas': roots, 'restored_version_records': receipts,
+            'concurrent_conflicts': conflicts, 'tracking_unchanged': True}
+    raise StoreConflict('restoration publication could not acquire a stable generation')
 
 
 def main():
@@ -86,29 +124,15 @@ def main():
                 if not isinstance(trusted_commit,str) or len(trusted_commit)!=40:
                     raise ValueError('sealed trusted generation commit missing') from exc
                 trusted=transport.read_at('future-candidates.json',trusted_commit)
-                repaired,receipts=restore_version_records(
-                    original.document,recovered_baseline,trusted.document)
-                if not receipts:
-                    raise
-                verify_preservation(repaired,tracking.document,preservation_baseline)
+                transport.last_commit = initial_head
+                baselines = [preservation_baseline]
                 if retained_baseline is not None:
-                    verify_preservation(repaired,tracking.document,retained_baseline)
-                verify_preservation(repaired,tracking.document,recovered_baseline)
-                roots=transport.write_many(
-                    {'future-candidates.json':repaired,'future-tracking.json':tracking.document},
-                    {'future-candidates.json':original.sha,'future-tracking.json':tracking.sha})
-                repaired_commit=transport.last_commit
-                confirmed_candidate=transport.read_at('future-candidates.json',repaired_commit)
-                confirmed_tracking=transport.read_at('future-tracking.json',repaired_commit)
-                if confirmed_candidate.document!=repaired or confirmed_tracking.document!=tracking.document:
-                    raise ValueError('immutable preservation repair readback differs')
+                    baselines.append(retained_baseline)
+                confirmed_candidate, confirmed_tracking, restoration = restore_generation(
+                    transport, original, tracking, recovered_baseline, trusted.document, baselines)
                 report['recovered_identity_preservation']=verify_preservation(
                     confirmed_candidate.document,confirmed_tracking.document,recovered_baseline)
-                report['preservation_repair']={
-                    'status':'PASS','trusted_commit':trusted_commit,
-                    'published_commit':repaired_commit,'root_shas':roots,
-                    'restored_version_records':receipts,
-                    'tracking_unchanged':confirmed_tracking.document==tracking.document}
+                report['preservation_repair']={**restoration, 'trusted_commit':trusted_commit}
                 original,tracking=confirmed_candidate,confirmed_tracking
         if retained_baseline is not None:
             report['retained_identity_preservation']=verify_preservation(
