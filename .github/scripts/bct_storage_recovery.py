@@ -123,7 +123,7 @@ def main():
                       tracked_failed_versions=len(identities))
         # A separate branch tests real token permissions and both sidecar paths.
         probe_branch = 'ops/bct-storage-probe-' + os.environ['GITHUB_RUN_ID']
-        transport.requester('POST', '/git/refs', {'ref': 'refs/heads/' + probe_branch, 'sha': refs['future-bottleneck-data']})
+        transport.create_branch(probe_branch, refs['future-bottleneck-data'])
         probe = GitHubTransport(os.environ['GITHUB_REPOSITORY'], probe_branch, os.environ['GITHUB_TOKEN'])
         candidate_test = store_patch(probe, 'future-candidates.json', owner='collection',
             patch={'summary': {'storage_probe_run': report['run_id']}}, operation_id='probe-' + report['run_id'])

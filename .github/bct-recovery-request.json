@@ -25,7 +25,7 @@
   "resume_cache_inventory_sha256": "b9f9cc4e86dfcf625afc76c2d34acb09173c8e8febc6a5e0e72795211cff83cc",
   "retained_seal_sha256": "0d773cb0c9e16283561a6ff72468c8bb6a02aaf7ba8ec522a47ccb887a8cc58a",
   "reader_batch_limit": 5,
-  "reason": "Run actual Stage 0-to-FULL operating revalidation following guarded main release cbe1f488db80f2232dd7ab99c598fe72ef55e41a, zero paid API; all prior bytes/hash pinned and backups preserved.",
+  "reason": "Resume pinned existing journals and source caches; validate linked-blob recovery and bounded immutable metadata cache on standard public CPU runner; no paid APIs.",
   "latest_failed_run": {
     "run_id": "38064145207",
     "artifact_id": 11675168080,
@@ -53,7 +53,7 @@
     },
     "inventory_sha256": "af04dd8ef92789e99ee0eb534da74f0a8c4a654b9421f43504ef6d4ec3ba89fa"
   },
-  "changed_condition": "Actual Gates 0-6 passed on Run38, the validated code tree and release receipt were conditionally published to main, and the next execution may now exercise fresh automatic candidate publication, Pages verification and the complete operating engine from Stage 0.",
-  "full_pipeline": true,
-  "repair_fix_head_sha": "737cf927d9bc3b40ad1dc01502b59b70f61811ff"
+  "changed_condition": "New content-addressed blob publication links objects to an immutable commit before hash readback; actual isolated storage/CAS/rollback validated. Revalidate Gates 0–6 for the exact new code before any main release. Frozen REVIEW drift traced to formatting only; hash-pinned original executable transport matches current AST and preserves old review seals.",
+  "full_pipeline": false,
+  "repair_fix_head_sha": "d340b5a393056a267923955d950d46c8c327cbd3"
 }
