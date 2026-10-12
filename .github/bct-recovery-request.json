@@ -1,27 +1,28 @@
 {
-  "resume_run_id": "38313744311",
-  "resume_artifact_id": 11775694939,
-  "resume_artifact_sha256": "f5fb965f55aebdd28723afd02659e9dd9bce68d7c24c26321d76b43cbfb01c05",
+  "resume_run_id": "38316734425",
+  "resume_artifact_id": 11778321087,
+  "resume_artifact_sha256": "090d9d04749ebd0e7aa611c9af95a4636ee5dfed7398c133601df50c860cf974",
   "resume_file_sha256": {
-    "checkpoint.json": "441de0b3a1d9cb3c330f5b32b87778b9d079e90ca4e07e727d25e296a7b1f451",
-    "source-audit.json": "c3d5f345d23a6376fec77e0c29f60f2ab726cdf2bbf9f41b058f378693e441da",
+    "checkpoint.json": "2568fd76219bcbaa3b0621994300d5640542784c540a475166359fde2c98d24e",
+    "e2e-recovery.json": "f8b9494d221d60ae0f5b8248ad141e5251aef429d6a44123f65e7549907281d7",
+    "source-audit.json": "57a33f92f6767b043609d69351ddcdf70f866810c46fc31fd27080afd2f0e82e",
     "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
     "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
-    "evidence-recovery-observations.json": "690bc9752c0c3c04bb3526aa86415e6cfd6b7df6cbccd3243e2e000df0895d55",
+    "evidence-recovery-observations.json": "179ff02c6a594d2e4005a40fac81144342dc6667041ba367925c91e70d2197dc",
     "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "evidence-recovery-versions.json": "6106da2c81412c9723db1a97fdd36a3b0e366dc0c52410bcb3cca3bb1a7dd8ec",
-    "local-reader-setup.json": "691710926395431ee81ac09d9634124cb086343429698ef7bc5fe7583ee0c58a",
-    "local-reader-probe.json": "e275779ba5fbbb86d18db2b06fdf1d1c2fe47a079b91afaccee08339177a252a",
-    "private-local-reader-execution.jsonl": "99600bbe4985c482dc10e3cd7cf4947c95c231eed69c7080b78533f463fe3c5b",
-    "recovery-preservation-seal.json": "56e0b38490e37f37443f85036020a15df8d52dfec219829465bb91d4cc0a7914",
-    "queue-recovery-versions.json": "4df3b4e3f02309713581d5ea1216e1a4aa0ebf2faf90e539a42a223cc06f8094",
+    "local-reader-setup.json": "d25fb3e2687ec6f18eeb2eb7c28acd711cd67f9b82a097697b5031b4cd8aacef",
+    "local-reader-probe.json": "f897d3c3e2ac9ca264fc9eaaf78cfbb13f0a9f273821908dc3e6f03d8096ad17",
+    "private-local-reader-execution.jsonl": "681f23407dd5b2b3696780f2161e0cbfcaee423de3a6509e077075218587b00d",
+    "recovery-preservation-seal.json": "96159652df38688cc0d136ccaa420765cd9bac75059c1dc87d4893872d1b535c",
+    "queue-recovery-versions.json": "4ab74e890a1eff8ff3034cb473a72d8162681dfd0059aaf00733a036d12d19f6",
     "operating-engine-checkpoint.json": "91010958be23cfe012bd5267bc4d80a1b9b4aa2938ce88abcf1d0fe24cfedb95",
     "operating-publication-request.json": "b7c5f3491723a643ccbaf8397a7a75cd2f7d44b2e3cd5279af0bac9793000117",
     "operating-publication-history.json": "9909a7963ffbda31ba25265237b86e67248c25159b818115fccc3c9957ff84b9",
-    "native-claim-recovery.json": "eee3f412e5aebe8e70df72c27a099a17316515559ba081f8f320342e9ee594dc",
-    "native-claim-history.json": "f1a35c72a5751d5dcdd55a9cd893ee895099174da098070c09489006479766ea"
+    "native-claim-recovery.json": "0be2b880d86e0dcce55edeb709e877e33df31e172f10213016cdfe5db43d9fda",
+    "native-claim-history.json": "0218108bbf6553381d1cc2b5cbefb1f7f6df2b144ae4a55349d3393dd2cd0c8a"
   },
-  "resume_cache_inventory_sha256": "49afd3b2c9131e6fd72332961f2cd14923f1f9fe0506cb8a5e64a9de40de56e3",
+  "resume_cache_inventory_sha256": "6ce00b73ed479cec13961e1a1fc94114218ff73db47313f0cb70076a5ea6b33c",
   "retained_seal_sha256": "0d773cb0c9e16283561a6ff72468c8bb6a02aaf7ba8ec522a47ccb887a8cc58a",
   "reader_batch_limit": 5,
   "reason": "Resume pinned existing journals and source caches; validate linked-blob recovery and bounded immutable metadata cache on standard public CPU runner; no paid APIs.",
@@ -52,12 +53,12 @@
     },
     "inventory_sha256": "af04dd8ef92789e99ee0eb534da74f0a8c4a654b9421f43504ef6d4ec3ba89fa"
   },
-  "changed_condition": "Prior exact code651 Gates failed at final Gate1CAS while newly scheduled RSS38313644101 and normal candidate38313843489 wrote production; actual isolated interruption/CAS/restart/readback/idempotence proof PASS and original preservation Gate0 PASS. No force or original loss. That normal writer is now completed:5nativeSUCCESS,5fullcompletion delta,0paidcalls; all normalmainwriters observed quiet. Preserve latest failedGate journals/cache inventory. Resume same native-extent correction code70843e and same objective/thresholds after actual external writer condition changed.",
-  "full_pipeline": false,
-  "repair_fix_head_sha": "70843e817c25863edadbad0f45e6e9371ae3c1c3",
+  "changed_condition": "Final main d4b3130f8a5c0f2261fa851c7a35cb1c19fd5b5c conditionally mergedPR41 after actual Gates38316734425 and independent SHA/code verification38320839649(234exactfiles). Original native beforeHTTP500 emptygrammarstack, same source afterEOS/DATA_INSUFFICIENT5535; exact stoppederrorhash retry archivesfailure. Actual main auto38321084267 SUCCESS5native/5completions,0paid, queue313completed0processing, published e71c2f9e68ce21893d58505be96597a8389dc125. All normal writers now complete. Prior failed thirdFULL resetstreak0; require three fresh distinct cycles on this unchanged finalmain. Preserve every source/journal/native history pin.",
+  "full_pipeline": true,
+  "repair_fix_head_sha": "00d9fcd3f0bb803576cc4088c81f4e8c305b928f",
   "writer_quiescence": {
-    "observed_at": "2026-10-12T22:27:04.946Z",
+    "observed_at": "2026-10-12T23:46:41.067Z",
     "active_candidate_runs": [],
-    "latest_completed_candidate": 38313843489
+    "latest_completed_candidate": 38321084267
   }
 }
