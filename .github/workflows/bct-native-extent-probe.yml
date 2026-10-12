@@ -1,0 +1,40 @@
+name: BCT actual native extent grammar before and after
+on:
+  push:
+    branches: [fix/bct-native-extent-integrity-20261013]
+    paths: [src/bct/future_local_reader.py, .github/scripts/bct_native_extent_probe.py, .github/workflows/bct-native-extent-probe.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e '.[test]'
+      - name: Reproduce source extent boundary regression
+        run: python -m pytest -q tests/test_future_local_reader.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: future-bottleneck-candidates
+          run-id: 38308762471
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/failed-native
+      - name: Actual failed original source and pinned CPU model before and after
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python .github/scripts/bct_native_extent_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-native-extent-proof-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/bct-native-extent-probe/extent-probe.json
+            ${{ runner.temp }}/bct-native-extent-probe/private-before-http-error.json
+            ${{ runner.temp }}/bct-native-extent-probe/native-server.log
+          retention-days: 30
+          if-no-files-found: error

@@ -19,6 +19,7 @@ from bct.future_worker import run_worker, _runs
 from bct.recovery_auto_reader import eligible
 from bct.recovery_preservation import verify, quarantine_changed_version_judgments, digest
 from bct.recovery_restore import copy_preserved_caches
+from bct.recovery_extent_retry import extent_retry_policy
 from bct_release_guard import verify_release
 from bct_local_reader_probe import setup
 
@@ -120,6 +121,11 @@ def main():
                 return (previous.get('state') == 'ERROR' and previous.get('reason') == 'TimeoutError'
                         and previous.get('run_id') == retries['worker_id']
                         and (item['document_id'], item['body_sha256']) in retry_keys)
+            extent_retry=extent_retry_policy(transport.requester,
+                json.loads(Path('config/bct-native-extent-recovery.json').read_text()),
+                _runs(t.document).values(),cache)
+            def retry_confirmed(item,previous):
+                return retry_timeout(item,previous) or extent_retry(item,previous)
             budget_held = set()
             def ready(item):
                 # Do not let an altered historical judgment be read or promoted.
@@ -138,7 +144,7 @@ def main():
                 return True
             report = run_worker(transport, 'future-candidates.json', 'future-tracking.json',
                 reader=reader, cache_dir=cache, limit=5, max_input_chars=12000,
-                source_eligible=ready, retry_failed=retry_timeout,
+                source_eligible=ready, retry_failed=retry_confirmed,
                 review_mode='API_REVIEW', input_rate=0, output_rate=0)
         after_head = transport.last_commit or transport.head()
         after_c = transport.read_at('future-candidates.json', after_head)
