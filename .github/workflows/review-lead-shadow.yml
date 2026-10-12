@@ -13,7 +13,6 @@ jobs:
   shadow:
     if: >-
       ${{ vars.BCT_REVIEW_SHADOW_ENABLED == 'true' &&
-          github.event.workflow_run.conclusion == 'success' &&
           github.event.workflow_run.head_branch == 'main' &&
           github.event.workflow_run.head_repository.full_name == github.repository &&
           github.event.workflow_run.event != 'pull_request' }}
@@ -35,7 +34,19 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p var/review-handoff var/review-state var/review-source-cache
-          gh run download "$ACQUISITION_RUN_ID" --name precursor-private-cache --dir var/review-source-cache
+          # A failed upstream run can still publish a valid verified cache.
+          # Keep SHADOW independent: read the artifact when it exists; when it
+          # does not, preserve an explicit blocked handoff without pretending
+          # the original evidence was processed.
+          artifact_id=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$ACQUISITION_RUN_ID/artifacts?per_page=100" \
+            --jq '.artifacts[] | select(.name == "precursor-private-cache" and .expired == false) | .id' | head -n 1)
+          if [[ -n "$artifact_id" ]]; then
+            gh run download "$ACQUISITION_RUN_ID" --name precursor-private-cache --dir var/review-source-cache
+            echo "BCT_REVIEW_HANDOFF_AVAILABLE=true" >> "$GITHUB_ENV"
+          else
+            echo "BCT_REVIEW_HANDOFF_AVAILABLE=false" >> "$GITHUB_ENV"
+            echo "REVIEW_LEAD HOLD: verified precursor-private-cache artifact missing for upstream run $ACQUISITION_RUN_ID. Original upstream failure remains unresolved." >> "$GITHUB_STEP_SUMMARY"
+          fi
           python - <<'PYTHON'
           import json, os
           from pathlib import Path
@@ -65,6 +76,7 @@ jobs:
             git archive "$review_sha" | tar -x -C var/review-state
           fi
       - name: Apply frozen REVIEW_LEAD intake in SHADOW
+        if: env.BCT_REVIEW_HANDOFF_AVAILABLE == 'true'
         run: >-
           python -m bct.review_shadow run
           --input var/review-handoff/input.json
