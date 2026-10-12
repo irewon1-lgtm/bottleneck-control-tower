@@ -4,6 +4,7 @@ The shared run claim has no automatic expiry: a crashed owner must be confirmed
 stopped before its claim is released. This avoids overlapping paid model calls.
 """
 import argparse
+from copy import deepcopy
 from collections import Counter
 from datetime import datetime, timezone
 import hashlib
@@ -149,9 +150,11 @@ def run_worker(transport, candidates_path, tracking_path, *, reader, cache_dir,
             if previous.get("state") == "RUNNING":
                 held_states['RUNNING'] += 1
                 continue
-            if previous.get("state") in ("ERROR", "BLOCKED") and not retry_failed:
-                held_states[previous['state']] += 1
-                continue
+            if previous.get("state") in ("ERROR", "BLOCKED"):
+                allowed = retry_failed(item, previous) if callable(retry_failed) else retry_failed
+                if not allowed:
+                    held_states[previous['state']] += 1
+                    continue
             pending.append((item, work_id))
             if len(pending) == limit:
                 break
@@ -168,6 +171,16 @@ def run_worker(transport, candidates_path, tracking_path, *, reader, cache_dir,
                          if x["document_id"] == original["document_id"] and x["body_sha256"] == original["body_sha256"]), None)
             if item is None:
                 continue
+            previous = _runs(tracking).get(work_id, {})
+            if previous.get('state') in ('ERROR', 'BLOCKED'):
+                # A changed-condition retry retains the exact prior failure
+                # before updating the mutable per-version claim state.
+                history_id = 'worker-retry-history-' + _key(work_id, previous)
+                tracking = _patch(transport, tracking_path, {'runs': {history_id: {
+                    'type': 'worker_retry_history', 'work_id': work_id,
+                    'document_id': item['document_id'], 'body_sha256': item['body_sha256'],
+                    'prior_state': deepcopy(previous), 'recorded_at': _now(),
+                }}}, run_id + '-retry-history-' + work_id, tracking)
             tracking = _patch(transport, tracking_path, {"runs": {work_id: {
                 "state": "RUNNING", "run_id": run_id,
                 "document_id": item["document_id"], "body_sha256": item["body_sha256"],
