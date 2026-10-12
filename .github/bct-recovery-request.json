@@ -53,7 +53,7 @@
     },
     "inventory_sha256": "af04dd8ef92789e99ee0eb534da74f0a8c4a654b9421f43504ef6d4ec3ba89fa"
   },
-  "changed_condition": "New content-addressed blob publication links objects to an immutable commit before hash readback; actual isolated storage/CAS/rollback validated. Revalidate Gates 0–6 for the exact new code before any main release. Frozen REVIEW drift traced to formatting only; hash-pinned original executable transport matches current AST and preserves old review seals. Prior run stopped during Git history acquisition, before remote writes. Immutable depth-1 snapshots replace full history fetch; per-ref actual duration is recorded.",
+  "changed_condition": "New content-addressed blob publication links objects to an immutable commit before hash readback; actual isolated storage/CAS/rollback validated. Revalidate Gates 0–6 for the exact new code before any main release. Frozen REVIEW drift traced to formatting only; hash-pinned original executable transport matches current AST and preserves old review seals. Prior run stopped during Git history acquisition, before remote writes. Immutable depth-1 snapshots replace full history fetch; per-ref actual duration is recorded. CAS failure was a real normal-writer advance during the long isolated probe; reproject from a freshly verified immutable pair and use it as CAS parent. The main CPU run completed with 3 real native results, 2 proven 180s timeouts; exact stopped-owner retry receives 600s without changing source, context, output or model.",
   "full_pipeline": false,
-  "repair_fix_head_sha": "49df580fd06fe7bd4f07b9d2ac38c3b53a7e77d3"
+  "repair_fix_head_sha": "d249e2a9837c59f21709d4a68da1f6031905157f"
 }

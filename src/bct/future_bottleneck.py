@@ -609,7 +609,10 @@ def main():
     result = run(args.db, args.output, limit=args.limit, cache_dir=args.cache_dir, patch_output=args.patch_output,
                  tracking_path=args.tracking, trigger=args.trigger, trigger_id=args.trigger_id, document_ids=args.document_id,
                  detection_mode=args.detection_mode)
-    print(json.dumps(result["summary"]))
+    # Full historical observations/refs remain in the saved sidecar. Repeating
+    # them in every CLI log produced megabytes of duplicate output per cycle.
+    print(json.dumps({key: value for key, value in result['summary'].items()
+                      if not isinstance(value, (dict, list))}))
 
 
 if __name__ == "__main__":
