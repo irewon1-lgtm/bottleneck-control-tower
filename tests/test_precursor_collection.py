@@ -235,3 +235,40 @@ def test_cached_publisher_cannot_be_changed_with_body_hash_unchanged(tmp_path,tr
     record['origin_publisher']='Fake independent publisher'
     path.write_text(json.dumps(record))
     with pytest.raises(ValueError,match='provenance no longer bound'):c.stored_documents(tmp_path)
+
+
+def test_automated_cycle_quarantines_corrupt_prior_original_and_keeps_new_capture(tmp_path, transport):
+    calls,_=transport
+    first=c.cycle(tmp_path,manifest(['buyer']))
+    original_path=next((tmp_path/'documents').glob('*.json'))
+    bad=c.read(original_path)
+    bad['origin_publisher']='forged old publisher'
+    original_path.write_text(json.dumps(bad,sort_keys=True))
+    # The explicit caller API stays fail closed (no silent source approval).
+    with pytest.raises(ValueError,match='provenance no longer bound'):
+        c.stored_documents(tmp_path)
+    quarantined_bytes=original_path.read_bytes()
+    second=c.cycle(tmp_path,manifest(['buyer','maker']))
+    assert second['new_verified_documents']==1
+    assert second['source_integrity_state']=='PARTIAL_HOLD'
+    assert second['unverified_source_holds']==1
+    assert len(list((tmp_path/'source-holds').glob('*.json')))==1
+    entry=c.read(next((tmp_path/'source-holds').glob('*.json')))
+    assert entry['status']=='UNVERIFIED_SOURCE_HOLD'
+    assert entry['approved_as_evidence'] is False
+    assert entry['promoted_to_live'] is False
+    assert entry['source_file']==original_path.name
+    assert original_path.read_bytes()==quarantined_bytes
+    assert 'https://maker.example/doc' in calls
+    # Same manifest restart is exactly idempotent and does not multiply holds.
+    assert c.cycle(tmp_path,manifest(['buyer','maker']))==second
+    assert len(list((tmp_path/'source-holds').glob('*.json')))==1
+
+
+def test_stored_documents_clean_quarantine_mode_matches_strict_mode(tmp_path,transport):
+    c.cycle(tmp_path,manifest(['buyer','maker']))
+    holds=[]
+    tolerant=c.stored_documents(tmp_path,quarantine_invalid=True,holds=holds)
+    strict=c.stored_documents(tmp_path)
+    assert holds==[]
+    assert tolerant==strict

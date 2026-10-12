@@ -17,7 +17,7 @@ from bct.future_body import read_cached_body
 from bct.future_local_reader import LocalCPUQuickReader
 from bct.future_worker import run_worker
 from bct.recovery_auto_reader import eligible
-from bct.recovery_preservation import verify
+from bct.recovery_preservation import verify, quarantine_changed_version_judgments, digest
 from bct.recovery_restore import copy_preserved_caches
 from bct_release_guard import verify_release
 from bct_local_reader_probe import setup
@@ -57,7 +57,22 @@ def main():
     head = transport.head()
     c = transport.read_at('future-candidates.json', head)
     t = transport.read_at('future-tracking.json', head)
-    verify(c.document, t.document, baseline); verify(c.document, t.document, retained)
+    verify(c.document, t.document, baseline)
+    # The retained seal can be older than later intake. Report every changed
+    # historic judgment, but do not delete or silently approve any version.
+    # The unchanged identities, old reviews and completion records remain
+    # strictly pinned by verify() before running the native reader.
+    retained_guard, historic_holds = quarantine_changed_version_judgments(
+        c.document, t.document, retained)
+    held_versions={(r['document_id'],r['body_sha256']) for r in historic_holds}
+    original_held_digests={(r['document_id'],r['body_sha256']):r['observed_record_sha256']
+                           for r in historic_holds}
+    if historic_holds:
+        (root/'historical-version-holds.json').write_text(
+            json.dumps({'state':'PARTIAL_UNVERIFIED_HISTORY','records':historic_holds},
+                       ensure_ascii=False,indent=2)+'\n')
+        print(json.dumps({'integrity_state':'PARTIAL_UNVERIFIED_HISTORY',
+                          'quarantined_versions':len(historic_holds)}),flush=True)
     config = json.loads(Path('config/bct-local-reader.json').read_text())
     process = None
     returned = []
@@ -85,6 +100,11 @@ def main():
             reader = LocalCPUQuickReader(setup_receipt, receipt_observer=observe)
             budget_held = set()
             def ready(item):
+                # Do not let an altered historical judgment be read or promoted.
+                # Old sealed judgments remain available for a separate
+                # content-addressed, trusted-generation repair.
+                if (item['document_id'],item.get('body_sha256')) in held_versions:
+                    return False
                 if not eligible(item, observations, cache): return False
                 body = read_cached_body(cache, item['body_sha256'])
                 payload = {'document_id': item['document_id'], 'title': item.get('title'),
@@ -101,12 +121,21 @@ def main():
         after_head = transport.last_commit or transport.head()
         after_c = transport.read_at('future-candidates.json', after_head)
         after_t = transport.read_at('future-tracking.json', after_head)
-        verify(after_c.document, after_t.document, baseline); verify(after_c.document, after_t.document, retained)
+        verify(after_c.document, after_t.document, baseline)
+        verify(after_c.document, after_t.document, retained_guard)
+        for (document_id, body_sha256), old_digest in original_held_digests.items():
+            current=after_c.document.get('results',{}).get(document_id,{}).get(
+                'versions',{}).get(body_sha256)
+            if digest(current)!=old_digest:
+                raise ValueError('quarantined historical judgment changed during automatic reading')
         report.update(run_id=os.environ['GITHUB_RUN_ID'], release_proof=release_proof,
             actual_returned_native_calls=len(returned), paid_fallback_calls=0,
             source_eligibility='EXACT_FULL_PROVENANCE_OR_VERIFIED_RECOVERED_SOURCE',
             input_budget_held_versions=[{'document_id': d, 'body_sha256': h} for d, h in sorted(budget_held)],
-            prediction_performance='UNVERIFIED')
+            prediction_performance='UNVERIFIED',
+            historical_judgment_holds=len(historic_holds),
+            historical_judgment_state='PARTIAL_UNVERIFIED_HISTORY' if historic_holds else 'PASS',
+            full_clean_status='BLOCKED_HISTORICAL_DRIFT' if historic_holds else 'ELIGIBLE_FOR_VERIFICATION')
         (root/'automatic-reader-report.json').write_text(json.dumps(report, indent=2)+'\n')
         passed = (report.get('state') == 'FINISHED' and report.get('summary_saved') is True
             and not report.get('counts', {}).get('ERROR') and not report.get('counts', {}).get('BLOCKED')

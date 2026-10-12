@@ -10,7 +10,16 @@ def run(manifest, root, *, search_endpoint=None, live_store=None):
     completed=collection.read(Path(__file__).resolve().parents[2]/'config/precursor-completed-exclusions.json')
     ids=set(completed['document_ids']);urls=set(completed['urls'])
     docs=[d for d in manifest.get('documents',[]) if d['document_id'] not in ids and d['url'] not in urls];summaries=[]
-    for start in range(0,max(1,len(docs)),100):
+    if not docs:
+        # A no-new RSS window must not reparse thousands of preserved articles.
+        # This is a true no-op, not a successful scan of previous sources.
+        return [{'new_verified_documents':0,'scope_complete_events':0,
+                 'independent_demand_supply_pairs':[],
+                 'common_future_window_pairs':[],'synthesized_targets':0,
+                 'early_preflight':0,'live_execution':{'state':'NO_NEW_DOCUMENTS','frozen':0},
+                 'source_integrity_state':'NOT_SCANNED_NO_NEW_DOCUMENTS',
+                 'unverified_source_holds':0}]
+    for start in range(0,len(docs),100):
         batch={**manifest,'documents':docs[start:start+100],'batch_number':start//100+1}
         summaries.append(collection.cycle(root,batch,search_endpoint=search_endpoint,live_store=live_store))
     return summaries
@@ -34,6 +43,8 @@ if __name__=='__main__':
             'early_frozen':summaries[-1]['live_execution']['frozen'],'baseline_reprocessed':0}
     public.update({k:summaries[-1].get(k,'LEGACY_RECEIPT_NO_REPROCESSING' if k=='scope_reader_version' else 0) for k in ('scope_reader_version','backfill_qa_documents',
                   'additional_bodies_acquired','valid_additional_primary_documents')})
+    public['source_integrity_state']=summaries[-1].get('source_integrity_state','UNVERIFIED')
+    public['unverified_source_holds']=summaries[-1].get('unverified_source_holds',0)
     public['evidence_graph']=summaries[-1].get('evidence_graph',{})
     public['graph_early_preflight']=summaries[-1].get('graph_early_preflight',0)
     public['graph_early_frozen']=summaries[-1].get('graph_live_execution',{}).get('frozen',0)
