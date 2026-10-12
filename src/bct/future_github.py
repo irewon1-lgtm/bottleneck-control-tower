@@ -4,6 +4,7 @@ import base64
 import hashlib
 import json
 import os
+import time
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError
@@ -37,20 +38,26 @@ def _payload(branch, raw, expected_sha):
 
 
 def _shards(document):
-    fields, items = [], []
+    fields = []
     for field, value in document.items():
         kind = 'dict' if isinstance(value, dict) else 'list' if isinstance(value, list) else 'value'
         fields.append({'name': field, 'kind': kind})
-        entries = value.items() if kind == 'dict' else enumerate(value) if kind == 'list' else [(None, value)]
-        for key, entry in entries:
-            items.append(json.dumps({'field': field, 'key': key, 'value': entry},
-                                    ensure_ascii=False, allow_nan=False, separators=(',', ':')).encode())
+    def items():
+        # Serialize once while packing, without retaining a second full corpus
+        # of individual encoded records alongside the finished shard bytes.
+        for descriptor in fields:
+            field, kind = descriptor['name'], descriptor['kind']
+            value = document[field]
+            entries = value.items() if kind == 'dict' else enumerate(value) if kind == 'list' else [(None, value)]
+            for key, entry in entries:
+                yield json.dumps({'field': field, 'key': key, 'value': entry},
+                                 ensure_ascii=False, allow_nan=False, separators=(',', ':')).encode()
     prefix = ('{"format":"' + SHARD_FORMAT + '","items":[').encode()
     suffix = b']}\n'
     chunks = []
     current: list[bytes] = []
     size = len(prefix) + len(suffix)
-    for item in items:
+    for item in items():
         if len(prefix) + len(item) + len(suffix) > MAX_SHARD_BYTES:
             raise ValueError('one data item exceeds the shard limit; source left unchanged')
         added = len(item) + bool(current)
@@ -277,7 +284,34 @@ class GitHubTransport(LegacyGitHubTransport):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._verified_blobs = {}
+        self._staged_blobs = {}
+        self.retry_observations = []
         self.last_commit = None
+
+    def _retry_object(self, method, suffix, payload=None):
+        # Blob creation is content-addressed and idempotent. Never retry ref
+        # updates or other mutations with an uncertain outcome.
+        for attempt in range(3):
+            try:
+                return self.requester(method, suffix, payload)
+            except (FileNotFoundError, GitHubRequestError) as exc:
+                retryable = (isinstance(exc, FileNotFoundError) and method == 'GET'
+                             or isinstance(exc, GitHubRequestError)
+                             and exc.details.get('category') == 'GITHUB_SERVICE_ERROR')
+                self.retry_observations.append({'method': method, 'endpoint': suffix,
+                    'attempt': attempt + 1, 'error_type': type(exc).__name__,
+                    'details': exc.details if isinstance(exc, GitHubRequestError) else {'status': 404}})
+                if not retryable or attempt == 2:
+                    raise
+                time.sleep(attempt + 1)
+
+    def _read_blob_bytes(self, blob_sha):
+        value = self._retry_object('GET', '/git/blobs/' + blob_sha)
+        raw = base64.b64decode(value['content'])
+        actual = hashlib.sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest()
+        if actual != blob_sha or value.get('sha') != blob_sha:
+            raise ValueError('GitHub staged blob and SHA disagree')
+        return raw
 
     def _blob(self, sha):
         if sha not in self._verified_blobs:
@@ -328,10 +362,16 @@ class GitHubTransport(LegacyGitHubTransport):
 
     def _create_verified_blob(self, raw):
         expected = hashlib.sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest()
-        value = self.requester('POST', '/git/blobs',
+        if expected in self._staged_blobs:
+            return expected
+        value = self._retry_object('POST', '/git/blobs',
                                {'encoding': 'base64', 'content': base64.b64encode(raw).decode()})
-        if value['sha'] != expected or self._blob(expected) != raw:
-            raise ValueError('created blob readback mismatch')
+        if value['sha'] != expected:
+            raise ValueError('created blob SHA mismatch')
+        # A successful POST does not establish immediate GET visibility for an
+        # unattached object. Link it to an immutable commit, then verify remote
+        # bytes before exposing that commit through a branch ref.
+        self._staged_blobs[expected] = raw
         return expected
 
     def write(self, path, document, expected_sha):
@@ -380,6 +420,7 @@ class GitHubTransport(LegacyGitHubTransport):
         if (not documents or set(documents)!=set(expected_shas)
                 or set(documents)-{'future-candidates.json','future-tracking.json'}):
             raise ValueError('unapproved sidecar generation paths')
+        self._staged_blobs = {}
         head=self.last_commit or self.head();previous={};roots={};changed=[]
         # Check every source SHA before making any blobs. A stale tracking
         # base must not publish an independently fresh candidate projection.
@@ -400,6 +441,13 @@ class GitHubTransport(LegacyGitHubTransport):
         tree = self.requester('POST', '/git/trees', {'base_tree': commit['tree']['sha'], 'tree': entries})
         saved = self.requester('POST', '/git/commits', {'message': 'Persist verified BCT sidecar generation',
                               'tree': tree['sha'], 'parents': [head]})
+        for sha, expected in self._staged_blobs.items():
+            if self._blob(sha) != expected:
+                raise ValueError('linked blob readback mismatch')
+        for entry in entries:
+            if self._root(entry['path'], saved['sha'])[1] != entry['sha']:
+                raise ValueError('linked commit path readback mismatch')
+        self._staged_blobs.clear()
         try:
             # The non-forced ref update is the CAS: a sibling commit produced
             # by another writer is rejected by GitHub.  A pre-PATCH ref GET is

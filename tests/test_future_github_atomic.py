@@ -176,8 +176,89 @@ def test_concurrent_ref_move_is_rejected_and_preserving_rebase_succeeds():
 def test_corrupt_blob_never_publishes():
     remote = GitRemote({});t = remote.transport();old = t.read(PATH);remote.corrupt = True
     with pytest.raises(ValueError):
-        t.write(PATH, {'results': {'new': 1}}, old.sha)
+        t.write(PATH, {'results': {'new': {'id': 'new'}}}, old.sha)
     assert remote.head == 'c0'
+
+
+def test_new_blobs_are_linked_and_verified_before_ref_move(monkeypatch):
+    remote = GitRemote({})
+    original = remote.request
+    created = set()
+    delays = []
+    def request(method, suffix, payload=None):
+        if method == 'GET' and suffix.startswith('/git/blobs/'):
+            sha = suffix.rsplit('/', 1)[1]
+            if sha in created:
+                # GitHub can withhold unattached objects. Require a commit to
+                # make them reachable, and model one propagation delay too.
+                linked = any(sha in remote.trees[c['tree']['sha']].values()
+                             for c in remote.commits.values())
+                if not linked or sha not in delays:
+                    delays.append(sha)
+                    raise FileNotFoundError('object not visible')
+        value = original(method, suffix, payload)
+        if method == 'POST' and suffix == '/git/blobs':
+            created.add(value['sha'])
+        return value
+    sleeps = []
+    monkeypatch.setattr(storage.time, 'sleep', sleeps.append)
+    t = storage.GitHubTransport('owner/repo', 'test', 'token', requester=request)
+    before = t.read(PATH)
+    document = {'results': {'new': {'id': 'new'}}}
+    t.write(PATH, document, before.sha)
+    assert t.read_at(PATH, remote.head).document == document
+    commit_at = remote.calls.index(('POST', '/git/commits'))
+    ref_at = remote.calls.index(('PATCH', '/git/refs/heads/test'))
+    for sha in created:
+        assert commit_at < remote.calls.index(('GET', '/git/blobs/' + sha)) < ref_at
+    assert sleeps and all(delay == 1 for delay in sleeps)
+
+
+def test_blob_service_retry_is_bounded_and_permission_failures_do_not_retry(monkeypatch):
+    remote = GitRemote({})
+    original = remote.request
+    failed = False
+    def request(method, suffix, payload=None):
+        nonlocal failed
+        if method == 'POST' and suffix == '/git/blobs' and not failed:
+            failed = True
+            raise storage.GitHubRequestError({'category': 'GITHUB_SERVICE_ERROR', 'status': 500})
+        return original(method, suffix, payload)
+    sleeps = []
+    monkeypatch.setattr(storage.time, 'sleep', sleeps.append)
+    t = storage.GitHubTransport('owner/repo', 'test', 'token', requester=request)
+    t.write(PATH, {'results': {'new': {'id': 'new'}}}, t.read(PATH).sha)
+    assert sleeps == [1] and len(t.retry_observations) == 1
+    for category in ('ACCESS_DENIED', 'PRIMARY_RATE_LIMIT'):
+        count = []
+        def denied(*args):
+            count.append(args)
+            raise storage.GitHubRequestError({'category': category, 'status': 403})
+        t = storage.GitHubTransport('owner/repo', 'test', 'token', requester=denied)
+        with pytest.raises(storage.GitHubRequestError):
+            t._create_verified_blob(b'new')
+        assert len(count) == 1
+
+
+def test_permanently_missing_linked_blob_never_moves_ref(monkeypatch):
+    remote = GitRemote({})
+    original = remote.request
+    t = remote.transport()
+    before = t.read(PATH)
+    reads = []
+    def request(method, suffix, payload=None):
+        if method == 'GET' and suffix.startswith('/git/blobs/'):
+            reads.append(suffix)
+            raise FileNotFoundError('still absent')
+        return original(method, suffix, payload)
+    t.requester = request
+    sleeps = []
+    monkeypatch.setattr(storage.time, 'sleep', sleeps.append)
+    with pytest.raises(FileNotFoundError):
+        t.write(PATH, {'results': {'new': {'id': 'new'}}}, before.sha)
+    assert len(reads) == 3 and sleeps == [1, 2]
+    assert remote.head == 'c0'
+    assert not any(method == 'PATCH' for method, _ in remote.calls)
 
 
 def test_response_diagnostics_distinguish_missing_header_and_rate_limit():
