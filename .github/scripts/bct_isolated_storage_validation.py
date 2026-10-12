@@ -22,7 +22,7 @@ def main():
     output = Path(os.environ['RUNNER_TEMP']) / 'bct-isolated-storage'
     output.mkdir(exist_ok=True)
     source = GitHubTransport(repository, 'future-bottleneck-data', token)
-    calls = Counter()
+    calls: Counter[str] = Counter()
     original = source.requester
 
     def counted(method, suffix, payload=None):

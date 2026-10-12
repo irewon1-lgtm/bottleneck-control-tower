@@ -284,6 +284,7 @@ class GitHubTransport(LegacyGitHubTransport):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._verified_blobs = {}
+        self._immutable_roots = {}
         self._staged_blobs = {}
         self.retry_observations = []
         self.last_commit = None
@@ -325,11 +326,20 @@ class GitHubTransport(LegacyGitHubTransport):
         return self.requester('GET', '/git/ref/heads/' + quote(self.branch, safe=''))['object']['sha']
 
     def _root(self, path, head):
+        key = (path, head)
+        if key in self._immutable_roots:
+            raw, sha = self._immutable_roots[key]
+            return (self._blob(sha) if raw is None else raw), sha
         value = self.requester('GET', '/contents/' + quote(path) + '?ref=' + head)
         raw = (base64.b64decode(value['content']) if value.get('encoding') == 'base64'
                else self._blob(value['sha']))
         if hashlib.sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest() != value['sha']:
             raise ValueError('GitHub content and SHA disagree')
+        if len(self._immutable_roots) >= 16:
+            self._immutable_roots.pop(next(iter(self._immutable_roots)))
+        # Large roots already live in the bounded verified-blob cache; keeping
+        # only their SHA here cannot pin another historical full document.
+        self._immutable_roots[key] = (None if len(raw) > 1024 * 1024 else raw, value['sha'])
         return raw, value['sha']
 
     def read_at(self, path, commit_sha):
@@ -444,8 +454,13 @@ class GitHubTransport(LegacyGitHubTransport):
         for sha, expected in self._staged_blobs.items():
             if self._blob(sha) != expected:
                 raise ValueError('linked blob readback mismatch')
+        linked = self.requester('GET', '/git/trees/' + tree['sha'] + '?recursive=1')
+        if linked.get('truncated'):
+            raise ValueError('complete linked tree required before publication')
+        paths = {entry['path']: entry['sha'] for entry in linked['tree']
+                 if entry['type'] == 'blob'}
         for entry in entries:
-            if self._root(entry['path'], saved['sha'])[1] != entry['sha']:
+            if paths.get(entry['path']) != entry['sha']:
                 raise ValueError('linked commit path readback mismatch')
         self._staged_blobs.clear()
         try:

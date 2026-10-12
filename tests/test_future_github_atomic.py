@@ -37,6 +37,11 @@ class GitRemote:
             return {'object': {'sha': self.head}}
         if method == 'GET' and suffix.startswith('/git/commits/'):
             return self.commits[suffix.rsplit('/', 1)[1]]
+        if method == 'GET' and suffix.startswith('/git/trees/'):
+            key = suffix.split('?', 1)[0].rsplit('/', 1)[1]
+            return {'truncated': False, 'tree': [
+                {'path': path, 'sha': sha, 'type': 'blob'}
+                for path, sha in self.trees[key].items()]}
         if method == 'GET' and suffix.startswith('/contents/'):
             path, ref = suffix[len('/contents/'):].split('?ref=')
             sha = self.trees[self.commits[ref]['tree']['sha']][unquote(path)]
