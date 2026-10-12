@@ -482,7 +482,7 @@ def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,
         # Avoid a second corpus-wide verified read when no new secondary
         # original was acquired. The first source-bound views are reusable.
         if any(d.get('status')=='CAPTURED' for r in requests for d in r['captures']):
-            source_holds=[]
+            source_holds: list[dict[str, Any]]=[]
             docs=stored_documents(root,quarantine_invalid=True,holds=source_holds)
         # The URL/capture ledger is not evidence approval. Only independently
         # validated primary additions may close a side in a LIVE batch.
