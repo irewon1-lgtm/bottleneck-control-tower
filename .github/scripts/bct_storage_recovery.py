@@ -182,35 +182,43 @@ def main():
         # reading may legitimately advance production in that window. Project
         # from the latest immutable pair, never from the pre-probe generation.
         # The final non-forced CAS still rejects a later concurrent writer.
-        production_base = transport.head()
-        report['projection_generation'] = production_base
-        generation = read_generation_at(transport, production_base)
-        original = generation['future-candidates.json']
-        tracking = generation['future-tracking.json']
-        transport.last_commit = production_base  # verified pair is the CAS parent
-        verify_preservation(original.document, tracking.document, preservation_baseline)
-        if retained_baseline is not None:
-            verify_preservation(original.document, tracking.document, retained_baseline)
-        if recovered_seal.exists():
-            verify_preservation(original.document, tracking.document, recovered_baseline)
         report['baseline_queue_before_probe'] = before
-        before = queue_summary(original.document, tracking.document)
-        report['baseline_queue'] = before
-        (root/'recovery-preservation-seal.json').write_text(
-            json.dumps(seal(original.document, tracking.document), ensure_ascii=False, indent=2)+'\n')
-        candidates_path, tracking_path = root / 'future-candidates.json', root / 'future-tracking.json'
-        candidates_path.write_bytes(_raw(original.document));tracking_path.write_bytes(_raw(tracking.document))
-        subprocess.run(['python', '.github/scripts/future_queue_snapshot.py', '--candidates', str(candidates_path),
-                        '--tracking', str(tracking_path), '--output-dir', str(root)], check=True,
-                       stdout=(root / 'queue-projection.log').open('w'))
-        final = json.loads(candidates_path.read_text())
-        # The local script composes owned bundle/queue patches. Publish their
-        # combined final state once, so no intermediate projection is visible.
-        if set(final['results']) != set(original.document['results']):
-            raise RuntimeError('candidate set changed during storage repair')
-        if final['results'] != original.document['results']:
-            raise RuntimeError('source records changed during storage repair')
-        transport.write('future-candidates.json', final, original.sha)
+        for attempt in range(3):
+            production_base = transport.head()
+            report['projection_generation'] = production_base
+            generation = read_generation_at(transport, production_base)
+            original = generation['future-candidates.json']
+            tracking = generation['future-tracking.json']
+            transport.last_commit = production_base  # verified pair is the CAS parent
+            verify_preservation(original.document, tracking.document, preservation_baseline)
+            if retained_baseline is not None:
+                verify_preservation(original.document, tracking.document, retained_baseline)
+            if recovered_seal.exists():
+                verify_preservation(original.document, tracking.document, recovered_baseline)
+            before = queue_summary(original.document, tracking.document)
+            report['baseline_queue'] = before
+            (root/'recovery-preservation-seal.json').write_text(
+                json.dumps(seal(original.document, tracking.document), ensure_ascii=False, indent=2)+'\n')
+            candidates_path, tracking_path = root / 'future-candidates.json', root / 'future-tracking.json'
+            candidates_path.write_bytes(_raw(original.document));tracking_path.write_bytes(_raw(tracking.document))
+            subprocess.run(['python', '.github/scripts/future_queue_snapshot.py', '--candidates', str(candidates_path),
+                            '--tracking', str(tracking_path), '--output-dir', str(root)], check=True,
+                           stdout=(root / 'queue-projection.log').open('w'))
+            final = json.loads(candidates_path.read_text())
+            # The local script composes owned bundle/queue patches. Publish their
+            # combined final state once, so no intermediate projection is visible.
+            if set(final['results']) != set(original.document['results']):
+                raise RuntimeError('candidate set changed during storage repair')
+            if final['results'] != original.document['results']:
+                raise RuntimeError('source records changed during storage repair')
+            try:
+                transport.write('future-candidates.json', final, original.sha)
+            except StoreConflict as exc:
+                report.setdefault('projection_conflicts', []).append({'attempt': attempt+1, 'reason': str(exc)})
+                if attempt == 2:
+                    raise
+                continue
+            break
         # GitHub may briefly serve the old mutable ref after a successful
         # fast-forward. Verify the immutable commit returned by the atomic
         # publisher; write_many already verified the ref-update response.
