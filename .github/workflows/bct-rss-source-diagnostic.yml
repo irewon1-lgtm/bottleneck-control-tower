@@ -1,0 +1,65 @@
+name: BCT read-only RSS source diagnosis
+on:
+  push:
+    branches: [ops/bct-rss-source-diagnostic-20261013]
+    paths: [.github/workflows/bct-rss-source-diagnostic.yml]
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: Read eight failed feeds without database writes
+        run: |
+          python - <<'PY'
+          import hashlib, json, os, socket
+          from concurrent.futures import ThreadPoolExecutor
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from urllib.parse import urlsplit
+          import xml.etree.ElementTree as ET
+          from bct.collectors.rss.cli import load_feeds
+          from bct.collectors.rss.collector import RSSTransport, parse_feed
+          feeds = load_feeds(Path('rss_feeds.yaml'))
+          selected = ['EIA Today in Energy', 'USGS Minerals News', 'DOE Carbon Capture',
+            'DOE Fossil techlines', 'DOE Fossil clean coal news', 'DOE Fossil oil natural gas news',
+            'DOE Fossil petroleum reserves news', 'DOE Fossil blog']
+          output = Path(os.environ['RUNNER_TEMP'])/'rss-source-probe'
+          output.mkdir()
+          def probe(name):
+            url = feeds[name]
+            row = {'feed': name, 'url': url, 'state': 'HOLD', 'database_writes': 0}
+            try:
+              row['address_families'] = sorted(set(str(x[0]) for x in socket.getaddrinfo(urlsplit(url).hostname, 443)))
+              raw = RSSTransport().get(url)
+              digest = hashlib.sha256(raw).hexdigest()
+              (output/(digest+'.xml')).write_bytes(raw)
+              row.update(response_bytes=len(raw), response_sha256=digest)
+              try:
+                root = ET.fromstring(raw)
+                row['feed_dates'] = [x.text for x in root.iter() if x.tag.rsplit('}',1)[-1] in ('pubDate','published','updated','date')][:20]
+              except ET.ParseError:
+                row['xml_state'] = 'INVALID_XML'
+              items = parse_feed(raw, 20)
+              row.update(state='AVAILABLE', parsed_entries=len(items))
+            except Exception as exc:
+              row.update(error_type=type(exc).__name__, error=str(exc)[:500])
+            return row
+          records = list(ThreadPoolExecutor(max_workers=4).map(probe, selected))
+          report = {'run_id': os.environ['GITHUB_RUN_ID'], 'code_sha': os.environ['GITHUB_SHA'],
+            'observed_at': datetime.now(timezone.utc).isoformat(), 'database_writes': 0, 'records': records}
+          (output/'report.json').write_text(json.dumps(report, indent=2)+'\n')
+          print(json.dumps(report))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bct-rss-source-diagnosis-${{ github.run_id }}
+          path: ${{ runner.temp }}/rss-source-probe
+          retention-days: 30
+          if-no-files-found: error
