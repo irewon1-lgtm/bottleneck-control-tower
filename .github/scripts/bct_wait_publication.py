@@ -19,7 +19,8 @@ def dispatch_and_wait(root, transport, *, deadline):
         proof = json.loads(path.read_text())
         if not str(proof.get('run_id', '')).isdigit():
             raise ValueError('publication request has invalid execution')
-        if proof.get('main_sha') != main:
+        if (proof.get('main_sha') != main
+                or proof.get('state') == 'COMPLETED' and proof['run_id'] != os.environ['GITHUB_RUN_ID']):
             history_path = root/'operating-publication-history.json'
             history = json.loads(history_path.read_text()) if history_path.exists() else []
             if proof not in history:
