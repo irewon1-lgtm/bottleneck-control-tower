@@ -248,7 +248,7 @@ def stored_documents(root, *, quarantine_invalid=False, holds=None):
                   'stored_document_sha256':acquisition.digest(path.read_bytes()),
                   'exception_type':type(exc).__name__,'reason':str(exc)[:512],
                   'approved_as_evidence':False,'promoted_to_live':False}
-            receipt=root/'source-holds'/(acquisition.digest(held)+'.json')
+            receipt=root/'source-holds'/(acquisition.digest(json.dumps(held,sort_keys=True,separators=(',',':')))+'.json')
             if not receipt.exists():
                 put(receipt,held)
             if holds is not None:
