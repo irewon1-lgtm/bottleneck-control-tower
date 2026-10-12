@@ -266,6 +266,34 @@ def test_permanently_missing_linked_blob_never_moves_ref(monkeypatch):
     assert not any(method == 'PATCH' for method, _ in remote.calls)
 
 
+@pytest.mark.parametrize('created_despite_error', [False, True])
+def test_uncertain_branch_creation_is_reconciled_before_retry(monkeypatch, created_despite_error):
+    seed = 'a' * 40
+    heads = {}
+    calls = []
+    def request(method, suffix, payload=None):
+        calls.append(method)
+        if method == 'GET':
+            if 'test' not in heads:
+                raise FileNotFoundError('absent')
+            return {'object': {'sha': heads['test']}}
+        if calls.count('POST') == 1:
+            if created_despite_error:
+                heads['test'] = seed
+            raise storage.GitHubRequestError({'category': 'GITHUB_SERVICE_ERROR', 'status': 500})
+        heads['test'] = seed
+        return {'object': {'sha': seed}}
+    monkeypatch.setattr(storage.time, 'sleep', lambda _: None)
+    t = storage.GitHubTransport('owner/repo', 'source', 'token', requester=request)
+    assert t.create_branch('test', seed) == seed
+    assert calls == (['GET', 'POST', 'GET'] if created_despite_error
+                     else ['GET', 'POST', 'GET', 'POST'])
+    heads['test'] = 'b' * 40
+    with pytest.raises(StoreConflict):
+        t.create_branch('test', seed)
+    assert calls[-1] == 'GET'
+
+
 def test_response_diagnostics_distinguish_missing_header_and_rate_limit():
     no_header = storage.error_details('PUT', '/contents/a', 403, {}, b'{"message":"Forbidden"}')
     assert no_header['category'] == 'UNCLASSIFIED'

@@ -46,7 +46,7 @@ def main():
         receipt['historic_preservation'] = verify(candidates, tracking, json.loads(
             Path('config/bct-recovery-preservation.json').read_text()))
         branch = 'ops/bct-storage-probe-' + run_id
-        counted('POST', '/git/refs', {'ref': 'refs/heads/' + branch, 'sha': head})
+        source.create_branch(branch, head)
         probe = GitHubTransport(repository, branch, token, requester=counted)
         receipt['probe_branch'] = branch
         receipt['atomic_recovery'] = verify_atomic_recovery(probe, run_id)

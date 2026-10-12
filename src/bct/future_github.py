@@ -325,6 +325,47 @@ class GitHubTransport(LegacyGitHubTransport):
     def head(self):
         return self.requester('GET', '/git/ref/heads/' + quote(self.branch, safe=''))['object']['sha']
 
+    def create_branch(self, branch, commit_sha):
+        """Create an exact new ref, reconciling a service error before retry.
+
+        This cannot move or overwrite an existing branch. A same-SHA existing
+        ref is an acknowledged creation; a different SHA is a conflict.
+        """
+        suffix = '/git/ref/heads/' + quote(branch, safe='')
+        def observed():
+            try:
+                actual = self.requester('GET', suffix)['object']['sha']
+            except FileNotFoundError:
+                return None
+            if actual != commit_sha:
+                raise StoreConflict('existing branch differs from requested seed')
+            return actual
+        actual = observed()
+        if actual:
+            return actual
+        for attempt in range(3):
+            try:
+                value = self.requester('POST', '/git/refs',
+                    {'ref': 'refs/heads/' + branch, 'sha': commit_sha})
+                if value['object']['sha'] != commit_sha:
+                    raise ValueError('created branch seed differs')
+                return commit_sha
+            except (GitHubRequestError, StoreConflict) as exc:
+                if (isinstance(exc, GitHubRequestError)
+                        and exc.details.get('category') != 'GITHUB_SERVICE_ERROR'):
+                    raise
+                self.retry_observations.append({'method': 'POST', 'endpoint': '/git/refs',
+                    'attempt': attempt + 1, 'error_type': type(exc).__name__,
+                    'details': exc.details if isinstance(exc, GitHubRequestError) else {'category': 'CONFLICT'}})
+                # An uncertain POST is never blindly repeated. GET first;
+                # unreadable ref state blocks instead of risking a duplicate.
+                actual = observed()
+                if actual:
+                    return actual
+                if isinstance(exc, StoreConflict) or attempt == 2:
+                    raise
+                time.sleep(attempt + 1)
+
     def _root(self, path, head):
         key = (path, head)
         if key in self._immutable_roots:
