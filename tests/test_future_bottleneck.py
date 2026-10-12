@@ -170,30 +170,6 @@ def test_filter_rescreen_preserves_existing_body_version_judgment(tmp_path):
     assert second['results']['d']['tracking_terms_sha256'] != first['results']['d']['tracking_terms_sha256']
 
 
-def test_changed_source_without_old_cache_preserves_original_judgment(tmp_path):
-    from bct.future_review import queue_items
-    from bct.recovery_preservation import seal, verify
-    path, output, cache = tmp_path/'db', tmp_path/'results.json', tmp_path/'cache'
-    with sqlite3.connect(path) as db:
-        db.execute('CREATE TABLE radar_items(id,title,url,source,collected_at,updated_at,status)')
-        db.execute("INSERT INTO radar_items VALUES('d','t','https://example.com/a','s','2026-10-01','v1','active')")
-    html = '<article>' + '<p>Demand for power transformers is rising. Capacity remains limited.</p>'*8 + '</article>'
-    first = run(path, output, cache_dir=cache, fetcher=lambda _: html)
-    old = first['results']['d']['current_body_sha256']
-    original = first['results']['d']['versions'][old]
-    baseline = seal(first, {})
-    (cache/(old+'.txt')).unlink()
-    with sqlite3.connect(path) as db:
-        db.execute("UPDATE radar_items SET updated_at='v2'")
-    second = run(path, output, cache_dir=cache, fetcher=lambda _: html.replace('rising', 'falling'))
-    assert second['results']['d']['versions'][old] == original
-    assert verify(second, {}, baseline)['status'] == 'PASS'
-    checks = second['results']['d']['version_access'][old]
-    assert checks[max(checks)]['reaccess_status'] == 'SOURCE_CHANGED'
-    assert any(item['body_sha256'] == old and item['access_status'] == 'SOURCE_CHANGED'
-               for item in queue_items(second, {})['material'])
-
-
 def test_workflow_is_independent_and_never_writes_canonical_database():
     text = Path('.github/workflows/future-bottleneck.yml').read_text()
     assert 'future-bottleneck-results' in text

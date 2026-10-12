@@ -81,21 +81,6 @@ def restore_version_records(candidates, baseline, trusted_candidates):
             receipts.append({'document_id': document_id, 'body_sha256': body_hash,
                              'before_sha256': digest(current) if current is not None else None,
                              'restored_sha256': expected})
-            # Preserve the exact drifted record as HOLD evidence before
-            # restoring the independently sealed original judgment.
-            record = current_results[document_id]
-            record.setdefault('version_judgment_holds', {})[digest(current)] = {
-                'state': 'HOLD', 'body_sha256': body_hash,
-                'observed_record': deepcopy(current), 'original_record_sha256': expected,
-                'reason': 'SEALED_VERSION_RECORD_DRIFT', 'promoted_to_completion': False,
-            }
-            if isinstance(current, dict) and current.get('access_checked_at'):
-                checked = current['access_checked_at']
-                record.setdefault('version_access', {}).setdefault(body_hash, {}).setdefault(checked, {
-                    'reaccess_status': current.get('reaccess_status'),
-                    'access_checked_at': checked,
-                    'observed_body_sha256': record.get('current_body_sha256'),
-                })
             versions[body_hash] = deepcopy(trusted)
     return restored, receipts
 

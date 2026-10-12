@@ -6,13 +6,12 @@ from pathlib import Path
 import sqlite3
 import subprocess
 import traceback
-import time
 from typing import Any
 from datetime import datetime, timezone
 
 from bct.future_github import GitHubTransport, GitHubRequestError, _raw
 from bct.future_review import queue_summary
-from bct.future_store import store_patch, StoreConflict
+from bct.future_store import store_patch
 from bct.future_worker import _runs, _run_patch
 from bct.recovery_preservation import (verify as verify_preservation, seal,
                                        restore_version_records)
@@ -21,44 +20,6 @@ from bct.recovery_storage_probe import read_generation_at, verify_atomic_recover
 
 def command(*args):
     return subprocess.check_output(args, text=True).strip()
-
-
-def restore_generation(transport, original, tracking, recovered_baseline, trusted, baselines):
-    """Rebase a sealed-record restoration without losing a normal writer."""
-    conflicts: list[dict[str, Any]] = []
-    for attempt in range(3):
-        repaired, receipts = restore_version_records(original.document, recovered_baseline, trusted)
-        for baseline in (*baselines, recovered_baseline):
-            verify_preservation(repaired, tracking.document, baseline)
-        if not receipts:
-            return original, tracking, {'status': 'PASS', 'restored_version_records': [],
-                                        'concurrent_conflicts': conflicts, 'tracking_unchanged': True}
-        try:
-            roots = transport.write_many(
-                {'future-candidates.json': repaired, 'future-tracking.json': tracking.document},
-                {'future-candidates.json': original.sha, 'future-tracking.json': tracking.sha})
-        except (StoreConflict, ValueError) as exc:
-            if not isinstance(exc, StoreConflict) and str(exc) != 'sidecar SHA changed':
-                raise
-            if attempt == 2:
-                raise
-            conflicts.append({'attempt': attempt + 1, 'reason': str(exc)})
-            head = transport.head()
-            original = transport.read_at('future-candidates.json', head)
-            tracking = transport.read_at('future-tracking.json', head)
-            transport.last_commit = head
-            continue
-        saved = transport.last_commit
-        candidate = transport.read_at('future-candidates.json', saved)
-        confirmed_tracking = transport.read_at('future-tracking.json', saved)
-        if candidate.document != repaired or confirmed_tracking.document != tracking.document:
-            raise ValueError('immutable preservation repair readback differs')
-        for baseline in (*baselines, recovered_baseline):
-            verify_preservation(candidate.document, confirmed_tracking.document, baseline)
-        return candidate, confirmed_tracking, {'status': 'PASS', 'published_commit': saved,
-            'root_shas': roots, 'restored_version_records': receipts,
-            'concurrent_conflicts': conflicts, 'tracking_unchanged': True}
-    raise StoreConflict('restoration publication could not acquire a stable generation')
 
 
 def main():
@@ -75,15 +36,7 @@ def main():
             if not line:
                 raise RuntimeError('required branch missing: ' + branch)
             refs[branch] = line.split()[0]
-            started = time.monotonic()
-            # Gate 0 reads this exact commit's files, not its ancestry. Fetching
-            # the full operational history pulls obsolete shard generations.
-            # Shallow local snapshots never rewrite/delete remote Git history.
-            subprocess.run(['git', 'fetch', '--no-tags', '--depth=1', 'origin', refs[branch]], check=True)
-            report.setdefault('snapshot_fetches', []).append({
-                'branch': branch, 'sha': refs[branch],
-                'seconds': round(time.monotonic() - started, 3), 'depth': 1})
-            print(json.dumps({'snapshot_fetch': report['snapshot_fetches'][-1]}), flush=True)
+            subprocess.run(['git', 'fetch', '--no-tags', 'origin', refs[branch]], check=True)
         report['baseline_heads'] = refs
         database = root / 'canonical.sqlite3'
         database.write_bytes(subprocess.check_output(['git', 'show', refs['data'] + ':canonical.sqlite3']))
@@ -124,15 +77,29 @@ def main():
                 if not isinstance(trusted_commit,str) or len(trusted_commit)!=40:
                     raise ValueError('sealed trusted generation commit missing') from exc
                 trusted=transport.read_at('future-candidates.json',trusted_commit)
-                transport.last_commit = initial_head
-                baselines = [preservation_baseline]
+                repaired,receipts=restore_version_records(
+                    original.document,recovered_baseline,trusted.document)
+                if not receipts:
+                    raise
+                verify_preservation(repaired,tracking.document,preservation_baseline)
                 if retained_baseline is not None:
-                    baselines.append(retained_baseline)
-                confirmed_candidate, confirmed_tracking, restoration = restore_generation(
-                    transport, original, tracking, recovered_baseline, trusted.document, baselines)
+                    verify_preservation(repaired,tracking.document,retained_baseline)
+                verify_preservation(repaired,tracking.document,recovered_baseline)
+                roots=transport.write_many(
+                    {'future-candidates.json':repaired,'future-tracking.json':tracking.document},
+                    {'future-candidates.json':original.sha,'future-tracking.json':tracking.sha})
+                repaired_commit=transport.last_commit
+                confirmed_candidate=transport.read_at('future-candidates.json',repaired_commit)
+                confirmed_tracking=transport.read_at('future-tracking.json',repaired_commit)
+                if confirmed_candidate.document!=repaired or confirmed_tracking.document!=tracking.document:
+                    raise ValueError('immutable preservation repair readback differs')
                 report['recovered_identity_preservation']=verify_preservation(
                     confirmed_candidate.document,confirmed_tracking.document,recovered_baseline)
-                report['preservation_repair']={**restoration, 'trusted_commit':trusted_commit}
+                report['preservation_repair']={
+                    'status':'PASS','trusted_commit':trusted_commit,
+                    'published_commit':repaired_commit,'root_shas':roots,
+                    'restored_version_records':receipts,
+                    'tracking_unchanged':confirmed_tracking.document==tracking.document}
                 original,tracking=confirmed_candidate,confirmed_tracking
         if retained_baseline is not None:
             report['retained_identity_preservation']=verify_preservation(
@@ -156,7 +123,7 @@ def main():
                       tracked_failed_versions=len(identities))
         # A separate branch tests real token permissions and both sidecar paths.
         probe_branch = 'ops/bct-storage-probe-' + os.environ['GITHUB_RUN_ID']
-        transport.create_branch(probe_branch, refs['future-bottleneck-data'])
+        transport.requester('POST', '/git/refs', {'ref': 'refs/heads/' + probe_branch, 'sha': refs['future-bottleneck-data']})
         probe = GitHubTransport(os.environ['GITHUB_REPOSITORY'], probe_branch, os.environ['GITHUB_TOKEN'])
         candidate_test = store_patch(probe, 'future-candidates.json', owner='collection',
             patch={'summary': {'storage_probe_run': report['run_id']}}, operation_id='probe-' + report['run_id'])
@@ -178,47 +145,23 @@ def main():
         # may briefly return the pre-repair document through the mutable ref;
         # the final CAS safely rejects a real concurrent writer instead of
         # composing a queue projection from that stale view.
-        # The independent fault probe can take minutes; normal collection and
-        # reading may legitimately advance production in that window. Project
-        # from the latest immutable pair, never from the pre-probe generation.
-        # The final non-forced CAS still rejects a later concurrent writer.
-        report['baseline_queue_before_probe'] = before
-        for attempt in range(3):
-            production_base = transport.head()
-            report['projection_generation'] = production_base
-            generation = read_generation_at(transport, production_base)
-            original = generation['future-candidates.json']
-            tracking = generation['future-tracking.json']
-            transport.last_commit = production_base  # verified pair is the CAS parent
-            verify_preservation(original.document, tracking.document, preservation_baseline)
-            if retained_baseline is not None:
-                verify_preservation(original.document, tracking.document, retained_baseline)
-            if recovered_seal.exists():
-                verify_preservation(original.document, tracking.document, recovered_baseline)
-            before = queue_summary(original.document, tracking.document)
-            report['baseline_queue'] = before
-            (root/'recovery-preservation-seal.json').write_text(
-                json.dumps(seal(original.document, tracking.document), ensure_ascii=False, indent=2)+'\n')
-            candidates_path, tracking_path = root / 'future-candidates.json', root / 'future-tracking.json'
-            candidates_path.write_bytes(_raw(original.document));tracking_path.write_bytes(_raw(tracking.document))
-            subprocess.run(['python', '.github/scripts/future_queue_snapshot.py', '--candidates', str(candidates_path),
-                            '--tracking', str(tracking_path), '--output-dir', str(root)], check=True,
-                           stdout=(root / 'queue-projection.log').open('w'))
-            final = json.loads(candidates_path.read_text())
-            # The local script composes owned bundle/queue patches. Publish their
-            # combined final state once, so no intermediate projection is visible.
-            if set(final['results']) != set(original.document['results']):
-                raise RuntimeError('candidate set changed during storage repair')
-            if final['results'] != original.document['results']:
-                raise RuntimeError('source records changed during storage repair')
-            try:
-                transport.write('future-candidates.json', final, original.sha)
-            except StoreConflict as exc:
-                report.setdefault('projection_conflicts', []).append({'attempt': attempt+1, 'reason': str(exc)})
-                if attempt == 2:
-                    raise
-                continue
-            break
+        production_base = transport.last_commit if report.get('preservation_repair') else initial_head
+        generation = read_generation_at(transport, production_base)
+        original = generation['future-candidates.json']
+        tracking = generation['future-tracking.json']
+        candidates_path, tracking_path = root / 'future-candidates.json', root / 'future-tracking.json'
+        candidates_path.write_bytes(_raw(original.document));tracking_path.write_bytes(_raw(tracking.document))
+        subprocess.run(['python', '.github/scripts/future_queue_snapshot.py', '--candidates', str(candidates_path),
+                        '--tracking', str(tracking_path), '--output-dir', str(root)], check=True,
+                       stdout=(root / 'queue-projection.log').open('w'))
+        final = json.loads(candidates_path.read_text())
+        # The local script composes owned bundle/queue patches. Publish their
+        # combined final state once, so no intermediate projection is visible.
+        if set(final['results']) != set(original.document['results']):
+            raise RuntimeError('candidate set changed during storage repair')
+        if final['results'] != original.document['results']:
+            raise RuntimeError('source records changed during storage repair')
+        transport.write('future-candidates.json', final, original.sha)
         # GitHub may briefly serve the old mutable ref after a successful
         # fast-forward. Verify the immutable commit returned by the atomic
         # publisher; write_many already verified the ref-update response.

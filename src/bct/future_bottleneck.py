@@ -498,15 +498,6 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
         result["attempts"] = acquired["ledger"].get("versions", {}).get(fingerprint, {}).get("automatic_attempts", 0)
         result["retry_after"] = (now + timedelta(hours=6)).isoformat() if result["material_check_required"] else ""
         versions = {}
-        version_access: dict[str, dict[str, dict]] = {}
-        def record_access(version_hash, status):
-            # Access observations belong to the acquisition timeline, not to
-            # the immutable judgment of the original HTML/body version.
-            checked = now.isoformat()
-            version_access[version_hash] = {checked: {
-                "reaccess_status": status, "access_checked_at": checked,
-                "observed_body_sha256": body_hash,
-            }}
         old_hash = prior.get("body_sha256")
         if old_hash and old_hash not in prior.get("versions", {}):
             versions[old_hash] = {k: prior[k] for k in (
@@ -514,8 +505,6 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
             versions[old_hash]["completeness_unverified"] = True
         body_hash = meta.get("body_sha256")
         if body_hash and body:
-            if prior.get("version_access", {}).get(body_hash):
-                record_access(body_hash, "AVAILABLE")
             if body_hash in prior.get("versions", {}):
                 # Source checks and body versions are different identities. An
                 # unchanged body may be observed under a new source check. Its
@@ -536,16 +525,14 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
                 if (acquired["acquired"] and meta.get("acquisition_status") != "UNAVAILABLE"
                         and old_version == (prior.get("current_body_sha256") or prior.get("body_sha256"))
                         and old_version != body_hash and read_cached_body(cache_dir, old_version) is None):
-                    record_access(old_version, "SOURCE_CHANGED")
+                    versions[old_version] = {"reaccess_status": "SOURCE_CHANGED", "access_checked_at": now.isoformat()}
         elif body_hash:
-            record_access(body_hash, "UNAVAILABLE")
+            versions[body_hash] = {"reaccess_status": "UNAVAILABLE", "access_checked_at": now.isoformat()}
             result["current_body_sha256"] = prior.get("current_body_sha256", body_hash)
         elif old_hash:
             # A failed reaccess does not delete the last successful body version.
             result["current_body_sha256"] = prior.get("current_body_sha256", old_hash)
         result["versions"] = versions
-        if version_access:
-            result["version_access"] = version_access
         if result["candidate"] or result["material_check_required"]:
             result["queue_entered_at"] = prior.get("queue_entered_at", now.isoformat())
         return result
@@ -622,10 +609,7 @@ def main():
     result = run(args.db, args.output, limit=args.limit, cache_dir=args.cache_dir, patch_output=args.patch_output,
                  tracking_path=args.tracking, trigger=args.trigger, trigger_id=args.trigger_id, document_ids=args.document_id,
                  detection_mode=args.detection_mode)
-    # Full historical observations/refs remain in the saved sidecar. Repeating
-    # them in every CLI log produced megabytes of duplicate output per cycle.
-    print(json.dumps({key: value for key, value in result['summary'].items()
-                      if not isinstance(value, (dict, list))}))
+    print(json.dumps(result["summary"]))
 
 
 if __name__ == "__main__":

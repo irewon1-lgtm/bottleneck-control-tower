@@ -56,9 +56,6 @@ def _records(candidates):
             if body_hash == current:
                 version = {**record, **version}
             version.update(version.get("screening", {}))
-            checks = record.get("version_access", {}).get(body_hash, {})
-            if checks:
-                version.update(checks[max(checks)])
             yield {**version, "document_id": document_id, "body_sha256": body_hash,
                    "url": record.get("url"), "title": record.get("title"),
                    "body_status": _status(version.get("body_status")),

@@ -142,25 +142,6 @@ def test_interrupted_document_claim_prevents_automatic_duplicate_call(tmp_path):
     assert tracking.get('reviews', {}) == {}
 
 
-def test_changed_condition_timeout_retry_preserves_exact_error_history(tmp_path):
-    paths = sources(tmp_path)
-    def timeout(_):
-        raise TimeoutError()
-    first = execute(paths, timeout)
-    before = json.loads(paths[2].read_text())
-    old = next(r for r in before['runs'].values() if r.get('reason') == 'TimeoutError'
-               and r.get('document_id') == '0')
-    def approved(item, previous):
-        return previous.get('reason') == 'TimeoutError' and previous.get('run_id') == first['id']
-    second = execute(paths, retry_failed=approved)
-    after = json.loads(paths[2].read_text())
-    assert second['counts'] == {'SUCCESS': 1}
-    histories = [r for r in after['runs'].values() if r.get('type') == 'worker_retry_history']
-    assert len(histories) == 1 and histories[0]['prior_state'] == old
-    third = execute(paths, retry_failed=approved)
-    assert third['model_calls'] == 0
-
-
 def test_3_full_and_partial_keep_body_state_and_missing_data(tmp_path):
     paths=sources(tmp_path,2,partial=(1,))
     result=execute(paths)

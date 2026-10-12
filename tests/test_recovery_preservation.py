@@ -56,9 +56,6 @@ def test_restore_sealed_version_only_keeps_new_observation_and_versions():
     assert repaired['results']['doc']['observation']=='new'
     assert repaired['results']['doc']['acquisition']=={'history':['new source check']}
     assert repaired['results']['doc']['versions']['new-body']=={'body_status':'PARTIAL'}
-    held = repaired['results']['doc']['version_judgment_holds'][digest(current['results']['doc']['versions']['body'])]
-    assert held['state'] == 'HOLD' and held['observed_record'] == current['results']['doc']['versions']['body']
-    assert held['promoted_to_completion'] is False
     assert receipts==[{'document_id':'doc','body_sha256':'body',
                        'before_sha256':digest(current['results']['doc']['versions']['body']),
                        'restored_sha256':baseline['version_record_hashes']['doc']['body']}]

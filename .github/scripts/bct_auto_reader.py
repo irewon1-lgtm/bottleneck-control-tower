@@ -15,7 +15,7 @@ from urllib.request import urlopen
 from bct.future_github import GitHubTransport
 from bct.future_body import read_cached_body
 from bct.future_local_reader import LocalCPUQuickReader
-from bct.future_worker import run_worker, _runs
+from bct.future_worker import run_worker
 from bct.recovery_auto_reader import eligible
 from bct.recovery_preservation import verify, quarantine_changed_version_judgments, digest
 from bct.recovery_restore import copy_preserved_caches
@@ -97,29 +97,7 @@ def main():
                 except OSError:
                     if time.monotonic() >= deadline: raise TimeoutError('automatic local reader startup deadline')
                     time.sleep(1)
-            # The standard CPU runner needed 140–156s for successful bodies;
-            # the longer exact FULL sources exceeded the former 180s deadline.
-            # Keep input/output/context unchanged; grant a bounded 600s read.
-            reader = LocalCPUQuickReader(setup_receipt, timeout=600, receipt_observer=observe)
-            retries = json.loads(Path('config/bct-cpu-timeout-recovery.json').read_text())
-            retry_keys = {(r['document_id'], r['body_sha256']) for r in retries['versions']}
-            needed = any(r.get('state') == 'ERROR' and r.get('reason') == 'TimeoutError'
-                and r.get('run_id') == retries['worker_id']
-                and (r.get('document_id'), r.get('body_sha256')) in retry_keys
-                for r in _runs(t.document).values())
-            if needed:
-                old_run = transport.requester('GET', '/actions/runs/' + str(retries['run_id']))
-                old_artifact = transport.requester('GET', '/actions/artifacts/' + str(retries['artifact_id']))
-                if (old_run['status'] != 'completed' or old_run['head_sha'] != retries['code_sha']
-                        or old_artifact['workflow_run']['id'] != retries['run_id']
-                        or old_artifact.get('digest') != 'sha256:' + retries['artifact_sha256']):
-                    raise ValueError('stopped timeout owner and archived failure proof required')
-            else:
-                retry_keys = set()  # Resolved history is not a future artifact dependency.
-            def retry_timeout(item, previous):
-                return (previous.get('state') == 'ERROR' and previous.get('reason') == 'TimeoutError'
-                        and previous.get('run_id') == retries['worker_id']
-                        and (item['document_id'], item['body_sha256']) in retry_keys)
+            reader = LocalCPUQuickReader(setup_receipt, receipt_observer=observe)
             budget_held = set()
             def ready(item):
                 # Do not let an altered historical judgment be read or promoted.
@@ -138,7 +116,7 @@ def main():
                 return True
             report = run_worker(transport, 'future-candidates.json', 'future-tracking.json',
                 reader=reader, cache_dir=cache, limit=5, max_input_chars=12000,
-                source_eligible=ready, retry_failed=retry_timeout,
+                source_eligible=ready,
                 review_mode='API_REVIEW', input_rate=0, output_rate=0)
         after_head = transport.last_commit or transport.head()
         after_c = transport.read_at('future-candidates.json', after_head)

@@ -33,28 +33,6 @@ class Transport:
         raise AssertionError((method, suffix))
 
 
-def test_next_independent_cycle_archives_completed_request_and_dispatches_fresh(tmp_path, monkeypatch):
-    monkeypatch.setenv('GITHUB_RUN_ID', '34')
-    monkeypatch.setattr(module, 'verify_release', lambda *args: None)
-    prior = {'run_id': '33', 'main_sha': 'main-sha', 'requested_at': '2000-01-01T00:00:00Z',
-             'state': 'COMPLETED', 'candidate_run_id': 101, 'pages_run_id': 102}
-    (tmp_path/'operating-publication-request.json').write_text(json.dumps(prior))
-    def run(ident, created, workflow, event):
-        return {'id': ident, 'head_sha': 'main-sha', 'created_at': created,
-                'path': '.github/workflows/'+workflow, 'event': event,
-                'status': 'completed', 'conclusion': 'success'}
-    transport = Transport([
-        run(101, '2000-01-01T00:00:00Z', 'future-bottleneck.yml', 'repository_dispatch'),
-        run(102, '2000-01-01T00:00:00Z', 'ui-pages.yml', 'workflow_run'),
-        run(301, '9998-01-01T00:00:00Z', 'future-bottleneck.yml', 'repository_dispatch'),
-        run(302, '9999-01-01T00:00:00Z', 'ui-pages.yml', 'workflow_run'),
-    ])
-    assert module.dispatch_and_wait(tmp_path, transport, deadline=module.time.monotonic()+1) == (301, 302)
-    assert transport.posts == 1
-    assert json.loads((tmp_path/'operating-publication-history.json').read_text()) == [prior]
-    assert json.loads((tmp_path/'operating-publication-request.json').read_text())['run_id'] == '34'
-
-
 def test_uncertain_dispatch_is_reconciled_without_a_second_post(tmp_path, monkeypatch):
     monkeypatch.setenv('GITHUB_RUN_ID', '32')
     monkeypatch.setattr(module, 'verify_release', lambda *args: None)

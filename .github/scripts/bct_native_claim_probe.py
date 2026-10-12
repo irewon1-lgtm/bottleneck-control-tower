@@ -71,7 +71,7 @@ def execute(root, payload, record, setup_receipt, observe_returned):
     commit = production.requester('POST', '/git/commits', {
         'message': 'Isolated exact-source native claim recovery verification',
         'tree': tree['sha'], 'parents': []})
-    production.create_branch(branch, commit['sha'])
+    production.requester('POST', '/git/refs', {'ref': 'refs/heads/'+branch, 'sha': commit['sha']})
     remote = GitHubTransport(os.environ['GITHUB_REPOSITORY'], branch, os.environ['GITHUB_TOKEN'])
     for path, value in initial.items():
         if remote.read_at(path, commit['sha']).document != value:
