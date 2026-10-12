@@ -2917,6 +2917,11 @@
       "owner": "review",
       "patch_sha256": "071db141d7de67fb9856f4287c369c60af50ea422d78f59cef52c8f31830876f",
       "applied_at": "2026-10-12T13:58:49.602712+00:00"
+    },
+    "review-auto-quick-b2e6f4062b9045853adc2ed8411dc186": {
+      "owner": "review",
+      "patch_sha256": "03fc5b483b1159031df1a564da179c10f9b080b37b36a7017f365592364b3f3f",
+      "applied_at": "2026-10-12T14:00:48.308756+00:00"
     }
   },
   "policy": {
@@ -5760,6 +5765,13 @@
       "reader_version": "bct-v33-reader-1",
       "read_end": 5716,
       "last_review_id": "auto-quick-f0876f15546bf469b84b61b77205a871"
+    },
+    "bbdb15c6-eb2c-4054-8fce-7b77aa9a6613:c8eefab50521b2dfc9096ebeb51e701cf2fdd2395f7843b7d4ca2d386e9fca87:bct-v33-reader-1": {
+      "document_id": "bbdb15c6-eb2c-4054-8fce-7b77aa9a6613",
+      "body_sha256": "c8eefab50521b2dfc9096ebeb51e701cf2fdd2395f7843b7d4ca2d386e9fca87",
+      "reader_version": "bct-v33-reader-1",
+      "read_end": 4551,
+      "last_review_id": "auto-quick-b2e6f4062b9045853adc2ed8411dc186"
     }
   },
   "purpose": "향후 1~2년 내 구체적 산업 공급 TARGET의 수요·공급 시간차 발견 및 예측 결과 추적",
@@ -32650,6 +32662,29 @@
         "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST"
       },
       "candidate_state": "DATA_WAIT"
+    },
+    "auto-quick-b2e6f4062b9045853adc2ed8411dc186": {
+      "disposition": "CHANGE",
+      "reason": "The document highlights the risk of missing charges in invoices, which can lead to revenue loss, especially for 3PLs with thin operating margins.",
+      "read_end": 4551,
+      "worker_provider": "local-cpu",
+      "worker_model": "Qwen/Qwen2.5-7B-Instruct-GGUF",
+      "review_id": "auto-quick-b2e6f4062b9045853adc2ed8411dc186",
+      "document_id": "bbdb15c6-eb2c-4054-8fce-7b77aa9a6613",
+      "body_sha256": "c8eefab50521b2dfc9096ebeb51e701cf2fdd2395f7843b7d4ca2d386e9fca87",
+      "reader_version": "bct-v33-reader-1",
+      "kind": "quick",
+      "read_start": 0,
+      "reviewed_at": "2026-10-12T14:00:46.650933+00:00",
+      "worker_event_id": "event-c64a53768960b403f87bb844",
+      "as_of": "2026-10-12",
+      "read_complete": true,
+      "source_access": {
+        "url": "https://www.supplychain247.com/article/3pl-warehouse-work-missing-invoices",
+        "body_sha256": "c8eefab50521b2dfc9096ebeb51e701cf2fdd2395f7843b7d4ca2d386e9fca87",
+        "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST"
+      },
+      "candidate_state": "REVIEWED"
     }
   },
   "runs": [
@@ -203401,6 +203436,6 @@
       ]
     }
   ],
-  "updated_at": "2026-10-12T13:58:23.887713+00:00",
+  "updated_at": "2026-10-12T14:00:46.650933+00:00",
   "version": 1
 }
