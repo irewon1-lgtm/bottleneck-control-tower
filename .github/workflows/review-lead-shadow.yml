@@ -78,7 +78,7 @@ jobs:
       - name: Apply frozen REVIEW_LEAD intake in SHADOW
         if: env.BCT_REVIEW_HANDOFF_AVAILABLE == 'true'
         run: >-
-          python -m bct.review_shadow run
+          python .github/scripts/review_shadow_frozen.py
           --input var/review-handoff/input.json
           --state var/review-state/review-lead-shadow
       - name: Preserve append-only review state in its own branch

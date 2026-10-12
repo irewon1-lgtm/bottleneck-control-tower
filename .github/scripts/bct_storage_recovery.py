@@ -6,6 +6,7 @@ from pathlib import Path
 import sqlite3
 import subprocess
 import traceback
+import time
 from typing import Any
 from datetime import datetime, timezone
 
@@ -36,7 +37,15 @@ def main():
             if not line:
                 raise RuntimeError('required branch missing: ' + branch)
             refs[branch] = line.split()[0]
-            subprocess.run(['git', 'fetch', '--no-tags', 'origin', refs[branch]], check=True)
+            started = time.monotonic()
+            # Gate 0 reads this exact commit's files, not its ancestry. Fetching
+            # the full operational history pulls obsolete shard generations.
+            # Shallow local snapshots never rewrite/delete remote Git history.
+            subprocess.run(['git', 'fetch', '--no-tags', '--depth=1', 'origin', refs[branch]], check=True)
+            report.setdefault('snapshot_fetches', []).append({
+                'branch': branch, 'sha': refs[branch],
+                'seconds': round(time.monotonic() - started, 3), 'depth': 1})
+            print(json.dumps({'snapshot_fetch': report['snapshot_fetches'][-1]}), flush=True)
         report['baseline_heads'] = refs
         database = root / 'canonical.sqlite3'
         database.write_bytes(subprocess.check_output(['git', 'show', refs['data'] + ':canonical.sqlite3']))
@@ -123,7 +132,7 @@ def main():
                       tracked_failed_versions=len(identities))
         # A separate branch tests real token permissions and both sidecar paths.
         probe_branch = 'ops/bct-storage-probe-' + os.environ['GITHUB_RUN_ID']
-        transport.requester('POST', '/git/refs', {'ref': 'refs/heads/' + probe_branch, 'sha': refs['future-bottleneck-data']})
+        transport.create_branch(probe_branch, refs['future-bottleneck-data'])
         probe = GitHubTransport(os.environ['GITHUB_REPOSITORY'], probe_branch, os.environ['GITHUB_TOKEN'])
         candidate_test = store_patch(probe, 'future-candidates.json', owner='collection',
             patch={'summary': {'storage_probe_run': report['run_id']}}, operation_id='probe-' + report['run_id'])
@@ -145,10 +154,26 @@ def main():
         # may briefly return the pre-repair document through the mutable ref;
         # the final CAS safely rejects a real concurrent writer instead of
         # composing a queue projection from that stale view.
-        production_base = transport.last_commit if report.get('preservation_repair') else initial_head
+        # The independent fault probe can take minutes; normal collection and
+        # reading may legitimately advance production in that window. Project
+        # from the latest immutable pair, never from the pre-probe generation.
+        # The final non-forced CAS still rejects a later concurrent writer.
+        production_base = transport.head()
+        report['projection_generation'] = production_base
         generation = read_generation_at(transport, production_base)
         original = generation['future-candidates.json']
         tracking = generation['future-tracking.json']
+        transport.last_commit = production_base  # verified pair is the CAS parent
+        verify_preservation(original.document, tracking.document, preservation_baseline)
+        if retained_baseline is not None:
+            verify_preservation(original.document, tracking.document, retained_baseline)
+        if recovered_seal.exists():
+            verify_preservation(original.document, tracking.document, recovered_baseline)
+        report['baseline_queue_before_probe'] = before
+        before = queue_summary(original.document, tracking.document)
+        report['baseline_queue'] = before
+        (root/'recovery-preservation-seal.json').write_text(
+            json.dumps(seal(original.document, tracking.document), ensure_ascii=False, indent=2)+'\n')
         candidates_path, tracking_path = root / 'future-candidates.json', root / 'future-tracking.json'
         candidates_path.write_bytes(_raw(original.document));tracking_path.write_bytes(_raw(tracking.document))
         subprocess.run(['python', '.github/scripts/future_queue_snapshot.py', '--candidates', str(candidates_path),
