@@ -1,0 +1,59 @@
+name: BCT exact release receipt and code verification
+on:
+  push:
+    branches: [ops/bct-extent-release-receipt-20261013]
+    paths: [.github/workflows/bct-exact-release-receipt.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  receipt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 00d9fcd3f0bb803576cc4088c81f4e8c305b928f
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: SHA-verify actual successful ZIP and every restored journal/cache
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python .github/scripts/bct_restore_operating_state.py --output "$RUNNER_TEMP/released-gates"
+      - name: Exact validated code and original source preservation receipt
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import sys,os,json,hashlib
+          from pathlib import Path
+          sys.path.insert(0,'.github/scripts')
+          from bct_release_guard import verify_release
+          from bct.future_github import GitHubTransport
+          from bct.recovery_restore import LATEST_ROOT_STATE,verify_restored
+          root=Path(os.environ['RUNNER_TEMP'])/'released-gates'
+          c=json.loads((root/'checkpoint.json').read_text())
+          restored=json.loads((root/'operating-state-restore.json').read_text())
+          assert str(c['run_id'])=='38316734425'
+          assert c['code_sha']=='956325a578a5e39a9ac2d88f35bb45f3581fa0bd'
+          assert all(c['gate'+str(i)]=='PASS' for i in range(7))
+          assert restored['artifact_id']==11778321087
+          assert restored['artifact_sha256']=='090d9d04749ebd0e7aa611c9af95a4636ee5dfed7398c133601df50c860cf974'
+          release=json.loads(Path('config/bct-operating-release.json').read_text())
+          t=GitHubTransport(os.environ['GITHUB_REPOSITORY'],'future-bottleneck-data',os.environ['GITHUB_TOKEN'])
+          verified=verify_release(t.requester,release,Path('.'))
+          pins={n:hashlib.sha256((root/n).read_bytes()).hexdigest() for n in ('checkpoint.json','e2e-recovery.json',*LATEST_ROOT_STATE) if (root/n).exists()}
+          proof=verify_restored(root,pins)
+          receipt={'status':'PASS','actual_execution':True,'release':release,'code':verified,'pins':pins,'proof':proof,'checkpoint':{k:v for k,v in c.items() if not isinstance(v,(dict,list))},'production_writes':0,'prediction_performance':'UNVERIFIED'}
+          p=Path(os.environ['RUNNER_TEMP'])/'release-receipt.json';p.write_text(json.dumps(receipt,indent=2)+'\\n')
+          print('RELEASE_VALIDATED_JSON='+json.dumps(receipt,separators=(',',':')))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-release-receipt-${{ github.run_id }}
+          path: ${{ runner.temp }}/release-receipt.json
+          retention-days: 30
+          if-no-files-found: error
