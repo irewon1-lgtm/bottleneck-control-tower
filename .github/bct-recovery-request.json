@@ -27,10 +27,10 @@
   "reader_batch_limit": 5,
   "reason": "Resume pinned existing journals and source caches; validate linked-blob recovery and bounded immutable metadata cache on standard public CPU runner; no paid APIs.",
   "latest_failed_run": {
-    "run_id": "38267116728",
-    "artifact_id": 11756175250,
-    "artifact_sha256": "9e90f8246b15c64e4472a4cff1da93f2485c88eff8e8a2d321c514b1fb3cdaee",
-    "status": "SEALED_VERSION_ACCESS_OBSERVATION_MUTATED_DURING_PROBE"
+    "run_id": "38270386110",
+    "artifact_id": 11757038240,
+    "artifact_sha256": "60a8e25af469c2195f58f6bf9cb172f67b972e9f2e237e05ae0c5e0e91f430d4",
+    "status": "FINAL_QUEUE_PUBLICATION_REAL_CONCURRENT_WRITER_CAS_REJECTION"
   },
   "source_scope_reinspection_urls": [],
   "retained_cache": {
@@ -53,7 +53,7 @@
     },
     "inventory_sha256": "af04dd8ef92789e99ee0eb534da74f0a8c4a654b9421f43504ef6d4ec3ba89fa"
   },
-  "changed_condition": "Actual sealed-version drift is precisely one normal collector access observation (AVAILABLE -> SOURCE_CHANGED; body unchanged). Access observations now append outside judgments and restore archives exact observed drift as HOLD before restoring original seal. Validate revised code Gates 0–6 before release; do not retry unchanged FULL. Actual restore CAS conflict during active normal CPU publication now performs bounded fresh-pair preserving rebase; semantic/identity failures are never retried. Typed contract passes.",
+  "changed_condition": "Actual sealed-version drift is precisely one normal collector access observation (AVAILABLE -> SOURCE_CHANGED; body unchanged). Access observations now append outside judgments and restore archives exact observed drift as HOLD before restoring original seal. Validate revised code Gates 0–6 before release; do not retry unchanged FULL. Actual restore CAS conflict during active normal CPU publication now performs bounded fresh-pair preserving rebase; semantic/identity failures are never retried. Typed contract passes. Real Gate0 repair and isolated atomic fault/CAS/restart succeeded; final queue publication collided with the normal writer. The final projection now re-reads and recomputes from a verified immutable pair after CAS rejection (maximum 3 attempts), retaining all original preservation guards.",
   "full_pipeline": false,
-  "repair_fix_head_sha": "cf490972fbf05cb80af411643f57fc2bb760dda7"
+  "repair_fix_head_sha": "237c0aaaf0ce095906c381091ee922e1a2456007"
 }
