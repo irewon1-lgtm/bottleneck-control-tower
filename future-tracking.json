@@ -3037,6 +3037,11 @@
       "owner": "review",
       "patch_sha256": "7a7dbcb28f0616af233e0b24ff58c3f8ab1c2b1e87dd2b064f87cb616d234700",
       "applied_at": "2026-10-12T15:11:09.623562+00:00"
+    },
+    "quick-worker-9df94406842d452abf24d8ad133347c1-retry-history-quick-version-68b61303c73cee04ab312d1a493d8a9e": {
+      "owner": "review",
+      "patch_sha256": "03856b78ee85d0a1cf6ffa91eb6b8f5409e43c125fec50219b471c5b2654c03d",
+      "applied_at": "2026-10-12T15:11:52.006367+00:00"
     }
   },
   "policy": {
@@ -186441,6 +186446,31 @@
       "duplicate_auto_reviews": 0,
       "distinct_events_attempted": 5,
       "summary_saved": true
+    },
+    {
+      "type": "worker_retry_history",
+      "work_id": "quick-version-68b61303c73cee04ab312d1a493d8a9e",
+      "document_id": "a146e92e-61ab-4980-a225-db6375eaa592",
+      "body_sha256": "334b8631f04351a43ba200e778d8d07f8c8121f98c9ba9fbc68ef0cb45ad084d",
+      "prior_state": {
+        "state": "ERROR",
+        "run_id": "quick-worker-3a0f755632974112a7bfe51cf621bb6b",
+        "document_id": "a146e92e-61ab-4980-a225-db6375eaa592",
+        "body_sha256": "334b8631f04351a43ba200e778d8d07f8c8121f98c9ba9fbc68ef0cb45ad084d",
+        "read_start": 0,
+        "claimed_at": "2026-10-12T13:49:11.704375+00:00",
+        "id": "quick-version-68b61303c73cee04ab312d1a493d8a9e",
+        "event_id": "event-820b42b7e17a94a648f3ba7f",
+        "input_tokens": null,
+        "output_tokens": null,
+        "input_characters": 8431,
+        "reason": "TimeoutError",
+        "elapsed_seconds": 193.03233216399985,
+        "estimated_cost_usd": null,
+        "finished_at": "2026-10-12T13:52:21.371952+00:00"
+      },
+      "recorded_at": "2026-10-12T15:11:51.630163+00:00",
+      "id": "worker-retry-history-8c4bb67fcd46b245a6b96db3423b4cd6"
     }
   ],
   "targets": [
