@@ -15,12 +15,8 @@ def dispatch_and_wait(root, transport, *, deadline):
     verify_release(request, json.loads(raw), Path('.'))
     path = root/'operating-publication-request.json'
     proof = None
-    retired_request = None
     if path.exists():
         proof = json.loads(path.read_text())
-        if (proof.get('state') == 'DISPATCHED' and proof.get('candidate_run_id')
-                and proof.get('run_id') != os.environ['GITHUB_RUN_ID']):
-            retired_request = dict(proof)
         if not str(proof.get('run_id', '')).isdigit():
             raise ValueError('publication request has invalid execution')
         if (proof.get('main_sha') != main
@@ -31,7 +27,6 @@ def dispatch_and_wait(root, transport, *, deadline):
                 history.append(proof)
             history_path.write_text(json.dumps(history, indent=2)+'\n')
             proof = None
-            retired_request = None
         # A hash-pinned recovery artifact may carry an uncertain request from
         # the immediately preceding runner.  Adopt that same request rather
         # than emitting a second dispatch; retain both execution identities.
@@ -66,34 +61,6 @@ def dispatch_and_wait(root, transport, *, deadline):
             if selected['status'] == 'completed' and selected['conclusion'] != 'success':
                 raise RuntimeError('fresh automatic candidate workflow failed: '+str(selected['id']))
             if selected['status'] == 'completed':
-                if retired_request is not None:
-                    if selected['id'] != retired_request['candidate_run_id']:
-                        raise ValueError('stored publication candidate identity changed')
-                    history_path = root/'operating-publication-history.json'
-                    history = json.loads(history_path.read_text()) if history_path.exists() else []
-                    if retired_request not in history:
-                        history.append(retired_request)
-                    history.append({'state': 'REMOTE_CANDIDATE_COMPLETED',
-                        'prior_recovery_run_id': retired_request['run_id'],
-                        'reconciled_by_run_id': os.environ['GITHUB_RUN_ID'],
-                        'candidate_run_id': selected['id'],
-                        'candidate_status': selected['status'],
-                        'candidate_conclusion': selected['conclusion'],
-                        'main_sha': main})
-                    history_path.write_text(json.dumps(history, indent=2)+'\n')
-                    # This resumed runner has executed new Gates 0–6. A known
-                    # prior dispatch must finish before requesting its fresh
-                    # publication; its old queue cannot certify the new gates.
-                    proof = {'run_id': os.environ['GITHUB_RUN_ID'], 'main_sha': main,
-                        'requested_at': datetime.now(timezone.utc).isoformat(), 'state': 'REQUESTING'}
-                    path.write_text(json.dumps(proof, indent=2)+'\n')
-                    request('POST', '/dispatches', {'event_type': 'bct-operating-publication',
-                        'client_payload': {'recovery_run_id': proof['run_id']}})
-                    proof['state'] = 'DISPATCHED'
-                    path.write_text(json.dumps(proof, indent=2)+'\n')
-                    start = datetime.fromisoformat(proof['requested_at'])
-                    retired_request = None
-                    continue
                 page_start = proof.get('pages_requested_at', selected['created_at'])
                 pages = [run for run in fresh if run['path'] == '.github/workflows/ui-pages.yml'
                          and run['event'] in ('workflow_run', 'repository_dispatch')
