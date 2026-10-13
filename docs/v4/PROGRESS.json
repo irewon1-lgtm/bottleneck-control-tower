@@ -1,29 +1,32 @@
 {
-  "plan_version": "1.1",
-  "plan_sha256": "18d46ef6f1aef0b57bbba1e9c3a61fe1b332668a7581074d7852eb6f60279f25",
+  "plan_version": "1.2",
+  "plan_sha256": "1e4c1889d8809c0cc9a0381269c9e094e6cf1056f1d43b8fda1d2260d6907b3a",
   "stage": 2,
-  "status": "FAIL_SOURCE_VALIDATION",
-  "handoff_sha": "14ffa30124b4ea1ee0b0650a168612e92d4abb10",
-  "base_remote_sha": "14ffa30124b4ea1ee0b0650a168612e92d4abb10",
-  "last_completed": "Groq-only implementation; 99 functional PASS, existing regression 261 PASS + 1 existing performance skip; real Groq JSON/usage received and stored; raw response/review hold and simulated WAIT_API survive process restart and backup/restore",
-  "next_action": "Stay in stage 2: fix literal quote/offset input-output contract using the saved response first, then require a source-valid stored live result. No further API request in this run; stage 3 and Shadow not started.",
+  "status": "BLOCKED_NEW_LIVE_CONTRACT_CHECK",
+  "handoff_sha": "fd199ea1feafbb32cce553e63c51351211a78289",
+  "base_remote_sha": "fd199ea1feafbb32cce553e63c51351211a78289",
+  "last_completed": "Hash-identical original/real response reused; exact quote binding revalidated 1 source item and rejected 4 invalid items; new 38 PASS and related prior 25 PASS; 261 regression passes reused without whole rerun; supported wire schema restored unchanged; local revalidation saved/reopened/backed up",
+  "next_action": "Stay in stage 2: one later authorized bounded Groq check using the restored previously accepted schema and current Python quote binding. Require a source-valid stored new response; no auth/model/setup redo, no extra key, no stage 3 or Shadow.",
   "blockers": [
-    "Real response rejected: invalid quote character offsets, non-literal product aliases and non-empty evidence for null values; zero accepted items",
-    "Same-input CPU comparison unavailable: old V4 ledger/CPU readings and pinned CPU weights absent; preserved code, no model reinstall",
-    "RPM/TPD account-specific overrides unobserved; published conservative caps used. RPD=1000 and TPM=8000 observed in real headers",
-    "Second failed POST HTTP detail was not retained by the old adapter; exact rejecting parameter is unknown. Subsequent adapter records safe diagnostic labels."
+    "Current-task single live call rejected the coordinate-free wire schema: HTTP 400 / invalid_request_error / SCHEMA. No new response or usage returned.",
+    "The previously accepted wire schema has been restored exactly; its new prompt/Python-binding path is verified locally, but its real recheck is NOT_RUN because the user capped this task at 1 live call.",
+    "Prior stored response is only PARTIAL_REVIEW: 1 exact-source item accepted, 4 non-literal/null-evidence items remain rejected. General semantic accuracy stays UNKNOWN."
   ],
   "tests": {
-    "api_mock_functional": "99 PASS (new execution)",
-    "existing_regression": "261 PASS, 1 existing holdout skip (new execution)",
+    "api_mock_functional": "Prior 99 retained as historical baseline; not rerun wholesale",
+    "existing_regression": "Prior 261 PASS + 1 skip REUSED: unchanged 22 core/CPU/fixture/pin files; not rerun wholesale",
     "gemini_live": "DISABLED_NOT_RUN_NO_KEY_REQUIREMENT",
-    "groq_live": "PASS_RESPONSE_AND_SQLITE_STORAGE",
-    "semantic_accuracy": "NOT_RUN_FORMAL_STAGE3; ONE_600_CHARACTER_SMOKE_FAILED",
+    "groq_live": "PRIOR_CONNECTION_PASS_REUSED; CURRENT_CALL_BLOCKED_HTTP400_SCHEMA",
+    "semantic_accuracy": "UNKNOWN_GENERAL; specific product/project/event rule cases separately checked",
     "stage3_plus": "NOT_RUN",
     "shadow_7_days": "NOT_RUN",
-    "groq_source_validation": "FAIL_SOURCE",
+    "groq_source_validation": "PASS_SAVED_REAL_ACCEPTED_ITEM; CURRENT_NEW_RESPONSE_NOT_RECEIVED",
     "restart_and_backup": "PASS_RAW_RESPONSE_REVIEW_HOLD_AND_SIMULATED_WAIT",
-    "duplicate_prevention": "PASS_FAILED_INPUT_HOLD; positive cache PASS_MOCK_ONLY"
+    "duplicate_prevention": "PASS_FAILED_INPUT_HOLD; positive cache PASS_MOCK_ONLY",
+    "quote_new_tests": "38 PASS unique current new cases",
+    "quote_related_regression": "25 prior affected cases PASS, selected only",
+    "saved_real_response_grounding": "PASS_PER_ITEM: 1 accepted / 4 rejected; original full batch remains PARTIAL_REVIEW",
+    "current_live_calls": 1
   },
   "commits": [
     {
@@ -45,10 +48,14 @@
     {
       "sha": "5447c30a9f00ad2e6f67255e0e8f552d5cedb195",
       "role": "Groq-only implementation and executed real failed-source evidence; push verified against remote ref"
+    },
+    {
+      "sha": "fd199ea1feafbb32cce553e63c51351211a78289",
+      "role": "Verified current handoff; prior connection and regression evidence reused"
     }
   ],
-  "scope": "Current task: stage 2 Groq-only connection verification; stage 2 source-validation completion not PASS; no stage 3 or seven-day Shadow.",
-  "updated_at": "2026-10-14T01:08:26.266144+09:00",
+  "scope": "Stage 2 exact-source repair; source item revalidation PASS but new live contract remains BLOCKED. No stage 3 accuracy evaluation or Shadow.",
+  "updated_at": "2026-10-14T07:46:06.838096+09:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
@@ -57,7 +64,8 @@
     "docs/v4/FREE_AI_SETUP.md",
     "docs/v4/GROQ_STAGE2_RESULTS.json",
     "docs/v4/GROQ_FUNCTIONAL_TESTS.xml",
-    "docs/v4/GROQ_REGRESSION_TESTS.xml"
+    "docs/v4/GROQ_REGRESSION_TESTS.xml",
+    "docs/v4/GROQ_QUOTE_REPAIR_RESULTS.json"
   ],
   "storage": {
     "branch": "codex/bct-v4-integration",
@@ -66,9 +74,10 @@
     "verified_preserved_upstream_blobs": 466,
     "main_verified": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
     "receipt_commit_note": "Implementation commit SHA is recorded after verified push; the final receipt commit may advance HEAD. Read the current remote branch ref for final delivery SHA.",
-    "current_delivery": "PASS_VERIFIED_REMOTE_IMPLEMENTATION_AND_EVIDENCE",
+    "current_delivery": "PENDING_QUOTE_REPAIR_COMMIT_PUSH",
     "local_new_trial_root": "var/v4/groq-stage2 (ignored; not restored historical V4 DB)",
-    "implementation_remote_sha": "5447c30a9f00ad2e6f67255e0e8f552d5cedb195"
+    "implementation_remote_sha": "5447c30a9f00ad2e6f67255e0e8f552d5cedb195",
+    "current_handoff_verified": "fd199ea1feafbb32cce553e63c51351211a78289"
   },
   "user_setup": [],
   "pr": {
@@ -85,7 +94,8 @@
     "measured_total_tokens": 1982,
     "failed_post_tokens": "UNKNOWN",
     "api_cost_usd": 0,
-    "basis": "User-confirmed Groq Free Plan; billing account not independently queried; no paid path"
+    "basis": "User-confirmed Groq Free Plan; billing account not independently queried; no paid path",
+    "scope": "Prior connection trial only; current-task usage is separate"
   },
   "providers": {
     "active": [
@@ -94,5 +104,12 @@
     "groq_model": "openai/gpt-oss-20b",
     "gemini": "DISABLED_ADAPTER_PRESERVED",
     "third_provider": false
+  },
+  "api_usage_current_task": {
+    "generation_posts": 1,
+    "received_responses": 0,
+    "tokens": "UNKNOWN_NOT_REPORTED",
+    "api_cost_usd": 0,
+    "basis": "Existing user-confirmed Groq Free Plan; no billing or paid path changes; no retry after failure"
   }
 }

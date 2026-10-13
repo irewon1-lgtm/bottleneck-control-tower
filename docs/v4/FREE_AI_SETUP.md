@@ -2,7 +2,13 @@
 
 Updated 2026-10-14 (Asia/Seoul). Read `EXECUTION_PLAN.md` and `PROGRESS.json` first. The fixed eight-stage goal and CPU GLiNER2 engine remain unchanged. Active AI: **GroqCloud Free Plan only**. Gemini code is retained, but routing/probes and key requirements are disabled. No third provider, paid fallback, upgrade or billing action.
 
-## Current real result
+## Current quote repair (2026-10-14)
+
+Python now binds exact unique quotes and discards every model coordinate. Saved original/response hashes matched; one SMR item passed strict source verification and was stored as PRODUCT_FAMILY with role UNKNOWN. Four invalid alias/null-evidence items remain rejected. General semantic accuracy is UNKNOWN. New tests: 38 PASS; selected existing tests: 25 PASS; prior 261 core regression passes reused without a whole rerun or reinstall.
+
+The one permitted new live request returned HTTP 400 / invalid_request_error / SCHEMA. No new response or token usage was received; no retry was made. The exact formerly accepted wire schema is restored; start/end remain ignored zero compatibility fields while Python computes all real coordinates. Its final live recheck is NOT_RUN because this task’s one-call allowance is exhausted. Overall stage 2 remains BLOCKED; stay in stage 2 for one later bounded check, do not start stage 3 or Shadow. See `GROQ_QUOTE_REPAIR_RESULTS.json`.
+
+## Prior connection trial (preserved history)
 
 `openai/gpt-oss-20b` remains selected. Official model listing returned it active with structured-output support; official docs confirm strict JSON and Free quotas. The user confirmed “Free Plan이다”. Existing `GROQ_API_KEY` and secure `api.groq.com` binding were reused; no key value was written or requested.
 

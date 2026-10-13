@@ -1,13 +1,13 @@
 {
-  "plan_version": "1.1",
+  "plan_version": "1.2",
   "stage": 2,
   "at": "2026-10-14T01:02:09.399427+09:00",
   "branch": "codex/bct-v4-integration",
   "handoff_sha": "14ffa30124b4ea1ee0b0650a168612e92d4abb10",
-  "overall_status": "FAIL_SOURCE_VALIDATION",
-  "groq_live_connection": "PASS",
+  "overall_status": "BLOCKED_NEW_LIVE_CONTRACT_CHECK",
+  "groq_live_connection": "PRIOR_PASS_REUSED_CURRENT_CHECK_BLOCKED",
   "sqlite_received_response": "PASS",
-  "validated_live_output": "FAIL",
+  "validated_live_output": "SAVED_ITEM_GROUNDING_PASS_NEW_RESPONSE_NOT_RECEIVED",
   "active_providers": [
     "groq"
   ],
@@ -151,182 +151,14 @@
     }
   ],
   "source_validation": {
-    "kind": "ONE_DOCUMENT_BOUNDED_LIVE_SMOKE_NOT_ACCURACY_BENCHMARK",
-    "source_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
-    "publication_metadata": "2026-07-25T12:47:13-04:00",
-    "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
-    "body_characters": 8053,
-    "selected_characters": 600,
-    "proposed_items": 5,
-    "accepted_items": 0,
-    "literal_validation": "FAIL_SOURCE",
-    "issues": [
-      {
-        "item": 0,
-        "field": "context",
-        "declared_start": 5905,
-        "declared_end": 5950,
-        "quote_characters": 97,
-        "reasons": [
-          "OFFSET_QUOTE_MISMATCH"
-        ]
-      },
-      {
-        "item": 0,
-        "field": "entity",
-        "declared_start": 5905,
-        "declared_end": 5950,
-        "quote_characters": 97,
-        "reasons": [
-          "OFFSET_QUOTE_MISMATCH"
-        ]
-      },
-      {
-        "item": 0,
-        "field": "product",
-        "declared_start": 5905,
-        "declared_end": 5950,
-        "quote_characters": 97,
-        "reasons": [
-          "OFFSET_QUOTE_MISMATCH",
-          "VALUE_NOT_LITERAL_IN_QUOTE"
-        ]
-      },
-      {
-        "item": 1,
-        "field": "context",
-        "declared_start": 5951,
-        "declared_end": 6000,
-        "quote_characters": 206,
-        "reasons": [
-          "OFFSET_QUOTE_MISMATCH"
-        ]
-      },
-      {
-        "item": 1,
-        "field": "entity",
-        "declared_start": 5951,
-        "declared_end": 6000,
-        "quote_characters": 206,
-        "reasons": [
-          "OFFSET_QUOTE_MISMATCH"
-        ]
-      },
-      {
-        "item": 1,
-        "field": "product",
-        "declared_start": 5951,
-        "declared_end": 6000,
-        "quote_characters": 206,
-        "reasons": [
-          "OFFSET_QUOTE_MISMATCH",
-          "VALUE_NOT_LITERAL_IN_QUOTE"
-        ]
-      },
-      {
-        "item": 2,
-        "field": "context",
-        "declared_start": 6001,
-        "declared_end": 6060,
-        "quote_characters": 134,
-        "reasons": [
-          "OFFSET_QUOTE_MISMATCH"
-        ]
-      },
-      {
-        "item": 2,
-        "field": "entity",
-        "declared_start": 6001,
-        "declared_end": 6060,
-        "quote_characters": 134,
-        "reasons": [
-          "OFFSET_QUOTE_MISMATCH"
-        ]
-      },
-      {
-        "item": 2,
-        "field": "product",
-        "declared_start": 6001,
-        "declared_end": 6060,
-        "quote_characters": 134,
-        "reasons": [
-          "OFFSET_QUOTE_MISMATCH"
-        ]
-      },
-      {
-        "item": 3,
-        "field": "context",
-        "declared_start": 6061,
-        "declared_end": 6080,
-        "quote_characters": 62,
-        "reasons": [
-          "OFFSET_QUOTE_MISMATCH"
-        ]
-      },
-      {
-        "item": 3,
-        "field": "entity",
-        "declared_start": 6061,
-        "declared_end": 6080,
-        "quote_characters": 62,
-        "reasons": [
-          "OFFSET_QUOTE_MISMATCH",
-          "NULL_WITH_NONEMPTY_EVIDENCE"
-        ]
-      },
-      {
-        "item": 3,
-        "field": "unit",
-        "declared_start": 6061,
-        "declared_end": 6080,
-        "quote_characters": 62,
-        "reasons": [
-          "OFFSET_QUOTE_MISMATCH",
-          "NULL_WITH_NONEMPTY_EVIDENCE"
-        ]
-      },
-      {
-        "item": 4,
-        "field": "context",
-        "declared_start": 5905,
-        "declared_end": 6080,
-        "quote_characters": 600,
-        "reasons": [
-          "OFFSET_QUOTE_MISMATCH"
-        ]
-      },
-      {
-        "item": 4,
-        "field": "entity",
-        "declared_start": 5905,
-        "declared_end": 6080,
-        "quote_characters": 600,
-        "reasons": [
-          "OFFSET_QUOTE_MISMATCH",
-          "NULL_WITH_NONEMPTY_EVIDENCE"
-        ]
-      },
-      {
-        "item": 4,
-        "field": "region",
-        "declared_start": 5905,
-        "declared_end": 6080,
-        "quote_characters": 600,
-        "reasons": [
-          "OFFSET_QUOTE_MISMATCH",
-          "NULL_WITH_NONEMPTY_EVIDENCE"
-        ]
-      }
-    ],
-    "manual_observations": [
-      "Advanced Nuclear Fuel Line Pilot Projects is correctly labelled PROJECT, but its lowercased product fact is not literal.",
-      "advanced light-water SMRs is a product family mentioned as the object of a government funding award; the AI labelled it PROJECT.",
-      "An actual partnership or funding award does not establish actual increased production capacity or delivered supply.",
-      "No actual product order is present in this window; positive order/forecast accuracy is not tested.",
-      "Absent specification, customer need time, supplier readiness, qualified supply pool, lead time and relief remain UNKNOWN; no S3 or candidate is accepted."
-    ],
-    "stage3_accuracy": "NOT_RUN",
-    "forecast_performance": "NOT_RUN"
+    "kind": "EXACT_REVALIDATION_OF_HASH_IDENTICAL_SAVED_REAL_RESPONSE",
+    "source_status": "PARTIAL_REVIEW",
+    "accepted_items": 1,
+    "rejected_items": 4,
+    "source_body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+    "coordinates": "PYTHON_EXACT_UNIQUE_QUOTE",
+    "semantic_accuracy": "UNKNOWN",
+    "evidence": "docs/v4/GROQ_QUOTE_REPAIR_RESULTS.json"
   },
   "source_acquisition": [
     {
@@ -549,7 +381,7 @@
   "semantic_accuracy_benchmark": "NOT_RUN",
   "future_bottleneck_lead_performance": "NOT_RUN",
   "next_stage_allowed": false,
-  "next_action": "Remain in stage 2. Fix the exact literal quote/offset contract and obtain a source-valid stored live reading; inspect this saved response first. No further API call in this run; do not start stage 3 or Shadow.",
+  "next_action": "One later bounded real check with restored known-supported wire schema; current task made exactly one request and does not retry. Inspect quote repair evidence; remain in stage 2.",
   "evidence_version_note": "Observed live generation predates final transport-state bookkeeping correction; subsequent changes were verified locally without an additional live call.",
   "local_artifact_policy": "New V4 SQLite/native originals/backups stay under ignored var/v4/groq-stage2. Public sanitized response and summaries are saved in this Git document; no old ledger restoration claimed.",
   "final_cli_restart": {
@@ -577,6 +409,220 @@
     "implementation_sha": "5447c30a9f00ad2e6f67255e0e8f552d5cedb195",
     "branch": "codex/bct-v4-integration",
     "main_sha_unchanged": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
-    "receipt_note": "The commit containing this receipt advances the branch; final SHA is independently checked against current remote ref and reported in chat."
+    "receipt_note": "The commit containing this receipt advances the branch; final SHA is independently checked against current remote ref and reported in chat.",
+    "scope": "Previous delivered trial; quote-repair delivery recorded separately"
+  },
+  "original_source_validation": {
+    "kind": "ONE_DOCUMENT_BOUNDED_LIVE_SMOKE_NOT_ACCURACY_BENCHMARK",
+    "source_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+    "publication_metadata": "2026-07-25T12:47:13-04:00",
+    "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+    "body_characters": 8053,
+    "selected_characters": 600,
+    "proposed_items": 5,
+    "accepted_items": 0,
+    "literal_validation": "FAIL_SOURCE",
+    "issues": [
+      {
+        "item": 0,
+        "field": "context",
+        "declared_start": 5905,
+        "declared_end": 5950,
+        "quote_characters": 97,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 0,
+        "field": "entity",
+        "declared_start": 5905,
+        "declared_end": 5950,
+        "quote_characters": 97,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 0,
+        "field": "product",
+        "declared_start": 5905,
+        "declared_end": 5950,
+        "quote_characters": 97,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH",
+          "VALUE_NOT_LITERAL_IN_QUOTE"
+        ]
+      },
+      {
+        "item": 1,
+        "field": "context",
+        "declared_start": 5951,
+        "declared_end": 6000,
+        "quote_characters": 206,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 1,
+        "field": "entity",
+        "declared_start": 5951,
+        "declared_end": 6000,
+        "quote_characters": 206,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 1,
+        "field": "product",
+        "declared_start": 5951,
+        "declared_end": 6000,
+        "quote_characters": 206,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH",
+          "VALUE_NOT_LITERAL_IN_QUOTE"
+        ]
+      },
+      {
+        "item": 2,
+        "field": "context",
+        "declared_start": 6001,
+        "declared_end": 6060,
+        "quote_characters": 134,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 2,
+        "field": "entity",
+        "declared_start": 6001,
+        "declared_end": 6060,
+        "quote_characters": 134,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 2,
+        "field": "product",
+        "declared_start": 6001,
+        "declared_end": 6060,
+        "quote_characters": 134,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 3,
+        "field": "context",
+        "declared_start": 6061,
+        "declared_end": 6080,
+        "quote_characters": 62,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 3,
+        "field": "entity",
+        "declared_start": 6061,
+        "declared_end": 6080,
+        "quote_characters": 62,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH",
+          "NULL_WITH_NONEMPTY_EVIDENCE"
+        ]
+      },
+      {
+        "item": 3,
+        "field": "unit",
+        "declared_start": 6061,
+        "declared_end": 6080,
+        "quote_characters": 62,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH",
+          "NULL_WITH_NONEMPTY_EVIDENCE"
+        ]
+      },
+      {
+        "item": 4,
+        "field": "context",
+        "declared_start": 5905,
+        "declared_end": 6080,
+        "quote_characters": 600,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 4,
+        "field": "entity",
+        "declared_start": 5905,
+        "declared_end": 6080,
+        "quote_characters": 600,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH",
+          "NULL_WITH_NONEMPTY_EVIDENCE"
+        ]
+      },
+      {
+        "item": 4,
+        "field": "region",
+        "declared_start": 5905,
+        "declared_end": 6080,
+        "quote_characters": 600,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH",
+          "NULL_WITH_NONEMPTY_EVIDENCE"
+        ]
+      }
+    ],
+    "manual_observations": [
+      "Advanced Nuclear Fuel Line Pilot Projects is correctly labelled PROJECT, but its lowercased product fact is not literal.",
+      "advanced light-water SMRs is a product family mentioned as the object of a government funding award; the AI labelled it PROJECT.",
+      "An actual partnership or funding award does not establish actual increased production capacity or delivered supply.",
+      "No actual product order is present in this window; positive order/forecast accuracy is not tested.",
+      "Absent specification, customer need time, supplier readiness, qualified supply pool, lead time and relief remain UNKNOWN; no S3 or candidate is accepted."
+    ],
+    "stage3_accuracy": "NOT_RUN",
+    "forecast_performance": "NOT_RUN"
+  },
+  "quote_repair": {
+    "at": "2026-10-14T07:42:50.798790+09:00",
+    "new_live_call_status": "BLOCKED_HTTP_400_SCHEMA",
+    "new_live_received_responses": 0,
+    "current_task_calls": 1,
+    "failed_call_usage": "UNKNOWN_NOT_REPORTED",
+    "api_cost_usd": 0,
+    "cost_basis": "Existing user-confirmed Free Plan; no paid path or account changes",
+    "api_error": {
+      "at": "2026-10-13T22:33:37.341999+00:00",
+      "attempt_id": "1c208621f563412988fdbd6a8b1fdb80",
+      "diagnostics": {
+        "error_code": "invalid_request_error",
+        "flags": [
+          "SCHEMA"
+        ],
+        "http_status": 400
+      },
+      "error_kind": "INPUT_INVALID",
+      "input_key": "d164570f70e9c9df7820f5ca66f10b6be189d9ae791c04311d0916ba6a9c9634",
+      "provider": "groq",
+      "run_id": "api-6accaeb2426a48838e6a535805fe5487"
+    },
+    "after_failure_additional_calls": 0,
+    "stored_real_response_revalidation": {
+      "accepted_source_items": 1,
+      "rejected_items": 4,
+      "source_status": "PARTIAL_REVIEW",
+      "semantics": "UNKNOWN_REQUIRES_REVIEW"
+    },
+    "restored_wire_schema": "Exactly equals prior Groq-accepted schema; ignored coordinate compatibility fields; local verification PASS, new real call NOT_RUN after cap exhausted",
+    "full_stage2_status": "BLOCKED_NEW_LIVE_CONTRACT_CHECK",
+    "stage3_started": false,
+    "shadow_started": false
   }
 }
