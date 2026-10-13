@@ -3967,6 +3967,11 @@
       "owner": "review",
       "patch_sha256": "53b62caaccb3b532c72803f5834e9428fe61f76cff3b64bc41089fb6452d2496",
       "applied_at": "2026-10-13T00:34:37.270486+00:00"
+    },
+    "finish-quick-worker-47d5944e5f6a4112af617228ba7c2ad3": {
+      "owner": "review",
+      "patch_sha256": "60242e78498f98788782a0e8516c6e60c0e7082d991a7677edaec9a7090f7c0a",
+      "applied_at": "2026-10-13T00:36:28.111073+00:00"
     }
   },
   "policy": {
@@ -194503,6 +194508,397 @@
       "elapsed_seconds": 102.63491716599992,
       "estimated_cost_usd": 0.0,
       "finished_at": "2026-10-13T00:34:36.930225+00:00"
+    },
+    {
+      "id": "quick-worker-47d5944e5f6a4112af617228ba7c2ad3",
+      "started_at": "2026-10-13T00:25:38.828961+00:00",
+      "state": "FINISHED",
+      "limit": 5,
+      "max_input_chars": 12000,
+      "results": [
+        {
+          "document_id": "4a36fe29-08a0-4fba-9e63-705171e462ab",
+          "body_sha256": "faace772e0a44fd1fb88ce21e680393afddc58d0c0dcb45fdde46aa2674af7e4",
+          "event_id": "event-40c03f2f68775e97a069eed3",
+          "state": "SUCCESS",
+          "input_tokens": 1217,
+          "output_tokens": 57,
+          "input_characters": 5086,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-ec08ff0637e60928305f2eff53bb2539",
+          "reused": false,
+          "elapsed_seconds": 89.63438900300002,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "4bb8abff-7d6c-40b5-ad81-5e21b32d59bb",
+          "body_sha256": "1fa905862e20897ce6ad9898fa4d5b0c637e7a9633351864af2953f3de285ae6",
+          "event_id": "event-4cb9b585e1a2275332d4116d",
+          "state": "SUCCESS",
+          "input_tokens": 1228,
+          "output_tokens": 48,
+          "input_characters": 5083,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-8559c0d6648c25f4974bc098534b13f9",
+          "reused": false,
+          "elapsed_seconds": 87.28503233499998,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "53e641c2-14f4-4275-9e14-c4885dc25548",
+          "body_sha256": "170d8391d4570456aee0a83b72f3d641cb68fad3b756e5729a5d291c90421ad5",
+          "event_id": "event-f4aa4ded26b10d6a5a584cef",
+          "state": "SUCCESS",
+          "input_tokens": 1171,
+          "output_tokens": 59,
+          "input_characters": 4789,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-4e01b6ebcfe2b45c07126a621c912aa7",
+          "reused": false,
+          "elapsed_seconds": 89.05882479700006,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "57b95463-d920-4851-aaec-057ea799b9ff",
+          "body_sha256": "fdc0225ac8689c65bd8537119c0f999e7933ceaa62f3aee450c7a0d7b7105643",
+          "event_id": "event-9e1857ed380817e2d85512f4",
+          "state": "SUCCESS",
+          "input_tokens": 1268,
+          "output_tokens": 52,
+          "input_characters": 5339,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-0cee8bb6249b08bb3edbfa12f65a6014",
+          "reused": false,
+          "elapsed_seconds": 90.19730304899986,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "59a791de-fc3b-4cc4-a48f-5912956d0392",
+          "body_sha256": "f94cf8c671074cb2e6577425132c645ea18bd80427fe01608de62ae88357b24e",
+          "event_id": "event-12cc15c6c4115244826517d0",
+          "state": "SUCCESS",
+          "input_tokens": 1499,
+          "output_tokens": 50,
+          "input_characters": 6575,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-29fb362a10eda15c06d42088f53b1cae",
+          "reused": false,
+          "elapsed_seconds": 102.63491716599992,
+          "estimated_cost_usd": 0.0
+        }
+      ],
+      "model_calls": 5,
+      "execution_mode": "LOCAL_ONLY",
+      "before": {
+        "computed_at": "2026-10-13T00:26:14.032837+00:00",
+        "reader_version": "bct-v33-reader-1",
+        "documents_total": 3397,
+        "preserved_versions": 5087,
+        "automatic_candidates": 2947,
+        "review_list_versions": 4748,
+        "quick_pending": 1471,
+        "completed_documents": 490,
+        "deep_pending": 0,
+        "candidate_data_wait": 63,
+        "material_pending": 440,
+        "oldest_wait_hours": 290.4,
+        "failed_versions": 2849,
+        "unresolved_versions": 4477,
+        "failure_reasons": {
+          "ENVIRONMENT_DNS_RESOLUTION_FAILED": 858,
+          "FULL_SOURCE_NOT_OBTAINED": 1917,
+          "REQUIRED_EVIDENCE_MISSING": 74
+        },
+        "failure_preview": [
+          {
+            "document_id": "e46eb0a1-ff8a-4ad5-af98-e856a0874918",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.nist.gov/blogs/taking-measure/home-gut-microbiome-tests-give-varying-results"
+          },
+          {
+            "document_id": "910c5f41-107c-42dc-b82a-ad2c8d0a854a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/ntcsa-setting-up-market-surveillance-unit-as-part-of-preparations-for-sawem-launch-in-april-2026-09-30"
+          },
+          {
+            "document_id": "773e8c78-ade3-47e4-a58b-96557f538e06",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/sibanye-confirms-wage-agreement-for-east-boulder-workers-strikes-continue-at-stillwater-east-columbus-continue-2026-09-30"
+          },
+          {
+            "document_id": "6da39140-fa09-4c6f-949b-0b4c6461642c",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/kropz-announces-plans-to-increase-nanophos-production-capacity-at-elandsfontein-2026-09-30"
+          },
+          {
+            "document_id": "6297cff1-c51c-4410-8d05-9aaed371a57a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/six-years-after-a-mining-reboot-egypts-gold-ambitions-start-to-take-shape-2026-09-30"
+          }
+        ],
+        "event_count": 4825,
+        "pending_events": 4368,
+        "preview": [
+          {
+            "document_id": "4190b9e8-ff3a-45f4-bab4-87b5cc9e9782",
+            "body_sha256": "725a4e05a7009e99b059f7288f28c68343690d27a3a5d334aace61e02706d133",
+            "url": "https://logisticsviewpoints.com/2026/09/29/the-global-refining-network-is-becoming-a-logistics-chokepoint/",
+            "title": "The Global Refining Network Is Becoming a Logistics Chokepoint",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 263.74,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "59f33f5f-aef6-47af-8bc7-2d5e0ed69a47",
+            "body_sha256": "6737bf0898d04f0320da746135345b0ee5b7acbb00dc06990f89e8f0c8072aaf",
+            "url": "https://www.renewableenergyworld.com/energy-business/new-project-development/a-bipartisan-spark-for-the-grid-factor-this-brief/",
+            "title": "A bipartisan SPARK for the grid | Factor This Brief",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF"
+            ],
+            "wait_hours": 263.74,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "c38f4b45-cd56-4dfb-b478-0f4012ffbfab",
+            "body_sha256": "ecb60205186b1450c7ea0cda8bff1b8f702dd99aeb3d05242612cc61459e8370",
+            "url": "https://logisticsviewpoints.com/2026/09/29/u-s-canada-import-restrictions-turn-trade-policy-into-a-logistics-execution-problem/",
+            "title": "U.S.-Canada Import Restrictions Turn Trade Policy Into a Logistics Execution Problem",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 263.74,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "063dc3dd-cf2c-4f84-815e-ea74d9a44acd",
+            "body_sha256": "6cac0b6c47b1936fa4467df547b3906948b2e35ff96614dd739cf5a21b7a2480",
+            "url": "https://pharma.economictimes.indiatimes.com/news/pharmatech/ai-can-make-clinical-trials-more-predictive-but-data-quality-remains-a-major-hurdle-experts/133288643",
+            "title": "AI can make clinical trials more predictive, but data quality remains a major hurdle: Experts",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 253.56,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "23e72695-a089-4bdd-bd05-f3a446992798",
+            "body_sha256": "4ae62c60dfefcdc5b86c6e754cb97a2687754cbfd5af1016504ac3598d417b92",
+            "url": "https://www.biospace.com/policy/china-poses-increasing-security-risk-as-us-biotech-innovation-edge-erodes",
+            "title": "China poses increasing security risk as US biotech innovation edge erodes",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 253.56,
+            "resume_at": 0,
+            "kind": "quick"
+          }
+        ]
+      },
+      "held_prior_version_states": {},
+      "attempted": 5,
+      "elapsed_seconds": 537.704065024,
+      "finished_at": "2026-10-13T00:34:47.100459+00:00",
+      "counts": {
+        "SUCCESS": 5
+      },
+      "mean_seconds": 107.5408130048,
+      "rates": {
+        "SUCCESS": 1.0,
+        "ERROR": 0.0,
+        "BLOCKED": 0.0
+      },
+      "token_totals": {
+        "input_tokens": 6383,
+        "output_tokens": 266
+      },
+      "estimated_cost_usd": 0.0,
+      "projections": {
+        "10": {
+          "seconds": 1075.408130048,
+          "estimated_cost_usd": 0.0,
+          "basis": "THIS_BATCH_ONLY_NOT_A_BACKLOG_GUARANTEE"
+        },
+        "50": {
+          "seconds": 5377.04065024,
+          "estimated_cost_usd": 0.0,
+          "basis": "THIS_BATCH_ONLY_NOT_A_BACKLOG_GUARANTEE"
+        },
+        "1278": {
+          "seconds": 137437.1590201344,
+          "estimated_cost_usd": 0.0,
+          "basis": "THIS_BATCH_ONLY_NOT_A_BACKLOG_GUARANTEE"
+        }
+      },
+      "after": {
+        "computed_at": "2026-10-13T00:35:11.026229+00:00",
+        "reader_version": "bct-v33-reader-1",
+        "documents_total": 3397,
+        "preserved_versions": 5087,
+        "automatic_candidates": 2947,
+        "review_list_versions": 4748,
+        "quick_pending": 1466,
+        "completed_documents": 495,
+        "deep_pending": 0,
+        "candidate_data_wait": 63,
+        "material_pending": 440,
+        "oldest_wait_hours": 290.55,
+        "failed_versions": 2849,
+        "unresolved_versions": 4472,
+        "failure_reasons": {
+          "ENVIRONMENT_DNS_RESOLUTION_FAILED": 858,
+          "FULL_SOURCE_NOT_OBTAINED": 1917,
+          "REQUIRED_EVIDENCE_MISSING": 74
+        },
+        "failure_preview": [
+          {
+            "document_id": "e46eb0a1-ff8a-4ad5-af98-e856a0874918",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.nist.gov/blogs/taking-measure/home-gut-microbiome-tests-give-varying-results"
+          },
+          {
+            "document_id": "910c5f41-107c-42dc-b82a-ad2c8d0a854a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/ntcsa-setting-up-market-surveillance-unit-as-part-of-preparations-for-sawem-launch-in-april-2026-09-30"
+          },
+          {
+            "document_id": "773e8c78-ade3-47e4-a58b-96557f538e06",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/sibanye-confirms-wage-agreement-for-east-boulder-workers-strikes-continue-at-stillwater-east-columbus-continue-2026-09-30"
+          },
+          {
+            "document_id": "6da39140-fa09-4c6f-949b-0b4c6461642c",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/kropz-announces-plans-to-increase-nanophos-production-capacity-at-elandsfontein-2026-09-30"
+          },
+          {
+            "document_id": "6297cff1-c51c-4410-8d05-9aaed371a57a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/six-years-after-a-mining-reboot-egypts-gold-ambitions-start-to-take-shape-2026-09-30"
+          }
+        ],
+        "event_count": 4825,
+        "pending_events": 4363,
+        "preview": [
+          {
+            "document_id": "4190b9e8-ff3a-45f4-bab4-87b5cc9e9782",
+            "body_sha256": "725a4e05a7009e99b059f7288f28c68343690d27a3a5d334aace61e02706d133",
+            "url": "https://logisticsviewpoints.com/2026/09/29/the-global-refining-network-is-becoming-a-logistics-chokepoint/",
+            "title": "The Global Refining Network Is Becoming a Logistics Chokepoint",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 263.89,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "59f33f5f-aef6-47af-8bc7-2d5e0ed69a47",
+            "body_sha256": "6737bf0898d04f0320da746135345b0ee5b7acbb00dc06990f89e8f0c8072aaf",
+            "url": "https://www.renewableenergyworld.com/energy-business/new-project-development/a-bipartisan-spark-for-the-grid-factor-this-brief/",
+            "title": "A bipartisan SPARK for the grid | Factor This Brief",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF"
+            ],
+            "wait_hours": 263.89,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "c38f4b45-cd56-4dfb-b478-0f4012ffbfab",
+            "body_sha256": "ecb60205186b1450c7ea0cda8bff1b8f702dd99aeb3d05242612cc61459e8370",
+            "url": "https://logisticsviewpoints.com/2026/09/29/u-s-canada-import-restrictions-turn-trade-policy-into-a-logistics-execution-problem/",
+            "title": "U.S.-Canada Import Restrictions Turn Trade Policy Into a Logistics Execution Problem",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 263.89,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "063dc3dd-cf2c-4f84-815e-ea74d9a44acd",
+            "body_sha256": "6cac0b6c47b1936fa4467df547b3906948b2e35ff96614dd739cf5a21b7a2480",
+            "url": "https://pharma.economictimes.indiatimes.com/news/pharmatech/ai-can-make-clinical-trials-more-predictive-but-data-quality-remains-a-major-hurdle-experts/133288643",
+            "title": "AI can make clinical trials more predictive, but data quality remains a major hurdle: Experts",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 253.7,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "23e72695-a089-4bdd-bd05-f3a446992798",
+            "body_sha256": "4ae62c60dfefcdc5b86c6e754cb97a2687754cbfd5af1016504ac3598d417b92",
+            "url": "https://www.biospace.com/policy/china-poses-increasing-security-risk-as-us-biotech-innovation-edge-erodes",
+            "title": "China poses increasing security risk as US biotech innovation edge erodes",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 253.7,
+            "resume_at": 0,
+            "kind": "quick"
+          }
+        ]
+      },
+      "source_records_unchanged": true,
+      "completed_delta": 5,
+      "quick_pending_delta": -5,
+      "pending_event_delta": -5,
+      "duplicate_auto_reviews": 0,
+      "distinct_events_attempted": 5,
+      "summary_saved": true
     }
   ],
   "targets": [
