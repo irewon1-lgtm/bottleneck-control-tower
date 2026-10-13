@@ -1,0 +1,595 @@
+{
+  "functional": {
+    "at": "2026-10-13",
+    "environment": {
+      "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+      "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+      "cpu_count": 9
+    },
+    "tests": [
+      {
+        "name": "BCT preserved input hash and evidence span",
+        "input_kind": "real stored BCT document",
+        "status": "PASS",
+        "seconds": 2.6749999960884452e-05,
+        "process_peak_rss_mb": 14.625,
+        "details": {
+          "sha256": "86d3b545d115eaec86b175ad9e32429b35a05bdb5596a51b0b8733cb64aac10e",
+          "chars": 10229,
+          "documents": 1,
+          "published_day": "2026-10-01",
+          "old_status": "PARTIAL",
+          "input_is_current_native_html": false
+        }
+      },
+      {
+        "name": "Trafilatura vs existing parser anchor retention",
+        "input_kind": "real BCT text in reconstructed HTML",
+        "status": "PASS",
+        "seconds": 0.682776070003456,
+        "process_peak_rss_mb": 33.11328125,
+        "details": {
+          "trafilatura_anchors": 6,
+          "bct_anchors": 6,
+          "trafilatura_chars": 10229,
+          "bct_chars": 10229,
+          "documents_per_100": 1,
+          "100_repeated_parses_seconds": 0.5829019680022611,
+          "warning": "HTML rebuilt from preserved text; not native webpage acquisition or general accuracy benchmark"
+        }
+      },
+      {
+        "name": "RSS date and malformed input",
+        "input_kind": "synthetic fixture",
+        "status": "PASS",
+        "seconds": 0.01576812400162453,
+        "process_peak_rss_mb": 33.23828125,
+        "details": {
+          "entries": 1,
+          "date_preserved": true,
+          "malformed_detected": true
+        }
+      },
+      {
+        "name": "Date parsing refuses invented day",
+        "input_kind": "synthetic fixture",
+        "status": "PASS",
+        "seconds": 1.9725083140001516,
+        "process_peak_rss_mb": 85.71484375,
+        "details": {
+          "explicit_date": "2028-03-01T00:00:00",
+          "year_only": null,
+          "quarter_parser": "NOT_IMPLEMENTED",
+          "event_date_role_linking": "NOT_IMPLEMENTED"
+        }
+      },
+      {
+        "name": "SupplyGraphAI outage timing / alternate / invalid input",
+        "input_kind": "synthetic fixture",
+        "status": "PASS",
+        "seconds": 0.14937841200298863,
+        "process_peak_rss_mb": 104.625,
+        "details": {
+          "shortage_day": 5.0,
+          "lost_units": 250.0,
+          "alternate_prevents_impact": true,
+          "dangling_edge_rejected": true,
+          "730_day_horizon_rejected": true,
+          "independent_origins_not_validated": true,
+          "assumptions": [
+            "Complete node outage; constant demand; no allocation, substitution consumption, or post-outage catch-up.",
+            "All dependency groups are required; one approved, full-capacity source satisfies a group.",
+            "Lead time represents already committed in-transit supply; inventory buffers are aggregate and non-overlapping.",
+            "Exposure is product units at risk × synthetic unit value, not realized revenue loss.",
+            "Alternates are already qualified, instantly available, and dedicated; shared capacity is not optimized."
+          ]
+        }
+      },
+      {
+        "name": "StatsForecast 36 month API smoke test",
+        "input_kind": "synthetic fixture",
+        "status": "PASS",
+        "seconds": 1.217709267999453,
+        "process_peak_rss_mb": 309.52734375,
+        "details": {
+          "series": 1,
+          "history_months": 48,
+          "forecast_months": 36,
+          "constant_baseline": 100,
+          "accuracy_on_industrial_target": "NOT_MEASURED",
+          "no_actual_target_time_series": true
+        }
+      },
+      {
+        "name": "PEMMSS mine ready year / ore-grade-recovery capacity",
+        "input_kind": "synthetic fixture",
+        "status": "PASS",
+        "seconds": 0.049399522999010514,
+        "process_peak_rss_mb": 324.734375,
+        "details": {
+          "not_ready_2027": true,
+          "2028_capacity_ore": 100,
+          "grade": 0.02,
+          "recovery": 0.8,
+          "2028_metal_supply": 1.6,
+          "demand": 10,
+          "conditional_gap": 8.4,
+          "repeated_year_production_blocked": true,
+          "not_real_mine_forecast": true
+        }
+      },
+      {
+        "name": "Stored BCT text + SHA + SQLite transaction integration",
+        "input_kind": "real BCT text plus adapter fixture",
+        "status": "PASS",
+        "seconds": 0.002754122993792407,
+        "process_peak_rss_mb": 325.234375,
+        "details": {
+          "duplicate_insert_attempts": 1000,
+          "distinct_documents": 1,
+          "rollback_after_injected_error": true,
+          "restart_read_verified": true,
+          "queue_is_minimal_research_adapter": true,
+          "BCT_forecast": "UNKNOWN",
+          "reason": "one historical source; no future demand or full qualified supply pool"
+        }
+      },
+      {
+        "name": "pypdf numeric retention and invalid input",
+        "input_kind": "synthetic PDF fixture",
+        "status": "PASS",
+        "seconds": 0.14807841899892082,
+        "process_peak_rss_mb": 331.484375,
+        "details": {
+          "pages": 1,
+          "numeric_anchors_retained": 2,
+          "broken_pdf_rejected": true,
+          "ocr": "NOT_RUN",
+          "real_pdf_tables": "NOT_RUN"
+        }
+      }
+    ],
+    "early": "UNVERIFIED",
+    "real_new_bottleneck_candidates": 0,
+    "real_target_accuracy": "NOT_MEASURED",
+    "independent_source_link_accuracy": "NOT_MEASURED",
+    "GLiNER2": "EXECUTED: see cpu_extractor; initial no-weight state superseded",
+    "CPU_LLM": "NOT_RUN_NO_WEIGHTS",
+    "real_qualified_supply_gap": "UNKNOWN"
+  },
+  "native_html": {
+    "url": "https://www.eia.gov/coal/production/quarterly/",
+    "html_sha256": "11e1afcc0178b36103040ab40c4844fd86ce794f539fd37a9b959e4fad688544",
+    "bytes": 113819,
+    "trafilatura": {
+      "chars": 4646,
+      "anchors": 6,
+      "seconds": 0.22237273000064306
+    },
+    "bct": {
+      "chars": 10259,
+      "anchors": 6,
+      "seconds": 0.019007616996532306,
+      "status": "PARTIAL"
+    },
+    "full_pdf_xlsx_content_verified": false,
+    "documents": 1
+  },
+  "cpu_extractor": {
+    "model": "fastino/gliner2-base-v1",
+    "device": "cpu",
+    "threads": 4,
+    "early": "UNVERIFIED",
+    "load_seconds": 39.09239834499749,
+    "inference_seconds": 1.129806508004549,
+    "output": {
+      "entities": {
+        "product": [
+          {
+            "text": "Metallurgical coal",
+            "confidence": 0.6536813378334045,
+            "start": 979,
+            "end": 997
+          },
+          {
+            "text": "Steam coal",
+            "confidence": 0.5971064567565918,
+            "start": 897,
+            "end": 907
+          }
+        ],
+        "location": [
+          {
+            "text": "U.S.",
+            "confidence": 0.9851265549659729,
+            "start": 558,
+            "end": 562
+          },
+          {
+            "text": "U.S.",
+            "confidence": 0.9838544726371765,
+            "start": 818,
+            "end": 822
+          },
+          {
+            "text": "U.S.",
+            "confidence": 0.9816226959228516,
+            "start": 731,
+            "end": 735
+          },
+          {
+            "text": "U.S.",
+            "confidence": 0.9812697172164917,
+            "start": 1359,
+            "end": 1363
+          },
+          {
+            "text": "U.S.",
+            "confidence": 0.9768798351287842,
+            "start": 428,
+            "end": 432
+          },
+          {
+            "text": "U.S.",
+            "confidence": 0.9747133255004883,
+            "start": 1070,
+            "end": 1074
+          },
+          {
+            "text": "U.S.",
+            "confidence": 0.9731609225273132,
+            "start": 306,
+            "end": 310
+          },
+          {
+            "text": "Colombia",
+            "confidence": 0.9628459811210632,
+            "start": 695,
+            "end": 703
+          },
+          {
+            "text": "U.S.",
+            "confidence": 0.9622023701667786,
+            "start": 42,
+            "end": 46
+          },
+          {
+            "text": "Canada",
+            "confidence": 0.9428769946098328,
+            "start": 716,
+            "end": 722
+          },
+          {
+            "text": "Western region",
+            "confidence": 0.9016852974891663,
+            "start": 251,
+            "end": 265
+          },
+          {
+            "text": "United States",
+            "confidence": 0.7579971551895142,
+            "start": 641,
+            "end": 654
+          }
+        ],
+        "quantity": [
+          {
+            "text": "61.6 MMst",
+            "confidence": 0.9616502523422241,
+            "start": 372,
+            "end": 381
+          },
+          {
+            "text": "0.7 MMst",
+            "confidence": 0.959879994392395,
+            "start": 787,
+            "end": 795
+          },
+          {
+            "text": "118.3 MMst",
+            "confidence": 0.957686722278595,
+            "start": 1598,
+            "end": 1608
+          },
+          {
+            "text": "145.5 MMst",
+            "confidence": 0.9547728896141052,
+            "start": 1463,
+            "end": 1473
+          },
+          {
+            "text": "137.8 MMst",
+            "confidence": 0.9522766470909119,
+            "start": 1479,
+            "end": 1489
+          },
+          {
+            "text": "88.8 MMst",
+            "confidence": 0.9516047239303589,
+            "start": 1100,
+            "end": 1109
+          },
+          {
+            "text": "26.8 MMst",
+            "confidence": 0.9505459666252136,
+            "start": 478,
+            "end": 487
+          },
+          {
+            "text": "13.9 MMst",
+            "confidence": 0.9308755397796631,
+            "start": 1014,
+            "end": 1023
+          },
+          {
+            "text": "13 MMst",
+            "confidence": 0.9282280802726746,
+            "start": 924,
+            "end": 931
+          },
+          {
+            "text": "110.9 MMst",
+            "confidence": 0.9117227792739868,
+            "start": 1614,
+            "end": 1624
+          },
+          {
+            "text": "98.8 MMst",
+            "confidence": 0.9088706374168396,
+            "start": 1244,
+            "end": 1253
+          },
+          {
+            "text": "105 MMst",
+            "confidence": 0.9007710814476013,
+            "start": 1172,
+            "end": 1180
+          },
+          {
+            "text": "125.4 million short tons",
+            "confidence": 0.7667123675346375,
+            "start": 105,
+            "end": 129
+          },
+          {
+            "text": "$110.68 per short ton",
+            "confidence": 0.5862812995910645,
+            "start": 614,
+            "end": 635
+          },
+          {
+            "text": "$139.27 per short ton",
+            "confidence": 0.5676157474517822,
+            "start": 874,
+            "end": 895
+          },
+          {
+            "text": "82.6%",
+            "confidence": 0.5178099274635315,
+            "start": 705,
+            "end": 710
+          }
+        ],
+        "date": [
+          {
+            "text": "second quarter of 2026",
+            "confidence": 0.9904914498329163,
+            "start": 334,
+            "end": 356
+          },
+          {
+            "text": "second quarter of 2026",
+            "confidence": 0.9904295206069946,
+            "start": 587,
+            "end": 609
+          },
+          {
+            "text": "second quarter of 2026",
+            "confidence": 0.9892252087593079,
+            "start": 19,
+            "end": 41
+          },
+          {
+            "text": "second quarter of 2026",
+            "confidence": 0.9887102246284485,
+            "start": 847,
+            "end": 869
+          },
+          {
+            "text": "second quarter of 2026",
+            "confidence": 0.9886136054992676,
+            "start": 1117,
+            "end": 1139
+          },
+          {
+            "text": "second quarter of 2026",
+            "confidence": 0.9884594082832336,
+            "start": 756,
+            "end": 778
+          },
+          {
+            "text": "second quarter of 2026",
+            "confidence": 0.9884166121482849,
+            "start": 1388,
+            "end": 1410
+          },
+          {
+            "text": "second quarter of 2026",
+            "confidence": 0.9881761074066162,
+            "start": 1419,
+            "end": 1441
+          },
+          {
+            "text": "second quarter of 2026",
+            "confidence": 0.9880687594413757,
+            "start": 74,
+            "end": 96
+          },
+          {
+            "text": "second quarter of 2026",
+            "confidence": 0.9871467351913452,
+            "start": 454,
+            "end": 476
+          },
+          {
+            "text": "second quarter of 2025",
+            "confidence": 0.9564681053161621,
+            "start": 403,
+            "end": 425
+          },
+          {
+            "text": "first quarter of 2026",
+            "confidence": 0.9524940848350525,
+            "start": 1046,
+            "end": 1067
+          },
+          {
+            "text": "second quarter of 2025",
+            "confidence": 0.951157808303833,
+            "start": 1270,
+            "end": 1292
+          },
+          {
+            "text": "second quarter of 2025",
+            "confidence": 0.9508794546127319,
+            "start": 209,
+            "end": 231
+          },
+          {
+            "text": "first quarter of 2026",
+            "confidence": 0.9448516368865967,
+            "start": 955,
+            "end": 976
+          },
+          {
+            "text": "first quarter of 2026",
+            "confidence": 0.942421019077301,
+            "start": 1197,
+            "end": 1218
+          },
+          {
+            "text": "first quarter of 2026",
+            "confidence": 0.9289823770523071,
+            "start": 1643,
+            "end": 1664
+          },
+          {
+            "text": "first quarter of 2026",
+            "confidence": 0.9210321307182312,
+            "start": 1508,
+            "end": 1529
+          },
+          {
+            "text": "first quarter of 2026",
+            "confidence": 0.9171379804611206,
+            "start": 514,
+            "end": 535
+          }
+        ],
+        "organization": [
+          {
+            "text": "electric power sector",
+            "confidence": 0.7177691459655762,
+            "start": 1298,
+            "end": 1319
+          },
+          {
+            "text": "electric power sector",
+            "confidence": 0.6956496238708496,
+            "start": 1563,
+            "end": 1584
+          }
+        ]
+      }
+    },
+    "chars": 1666,
+    "status": "EXECUTED",
+    "peak_rss_mb": 2315.69921875,
+    "target_5_field_accuracy": "NOT_MEASURED",
+    "independent_source_linking": "NOT_IMPLEMENTED",
+    "new_bottleneck_candidates": 0
+  },
+  "edgartools": {
+    "version": "2.21.1",
+    "seconds": 0.0777346570030204,
+    "chars": 11429,
+    "tables": 0,
+    "table_status": "No tables found",
+    "anchors": 6,
+    "SEC_live_filing_parse": "NOT_RUN",
+    "version_is_old": true,
+    "initial_failure": "missing optional html5lib",
+    "retry": "installed html5lib only"
+  },
+  "mining_data": {
+    "rows": 17260,
+    "companies": 68,
+    "commodity_field_distinct_values": 70,
+    "mines": 176,
+    "missing_source_url": 536,
+    "metrics": {
+      "grade": 2101,
+      "guidance": 605,
+      "production": 9284,
+      "production_guidance": 398,
+      "sales": 4796,
+      "sales_guidance": 76
+    },
+    "data_sha256": "4d78436102eea45b8c48c0c0a0905baae9ea5a83592928be467db4d03eaab2e8",
+    "data_is_current_live_feed": false,
+    "future_2027_2029_supply": "NOT_VERIFIED",
+    "official_reports_crosscheck": "NOT_RUN",
+    "data_terms": "research and education; raw dataset not redistributed in deliverable"
+  },
+  "minimal_integration": {
+    "status": "PASS",
+    "scope": "preserved BCT text -> CPU GLiNER2 -> original source spans -> SQLite idempotence -> failure rollback -> reopened database",
+    "source_documents": 1,
+    "entities": 51,
+    "entity_offsets_verified": 51,
+    "source_independence": "one origin only; no independent corroboration",
+    "future_gap": "UNKNOWN",
+    "early": "UNVERIFIED",
+    "new_bottleneck_candidates": 0,
+    "adapter_seconds": 0.0012874849999207072,
+    "process_peak_rss_mb": 10.125,
+    "unverified": [
+      "TARGET five-field extraction accuracy",
+      "demand/supply event-role linkage",
+      "qualified supply coverage",
+      "live scheduling",
+      "multi-document throughput"
+    ]
+  },
+  "access": [
+    {
+      "url": "https://www.eia.gov/coal/production/quarterly/",
+      "http": 200,
+      "bytes": 114847,
+      "seconds": 4.990085571000236,
+      "sha256": "78588a5ec94cb0523d7019d78be43916ccccdd0c543405b31214b04e317838c8"
+    },
+    {
+      "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries/",
+      "status": "BLOCKED",
+      "error": "HTTP Error 403: Forbidden",
+      "seconds": 3.3425896240005386
+    },
+    {
+      "url": "https://data.sec.gov/submissions/CIK0001701605.json",
+      "http": 200,
+      "bytes": 159282,
+      "seconds": 3.8477230290009174,
+      "sha256": "499ba6d918a9a73ee5785d638ce9f27bc5b69a973712adc30a2f03c289bfb368"
+    },
+    {
+      "url": "https://huggingface.co/fastino/gliner2-base-v1/resolve/main/config.json",
+      "http": 200,
+      "bytes": 236,
+      "seconds": 7.357463615000597,
+      "sha256": "33d8aa009deed4b5435d162e08b5a720b252a0084e59d30d366b37da8c0193c5"
+    }
+  ],
+  "final_forecast_status": "UNVERIFIED",
+  "new_verified_bottlenecks": 0
+}
