@@ -41,10 +41,14 @@
     {
       "sha": "14ffa30124b4ea1ee0b0650a168612e92d4abb10",
       "role": "verified handoff / remote HEAD at task start"
+    },
+    {
+      "sha": "5447c30a9f00ad2e6f67255e0e8f552d5cedb195",
+      "role": "Groq-only implementation and executed real failed-source evidence; push verified against remote ref"
     }
   ],
   "scope": "Current task: stage 2 Groq-only connection verification; stage 2 source-validation completion not PASS; no stage 3 or seven-day Shadow.",
-  "updated_at": "2026-10-14T01:04:35.549070+09:00",
+  "updated_at": "2026-10-14T01:08:26.266144+09:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
@@ -58,12 +62,13 @@
   "storage": {
     "branch": "codex/bct-v4-integration",
     "implementation_push": "PASS_VERIFIED_REMOTE_REF",
-    "latest_remote_verified": "9617a5d30655e45937ba38bb27f7ca78c48d77c5",
+    "latest_remote_verified": "5447c30a9f00ad2e6f67255e0e8f552d5cedb195",
     "verified_preserved_upstream_blobs": 466,
     "main_verified": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
     "receipt_commit_note": "Implementation commit SHA is recorded after verified push; the final receipt commit may advance HEAD. Read the current remote branch ref for final delivery SHA.",
-    "current_delivery": "PENDING_COMMIT_PUSH_VERIFICATION",
-    "local_new_trial_root": "var/v4/groq-stage2 (ignored; not restored historical V4 DB)"
+    "current_delivery": "PASS_VERIFIED_REMOTE_IMPLEMENTATION_AND_EVIDENCE",
+    "local_new_trial_root": "var/v4/groq-stage2 (ignored; not restored historical V4 DB)",
+    "implementation_remote_sha": "5447c30a9f00ad2e6f67255e0e8f552d5cedb195"
   },
   "user_setup": [],
   "pr": {
