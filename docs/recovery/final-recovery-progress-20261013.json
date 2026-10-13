@@ -1,27 +1,30 @@
 {
   "format": "bct-final-recovery-progress-v1",
-  "observed_at": "2026-10-13T01:41:27.570Z",
-  "status": "IN_PROGRESS_NOT_CLEAN_PASS",
-  "main_sha": "d4b3130f8a5c0f2261fa851c7a35cb1c19fd5b5c",
+  "observed_at": "2026-10-13T03:28:17.251Z",
+  "status": "IN_PROGRESS_FULL_FAIL_NOT_CLEAN_PASS",
+  "main_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
   "merged_prs": [
     38,
     39,
     40,
-    41
+    41,
+    42
   ],
   "release": {
-    "gate_run_id": 38316734425,
-    "validated_code_sha": "956325a578a5e39a9ac2d88f35bb45f3581fa0bd",
-    "artifact_id": 11778321087,
-    "artifact_sha256": "090d9d04749ebd0e7aa611c9af95a4636ee5dfed7398c133601df50c860cf974"
+    "gate_run_id": 38331945733,
+    "validated_code_sha": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+    "artifact_id": 11783493914,
+    "artifact_sha256": "00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a"
   },
-  "gate_receipt_run": 38320839649,
+  "gate_receipt_run": 38333941926,
   "regressions": {
-    "python_pass": 939,
+    "python_pass": 942,
     "python_skip": 1,
     "javascript_pass": 34,
     "original_sources_preserved": 230,
-    "forecast_accuracy": "UNVERIFIED"
+    "typechecked_files": 47,
+    "forecast_accuracy": "UNVERIFIED",
+    "gate_run": 38331945733
   },
   "native_failure_archive": {
     "run_id": 38325017675,
@@ -216,21 +219,23 @@
     }
   },
   "actual_latest_rss": {
-    "run_id": 38313644101,
-    "code_sha": "367bf477717561380282d1b9f5ca46fc82f11323",
-    "initial": 3363,
-    "total": 3391,
-    "new": 28,
+    "initial": 3154,
+    "latest": 3399,
+    "cumulative_new": 245,
+    "last_run_new": 2,
     "normal_sources": 117,
-    "total_sources": 125,
-    "precursor_run": 38313843360,
-    "verified_new_originals": 10,
-    "review_run": 38313982144,
-    "review_records": 11,
-    "independent_pairs": 0,
-    "early": 0,
-    "artifact_sha256": "239dfb697a20997d12c4c320327f6685df808a3d4175acb38b2f0a22ffa4da35",
-    "cumulative_new_in_task": 243
+    "registered_sources": 125,
+    "errors": {
+      "MalformedRecord": 2,
+      "URLError": 6
+    },
+    "last_rss_run": 38338312039,
+    "precursor_run": 38338585735,
+    "new_verified_originals": 1,
+    "review_run": 38338675901,
+    "review_records": 1,
+    "candidate_run": 38338585716,
+    "code_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797"
   },
   "final_code_next_scheduled_rss": {
     "run_id": 38326068143,
@@ -421,11 +426,11 @@
     "git_physical_bytes_reclaimed": "NOT_CLAIMED"
   },
   "remaining": [
-    "Three distinct final-code FULL executions",
-    "Fresh reference audit and safe unused sidecar cleanup",
-    "Final immutable source/root SHA checks after cleanup",
-    "Final report with PASS/FAIL/SKIP/BLOCKED scopes",
-    "Next scheduled RSS after any PR42 final-main release; current d4 scheduled downstream verified"
+    "Validate and release diagnostic PR43 without changing forecasting logic",
+    "Actual final-code distinct FULL cycles",
+    "New original CPU review production import and current screen verification",
+    "Latest reference audit, isolated cleanup verification and conditional safe prune",
+    "Final post-release scheduler observation and report"
   ],
   "production_history_rewritten": false,
   "paid_calls": 0,
@@ -494,176 +499,86 @@
   "latest_code_rollback": {
     "status": "PASS",
     "actual_execution": true,
-    "scope": "Forward commits on isolated branch only; exact original code trees restored. Existing final-code regression receipts reused, not rerun here.",
+    "scope": "Exact code trees using forward commits on isolated branch; matched-code regression receipts reused",
     "branch": "ops/bct-rollback-rehearsal-20261013",
-    "start_sha": "6ce452fa47cfccd2ef3a72b636f4f0696743788b",
     "steps": [
       {
-        "sha": "b21bf9714da86de6d691e57cd4a64b7300fc64fc",
-        "parent": "6ce452fa47cfccd2ef3a72b636f4f0696743788b",
+        "tree": "119be9be4a7b04a24a38e85164542e7c1a925871",
+        "name": "align final PR42 code",
+        "parent": "f2e51747be1e305ceca01e76a4e91df9ae6fb5a4",
+        "sha": "cd5aa975826c9bbcfe8c0e612953cf9adf01c05e",
+        "actual": "cd5aa975826c9bbcfe8c0e612953cf9adf01c05e",
+        "force": false
+      },
+      {
         "tree": "3b1bf1f0ee0c861173281d3cf0dfa222984306a5",
-        "force": false,
-        "observed_ref_sha": "b21bf9714da86de6d691e57cd4a64b7300fc64fc"
+        "name": "rollback to exact pre-PR42 code",
+        "parent": "cd5aa975826c9bbcfe8c0e612953cf9adf01c05e",
+        "sha": "0b8198b5d43d03a0ca89a2da782d6753c819fabc",
+        "actual": "0b8198b5d43d03a0ca89a2da782d6753c819fabc",
+        "force": false
       },
       {
-        "sha": "5b0ae2c123baa6c683a22a18ea8ecc984c98e9c6",
-        "parent": "b21bf9714da86de6d691e57cd4a64b7300fc64fc",
-        "tree": "acd22edb9994edea1a2422b8132cbd522858b9c7",
-        "force": false,
-        "observed_ref_sha": "5b0ae2c123baa6c683a22a18ea8ecc984c98e9c6"
-      },
-      {
-        "sha": "f2e51747be1e305ceca01e76a4e91df9ae6fb5a4",
-        "parent": "5b0ae2c123baa6c683a22a18ea8ecc984c98e9c6",
-        "tree": "3b1bf1f0ee0c861173281d3cf0dfa222984306a5",
-        "force": false,
-        "observed_ref_sha": "f2e51747be1e305ceca01e76a4e91df9ae6fb5a4"
+        "tree": "119be9be4a7b04a24a38e85164542e7c1a925871",
+        "name": "restore final PR42 code",
+        "parent": "0b8198b5d43d03a0ca89a2da782d6753c819fabc",
+        "sha": "4a9541afb044d52ce2b50d18cf3ba44371deeaf7",
+        "actual": "4a9541afb044d52ce2b50d18cf3ba44371deeaf7",
+        "force": false
       }
     ],
-    "restored_tree": "3b1bf1f0ee0c861173281d3cf0dfa222984306a5",
-    "exact_final_main_tree": "3b1bf1f0ee0c861173281d3cf0dfa222984306a5",
-    "production_refs_before": [
+    "production_before": [
       {
-        "ref": "refs/heads/backup/future-data-before-shard-cleanup-20261012-3cd0558f",
-        "sha": "3cd0558fdbca12c02fb094f56bd5c9a91a680ea9"
+        "branch": "main",
+        "sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-native-extent-release-20261013-367bf477",
-        "sha": "367bf477717561380282d1b9f5ca46fc82f11323"
+        "branch": "data",
+        "sha": "cbeb35db0580b12823f9f67bd1fc480e9980b4e1"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-publication-release-20261013-39a7f6b5",
-        "sha": "39a7f6b58a2f38114b4b0c68b62dd1ef9a5fc189"
+        "branch": "future-bottleneck-data",
+        "sha": "66840cd7f13629c9386a35ab08301ca167504a5b"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-repair-future-data-20261012",
-        "sha": "261e469ac33f087f8f6aac0e80006d12fab3e01a"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-repair-live-state-20261012",
+        "branch": "live-state",
         "sha": "21e1be03b522d81a20d95e79694617967d8a608a"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-repair-main-20261012",
-        "sha": "b383389a7f08cad440fae8a7ee40d0b784e54df9"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-repair-review-state-20261012",
-        "sha": "1e0fb94a635e3b6ad066dbd2cfa0d4eacc16780a"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-repair-rss-data-20261012",
-        "sha": "0f8ad9ba09b36a3c3ac36b0786e9a40100e5ce10"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-storage-release-20261012-cbe1f488",
-        "sha": "cbe1f488db80f2232dd7ab99c598fe72ef55e41a"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-version-access-release-20261013-eab6b0e9",
-        "sha": "eab6b0e9ea823fb2b51bf70add4aa34d0a3a4a30"
-      },
-      {
-        "ref": "refs/heads/data",
-        "sha": "943194423e52e8445405706c84e83b2de94093bb"
-      },
-      {
-        "ref": "refs/heads/future-bottleneck-data",
-        "sha": "6369c82ce91f171406c62f84dad1574af0c864dc"
-      },
-      {
-        "ref": "refs/heads/live-state",
-        "sha": "21e1be03b522d81a20d95e79694617967d8a608a"
-      },
-      {
-        "ref": "refs/heads/main",
-        "sha": "d4b3130f8a5c0f2261fa851c7a35cb1c19fd5b5c"
-      },
-      {
-        "ref": "refs/heads/review-lead-evaluation-state",
-        "sha": "5bcbc34574b2079fd9d74433fb2f3434c807d3a9"
-      },
-      {
-        "ref": "refs/heads/review-lead-shadow-state",
-        "sha": "236151fd616b262873256f1bf10f991f28a9313b"
+        "branch": "review-lead-shadow-state",
+        "sha": "7580974082abe27a80f5fee66faabe3330147eca"
       }
     ],
-    "production_refs_after": [
+    "production_after": [
       {
-        "ref": "refs/heads/backup/future-data-before-shard-cleanup-20261012-3cd0558f",
-        "sha": "3cd0558fdbca12c02fb094f56bd5c9a91a680ea9"
+        "branch": "main",
+        "sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-native-extent-release-20261013-367bf477",
-        "sha": "367bf477717561380282d1b9f5ca46fc82f11323"
+        "branch": "data",
+        "sha": "cbeb35db0580b12823f9f67bd1fc480e9980b4e1"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-publication-release-20261013-39a7f6b5",
-        "sha": "39a7f6b58a2f38114b4b0c68b62dd1ef9a5fc189"
+        "branch": "future-bottleneck-data",
+        "sha": "66840cd7f13629c9386a35ab08301ca167504a5b"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-repair-future-data-20261012",
-        "sha": "261e469ac33f087f8f6aac0e80006d12fab3e01a"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-repair-live-state-20261012",
+        "branch": "live-state",
         "sha": "21e1be03b522d81a20d95e79694617967d8a608a"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-repair-main-20261012",
-        "sha": "b383389a7f08cad440fae8a7ee40d0b784e54df9"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-repair-review-state-20261012",
-        "sha": "1e0fb94a635e3b6ad066dbd2cfa0d4eacc16780a"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-repair-rss-data-20261012",
-        "sha": "0f8ad9ba09b36a3c3ac36b0786e9a40100e5ce10"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-storage-release-20261012-cbe1f488",
-        "sha": "cbe1f488db80f2232dd7ab99c598fe72ef55e41a"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-version-access-release-20261013-eab6b0e9",
-        "sha": "eab6b0e9ea823fb2b51bf70add4aa34d0a3a4a30"
-      },
-      {
-        "ref": "refs/heads/data",
-        "sha": "943194423e52e8445405706c84e83b2de94093bb"
-      },
-      {
-        "ref": "refs/heads/future-bottleneck-data",
-        "sha": "6369c82ce91f171406c62f84dad1574af0c864dc"
-      },
-      {
-        "ref": "refs/heads/live-state",
-        "sha": "21e1be03b522d81a20d95e79694617967d8a608a"
-      },
-      {
-        "ref": "refs/heads/main",
-        "sha": "d4b3130f8a5c0f2261fa851c7a35cb1c19fd5b5c"
-      },
-      {
-        "ref": "refs/heads/review-lead-evaluation-state",
-        "sha": "5bcbc34574b2079fd9d74433fb2f3434c807d3a9"
-      },
-      {
-        "ref": "refs/heads/review-lead-shadow-state",
-        "sha": "236151fd616b262873256f1bf10f991f28a9313b"
+        "branch": "review-lead-shadow-state",
+        "sha": "7580974082abe27a80f5fee66faabe3330147eca"
       }
     ],
-    "production_refs_changed": [],
-    "force_pushes": 0,
-    "history_rewrites": 0,
-    "production_ref_guard": "PASS"
+    "production_changed": [],
+    "history_rewrites": 0
   },
   "final_core_objective_code_sha_proof": {
     "status": "PASS",
     "actual_remote_execution": true,
     "baseline": "cbe1f488db80f2232dd7ab99c598fe72ef55e41a",
-    "main": "d4b3130f8a5c0f2261fa851c7a35cb1c19fd5b5c",
+    "main": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
     "method": "Exact Git blob SHA equality for four existing leading demand/supply forecast modules",
     "files": [
       {
@@ -693,7 +608,7 @@
     "pr": 42,
     "branch": "fix/bct-publication-budget-resume-20261013",
     "sha": "46de5837889e3d547af6d748f5de9ce469cabc07",
-    "main_merged": false,
+    "main_merged": true,
     "focused_regression": {
       "run_id": 38331370992,
       "before": {
@@ -706,7 +621,8 @@
       "other_engine_storage_passed": 51
     },
     "gates_run": 38331945733,
-    "gates_status": "GATES0_TO4_PASS_STAGE5_RUNNING"
+    "gates_status": "PASS",
+    "release_head_sha": "d9dd46c368aab47d017b76b43c04bbe701846676"
   },
   "initial_reference_audit": {
     "actual_artifact_sha256": "ef44647971894a2fb7333d2e60968d5cd67ca8528c024beb07c175cda49074c1",
@@ -1013,15 +929,917 @@
     }
   },
   "new_rss_exact_cpu": {
-    "run_id": 38332438586,
-    "workflow_status": "FAIL_AUDIT_ASSERTION",
-    "worker_status": "FINISHED",
+    "status": "PASS",
+    "actual_execution": true,
+    "checked_out_code_sha": "d4b3130f8a5c0f2261fa851c7a35cb1c19fd5b5c",
+    "audit_run_id": "38334067719",
+    "code": {
+      "status": "PASS",
+      "gate_run_id": 38316734425,
+      "verified_code_files": 234,
+      "validated_code_sha": "956325a578a5e39a9ac2d88f35bb45f3581fa0bd",
+      "artifact_id": 11778321087
+    },
+    "rss_run": 38326068143,
+    "precursor_run": 38326295131,
+    "candidate_run": 38326295081,
+    "candidate_commit": "ce5752df6d2ad8ba74846e9178931ed4e1e07901",
+    "document_id": "3d61549c-7b3d-4110-935e-0e85dfbc1ee3",
+    "body_sha256": "05cf535b8d07e5eeb652227505044ab7d4d54367acee4d49b820843fd8725b80",
+    "original_html_sha256": "83ac8441eae2df6d346c7b63a851c7c9a7943588563f75ba5f13e9e22c16cf85",
+    "source_records_unchanged": true,
+    "preservation": {
+      "status": "PASS",
+      "preserved_candidates": 2865,
+      "preserved_completed_versions": 184,
+      "preserved_failure_versions": 3696,
+      "preserved_reviews": 213
+    },
     "model_calls": 1,
-    "successful_calls": 1,
-    "source_whole_complete": true,
+    "actual_returned_native_calls": 1,
+    "actual_complete_read": true,
+    "review": {
+      "as_of": "2026-10-13",
+      "body_sha256": "05cf535b8d07e5eeb652227505044ab7d4d54367acee4d49b820843fd8725b80",
+      "candidate_state": "REVIEWED",
+      "disposition": "CHANGE",
+      "document_id": "3d61549c-7b3d-4110-935e-0e85dfbc1ee3",
+      "kind": "quick",
+      "read_complete": true,
+      "read_end": 4455,
+      "read_start": 0,
+      "reader_version": "bct-v33-reader-1",
+      "reason": "Microsoft has significantly upgraded its Maia 300 accelerator, increasing HBM bandwidth and delivering more AI inference computing power.",
+      "review_id": "auto-quick-24620d5359eaa8a76aadc16477fe23ef",
+      "reviewed_at": "2026-10-13T01:57:00.181574+00:00",
+      "source_access": {
+        "body_sha256": "05cf535b8d07e5eeb652227505044ab7d4d54367acee4d49b820843fd8725b80",
+        "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST",
+        "url": "https://www.hpcwire.com/2026/10/12/microsoft-boosts-hbm-bandwidth-by-2-5x-with-maia-300-accelerator/"
+      },
+      "worker_event_id": "event-ef845413b957e6d94811d366",
+      "worker_model": "Qwen/Qwen2.5-7B-Instruct-GGUF",
+      "worker_provider": "local-cpu"
+    },
+    "review_sha256": "063f92bc472347520f919ee15e49fa8060c864f62ff6c0b142b3be34922c614d",
+    "native_receipts": [
+      {
+        "document_id": "3d61549c-7b3d-4110-935e-0e85dfbc1ee3",
+        "body_sha256": "05cf535b8d07e5eeb652227505044ab7d4d54367acee4d49b820843fd8725b80",
+        "expected_read_end": 4455,
+        "prompt_tokens": 1597,
+        "model": "bct-recovery-qwen2.5-7b",
+        "truncated": false,
+        "stop_type": "eos",
+        "tokens_evaluated": 1597,
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 1597,
+          "prompt_ms": 34584.182,
+          "prompt_per_token_ms": 21.655718221665623,
+          "prompt_per_second": 46.17718007614001,
+          "predicted_n": 47,
+          "predicted_ms": 10520.94,
+          "predicted_per_token_ms": 228.71608695652176,
+          "predicted_per_second": 4.372232899341693
+        },
+        "content": "{\"disposition\": \"CHANGE\", \"reason\": \"Microsoft has significantly upgraded its Maia 300 accelerator, increasing HBM bandwidth and delivering more AI inference computing power.\",\"read_end\": 4455}",
+        "response_sha256": "e9f612310e8722b3a25d3f6816dd54c6fb52e92f3bb0904c5d3a374baf899833"
+      }
+    ],
+    "production_ref_writes": 0,
+    "production_reviews_added": 0,
+    "paid_fallback_calls": 0,
+    "prediction_performance": "UNVERIFIED",
+    "scope": "Exact newest real RSS source read by unchanged CPU worker in isolated local copy; production import not performed",
+    "actual_zip_sha256": "fc2de357ced83cbdfa1dc3103550af79b065f105756b51f7b39e1a01dc0837ed",
+    "actual_artifact_id": 11784282874,
+    "related_review_lead_records": [
+      {
+        "path": "queue/dec3ca1902e4a946f36dbc302981e976c5aece17f84ba5041de51383f0c9056e.json",
+        "record": {
+          "document_id": "3d61549c-7b3d-4110-935e-0e85dfbc1ee3",
+          "body_sha256": "05cf535b8d07e5eeb652227505044ab7d4d54367acee4d49b820843fd8725b80",
+          "published_at": "2026-10-12T22:46:01+00:00",
+          "acquired_at": "2026-10-13T00:15:25.396680+00:00",
+          "available_at": "2026-10-13T00:15:25.396680+00:00",
+          "mode": "PROSPECTIVE_REVIEW",
+          "status": "HOLD"
+        }
+      },
+      {
+        "path": "store/intake/bd454c6d058bf44505c7c96e28443f81c6f257baa7e83a1fe9e871a755396ddb.json",
+        "record": {
+          "document_id": "3d61549c-7b3d-4110-935e-0e85dfbc1ee3",
+          "body_sha256": "05cf535b8d07e5eeb652227505044ab7d4d54367acee4d49b820843fd8725b80",
+          "origin_url": "https://www.hpcwire.com/2026/10/12/microsoft-boosts-hbm-bandwidth-by-2-5x-with-maia-300-accelerator/",
+          "provenance_verified": true,
+          "final_status": "HOLD",
+          "reason": "SEMANTIC_REVIEW_REQUIRED",
+          "formal_TARGET_id": null,
+          "mode": "PROSPECTIVE_REVIEW"
+        }
+      }
+    ],
+    "final_native_code_reuse": {
+      "status": "PASS",
+      "actual_remote_sha_check": true,
+      "main_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+      "files": [
+        {
+          "path": "src/bct/future_worker.py",
+          "before": "116a6880b2c98599086930692f7e7619a4d7cf00",
+          "after": "116a6880b2c98599086930692f7e7619a4d7cf00"
+        },
+        {
+          "path": "src/bct/future_local_reader.py",
+          "before": "2a120f8419714ca764b2fba9e80e572f1fb18d81",
+          "after": "2a120f8419714ca764b2fba9e80e572f1fb18d81"
+        },
+        {
+          "path": "src/bct/future_review.py",
+          "before": "549ab78d42f2a0289844aaaea38096fb40b6639a",
+          "after": "549ab78d42f2a0289844aaaea38096fb40b6639a"
+        },
+        {
+          "path": "src/bct/future_store.py",
+          "before": "b4d72637572202511c6397c4dfcf75bdc2316190",
+          "after": "b4d72637572202511c6397c4dfcf75bdc2316190"
+        },
+        {
+          "path": "src/bct/future_github.py",
+          "before": "b2226a175ec5153f7c326a273871ef84a74b72c3",
+          "after": "b2226a175ec5153f7c326a273871ef84a74b72c3"
+        },
+        {
+          "path": "config/bct-local-reader.json",
+          "before": "2bcc79a4af6d750ccb2a261a2aa2b2b728dcd67c",
+          "after": "2bcc79a4af6d750ccb2a261a2aa2b2b728dcd67c"
+        }
+      ]
+    },
+    "production_import_status": "NOT_RUN"
+  },
+  "exact_release_receipt": {
+    "status": "PASS",
+    "actual_execution": true,
+    "release": {
+      "gate_run_id": 38331945733,
+      "validated_code_sha": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+      "artifact_id": 11783493914,
+      "artifact_sha256": "00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a"
+    },
+    "code": {
+      "status": "PASS",
+      "gate_run_id": 38331945733,
+      "verified_code_files": 235,
+      "validated_code_sha": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+      "artifact_id": 11783493914
+    },
+    "pins": {
+      "checkpoint.json": "6bf4b59f2880dbf398bd13bef863c3ac41c3240841c9eac1dd3f2fbdb84b7d42",
+      "e2e-recovery.json": "5aff83ca2e9b7066a4aab7b916091d7df5afba87b1ddc6a14a9cfaacf43bfe0c",
+      "source-audit.json": "e6a4b5a82de89e2ef19767084bc6ac59ff1a84775014f04826633330ca60b3be",
+      "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
+      "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
+      "evidence-recovery-observations.json": "e9a287f0a3e9d0d3286f48e69f414ca9e9b98e36b31e31cd33501764cb69071f",
+      "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "evidence-recovery-versions.json": "d41acd074251ba30a7a86c2dff553a2c49e31bb85d764102d6065e9fdb4c3d86",
+      "local-reader-setup.json": "574e1d79174ca3c8618f6e914297a1faa3fd29ce63f6af76233ae84addb6475e",
+      "local-reader-probe.json": "7643f8d37dafead5e6e75db599b32bf80c3a2f8b5aa5e7fcca7c5c222cc643bc",
+      "private-local-reader-execution.jsonl": "edff576a0c81e4faa3d37b252412cc5efaa6812bea7d617d0dcc92de5b35b40c",
+      "recovery-preservation-seal.json": "9652c4e6b0eb0cbc6dd96c7073adea442e1493eec18c1262a0d6dd0b9ba1d5e7",
+      "queue-recovery-versions.json": "3c65ce65228d97941cc32d1c4d446e7dbcb351f50578ebc3716b17a1560c6527",
+      "operating-engine-checkpoint.json": "267b6dc5b8cd6155e07b0b5c29a4492fb4ed029c5b9dd24fa420c937e4e19e1e",
+      "operating-publication-request.json": "f1e3f230abc15d67b0726a90cb82b820f9266364c871cb45833fc1a4cce81468",
+      "operating-publication-history.json": "120222a5dea8dc5f8c52a9d95e104d98ad7c2313948237dedadd9281e23b698d",
+      "native-claim-recovery.json": "ca5158288848a25360df7d6331e1d050f2cf5eb5d24ae95187283ee4b1f6e908",
+      "native-claim-history.json": "289cb89b3657d8299c20b215d4ca34addcacc53c18d29d432f8c5681d1b0ac2f"
+    },
+    "proof": {
+      "status": "PASS",
+      "verified_pinned_files": {
+        "checkpoint.json": "6bf4b59f2880dbf398bd13bef863c3ac41c3240841c9eac1dd3f2fbdb84b7d42",
+        "e2e-recovery.json": "5aff83ca2e9b7066a4aab7b916091d7df5afba87b1ddc6a14a9cfaacf43bfe0c",
+        "source-audit.json": "e6a4b5a82de89e2ef19767084bc6ac59ff1a84775014f04826633330ca60b3be",
+        "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
+        "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
+        "evidence-recovery-observations.json": "e9a287f0a3e9d0d3286f48e69f414ca9e9b98e36b31e31cd33501764cb69071f",
+        "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "evidence-recovery-versions.json": "d41acd074251ba30a7a86c2dff553a2c49e31bb85d764102d6065e9fdb4c3d86",
+        "local-reader-setup.json": "574e1d79174ca3c8618f6e914297a1faa3fd29ce63f6af76233ae84addb6475e",
+        "local-reader-probe.json": "7643f8d37dafead5e6e75db599b32bf80c3a2f8b5aa5e7fcca7c5c222cc643bc",
+        "private-local-reader-execution.jsonl": "edff576a0c81e4faa3d37b252412cc5efaa6812bea7d617d0dcc92de5b35b40c",
+        "recovery-preservation-seal.json": "9652c4e6b0eb0cbc6dd96c7073adea442e1493eec18c1262a0d6dd0b9ba1d5e7",
+        "queue-recovery-versions.json": "3c65ce65228d97941cc32d1c4d446e7dbcb351f50578ebc3716b17a1560c6527",
+        "operating-engine-checkpoint.json": "267b6dc5b8cd6155e07b0b5c29a4492fb4ed029c5b9dd24fa420c937e4e19e1e",
+        "operating-publication-request.json": "f1e3f230abc15d67b0726a90cb82b820f9266364c871cb45833fc1a4cce81468",
+        "operating-publication-history.json": "120222a5dea8dc5f8c52a9d95e104d98ad7c2313948237dedadd9281e23b698d",
+        "native-claim-recovery.json": "ca5158288848a25360df7d6331e1d050f2cf5eb5d24ae95187283ee4b1f6e908",
+        "native-claim-history.json": "289cb89b3657d8299c20b215d4ca34addcacc53c18d29d432f8c5681d1b0ac2f"
+      },
+      "verified_cache_files": {
+        "private-source-cache": 1677,
+        "private-evidence-cache": 77,
+        "private-evidence-raw": 1467,
+        "private-source-html": 8,
+        "private-native-claim": 51
+      },
+      "cache_inventory_sha256": "61254209fc5697fdd3e2789806214ee15cd01d564386ce75eb4bc7acdda2ed5a"
+    },
+    "checkpoint": {
+      "version": 1,
+      "status": "PASS",
+      "stage": 6,
+      "run_id": "38331945733",
+      "code_sha": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+      "started_at": "2026-10-13T01:24:19.292385+00:00",
+      "prediction_performance": "UNVERIFIED",
+      "live_early": 0,
+      "database_sha256": "f50dbbd8780293aaefd495ec63b7706d61e7d3a8be7f29cee391d895732abd73",
+      "gate0": "PASS",
+      "tracked_failed_versions": 3696,
+      "probe_branch": "ops/bct-storage-probe-38331945733",
+      "probe_commit": "f6f7b156401a5fe52ad0877078ba4d835b9dfda4",
+      "projection_generation": "031b22a79aa390ae254a83aa91708d9dc30ec571",
+      "gate1": "PASS",
+      "publication_commit": "e68060aab2f0f130d2401f7815e43e68b9b048bc",
+      "candidate_blob_sha": "2a9d1cf07357486776d502c1413f378e1e702bda",
+      "candidate_sha256": "4be5de17dfa0c46d742396a0ad334ee4831ae7e72865b8986f26bd049c0619fc",
+      "prior_403_cause": "UNCLASSIFIED_OLD_RESPONSE_NOT_RETAINED",
+      "classification_tests": "PRIMARY/SECONDARY_RATE_LIMIT, ACCESS_DENIED, absent header covered",
+      "next_stage": 7,
+      "resume_condition": "Real E2E and regression Stage 6, then publication Stage 7 required",
+      "finished_at": "2026-10-13T01:34:53.477725+00:00",
+      "source_audit_candidate_blob": "2a9d1cf07357486776d502c1413f378e1e702bda",
+      "sample_sources": 36,
+      "sample_http_completed": 36,
+      "sample_http_200": 36,
+      "sample_full": 23,
+      "sample_dns_failures": 0,
+      "sample_system_errors": 0,
+      "sample_exact_failed_versions_recovered": 12,
+      "source_records_changed": false,
+      "originals_and_history_preserved": true,
+      "gate2": "PASS",
+      "recovery_urls": 2621,
+      "recovery_versions": 3696,
+      "recovery_system_errors": 0,
+      "recovery_urls_not_attempted": 0,
+      "production_source_records_changed": false,
+      "recovery_prior_observations_restored": 2621,
+      "recovery_http_executions_this_run": 0,
+      "reader_completions_added": 323,
+      "original_184_completions_preserved": true,
+      "gate3": "PASS",
+      "source_recovery_finished_at": "2026-10-13T01:35:27.978453+00:00",
+      "gate4": "PASS",
+      "evidence_versions_audited": 74,
+      "full_clean_status": "BLOCKED",
+      "full_clean_count": 0,
+      "full_clean_reason": "OPERATING_PUBLICATION_STAGE_7_AND_FULL_REQUIRED",
+      "evidence_original_http_requests": 74,
+      "evidence_scoped_requests": 0,
+      "evidence_searches_completed": 0,
+      "evidence_scope_held_versions": 74,
+      "evidence_system_errors": 0,
+      "evidence_supplement_promotions": 0,
+      "evidence_recovery_finished_at": "2026-10-13T01:36:26.898408+00:00",
+      "gate5": "PASS",
+      "queue_recovery_commit": "66840cd7f13629c9386a35ab08301ca167504a5b",
+      "actual_reader_results_added": 5,
+      "source_access_records_added": 0,
+      "source_versions_appended": 0,
+      "source_previous_judgments_preserved": true,
+      "legacy_read_results": 507,
+      "legacy_partial_read_results": 142,
+      "old_failure_versions_preserved": 3696,
+      "source_decisions_scores_preserved": true,
+      "production_restart_same_generation": "PASS",
+      "actual_remote_interruption_concurrency": "PASS",
+      "confirmed_targets_predictions_preserved": true,
+      "completion_failure_state_overlap": 0,
+      "queue_recovery_finished_at": "2026-10-13T01:44:50.930270+00:00",
+      "gate6": "PASS",
+      "e2e_execution_id": "18f74645ff9f459383ce31bd2403c9b0",
+      "e2e_proof_sha256": "5aff83ca2e9b7066a4aab7b916091d7df5afba87b1ddc6a14a9cfaacf43bfe0c"
+    },
     "production_writes": 0,
-    "audit_failure": "Entire candidate document equality asserted despite existing worker's authorized queue-summary update; source records report unchanged. Corrected audit requires source exact equality, preserves all historical reviews and operation entries, permits only summary and append-only operations.",
-    "corrected_audit_commit": "6ce1608b645bd564623a81ac8309c96d2e056620",
-    "corrected_status": "RUNNING_NOT_PASS"
+    "prediction_performance": "UNVERIFIED"
+  },
+  "final_code_full_attempts": [
+    {
+      "run_id": 38334212709,
+      "ops_sha": "a6ee3bdde9cfad1b79fa44db3abeaf1aea8f5c58",
+      "status": "FAIL",
+      "gates_0_to_6": "PASS",
+      "candidate_run": 38336983221,
+      "candidate_native_calls": 5,
+      "candidate_native_counts": {
+        "SUCCESS": 5
+      },
+      "candidate_paid_calls": 0,
+      "gate7": "FAIL_GITHUB_REQUEST_ERROR",
+      "clean_streak": 0,
+      "artifact_id": 11785632744,
+      "artifact_sha256": "a342ab7675f53a11d0e381138db6a4f7ba1fb5932c38a8b6cec59c0ba8437d6e",
+      "original_http_cause": "NOT_DETERMINABLE_SAFE_EXCEPTION_DETAILS_WERE_DROPPED",
+      "cache_restoration_proof": {
+        "status": "RESTORE_VALIDATED_ONLY",
+        "full_clean_status": "FAIL",
+        "scope": "Actual failed FULL GitHub publication checkpoint/cache preservation; not a CLEAN PASS",
+        "actual_execution": true,
+        "release": {
+          "gate_run_id": 38331945733,
+          "validated_code_sha": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+          "artifact_id": 11783493914,
+          "artifact_sha256": "00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a"
+        },
+        "code": {
+          "status": "PASS",
+          "gate_run_id": 38331945733,
+          "verified_code_files": 235,
+          "validated_code_sha": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+          "artifact_id": 11783493914
+        },
+        "pins": {
+          "checkpoint.json": "30e1d7c6acb443b054f85fb1e4cda6cb3bc3ed634d5e1411d9ae3e4b7f494c2e",
+          "e2e-recovery.json": "153e51ab925497f0addf469519880af74c530aaa5ad7d18118e2efd5de9d9995",
+          "source-audit.json": "287a42542b9b24dee5ca13ca9d9d713ca4e7db8d22aa1da0138698cd25514569",
+          "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
+          "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
+          "evidence-recovery-observations.json": "9a9d100c0b1ee29645dd90601dea3acf430755ef1a4169af0b0a9f4eeb7458ab",
+          "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "evidence-recovery-versions.json": "d41acd074251ba30a7a86c2dff553a2c49e31bb85d764102d6065e9fdb4c3d86",
+          "local-reader-setup.json": "45dfbcf9287a79cad21d719a557cec464670cfc2733749e5a5a83531ce3f764c",
+          "local-reader-probe.json": "e7824ae4ec0db0a84dcdeda2155e47a2e04b037378d6cccbb0f116b9f7526ea2",
+          "private-local-reader-execution.jsonl": "bb538e7c1fc19a24b1a7b3e6cf1730f254f7b5e5daf35e767f419f7a94575376",
+          "recovery-preservation-seal.json": "76a0f8313d7e129ccf589e515900514fff38db46f4ec33f51785e797c2c07beb",
+          "queue-recovery-versions.json": "c06717d27ef3ed5033b41608b3440f4da86793741b5f3500044ac4d5a1bb1e15",
+          "operating-engine-checkpoint.json": "75f528162ff5d03b0f3499178a3a86c92e91c1e54b6369b72cc9b9bf2f88f965",
+          "operating-publication-request.json": "58c68e7aeef14bb59bc6bb4b9316a4ba5a9f1f0921f55bfe18df923c4ce016bc",
+          "operating-publication-history.json": "43e7d89a9d0e34bc752105998cae5e1c1633a961dceb8ede3fde427595a0dded",
+          "native-claim-recovery.json": "a083aa156fcadb4b2a699e90f5e17b532764072f6f387b5cf7c32c273f9802d6",
+          "native-claim-history.json": "ba76cd5a1ae2fa08cc2ae91883b8627212c1a095973f7965a1c8229586548038"
+        },
+        "proof": {
+          "status": "PASS",
+          "verified_pinned_files": {
+            "checkpoint.json": "30e1d7c6acb443b054f85fb1e4cda6cb3bc3ed634d5e1411d9ae3e4b7f494c2e",
+            "e2e-recovery.json": "153e51ab925497f0addf469519880af74c530aaa5ad7d18118e2efd5de9d9995",
+            "source-audit.json": "287a42542b9b24dee5ca13ca9d9d713ca4e7db8d22aa1da0138698cd25514569",
+            "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
+            "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
+            "evidence-recovery-observations.json": "9a9d100c0b1ee29645dd90601dea3acf430755ef1a4169af0b0a9f4eeb7458ab",
+            "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+            "evidence-recovery-versions.json": "d41acd074251ba30a7a86c2dff553a2c49e31bb85d764102d6065e9fdb4c3d86",
+            "local-reader-setup.json": "45dfbcf9287a79cad21d719a557cec464670cfc2733749e5a5a83531ce3f764c",
+            "local-reader-probe.json": "e7824ae4ec0db0a84dcdeda2155e47a2e04b037378d6cccbb0f116b9f7526ea2",
+            "private-local-reader-execution.jsonl": "bb538e7c1fc19a24b1a7b3e6cf1730f254f7b5e5daf35e767f419f7a94575376",
+            "recovery-preservation-seal.json": "76a0f8313d7e129ccf589e515900514fff38db46f4ec33f51785e797c2c07beb",
+            "queue-recovery-versions.json": "c06717d27ef3ed5033b41608b3440f4da86793741b5f3500044ac4d5a1bb1e15",
+            "operating-engine-checkpoint.json": "75f528162ff5d03b0f3499178a3a86c92e91c1e54b6369b72cc9b9bf2f88f965",
+            "operating-publication-request.json": "58c68e7aeef14bb59bc6bb4b9316a4ba5a9f1f0921f55bfe18df923c4ce016bc",
+            "operating-publication-history.json": "43e7d89a9d0e34bc752105998cae5e1c1633a961dceb8ede3fde427595a0dded",
+            "native-claim-recovery.json": "a083aa156fcadb4b2a699e90f5e17b532764072f6f387b5cf7c32c273f9802d6",
+            "native-claim-history.json": "ba76cd5a1ae2fa08cc2ae91883b8627212c1a095973f7965a1c8229586548038"
+          },
+          "verified_cache_files": {
+            "private-source-cache": 1677,
+            "private-evidence-cache": 77,
+            "private-evidence-raw": 1520,
+            "private-source-html": 8,
+            "private-native-claim": 54
+          },
+          "cache_inventory_sha256": "d9ed3e8b9e82fa3a44fa999c90b27e102f5d330f80d6c090dd0fee4388cbb39c"
+        },
+        "checkpoint": {
+          "version": 1,
+          "status": "PASS",
+          "stage": 6,
+          "run_id": "38334212709",
+          "code_sha": "a6ee3bdde9cfad1b79fa44db3abeaf1aea8f5c58",
+          "started_at": "2026-10-13T01:53:38.043493+00:00",
+          "prediction_performance": "UNVERIFIED",
+          "live_early": 0,
+          "database_sha256": "f50dbbd8780293aaefd495ec63b7706d61e7d3a8be7f29cee391d895732abd73",
+          "gate0": "PASS",
+          "tracked_failed_versions": 3696,
+          "probe_branch": "ops/bct-storage-probe-38334212709",
+          "probe_commit": "15922020514061a8dcf3dee72acd6ed08a869c08",
+          "projection_generation": "66840cd7f13629c9386a35ab08301ca167504a5b",
+          "gate1": "PASS",
+          "publication_commit": "babd2c628c273809d17a01a24594148419501846",
+          "candidate_blob_sha": "a41d197b0ca860f24684c69c0d629be73f904539",
+          "candidate_sha256": "0a9fb8e78914ef8e791b81f4f8cb6ba6c8bea63d33d52bf2c7de9a5eac7d9787",
+          "prior_403_cause": "UNCLASSIFIED_OLD_RESPONSE_NOT_RETAINED",
+          "classification_tests": "PRIMARY/SECONDARY_RATE_LIMIT, ACCESS_DENIED, absent header covered",
+          "next_stage": 7,
+          "resume_condition": "Real E2E and regression Stage 6, then publication Stage 7 required",
+          "finished_at": "2026-10-13T02:06:44.370744+00:00",
+          "source_audit_candidate_blob": "a41d197b0ca860f24684c69c0d629be73f904539",
+          "sample_sources": 36,
+          "sample_http_completed": 36,
+          "sample_http_200": 36,
+          "sample_full": 23,
+          "sample_dns_failures": 0,
+          "sample_system_errors": 0,
+          "sample_exact_failed_versions_recovered": 12,
+          "source_records_changed": false,
+          "originals_and_history_preserved": true,
+          "gate2": "PASS",
+          "recovery_urls": 2621,
+          "recovery_versions": 3696,
+          "recovery_system_errors": 0,
+          "recovery_urls_not_attempted": 0,
+          "production_source_records_changed": false,
+          "recovery_prior_observations_restored": 2621,
+          "recovery_http_executions_this_run": 0,
+          "reader_completions_added": 328,
+          "original_184_completions_preserved": true,
+          "gate3": "PASS",
+          "source_recovery_finished_at": "2026-10-13T02:07:51.491839+00:00",
+          "gate4": "PASS",
+          "evidence_versions_audited": 74,
+          "full_clean_status": "FAIL",
+          "full_clean_count": 0,
+          "full_clean_reason": "OPERATING_PUBLICATION_STAGE_7_AND_FULL_REQUIRED",
+          "evidence_original_http_requests": 74,
+          "evidence_scoped_requests": 0,
+          "evidence_searches_completed": 0,
+          "evidence_scope_held_versions": 74,
+          "evidence_system_errors": 0,
+          "evidence_supplement_promotions": 0,
+          "evidence_recovery_finished_at": "2026-10-13T02:08:52.074909+00:00",
+          "gate5": "PASS",
+          "queue_recovery_commit": "5f2910f4584e09b3b2be47143b8b5a5cab9f39c0",
+          "actual_reader_results_added": 5,
+          "source_access_records_added": 0,
+          "source_versions_appended": 0,
+          "source_previous_judgments_preserved": true,
+          "legacy_read_results": 512,
+          "legacy_partial_read_results": 142,
+          "old_failure_versions_preserved": 3696,
+          "source_decisions_scores_preserved": true,
+          "production_restart_same_generation": "PASS",
+          "actual_remote_interruption_concurrency": "PASS",
+          "confirmed_targets_predictions_preserved": true,
+          "completion_failure_state_overlap": 0,
+          "queue_recovery_finished_at": "2026-10-13T02:23:47.461771+00:00",
+          "gate6": "PASS",
+          "e2e_execution_id": "8666ff0378004f31b48d468f406e3bc0",
+          "e2e_proof_sha256": "153e51ab925497f0addf469519880af74c530aaa5ad7d18118e2efd5de9d9995",
+          "clean_streak": 0,
+          "operating_engine_reason": "RuntimeError"
+        },
+        "production_writes": 0,
+        "prediction_performance": "UNVERIFIED"
+      }
+    }
+  ],
+  "next_final_schedule": {
+    "observed_at": "2026-10-13T03:28:17.251Z",
+    "main_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+    "actual_browser_enabled_signal": "Workflow options menu offers Disable workflow",
+    "enabled": true,
+    "latest_observed_scheduled_run": 38326068143,
+    "final_main_next_automatic_run": "PASS_OBSERVED_38338312039",
+    "cron_changed": false,
+    "schedule_slot_attribution": "UNKNOWN: event.schedule not persisted; cannot assert exact missed slot or provider cause",
+    "provider_status": {
+      "observed_at": "2026-10-13T02:41:52.620Z",
+      "official_status": "All Systems Operational; Actions Operational; no incident reported2026-10-13",
+      "previous_incident_resolved_at": "2026-10-12T20:16:00Z",
+      "current_missing_trigger_cause": "NOT_PROVEN",
+      "general_schedule_behavior": "Official GitHub documentation allows scheduler delays and drops under load; does not prove this repository's cause."
+    }
+  },
+  "final_code_next_automatic_rss": {
+    "status": "PASS",
+    "actual_execution": true,
+    "main_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+    "rss_run": 38338312039,
+    "rss_new": 2,
+    "rss_total": 3399,
+    "rss_normal_sources": 117,
+    "precursor_run": 38338585735,
+    "hash_verified_new_originals": [
+      {
+        "document_id": "f84d7c51-f5cc-4820-a24a-c25f19500c7c",
+        "body_sha256": "13d93621f0f19857adc97de8b09ea431c99f5731c6d2ddbb18c503a5f07d95b3",
+        "raw_html_sha256": "4047485a8f90435e5419436f6d0d045f9e386b3ad8a2f1ecd6143e9a20b13b26",
+        "body_chars": 751,
+        "body_status": "FULL",
+        "provenance": "PASS",
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        }
+      }
+    ],
+    "review_run": 38338675901,
+    "old_review_files_byte_preserved": 694,
+    "new_review_file_total": 698,
+    "independent_qualified_pairs": 0,
+    "EARLY": 0,
+    "forecast_accuracy": "UNVERIFIED",
+    "candidate_run": 38338585716,
+    "candidate_status": "SUCCESS",
+    "candidate_native_calls": 5,
+    "candidate_paid_calls": 0,
+    "published_commit": "38c2daa0a3bd39b85a61cdf02cbf7d10d681329c",
+    "completed_queue": 348
+  },
+  "new_proposed_diagnostic_repair": {
+    "pr": 43,
+    "branch": "fix/bct-publication-safe-diagnostics-20261013",
+    "head_sha": "0c2549b878d1151d9702e48ec93561a7f4036ae1",
+    "main_merged": false,
+    "root_fault": "exact-type catch discarded sanitized GitHubRequestError subclass diagnostics",
+    "before_test_failures": 2,
+    "corrected_related_test_passed": 39,
+    "isolated_live_replay": {
+      "status": "PASS",
+      "actual_execution": true,
+      "run_id": "38339821832",
+      "original_failed_candidate_run": 38336983221,
+      "original_failed_full_run": 38334212709,
+      "original_http_cause": "UNRECOVERABLE_FROM_ORIGINAL_RECEIPT_EXCEPTION_SUBCLASS_DETAILS_DROPPED",
+      "production_ref_writes": 0,
+      "additional_model_calls": 0,
+      "paid_api_calls": 0,
+      "source_frozen_sha": "12cf8ff5d0e9dc72cb382c3063af03c2be12de84",
+      "isolated_branch": "ops/bct-publication-error-probe-38339821832",
+      "publication_receipt": {
+        "status": "PASS",
+        "actual_execution": true,
+        "run_id": "38339821832",
+        "started_at": "2026-10-13T03:03:26.096037+00:00",
+        "parent_commit": "12cf8ff5d0e9dc72cb382c3063af03c2be12de84",
+        "published_commit": "5f5fc77dba0bc6971c9a24b2c45941c111916614",
+        "root_shas": {
+          "future-candidates.json": "04aa7aa2758e6e45a5497fac776b80b1838aada9",
+          "future-tracking.json": "0b8c926e9ab7c7f19f2276baadb18dfd07073862"
+        },
+        "document_sha256": {
+          "future-candidates.json": "0b6018e1dbf0743b75b8286623c16fc65cacdc236574f7d5a51fd09027fe1a22",
+          "future-tracking.json": "30aba3ea1d6c4e5be55f9985d3624c82374ddd461062d12cb39d2613bfae3938"
+        },
+        "queue_counts": {
+          "PENDING": 1141,
+          "PROCESSING": 1,
+          "COMPLETED": 344,
+          "SOURCE_WAIT": 2235,
+          "EVIDENCE_WAIT": 63,
+          "FAILED": 971,
+          "RETRY_SCHEDULED": 0
+        },
+        "queue_total": 4755,
+        "failed_versions_preserved": 3696,
+        "review_records_unchanged": true,
+        "projection_sha256": "643709b0928629f60c956b404f5ddd2b073a8f860970e7b15274a4670589fce3",
+        "prediction_performance": "UNVERIFIED",
+        "finished_at": "2026-10-13T03:06:16.877883+00:00"
+      },
+      "publisher_exit_code": 0,
+      "phase": "actual_isolated_same_input_publication",
+      "api_request_events": [
+        {
+          "method": "GET",
+          "endpoint": "/git/ref/heads/ops%2Fbct-publication-error-probe-38339821832",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/contents/future-candidates.json",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/47566c7f8c37fc8f1c8a56aeaf4b33f682347adc",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/6ec80825585658c729c191b8ccebd0eaaff951ec",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/b552fd632649a9ada229a317ca38b362932e4433",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/f7cadabbe8afc0a85c516f0ed7780baa805b0197",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/e1dfc7db75357fcbd439e5b21b32b918b2c6524e",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/d94453355bbf9e32c5f034dc078c41c541987245",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/6038490188781acc3b945e5060e638cbfd4ee4dc",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/2a253c7a9d7bda6ffd4c8c845b28a332cebfb964",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/1601cfb25251d5ddc26b3b2974f1cc3c64c2c02c",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/9b9db1d4e44438dab5784812f10783d7a4dcdb95",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/9bd3dff1f94aa32aff8030372b2a3a3fb5e25178",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/bf7ad5768050f67e1fabda11072626d5be9423fe",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/84261cc9ede233c37aebcbd69f556e57f001636d",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/contents/future-tracking.json",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/0b8c926e9ab7c7f19f2276baadb18dfd07073862",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/ref/heads/ops%2Fbct-publication-error-probe-38339821832",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/commits/12cf8ff5d0e9dc72cb382c3063af03c2be12de84",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "POST",
+          "endpoint": "/git/blobs",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/6ec80825585658c729c191b8ccebd0eaaff951ec",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/b552fd632649a9ada229a317ca38b362932e4433",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/f7cadabbe8afc0a85c516f0ed7780baa805b0197",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/e1dfc7db75357fcbd439e5b21b32b918b2c6524e",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "POST",
+          "endpoint": "/git/blobs",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/6038490188781acc3b945e5060e638cbfd4ee4dc",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/2a253c7a9d7bda6ffd4c8c845b28a332cebfb964",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "POST",
+          "endpoint": "/git/blobs",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "POST",
+          "endpoint": "/git/blobs",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "POST",
+          "endpoint": "/git/blobs",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "POST",
+          "endpoint": "/git/blobs",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "POST",
+          "endpoint": "/git/blobs",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "POST",
+          "endpoint": "/git/blobs",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "POST",
+          "endpoint": "/git/blobs",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "POST",
+          "endpoint": "/git/trees",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "POST",
+          "endpoint": "/git/commits",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/b2d84bdcbeb1f55ca1bd723c501fdccb213d5692",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/0db37bcf1c3b9daafb8e0811ab6492578b6cbee6",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/36af7dcf8dddaa8d8d42290b7d9d1ade11c71efc",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/ddc90e6024cfafb7eea3f7ad03964ceb9bb5d8c5",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/130b2a9b942b038870abd6d2fe43bb8739c03f64",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/7c8d2411246ab3d7871cc79b674c4933c832524d",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/55ca6e3765a7add8f33df1312f83c3507555f4c1",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/04aa7aa2758e6e45a5497fac776b80b1838aada9",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/31292da0f1644d29c02aeb0230fed7f0cdadcfd9",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/trees/cc56bf109c02cb57338e6e37c56a23e5729fd5ae",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "PATCH",
+          "endpoint": "/git/refs/heads/ops%2Fbct-publication-error-probe-38339821832",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/contents/future-candidates.json",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/contents/future-tracking.json",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/0b8c926e9ab7c7f19f2276baadb18dfd07073862",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/contents/future-candidates.ui.json.gz",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/b2d84bdcbeb1f55ca1bd723c501fdccb213d5692",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/6ec80825585658c729c191b8ccebd0eaaff951ec",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/b552fd632649a9ada229a317ca38b362932e4433",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/f7cadabbe8afc0a85c516f0ed7780baa805b0197",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/e1dfc7db75357fcbd439e5b21b32b918b2c6524e",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/0db37bcf1c3b9daafb8e0811ab6492578b6cbee6",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/6038490188781acc3b945e5060e638cbfd4ee4dc",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/2a253c7a9d7bda6ffd4c8c845b28a332cebfb964",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/36af7dcf8dddaa8d8d42290b7d9d1ade11c71efc",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/ddc90e6024cfafb7eea3f7ad03964ceb9bb5d8c5",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/130b2a9b942b038870abd6d2fe43bb8739c03f64",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/7c8d2411246ab3d7871cc79b674c4933c832524d",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/55ca6e3765a7add8f33df1312f83c3507555f4c1",
+          "status": "SUCCESS"
+        },
+        {
+          "method": "GET",
+          "endpoint": "/git/blobs/0b8c926e9ab7c7f19f2276baadb18dfd07073862",
+          "status": "SUCCESS"
+        }
+      ]
+    },
+    "original_underlying_http_cause": "NOT_PROVEN",
+    "actual_new_gates": "NOT_RUN_WAIT_FOR_NORMAL_WRITERS"
   }
 }
