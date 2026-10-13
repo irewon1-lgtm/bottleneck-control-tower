@@ -241,3 +241,9 @@ bottleneck-control-tower/
 ## Stage 4 gate
 
 Do not connect another API until the Stage 0–3 tests pass in the target environment and a backup containing SEC, USAspending and Federal Register records restores cleanly. Historical coverage and larger-scale search require explicit pagination, entity resolution and backup retention; these remain outside Stage 3.
+
+
+
+## BCT V4 resume procedure
+
+Before any V4 work, read [the fixed execution plan](docs/v4/EXECUTION_PLAN.md) and [the current progress ledger](docs/v4/PROGRESS.json). Resume the recorded next action on `codex/bct-v4-integration`; inspect only evidence needed for that stage. Preserve the eight-stage order, Gemini then GroqCloud, free-only use, and V3.3 operating boundaries. Do not repeat completed research or claim unexecuted tests as PASS. This task covers stages 1–2 only; API connection success does not establish accuracy or EARLY discovery.
