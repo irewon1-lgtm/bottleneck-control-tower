@@ -16,6 +16,11 @@ def main():
     run = sub.add_parser("cycle")
     run.add_argument("--config", type=Path, default=Path("config/v4-sources.json"))
     run.add_argument("--no-ai", action="store_true")
+    run.add_argument("--api-config", type=Path, help="Explicit opt-in free API annotations; never operating promotion")
+    api = sub.add_parser("api-read")
+    api.add_argument("--config", type=Path, default=Path("config/v4-free-ai.json"))
+    api.add_argument("--limit", type=int)
+    api.add_argument("--probe-provider", choices=["gemini", "groq"], help="Isolated connectivity test only")
     backfill = sub.add_parser("replay")
     backfill.add_argument("--input", type=Path, required=True)
     backfill.add_argument("--as-of", required=True)
@@ -31,8 +36,14 @@ def main():
         if args.command == "prepare-model":
             result = prepare_model(args.root)
         elif args.command == "cycle":
-            result = cycle(args.root, json.loads(args.config.read_text()), use_ai=not args.no_ai)
+            result = cycle(args.root, json.loads(args.config.read_text()), use_ai=not args.no_ai,
+                           api_config=json.loads(args.api_config.read_text()) if args.api_config else None)
             code = 2 if result["integration_status"] == "BLOCKED" else 0
+        elif args.command == "api-read":
+            from .free_ai import annotate
+            result = annotate(args.root, json.loads(args.config.read_text()), limit=args.limit,
+                              probe_provider=args.probe_provider)
+            code = 2 if result["status"] == "BLOCKED" else 0
         elif args.command == "replay":
             result = replay(args.root, json.loads(args.input.read_text()), args.as_of,
                             mode="SYNTHETIC" if args.synthetic else "BACKFILL")
@@ -46,6 +57,8 @@ def main():
                     result = stamp_export({"status": ledger.status(), "candidates": ledger.history()})
                 else:
                     result = ledger.status()
+                from .free_ai import api_status
+                result["api"] = api_status(ledger)
             finally:
                 ledger.close()
     except Exception as exc:
@@ -57,3 +70,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+

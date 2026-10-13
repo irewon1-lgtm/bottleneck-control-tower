@@ -1,0 +1,154 @@
+{
+  "at": "2026-10-13T14:44:41.082907+00:00",
+  "scope": "Fixed-plan stages 1 and 2 only; no stage 3+ or seven-day Shadow run",
+  "stage1": {
+    "status": "PASS",
+    "evidence": "docs/v4/STAGE1_STATUS.json"
+  },
+  "stage2": {
+    "status": "BLOCKED",
+    "implementation": "COMPLETE_FUNCTIONAL_ONLY",
+    "reasons": [
+      "GEMINI_API_KEY absent",
+      "GROQ_API_KEY absent",
+      "Actual free-account eligibility and limits unverified",
+      "Prior V4 SQLite with captured originals and CPU readings absent in this fresh workspace",
+      "Official API egress not verified in restricted workspace"
+    ]
+  },
+  "models": {
+    "gemini": "gemini-3.5-flash-lite",
+    "groq": "openai/gpt-oss-20b",
+    "model_selection": "Pinned from official docs; account availability not verified"
+  },
+  "functional_api_tests": {
+    "status": "PASS",
+    "kind": "SYNTHETIC_MOCK_AND_REAL_LOCAL_EXECUTION",
+    "summary": {
+      "tests": 65,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.638
+    },
+    "evidence": "docs/v4/API_FUNCTIONAL_TESTS.xml",
+    "covered": [
+      "Gemini->Groq on quota, timeout, server, network, auth",
+      "Both down -> durable WAIT_API",
+      "New-process restart and backup/restore",
+      "Duplicate same-input, alias and crash prevention",
+      "Single POST, HTTP error classification and JSON/schema decoding",
+      "Source/body/context/field validation and heading/generic counterexamples",
+      "Free-only account guard, quotas, call/token caps",
+      "Policy/input refusal without fallback and bad-contract persistence",
+      "CPU/collection preservation; queue advances past completed docs"
+    ]
+  },
+  "existing_regression": {
+    "status": "PASS_FUNCTIONAL_WITH_EXISTING_PERFORMANCE_SKIP",
+    "summary": {
+      "tests": 262,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1,
+      "seconds": 2.546
+    },
+    "evidence": "docs/v4/REGRESSION_TESTS.xml",
+    "passed": 261,
+    "skip_reason": "Existing real-holdout source corpus unavailable; forecast performance remains BLOCKED"
+  },
+  "live_api": {
+    "at": "2026-10-13T14:38:21.670302+00:00",
+    "kind": "LIVE_CONNECTIVITY",
+    "providers": {
+      "gemini": {
+        "status": "BLOCKED",
+        "model": "gemini-3.5-flash-lite",
+        "reasons": [
+          "KEY_MISSING",
+          "FREE_ACCOUNT_AND_LIMITS_UNVERIFIED",
+          "SAVED_V4_ORIGINAL_MISSING"
+        ]
+      },
+      "groq": {
+        "status": "BLOCKED",
+        "model": "openai/gpt-oss-20b",
+        "reasons": [
+          "KEY_MISSING",
+          "FREE_ACCOUNT_AND_LIMITS_UNVERIFIED",
+          "SAVED_V4_ORIGINAL_MISSING"
+        ]
+      }
+    },
+    "calls": 0,
+    "reported_tokens": 0,
+    "api_cost": 0,
+    "local_cpu_comparison": "BLOCKED_UNTIL_SAME_ORIGINAL_AND_LIVE_API_OUTPUT_EXIST",
+    "semantic_accuracy": "UNKNOWN",
+    "forecast_performance": "BLOCKED"
+  },
+  "local_overhead": {
+    "kind": "SYNTHETIC_LOCAL_CONTROL_ONLY",
+    "documents": 3,
+    "characters_per_document": 270050,
+    "wall_seconds": 0.1792,
+    "process_peak_rss_mib": 21.87,
+    "peak_increase_mib": 11.62,
+    "real_api_calls": 0,
+    "cpu_model_loaded": false,
+    "api_latency_and_memory": "NOT_MEASURED",
+    "note": "Includes public-input guard, bounded selection, SQLite capture/events and fake response validation; not forecast accuracy or real API performance"
+  },
+  "comparison_with_cpu": {
+    "status": "BLOCKED",
+    "reason": "No live API output; same-input original V4 body/CPU ledger unavailable",
+    "meaning_accuracy": "UNKNOWN"
+  },
+  "changes": [
+    "Optional bounded API adapters; no SDK/dependency change",
+    "Existing V4 SQLite events reuse for jobs, attempts, usage, blocks and cache",
+    "Original windows directly scanned, not limited to GLiNER entities",
+    "Source-verified advisory fields; TARGET five fields/S1/S2/S3 preserved",
+    "Default disabled; no operating activation"
+  ],
+  "safety": {
+    "main_changed": false,
+    "operating_db_changed": false,
+    "actions_changed": false,
+    "alerts_changed": false,
+    "paid_calls": 0,
+    "third_provider_added": false,
+    "operating_activation": false,
+    "new_verified_bottlenecks": 0
+  },
+  "preservation": {
+    "exact_original_blobs_verified": 143,
+    "existing_domain_modules_and_ledger_unchanged": true,
+    "plan_sha256": "c8977cc818c9bc10bb9c17cf9615d5a665a753fef494ff71f4168414e45ec99f"
+  },
+  "runtime": {
+    "python": "3.12",
+    "api_new_dependencies": [],
+    "cpu_model_loaded_this_task": false,
+    "test_environment_dependencies": "Existing non-model test/parser dependencies reused in isolated environment",
+    "api_cost": 0,
+    "work_usage_and_infrastructure_cost": "NOT_MEASURED_SEPARATE_FROM_API_COST"
+  },
+  "repair_history": [
+    "Restored missing upstream objective lock before valid ledger tests",
+    "Restored missing upstream test fixtures and config/guidance dependencies",
+    "Corrected one extra newline in scratch materialization using exact upstream Git blob hashes; no protected repository edits",
+    "Corrected queue test fixtures to use distinct source URLs; revisions of one URL are not independent documents",
+    "Added exact event-context evidence and corrected mock response to match its second original"
+  ],
+  "next_action": "Inject both keys safely and confirm actual Free account/model limits; restore isolated V4 original ledger, then resume stage 2 live probes once; do not start stage 3",
+  "network_access": {
+    "status": "NOT_TESTED",
+    "current_environment": "restricted outbound access",
+    "required_api_hosts": [
+      "generativelanguage.googleapis.com",
+      "api.groq.com"
+    ],
+    "previous_allowlist_rejection": "docs/v4/DELIVERY.json; no unapproved bypass/repeated permission mutation"
+  }
+}

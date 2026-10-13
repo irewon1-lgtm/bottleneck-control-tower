@@ -1,0 +1,106 @@
+{
+  "at": "2026-10-13T14:20:16.483Z",
+  "stage": 1,
+  "status": "PASS",
+  "remote_base": "6221c4820dd9c596b7bccba06a9a0672d53f0959",
+  "plan_commit": "cbd3b43d9e623d69a7cbc19f50e334fd7040c80b",
+  "operating_main": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+  "data_branch_sha": "6ec0852c5a8248b6eb22ba1410c448fa23dfa458",
+  "summary_scope": "Stored V3.3 sidecar snapshot; candidate/read counts are not validated future bottlenecks",
+  "stored_summary": {
+    "precursor_documents_total": 1869,
+    "private_cache": "RUNTIME_ONLY_NOT_PUBLISHED",
+    "processed_this_run": 0,
+    "processed_total": 3499,
+    "readable_active_total": 2612,
+    "recovery_queue": {
+      "format": "bct-recovery-queue-v1",
+      "counts": {
+        "PENDING": 1177,
+        "PROCESSING": 0,
+        "COMPLETED": 368,
+        "SOURCE_WAIT": 2279,
+        "EVIDENCE_WAIT": 63,
+        "FAILED": 971,
+        "RETRY_SCHEDULED": 0
+      },
+      "total_queue_versions": 4858,
+      "preserved_failure_versions": 3696,
+      "legacy_read_results": 542,
+      "legacy_partial_read_results": 142,
+      "source_corrected_read_results": 30,
+      "non_full_read_results": 172,
+      "historical_completed_failed_overlap": 469,
+      "candidate_evidence_wait": 144,
+      "completion_failure_state_overlap": 0,
+      "prediction_performance": "UNVERIFIED",
+      "generation_run_id": "38401996948"
+    },
+    "review_queue": {
+      "computed_at": "2026-10-13T13:38:31.284516+00:00",
+      "reader_version": "bct-v33-reader-1",
+      "documents_total": 3499,
+      "preserved_versions": 5198,
+      "automatic_candidates": 3025,
+      "review_list_versions": 4857,
+      "quick_pending": 1500,
+      "completed_documents": 540,
+      "deep_pending": 0,
+      "candidate_data_wait": 70,
+      "material_pending": 489,
+      "oldest_wait_hours": 303.61,
+      "failed_versions": 2849,
+      "unresolved_versions": 4543,
+      "failure_reasons": {
+        "ENVIRONMENT_DNS_RESOLUTION_FAILED": 858,
+        "FULL_SOURCE_NOT_OBTAINED": 1917,
+        "REQUIRED_EVIDENCE_MISSING": 74
+      },
+      "event_count": 4935,
+      "pending_events": 4433
+    },
+    "scope_articles": 3499,
+    "screening_pending_total": 1346,
+    "source_reaccess_limit": "Cache may expire; historical body reproducibility is not guaranteed.",
+    "source_wide_scan": true,
+    "unavailable_active_total": 887
+  },
+  "latest_workflows": [
+    {
+      "id": 38401996948,
+      "name": "Future bottleneck body candidates",
+      "conclusion": "success",
+      "created_at": "2026-10-13T13:03:45Z",
+      "updated_at": "2026-10-13T13:44:11Z",
+      "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/38401996948"
+    },
+    {
+      "id": 38401996911,
+      "name": "New precursor evidence acquisition",
+      "conclusion": "success",
+      "created_at": "2026-10-13T13:03:45Z",
+      "updated_at": "2026-10-13T13:05:48Z",
+      "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/38401996911"
+    },
+    {
+      "id": 38401614405,
+      "name": "RSS live environment check",
+      "conclusion": "success",
+      "created_at": "2026-10-13T13:00:49Z",
+      "updated_at": "2026-10-13T13:03:42Z",
+      "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/38401614405"
+    }
+  ],
+  "paths": {
+    "v33_collection": ".github/workflows/future-bottleneck.yml; precursor-acquisition.yml; RSS collectors",
+    "v33_body": "future_body.acquire_document/read_cached_body; private runtime cache; JSON sidecar shards",
+    "v4": "src/bct/v4/{adapters,pipeline,store}.py; append-only var/v4/runtime/v4.sqlite3",
+    "local_ai": "fastino/gliner2-base-v1 pinned revision; verified spans remain semantic UNKNOWN",
+    "minimal_hook": "optional API annotation after ledger.capture; offline api-read against captured V4 docs"
+  },
+  "limits": [
+    "Operating private body cache and earlier V4 runtime DB not available in this fresh workspace",
+    "Detailed new live corpus accuracy and API comparison are BLOCKED, not inferred from saved counts"
+  ],
+  "preserved": true
+}

@@ -51,7 +51,7 @@ def analyze(documents, *, mode="LIVE", as_of=None, new_ids=None):
     return stamp_export(result)
 
 
-def cycle(root, config, *, use_ai=True, client=None):
+def cycle(root, config, *, use_ai=True, client=None, api_config=None, api_adapter=None):
     """One bounded pass. Failed sources remain failures; no automatic retry loop."""
     ledger = Ledger(root)
     client = client or SourceClient()
@@ -72,6 +72,10 @@ def cycle(root, config, *, use_ai=True, client=None):
             ledger.event("FAILURE", {"run_id": run_id, **item})
     try:
         with ledger.worker():
+            api_router = None
+            if api_config is not None:
+                from .free_ai import Router
+                api_router = Router(ledger, api_config, run_id=run_id, adapter=api_adapter)
             with ledger.db:
                 ledger.event("RUN_STARTED", {"run_id": run_id, "mode": "LIVE", "config_sha256": sha(config)})
             urls = list(config.get("urls", []))
@@ -128,6 +132,10 @@ def cycle(root, config, *, use_ai=True, client=None):
                         reading["ai"] = {"status": "NOT_RUN", "reason": "explicit --no-ai"}
                     if ledger.capture(doc, raw, reading):
                         new_ids.append(doc["document_id"])
+                    if api_router and len(readings) < api_router.config["document_limit"]:
+                        # Raw and CPU reading are committed first. API WAIT/denial
+                        # cannot erase a captured source or mark it analyzed.
+                        api_router.read(doc)
                     readings.append({"document_id": doc["document_id"], "ai_status": reading["ai"]["status"]})
                     captured += 1
                 except Exception as exc:
@@ -143,6 +151,11 @@ def cycle(root, config, *, use_ai=True, client=None):
                           process_peak_rss_mib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1024,
                           paid_api_calls=0, additional_api_cost=0,
                           warning="LIVE captures are observation logs, not validated EARLY performance")
+            if api_router:
+                from .free_ai import api_status
+                result["api_annotations"] = api_status(ledger)
+                result["api_calls_this_run"] = api_router.calls
+                result["api_semantic_accuracy"] = "UNKNOWN"
             return ledger.save_run(run_id, result, "LIVE")
     finally:
         ledger.close()
@@ -162,3 +175,4 @@ def replay(root, batch, as_of, *, mode="BACKFILL"):
             return ledger.save_run(run_id, result, mode)
     finally:
         ledger.close()
+

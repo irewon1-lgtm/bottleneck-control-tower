@@ -56,3 +56,8 @@ BLOCKED다. 연구 ZIP이 없어도 새 원문 수집은 가능하지만 과거 
 
 환경 설정에 저장한 설치/시작 지침은 재사용용 초안이다. 저장은 환경 게시나
 새 작업에서의 복원을 증명하지 않는다. 환경 설정에서 검토·저장 후 환경을 게시한다.
+
+
+## Fixed plan and optional free API annotations
+
+Resume from [EXECUTION_PLAN.md](EXECUTION_PLAN.md) and [PROGRESS.json](PROGRESS.json). The optional API path remains disabled by default. See [FREE_AI_SETUP.md](FREE_AI_SETUP.md) for secure Gemini/GroqCloud setup and live prerequisites, and [API_TEST_RESULTS.json](API_TEST_RESULTS.json) for separate mock/live evidence. The original CPU path and operating boundaries stay in place.

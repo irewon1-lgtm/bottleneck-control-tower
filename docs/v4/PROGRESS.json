@@ -1,31 +1,62 @@
 {
   "plan_version": "1.0",
   "plan_sha256": "c8977cc818c9bc10bb9c17cf9615d5a665a753fef494ff71f4168414e45ec99f",
-  "stage": 1,
-  "status": "IN_PROGRESS",
+  "stage": 2,
+  "status": "BLOCKED",
   "handoff_sha": "6221c4820dd9c596b7bccba06a9a0672d53f0959",
   "base_remote_sha": "6221c4820dd9c596b7bccba06a9a0672d53f0959",
-  "last_completed": "Confirmed remote development HEAD and read V4 implementation; preserved operating refs",
-  "next_action": "Record stage 1 collection and storage evidence; implement bounded free API adapters",
+  "last_completed": "Stage 1 PASS; stage 2 implementation and 65 independent functional tests PASS; existing regression 261 PASS + existing performance skip 1",
+  "next_action": "Inject both keys safely and confirm actual Free account/model limits; restore isolated V4 original ledger, then resume stage 2 live probes once; do not start stage 3",
   "blockers": [
-    {
-      "item": "Gemini live connection",
-      "reason": "GEMINI_API_KEY not injected; account tier/quotas unverified"
-    },
-    {
-      "item": "GroqCloud live connection",
-      "reason": "GROQ_API_KEY not injected; account tier/quotas unverified"
-    }
+    "GEMINI_API_KEY absent",
+    "GROQ_API_KEY absent",
+    "Actual free-account eligibility and limits unverified",
+    "Prior V4 SQLite with captured originals and CPU readings absent in this fresh workspace",
+    "Approved execution environment access to both official API hosts not verified; restricted egress must not be bypassed"
   ],
   "tests": {
-    "new_api": "NOT_RUN"
+    "api_mock_functional": "65 PASS",
+    "existing_regression": "261 PASS, 1 existing skip",
+    "gemini_live": "BLOCKED",
+    "groq_live": "BLOCKED",
+    "semantic_accuracy": "NOT_RUN",
+    "stage3_plus": "NOT_RUN",
+    "shadow_7_days": "NOT_RUN"
   },
   "commits": [
     {
       "sha": "6221c4820dd9c596b7bccba06a9a0672d53f0959",
       "role": "verified upstream base"
+    },
+    {
+      "sha": "cbd3b43d9e623d69a7cbc19f50e334fd7040c80b",
+      "role": "fixed plan remotely verified"
     }
   ],
   "scope": "Stages 1 and 2 only; stage 3+ and 7-day observation NOT_RUN",
-  "updated_at": "2026-10-13T14:13:52.325933+00:00"
+  "updated_at": "2026-10-13T14:44:41.082907+00:00",
+  "evidence": [
+    "docs/v4/STAGE1_STATUS.json",
+    "docs/v4/API_TEST_RESULTS.json",
+    "docs/v4/API_FUNCTIONAL_TESTS.xml",
+    "docs/v4/REGRESSION_TESTS.xml",
+    "docs/v4/FREE_AI_SETUP.md"
+  ],
+  "storage": {
+    "branch": "codex/bct-v4-integration",
+    "implementation_push": "PENDING",
+    "latest_remote_verified": "cbd3b43d9e623d69a7cbc19f50e334fd7040c80b"
+  },
+  "user_setup": [
+    "GEMINI_API_KEY and GROQ_API_KEY in secure execution environment/Secrets",
+    "Both actual Free tiers and selected-model RPM/RPD/TPM/TPD evidence; never paste keys",
+    "Existing V4 public-original/CPU-reading ledger restored to isolated development root",
+    "Use approved execution environment allowing generativelanguage.googleapis.com and api.groq.com"
+  ],
+  "pr": {
+    "status": "BLOCKED_GITHUB_API_403_PRIOR",
+    "evidence": "docs/v4/DELIVERY.json",
+    "retried": false,
+    "reason": "Prior Forbidden remains; no changed PR permission evidence"
+  }
 }
