@@ -76,8 +76,11 @@ jobs:
           assert hashlib.sha256((root/'original/raw'/(rawsha+'.html')).read_bytes()).hexdigest()==rawsha
           body=original['body'];assert hashlib.sha256(body.encode()).hexdigest()==sha
           paths=root/'state/future-output';cp=paths/'future-candidates.json';tp=paths/'future-tracking.json'
-          c=json.loads(cp.read_text());before=json.loads(tp.read_text())
           publication=json.loads((paths/'operating-publication.json').read_text())
+          assert publication['published_commit']=='ce5752df6d2ad8ba74846e9178931ed4e1e07901'
+          c=t.read_at('future-candidates.json',publication['published_commit']).document
+          before=t.read_at('future-tracking.json',publication['published_commit']).document
+          cp.write_text(json.dumps(c,ensure_ascii=False));tp.write_text(json.dumps(before,ensure_ascii=False))
           assert hashlib.sha256(_raw(c)).hexdigest()==publication['document_sha256']['future-candidates.json']
           assert hashlib.sha256(_raw(before)).hexdigest()==publication['document_sha256']['future-tracking.json']
           item=_version_item(c,doc,sha)
@@ -87,8 +90,10 @@ jobs:
           config=json.loads(Path('config/bct-local-reader.json').read_text())
           binary,weights,setup_receipt=setup(root,config)
           server_log=(root/'native-server.log').open('w')
-          process=subprocess.Popen([str(binary),'-m',str(weights),'--host','127.0.0.1','--port','8080',
-              '-c','16384','-t','4','--no-webui'],stdout=server_log,stderr=subprocess.STDOUT)
+          process=subprocess.Popen([str(binary),'-m',str(weights),'--alias',config['alias'],
+              '--host','127.0.0.1','--port','8080','-c',str(config['context_tokens']),
+              '-t','4','-tb','4','-np','1','--no-context-shift','--log-disable'],
+              stdout=server_log,stderr=subprocess.STDOUT)
           observed=[]
           try:
               ready=time.monotonic()+90
