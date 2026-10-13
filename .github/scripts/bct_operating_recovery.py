@@ -44,6 +44,7 @@ def main():
         'observed_main': observed_main,
         # Resume artifact IDs/hashes are new checkpoints, not changed code.
         'reader_batch_limit': request.get('reader_batch_limit', 50)}, sort_keys=True).encode()).hexdigest()
+    operating_deadline = time.monotonic()+85*60
     external_runs: dict[str, Any] = {}
     for name in ('BCT_CANDIDATE_RUN_ID', 'BCT_PAGES_RUN_ID'):
         selected = os.environ.get(name)
@@ -113,7 +114,7 @@ def main():
         if not candidate or not pages:
             from bct_wait_publication import dispatch_and_wait
             try:
-                candidate, pages = dispatch_and_wait(root, transport, deadline=time.monotonic()+45*60)
+                candidate, pages = dispatch_and_wait(root, transport, deadline=operating_deadline)
             except (FileNotFoundError, TimeoutError) as exc:
                 return {'status': 'BLOCKED', 'reason': type(exc).__name__,
                     'resume_condition': 'Require released exact main code and fresh completed candidate/Pages; preserve pending dispatch before resuming'}
@@ -155,7 +156,7 @@ def main():
         4: standard(4, 'bct_evidence_recovery'), 5: reading,
         6: standard(6, 'bct_e2e_recovery'), 7: publication, 'FULL': full}
     state = run(stages, fingerprint=lambda: fingerprint,
-        output=root/'operating-engine-checkpoint.json', deadline=time.monotonic()+85*60,
+        output=root/'operating-engine-checkpoint.json', deadline=operating_deadline,
         condition=lambda: condition,
         single_cycle=True, execution_identity=run_id+':'+os.environ.get('GITHUB_RUN_ATTEMPT', '1'))
     checkpoint = root/'checkpoint.json'
