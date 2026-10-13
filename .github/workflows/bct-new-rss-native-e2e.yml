@@ -1,0 +1,138 @@
+name: BCT actual newest RSS source CPU proof
+on:
+  push:
+    branches: [ops/bct-native-archive-audit-20261013]
+    paths: [.github/workflows/bct-new-rss-native-e2e.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: d4b3130f8a5c0f2261fa851c7a35cb1c19fd5b5c
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: Actual newest original HTML and whole source CPU reading in isolated copy
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import hashlib,json,os,sys,time,subprocess,shutil
+          from pathlib import Path
+          from urllib.request import Request,build_opener,urlopen
+          from urllib.error import HTTPError
+          from urllib.parse import urlparse
+          sys.path.insert(0,'.github/scripts')
+          from bct_restore_operating_state import NoRedirect,unpack
+          from bct_local_reader_probe import setup
+          from bct_release_guard import verify_release
+          from bct.future_github import GitHubTransport,_raw
+          from bct.future_store import LocalJSONTransport
+          from bct.future_worker import run_worker
+          from bct.future_local_reader import LocalCPUQuickReader
+          from bct.future_body import cache_body
+          from bct.future_review import _version_item,document_complete
+          from bct.recovery_preservation import verify,digest
+          root=Path(os.environ['RUNNER_TEMP'])/'bct-new-rss-native';root.mkdir()
+          token=os.environ['GITHUB_TOKEN'];repo=os.environ['GITHUB_REPOSITORY']
+          assert repo=='irewon1-lgtm/bottleneck-control-tower'
+          t=GitHubTransport(repo,'future-bottleneck-data',token)
+          assert t.requester('GET','')['private'] is False
+          release=json.loads(Path('config/bct-operating-release.json').read_text())
+          code=verify_release(t.requester,release,Path('.'))
+          prefix='https://api.github.com/repos/'+repo
+          def download(aid,rid,sha,target):
+              artifact=t.requester('GET','/actions/artifacts/'+str(aid))
+              assert artifact['workflow_run']['id']==rid and artifact['digest']=='sha256:'+sha and not artifact['expired']
+              req=Request(prefix+'/actions/artifacts/'+str(aid)+'/zip',headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'})
+              try:build_opener(NoRedirect).open(req,timeout=30)
+              except HTTPError as exc:
+                  if exc.code not in (301,302,303,307,308):raise
+                  location=exc.headers['Location']
+              else:raise ValueError('signed artifact redirect required')
+              host=urlparse(location)
+              assert host.scheme=='https' and host.hostname.endswith(('.blob.core.windows.net','.actions.githubusercontent.com'))
+              archive=root/(str(aid)+'.zip');h=hashlib.sha256();size=0
+              with urlopen(location,timeout=30) as response,archive.open('wb') as output:
+                  while chunk:=response.read(1024*1024):
+                      size+=len(chunk)
+                      assert size<=512*1024**2
+                      output.write(chunk);h.update(chunk)
+              assert h.hexdigest()==sha
+              unpack(archive,target)
+          download(11781872668,38326295081,'6720dd8c221dccb297650b9fd817a059791e9c5db9f70a6512fc24761db59055',root/'state')
+          download(11780529072,38326295131,'f3f662a2717b4641de76d078a0d3c0c54374740d188253df73d905ffef2cde96',root/'original')
+          doc='3d61549c-7b3d-4110-935e-0e85dfbc1ee3';sha='05cf535b8d07e5eeb652227505044ab7d4d54367acee4d49b820843fd8725b80'
+          rawsha='83ac8441eae2df6d346c7b63a851c7c9a7943588563f75ba5f13e9e22c16cf85'
+          original=json.loads((root/'original/documents'/ (sha+'.json')).read_text())
+          assert original['document_id']==doc and original['body_sha256']==sha and original['raw_sha256']==rawsha
+          assert original['provenance_verified'] is True and original['provenance']=='PASS' and original['body_status']=='FULL'
+          assert hashlib.sha256((root/'original/raw'/(rawsha+'.html')).read_bytes()).hexdigest()==rawsha
+          body=original['body'];assert hashlib.sha256(body.encode()).hexdigest()==sha
+          paths=root/'state/future-output';cp=paths/'future-candidates.json';tp=paths/'future-tracking.json'
+          c=json.loads(cp.read_text());before=json.loads(tp.read_text())
+          publication=json.loads((paths/'operating-publication.json').read_text())
+          assert hashlib.sha256(_raw(c)).hexdigest()==publication['document_sha256']['future-candidates.json']
+          assert hashlib.sha256(_raw(before)).hexdigest()==publication['document_sha256']['future-tracking.json']
+          item=_version_item(c,doc,sha)
+          assert item['body_status']=='FULL' and item['body_chars']==len(body)
+          assert not document_complete(before,item)
+          cache=root/'body-cache';cache.mkdir();assert cache_body(cache,body)==sha
+          config=json.loads(Path('config/bct-local-reader.json').read_text())
+          binary,weights,setup_receipt=setup(root,config)
+          server_log=(root/'native-server.log').open('w')
+          process=subprocess.Popen([str(binary),'-m',str(weights),'--host','127.0.0.1','--port','8080',
+              '-c','16384','-t','4','--no-webui'],stdout=server_log,stderr=subprocess.STDOUT)
+          observed=[]
+          try:
+              ready=time.monotonic()+90
+              while True:
+                  if process.poll() is not None:raise RuntimeError('native server exited')
+                  try:
+                      with urlopen('http://127.0.0.1:8080/health',timeout=2) as response:
+                          if response.status==200:break
+                  except Exception:
+                      if time.monotonic()>=ready:raise TimeoutError('native server startup')
+                      time.sleep(1)
+              reader=LocalCPUQuickReader(setup_receipt,receipt_observer=lambda value:observed.append(value))
+              report=run_worker(LocalJSONTransport(),str(cp),str(tp),reader=reader,cache_dir=cache,
+                  limit=1,max_input_chars=12000,review_mode='API_REVIEW',
+                  source_eligible=lambda value:value['document_id']==doc and value['body_sha256']==sha)
+              assert report['state']=='FINISHED' and report['model_calls']==1 and report['counts']=={'SUCCESS':1}
+              assert len(observed)==1 and report['results'][0]['document_id']==doc
+              after=json.loads(tp.read_text())
+              assert document_complete(after,item),'actual complete source reading required; INCOMPLETE is not PASS'
+              assert json.loads(cp.read_text())==c
+              preservation=verify(c,after,json.loads(Path('config/bct-recovery-preservation.json').read_text()))
+              review=after['reviews'][report['results'][0]['review_id']]
+              assert review['body_sha256']==sha and review['document_id']==doc
+              receipt={'status':'PASS','actual_execution':True,'checked_out_code_sha':'d4b3130f8a5c0f2261fa851c7a35cb1c19fd5b5c',
+                  'audit_run_id':os.environ['GITHUB_RUN_ID'],'code':code,'rss_run':38326068143,'precursor_run':38326295131,
+                  'candidate_run':38326295081,'candidate_commit':publication['published_commit'],
+                  'document_id':doc,'body_sha256':sha,'original_html_sha256':rawsha,
+                  'source_records_unchanged':True,'preservation':preservation,'model_calls':1,
+                  'actual_returned_native_calls':len(observed),'actual_complete_read':True,
+                  'review':review,'review_sha256':digest(review),'native_receipts':observed,
+                  'production_ref_writes':0,'production_reviews_added':0,'paid_fallback_calls':0,
+                  'prediction_performance':'UNVERIFIED','scope':'Exact newest real RSS source read by unchanged CPU worker in isolated local copy; production import not performed'}
+              (root/'new-rss-native-receipt.json').write_text(json.dumps(receipt,indent=2))
+              print('NEW_RSS_NATIVE_JSON='+json.dumps({k:v for k,v in receipt.items() if k not in ('review','native_receipts')},separators=(',',':')))
+          finally:
+              process.terminate()
+              try:process.wait(timeout=10)
+              except subprocess.TimeoutExpired:process.kill()
+              server_log.close()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-new-rss-native-proof-${{ github.run_id }}
+          path: ${{ runner.temp }}/bct-new-rss-native/new-rss-native-receipt.json
+          retention-days: 30
+          if-no-files-found: error
