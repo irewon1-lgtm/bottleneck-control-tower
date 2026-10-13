@@ -1,0 +1,126 @@
+name: BCT isolated publication HTTP diagnostic replay
+on:
+  push:
+    branches: [ops/bct-publication-error-replay-20261013]
+    paths: [.github/workflows/bct-publication-error-replay.yml]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 0c2549b878d1151d9702e48ec93561a7f4036ae1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e . pytest
+      - name: Reproduce original dropped error facts
+        run: |
+          git show 9cba69d1785daa9d3199dd6309d76b96ef64c797:.github/scripts/bct_publish_operating_queue.py > "$RUNNER_TEMP/original-publisher.py"
+          cp .github/scripts/bct_publish_operating_queue.py "$RUNNER_TEMP/fixed-publisher.py"
+          cp "$RUNNER_TEMP/original-publisher.py" .github/scripts/bct_publish_operating_queue.py
+          set +e
+          python -m pytest tests/test_publication_error_receipt.py -q
+          outcome=$?
+          set -e
+          cp "$RUNNER_TEMP/fixed-publisher.py" .github/scripts/bct_publish_operating_queue.py
+          test "$outcome" -eq 1
+      - name: Verify corrected safe receipts and unchanged engine storage
+        run: |
+          python -m pytest tests/test_publication_error_receipt.py tests/test_recovery_publication.py tests/test_future_github_atomic.py tests/test_operating_publication_wait.py -q
+          python -m compileall -q .github/scripts/bct_publish_operating_queue.py tests/test_publication_error_receipt.py
+      - name: Actual failed projection replay on isolated Git ref without new inference
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import hashlib,json,os,sys
+          from pathlib import Path
+          from urllib.request import Request,build_opener,urlopen
+          from urllib.error import HTTPError
+          from urllib.parse import urlparse,quote
+          sys.path.insert(0,'.github/scripts')
+          import bct_publish_operating_queue as publisher
+          from bct_restore_operating_state import NoRedirect,unpack
+          from bct.future_github import GitHubTransport,GitHubRequestError
+          root=Path(os.environ['RUNNER_TEMP'])/'bct-publication-replay';root.mkdir()
+          token=os.environ['GITHUB_TOKEN'];repo=os.environ['GITHUB_REPOSITORY']
+          assert repo=='irewon1-lgtm/bottleneck-control-tower'
+          t=GitHubTransport(repo,'future-bottleneck-data',token)
+          assert t.requester('GET','')['private'] is False
+          events=[];phase='download'
+          result={'status':'FAIL','actual_execution':True,'run_id':os.environ['GITHUB_RUN_ID'],
+              'original_failed_candidate_run':38336983221,'original_failed_full_run':38334212709,
+              'original_http_cause':'UNRECOVERABLE_FROM_ORIGINAL_RECEIPT_EXCEPTION_SUBCLASS_DETAILS_DROPPED',
+              'production_ref_writes':0,'additional_model_calls':0,'paid_api_calls':0}
+          prefix='https://api.github.com/repos/'+repo
+          def download(aid,rid,sha,target):
+              artifact=t.requester('GET','/actions/artifacts/'+str(aid))
+              assert artifact['workflow_run']['id']==rid and artifact['digest']=='sha256:'+sha and not artifact['expired']
+              req=Request(prefix+'/actions/artifacts/'+str(aid)+'/zip',headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'})
+              try:build_opener(NoRedirect).open(req,timeout=30)
+              except HTTPError as exc:
+                  if exc.code not in (301,302,303,307,308):raise
+                  location=exc.headers['Location']
+              else:raise ValueError('signed artifact redirect required')
+              host=urlparse(location)
+              assert host.scheme=='https' and host.hostname.endswith(('.blob.core.windows.net','.actions.githubusercontent.com'))
+              archive=root/(str(aid)+'.zip');h=hashlib.sha256();size=0
+              with urlopen(location,timeout=30) as response,archive.open('wb') as output:
+                  while chunk:=response.read(1024*1024):
+                      size+=len(chunk)
+                      assert size<=512*1024**2
+                      output.write(chunk);h.update(chunk)
+              assert h.hexdigest()==sha
+              unpack(archive,target)
+          
+          
+          try:
+              download(11786721036,38336983221,'816d3f8f3dfae8d13b8d9e0c7112c9c4e469aa31700a7b77911488f14a29ddb8',root/'candidate')
+              download(11785632744,38334212709,'a342ab7675f53a11d0e381138db6a4f7ba1fb5932c38a8b6cec59c0ba8437d6e',root/'state')
+              phase='freeze_existing_data'
+              head=t.head();branch='ops/bct-publication-error-probe-'+os.environ['GITHUB_RUN_ID']
+              result.update(source_frozen_sha=head,isolated_branch=branch)
+              phase='create_isolated_ref'
+              t.requester('POST','/git/refs',{'ref':'refs/heads/'+branch,'sha':head})
+              target=GitHubTransport(repo,branch,token);request=target.requester
+              def isolated_request(method,suffix,payload=None):
+                  if method=='PATCH':
+                      assert suffix.endswith((branch,quote(branch,safe=''))),'only isolated branch PATCH allowed'
+                  elif method=='POST':
+                      assert suffix in ('/git/blobs','/git/trees','/git/commits'),'only unpublished Git objects allowed'
+                  else:assert method=='GET'
+                  event={'method':method,'endpoint':suffix.split('?',1)[0]}
+                  try:
+                      value=request(method,suffix,payload);event['status']='SUCCESS';return value
+                  except GitHubRequestError as exc:
+                      event['github_error_details']=dict(exc.details);raise
+                  finally:events.append(event)
+              target.requester=isolated_request
+              publisher.GitHubTransport=lambda *args,**kwargs:target
+              sys.argv=['publisher','--output-dir',str(root/'candidate/future-output'),'--recovery-state',str(root/'state')]
+              phase='actual_isolated_same_input_publication'
+              code=publisher.main()
+              receipt=json.loads((root/'candidate/future-output/operating-publication.json').read_text())
+              result.update(publication_receipt=receipt,publisher_exit_code=code,status=receipt['status'])
+          except GitHubRequestError as exc:
+              result.update(error_type=type(exc).__name__,github_error_details=dict(exc.details))
+          except Exception as exc:
+              result.update(error_type=type(exc).__name__,failure_code=str(exc)[:500])
+          finally:
+              result.update(phase=phase,api_request_events=events)
+              (root/'isolated-publication-replay.json').write_text(json.dumps(result,indent=2))
+              print('ISOLATED_PUBLICATION_REPLAY_JSON='+json.dumps(result,separators=(',',':')))
+          assert result['status']=='PASS','preserve actual error evidence; do not repeat unchanged failure'
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-publication-http-replay-${{ github.run_id }}
+          path: ${{ runner.temp }}/bct-publication-replay/isolated-publication-replay.json
+          retention-days: 30
+          if-no-files-found: error
