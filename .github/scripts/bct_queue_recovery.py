@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-from bct.future_github import GitHubTransport
+from bct.future_github import GitHubTransport, GitHubRequestError
 from bct.future_review import _records, document_complete, review_patch, validate_review, queue_summary, READER_VERSION
 from bct.future_store import apply_owned_patch
 from bct.recovery_preservation import verify,seal
@@ -202,6 +202,8 @@ def execute():
             resume_condition='Real E2E and regression Stage 6, then publication Stage 7 required')
     except Exception as exc:
         report.update(stage=5,status='FAIL',gate5='FAIL',error_type=type(exc).__name__,
+                      queue_recovery_commit=transport.last_commit,
+                      github_retry_observations=transport.retry_observations,
                       resume_condition='Fix actual queue/save/identity failure and restart Stage 0')
         raise
     finally:
@@ -219,7 +221,13 @@ def main():
         report=json.loads(checkpoint.read_text())
         report.update(stage=5,status='FAIL',gate5='FAIL',error_type=type(exc).__name__,
                       full_clean_status='BLOCKED',resume_condition='Fix recorded queue gate failure and restart Stage 0')
-        if type(exc) in (ValueError,RuntimeError):report['queue_failure_code']=str(exc)
+        if isinstance(exc,GitHubRequestError):
+            report['github_error_details']=dict(exc.details)
+            report['queue_failure_code']=str(exc)
+        elif isinstance(exc,FileNotFoundError):
+            report['queue_failure_code']=(str(exc) if str(exc).startswith('GitHub GET object unavailable: ')
+                else 'LOCAL_FILE_UNAVAILABLE: '+Path(exc.filename).name if exc.filename else 'FILE_UNAVAILABLE')
+        elif type(exc) in (ValueError,RuntimeError):report['queue_failure_code']=str(exc)
         checkpoint.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
         print(json.dumps({k:report.get(k) for k in ('stage','status','gate5','error_type','queue_failure_code')}))
         return 1

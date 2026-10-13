@@ -371,7 +371,9 @@ class GitHubTransport(LegacyGitHubTransport):
         if key in self._immutable_roots:
             raw, sha = self._immutable_roots[key]
             return (self._blob(sha) if raw is None else raw), sha
-        value = self.requester('GET', '/contents/' + quote(path) + '?ref=' + head)
+        # A newly published commit can briefly be absent from Contents.
+        # Retry only this immutable SHA lookup; never repeat the ref mutation.
+        value = self._retry_object('GET', '/contents/' + quote(path) + '?ref=' + head)
         raw = (base64.b64decode(value['content']) if value.get('encoding') == 'base64'
                else self._blob(value['sha']))
         if hashlib.sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest() != value['sha']:
