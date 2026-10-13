@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: d9dd46c368aab47d017b76b43c04bbe701846676
+          ref: 9cba69d1785daa9d3199dd6309d76b96ef64c797
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -36,17 +36,17 @@ jobs:
           root=Path(os.environ['RUNNER_TEMP'])/'released-gates'
           c=json.loads((root/'checkpoint.json').read_text())
           restored=json.loads((root/'operating-state-restore.json').read_text())
-          assert str(c['run_id'])=='38331945733'
-          assert c['code_sha']=='1e4ec2aaed3cba0a627d31e28c613c8490a27b50'
+          assert str(c['run_id'])=='38334212709'
+          assert c['code_sha']=='a6ee3bdde9cfad1b79fa44db3abeaf1aea8f5c58'
           assert all(c['gate'+str(i)]=='PASS' for i in range(7))
-          assert restored['artifact_id']==11783493914
-          assert restored['artifact_sha256']=='00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a'
+          assert restored['artifact_id']==11785632744
+          assert restored['artifact_sha256']=='a342ab7675f53a11d0e381138db6a4f7ba1fb5932c38a8b6cec59c0ba8437d6e'
           release=json.loads(Path('config/bct-operating-release.json').read_text())
           t=GitHubTransport(os.environ['GITHUB_REPOSITORY'],'future-bottleneck-data',os.environ['GITHUB_TOKEN'])
           verified=verify_release(t.requester,release,Path('.'))
           pins={n:hashlib.sha256((root/n).read_bytes()).hexdigest() for n in ('checkpoint.json','e2e-recovery.json',*LATEST_ROOT_STATE) if (root/n).exists()}
           proof=verify_restored(root,pins)
-          receipt={'status':'PASS','actual_execution':True,'release':release,'code':verified,'pins':pins,'proof':proof,'checkpoint':{k:v for k,v in c.items() if not isinstance(v,(dict,list))},'production_writes':0,'prediction_performance':'UNVERIFIED'}
+          receipt={'status':'RESTORE_VALIDATED_ONLY','full_clean_status':'FAIL','scope':'Actual failed FULL GitHub publication checkpoint/cache preservation; not a CLEAN PASS','actual_execution':True,'release':release,'code':verified,'pins':pins,'proof':proof,'checkpoint':{k:v for k,v in c.items() if not isinstance(v,(dict,list))},'production_writes':0,'prediction_performance':'UNVERIFIED'}
           p=Path(os.environ['RUNNER_TEMP'])/'release-receipt.json';p.write_text(json.dumps(receipt,indent=2))
           print('RELEASE_VALIDATED_JSON='+json.dumps(receipt,separators=(',',':')))
           PY
