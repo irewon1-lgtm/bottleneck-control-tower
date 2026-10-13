@@ -20,6 +20,7 @@ jobs:
       - run: python -m pip install -e . pytest
       - name: Reproduce original dropped error facts
         run: |
+          git fetch --no-tags --depth=1 origin 9cba69d1785daa9d3199dd6309d76b96ef64c797
           git show 9cba69d1785daa9d3199dd6309d76b96ef64c797:.github/scripts/bct_publish_operating_queue.py > "$RUNNER_TEMP/original-publisher.py"
           cp .github/scripts/bct_publish_operating_queue.py "$RUNNER_TEMP/fixed-publisher.py"
           cp "$RUNNER_TEMP/original-publisher.py" .github/scripts/bct_publish_operating_queue.py
