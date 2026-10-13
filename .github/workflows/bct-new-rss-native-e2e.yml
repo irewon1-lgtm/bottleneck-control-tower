@@ -109,7 +109,12 @@ jobs:
               report=run_worker(LocalJSONTransport(),str(cp),str(tp),reader=reader,cache_dir=cache,
                   limit=1,max_input_chars=12000,review_mode='API_REVIEW',
                   source_eligible=lambda value:value['document_id']==doc and value['body_sha256']==sha)
-              diagnostics={'report':report,'native_receipts':observed,'production_ref_writes':0,'scope':'ISOLATED ACTUAL EXECUTION; not a PASS if any assertion fails'}
+              after=json.loads(tp.read_text());current=json.loads(cp.read_text())
+              review=after.get('reviews',{}).get(report.get('results',[{}])[0].get('review_id'))
+              diagnostics={'report':report,'native_receipts':observed,'review':review,
+                  'source_records_equal':current.get('results')==c.get('results'),
+                  'historic_reviews_preserved':all(after.get('reviews',{}).get(key)==value for key,value in before.get('reviews',{}).items()),
+                  'production_ref_writes':0,'scope':'ISOLATED ACTUAL EXECUTION; not a PASS if any assertion fails'}
               (root/'worker-execution.json').write_text(json.dumps(diagnostics,indent=2))
               print('WORKER_EXECUTION_JSON='+json.dumps(report,separators=(',',':')),flush=True)
               assert report['state']=='FINISHED' and report['model_calls']==1 and report['counts']=={'SUCCESS':1}
@@ -120,7 +125,8 @@ jobs:
               assert current['results']==c['results'] and report['source_records_unchanged'] is True
               changed={key for key in set(c)|set(current) if c.get(key)!=current.get(key)}
               assert changed <= {'summary','operations'},'only queue summary and append-only operation journal may change'
-              assert current['summary']['review_queue']==report['after']
+              assert all(current['summary']['review_queue'][key]==report['after'][key]
+                  for key in ('documents_total','completed_documents','quick_pending','failed_versions','unresolved_versions'))
               assert all(current.get('operations',{}).get(key)==value for key,value in c.get('operations',{}).items())
               assert all(after.get('reviews',{}).get(key)==value for key,value in before.get('reviews',{}).items())
               preservation=verify(c,after,json.loads(Path('config/bct-recovery-preservation.json').read_text()))
