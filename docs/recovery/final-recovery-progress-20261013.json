@@ -1,27 +1,30 @@
 {
   "format": "bct-final-recovery-progress-v1",
-  "observed_at": "2026-10-13T01:41:27.570Z",
+  "observed_at": "2026-10-13T01:55:05.850Z",
   "status": "IN_PROGRESS_NOT_CLEAN_PASS",
-  "main_sha": "d4b3130f8a5c0f2261fa851c7a35cb1c19fd5b5c",
+  "main_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
   "merged_prs": [
     38,
     39,
     40,
-    41
+    41,
+    42
   ],
   "release": {
-    "gate_run_id": 38316734425,
-    "validated_code_sha": "956325a578a5e39a9ac2d88f35bb45f3581fa0bd",
-    "artifact_id": 11778321087,
-    "artifact_sha256": "090d9d04749ebd0e7aa611c9af95a4636ee5dfed7398c133601df50c860cf974"
+    "gate_run_id": 38331945733,
+    "validated_code_sha": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+    "artifact_id": 11783493914,
+    "artifact_sha256": "00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a"
   },
-  "gate_receipt_run": 38320839649,
+  "gate_receipt_run": 38333941926,
   "regressions": {
-    "python_pass": 939,
+    "python_pass": 942,
     "python_skip": 1,
     "javascript_pass": 34,
     "original_sources_preserved": 230,
-    "forecast_accuracy": "UNVERIFIED"
+    "typechecked_files": 47,
+    "forecast_accuracy": "UNVERIFIED",
+    "gate_run": 38331945733
   },
   "native_failure_archive": {
     "run_id": 38325017675,
@@ -494,176 +497,86 @@
   "latest_code_rollback": {
     "status": "PASS",
     "actual_execution": true,
-    "scope": "Forward commits on isolated branch only; exact original code trees restored. Existing final-code regression receipts reused, not rerun here.",
+    "scope": "Exact code trees using forward commits on isolated branch; matched-code regression receipts reused",
     "branch": "ops/bct-rollback-rehearsal-20261013",
-    "start_sha": "6ce452fa47cfccd2ef3a72b636f4f0696743788b",
     "steps": [
       {
-        "sha": "b21bf9714da86de6d691e57cd4a64b7300fc64fc",
-        "parent": "6ce452fa47cfccd2ef3a72b636f4f0696743788b",
+        "tree": "119be9be4a7b04a24a38e85164542e7c1a925871",
+        "name": "align final PR42 code",
+        "parent": "f2e51747be1e305ceca01e76a4e91df9ae6fb5a4",
+        "sha": "cd5aa975826c9bbcfe8c0e612953cf9adf01c05e",
+        "actual": "cd5aa975826c9bbcfe8c0e612953cf9adf01c05e",
+        "force": false
+      },
+      {
         "tree": "3b1bf1f0ee0c861173281d3cf0dfa222984306a5",
-        "force": false,
-        "observed_ref_sha": "b21bf9714da86de6d691e57cd4a64b7300fc64fc"
+        "name": "rollback to exact pre-PR42 code",
+        "parent": "cd5aa975826c9bbcfe8c0e612953cf9adf01c05e",
+        "sha": "0b8198b5d43d03a0ca89a2da782d6753c819fabc",
+        "actual": "0b8198b5d43d03a0ca89a2da782d6753c819fabc",
+        "force": false
       },
       {
-        "sha": "5b0ae2c123baa6c683a22a18ea8ecc984c98e9c6",
-        "parent": "b21bf9714da86de6d691e57cd4a64b7300fc64fc",
-        "tree": "acd22edb9994edea1a2422b8132cbd522858b9c7",
-        "force": false,
-        "observed_ref_sha": "5b0ae2c123baa6c683a22a18ea8ecc984c98e9c6"
-      },
-      {
-        "sha": "f2e51747be1e305ceca01e76a4e91df9ae6fb5a4",
-        "parent": "5b0ae2c123baa6c683a22a18ea8ecc984c98e9c6",
-        "tree": "3b1bf1f0ee0c861173281d3cf0dfa222984306a5",
-        "force": false,
-        "observed_ref_sha": "f2e51747be1e305ceca01e76a4e91df9ae6fb5a4"
+        "tree": "119be9be4a7b04a24a38e85164542e7c1a925871",
+        "name": "restore final PR42 code",
+        "parent": "0b8198b5d43d03a0ca89a2da782d6753c819fabc",
+        "sha": "4a9541afb044d52ce2b50d18cf3ba44371deeaf7",
+        "actual": "4a9541afb044d52ce2b50d18cf3ba44371deeaf7",
+        "force": false
       }
     ],
-    "restored_tree": "3b1bf1f0ee0c861173281d3cf0dfa222984306a5",
-    "exact_final_main_tree": "3b1bf1f0ee0c861173281d3cf0dfa222984306a5",
-    "production_refs_before": [
+    "production_before": [
       {
-        "ref": "refs/heads/backup/future-data-before-shard-cleanup-20261012-3cd0558f",
-        "sha": "3cd0558fdbca12c02fb094f56bd5c9a91a680ea9"
+        "branch": "main",
+        "sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-native-extent-release-20261013-367bf477",
-        "sha": "367bf477717561380282d1b9f5ca46fc82f11323"
+        "branch": "data",
+        "sha": "cbeb35db0580b12823f9f67bd1fc480e9980b4e1"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-publication-release-20261013-39a7f6b5",
-        "sha": "39a7f6b58a2f38114b4b0c68b62dd1ef9a5fc189"
+        "branch": "future-bottleneck-data",
+        "sha": "66840cd7f13629c9386a35ab08301ca167504a5b"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-repair-future-data-20261012",
-        "sha": "261e469ac33f087f8f6aac0e80006d12fab3e01a"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-repair-live-state-20261012",
+        "branch": "live-state",
         "sha": "21e1be03b522d81a20d95e79694617967d8a608a"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-repair-main-20261012",
-        "sha": "b383389a7f08cad440fae8a7ee40d0b784e54df9"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-repair-review-state-20261012",
-        "sha": "1e0fb94a635e3b6ad066dbd2cfa0d4eacc16780a"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-repair-rss-data-20261012",
-        "sha": "0f8ad9ba09b36a3c3ac36b0786e9a40100e5ce10"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-storage-release-20261012-cbe1f488",
-        "sha": "cbe1f488db80f2232dd7ab99c598fe72ef55e41a"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-version-access-release-20261013-eab6b0e9",
-        "sha": "eab6b0e9ea823fb2b51bf70add4aa34d0a3a4a30"
-      },
-      {
-        "ref": "refs/heads/data",
-        "sha": "943194423e52e8445405706c84e83b2de94093bb"
-      },
-      {
-        "ref": "refs/heads/future-bottleneck-data",
-        "sha": "6369c82ce91f171406c62f84dad1574af0c864dc"
-      },
-      {
-        "ref": "refs/heads/live-state",
-        "sha": "21e1be03b522d81a20d95e79694617967d8a608a"
-      },
-      {
-        "ref": "refs/heads/main",
-        "sha": "d4b3130f8a5c0f2261fa851c7a35cb1c19fd5b5c"
-      },
-      {
-        "ref": "refs/heads/review-lead-evaluation-state",
-        "sha": "5bcbc34574b2079fd9d74433fb2f3434c807d3a9"
-      },
-      {
-        "ref": "refs/heads/review-lead-shadow-state",
-        "sha": "236151fd616b262873256f1bf10f991f28a9313b"
+        "branch": "review-lead-shadow-state",
+        "sha": "7580974082abe27a80f5fee66faabe3330147eca"
       }
     ],
-    "production_refs_after": [
+    "production_after": [
       {
-        "ref": "refs/heads/backup/future-data-before-shard-cleanup-20261012-3cd0558f",
-        "sha": "3cd0558fdbca12c02fb094f56bd5c9a91a680ea9"
+        "branch": "main",
+        "sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-native-extent-release-20261013-367bf477",
-        "sha": "367bf477717561380282d1b9f5ca46fc82f11323"
+        "branch": "data",
+        "sha": "cbeb35db0580b12823f9f67bd1fc480e9980b4e1"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-publication-release-20261013-39a7f6b5",
-        "sha": "39a7f6b58a2f38114b4b0c68b62dd1ef9a5fc189"
+        "branch": "future-bottleneck-data",
+        "sha": "66840cd7f13629c9386a35ab08301ca167504a5b"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-repair-future-data-20261012",
-        "sha": "261e469ac33f087f8f6aac0e80006d12fab3e01a"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-repair-live-state-20261012",
+        "branch": "live-state",
         "sha": "21e1be03b522d81a20d95e79694617967d8a608a"
       },
       {
-        "ref": "refs/heads/backup/pre-bct-repair-main-20261012",
-        "sha": "b383389a7f08cad440fae8a7ee40d0b784e54df9"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-repair-review-state-20261012",
-        "sha": "1e0fb94a635e3b6ad066dbd2cfa0d4eacc16780a"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-repair-rss-data-20261012",
-        "sha": "0f8ad9ba09b36a3c3ac36b0786e9a40100e5ce10"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-storage-release-20261012-cbe1f488",
-        "sha": "cbe1f488db80f2232dd7ab99c598fe72ef55e41a"
-      },
-      {
-        "ref": "refs/heads/backup/pre-bct-version-access-release-20261013-eab6b0e9",
-        "sha": "eab6b0e9ea823fb2b51bf70add4aa34d0a3a4a30"
-      },
-      {
-        "ref": "refs/heads/data",
-        "sha": "943194423e52e8445405706c84e83b2de94093bb"
-      },
-      {
-        "ref": "refs/heads/future-bottleneck-data",
-        "sha": "6369c82ce91f171406c62f84dad1574af0c864dc"
-      },
-      {
-        "ref": "refs/heads/live-state",
-        "sha": "21e1be03b522d81a20d95e79694617967d8a608a"
-      },
-      {
-        "ref": "refs/heads/main",
-        "sha": "d4b3130f8a5c0f2261fa851c7a35cb1c19fd5b5c"
-      },
-      {
-        "ref": "refs/heads/review-lead-evaluation-state",
-        "sha": "5bcbc34574b2079fd9d74433fb2f3434c807d3a9"
-      },
-      {
-        "ref": "refs/heads/review-lead-shadow-state",
-        "sha": "236151fd616b262873256f1bf10f991f28a9313b"
+        "branch": "review-lead-shadow-state",
+        "sha": "7580974082abe27a80f5fee66faabe3330147eca"
       }
     ],
-    "production_refs_changed": [],
-    "force_pushes": 0,
-    "history_rewrites": 0,
-    "production_ref_guard": "PASS"
+    "production_changed": [],
+    "history_rewrites": 0
   },
   "final_core_objective_code_sha_proof": {
     "status": "PASS",
     "actual_remote_execution": true,
     "baseline": "cbe1f488db80f2232dd7ab99c598fe72ef55e41a",
-    "main": "d4b3130f8a5c0f2261fa851c7a35cb1c19fd5b5c",
+    "main": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
     "method": "Exact Git blob SHA equality for four existing leading demand/supply forecast modules",
     "files": [
       {
@@ -693,7 +606,7 @@
     "pr": 42,
     "branch": "fix/bct-publication-budget-resume-20261013",
     "sha": "46de5837889e3d547af6d748f5de9ce469cabc07",
-    "main_merged": false,
+    "main_merged": true,
     "focused_regression": {
       "run_id": 38331370992,
       "before": {
@@ -706,7 +619,8 @@
       "other_engine_storage_passed": 51
     },
     "gates_run": 38331945733,
-    "gates_status": "GATES0_TO4_PASS_STAGE5_RUNNING"
+    "gates_status": "PASS",
+    "release_head_sha": "d9dd46c368aab47d017b76b43c04bbe701846676"
   },
   "initial_reference_audit": {
     "actual_artifact_sha256": "ef44647971894a2fb7333d2e60968d5cd67ca8528c024beb07c175cda49074c1",
@@ -1022,6 +936,166 @@
     "production_writes": 0,
     "audit_failure": "Entire candidate document equality asserted despite existing worker's authorized queue-summary update; source records report unchanged. Corrected audit requires source exact equality, preserves all historical reviews and operation entries, permits only summary and append-only operations.",
     "corrected_audit_commit": "6ce1608b645bd564623a81ac8309c96d2e056620",
-    "corrected_status": "RUNNING_NOT_PASS"
-  }
+    "corrected_status": "FAIL_SUMMARY_ASSERTION",
+    "latest_audit_run": 38333271495,
+    "reason": "Actual worker succeeded, whole source complete and source records unchanged. Summary uses existing preserving deep-merge for preview lists; compare exact current numeric queue counts, not whole merged preview array. Full diagnostics now include actual saved review and historical-review equality before assertions.",
+    "next_audit_run": 38334067719,
+    "next_status": "IN_PROGRESS_NOT_PASS"
+  },
+  "exact_release_receipt": {
+    "status": "PASS",
+    "actual_execution": true,
+    "release": {
+      "gate_run_id": 38331945733,
+      "validated_code_sha": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+      "artifact_id": 11783493914,
+      "artifact_sha256": "00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a"
+    },
+    "code": {
+      "status": "PASS",
+      "gate_run_id": 38331945733,
+      "verified_code_files": 235,
+      "validated_code_sha": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+      "artifact_id": 11783493914
+    },
+    "pins": {
+      "checkpoint.json": "6bf4b59f2880dbf398bd13bef863c3ac41c3240841c9eac1dd3f2fbdb84b7d42",
+      "e2e-recovery.json": "5aff83ca2e9b7066a4aab7b916091d7df5afba87b1ddc6a14a9cfaacf43bfe0c",
+      "source-audit.json": "e6a4b5a82de89e2ef19767084bc6ac59ff1a84775014f04826633330ca60b3be",
+      "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
+      "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
+      "evidence-recovery-observations.json": "e9a287f0a3e9d0d3286f48e69f414ca9e9b98e36b31e31cd33501764cb69071f",
+      "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "evidence-recovery-versions.json": "d41acd074251ba30a7a86c2dff553a2c49e31bb85d764102d6065e9fdb4c3d86",
+      "local-reader-setup.json": "574e1d79174ca3c8618f6e914297a1faa3fd29ce63f6af76233ae84addb6475e",
+      "local-reader-probe.json": "7643f8d37dafead5e6e75db599b32bf80c3a2f8b5aa5e7fcca7c5c222cc643bc",
+      "private-local-reader-execution.jsonl": "edff576a0c81e4faa3d37b252412cc5efaa6812bea7d617d0dcc92de5b35b40c",
+      "recovery-preservation-seal.json": "9652c4e6b0eb0cbc6dd96c7073adea442e1493eec18c1262a0d6dd0b9ba1d5e7",
+      "queue-recovery-versions.json": "3c65ce65228d97941cc32d1c4d446e7dbcb351f50578ebc3716b17a1560c6527",
+      "operating-engine-checkpoint.json": "267b6dc5b8cd6155e07b0b5c29a4492fb4ed029c5b9dd24fa420c937e4e19e1e",
+      "operating-publication-request.json": "f1e3f230abc15d67b0726a90cb82b820f9266364c871cb45833fc1a4cce81468",
+      "operating-publication-history.json": "120222a5dea8dc5f8c52a9d95e104d98ad7c2313948237dedadd9281e23b698d",
+      "native-claim-recovery.json": "ca5158288848a25360df7d6331e1d050f2cf5eb5d24ae95187283ee4b1f6e908",
+      "native-claim-history.json": "289cb89b3657d8299c20b215d4ca34addcacc53c18d29d432f8c5681d1b0ac2f"
+    },
+    "proof": {
+      "status": "PASS",
+      "verified_pinned_files": {
+        "checkpoint.json": "6bf4b59f2880dbf398bd13bef863c3ac41c3240841c9eac1dd3f2fbdb84b7d42",
+        "e2e-recovery.json": "5aff83ca2e9b7066a4aab7b916091d7df5afba87b1ddc6a14a9cfaacf43bfe0c",
+        "source-audit.json": "e6a4b5a82de89e2ef19767084bc6ac59ff1a84775014f04826633330ca60b3be",
+        "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
+        "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10",
+        "evidence-recovery-observations.json": "e9a287f0a3e9d0d3286f48e69f414ca9e9b98e36b31e31cd33501764cb69071f",
+        "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "evidence-recovery-versions.json": "d41acd074251ba30a7a86c2dff553a2c49e31bb85d764102d6065e9fdb4c3d86",
+        "local-reader-setup.json": "574e1d79174ca3c8618f6e914297a1faa3fd29ce63f6af76233ae84addb6475e",
+        "local-reader-probe.json": "7643f8d37dafead5e6e75db599b32bf80c3a2f8b5aa5e7fcca7c5c222cc643bc",
+        "private-local-reader-execution.jsonl": "edff576a0c81e4faa3d37b252412cc5efaa6812bea7d617d0dcc92de5b35b40c",
+        "recovery-preservation-seal.json": "9652c4e6b0eb0cbc6dd96c7073adea442e1493eec18c1262a0d6dd0b9ba1d5e7",
+        "queue-recovery-versions.json": "3c65ce65228d97941cc32d1c4d446e7dbcb351f50578ebc3716b17a1560c6527",
+        "operating-engine-checkpoint.json": "267b6dc5b8cd6155e07b0b5c29a4492fb4ed029c5b9dd24fa420c937e4e19e1e",
+        "operating-publication-request.json": "f1e3f230abc15d67b0726a90cb82b820f9266364c871cb45833fc1a4cce81468",
+        "operating-publication-history.json": "120222a5dea8dc5f8c52a9d95e104d98ad7c2313948237dedadd9281e23b698d",
+        "native-claim-recovery.json": "ca5158288848a25360df7d6331e1d050f2cf5eb5d24ae95187283ee4b1f6e908",
+        "native-claim-history.json": "289cb89b3657d8299c20b215d4ca34addcacc53c18d29d432f8c5681d1b0ac2f"
+      },
+      "verified_cache_files": {
+        "private-source-cache": 1677,
+        "private-evidence-cache": 77,
+        "private-evidence-raw": 1467,
+        "private-source-html": 8,
+        "private-native-claim": 51
+      },
+      "cache_inventory_sha256": "61254209fc5697fdd3e2789806214ee15cd01d564386ce75eb4bc7acdda2ed5a"
+    },
+    "checkpoint": {
+      "version": 1,
+      "status": "PASS",
+      "stage": 6,
+      "run_id": "38331945733",
+      "code_sha": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+      "started_at": "2026-10-13T01:24:19.292385+00:00",
+      "prediction_performance": "UNVERIFIED",
+      "live_early": 0,
+      "database_sha256": "f50dbbd8780293aaefd495ec63b7706d61e7d3a8be7f29cee391d895732abd73",
+      "gate0": "PASS",
+      "tracked_failed_versions": 3696,
+      "probe_branch": "ops/bct-storage-probe-38331945733",
+      "probe_commit": "f6f7b156401a5fe52ad0877078ba4d835b9dfda4",
+      "projection_generation": "031b22a79aa390ae254a83aa91708d9dc30ec571",
+      "gate1": "PASS",
+      "publication_commit": "e68060aab2f0f130d2401f7815e43e68b9b048bc",
+      "candidate_blob_sha": "2a9d1cf07357486776d502c1413f378e1e702bda",
+      "candidate_sha256": "4be5de17dfa0c46d742396a0ad334ee4831ae7e72865b8986f26bd049c0619fc",
+      "prior_403_cause": "UNCLASSIFIED_OLD_RESPONSE_NOT_RETAINED",
+      "classification_tests": "PRIMARY/SECONDARY_RATE_LIMIT, ACCESS_DENIED, absent header covered",
+      "next_stage": 7,
+      "resume_condition": "Real E2E and regression Stage 6, then publication Stage 7 required",
+      "finished_at": "2026-10-13T01:34:53.477725+00:00",
+      "source_audit_candidate_blob": "2a9d1cf07357486776d502c1413f378e1e702bda",
+      "sample_sources": 36,
+      "sample_http_completed": 36,
+      "sample_http_200": 36,
+      "sample_full": 23,
+      "sample_dns_failures": 0,
+      "sample_system_errors": 0,
+      "sample_exact_failed_versions_recovered": 12,
+      "source_records_changed": false,
+      "originals_and_history_preserved": true,
+      "gate2": "PASS",
+      "recovery_urls": 2621,
+      "recovery_versions": 3696,
+      "recovery_system_errors": 0,
+      "recovery_urls_not_attempted": 0,
+      "production_source_records_changed": false,
+      "recovery_prior_observations_restored": 2621,
+      "recovery_http_executions_this_run": 0,
+      "reader_completions_added": 323,
+      "original_184_completions_preserved": true,
+      "gate3": "PASS",
+      "source_recovery_finished_at": "2026-10-13T01:35:27.978453+00:00",
+      "gate4": "PASS",
+      "evidence_versions_audited": 74,
+      "full_clean_status": "BLOCKED",
+      "full_clean_count": 0,
+      "full_clean_reason": "OPERATING_PUBLICATION_STAGE_7_AND_FULL_REQUIRED",
+      "evidence_original_http_requests": 74,
+      "evidence_scoped_requests": 0,
+      "evidence_searches_completed": 0,
+      "evidence_scope_held_versions": 74,
+      "evidence_system_errors": 0,
+      "evidence_supplement_promotions": 0,
+      "evidence_recovery_finished_at": "2026-10-13T01:36:26.898408+00:00",
+      "gate5": "PASS",
+      "queue_recovery_commit": "66840cd7f13629c9386a35ab08301ca167504a5b",
+      "actual_reader_results_added": 5,
+      "source_access_records_added": 0,
+      "source_versions_appended": 0,
+      "source_previous_judgments_preserved": true,
+      "legacy_read_results": 507,
+      "legacy_partial_read_results": 142,
+      "old_failure_versions_preserved": 3696,
+      "source_decisions_scores_preserved": true,
+      "production_restart_same_generation": "PASS",
+      "actual_remote_interruption_concurrency": "PASS",
+      "confirmed_targets_predictions_preserved": true,
+      "completion_failure_state_overlap": 0,
+      "queue_recovery_finished_at": "2026-10-13T01:44:50.930270+00:00",
+      "gate6": "PASS",
+      "e2e_execution_id": "18f74645ff9f459383ce31bd2403c9b0",
+      "e2e_proof_sha256": "5aff83ca2e9b7066a4aab7b916091d7df5afba87b1ddc6a14a9cfaacf43bfe0c"
+    },
+    "production_writes": 0,
+    "prediction_performance": "UNVERIFIED"
+  },
+  "final_code_full_attempts": [
+    {
+      "run_id": 38334212709,
+      "ops_sha": "a6ee3bdde9cfad1b79fa44db3abeaf1aea8f5c58",
+      "status": "IN_PROGRESS_NOT_PASS",
+      "current_stage": "actual operating engine",
+      "clean_streak": "NOT_CONFIRMED"
+    }
+  ]
 }
