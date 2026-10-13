@@ -1,0 +1,2484 @@
+{
+  "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+  "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+  "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+  "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+  "applies_from": "2026-10-05T15:24:06.650413+00:00",
+  "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+  "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+  "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+  "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+  "provenance_verified": true,
+  "automatic_extraction": {
+    "version": "BCT_PRECURSOR_V2_SHADOW_2",
+    "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+    "events": [
+      {
+        "event_id": "757f4d63469cae3cd9a61fd22fa76aa627a8d28b626d282bfbf41d1f75597aa3",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "role": "SUPPLY",
+        "kind": "READINESS_OR_QUANTITY",
+        "reference": {
+          "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+          "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+          "locator": {
+            "start": 957,
+            "end": 1110
+          },
+          "quote": "If the baker handles inventory, ordering, customer service, and cleaning along with baking, it violates SRP since multiple responsibilities are combined."
+        },
+        "fields": {},
+        "context_references": [
+          {
+            "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+            "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+            "locator": {
+              "start": 957,
+              "end": 1110
+            },
+            "quote": "If the baker handles inventory, ordering, customer service, and cleaning along with baking, it violates SRP since multiple responsibilities are combined."
+          }
+        ],
+        "direct_origin": true,
+        "facts": {},
+        "period": null
+      },
+      {
+        "event_id": "2b7b91d12b82460c335457bdaa5a528686e7f8c1351c430254de342630c38888",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "role": "SUPPLY",
+        "kind": "READINESS_OR_QUANTITY",
+        "reference": {
+          "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+          "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+          "locator": {
+            "start": 1384,
+            "end": 2530
+          },
+          "quote": "#include <iostream> #include <string> // Class for baking bread class BreadBaker { public : void bakeBread () { std :: cout << \"Baking high-quality bread...\" << std :: endl ; } }; // Class for managing inventory class InventoryManager { public : void manageInventory () { std :: cout << \"Managing inventory...\" << std :: endl ; } }; // Class for ordering supplies class SupplyOrder { public : void orderSupplies () { std :: cout << \"Ordering supplies...\" << std :: endl ; } }; // Class for serving customers class CustomerService { public : void serveCustomer () { std :: cout << \"Serving customers...\" << std :: endl ; } }; // Class for cleaning the bakery class BakeryCleaner { public : void cleanBakery () { std :: cout << \"Cleaning the bakery...\" << std :: endl ; } }; int main () { BreadBaker baker ; InventoryManager inventoryManager ; SupplyOrder supplyOrder ; CustomerService customerService ; BakeryCleaner cleaner ; // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); return 0 ; }"
+        },
+        "fields": {},
+        "context_references": [
+          {
+            "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+            "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+            "locator": {
+              "start": 1384,
+              "end": 2530
+            },
+            "quote": "#include <iostream> #include <string> // Class for baking bread class BreadBaker { public : void bakeBread () { std :: cout << \"Baking high-quality bread...\" << std :: endl ; } }; // Class for managing inventory class InventoryManager { public : void manageInventory () { std :: cout << \"Managing inventory...\" << std :: endl ; } }; // Class for ordering supplies class SupplyOrder { public : void orderSupplies () { std :: cout << \"Ordering supplies...\" << std :: endl ; } }; // Class for serving customers class CustomerService { public : void serveCustomer () { std :: cout << \"Serving customers...\" << std :: endl ; } }; // Class for cleaning the bakery class BakeryCleaner { public : void cleanBakery () { std :: cout << \"Cleaning the bakery...\" << std :: endl ; } }; int main () { BreadBaker baker ; InventoryManager inventoryManager ; SupplyOrder supplyOrder ; CustomerService customerService ; BakeryCleaner cleaner ; // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); return 0 ; }"
+          }
+        ],
+        "direct_origin": true,
+        "facts": {},
+        "period": null
+      },
+      {
+        "event_id": "5c3d0bf9e1a7fbdc2e40c1512b62fa5d37d1a1a8c9832ee746aa2b48d28c794a",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "role": "SUPPLY",
+        "kind": "READINESS_OR_QUANTITY",
+        "reference": {
+          "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+          "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+          "locator": {
+            "start": 2536,
+            "end": 3761
+          },
+          "quote": "// Class for baking bread class BreadBaker { public void bakeBread () { System . out . println ( \"Baking high-quality bread...\" ); } } // Class for managing inventory class InventoryManager { public void manageInventory () { System . out . println ( \"Managing inventory...\" ); } } // Class for ordering supplies class SupplyOrder { public void orderSupplies () { System . out . println ( \"Ordering supplies...\" ); } } // Class for serving customers class CustomerService { public void serveCustomer () { System . out . println ( \"Serving customers...\" ); } } // Class for cleaning the bakery class BakeryCleaner { public void cleanBakery () { System . out . println ( \"Cleaning the bakery...\" ); } } public class Main { public static void main ( String [] args ) { BreadBaker baker = new BreadBaker (); InventoryManager inventoryManager = new InventoryManager (); SupplyOrder supplyOrder = new SupplyOrder (); CustomerService customerService = new CustomerService (); BakeryCleaner cleaner = new BakeryCleaner (); // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); } }"
+        },
+        "fields": {},
+        "context_references": [
+          {
+            "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+            "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+            "locator": {
+              "start": 2536,
+              "end": 3761
+            },
+            "quote": "// Class for baking bread class BreadBaker { public void bakeBread () { System . out . println ( \"Baking high-quality bread...\" ); } } // Class for managing inventory class InventoryManager { public void manageInventory () { System . out . println ( \"Managing inventory...\" ); } } // Class for ordering supplies class SupplyOrder { public void orderSupplies () { System . out . println ( \"Ordering supplies...\" ); } } // Class for serving customers class CustomerService { public void serveCustomer () { System . out . println ( \"Serving customers...\" ); } } // Class for cleaning the bakery class BakeryCleaner { public void cleanBakery () { System . out . println ( \"Cleaning the bakery...\" ); } } public class Main { public static void main ( String [] args ) { BreadBaker baker = new BreadBaker (); InventoryManager inventoryManager = new InventoryManager (); SupplyOrder supplyOrder = new SupplyOrder (); CustomerService customerService = new CustomerService (); BakeryCleaner cleaner = new BakeryCleaner (); // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); } }"
+          }
+        ],
+        "direct_origin": true,
+        "facts": {},
+        "period": null
+      },
+      {
+        "event_id": "3be763465b14ae246d43e49bdd7b090c14c7a14586caba2fea914b1d28874a88",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "role": "SUPPLY",
+        "kind": "READINESS_OR_QUANTITY",
+        "reference": {
+          "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+          "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+          "locator": {
+            "start": 3769,
+            "end": 4743
+          },
+          "quote": "# Class for baking bread class BreadBaker : def bakeBread ( self ): print ( \"Baking high-quality bread...\" ) # Class for managing inventory class InventoryManager : def manageInventory ( self ): print ( \"Managing inventory...\" ) # Class for ordering supplies class SupplyOrder : def orderSupplies ( self ): print ( \"Ordering supplies...\" ) # Class for serving customers class CustomerService : def serveCustomer ( self ): print ( \"Serving customers...\" ) # Class for cleaning the bakery class BakeryCleaner : def cleanBakery ( self ): print ( \"Cleaning the bakery...\" ) def main (): baker = BreadBaker () inventoryManager = InventoryManager () supplyOrder = SupplyOrder () customerService = CustomerService () cleaner = BakeryCleaner () # Each class focuses on its specific responsibility baker . bakeBread () inventoryManager . manageInventory () supplyOrder . orderSupplies () customerService . serveCustomer () cleaner . cleanBakery () if __name__ == \"__main__\" : main ()"
+        },
+        "fields": {},
+        "context_references": [
+          {
+            "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+            "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+            "locator": {
+              "start": 3769,
+              "end": 4743
+            },
+            "quote": "# Class for baking bread class BreadBaker : def bakeBread ( self ): print ( \"Baking high-quality bread...\" ) # Class for managing inventory class InventoryManager : def manageInventory ( self ): print ( \"Managing inventory...\" ) # Class for ordering supplies class SupplyOrder : def orderSupplies ( self ): print ( \"Ordering supplies...\" ) # Class for serving customers class CustomerService : def serveCustomer ( self ): print ( \"Serving customers...\" ) # Class for cleaning the bakery class BakeryCleaner : def cleanBakery ( self ): print ( \"Cleaning the bakery...\" ) def main (): baker = BreadBaker () inventoryManager = InventoryManager () supplyOrder = SupplyOrder () customerService = CustomerService () cleaner = BakeryCleaner () # Each class focuses on its specific responsibility baker . bakeBread () inventoryManager . manageInventory () supplyOrder . orderSupplies () customerService . serveCustomer () cleaner . cleanBakery () if __name__ == \"__main__\" : main ()"
+          }
+        ],
+        "direct_origin": true,
+        "facts": {},
+        "period": null
+      },
+      {
+        "event_id": "99acf41954293b5b888048767e7f89719f7ed8f134c9a4014f88e26ce8675736",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "role": "SUPPLY",
+        "kind": "READINESS_OR_QUANTITY",
+        "reference": {
+          "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+          "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+          "locator": {
+            "start": 4755,
+            "end": 5796
+          },
+          "quote": "// Class for baking bread class BreadBaker { bakeBread () { console . log ( \"Baking high-quality bread...\" ); } } // Class for managing inventory class InventoryManager { manageInventory () { console . log ( \"Managing inventory...\" ); } } // Class for ordering supplies class SupplyOrder { orderSupplies () { console . log ( \"Ordering supplies...\" ); } } // Class for serving customers class CustomerService { serveCustomer () { console . log ( \"Serving customers...\" ); } } // Class for cleaning the bakery class BakeryCleaner { cleanBakery () { console . log ( \"Cleaning the bakery...\" ); } } function main () { const baker = new BreadBaker (); const inventoryManager = new InventoryManager (); const supplyOrder = new SupplyOrder (); const customerService = new CustomerService (); const cleaner = new BakeryCleaner (); // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); } main ();"
+        },
+        "fields": {},
+        "context_references": [
+          {
+            "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+            "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+            "locator": {
+              "start": 4755,
+              "end": 5796
+            },
+            "quote": "// Class for baking bread class BreadBaker { bakeBread () { console . log ( \"Baking high-quality bread...\" ); } } // Class for managing inventory class InventoryManager { manageInventory () { console . log ( \"Managing inventory...\" ); } } // Class for ordering supplies class SupplyOrder { orderSupplies () { console . log ( \"Ordering supplies...\" ); } } // Class for serving customers class CustomerService { serveCustomer () { console . log ( \"Serving customers...\" ); } } // Class for cleaning the bakery class BakeryCleaner { cleanBakery () { console . log ( \"Cleaning the bakery...\" ); } } function main () { const baker = new BreadBaker (); const inventoryManager = new InventoryManager (); const supplyOrder = new SupplyOrder (); const customerService = new CustomerService (); const cleaner = new BakeryCleaner (); // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); } main ();"
+          }
+        ],
+        "direct_origin": true,
+        "facts": {},
+        "period": null
+      },
+      {
+        "event_id": "b67bbbc43861e5da96cc669a456af9fb5e2fe1c8793439703845d885bfce48c0",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "role": "SUPPLY",
+        "kind": "READINESS_OR_QUANTITY",
+        "reference": {
+          "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+          "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+          "locator": {
+            "start": 5833,
+            "end": 5854
+          },
+          "quote": "Managing inventory..."
+        },
+        "fields": {},
+        "context_references": [
+          {
+            "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+            "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+            "locator": {
+              "start": 5833,
+              "end": 5854
+            },
+            "quote": "Managing inventory..."
+          }
+        ],
+        "direct_origin": true,
+        "facts": {},
+        "period": null
+      },
+      {
+        "event_id": "8a81d3cdcacb93ee8a8cf6b6d5911eba872192bd95a36a2f389a1d60fe919484",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "role": "SUPPLY",
+        "kind": "READINESS_OR_QUANTITY",
+        "reference": {
+          "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+          "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+          "locator": {
+            "start": 6085,
+            "end": 6214
+          },
+          "quote": "InventoryManager Class : Handles inventory management, ensuring that the bakery has the right ingredients and supplies available."
+        },
+        "fields": {},
+        "context_references": [
+          {
+            "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+            "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+            "locator": {
+              "start": 6085,
+              "end": 6214
+            },
+            "quote": "InventoryManager Class : Handles inventory management, ensuring that the bakery has the right ingredients and supplies available."
+          }
+        ],
+        "direct_origin": true,
+        "facts": {},
+        "period": null
+      }
+    ],
+    "facts_verified_semantically": false
+  },
+  "semantic_review": {
+    "status": "PENDING",
+    "annotation_method": null,
+    "annotator": null
+  },
+  "final_status": "HOLD",
+  "reason": "SEMANTIC_REVIEW_REQUIRED",
+  "formal_TARGET_id": null,
+  "EARLY_success": false,
+  "review_id": null,
+  "intake_version": "BCT_REVIEW_INTAKE_1",
+  "annotation_sha256": null,
+  "mode": "PROSPECTIVE_REVIEW",
+  "recorded_at": "2026-10-13T22:28:15.984265+00:00",
+  "source_document": {
+    "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+    "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+    "collected_at": "2026-10-13T22:26:11.255799+00:00",
+    "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+    "canonical_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+    "origin_publisher": "GeeksforGeeks",
+    "published_at": "2019-10-12T23:58:44+00:00",
+    "published_at_raw": "2019-10-12 23:58:44+00:00",
+    "publication_precision": "TIMESTAMP",
+    "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+    "available_at": "2026-10-13T22:26:11.798747+00:00",
+    "body": "The SOLID principles are five essential guidelines that enhance software design, making code more maintainable and scalable.\nThe SOLID principles help in enhancing loose coupling. Loose coupling means a group of classes are less dependent on one another.\nLoose coupling helps in making code more reusable, maintainable, flexible and stable.\nLoosely coupled classes minimize changes in your code when some changes are required in some other code.\nSOLID\n1. Single Responsibility Principle\nThis principle states that \"A class should have only one reason to change\" which means every class should have a single responsibility or single job or single purpose. In other words, a class should have only one job or purpose within the software system.\nExample: Imagine a baker who is responsible for baking bread. The baker's role is to focus on the task of baking bread, ensuring that the bread is of high quality, properly baked, and meets the bakery's standards.\nIf the baker handles inventory, ordering, customer service, and cleaning along with baking, it violates SRP since multiple responsibilities are combined.\nEach task is a separate responsibility, and combining them reduces the baker’s focus and effectiveness in baking.\nTo follow SRP, responsibilities should be divided among different individuals or teams, each handling a specific task independently.\nCode of above Example\nC++\n#include <iostream> #include <string> // Class for baking bread class BreadBaker { public : void bakeBread () { std :: cout << \"Baking high-quality bread...\" << std :: endl ; } }; // Class for managing inventory class InventoryManager { public : void manageInventory () { std :: cout << \"Managing inventory...\" << std :: endl ; } }; // Class for ordering supplies class SupplyOrder { public : void orderSupplies () { std :: cout << \"Ordering supplies...\" << std :: endl ; } }; // Class for serving customers class CustomerService { public : void serveCustomer () { std :: cout << \"Serving customers...\" << std :: endl ; } }; // Class for cleaning the bakery class BakeryCleaner { public : void cleanBakery () { std :: cout << \"Cleaning the bakery...\" << std :: endl ; } }; int main () { BreadBaker baker ; InventoryManager inventoryManager ; SupplyOrder supplyOrder ; CustomerService customerService ; BakeryCleaner cleaner ; // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); return 0 ; }\nJava\n// Class for baking bread class BreadBaker { public void bakeBread () { System . out . println ( \"Baking high-quality bread...\" ); } } // Class for managing inventory class InventoryManager { public void manageInventory () { System . out . println ( \"Managing inventory...\" ); } } // Class for ordering supplies class SupplyOrder { public void orderSupplies () { System . out . println ( \"Ordering supplies...\" ); } } // Class for serving customers class CustomerService { public void serveCustomer () { System . out . println ( \"Serving customers...\" ); } } // Class for cleaning the bakery class BakeryCleaner { public void cleanBakery () { System . out . println ( \"Cleaning the bakery...\" ); } } public class Main { public static void main ( String [] args ) { BreadBaker baker = new BreadBaker (); InventoryManager inventoryManager = new InventoryManager (); SupplyOrder supplyOrder = new SupplyOrder (); CustomerService customerService = new CustomerService (); BakeryCleaner cleaner = new BakeryCleaner (); // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); } }\nPython\n# Class for baking bread class BreadBaker : def bakeBread ( self ): print ( \"Baking high-quality bread...\" ) # Class for managing inventory class InventoryManager : def manageInventory ( self ): print ( \"Managing inventory...\" ) # Class for ordering supplies class SupplyOrder : def orderSupplies ( self ): print ( \"Ordering supplies...\" ) # Class for serving customers class CustomerService : def serveCustomer ( self ): print ( \"Serving customers...\" ) # Class for cleaning the bakery class BakeryCleaner : def cleanBakery ( self ): print ( \"Cleaning the bakery...\" ) def main (): baker = BreadBaker () inventoryManager = InventoryManager () supplyOrder = SupplyOrder () customerService = CustomerService () cleaner = BakeryCleaner () # Each class focuses on its specific responsibility baker . bakeBread () inventoryManager . manageInventory () supplyOrder . orderSupplies () customerService . serveCustomer () cleaner . cleanBakery () if __name__ == \"__main__\" : main ()\nJavaScript\n// Class for baking bread class BreadBaker { bakeBread () { console . log ( \"Baking high-quality bread...\" ); } } // Class for managing inventory class InventoryManager { manageInventory () { console . log ( \"Managing inventory...\" ); } } // Class for ordering supplies class SupplyOrder { orderSupplies () { console . log ( \"Ordering supplies...\" ); } } // Class for serving customers class CustomerService { serveCustomer () { console . log ( \"Serving customers...\" ); } } // Class for cleaning the bakery class BakeryCleaner { cleanBakery () { console . log ( \"Cleaning the bakery...\" ); } } function main () { const baker = new BreadBaker (); const inventoryManager = new InventoryManager (); const supplyOrder = new SupplyOrder (); const customerService = new CustomerService (); const cleaner = new BakeryCleaner (); // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); } main ();\nOutput\nBaking high-quality bread... Managing inventory... Ordering supplies... Serving customers... Cleaning the bakery...\nBreadBaker Class : Responsible solely for baking bread. This class focuses on ensuring the quality and standards of the bread without being burdened by other tasks.\nInventoryManager Class : Handles inventory management, ensuring that the bakery has the right ingredients and supplies available.\nSupplyOrder Class : Manages ordering supplies, ensuring that the bakery is stocked with necessary items.\nCustomerService Class : Takes care of serving customers, providing a focused approach to customer interactions.\nBakeryCleaner Class : Responsible for cleaning the bakery, ensuring a hygienic environment.\n2. Open/Closed Principle\nThis principle states that \"Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification\" which means you should be able to extend a class behavior, without modifying it.\nExample: Imagine you have a class called PaymentProcessor that processes payments for an online store. Initially, the PaymentProcessor class only supports processing payments using credit cards. However, you want to extend its functionality to also support processing payments using PayPal.\nInstead of modifying the existing PaymentProcessor class, a new PayPalPaymentProcessor class can be created to add PayPal support.\nThis keeps the original class unchanged while extending its functionality through a new class.\nIt follows the Open-Closed Principle by keeping the class closed for modification but open for extension.\nC++\n#include <iostream> #include <string> // Base class for payment processing class PaymentProcessor { public : virtual void processPayment ( double amount ) = 0 ; // Pure virtual function }; // Credit card payment processor class CreditCardPaymentProcessor : public PaymentProcessor { public : void processPayment ( double amount ) override { std :: cout << \"Processing credit card payment of $\" << amount << std :: endl ; } };\nJava\n// Base class for payment processing abstract class PaymentProcessor { public abstract void processPayment ( double amount ); // Pure virtual function } // Credit card payment processor class CreditCardPaymentProcessor extends PaymentProcessor { @Override public void processPayment ( double amount ) { System . out . println ( \"Processing credit card payment of $\" + amount ); } }\nPython\nfrom abc import ABC , abstractmethod # Base class for payment processing class PaymentProcessor ( ABC ): @abstractmethod def processPayment ( self , amount ): # Pure virtual function pass # Credit card payment processor class CreditCardPaymentProcessor ( PaymentProcessor ): def processPayment ( self , amount ): print ( f \"Processing credit card payment of $ { amount } \" )\nJavaScript\n// Base class for payment processing class PaymentProcessor { processPayment ( amount ) { // Pure virtual function throw new Error ( \"processPayment must be implemented\" ); } } // Credit card payment processor class CreditCardPaymentProcessor extends PaymentProcessor { processPayment ( amount ) { console . log ( `Processing credit card payment of $ ${ amount } ` ); } }\nExtended Functionality\nNow, to add support for PayPal payments, you create a new class PayPalPaymentProcessor that extends PaymentProcessor.\nC++\n// PayPal payment processor class PayPalPaymentProcessor : public PaymentProcessor { public : void processPayment ( double amount ) override { std :: cout << \"Processing PayPal payment of $\" << amount << std :: endl ; } };\nJava\n// PayPal payment processor class PayPalPaymentProcessor extends PaymentProcessor { @Override public void processPayment ( double amount ) { System . out . println ( \"Processing PayPal payment of $\" + amount ); } }\nPython\n# PayPal payment processor class PayPalPaymentProcessor ( PaymentProcessor ): def processPayment ( self , amount ): print ( f \"Processing PayPal payment of $ { amount } \" )\nJavaScript\n// PayPal payment processor class PayPalPaymentProcessor extends PaymentProcessor { processPayment ( amount ) { console . log ( `Processing PayPal payment of $ ${ amount } ` ); } }\nUsage\nIn your application, you can use either payment processor without modifying the existing code for PaymentProcessor or CreditCardPaymentProcessor.\nC++\nvoid processPayment ( PaymentProcessor * processor , double amount ) { processor -> processPayment ( amount ); } int main () { CreditCardPaymentProcessor creditCardProcessor ; PayPalPaymentProcessor payPalProcessor ; processPayment ( & creditCardProcessor , 100.00 ); // Processing credit card payment processPayment ( & payPalProcessor , 150.00 ); // Processing PayPal payment return 0 ; }\nJava\n// Function to process payment public static void processPayment ( PaymentProcessor processor , double amount ) { processor . processPayment ( amount ); } public class Main { public static void main ( String [] args ) { CreditCardPaymentProcessor creditCardProcessor = new CreditCardPaymentProcessor (); PayPalPaymentProcessor payPalProcessor = new PayPalPaymentProcessor (); processPayment ( creditCardProcessor , 100.00 ); // Processing credit card payment processPayment ( payPalProcessor , 150.00 ); // Processing PayPal payment } // Function to process payment public static void processPayment ( PaymentProcessor processor , double amount ) { processor . processPayment ( amount ); } }\nPython\n# Function to process payment def processPayment ( processor , amount ): processor . processPayment ( amount ) def main (): creditCardProcessor = CreditCardPaymentProcessor () payPalProcessor = PayPalPaymentProcessor () processPayment ( creditCardProcessor , 100.00 ) # Processing credit card payment processPayment ( payPalProcessor , 150.00 ) # Processing PayPal payment if __name__ == \"__main__\" : main ()\nJavaScript\n// Function to process payment function processPayment ( processor , amount ) { processor . processPayment ( amount ); } function main () { const creditCardProcessor = new CreditCardPaymentProcessor (); const payPalProcessor = new PayPalPaymentProcessor (); processPayment ( creditCardProcessor , 100.00 ); // Processing credit card payment processPayment ( payPalProcessor , 150.00 ); // Processing PayPal payment } main ();\nExplanation of the above code:\nBase Class (PaymentProcessor): An abstract class that defines a common interface (processPayment) for all payment processors.\nCreditCardPaymentProcessor: Implements payment processing specifically for credit card transactions.\nPayPalPaymentProcessor: Extends functionality by handling PayPal payment processing.\nMain Function: Uses the PaymentProcessor interface to call processPayment(), allowing flexibility without changing existing code.\n3. Liskov's Substitution Principle\nThe principle was introduced by Barbara Liskov in 1987. According to this principle, \"derived or child classes must be able to replace their base or parent classes\". This ensures that any subclass can be used in place of its parent class without causing unexpected behavior in the program.\nExample: One of the classic examples of this principle is a rectangle having four sides. A rectangle's height can be any value and width can be any value. A square is a rectangle with equal width and height. So we can say that we can extend the properties of the rectangle class into square class.\nReplacing the Rectangle with a Square forces constraints (equal sides), which changes the expected behavior of the parent class.\nThis violates LSP because a derived class should not alter or break the behavior expected from the base class.\nCode of above example\nC++\n#include <iostream> // Base class for shapes class Rectangle { protected : double width ; double height ; public : Rectangle ( double w , double h ) : width ( w ), height ( h ) {} virtual double area () const { return width * height ; } double getWidth () const { return width ; } double getHeight () const { return height ; } virtual void setWidth ( double w ) { // made virtual width = w ; } virtual void setHeight ( double h ) { // also virtual (good practice) height = h ; } }; // Derived class for squares class Square : public Rectangle { public : Square ( double size ) : Rectangle ( size , size ) {} void setWidth ( double w ) override { width = height = w ; } void setHeight ( double h ) override { width = height = h ; } }; int main () { Square s ( 5 ); s . setWidth ( 10 ); std :: cout << \"Area: \" << s . area () << std :: endl ; return 0 ; }\nJava\nimport java.util.* ; // Base class for shapes class Rectangle { protected double width ; protected double height ; public Rectangle ( double w , double h ) { width = w ; height = h ; } public double area () { return width * height ; } public double getWidth () { return width ; } public double getHeight () { return height ; } public void setWidth ( double w ) { width = w ; } public void setHeight ( double h ) { height = h ; } } // Derived class for squares class Square extends Rectangle { public Square ( double size ) { super ( size , size ); } @Override public void setWidth ( double w ) { width = height = w ; } @Override public void setHeight ( double h ) { width = height = h ; } } public class Main { public static void main ( String [] args ) { Square s = new Square ( 5 ); s . setWidth ( 10 ); System . out . println ( \"Area: \" + s . area ()); } }\nPython\nfrom abc import ABC , abstractmethod # Base class for shapes class Rectangle ( ABC ): def __init__ ( self , width , height ): self . _width = width self . _height = height @abstractmethod def area ( self ): return self . _width * self . _height def get_width ( self ): return self . _width def get_height ( self ): return self . _height @abstractmethod def set_width ( self , width ): self . _width = width @abstractmethod def set_height ( self , height ): self . _height = height # Derived class for squares class Square ( Rectangle ): def __init__ ( self , size ): super () . __init__ ( size , size ) def set_width ( self , width ): self . _width = self . _height = width def set_height ( self , height ): self . _width = self . _height = height def area ( self ): return self . _width * self . _height if __name__ == '__main__' : s = Square ( 5 ) s . set_width ( 10 ) print ( f 'Area: { s . area () } ' )\nJavaScript\n// Base class for shapes class Rectangle { constructor ( w , h ) { this . width = w ; this . height = h ; } area () { return this . width * this . height ; } getWidth () { return this . width ; } getHeight () { return this . height ; } setWidth ( w ) { this . width = w ; } setHeight ( h ) { this . height = h ; } } // Derived class for squares class Square extends Rectangle { constructor ( size ) { super ( size , size ); } setWidth ( w ) { this . width = this . height = w ; // Ensure both width and height remain the same } }\nOutput\nArea: 100\nRectangle Class : This is the base class that has properties for width and height. It has methods for calculating the area and for setting width and height.\nSquare Class : This class inherits from Rectangle but overrides the setWidth and setHeight methods to ensure that changing one dimension affects the other, maintaining the property that all sides are equal.\nLSP Violation Example\nTo see a potential violation of LSP, consider what would happen if you were to use the Square class in a context expecting a Rectangle:\nIf you substitute a Square where a Rectangle is expected, changing just the width or height would lead to unexpected results because it will change both dimensions.\n4. Interface Segregation Principle\nThis principle applies to interfaces and is similar to the Single Responsibility Principle, focusing on keeping interfaces specific and well-defined. It states that clients should not be forced to depend on methods that are irrelevant to them, avoiding unnecessary dependencies. The goal is to prevent fat interfaces by using multiple small, client-specific interfaces, each with a clear and specific responsibility.\nExample: Suppose if you enter a restaurant and you are pure vegetarian. The waiter in that restaurant gave you the menu card which includes vegetarian items, non-vegetarian items, drinks, and sweets.\nCustomers should receive a menu relevant to their needs (e.g., vegetarian only) instead of a general menu with unnecessary items.\nSplitting a common menu into smaller, specific ones reduces unnecessary dependencies and minimizes future changes.\nC++\n#include <iostream> #include <vector> #include <string> // Interface for vegetarian menu class IVegetarianMenu { public : virtual std :: vector < std :: string > getVegetarianItems () = 0 ; }; // Interface for non-vegetarian menu class INonVegetarianMenu { public : virtual std :: vector < std :: string > getNonVegetarianItems () = 0 ; }; // Interface for drinks menu class IDrinkMenu { public : virtual std :: vector < std :: string > getDrinkItems () = 0 ; }; // Class for vegetarian menu class VegetarianMenu : public IVegetarianMenu { public : std :: vector < std :: string > getVegetarianItems () override { return { \"Vegetable Curry\" , \"Paneer Tikka\" , \"Salad\" }; } }; // Class for non-vegetarian menu class NonVegetarianMenu : public INonVegetarianMenu { public : std :: vector < std :: string > getNonVegetarianItems () override { return { \"Chicken Curry\" , \"Fish Fry\" , \"Mutton Biryani\" }; } }; // Class for drinks menu class DrinkMenu : public IDrinkMenu { public : std :: vector < std :: string > getDrinkItems () override { return { \"Water\" , \"Soda\" , \"Juice\" }; } }; // Function to display menu items for a vegetarian customer void displayVegetarianMenu ( IVegetarianMenu * menu ) { std :: cout << \"Vegetarian Menu: \\n \" ; for ( const auto & item : menu -> getVegetarianItems ()) { std :: cout << \"- \" << item << std :: endl ; } } // Function to display menu items for a non-vegetarian customer void displayNonVegetarianMenu ( INonVegetarianMenu * menu ) { std :: cout << \"Non-Vegetarian Menu: \\n \" ; for ( const auto & item : menu -> getNonVegetarianItems ()) { std :: cout << \"- \" << item << std :: endl ; } } int main () { VegetarianMenu vegMenu ; NonVegetarianMenu nonVegMenu ; DrinkMenu drinkMenu ; displayVegetarianMenu ( & vegMenu ); displayNonVegetarianMenu ( & nonVegMenu ); return 0 ; }\nJava\nimport java.util.* ; // Interface for vegetarian menu interface IVegetarianMenu { List < String > getVegetarianItems (); } // Interface for non-vegetarian menu interface INonVegetarianMenu { List < String > getNonVegetarianItems (); } // Interface for drinks menu interface IDrinkMenu { List < String > getDrinkItems (); } // Class for vegetarian menu class VegetarianMenu implements IVegetarianMenu { public List < String > getVegetarianItems () { return Arrays . asList ( \"Vegetable Curry\" , \"Paneer Tikka\" , \"Salad\" ); } } // Class for non-vegetarian menu class NonVegetarianMenu implements INonVegetarianMenu { public List < String > getNonVegetarianItems () { return Arrays . asList ( \"Chicken Curry\" , \"Fish Fry\" , \"Mutton Biryani\" ); } } // Class for drinks menu class DrinkMenu implements IDrinkMenu { public List < String > getDrinkItems () { return Arrays . asList ( \"Water\" , \"Soda\" , \"Juice\" ); } } // Function to display menu items for a vegetarian customer class MenuDisplay { public static void displayVegetarianMenu ( IVegetarianMenu menu ) { System . out . println ( \"Vegetarian Menu:\" ); for ( String item : menu . getVegetarianItems ()) { System . out . println ( \"- \" + item ); } } // Function to display menu items for a non-vegetarian customer public static void displayNonVegetarianMenu ( INonVegetarianMenu menu ) { System . out . println ( \"Non-Vegetarian Menu:\" ); for ( String item : menu . getNonVegetarianItems ()) { System . out . println ( \"- \" + item ); } } } public class Main { public static void main ( String [] args ) { VegetarianMenu vegMenu = new VegetarianMenu (); NonVegetarianMenu nonVegMenu = new NonVegetarianMenu (); DrinkMenu drinkMenu = new DrinkMenu (); MenuDisplay . displayVegetarianMenu ( vegMenu ); MenuDisplay . displayNonVegetarianMenu ( nonVegMenu ); } }\nPython\nfrom abc import ABC , abstractmethod # Interface for vegetarian menu class IVegetarianMenu ( ABC ): @abstractmethod def getVegetarianItems ( self ): pass # Interface for non-vegetarian menu class INonVegetarianMenu ( ABC ): @abstractmethod def getNonVegetarianItems ( self ): pass # Interface for drinks menu class IDrinkMenu ( ABC ): @abstractmethod def getDrinkItems ( self ): pass # Class for vegetarian menu class VegetarianMenu ( IVegetarianMenu ): def getVegetarianItems ( self ): return [ \"Vegetable Curry\" , \"Paneer Tikka\" , \"Salad\" ] # Class for non-vegetarian menu class NonVegetarianMenu ( INonVegetarianMenu ): def getNonVegetarianItems ( self ): return [ \"Chicken Curry\" , \"Fish Fry\" , \"Mutton Biryani\" ] # Class for drinks menu class DrinkMenu ( IDrinkMenu ): def getDrinkItems ( self ): return [ \"Water\" , \"Soda\" , \"Juice\" ] # Function to display menu items for a vegetarian customer def displayVegetarianMenu ( menu ): print ( \"Vegetarian Menu:\" ) for item in menu . getVegetarianItems (): print ( f \"- { item } \" ) # Function to display menu items for a non-vegetarian customer def displayNonVegetarianMenu ( menu ): print ( \"Non-Vegetarian Menu:\" ) for item in menu . getNonVegetarianItems (): print ( f \"- { item } \" ) def main (): vegMenu = VegetarianMenu () nonVegMenu = NonVegetarianMenu () drinkMenu = DrinkMenu () displayVegetarianMenu ( vegMenu ) displayNonVegetarianMenu ( nonVegMenu ) if __name__ == \"__main__\" : main ()\nJavaScript\n// Interface simulation is done by convention in JavaScript // Class for vegetarian menu class VegetarianMenu { getVegetarianItems () { return [ \"Vegetable Curry\" , \"Paneer Tikka\" , \"Salad\" ]; } } // Class for non-vegetarian menu class NonVegetarianMenu { getNonVegetarianItems () { return [ \"Chicken Curry\" , \"Fish Fry\" , \"Mutton Biryani\" ]; } } // Class for drinks menu class DrinkMenu { getDrinkItems () { return [ \"Water\" , \"Soda\" , \"Juice\" ]; } } // Function to display menu items for a vegetarian customer function displayVegetarianMenu ( menu ) { console . log ( \"Vegetarian Menu:\" ); for ( const item of menu . getVegetarianItems ()) { console . log ( \"- \" + item ); } } // Function to display menu items for a non-vegetarian customer function displayNonVegetarianMenu ( menu ) { console . log ( \"Non-Vegetarian Menu:\" ); for ( const item of menu . getNonVegetarianItems ()) { console . log ( \"- \" + item ); } } function main () { const vegMenu = new VegetarianMenu (); const nonVegMenu = new NonVegetarianMenu (); const drinkMenu = new DrinkMenu (); displayVegetarianMenu ( vegMenu ); displayNonVegetarianMenu ( nonVegMenu ); } main ();\nIVegetarianMenu Interface : This interface defines a method to get vegetarian items. It ensures that only classes implementing vegetarian menus will need to provide this functionality.\nINonVegetarianMenu Interface : Similar to the vegetarian interface, this one defines a method for getting non-vegetarian items.\nIDrinkMenu Interface : This interface defines a method for getting drink items, keeping it separate from food items.\nVegetarianMenu Class : Implements the IVegetarianMenu interface and provides a list of vegetarian items.\nNonVegetarianMenu Class : Implements the INonVegetarianMenu interface and provides a list of non-vegetarian items.\nDrinkMenu Class : Implements the IDrinkMenu interface and provides a list of drink items.\n5. Dependency Inversion Principle\nThe Dependency Inversion Principle (DIP) is a principle in object-oriented design that states that \"High-level modules should not depend on low-level modules. Both should depend on abstractions\". means \"Big parts of your program should not directly depend on small, detailed parts. Instead, both should depend on general ideas (interfaces)\". Additionally, abstractions should not depend on details. Details should depend on abstractions(Details should follow the rules).\nIn simpler terms, the DIP suggests that classes should rely on abstractions (e.g., interfaces or abstract classes) rather than concrete implementations.\nThis allows for more flexible and decoupled code, making it easier to change implementations without affecting other parts of the codebase.\nExample: In a software development team, developers depend on an abstract version control system (e.g., Git) to manage and track changes to the codebase. They don't depend on specific details of how Git works internally.\nCode of above example\nC++\n#include <iostream> #include <string> // Interface for version control system class IVersionControl { public : virtual void commit ( const std :: string & message ) = 0 ; virtual void push () = 0 ; virtual void pull () = 0 ; }; // Git version control implementation class GitVersionControl : public IVersionControl { public : void commit ( const std :: string & message ) override { std :: cout << \"Committing changes to Git with message: \" << message << std :: endl ; } void push () override { std :: cout << \"Pushing changes to remote Git repository.\" << std :: endl ; } void pull () override { std :: cout << \"Pulling changes from remote Git repository.\" << std :: endl ; } }; // Team class that relies on version control class DevelopmentTeam { private : IVersionControl * versionControl ; public : DevelopmentTeam ( IVersionControl * vc ) : versionControl ( vc ) {} void makeCommit ( const std :: string & message ) { versionControl -> commit ( message ); } void performPush () { versionControl -> push (); } void performPull () { versionControl -> pull (); } }; int main () { GitVersionControl git ; DevelopmentTeam team ( & git ); team . makeCommit ( \"Initial commit\" ); team . performPush (); team . performPull (); return 0 ; }\nJava\n// Interface for version control system interface IVersionControl { void commit ( String message ); void push (); void pull (); } // Git version control implementation class GitVersionControl implements IVersionControl { @Override public void commit ( String message ) { System . out . println ( \"Committing changes to Git with message: \" + message ); } @Override public void push () { System . out . println ( \"Pushing changes to remote Git repository.\" ); } @Override public void pull () { System . out . println ( \"Pulling changes from remote Git repository.\" ); } } // Team class that relies on version control class DevelopmentTeam { private IVersionControl versionControl ; public DevelopmentTeam ( IVersionControl vc ) { this . versionControl = vc ; } public void makeCommit ( String message ) { versionControl . commit ( message ); } public void performPush () { versionControl . push (); } public void performPull () { versionControl . pull (); } } public class Main { public static void main ( String [] args ) { GitVersionControl git = new GitVersionControl (); DevelopmentTeam team = new DevelopmentTeam ( git ); team . makeCommit ( \"Initial commit\" ); team . performPush (); team . performPull (); } }\nPython\nfrom abc import ABC , abstractmethod # Interface for version control system class IVersionControl ( ABC ): @abstractmethod def commit ( self , message ): pass @abstractmethod def push ( self ): pass @abstractmethod def pull ( self ): pass # Git version control implementation class GitVersionControl ( IVersionControl ): def commit ( self , message ): print ( f \"Committing changes to Git with message: { message } \" ) def push ( self ): print ( \"Pushing changes to remote Git repository.\" ) def pull ( self ): print ( \"Pulling changes from remote Git repository.\" ) # Team class that relies on version control class DevelopmentTeam : def __init__ ( self , vc : IVersionControl ): self . versionControl = vc def makeCommit ( self , message ): self . versionControl . commit ( message ) def performPush ( self ): self . versionControl . push () def performPull ( self ): self . versionControl . pull () def main (): git = GitVersionControl () team = DevelopmentTeam ( git ) team . makeCommit ( \"Initial commit\" ) team . performPush () team . performPull () if __name__ == \"__main__\" : main ()\nJavaScript\n// Interface for version control system simulated via convention class IVersionControl { commit ( message ) { throw new Error ( \"commit() must be implemented\" ); } push () { throw new Error ( \"push() must be implemented\" ); } pull () { throw new Error ( \"pull() must be implemented\" ); } } // Git version control implementation class GitVersionControl extends IVersionControl { commit ( message ) { console . log ( \"Committing changes to Git with message: \" + message ); } push () { console . log ( \"Pushing changes to remote Git repository.\" ); } pull () { console . log ( \"Pulling changes from remote Git repository.\" ); } } // Team class that relies on version control class DevelopmentTeam { constructor ( vc ) { this . versionControl = vc ; } makeCommit ( message ) { this . versionControl . commit ( message ); } performPush () { this . versionControl . push (); } performPull () { this . versionControl . pull (); } } function main () { const git = new GitVersionControl (); const team = new DevelopmentTeam ( git ); team . makeCommit ( \"Initial commit\" ); team . performPush (); team . performPull (); } main ();\nOutput\nCommitting changes to Git with message: Initial commit Pushing changes to remote Git repository. Pulling changes from remote Git repository.\nIVersionControl Interface : This defines the operations that any version control system should support, like commit, push, and pull. It serves as an abstraction that decouples high-level code from low-level implementations.\nGitVersionControl Class : This class implements the IVersionControl interface, providing specific functionality for managing version control using Git.\nDevelopmentTeam Class : This class relies on the IVersionControl interface, meaning it can work with any version control implementation that adheres to the interface. It does not need to know the details of how Git works internally.\nNeed for SOLID Principles in Object-Oriented Design\nThe main reasons why solid principles are important in object oriented design:\nSOLID principles make code easier to maintain. When each class has a clear responsibility, it's simpler to find where to make changes without affecting unrelated parts of the code.\nThese principles support growth in software. For example, the Open/Closed Principle allows developers to add new features without changing existing code, making it easier to adapt to new requirements.\nSOLID encourages flexibility. By depending on abstractions rather than specific implementations (as in the Dependency Inversion Principle), developers can change components without disrupting the entire system.",
+    "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+    "version": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+    "raw_sha256": "c720d6d90e6c5757d2478d601e2c185e0d42b1758a113b77b2d4a53a65813ec2",
+    "checks": {
+      "http_success": true,
+      "original_identity": true,
+      "publisher_observed": true,
+      "attribution_consistent": true,
+      "original_publication": true,
+      "available_at_recorded": true,
+      "full_accessible_body": true,
+      "not_republication": true,
+      "body_hash_matches": true,
+      "publication_before_acquisition": true
+    },
+    "provenance": "PASS",
+    "provenance_verified": true,
+    "provenance_blockers": [],
+    "body_status": "FULL",
+    "raw_path": "var/new-precursors/raw/c720d6d90e6c5757d2478d601e2c185e0d42b1758a113b77b2d4a53a65813ec2.html",
+    "status": "CAPTURED",
+    "scope_reader_version": "source-scope-reader-4",
+    "scope_read_mode": "LIVE_FRESH",
+    "excluded_page_regions": [
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 1380,
+          "end": 1383
+        },
+        "source_quote": "C++",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 2531,
+          "end": 2535
+        },
+        "source_quote": "Java",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 3762,
+          "end": 3768
+        },
+        "source_quote": "Python",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 7394,
+          "end": 7397
+        },
+        "source_quote": "C++",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 7824,
+          "end": 7828
+        },
+        "source_quote": "Java",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 8211,
+          "end": 8217
+        },
+        "source_quote": "Python",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 9117,
+          "end": 9120
+        },
+        "source_quote": "C++",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 9344,
+          "end": 9348
+        },
+        "source_quote": "Java",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 9564,
+          "end": 9570
+        },
+        "source_quote": "Python",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 10088,
+          "end": 10091
+        },
+        "source_quote": "C++",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 10483,
+          "end": 10487
+        },
+        "source_quote": "Java",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 11180,
+          "end": 11186
+        },
+        "source_quote": "Python",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 13391,
+          "end": 13394
+        },
+        "source_quote": "C++",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 14249,
+          "end": 14253
+        },
+        "source_quote": "Java",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 15114,
+          "end": 15120
+        },
+        "source_quote": "Python",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 18171,
+          "end": 18174
+        },
+        "source_quote": "C++",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 19986,
+          "end": 19990
+        },
+        "source_quote": "Java",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 21801,
+          "end": 21807
+        },
+        "source_quote": "Python",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 26194,
+          "end": 26197
+        },
+        "source_quote": "C++",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 27435,
+          "end": 27439
+        },
+        "source_quote": "Java",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+        "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "locator": {
+          "start": 28655,
+          "end": 28661
+        },
+        "source_quote": "Python",
+        "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+        "origin_publisher": "GeeksforGeeks",
+        "published_at": "2019-10-12T23:58:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      }
+    ],
+    "retained_collection_events": [
+      {
+        "event_id": "dae091b5123c798cb1adc959c051ccf569d56f21a3c6b141b153db3cb4f86720",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 180,
+          "end": 254
+        },
+        "source_quote": "Loose coupling means a group of classes are less dependent on one another.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "89ef27841e3201072cb9c7b727d8e9b09c48951ccaefceaf20a6a555952b53bd",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "INVENTORY",
+        "event_types": [
+          "INVENTORY"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 957,
+          "end": 1110
+        },
+        "source_quote": "If the baker handles inventory, ordering, customer service, and cleaning along with baking, it violates SRP since multiple responsibilities are combined.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "INVENTORY",
+              "reference": {
+                "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+                "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+                "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "locator": {
+                  "start": 957,
+                  "end": 1110
+                },
+                "source_quote": "If the baker handles inventory, ordering, customer service, and cleaning along with baking, it violates SRP since multiple responsibilities are combined.",
+                "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "origin_publisher": "GeeksforGeeks",
+                "published_at": "2019-10-12T23:58:44+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "d632e2a4bbb66d9f8de8b90d945c94860524c1c71af8387db119ed34273daeec",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "INVENTORY",
+        "event_types": [
+          "INVENTORY"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 1384,
+          "end": 2530
+        },
+        "source_quote": "#include <iostream> #include <string> // Class for baking bread class BreadBaker { public : void bakeBread () { std :: cout << \"Baking high-quality bread...\" << std :: endl ; } }; // Class for managing inventory class InventoryManager { public : void manageInventory () { std :: cout << \"Managing inventory...\" << std :: endl ; } }; // Class for ordering supplies class SupplyOrder { public : void orderSupplies () { std :: cout << \"Ordering supplies...\" << std :: endl ; } }; // Class for serving customers class CustomerService { public : void serveCustomer () { std :: cout << \"Serving customers...\" << std :: endl ; } }; // Class for cleaning the bakery class BakeryCleaner { public : void cleanBakery () { std :: cout << \"Cleaning the bakery...\" << std :: endl ; } }; int main () { BreadBaker baker ; InventoryManager inventoryManager ; SupplyOrder supplyOrder ; CustomerService customerService ; BakeryCleaner cleaner ; // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); return 0 ; }",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "INVENTORY",
+              "reference": {
+                "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+                "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+                "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "locator": {
+                  "start": 1384,
+                  "end": 2530
+                },
+                "source_quote": "#include <iostream> #include <string> // Class for baking bread class BreadBaker { public : void bakeBread () { std :: cout << \"Baking high-quality bread...\" << std :: endl ; } }; // Class for managing inventory class InventoryManager { public : void manageInventory () { std :: cout << \"Managing inventory...\" << std :: endl ; } }; // Class for ordering supplies class SupplyOrder { public : void orderSupplies () { std :: cout << \"Ordering supplies...\" << std :: endl ; } }; // Class for serving customers class CustomerService { public : void serveCustomer () { std :: cout << \"Serving customers...\" << std :: endl ; } }; // Class for cleaning the bakery class BakeryCleaner { public : void cleanBakery () { std :: cout << \"Cleaning the bakery...\" << std :: endl ; } }; int main () { BreadBaker baker ; InventoryManager inventoryManager ; SupplyOrder supplyOrder ; CustomerService customerService ; BakeryCleaner cleaner ; // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); return 0 ; }",
+                "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "origin_publisher": "GeeksforGeeks",
+                "published_at": "2019-10-12T23:58:44+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "8df979aa9570070eaaa046e0d706ab7a927e9c44df3e78cfb1d4075d96ec4725",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "INVENTORY",
+        "event_types": [
+          "INVENTORY"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 2536,
+          "end": 3761
+        },
+        "source_quote": "// Class for baking bread class BreadBaker { public void bakeBread () { System . out . println ( \"Baking high-quality bread...\" ); } } // Class for managing inventory class InventoryManager { public void manageInventory () { System . out . println ( \"Managing inventory...\" ); } } // Class for ordering supplies class SupplyOrder { public void orderSupplies () { System . out . println ( \"Ordering supplies...\" ); } } // Class for serving customers class CustomerService { public void serveCustomer () { System . out . println ( \"Serving customers...\" ); } } // Class for cleaning the bakery class BakeryCleaner { public void cleanBakery () { System . out . println ( \"Cleaning the bakery...\" ); } } public class Main { public static void main ( String [] args ) { BreadBaker baker = new BreadBaker (); InventoryManager inventoryManager = new InventoryManager (); SupplyOrder supplyOrder = new SupplyOrder (); CustomerService customerService = new CustomerService (); BakeryCleaner cleaner = new BakeryCleaner (); // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); } }",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": true,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "INVENTORY",
+              "reference": {
+                "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+                "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+                "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "locator": {
+                  "start": 2536,
+                  "end": 3761
+                },
+                "source_quote": "// Class for baking bread class BreadBaker { public void bakeBread () { System . out . println ( \"Baking high-quality bread...\" ); } } // Class for managing inventory class InventoryManager { public void manageInventory () { System . out . println ( \"Managing inventory...\" ); } } // Class for ordering supplies class SupplyOrder { public void orderSupplies () { System . out . println ( \"Ordering supplies...\" ); } } // Class for serving customers class CustomerService { public void serveCustomer () { System . out . println ( \"Serving customers...\" ); } } // Class for cleaning the bakery class BakeryCleaner { public void cleanBakery () { System . out . println ( \"Cleaning the bakery...\" ); } } public class Main { public static void main ( String [] args ) { BreadBaker baker = new BreadBaker (); InventoryManager inventoryManager = new InventoryManager (); SupplyOrder supplyOrder = new SupplyOrder (); CustomerService customerService = new CustomerService (); BakeryCleaner cleaner = new BakeryCleaner (); // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); } }",
+                "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "origin_publisher": "GeeksforGeeks",
+                "published_at": "2019-10-12T23:58:44+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "c922b27f6cf33592b655aa4e7070d8766bbf36386584b261e286fdda52f2d552",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "INVENTORY",
+        "event_types": [
+          "INVENTORY"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 3769,
+          "end": 4743
+        },
+        "source_quote": "# Class for baking bread class BreadBaker : def bakeBread ( self ): print ( \"Baking high-quality bread...\" ) # Class for managing inventory class InventoryManager : def manageInventory ( self ): print ( \"Managing inventory...\" ) # Class for ordering supplies class SupplyOrder : def orderSupplies ( self ): print ( \"Ordering supplies...\" ) # Class for serving customers class CustomerService : def serveCustomer ( self ): print ( \"Serving customers...\" ) # Class for cleaning the bakery class BakeryCleaner : def cleanBakery ( self ): print ( \"Cleaning the bakery...\" ) def main (): baker = BreadBaker () inventoryManager = InventoryManager () supplyOrder = SupplyOrder () customerService = CustomerService () cleaner = BakeryCleaner () # Each class focuses on its specific responsibility baker . bakeBread () inventoryManager . manageInventory () supplyOrder . orderSupplies () customerService . serveCustomer () cleaner . cleanBakery () if __name__ == \"__main__\" : main ()",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "INVENTORY",
+              "reference": {
+                "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+                "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+                "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "locator": {
+                  "start": 3769,
+                  "end": 4743
+                },
+                "source_quote": "# Class for baking bread class BreadBaker : def bakeBread ( self ): print ( \"Baking high-quality bread...\" ) # Class for managing inventory class InventoryManager : def manageInventory ( self ): print ( \"Managing inventory...\" ) # Class for ordering supplies class SupplyOrder : def orderSupplies ( self ): print ( \"Ordering supplies...\" ) # Class for serving customers class CustomerService : def serveCustomer ( self ): print ( \"Serving customers...\" ) # Class for cleaning the bakery class BakeryCleaner : def cleanBakery ( self ): print ( \"Cleaning the bakery...\" ) def main (): baker = BreadBaker () inventoryManager = InventoryManager () supplyOrder = SupplyOrder () customerService = CustomerService () cleaner = BakeryCleaner () # Each class focuses on its specific responsibility baker . bakeBread () inventoryManager . manageInventory () supplyOrder . orderSupplies () customerService . serveCustomer () cleaner . cleanBakery () if __name__ == \"__main__\" : main ()",
+                "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "origin_publisher": "GeeksforGeeks",
+                "published_at": "2019-10-12T23:58:44+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "35194e6d309a5ba5c21a3341b0952f439a1c87de197e1d659880c32d095623d3",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "INVENTORY",
+        "event_types": [
+          "INVENTORY"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 4755,
+          "end": 5796
+        },
+        "source_quote": "// Class for baking bread class BreadBaker { bakeBread () { console . log ( \"Baking high-quality bread...\" ); } } // Class for managing inventory class InventoryManager { manageInventory () { console . log ( \"Managing inventory...\" ); } } // Class for ordering supplies class SupplyOrder { orderSupplies () { console . log ( \"Ordering supplies...\" ); } } // Class for serving customers class CustomerService { serveCustomer () { console . log ( \"Serving customers...\" ); } } // Class for cleaning the bakery class BakeryCleaner { cleanBakery () { console . log ( \"Cleaning the bakery...\" ); } } function main () { const baker = new BreadBaker (); const inventoryManager = new InventoryManager (); const supplyOrder = new SupplyOrder (); const customerService = new CustomerService (); const cleaner = new BakeryCleaner (); // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); } main ();",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": true,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "INVENTORY",
+              "reference": {
+                "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+                "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+                "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "locator": {
+                  "start": 4755,
+                  "end": 5796
+                },
+                "source_quote": "// Class for baking bread class BreadBaker { bakeBread () { console . log ( \"Baking high-quality bread...\" ); } } // Class for managing inventory class InventoryManager { manageInventory () { console . log ( \"Managing inventory...\" ); } } // Class for ordering supplies class SupplyOrder { orderSupplies () { console . log ( \"Ordering supplies...\" ); } } // Class for serving customers class CustomerService { serveCustomer () { console . log ( \"Serving customers...\" ); } } // Class for cleaning the bakery class BakeryCleaner { cleanBakery () { console . log ( \"Cleaning the bakery...\" ); } } function main () { const baker = new BreadBaker (); const inventoryManager = new InventoryManager (); const supplyOrder = new SupplyOrder (); const customerService = new CustomerService (); const cleaner = new BakeryCleaner (); // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); } main ();",
+                "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "origin_publisher": "GeeksforGeeks",
+                "published_at": "2019-10-12T23:58:44+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "f16c627f765dacdc99aa43af110bba0786b07be29a42a44d1ac2f576e2b95375",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "INVENTORY",
+        "event_types": [
+          "INVENTORY"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 5833,
+          "end": 5854
+        },
+        "source_quote": "Managing inventory...",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "INVENTORY",
+              "reference": {
+                "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+                "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+                "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "locator": {
+                  "start": 5833,
+                  "end": 5854
+                },
+                "source_quote": "Managing inventory...",
+                "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "origin_publisher": "GeeksforGeeks",
+                "published_at": "2019-10-12T23:58:44+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "68ac9ff00b4f1e8ef9976e3f3c54c66704c3af72caead547ca3c6afbdbb2fbea",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "INVENTORY",
+        "event_types": [
+          "INVENTORY"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 6085,
+          "end": 6214
+        },
+        "source_quote": "InventoryManager Class : Handles inventory management, ensuring that the bakery has the right ingredients and supplies available.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "INVENTORY",
+              "reference": {
+                "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+                "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+                "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "locator": {
+                  "start": 6085,
+                  "end": 6214
+                },
+                "source_quote": "InventoryManager Class : Handles inventory management, ensuring that the bakery has the right ingredients and supplies available.",
+                "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "origin_publisher": "GeeksforGeeks",
+                "published_at": "2019-10-12T23:58:44+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "821779d66e45c041645d71f958c82b0875d4aa80b4a475c8590c6c13709c2d8a",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "RELIEF",
+        "event_types": [
+          "RELIEF"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 17109,
+          "end": 17273
+        },
+        "source_quote": "If you substitute a Square where a Rectangle is expected, changing just the width or height would lead to unexpected results because it will change both dimensions.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "d536bb3a15679719a75aeec9a7c101292285073e5c4bb0a48d4d6c853d6ced34",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 17459,
+          "end": 17587
+        },
+        "source_quote": "It states that clients should not be forced to depend on methods that are irrelevant to them, avoiding unnecessary dependencies.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "f83635815746a6afc342d864731bc6d437192c0d011eb17834f966a384d9605b",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 18056,
+          "end": 18170
+        },
+        "source_quote": "Splitting a common menu into smaller, specific ones reduces unnecessary dependencies and minimizes future changes.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "d58f266b6932130bba1751ea3ba110603465e7a18c0175c45e466ea3c76f402c",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 25156,
+          "end": 25186
+        },
+        "source_quote": "Dependency Inversion Principle",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "a41014a30c1413cc1b0f82e9222a8c563b40b21f3cd7245212209a288dbf397f",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 25187,
+          "end": 25345
+        },
+        "source_quote": "The Dependency Inversion Principle (DIP) is a principle in object-oriented design that states that \"High-level modules should not depend on low-level modules.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "12d894fa7b364ade992224d2141abb4c5455c95c934eec71a9b95816a4cd7ece",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 32186,
+          "end": 32366
+        },
+        "source_quote": "By depending on abstractions rather than specific implementations (as in the Dependency Inversion Principle), developers can change components without disrupting the entire system.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "precursor_events": [
+      {
+        "event_id": "dae091b5123c798cb1adc959c051ccf569d56f21a3c6b141b153db3cb4f86720",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 180,
+          "end": 254
+        },
+        "source_quote": "Loose coupling means a group of classes are less dependent on one another.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "89ef27841e3201072cb9c7b727d8e9b09c48951ccaefceaf20a6a555952b53bd",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "INVENTORY",
+        "event_types": [
+          "INVENTORY"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 957,
+          "end": 1110
+        },
+        "source_quote": "If the baker handles inventory, ordering, customer service, and cleaning along with baking, it violates SRP since multiple responsibilities are combined.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "INVENTORY",
+              "reference": {
+                "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+                "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+                "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "locator": {
+                  "start": 957,
+                  "end": 1110
+                },
+                "source_quote": "If the baker handles inventory, ordering, customer service, and cleaning along with baking, it violates SRP since multiple responsibilities are combined.",
+                "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "origin_publisher": "GeeksforGeeks",
+                "published_at": "2019-10-12T23:58:44+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "d632e2a4bbb66d9f8de8b90d945c94860524c1c71af8387db119ed34273daeec",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "INVENTORY",
+        "event_types": [
+          "INVENTORY"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 1384,
+          "end": 2530
+        },
+        "source_quote": "#include <iostream> #include <string> // Class for baking bread class BreadBaker { public : void bakeBread () { std :: cout << \"Baking high-quality bread...\" << std :: endl ; } }; // Class for managing inventory class InventoryManager { public : void manageInventory () { std :: cout << \"Managing inventory...\" << std :: endl ; } }; // Class for ordering supplies class SupplyOrder { public : void orderSupplies () { std :: cout << \"Ordering supplies...\" << std :: endl ; } }; // Class for serving customers class CustomerService { public : void serveCustomer () { std :: cout << \"Serving customers...\" << std :: endl ; } }; // Class for cleaning the bakery class BakeryCleaner { public : void cleanBakery () { std :: cout << \"Cleaning the bakery...\" << std :: endl ; } }; int main () { BreadBaker baker ; InventoryManager inventoryManager ; SupplyOrder supplyOrder ; CustomerService customerService ; BakeryCleaner cleaner ; // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); return 0 ; }",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "INVENTORY",
+              "reference": {
+                "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+                "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+                "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "locator": {
+                  "start": 1384,
+                  "end": 2530
+                },
+                "source_quote": "#include <iostream> #include <string> // Class for baking bread class BreadBaker { public : void bakeBread () { std :: cout << \"Baking high-quality bread...\" << std :: endl ; } }; // Class for managing inventory class InventoryManager { public : void manageInventory () { std :: cout << \"Managing inventory...\" << std :: endl ; } }; // Class for ordering supplies class SupplyOrder { public : void orderSupplies () { std :: cout << \"Ordering supplies...\" << std :: endl ; } }; // Class for serving customers class CustomerService { public : void serveCustomer () { std :: cout << \"Serving customers...\" << std :: endl ; } }; // Class for cleaning the bakery class BakeryCleaner { public : void cleanBakery () { std :: cout << \"Cleaning the bakery...\" << std :: endl ; } }; int main () { BreadBaker baker ; InventoryManager inventoryManager ; SupplyOrder supplyOrder ; CustomerService customerService ; BakeryCleaner cleaner ; // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); return 0 ; }",
+                "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "origin_publisher": "GeeksforGeeks",
+                "published_at": "2019-10-12T23:58:44+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "8df979aa9570070eaaa046e0d706ab7a927e9c44df3e78cfb1d4075d96ec4725",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "INVENTORY",
+        "event_types": [
+          "INVENTORY"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 2536,
+          "end": 3761
+        },
+        "source_quote": "// Class for baking bread class BreadBaker { public void bakeBread () { System . out . println ( \"Baking high-quality bread...\" ); } } // Class for managing inventory class InventoryManager { public void manageInventory () { System . out . println ( \"Managing inventory...\" ); } } // Class for ordering supplies class SupplyOrder { public void orderSupplies () { System . out . println ( \"Ordering supplies...\" ); } } // Class for serving customers class CustomerService { public void serveCustomer () { System . out . println ( \"Serving customers...\" ); } } // Class for cleaning the bakery class BakeryCleaner { public void cleanBakery () { System . out . println ( \"Cleaning the bakery...\" ); } } public class Main { public static void main ( String [] args ) { BreadBaker baker = new BreadBaker (); InventoryManager inventoryManager = new InventoryManager (); SupplyOrder supplyOrder = new SupplyOrder (); CustomerService customerService = new CustomerService (); BakeryCleaner cleaner = new BakeryCleaner (); // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); } }",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": true,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "INVENTORY",
+              "reference": {
+                "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+                "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+                "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "locator": {
+                  "start": 2536,
+                  "end": 3761
+                },
+                "source_quote": "// Class for baking bread class BreadBaker { public void bakeBread () { System . out . println ( \"Baking high-quality bread...\" ); } } // Class for managing inventory class InventoryManager { public void manageInventory () { System . out . println ( \"Managing inventory...\" ); } } // Class for ordering supplies class SupplyOrder { public void orderSupplies () { System . out . println ( \"Ordering supplies...\" ); } } // Class for serving customers class CustomerService { public void serveCustomer () { System . out . println ( \"Serving customers...\" ); } } // Class for cleaning the bakery class BakeryCleaner { public void cleanBakery () { System . out . println ( \"Cleaning the bakery...\" ); } } public class Main { public static void main ( String [] args ) { BreadBaker baker = new BreadBaker (); InventoryManager inventoryManager = new InventoryManager (); SupplyOrder supplyOrder = new SupplyOrder (); CustomerService customerService = new CustomerService (); BakeryCleaner cleaner = new BakeryCleaner (); // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); } }",
+                "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "origin_publisher": "GeeksforGeeks",
+                "published_at": "2019-10-12T23:58:44+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "c922b27f6cf33592b655aa4e7070d8766bbf36386584b261e286fdda52f2d552",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "INVENTORY",
+        "event_types": [
+          "INVENTORY"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 3769,
+          "end": 4743
+        },
+        "source_quote": "# Class for baking bread class BreadBaker : def bakeBread ( self ): print ( \"Baking high-quality bread...\" ) # Class for managing inventory class InventoryManager : def manageInventory ( self ): print ( \"Managing inventory...\" ) # Class for ordering supplies class SupplyOrder : def orderSupplies ( self ): print ( \"Ordering supplies...\" ) # Class for serving customers class CustomerService : def serveCustomer ( self ): print ( \"Serving customers...\" ) # Class for cleaning the bakery class BakeryCleaner : def cleanBakery ( self ): print ( \"Cleaning the bakery...\" ) def main (): baker = BreadBaker () inventoryManager = InventoryManager () supplyOrder = SupplyOrder () customerService = CustomerService () cleaner = BakeryCleaner () # Each class focuses on its specific responsibility baker . bakeBread () inventoryManager . manageInventory () supplyOrder . orderSupplies () customerService . serveCustomer () cleaner . cleanBakery () if __name__ == \"__main__\" : main ()",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "INVENTORY",
+              "reference": {
+                "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+                "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+                "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "locator": {
+                  "start": 3769,
+                  "end": 4743
+                },
+                "source_quote": "# Class for baking bread class BreadBaker : def bakeBread ( self ): print ( \"Baking high-quality bread...\" ) # Class for managing inventory class InventoryManager : def manageInventory ( self ): print ( \"Managing inventory...\" ) # Class for ordering supplies class SupplyOrder : def orderSupplies ( self ): print ( \"Ordering supplies...\" ) # Class for serving customers class CustomerService : def serveCustomer ( self ): print ( \"Serving customers...\" ) # Class for cleaning the bakery class BakeryCleaner : def cleanBakery ( self ): print ( \"Cleaning the bakery...\" ) def main (): baker = BreadBaker () inventoryManager = InventoryManager () supplyOrder = SupplyOrder () customerService = CustomerService () cleaner = BakeryCleaner () # Each class focuses on its specific responsibility baker . bakeBread () inventoryManager . manageInventory () supplyOrder . orderSupplies () customerService . serveCustomer () cleaner . cleanBakery () if __name__ == \"__main__\" : main ()",
+                "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "origin_publisher": "GeeksforGeeks",
+                "published_at": "2019-10-12T23:58:44+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "35194e6d309a5ba5c21a3341b0952f439a1c87de197e1d659880c32d095623d3",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "INVENTORY",
+        "event_types": [
+          "INVENTORY"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 4755,
+          "end": 5796
+        },
+        "source_quote": "// Class for baking bread class BreadBaker { bakeBread () { console . log ( \"Baking high-quality bread...\" ); } } // Class for managing inventory class InventoryManager { manageInventory () { console . log ( \"Managing inventory...\" ); } } // Class for ordering supplies class SupplyOrder { orderSupplies () { console . log ( \"Ordering supplies...\" ); } } // Class for serving customers class CustomerService { serveCustomer () { console . log ( \"Serving customers...\" ); } } // Class for cleaning the bakery class BakeryCleaner { cleanBakery () { console . log ( \"Cleaning the bakery...\" ); } } function main () { const baker = new BreadBaker (); const inventoryManager = new InventoryManager (); const supplyOrder = new SupplyOrder (); const customerService = new CustomerService (); const cleaner = new BakeryCleaner (); // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); } main ();",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": true,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "INVENTORY",
+              "reference": {
+                "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+                "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+                "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "locator": {
+                  "start": 4755,
+                  "end": 5796
+                },
+                "source_quote": "// Class for baking bread class BreadBaker { bakeBread () { console . log ( \"Baking high-quality bread...\" ); } } // Class for managing inventory class InventoryManager { manageInventory () { console . log ( \"Managing inventory...\" ); } } // Class for ordering supplies class SupplyOrder { orderSupplies () { console . log ( \"Ordering supplies...\" ); } } // Class for serving customers class CustomerService { serveCustomer () { console . log ( \"Serving customers...\" ); } } // Class for cleaning the bakery class BakeryCleaner { cleanBakery () { console . log ( \"Cleaning the bakery...\" ); } } function main () { const baker = new BreadBaker (); const inventoryManager = new InventoryManager (); const supplyOrder = new SupplyOrder (); const customerService = new CustomerService (); const cleaner = new BakeryCleaner (); // Each class focuses on its specific responsibility baker . bakeBread (); inventoryManager . manageInventory (); supplyOrder . orderSupplies (); customerService . serveCustomer (); cleaner . cleanBakery (); } main ();",
+                "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "origin_publisher": "GeeksforGeeks",
+                "published_at": "2019-10-12T23:58:44+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "f16c627f765dacdc99aa43af110bba0786b07be29a42a44d1ac2f576e2b95375",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "INVENTORY",
+        "event_types": [
+          "INVENTORY"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 5833,
+          "end": 5854
+        },
+        "source_quote": "Managing inventory...",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "INVENTORY",
+              "reference": {
+                "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+                "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+                "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "locator": {
+                  "start": 5833,
+                  "end": 5854
+                },
+                "source_quote": "Managing inventory...",
+                "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "origin_publisher": "GeeksforGeeks",
+                "published_at": "2019-10-12T23:58:44+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "68ac9ff00b4f1e8ef9976e3f3c54c66704c3af72caead547ca3c6afbdbb2fbea",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "INVENTORY",
+        "event_types": [
+          "INVENTORY"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 6085,
+          "end": 6214
+        },
+        "source_quote": "InventoryManager Class : Handles inventory management, ensuring that the bakery has the right ingredients and supplies available.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "INVENTORY",
+              "reference": {
+                "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+                "body_sha256": "1ffa1ee2d97c0009c7770bfeadacc523d0cea088da5a33676ae4fcdeb2925ae3",
+                "origin_id": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "locator": {
+                  "start": 6085,
+                  "end": 6214
+                },
+                "source_quote": "InventoryManager Class : Handles inventory management, ensuring that the bakery has the right ingredients and supplies available.",
+                "origin_url": "https://www.geeksforgeeks.org/system-design/solid-principle-in-programming-understand-with-real-life-examples/",
+                "origin_publisher": "GeeksforGeeks",
+                "published_at": "2019-10-12T23:58:44+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T22:26:11.798747+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "821779d66e45c041645d71f958c82b0875d4aa80b4a475c8590c6c13709c2d8a",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "RELIEF",
+        "event_types": [
+          "RELIEF"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 17109,
+          "end": 17273
+        },
+        "source_quote": "If you substitute a Square where a Rectangle is expected, changing just the width or height would lead to unexpected results because it will change both dimensions.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "d536bb3a15679719a75aeec9a7c101292285073e5c4bb0a48d4d6c853d6ced34",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 17459,
+          "end": 17587
+        },
+        "source_quote": "It states that clients should not be forced to depend on methods that are irrelevant to them, avoiding unnecessary dependencies.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "f83635815746a6afc342d864731bc6d437192c0d011eb17834f966a384d9605b",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 18056,
+          "end": 18170
+        },
+        "source_quote": "Splitting a common menu into smaller, specific ones reduces unnecessary dependencies and minimizes future changes.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "d58f266b6932130bba1751ea3ba110603465e7a18c0175c45e466ea3c76f402c",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 25156,
+          "end": 25186
+        },
+        "source_quote": "Dependency Inversion Principle",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "a41014a30c1413cc1b0f82e9222a8c563b40b21f3cd7245212209a288dbf397f",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 25187,
+          "end": 25345
+        },
+        "source_quote": "The Dependency Inversion Principle (DIP) is a principle in object-oriented design that states that \"High-level modules should not depend on low-level modules.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "12d894fa7b364ade992224d2141abb4c5455c95c934eec71a9b95816a4cd7ece",
+        "document_id": "new-source-38517dcdceb9e93efa0bdf938ab8318e13b692b16eaa5dd4c9a0b92226fe9d5d",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 32186,
+          "end": 32366
+        },
+        "source_quote": "By depending on abstractions rather than specific implementations (as in the Dependency Inversion Principle), developers can change components without disrupting the entire system.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "objective_version": "bct-objective-1",
+    "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  },
+  "T": "UNKNOWN",
+  "T_scope": "UNKNOWN",
+  "strict_candidate_first_met_at": "UNKNOWN",
+  "leading_detection_success": false,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "record_sha256": "095f67b51c33551ab03030db2835f166c3190894f8bcc5111b9025cb7f3a27ad"
+}
