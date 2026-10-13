@@ -1,106 +1,51 @@
-# Stage 2: free API connection, operating use remains disabled
+# Stage 2 — GroqCloud only, Gemini disabled
 
-Read EXECUTION_PLAN.md and PROGRESS.json first. The fixed sequence is Gemini then
-GroqCloud, not xAI Grok. This branch adds optional annotations to existing V4;
-it does not replace V3.3 or change its Actions, databases, alerts or S stages.
+Updated 2026-10-14 (Asia/Seoul). Read `EXECUTION_PLAN.md` and `PROGRESS.json` first. The fixed eight-stage goal and CPU GLiNER2 engine remain unchanged. Active AI: **GroqCloud Free Plan only**. Gemini code is retained, but routing/probes and key requirements are disabled. No third provider, paid fallback, upgrade or billing action.
 
-## Fixed models and official conditions
+## Current real result
 
-Checked 2026-10-13 against official documentation:
+`openai/gpt-oss-20b` remains selected. Official model listing returned it active with structured-output support; official docs confirm strict JSON and Free quotas. The user confirmed “Free Plan이다”. Existing `GROQ_API_KEY` and secure `api.groq.com` binding were reused; no key value was written or requested.
 
-| Provider | One fixed model | JSON | Free condition |
-| --- | --- | --- | --- |
-| Gemini Developer API | `gemini-3.5-flash-lite` | GenerateContent `responseMimeType` and `responseJsonSchema` | Pricing lists free input/output on Free Tier; account/model quotas must be checked in AI Studio |
-| GroqCloud | `openai/gpt-oss-20b` | Chat Completions strict JSON Schema | Free Plan; published base limits 30 RPM, 1,000 RPD, 8,000 TPM, 200,000 TPD; account limits can differ |
+Generation POST attempts: **3** in separate bounded runs, **2 errors**, **1 actual JSON response** saved in SQLite `API_RECEIVED`. Measured usage: **843 input + 1,139 output = 1,982 tokens**. Earlier failed-request tokens: **UNKNOWN**, not zero. API cost $0 on the user-confirmed Free Plan; no independent billing-account audit was performed. Metadata GETs are separate: one model-list success and one default-client diagnostic failure.
 
-The Groq model is served only through `api.groq.com`. No OpenAI API or third
-provider is used. Neither account's free access or exact quota was verified in
-this execution: no credentials were injected. Models are pinned from official
-docs; account eligibility and live model availability remain BLOCKED.
+**Connection/storage PASS; source-valid output FAIL; overall stage 2 is not PASS.** Wrong offsets, non-literal product aliases and non-empty evidence for null values caused all five proposed items to be held. Zero accepted readings/S3. The model called `advanced light-water SMRs` a PROJECT and treated funding/partnership actions as supply increases; these do not prove increased delivered supply. This 600-character smoke is not a formal accuracy or lead-performance evaluation. Do not start stage 3 or seven-day Shadow.
 
-Sources: [Gemini model](https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite),
-[pricing](https://ai.google.dev/gemini-api/docs/pricing),
-[billing](https://ai.google.dev/gemini-api/docs/billing),
-[quotas](https://ai.google.dev/gemini-api/docs/rate-limits),
-[REST generation/schema](https://ai.google.dev/api/generate-content),
-[Groq free quotas](https://console.groq.com/docs/rate-limits),
-[Groq structured outputs](https://console.groq.com/docs/structured-outputs),
-[Groq billing](https://console.groq.com/docs/billing-faqs).
+Full public response, failures and the ten requested checks: `GROQ_STAGE2_RESULTS.json`.
 
-## One setup request for the user
+## Quotas and runtime
 
-1. Create keys in an actual Gemini **Free Tier project without billing** and
-   a GroqCloud **Free Plan account**. Do not upgrade or attach payment.
-2. Store keys using the existing secure secret injection route. GitHub repository
-   secret names are `GEMINI_API_KEY` and `GROQ_API_KEY`. For a Work/Codex execution,
-   inject the same environment variable names through that environment's secret
-   settings. GitHub repository Secrets do not automatically become Work variables.
-   Never paste keys into chat, config files, commands, commits or logs.
-3. Confirm each selected model is enabled and has a nonzero free quota. Supply
-   the free-tier and limits screen (with keys/account identities hidden), or its
-   values for RPM, RPD, TPM and TPD if applicable. Do this for both providers at once.
-4. Restore the **existing V4** SQLite snapshot into a separate development root
-   with its captured public originals and prior CPU readings. Never use the V3.3 DB.
+Official defaults: 30 RPM / 1,000 RPD / 8,000 TPM / 200,000 TPD. Actual headers: RPD **1,000**, TPM **8,000**, remaining requests **999**, remaining tokens **6,756**. RPM/TPD are published conservative caps, not observed account overrides. Other organization traffic is not visible locally.
 
-The execution environment must permit the two official API hosts
-`generativelanguage.googleapis.com` and `api.groq.com`. The current workspace
-has restricted outbound access and that API access was not verified. Do not
-bypass an environment/organization denial through another provider. Prior V4
-delivery records a rejected environment allowlist update and a GitHub PR 403;
-neither blocked mutation is repeated without changed permission evidence.
+Tracked `config/v4-free-ai.json` remains disabled and its generic account unverified. Current ignored configuration: `var/v4/groq-stage2/trial-config.json`, with dated user Free confirmation and quota evidence. Verification expires after seven days. Do not activate an account merely from public pricing or create another key.
 
-Keep `config/v4-free-ai.json` disabled in Git. Make a runtime copy under ignored
-`var/v4/`, set `enabled=true`, and fill each account: `verified_free=true`,
-`tier="Free"`, exact fixed `model`, timezone-bearing `checked_at`, evidence path,
-`settings_revision` and observed positive RPM/RPD/TPM (TPD can be null if absent).
-Confirmation expires after seven days; paid/unverified/stale accounts cannot call.
-Changing verified settings/key identity is required to reopen an AUTH/zero-quota block.
-This is a local safeguard, not a billing-account API verification.
+Caps per run: one POST, reservation 6,400, output 2,048 tokens, input 600 characters, up to two windows, 60-second timeout. Reservation is UTF-8 payload bytes plus output cap, not measured tokens. Local quotas use 80% and rolling 24-hour accounting. No automatic SDK retry, redirect, repair, search, grounding or paid tools. Remote low-quota headers apply even when source validation rejects a response.
 
-Use the existing environment; no provider SDK or new dependency is needed:
+## Sources, storage and validation
+
+Prior V4 SQLite/original/CPU readings and pinned CPU weights were absent. Two official pages were **newly acquired**, not restored. Energy.gov canonical/publisher/publication/raw and body hashes passed, while full-document completeness remains PARTIAL/BLOCKED. A hash-bound explicit public-excerpt review allowed bounded public text only; it did not promote original provenance or an S stage. EIA lacked canonical/publication evidence and stays held. A third issuer fetch was blocked and not looped.
+
+Native HTML, unchanged original bodies, reviews, responses, attempts/errors/jobs and backups remain in ignored `var/v4/groq-stage2/`. Fresh processes and backup restore retained the real response/REVIEW_REQUIRED with no new API calls. A separate clearly marked simulated-429 ledger retained WAIT_API/cooldown. Real quota was not deliberately exhausted. Success-cache/alias tests passed mocks; no valid live reading exists for a live success-cache claim. CPU same-input numerical comparison is BLOCKED; existing engine code is unchanged and no large reinstall was attempted.
+
+Executed: **99 functional passes**, **261 existing regression passes + 1 existing real-holdout skip**. Commands overlap on V4 integration tests; do not add them as distinct-test totals. Evidence: `GROQ_FUNCTIONAL_TESTS.xml`, `GROQ_REGRESSION_TESTS.xml`.
+
+## Supported corrections and remaining work
+
+Default urllib reproduced 403/1010 on a read-only request; the identifying BCT client succeeded. Requests now identify the real client as `BCT-V4-stage2/1.0`, without browser impersonation, alternate proxy or policy bypass. The wire schema uses documented strict structural types, retaining local cardinality checks, with documented `reasoning_effort=low`.
+
+The old adapter did not retain the second POST HTTP detail; its exact rejecting parameter is unknown. The next changed-contract request returned JSON. New errors retain only HTTP status and recognized safe diagnostic labels, never raw credential-bearing error text. Unchanged invalid contracts remain held; only a changed contract may reopen an INPUT_INVALID hold. Received usage and transport recovery are saved independently of source validation. A null unverified `checked_at` now returns WAIT_API safely.
+
+Next: fix the exact quote/offset contract using the saved response first, then require a source-valid stored live reading in a new bounded run. Do not relax citation checks, rewrite invented aliases to get PASS, or change TARGET's five fields/S1/S2/S3. Missing facts remain UNKNOWN. No more API calls occurred after the received response. Main, V3.3 operating DB, Actions and alerts were not changed.
+
+Local inspection without network:
 
 ```bash
-PYTHONPATH=src python scripts/v4/api_trial.py --root var/v4/isolated-runtime --config var/v4/free-ai-config.json
-PYTHONPATH=src python -m bct.v4 --root var/v4/isolated-runtime api-read --config var/v4/free-ai-config.json --limit 3
+cd /workspace/bottleneck-control-tower
+.venv/bin/python -m bct.v4 --root var/v4/groq-stage2/live status
+.venv/bin/python -m pytest -q tests/test_v4_free_ai.py tests/test_v4_integration.py
 ```
 
-The trial checks Gemini and Groq separately, once per unchanged input/provider,
-as explicit connectivity probes. Normal `api-read` and optional `cycle --api-config`
-always use the fixed fallback order. Do not schedule these or change Actions in
-this task. Source collection is not run by `api-read`.
+Do not repeat the live trial to seek a desired answer. Wrong-source jobs stay REVIEW_REQUIRED; unavailable Groq stays WAIT_API. Collection stays separate and sources are retained.
 
-## What the implementation verifies
+Official checks: [Free quotas](https://console.groq.com/docs/rate-limits), [structured outputs](https://console.groq.com/docs/structured-outputs), [API reference](https://console.groq.com/docs/api-reference), [billing](https://console.groq.com/docs/billing-faqs), `GET https://api.groq.com/openai/v1/models`.
 
-Exact source quotes/character positions, body hashes, the original publication
-metadata, and literal field values are checked locally. API classifications are
-advisory and retain semantic UNKNOWN. Five TARGET fields stay `product`,
-`specification`, `region`, `customer_group`, `supply_pool`. No automatic S3 promotion.
-The original CPU GLiNER2 remains available. API reads original windows directly
-and can find products absent from CPU spans. Unselected body text is retained and
-reported as unprocessed; bounded windows are not full-document analysis.
-
-Public provenance is required. Query-bearing URLs, private/forbidden markers,
-credentials, personal contacts and account-like material are held for review.
-Safety/organization policy denials and bad requests never trigger provider hopping.
-An unsupported request contract is also held across documents/restarts until
-that local request contract changes.
-HTTP makes one POST with a 60-second timeout, no redirect, SDK retry, search,
-grounding, paid tool or repair request. FORMAT/SOURCE errors can try the unused
-second provider once. Normal UNKNOWN is a successful answer and is never retried.
-
-SQLite records attempts before IO, responses, usage, jobs and provider blocks.
-Restart and backup preserve these records. An interrupted uncertain request is
-held instead of being automatically resent. Successful duplicate input is cached,
-including alias URLs; source identity is reattached during cache validation.
-Local quotas reserve byte-count plus output-cap budgets (conservative estimates,
-not actual tokens) and apply 80% of confirmed limits. Sliding 24-hour limits are
-deliberately stricter than daily reset; Gemini RPD reset is Pacific midnight.
-Remote low-quota headers stop a provider too. Failed-request token usage can be UNKNOWN.
-
-Transient failures without a provider resume time wait at least an hour; known
-daily exhaustion without a reset waits 24 hours. A provider-supplied Retry-After
-is honored. Recovery uses one bounded check in the next normal execution. Both
-unavailable means WAIT_API; it neither deletes sources nor writes analysis complete.
-
-Functional mocks, live connectivity, semantic accuracy and EARLY performance are
-different results. Stage 3+ and seven-day Shadow observation are NOT_RUN here.
+Environment allowlist draft retains `api.groq.com`, adding `console.groq.com`, `www.energy.gov`, `www.eia.gov`, `investors.bakerhughes.com`; existing package presets stay intact. Draft save confirmed; publication unverified. Review/save the draft in environment settings and publish to retain prepared current-instance filesystem/configuration for future tasks. Observed successful source/console requests and the blocked issuer request do not prove that draft saving itself applied or published the network policy.

@@ -29,22 +29,28 @@ def main():
             with ledger.worker():
                 docs = ledger.latest_documents()
                 router = Router(ledger, config)
-                for provider in MODELS:
+                for provider in config["providers"]:
                     reason = "EXPLICIT_OPT_IN_REQUIRED" if not config["enabled"] else router.available(provider)
                     if reason or not docs:
                         results["providers"][provider] = {"status": "BLOCKED", "reason": reason or "SAVED_V4_ORIGINAL_MISSING", "model": MODELS[provider]}
+                        router.record("API_PREFLIGHT", {"provider": provider, "status": "WAIT_API",
+                                      "reason": reason or "SAVED_V4_ORIGINAL_MISSING"})
                     else:
                         value = router.read(docs[0], probe_provider=provider)
+                        received = [x for x in router.events("API_RECEIVED")
+                                    if x["provider"] == provider and x["input_key"] == value.get("input_key")]
                         results["providers"][provider] = {"status": value["status"], "model": MODELS[provider],
                             "cached": value.get("cached", False), "failures": value.get("failures", []),
-                            "response_saved": value["status"] == "PASS", "input_key": value.get("input_key")}
+                            "connection_status": "PASS" if received else "BLOCKED",
+                            "response_saved": bool(received), "validated_response_saved": value["status"] == "PASS",
+                            "input_key": value.get("input_key")}
                 results["calls"] = router.calls
-                responses = [x for x in router.events("API_RESPONSE") if x["run_id"] == router.run_id]
+                responses = [x for x in router.events("API_RECEIVED") if x["run_id"] == router.run_id]
                 results["reported_tokens"] = sum(x["usage"].get("total_tokens") or 0 for x in responses)
                 results["usage_missing"] = any(x["usage"].get("total_tokens") is None for x in responses)
                 results["ledger_status"] = api_status(ledger)
         else:
-            for provider in MODELS:
+            for provider in config["providers"]:
                 results["providers"][provider] = {"status": "BLOCKED", "model": MODELS[provider],
                     "reasons": (["KEY_MISSING"] if not os.getenv(KEYS[provider]) else [])
                         + ["FREE_ACCOUNT_AND_LIMITS_UNVERIFIED", "SAVED_V4_ORIGINAL_MISSING"]}

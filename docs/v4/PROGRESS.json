@@ -1,27 +1,29 @@
 {
-  "plan_version": "1.0",
-  "plan_sha256": "c8977cc818c9bc10bb9c17cf9615d5a665a753fef494ff71f4168414e45ec99f",
+  "plan_version": "1.1",
+  "plan_sha256": "18d46ef6f1aef0b57bbba1e9c3a61fe1b332668a7581074d7852eb6f60279f25",
   "stage": 2,
-  "status": "BLOCKED",
-  "handoff_sha": "6221c4820dd9c596b7bccba06a9a0672d53f0959",
-  "base_remote_sha": "6221c4820dd9c596b7bccba06a9a0672d53f0959",
-  "last_completed": "Stage 1 PASS; stage 2 implementation and 65 independent functional tests PASS; existing regression 261 PASS + existing performance skip 1",
-  "next_action": "Inject both keys safely and confirm actual Free account/model limits; restore isolated V4 original ledger, then resume stage 2 live probes once; do not start stage 3",
+  "status": "FAIL_SOURCE_VALIDATION",
+  "handoff_sha": "14ffa30124b4ea1ee0b0650a168612e92d4abb10",
+  "base_remote_sha": "14ffa30124b4ea1ee0b0650a168612e92d4abb10",
+  "last_completed": "Groq-only implementation; 99 functional PASS, existing regression 261 PASS + 1 existing performance skip; real Groq JSON/usage received and stored; raw response/review hold and simulated WAIT_API survive process restart and backup/restore",
+  "next_action": "Stay in stage 2: fix literal quote/offset input-output contract using the saved response first, then require a source-valid stored live result. No further API request in this run; stage 3 and Shadow not started.",
   "blockers": [
-    "GEMINI_API_KEY absent",
-    "GROQ_API_KEY absent",
-    "Actual free-account eligibility and limits unverified",
-    "Prior V4 SQLite with captured originals and CPU readings absent in this fresh workspace",
-    "Approved execution environment access to both official API hosts not verified; restricted egress must not be bypassed"
+    "Real response rejected: invalid quote character offsets, non-literal product aliases and non-empty evidence for null values; zero accepted items",
+    "Same-input CPU comparison unavailable: old V4 ledger/CPU readings and pinned CPU weights absent; preserved code, no model reinstall",
+    "RPM/TPD account-specific overrides unobserved; published conservative caps used. RPD=1000 and TPM=8000 observed in real headers",
+    "Second failed POST HTTP detail was not retained by the old adapter; exact rejecting parameter is unknown. Subsequent adapter records safe diagnostic labels."
   ],
   "tests": {
-    "api_mock_functional": "65 PASS",
-    "existing_regression": "261 PASS, 1 existing skip",
-    "gemini_live": "BLOCKED",
-    "groq_live": "BLOCKED",
-    "semantic_accuracy": "NOT_RUN",
+    "api_mock_functional": "99 PASS (new execution)",
+    "existing_regression": "261 PASS, 1 existing holdout skip (new execution)",
+    "gemini_live": "DISABLED_NOT_RUN_NO_KEY_REQUIREMENT",
+    "groq_live": "PASS_RESPONSE_AND_SQLITE_STORAGE",
+    "semantic_accuracy": "NOT_RUN_FORMAL_STAGE3; ONE_600_CHARACTER_SMOKE_FAILED",
     "stage3_plus": "NOT_RUN",
-    "shadow_7_days": "NOT_RUN"
+    "shadow_7_days": "NOT_RUN",
+    "groq_source_validation": "FAIL_SOURCE",
+    "restart_and_backup": "PASS_RAW_RESPONSE_REVIEW_HOLD_AND_SIMULATED_WAIT",
+    "duplicate_prevention": "PASS_FAILED_INPUT_HOLD; positive cache PASS_MOCK_ONLY"
   },
   "commits": [
     {
@@ -35,16 +37,23 @@
     {
       "sha": "9617a5d30655e45937ba38bb27f7ca78c48d77c5",
       "role": "Free API implementation and executed functional evidence; remote SHA verified"
+    },
+    {
+      "sha": "14ffa30124b4ea1ee0b0650a168612e92d4abb10",
+      "role": "verified handoff / remote HEAD at task start"
     }
   ],
-  "scope": "Stages 1 and 2 only; stage 3+ and 7-day observation NOT_RUN",
-  "updated_at": "2026-10-13T14:49:41.227611+00:00",
+  "scope": "Current task: stage 2 Groq-only connection verification; stage 2 source-validation completion not PASS; no stage 3 or seven-day Shadow.",
+  "updated_at": "2026-10-14T01:04:35.549070+09:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
     "docs/v4/API_FUNCTIONAL_TESTS.xml",
     "docs/v4/REGRESSION_TESTS.xml",
-    "docs/v4/FREE_AI_SETUP.md"
+    "docs/v4/FREE_AI_SETUP.md",
+    "docs/v4/GROQ_STAGE2_RESULTS.json",
+    "docs/v4/GROQ_FUNCTIONAL_TESTS.xml",
+    "docs/v4/GROQ_REGRESSION_TESTS.xml"
   ],
   "storage": {
     "branch": "codex/bct-v4-integration",
@@ -52,18 +61,33 @@
     "latest_remote_verified": "9617a5d30655e45937ba38bb27f7ca78c48d77c5",
     "verified_preserved_upstream_blobs": 466,
     "main_verified": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
-    "receipt_commit_note": "The commit containing this progress receipt may advance HEAD; read the current remote ref for the receipt commit."
+    "receipt_commit_note": "Implementation commit SHA is recorded after verified push; the final receipt commit may advance HEAD. Read the current remote branch ref for final delivery SHA.",
+    "current_delivery": "PENDING_COMMIT_PUSH_VERIFICATION",
+    "local_new_trial_root": "var/v4/groq-stage2 (ignored; not restored historical V4 DB)"
   },
-  "user_setup": [
-    "GEMINI_API_KEY and GROQ_API_KEY in secure execution environment/Secrets",
-    "Both actual Free tiers and selected-model RPM/RPD/TPM/TPD evidence; never paste keys",
-    "Existing V4 public-original/CPU-reading ledger restored to isolated development root",
-    "Use approved execution environment allowing generativelanguage.googleapis.com and api.groq.com"
-  ],
+  "user_setup": [],
   "pr": {
     "status": "BLOCKED_GITHUB_API_403_PRIOR",
     "evidence": "docs/v4/DELIVERY.json",
     "retried": false,
     "reason": "Prior Forbidden remains; no changed PR permission evidence"
+  },
+  "api_usage": {
+    "generation_posts": 3,
+    "received_responses": 1,
+    "measured_input_tokens": 843,
+    "measured_output_tokens": 1139,
+    "measured_total_tokens": 1982,
+    "failed_post_tokens": "UNKNOWN",
+    "api_cost_usd": 0,
+    "basis": "User-confirmed Groq Free Plan; billing account not independently queried; no paid path"
+  },
+  "providers": {
+    "active": [
+      "groq"
+    ],
+    "groq_model": "openai/gpt-oss-20b",
+    "gemini": "DISABLED_ADAPTER_PRESERVED",
+    "third_provider": false
   }
 }

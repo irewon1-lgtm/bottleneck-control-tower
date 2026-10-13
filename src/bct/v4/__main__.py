@@ -20,7 +20,7 @@ def main():
     api = sub.add_parser("api-read")
     api.add_argument("--config", type=Path, default=Path("config/v4-free-ai.json"))
     api.add_argument("--limit", type=int)
-    api.add_argument("--probe-provider", choices=["gemini", "groq"], help="Isolated connectivity test only")
+    api.add_argument("--probe-provider", choices=["groq"], help="Isolated GroqCloud connectivity test only")
     backfill = sub.add_parser("replay")
     backfill.add_argument("--input", type=Path, required=True)
     backfill.add_argument("--as-of", required=True)

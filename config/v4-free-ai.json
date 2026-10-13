@@ -1,29 +1,65 @@
 {
   "version": "bct-v4-free-ai-1",
   "enabled": false,
-  "providers": ["gemini", "groq"],
-  "models": {"gemini": "gemini-3.5-flash-lite", "groq": "openai/gpt-oss-20b"},
+  "providers": [
+    "groq"
+  ],
+  "models": {
+    "gemini": "gemini-3.5-flash-lite",
+    "groq": "openai/gpt-oss-20b"
+  },
   "timeout_seconds": 60,
-  "document_limit": 3,
-  "max_calls_per_run": 6,
-  "max_reserved_tokens_per_run": 24000,
+  "document_limit": 1,
+  "max_calls_per_run": 1,
+  "max_reserved_tokens_per_run": 6400,
   "max_output_tokens": 2048,
   "max_windows": 2,
-  "max_input_characters": 1000,
+  "max_input_characters": 600,
   "quota_fraction": 0.8,
   "accounts": {
-    "gemini": {"verified_free": false, "tier": "UNKNOWN", "model": "gemini-3.5-flash-lite", "checked_at": null, "evidence": null, "settings_revision": null, "limits": {"rpm": null, "rpd": null, "tpm": null, "tpd": null}},
-    "groq": {"verified_free": false, "tier": "UNKNOWN", "model": "openai/gpt-oss-20b", "checked_at": null, "evidence": null, "settings_revision": null, "limits": {"rpm": null, "rpd": null, "tpm": null, "tpd": null}}
+    "gemini": {
+      "verified_free": false,
+      "tier": "UNKNOWN",
+      "model": "gemini-3.5-flash-lite",
+      "checked_at": null,
+      "evidence": null,
+      "settings_revision": null,
+      "limits": {
+        "rpm": null,
+        "rpd": null,
+        "tpm": null,
+        "tpd": null
+      }
+    },
+    "groq": {
+      "verified_free": false,
+      "tier": "UNKNOWN",
+      "model": "openai/gpt-oss-20b",
+      "checked_at": null,
+      "evidence": null,
+      "settings_revision": null,
+      "limits": {
+        "rpm": null,
+        "rpd": null,
+        "tpm": null,
+        "tpd": null
+      }
+    }
   },
   "official_documentation": {
-    "checked_on": "2026-10-13",
+    "checked_on": "2026-10-14",
     "gemini_free_input_output": "https://ai.google.dev/gemini-api/docs/pricing",
     "gemini_model": "https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite",
     "gemini_json": "https://ai.google.dev/api/generate-content",
     "gemini_limits": "https://ai.google.dev/gemini-api/docs/rate-limits",
     "groq_json": "https://console.groq.com/docs/structured-outputs",
     "groq_limits": "https://console.groq.com/docs/rate-limits",
-    "groq_published_free_limits": {"rpm": 30, "rpd": 1000, "tpm": 8000, "tpd": 200000},
-    "account_limits_status": "BLOCKED: no credentials/account evidence; published limits do not activate a provider"
+    "groq_published_free_limits": {
+      "rpm": 30,
+      "rpd": 1000,
+      "tpm": 8000,
+      "tpd": 200000
+    },
+    "account_limits_status": "Current task: user confirmed Groq Free Plan; actual headers RPD=1000 TPM=8000. RPM/TPD published caps only. Generic tracked account remains unverified; use ignored runtime evidence."
   }
 }

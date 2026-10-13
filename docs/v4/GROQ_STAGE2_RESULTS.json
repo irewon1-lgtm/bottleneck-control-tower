@@ -1,0 +1,575 @@
+{
+  "plan_version": "1.1",
+  "stage": 2,
+  "at": "2026-10-14T01:02:09.399427+09:00",
+  "branch": "codex/bct-v4-integration",
+  "handoff_sha": "14ffa30124b4ea1ee0b0650a168612e92d4abb10",
+  "overall_status": "FAIL_SOURCE_VALIDATION",
+  "groq_live_connection": "PASS",
+  "sqlite_received_response": "PASS",
+  "validated_live_output": "FAIL",
+  "active_providers": [
+    "groq"
+  ],
+  "gemini": "DISABLED_NO_REAL_CALLS_NO_KEY_REQUIREMENT_ADAPTER_PRESERVED",
+  "model": "openai/gpt-oss-20b",
+  "model_changed": false,
+  "api_usage": {
+    "generation_post_attempts": 3,
+    "received_generation_responses": 1,
+    "prior_failed_posts": 2,
+    "model_metadata_gets": 2,
+    "successful_metadata_gets": 1,
+    "client_diagnosis_get_failures": 1,
+    "usage": {
+      "input_tokens": 843,
+      "output_tokens": 1139,
+      "total_tokens": 1982
+    },
+    "failed_post_tokens": "UNKNOWN_NOT_REPORTED",
+    "api_cost_usd": 0,
+    "cost_basis": "User-confirmed Groq Free Plan; no paid upgrade, billing action, tools or fallback; independent billing-account inspection not performed",
+    "no_more_generation_calls_after_received_output": true
+  },
+  "free_account": {
+    "status": "USER_CONFIRMED_FREE_PLAN",
+    "user_statement": "Free Plan이다",
+    "checked_at": "2026-10-13T15:42:16.122730+00:00",
+    "model": "openai/gpt-oss-20b",
+    "published_free_limits": {
+      "rpm": 30,
+      "rpd": 1000,
+      "tpm": 8000,
+      "tpd": 200000
+    },
+    "limits_source": "https://console.groq.com/docs/rate-limits",
+    "account_limit_status": "RPD and TPM observed; RPM and TPD are published conservative caps, not account observations",
+    "no_paid_plan_upgrade_or_billing_action": true,
+    "account_observed_limits": {
+      "rpd": 1000,
+      "tpm": 8000
+    },
+    "quota_headers": {
+      "x-ratelimit-limit-requests": "1000",
+      "x-ratelimit-limit-tokens": "8000",
+      "x-ratelimit-remaining-requests": "999",
+      "x-ratelimit-remaining-tokens": "6756",
+      "x-ratelimit-reset-requests": "1m26.4s",
+      "x-ratelimit-reset-tokens": "9.33s"
+    }
+  },
+  "limits": {
+    "per_run_post_cap": 1,
+    "per_run_reserved_token_cap": 6400,
+    "output_token_cap": 2048,
+    "input_character_cap": 600,
+    "max_windows": 2,
+    "fraction_of_limits": 0.8,
+    "reservation_basis": "UTF-8 payload bytes plus output token cap, not measured token counts",
+    "actual_last_reservation": 5733,
+    "other_organization_traffic": "NOT_OBSERVABLE_LOCALLY"
+  },
+  "ten_requested_checks": [
+    {
+      "id": 1,
+      "check": "Real Groq generation connection",
+      "status": "PASS",
+      "evidence": "One decoded actual Groq response; model unchanged; 3 POST attempts total"
+    },
+    {
+      "id": 2,
+      "check": "SQLite received response / validated output",
+      "status": "PASS_RAW_STORAGE_FAIL_VALIDATION",
+      "received_responses": 1,
+      "validated_responses": 0
+    },
+    {
+      "id": 3,
+      "check": "Official-source product/demand/supply extraction",
+      "status": "FAIL_SOURCE_VALIDATION",
+      "accepted_items": 0,
+      "proposed_items": 5,
+      "scope": "1 document / 600 of 8053 characters; no accuracy benchmark"
+    },
+    {
+      "id": 4,
+      "check": "Generic nouns vs physical product",
+      "status": "FAIL_REAL_SMOKE_PASS_FUNCTIONAL",
+      "observation": "Advanced light-water SMRs labelled PROJECT; original validator rejects erroneous literal citations"
+    },
+    {
+      "id": 5,
+      "check": "Real orders vs forecasts",
+      "status": "NOT_RUN_POSITIVE_REAL_ORDER",
+      "observation": "Funding awards and partnerships are not delivered supply; no actual product order in selected window; mock actual/plan/negation tests PASS"
+    },
+    {
+      "id": 6,
+      "check": "Original quotation and publication cross-check",
+      "status": "PASS_PUBLICATION_FAIL_QUOTES",
+      "observation": "Original timestamp preserved; 15 invalid evidence fields; no inferred publication date"
+    },
+    {
+      "id": 7,
+      "check": "Duplicate prevention",
+      "status": "PASS_FAILED_INPUT_HOLD",
+      "live_success_cache": "NOT_RUN_NO_VALID_LIVE_OUTPUT",
+      "mock_success_cache": "PASS"
+    },
+    {
+      "id": 8,
+      "check": "Free quota exhaustion -> WAIT_API",
+      "status": "PASS_SIMULATED_429",
+      "real_exhaustion": "NOT_RUN_NOT_INTENTIONALLY_EXHAUSTED"
+    },
+    {
+      "id": 9,
+      "check": "New process restart and backup restore",
+      "status": "PASS",
+      "evidence": "Raw response / REVIEW_REQUIRED retained; separate simulated WAIT_API retained; no new API calls"
+    },
+    {
+      "id": 10,
+      "check": "Changed functionality and related regression",
+      "status": "PASS_WITH_EXISTING_SKIP",
+      "functional": {
+        "tests": 99,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "time": 1.969,
+        "passed": 99
+      },
+      "regression": {
+        "tests": 262,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1,
+        "time": 3.416,
+        "passed": 261
+      }
+    }
+  ],
+  "source_validation": {
+    "kind": "ONE_DOCUMENT_BOUNDED_LIVE_SMOKE_NOT_ACCURACY_BENCHMARK",
+    "source_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+    "publication_metadata": "2026-07-25T12:47:13-04:00",
+    "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+    "body_characters": 8053,
+    "selected_characters": 600,
+    "proposed_items": 5,
+    "accepted_items": 0,
+    "literal_validation": "FAIL_SOURCE",
+    "issues": [
+      {
+        "item": 0,
+        "field": "context",
+        "declared_start": 5905,
+        "declared_end": 5950,
+        "quote_characters": 97,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 0,
+        "field": "entity",
+        "declared_start": 5905,
+        "declared_end": 5950,
+        "quote_characters": 97,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 0,
+        "field": "product",
+        "declared_start": 5905,
+        "declared_end": 5950,
+        "quote_characters": 97,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH",
+          "VALUE_NOT_LITERAL_IN_QUOTE"
+        ]
+      },
+      {
+        "item": 1,
+        "field": "context",
+        "declared_start": 5951,
+        "declared_end": 6000,
+        "quote_characters": 206,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 1,
+        "field": "entity",
+        "declared_start": 5951,
+        "declared_end": 6000,
+        "quote_characters": 206,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 1,
+        "field": "product",
+        "declared_start": 5951,
+        "declared_end": 6000,
+        "quote_characters": 206,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH",
+          "VALUE_NOT_LITERAL_IN_QUOTE"
+        ]
+      },
+      {
+        "item": 2,
+        "field": "context",
+        "declared_start": 6001,
+        "declared_end": 6060,
+        "quote_characters": 134,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 2,
+        "field": "entity",
+        "declared_start": 6001,
+        "declared_end": 6060,
+        "quote_characters": 134,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 2,
+        "field": "product",
+        "declared_start": 6001,
+        "declared_end": 6060,
+        "quote_characters": 134,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 3,
+        "field": "context",
+        "declared_start": 6061,
+        "declared_end": 6080,
+        "quote_characters": 62,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 3,
+        "field": "entity",
+        "declared_start": 6061,
+        "declared_end": 6080,
+        "quote_characters": 62,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH",
+          "NULL_WITH_NONEMPTY_EVIDENCE"
+        ]
+      },
+      {
+        "item": 3,
+        "field": "unit",
+        "declared_start": 6061,
+        "declared_end": 6080,
+        "quote_characters": 62,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH",
+          "NULL_WITH_NONEMPTY_EVIDENCE"
+        ]
+      },
+      {
+        "item": 4,
+        "field": "context",
+        "declared_start": 5905,
+        "declared_end": 6080,
+        "quote_characters": 600,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH"
+        ]
+      },
+      {
+        "item": 4,
+        "field": "entity",
+        "declared_start": 5905,
+        "declared_end": 6080,
+        "quote_characters": 600,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH",
+          "NULL_WITH_NONEMPTY_EVIDENCE"
+        ]
+      },
+      {
+        "item": 4,
+        "field": "region",
+        "declared_start": 5905,
+        "declared_end": 6080,
+        "quote_characters": 600,
+        "reasons": [
+          "OFFSET_QUOTE_MISMATCH",
+          "NULL_WITH_NONEMPTY_EVIDENCE"
+        ]
+      }
+    ],
+    "manual_observations": [
+      "Advanced Nuclear Fuel Line Pilot Projects is correctly labelled PROJECT, but its lowercased product fact is not literal.",
+      "advanced light-water SMRs is a product family mentioned as the object of a government funding award; the AI labelled it PROJECT.",
+      "An actual partnership or funding award does not establish actual increased production capacity or delivered supply.",
+      "No actual product order is present in this window; positive order/forecast accuracy is not tested.",
+      "Absent specification, customer need time, supplier readiness, qualified supply pool, lead time and relief remain UNKNOWN; no S3 or candidate is accepted."
+    ],
+    "stage3_accuracy": "NOT_RUN",
+    "forecast_performance": "NOT_RUN"
+  },
+  "source_acquisition": [
+    {
+      "url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+      "acquired_at": "2026-10-13T15:32:47.077146+00:00",
+      "kind": "NEW_ACQUISITION_NOT_RESTORATION",
+      "status": "PASS_FETCH",
+      "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+      "raw_sha256": "e5a5b7f82c86fbbc758def29824d412091223058dc5bf12fa198b47fb6a12f13",
+      "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+      "provenance": "BLOCKED",
+      "published_at": "2026-07-25T12:47:13-04:00",
+      "provenance_blockers": [
+        "full_accessible_body"
+      ],
+      "body_status": "PARTIAL"
+    },
+    {
+      "url": "https://www.eia.gov/electricity/monthly/",
+      "acquired_at": "2026-10-13T15:32:48.419017+00:00",
+      "kind": "NEW_ACQUISITION_NOT_RESTORATION",
+      "status": "PASS_FETCH",
+      "document_id": "v4doc-95747233913bebbc3be389e57f3335a942d5502b13be8f3fb32851862d030814",
+      "raw_sha256": "b3d65a459311caad677d74bf5845148d00102e84f5387cbc42518c5f011a2850",
+      "body_sha256": "50dc12fd84e755dc9654e59b982e2afd8b1c03e0200a08ffc0f76f641d95ebb7",
+      "provenance": "BLOCKED",
+      "published_at": null,
+      "provenance_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication",
+        "full_accessible_body"
+      ],
+      "body_status": "PARTIAL"
+    },
+    {
+      "url": "https://investors.bakerhughes.com/news/press-releases/news-details/2026/Dynamis-Power-Solutions-Awards-Baker-Hughes-Major-Power-Generation-Order-for-Data-Centers-Oil--Gas/default.aspx",
+      "acquired_at": "2026-10-13T15:34:36.389622+00:00",
+      "kind": "NEW_ACQUISITION_NOT_RESTORATION",
+      "status": "BLOCKED",
+      "error_type": "OSError",
+      "reason": "Tunnel connection failed: 403 Forbidden"
+    }
+  ],
+  "source_review": {
+    "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+    "status": "PASS",
+    "evidence": "var/v4/groq-stage2/public-excerpt-review.json",
+    "raw_sha256": "e5a5b7f82c86fbbc758def29824d412091223058dc5bf12fa198b47fb6a12f13",
+    "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+    "published_at": "2026-07-25T12:47:13-04:00",
+    "scope": "PUBLIC_EXCERPT_ONLY_FULL_DOCUMENT_STAYS_BLOCKED",
+    "reviewed_at": "2026-10-13T15:42:16.115867+00:00",
+    "basis": "Official canonical Energy.gov URL, matching publisher and dated article metadata; preserved native HTML and literal extracted text; only full body completeness fails. No full-document or forecast claim."
+  },
+  "raw_response": {
+    "text": "{\"items\":[{\"kind\":\"PROJECT\",\"role\":\"DEMAND_INCREASE\",\"actuality\":\"ACTUAL\",\"context\":{\"start\":5905,\"end\":5950,\"quote\":\"2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects\"},\"entity\":{\"start\":5905,\"end\":5950,\"quote\":\"2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects\",\"value\":\"Advanced Nuclear Fuel Line Pilot Projects\"},\"facts\":[{\"field\":\"product\",\"value\":\"advanced nuclear fuel line pilot projects\",\"start\":5905,\"end\":5950,\"quote\":\"2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects\"}]},{\"kind\":\"PROJECT\",\"role\":\"SUPPLY_INCREASE\",\"actuality\":\"ACTUAL\",\"context\":{\"start\":5951,\"end\":6000,\"quote\":\"October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies\"},\"entity\":{\"start\":5951,\"end\":6000,\"quote\":\"October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies\",\"value\":\"Westinghouse’s nuclear reactor technologies\"},\"facts\":[{\"field\":\"product\",\"value\":\"Westinghouse nuclear reactor technologies\",\"start\":5951,\"end\":6000,\"quote\":\"October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies\"}]},{\"kind\":\"PROJECT\",\"role\":\"SUPPLY_INCREASE\",\"actuality\":\"ACTUAL\",\"context\":{\"start\":6001,\"end\":6060,\"quote\":\"December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs\"},\"entity\":{\"start\":6001,\"end\":6060,\"quote\":\"December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs\",\"value\":\"advanced light-water SMRs\"},\"facts\":[{\"field\":\"product\",\"value\":\"advanced light-water SMRs\",\"start\":6001,\"end\":6060,\"quote\":\"December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs\"}]},{\"kind\":\"GENERAL_EXPRESSION\",\"role\":\"UNKNOWN\",\"actuality\":\"UNKNOWN\",\"context\":{\"start\":6061,\"end\":6080,\"quote\":\"January 5, 2026: The Energy Department announced a $2.7 billio\"},\"entity\":{\"start\":6061,\"end\":6080,\"quote\":\"January 5, 2026: The Energy Department announced a $2.7 billio\",\"value\":null},\"facts\":[{\"field\":\"unit\",\"value\":null,\"start\":6061,\"end\":6080,\"quote\":\"January 5, 2026: The Energy Department announced a $2.7 billio\"}]},{\"kind\":\"UNKNOWN\",\"role\":\"UNKNOWN\",\"actuality\":\"UNKNOWN\",\"context\":{\"start\":5905,\"end\":6080,\"quote\":\"2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel. October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad. December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs. January 5, 2026: The Energy Department announced a $2.7 billio\"},\"entity\":{\"start\":5905,\"end\":6080,\"quote\":\"2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel. October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad. December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs. January 5, 2026: The Energy Department announced a $2.7 billio\",\"value\":null},\"facts\":[{\"field\":\"region\",\"value\":null,\"start\":5905,\"end\":6080,\"quote\":\"2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel. October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad. December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs. January 5, 2026: The Energy Department announced a $2.7 billio\"}]}]}",
+    "usage": {
+      "input_tokens": 843,
+      "output_tokens": 1139,
+      "total_tokens": 1982
+    },
+    "quota_headers": {
+      "x-ratelimit-limit-requests": "1000",
+      "x-ratelimit-limit-tokens": "8000",
+      "x-ratelimit-remaining-requests": "999",
+      "x-ratelimit-remaining-tokens": "6756",
+      "x-ratelimit-reset-requests": "1m26.4s",
+      "x-ratelimit-reset-tokens": "9.33s"
+    },
+    "attempt_id": "cdf4e16a1f374ed2b3586857232df911",
+    "stored_in": "var/v4/groq-stage2/live/v4.sqlite3 events:API_RECEIVED",
+    "text_sha256": "7766287934519eccf792ad990378379f32a598d522ce7e5b0ad6e9caf4bdd158"
+  },
+  "restart_and_backup": {
+    "kind": "LOCAL_FRESH_PROCESS_RESTART_AND_SQLITE_BACKUP_RESTORE",
+    "restart_raw_response_and_review_hold": "PASS",
+    "duplicate_failed_input_suppression": "PASS",
+    "positive_success_cache_on_live_output": "NOT_RUN_NO_SOURCE_VALID_OUTPUT",
+    "simulated_quota_wait_and_cooldown": "PASS",
+    "quota_simulation_actual_api_calls": 0,
+    "additional_real_api_calls": 0,
+    "observations": [
+      {
+        "root": "var/v4/groq-stage2/live",
+        "observed": {
+          "status": "REVIEW_REQUIRED",
+          "calls_this_run": 0,
+          "documents": 2,
+          "integrity": "ok",
+          "attempts": 3,
+          "received_responses": 1,
+          "reported_tokens": 1982,
+          "wait_api_documents": 0,
+          "error_kind": null
+        }
+      },
+      {
+        "root": "var/v4/groq-stage2/backups/live",
+        "observed": {
+          "status": "REVIEW_REQUIRED",
+          "calls_this_run": 0,
+          "documents": 2,
+          "integrity": "ok",
+          "attempts": 3,
+          "received_responses": 1,
+          "reported_tokens": 1982,
+          "wait_api_documents": 0,
+          "error_kind": null
+        }
+      },
+      {
+        "root": "var/v4/groq-stage2/quota-simulation",
+        "observed": {
+          "status": "WAIT_API",
+          "calls_this_run": 0,
+          "documents": 1,
+          "integrity": "ok",
+          "attempts": 1,
+          "received_responses": 0,
+          "reported_tokens": 0,
+          "wait_api_documents": 1,
+          "error_kind": "QUOTA"
+        }
+      },
+      {
+        "root": "var/v4/groq-stage2/backups/quota-simulation",
+        "observed": {
+          "status": "WAIT_API",
+          "calls_this_run": 0,
+          "documents": 1,
+          "integrity": "ok",
+          "attempts": 1,
+          "received_responses": 0,
+          "reported_tokens": 0,
+          "wait_api_documents": 1,
+          "error_kind": "QUOTA"
+        }
+      }
+    ],
+    "backup_hashes": {
+      "var/v4/groq-stage2/backups/live/v4.sqlite3": "a37fd437e1fbd146c7a626baaffe7675dd2d4ac51888cd6ec40e257cb3132d8a",
+      "var/v4/groq-stage2/backups/quota-simulation/v4.sqlite3": "1f2f828d872c212f8967eb9b9137a4ee08e51fa7f4e987b209319d4c0fbb333f"
+    }
+  },
+  "api_ledger": {
+    "attempts": 3,
+    "successful_responses": 0,
+    "reported_tokens": 1982,
+    "received_responses": 1,
+    "responses_without_usage": 0,
+    "failed_attempt_tokens": "UNKNOWN",
+    "wait_api_documents": 0,
+    "provider_states": {
+      "groq": {
+        "at": "2026-10-13T15:58:34.162861+00:00",
+        "blocked": false,
+        "last_check": "PASS_TRANSPORT_FROM_SAVED_RESPONSE",
+        "note": "Reconstructed from already persisted HTTP response; no new request",
+        "provider": "groq",
+        "received_attempt_id": "cdf4e16a1f374ed2b3586857232df911",
+        "run_id": "api-81be85e4207a46af86513471803da016"
+      }
+    },
+    "forecast_performance": "BLOCKED"
+  },
+  "local_cpu_comparison": {
+    "status": "BLOCKED",
+    "reason": "Prior V4 original/CPU ledger and pinned CPU weights absent; no CPU reinstall or new CPU execution; numerical same-input comparison not available",
+    "engine_preserved": true,
+    "architecture_difference": "Groq reads original windows rather than only GLiNER spans; this is not demonstrated accuracy improvement"
+  },
+  "repair_history": [
+    {
+      "change": "Groq-only provider policy, CLI/trial/config and cache selection; Gemini code retained",
+      "evidence": "Functional tests and diff"
+    },
+    {
+      "change": "Null checked_at now safely produces WAIT_API instead of AttributeError",
+      "evidence": "Executed unverified-account test"
+    },
+    {
+      "change": "Reviewed public excerpts retain original PARTIAL/BLOCKED; metadata, raw/body hashes, safety and publication checks still required",
+      "evidence": "Public review, immutable original, negative tests"
+    },
+    {
+      "change": "Event context ranked before headline/date; bounded coverage retained",
+      "evidence": "Executed window counterexample and real preflight"
+    },
+    {
+      "change": "Identifying BCT User-Agent",
+      "evidence": "Successful identifying /models GET vs default urllib GET 403/1010; initial generation error recorded as AUTH; exact first POST body not retained"
+    },
+    {
+      "change": "Documented strict structural wire schema and low reasoning effort, retaining local cardinality and literal validation",
+      "evidence": "Second POST INPUT_INVALID; original HTTP detail not retained; next changed-contract POST returned JSON; exact rejecting keyword is unknown"
+    },
+    {
+      "change": "Safe HTTP diagnostic labels, received usage storage, transport-vs-source state, changed-contract retry gate",
+      "evidence": "Functional HTTP, quota, wrong-schema and recovery tests"
+    }
+  ],
+  "safety": {
+    "main_modified": false,
+    "v33_operating_db_used": false,
+    "actions_modified": false,
+    "alerts_modified": false,
+    "data_deleted": false,
+    "gemini_real_calls": 0,
+    "third_provider_added": false,
+    "paid_plan_used": false,
+    "gliner_engine_modified": false,
+    "target_five_fields_modified": false,
+    "s_stage_semantics_modified": false,
+    "accepted_s3": 0,
+    "stage3_started": false,
+    "shadow_started": false
+  },
+  "semantic_accuracy_benchmark": "NOT_RUN",
+  "future_bottleneck_lead_performance": "NOT_RUN",
+  "next_stage_allowed": false,
+  "next_action": "Remain in stage 2. Fix the exact literal quote/offset contract and obtain a source-valid stored live reading; inspect this saved response first. No further API call in this run; do not start stage 3 or Shadow.",
+  "evidence_version_note": "Observed live generation predates final transport-state bookkeeping correction; subsequent changes were verified locally without an additional live call.",
+  "local_artifact_policy": "New V4 SQLite/native originals/backups stay under ignored var/v4/groq-stage2. Public sanitized response and summaries are saved in this Git document; no old ledger restoration claimed.",
+  "final_cli_restart": {
+    "status": "PASS_EXPECTED_REVIEW_HOLD",
+    "actual_calls": 0,
+    "provider": {
+      "status": "REVIEW_REQUIRED",
+      "model": "openai/gpt-oss-20b",
+      "cached": false,
+      "failures": [
+        {
+          "provider": "groq",
+          "reason": "SOURCE"
+        }
+      ],
+      "connection_status": "PASS",
+      "response_saved": true,
+      "validated_response_saved": false,
+      "input_key": "952f72eec8686b29fba1ec60a7865e80000e2cb6b3149d525d630ae1558e78b4"
+    },
+    "total_attempts": 3
+  }
+}

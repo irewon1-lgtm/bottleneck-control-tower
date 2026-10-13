@@ -22,6 +22,8 @@ from bct.target_acquisition import public_url
 from .store import encode, sha
 
 VERSION = "bct-v4-free-ai-1"
+ACTIVE_PROVIDERS = ("groq",)  # Gemini adapter is retained, but cannot be routed/probed.
+HTTP_USER_AGENT = "BCT-V4-stage2/1.0"
 MODELS = {"gemini": "gemini-3.5-flash-lite", "groq": "openai/gpt-oss-20b"}
 KEYS = {"gemini": "GEMINI_API_KEY", "groq": "GROQ_API_KEY"}
 EXTRA_FIELDS = ("need_time", "ready_time", "quantity", "unit", "period", "lead_time", "relief", "alternative")
@@ -55,15 +57,24 @@ SCHEMA = obj({"items": {"type": "array", "maxItems": 6, "items": obj({
     "context": CONTEXT,
     "entity": LITERAL,
     "facts": {"type": "array", "maxItems": 16, "items": FACT}})}})
+# Use the documented strict structural subset on the wire. Cardinality bounds
+# remain mandatory in local shape(), without depending on remote keyword support.
+GROQ_SCHEMA = deepcopy(SCHEMA)
+GROQ_SCHEMA["properties"]["items"].pop("maxItems")
+GROQ_SCHEMA["properties"]["items"]["items"]["properties"]["facts"].pop("maxItems")
 
 
 class APIError(Exception):
-    def __init__(self, kind, *, retry_at=None, daily=False):
+    def __init__(self, kind, *, retry_at=None, daily=False, http_status=None, error_code=None, flags=None):
         super().__init__(kind)  # No raw response, request, key or exception text.
         self.kind, self.retry_at, self.daily = kind, retry_at, daily
+        self.diagnostics = {"http_status": http_status, "error_code": error_code,
+                            "flags": flags or []} if http_status is not None else {}
 
 
 def instant(value):
+    if not isinstance(value, str):
+        raise ValueError("TIMEZONE_REQUIRED")
     parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     if parsed.tzinfo is None:
         raise ValueError("TIMEZONE_REQUIRED")
@@ -71,7 +82,10 @@ def instant(value):
 
 
 def checked_config(config):
-    if config.get("version") != VERSION or config.get("providers") != ["gemini", "groq"] or config.get("models") != MODELS:
+    models = config.get("models", {})
+    if (config.get("version") != VERSION or config.get("providers") != list(ACTIVE_PROVIDERS)
+            or models.get("groq") != MODELS["groq"]
+            or any(p not in MODELS or model != MODELS[p] for p, model in models.items())):
         raise ValueError("FIXED_PROVIDER_MODEL_CONTRACT")
     for key, low, high in (("document_limit", 1, 10), ("max_calls_per_run", 1, 20),
                            ("max_reserved_tokens_per_run", 1, 80000), ("max_output_tokens", 256, 4096),
@@ -93,7 +107,20 @@ def source_input(doc, config, env):
     except (ValueError, KeyError):
         raise APIError("POLICY") from None
     parts = urlsplit(doc["origin_url"])
-    if (doc.get("provenance") != "PASS" or doc.get("confidential") or doc.get("personal_data")
+    # A reviewed public excerpt can be read while full-document completeness stays
+    # BLOCKED. This never changes the original provenance or the S-stage gate.
+    review = doc.get("api_public_excerpt_review", {})
+    checks = doc.get("checks", {})
+    reviewed_excerpt = (review.get("status") == "PASS" and review.get("evidence")
+        and review.get("raw_sha256") == doc.get("raw_sha256")
+        and review.get("body_sha256") == doc.get("body_sha256")
+        and doc.get("provenance") == "BLOCKED" and doc.get("body_status") == "PARTIAL"
+        and doc.get("provenance_blockers") == ["full_accessible_body"]
+        and checks.get("full_accessible_body") is False
+        and all(checks.get(k) is True for k in ("http_success", "original_identity",
+            "publisher_observed", "attribution_consistent", "original_publication",
+            "not_republication", "body_hash_matches", "publication_before_acquisition")))
+    if (doc.get("provenance") != "PASS" and not reviewed_excerpt or doc.get("confidential") or doc.get("personal_data")
             or doc.get("api_transfer_forbidden") or parts.query or parts.fragment):
         raise APIError("POLICY")
     # Fail closed for credentials and personal contact/account-like data.
@@ -102,7 +129,7 @@ def source_input(doc, config, env):
         raise APIError("POLICY")
     chunks = list(re.finditer(r"[^\n]{1,1000}", body))
     signal = re.compile(r"order|contract|deliver|backlog|demand|capacity|production|qualif|delay|lead.time|supply|inventory|expand|alternative|relief|20\d{2}", re.I)
-    ranked = sorted(chunks, key=lambda m: (not bool(signal.search(m[0])), m.start()))
+    ranked = sorted(chunks, key=lambda m: (-len(signal.findall(m[0])), m.start()))
     selected, remaining = [], config["max_input_characters"]
     for chunk in ranked[:config["max_windows"]]:
         if not remaining:
@@ -113,6 +140,7 @@ def source_input(doc, config, env):
     selected.sort(key=lambda x: x["start"])
     return {"windows": selected, "publication": {"published_at": doc.get("published_at"),
              "precision": doc.get("publication_precision", "UNKNOWN")},
+            "provenance_scope": "REVIEWED_PUBLIC_EXCERPT_NOT_FULL_DOCUMENT" if reviewed_excerpt else "VERIFIED_DOCUMENT",
             "selected_characters": sum(len(x["text"]) for x in selected), "body_characters": len(body),
             "coverage": "BOUNDED_WINDOWS_NOT_FULL_DOCUMENT"}
 
@@ -232,10 +260,12 @@ class HTTPAdapter:
                                           "maxOutputTokens": max_output}})
         if provider == "groq":
             return ("https://api.groq.com/openai/v1/chat/completions",
-                    {"Content-Type": "application/json", "Authorization": "Bearer " + self.env.get(KEYS[provider], "")},
+                    {"Content-Type": "application/json", "User-Agent": HTTP_USER_AGENT,
+                     "Authorization": "Bearer " + self.env.get(KEYS[provider], "")},
                     {"model": MODELS[provider], "messages": [{"role": "system", "content": SYSTEM},
                      {"role": "user", "content": message}], "max_completion_tokens": max_output,
-                     "response_format": {"type": "json_schema", "json_schema": {"name": "bct_source_facts", "strict": True, "schema": SCHEMA}}})
+                     "reasoning_effort": "low",
+                     "response_format": {"type": "json_schema", "json_schema": {"name": "bct_source_facts", "strict": True, "schema": GROQ_SCHEMA}}})
         raise ValueError("NO_THIRD_PROVIDER")
 
     def call(self, provider, source, max_output):
@@ -251,19 +281,31 @@ class HTTPAdapter:
             body = exc.read(20000).decode("utf-8", errors="replace").casefold()
             headers = {k.lower(): v for k, v in exc.headers.items()}
             at = retry_after(headers, datetime.now(timezone.utc))
+            # Log only status and recognized diagnostic labels, never raw errors.
+            codes = ("invalid_api_key", "invalid_request_error", "json_validate_failed",
+                     "model_not_found", "model_decommissioned", "rate_limit_exceeded")
+            code = next((v for v in codes if v in body), "UNKNOWN")
+            flags = [label for label, pattern in (("CLIENT_SIGNATURE", r"error code\s*:?\s*1010\b"),
+                ("SCHEMA", r"json.schema|schema"), ("MAX_ITEMS", r"maxitems|max_items"),
+                ("TOKEN_CAP", r"max.completion.tokens|max.tokens"),
+                ("UNSUPPORTED_PARAMETER", r"unsupported|not.supported|unknown.parameter")) if re.search(pattern, body)]
+            def failure(kind, **kwargs):
+                return APIError(kind, http_status=exc.code, error_code=code, flags=flags, **kwargs)
             if re.search(r"safety|content.policy|data.policy|egress|allowlist|domain.not.allowed|organization.policy", body):
-                raise APIError("POLICY") from None
+                raise failure("POLICY") from None
             if exc.code == 429:
                 daily = bool(re.search(r"per.day|daily|requestsperday", body))
                 zero = bool(re.search(r'(?:limit|quotavalue)["\s:=]*["\s]*0\b|quota.{0,40}(?:zero|billing)', body))
-                raise APIError("ACCOUNT" if zero else "QUOTA", retry_at=at, daily=daily) from None
+                raise failure("ACCOUNT" if zero else "QUOTA", retry_at=at, daily=daily) from None
             if re.search(r"billing|payment.required|free.tier.not.available", body):
-                raise APIError("ACCOUNT") from None
+                raise failure("ACCOUNT") from None
+            if exc.code == 403 and re.search(r"error code\s*:?\s*1010\b", body):
+                raise failure("INPUT_INVALID") from None  # Client HTTP signature, not bad credentials.
             if exc.code in (401, 403, 404):
-                raise APIError("AUTH", retry_at=None) from None
+                raise failure("AUTH", retry_at=None) from None
             if 500 <= exc.code <= 599:
-                raise APIError("SERVER", retry_at=at) from None
-            raise APIError("INPUT_INVALID") from None
+                raise failure("SERVER", retry_at=at) from None
+            raise failure("INPUT_INVALID") from None
         except (TimeoutError, socket.timeout):
             raise APIError("TIMEOUT") from None
         except URLError as exc:
@@ -310,9 +352,9 @@ class Router:
         self.calls, self.reserved = 0, 0
         # Input/unsupported-format errors require a changed request contract,
         # not another document or another provider with the same broken format.
-        self.request_contract = sha([VERSION, SCHEMA, SYSTEM, MODELS,
+        self.request_contract = sha([VERSION, SCHEMA, SYSTEM, MODELS, HTTP_USER_AGENT,
             config["max_output_tokens"], config["max_input_characters"], config["max_windows"],
-            [HTTPAdapter({}).request(p, {}, config["max_output_tokens"])[::2] for p in MODELS]])
+            [HTTPAdapter({}).request(p, {}, config["max_output_tokens"])[::2] for p in self.config["providers"]]])
 
     def events(self, kind):
         return [json.loads(x[0]) for x in self.ledger.db.execute("SELECT payload FROM events WHERE kind=? ORDER BY seq", (kind,))]
@@ -328,7 +370,16 @@ class Router:
     def identity(self, provider):
         return sha([self.env.get(KEYS[provider]), self.config["accounts"].get(provider)])
 
+    def reviewed_document(self, doc):
+        reviews = [x for x in self.events("API_PUBLIC_EXCERPT_REVIEW")
+                   if x["document_id"] == doc["document_id"]
+                   and x["body_sha256"] == doc["body_sha256"]
+                   and x["raw_sha256"] == doc.get("raw_sha256")]
+        return {**doc, "api_public_excerpt_review": reviews[-1]} if reviews else doc
+
     def available(self, provider):
+        if provider not in self.config["providers"]:
+            return "PROVIDER_DISABLED"
         if provider in self.skip:
             return "BLOCKED_THIS_RUN"
         account = self.config["accounts"].get(provider, {})
@@ -383,6 +434,9 @@ class Router:
     def read(self, doc, *, probe_provider=None):
         if probe_provider is not None and probe_provider not in MODELS:
             raise ValueError("NO_THIRD_PROVIDER")
+        if probe_provider is not None and probe_provider not in self.config["providers"]:
+            raise ValueError("PROVIDER_DISABLED")
+        doc = self.reviewed_document(doc)
         # probe_provider is an explicit isolated connectivity test, never fallback routing.
         base = {"document_id": doc["document_id"], "body_sha256": doc["body_sha256"], "version": VERSION}
         def finish(status, **data):
@@ -398,7 +452,7 @@ class Router:
         input_key = sha([VERSION, SYSTEM, SCHEMA, source, doc["body_sha256"]])
         base["input_key"] = input_key
         failures = []
-        providers = [probe_provider] if probe_provider else ["gemini", "groq"]
+        providers = [probe_provider] if probe_provider else self.config["providers"]
         for provider in providers:
             prior = [x for x in self.events("API_RESPONSE") if x["input_key"] == input_key and x["provider"] == provider]
             if prior:
@@ -426,9 +480,15 @@ class Router:
                     continue
                 if same[-1]["error_kind"] in ("FORMAT", "SOURCE", "INPUT_INVALID", "POLICY"):
                     if same[-1]["error_kind"] in ("INPUT_INVALID", "POLICY"):
-                        return finish("REVIEW_REQUIRED", reason=same[-1]["error_kind"], failures=failures)
-                    failures.append({"provider": provider, "reason": same[-1]["error_kind"]})
-                    continue
+                        contract = last.get("request_contract")
+                        if not contract:
+                            contract = next((x["request_contract"] for x in self.events("API_CONFIG_ERROR")
+                                             if x["run_id"] == last["run_id"]), None)
+                        if same[-1]["error_kind"] == "POLICY" or not contract or contract == self.request_contract:
+                            return finish("REVIEW_REQUIRED", reason=same[-1]["error_kind"], failures=failures)
+                    else:
+                        failures.append({"provider": provider, "reason": same[-1]["error_kind"]})
+                        continue
             state = self.state(provider)
             recovering = bool(state and state.get("blocked"))
             if recovering:
@@ -444,36 +504,46 @@ class Router:
             attempt_id = uuid.uuid4().hex
             self.record("API_ATTEMPT", {"attempt_id": attempt_id, "provider": provider, "model": MODELS[provider],
                         "input_key": input_key, "reserved_tokens": reserve, "recovery_probe": recovering,
+                        "request_contract": self.request_contract,
                         "connection_probe": probe_provider is not None})
             self.calls += 1
             self.reserved += reserve
             try:
                 response = self.adapter.call(provider, source, self.config["max_output_tokens"])
+                # Preserve received usage even if source/schema validation fails.
+                self.record("API_RECEIVED", {"attempt_id": attempt_id, "provider": provider,
+                            "model": MODELS[provider], "input_key": input_key,
+                            "text": response["text"], "usage": response["usage"],
+                            "quota_headers": {k: v for k, v in response.get("headers", {}).items()
+                                if k.startswith("x-ratelimit-") or k == "retry-after"}})
+                # HTTP success clears stale transport blocks even if the advisory
+                # reading fails source validation; its token use still consumes quota.
+                self.record("API_PROVIDER_STATE", {"provider": provider, "blocked": False, "last_check": "PASS_TRANSPORT"})
+                headers = response.get("headers", {})
+                limits = self.config["accounts"][provider]["limits"]
+                for header, quota in (("x-ratelimit-remaining-requests", "rpd"), ("x-ratelimit-remaining-tokens", "tpm")):
+                    try:
+                        if header in headers and float(headers[header]) <= limits[quota] * 0.2:
+                            self.block(provider, APIError("QUOTA"))
+                            break
+                    except (TypeError, ValueError):
+                        continue
                 validated = validate_output(response["text"], doc, source)
             except APIError as error:
-                self.record("API_ERROR", {"attempt_id": attempt_id, "provider": provider, "input_key": input_key, "error_kind": error.kind})
+                self.record("API_ERROR", {"attempt_id": attempt_id, "provider": provider, "input_key": input_key,
+                                          "error_kind": error.kind, "diagnostics": error.diagnostics})
                 failures.append({"provider": provider, "reason": error.kind})
                 if error.kind in ("POLICY", "INPUT_INVALID"):
                     if error.kind == "INPUT_INVALID":
                         self.record("API_CONFIG_ERROR", {"request_contract": self.request_contract, "error_kind": error.kind})
                     return finish("REVIEW_REQUIRED" if error.kind == "POLICY" else "INPUT_ERROR", reason=error.kind, failures=failures)
                 if error.kind in ("FORMAT", "SOURCE"):
-                    continue  # Only the unused next provider, once; no repair call.
+                    continue  # Hold for local review, no repair API call.
                 self.block(provider, error)
                 continue
             self.record("API_RESPONSE", {"attempt_id": attempt_id, "provider": provider, "model": MODELS[provider],
                         "input_key": input_key, "text": response["text"], "usage": response["usage"], "api_cost": 0,
                         "cost_basis": "verified free account; no tools/paid fallback"})
-            self.record("API_PROVIDER_STATE", {"provider": provider, "blocked": False, "last_check": "PASS"})
-            headers = response.get("headers", {})
-            limits = self.config["accounts"][provider]["limits"]
-            for header, quota in (("x-ratelimit-remaining-requests", "rpd"), ("x-ratelimit-remaining-tokens", "tpm")):
-                try:
-                    if header in headers and float(headers[header]) <= limits[quota] * 0.2:
-                        self.block(provider, APIError("QUOTA"))
-                        break
-                except (TypeError, ValueError):
-                    continue
             return finish("PASS", provider=provider, model=MODELS[provider], cached=False, result=validated, failures=failures)
         needs_review = any(x["reason"] in ("FORMAT", "SOURCE", "INTERRUPTED_ATTEMPT_REQUIRES_REVIEW") for x in failures)
         return finish("REVIEW_REQUIRED" if needs_review else "WAIT_API", failures=failures, coverage=source)
@@ -481,9 +551,11 @@ class Router:
 
 def api_status(ledger):
     events = [(kind, json.loads(text)) for kind, text in ledger.db.execute("SELECT kind,payload FROM events WHERE kind LIKE 'API_%' ORDER BY seq")]
+    received = {entry["attempt_id"]: entry for kind, entry in events if kind == "API_RECEIVED"}
     providers, jobs = {}, {}
     attempts, responses, usage = 0, 0, 0
     unknown_usage = 0
+    accounted = set()
     for kind, entry in events:
         if kind == "API_PROVIDER_STATE":
             providers[entry["provider"]] = entry
@@ -495,9 +567,18 @@ def api_status(ledger):
             responses += 1
             total = entry["usage"].get("total_tokens")
             unknown_usage += total is None
-            usage += total or 0
+            if entry["attempt_id"] not in received:
+                usage += total or 0  # Historical ledgers predate API_RECEIVED.
+                if total is not None:
+                    accounted.add(entry["attempt_id"])
+    for attempt_id, entry in received.items():
+        total = entry["usage"].get("total_tokens")
+        usage += total or 0
+        if total is not None:
+            accounted.add(attempt_id)
     return {"attempts": attempts, "successful_responses": responses, "reported_tokens": usage,
-            "responses_without_usage": unknown_usage, "failed_attempt_tokens": "UNKNOWN" if attempts > responses else 0,
+            "received_responses": len(received), "responses_without_usage": unknown_usage,
+            "failed_attempt_tokens": "UNKNOWN" if attempts > len(accounted) else 0,
             "wait_api_documents": sum(x == "WAIT_API" for x in jobs.values()), "provider_states": providers,
             "forecast_performance": "BLOCKED"}
 
@@ -513,10 +594,12 @@ def annotate(root, config, *, limit=None, probe_provider=None):
         with ledger.worker():
             router = Router(ledger, config)
             documents = ledger.latest_documents()
-            finished_keys = {x["input_key"] for x in router.events("API_RESPONSE")}
+            finished_keys = {x["input_key"] for x in router.events("API_RESPONSE")
+                             if x["provider"] in config["providers"]}
             latest_jobs = {(x["document_id"], x["body_sha256"]): x for x in router.events("API_JOB")}
             selected, held = [], 0
             for doc in documents:
+                doc = router.reviewed_document(doc)
                 if probe_provider is None:
                     try:
                         source = source_input(doc, config, router.env)
