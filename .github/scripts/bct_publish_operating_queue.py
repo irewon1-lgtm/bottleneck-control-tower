@@ -5,7 +5,7 @@ import json
 import os
 from pathlib import Path
 
-from bct.future_github import GitHubTransport
+from bct.future_github import GitHubRequestError, GitHubTransport
 from bct.recovery_publication import publish_projection
 
 
@@ -40,7 +40,12 @@ def main():
         # Pending is a concrete failure receipt, never an asserted saved state.
         receipt.update(error_type=type(exc).__name__,
             resume_condition='Read latest roots, rebuild owned projection; restart full verification from Stage 0')
-        if type(exc) in (ValueError, RuntimeError):
+        if isinstance(exc, GitHubRequestError):
+            # Already sanitized by the transport; retain status, endpoint,
+            # retry/rate headers and request ID without response body or token.
+            receipt['github_error_details'] = dict(exc.details)
+            receipt['failure_code'] = str(exc)
+        elif type(exc) in (ValueError, RuntimeError):
             receipt['failure_code'] = str(exc)
         return 1
     finally:
