@@ -1,0 +1,694 @@
+{
+  "at": "2026-10-13T13:11:08.955374+00:00",
+  "base_main": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+  "development_branch": "codex/bct-v4-integration",
+  "overall_required_goal": "BLOCKED_NOT_COMPLETE",
+  "stages": [
+    {
+      "stage": 1,
+      "status": "PASS",
+      "scope": "Six research files, 53 decisions, objective lock, 241 existing functional passes",
+      "excluded": "1 existing real-holdout skip remains performance BLOCKED"
+    },
+    {
+      "stage": 2,
+      "status": "PASS",
+      "scope": "Six direct libraries, actual CPU model, SQLite, atomicity/dedup/firsts/backup, repeated setup and unchanged existing engines"
+    },
+    {
+      "stage": 3,
+      "status": "BLOCKED",
+      "functional_subchecks": "PASS: official originals 3 -> actual CPU inference -> located spans -> SQLite; real PDF 55 pages; native EIA same-input 6 anchors",
+      "blocker": "No independent full TARGET/event-role gold; bounded windows, PARTIAL official pages; accuracy/omission for full TARGET UNKNOWN"
+    },
+    {
+      "stage": 4,
+      "status": "NOT_RUN",
+      "independent_synthetic_regression": "PASS: 20 V4 tests plus existing source/graph/temporal/relief/S regression; no inappropriate S upgrade",
+      "blocker": "Required full stage3 semantic data validation not PASS; real judgment accuracy not asserted"
+    },
+    {
+      "stage": 5,
+      "status": "BLOCKED",
+      "accepted_real_cases": {
+        "positive": 0,
+        "negative": 0,
+        "hard_negative": 0,
+        "untouched_holdout": 0
+      },
+      "blocker": "No archived pre-public inputs and independently frozen earliest-confirmation truth; existing inspected fixtures are regression, not unused holdout"
+    },
+    {
+      "stage": 6,
+      "status": "NOT_RUN",
+      "independent_observation": "LIVE source acquisition records on one calendar day; 7-day performance test BLOCKED",
+      "blocker": "Stage5 not PASS; actual seven days not elapsed"
+    },
+    {
+      "stage": 7,
+      "status": "BLOCKED",
+      "decision": "V33_REPLACEMENT_HOLD",
+      "blocker": "Pre-news performance and same-input real TARGET accuracy not proved"
+    }
+  ],
+  "regression": {
+    "passed": 261,
+    "skipped": 1,
+    "failed": 0,
+    "command": ".venv/bin/python -m pytest -q tests/test_v4_integration.py tests/test_forecast_discovery.py tests/test_early_forecast.py tests/test_precursor_discovery.py tests/test_precursor_source_pipeline.py tests/test_precursor_evidence_graph.py tests/test_future_body_v33.py tests/test_future_store.py tests/test_recovery_restore.py tests/test_sec_collector.py --junitxml=var/v4/evidence/final-verified.xml"
+  },
+  "actual_cpu_smoke": {
+    "status": "PASS",
+    "input_kind": "SYNTHETIC",
+    "at": "2026-10-13T13:06:38.861370+00:00",
+    "load_cpu_seconds": 19.487438816,
+    "load_wall_seconds": 13.950476471000002,
+    "inference_cpu_seconds": 5.501397838999999,
+    "inference_wall_seconds": 1.8532043290001639,
+    "process_peak_rss_mib": 2098.6171875,
+    "result": {
+      "status": "PASS",
+      "model": "fastino/gliner2-base-v1",
+      "revision": "f9634218e53580c56edf0de97ca1a7d3f1c2354e",
+      "device": "cpu",
+      "threads": 4,
+      "spans": [
+        {
+          "label": "product",
+          "text": "tungsten",
+          "confidence": 0.9999985694885254,
+          "document_id": "synthetic-cpu-smoke",
+          "body_sha256": "63f4ab0b3ab51b047dfb3f3d1430e67654b52d3f81933ba61888a7beb7c5eb74",
+          "locator": {
+            "start": 22,
+            "end": 30
+          },
+          "semantic_status": "UNKNOWN"
+        },
+        {
+          "label": "product",
+          "text": "tungsten",
+          "confidence": 0.9999953508377075,
+          "document_id": "synthetic-cpu-smoke",
+          "body_sha256": "63f4ab0b3ab51b047dfb3f3d1430e67654b52d3f81933ba61888a7beb7c5eb74",
+          "locator": {
+            "start": 80,
+            "end": 88
+          },
+          "semantic_status": "UNKNOWN"
+        },
+        {
+          "label": "location",
+          "text": "United States",
+          "confidence": 0.9999892711639404,
+          "document_id": "synthetic-cpu-smoke",
+          "body_sha256": "63f4ab0b3ab51b047dfb3f3d1430e67654b52d3f81933ba61888a7beb7c5eb74",
+          "locator": {
+            "start": 34,
+            "end": 47
+          },
+          "semantic_status": "UNKNOWN"
+        },
+        {
+          "label": "customer",
+          "text": "Meridian",
+          "confidence": 0.9996523857116699,
+          "document_id": "synthetic-cpu-smoke",
+          "body_sha256": "63f4ab0b3ab51b047dfb3f3d1430e67654b52d3f81933ba61888a7beb7c5eb74",
+          "locator": {
+            "start": 49,
+            "end": 57
+          },
+          "semantic_status": "UNKNOWN"
+        },
+        {
+          "label": "supplier",
+          "text": "Atlas Metals",
+          "confidence": 0.998083233833313,
+          "document_id": "synthetic-cpu-smoke",
+          "body_sha256": "63f4ab0b3ab51b047dfb3f3d1430e67654b52d3f81933ba61888a7beb7c5eb74",
+          "locator": {
+            "start": 0,
+            "end": 12
+          },
+          "semantic_status": "UNKNOWN"
+        },
+        {
+          "label": "date",
+          "text": "2028",
+          "confidence": 0.9998989105224609,
+          "document_id": "synthetic-cpu-smoke",
+          "body_sha256": "63f4ab0b3ab51b047dfb3f3d1430e67654b52d3f81933ba61888a7beb7c5eb74",
+          "locator": {
+            "start": 92,
+            "end": 96
+          },
+          "semantic_status": "UNKNOWN"
+        }
+      ],
+      "event_link_accuracy": "UNKNOWN",
+      "target_accuracy": "UNKNOWN",
+      "selected_windows": [
+        {
+          "start": 0,
+          "end": 97
+        }
+      ],
+      "unread_signal_windows": 0,
+      "coverage": "BOUNDED_SIGNAL_WINDOWS_NOT_FULL_DOCUMENT",
+      "policy": "Source-located advisory entities; no automatic scope/qualification/S upgrade"
+    },
+    "early": "BLOCKED"
+  },
+  "actual_ai_trial": {
+    "run_id": "v4-5128eb87f4854783a28ece4bf1d0c053",
+    "live_captured": 3,
+    "integration_status": "PASS",
+    "cpu_seconds": 62.058923795,
+    "wall_seconds": 47.27468395899996,
+    "process_peak_rss_mib": 2121.953125,
+    "readings": [
+      {
+        "document_id": "v4doc-a4954e97c08229224f1d7382ac8c65aa9e4d90b928fce8a50c2970c082ef2803",
+        "ai_status": "PASS"
+      },
+      {
+        "document_id": "v4doc-3757269bf6c5f959a07b2f7ee643824560c44b3354b2c607786812b64a72d778",
+        "ai_status": "PASS"
+      },
+      {
+        "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+        "ai_status": "PASS"
+      }
+    ],
+    "failures": [],
+    "early_success_cases": 0
+  },
+  "actual_ai_span_audit": [
+    {
+      "document_id": "v4doc-a4954e97c08229224f1d7382ac8c65aa9e4d90b928fce8a50c2970c082ef2803",
+      "status": "PASS",
+      "source_verified_spans": 17,
+      "selected_windows": [
+        {
+          "end": 28606,
+          "start": 28572
+        },
+        {
+          "end": 28966,
+          "start": 28936
+        },
+        {
+          "end": 60030,
+          "start": 59408
+        },
+        {
+          "end": 131334,
+          "start": 130712
+        }
+      ],
+      "unread_signal_windows": 62,
+      "semantic_accuracy": "UNKNOWN"
+    },
+    {
+      "document_id": "v4doc-3757269bf6c5f959a07b2f7ee643824560c44b3354b2c607786812b64a72d778",
+      "status": "PASS",
+      "source_verified_spans": 4,
+      "selected_windows": [
+        {
+          "end": 767,
+          "start": 733
+        },
+        {
+          "end": 1157,
+          "start": 1064
+        },
+        {
+          "end": 3461,
+          "start": 3423
+        },
+        {
+          "end": 5136,
+          "start": 4515
+        }
+      ],
+      "unread_signal_windows": 1,
+      "semantic_accuracy": "UNKNOWN"
+    },
+    {
+      "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+      "status": "PASS",
+      "source_verified_spans": 42,
+      "selected_windows": [
+        {
+          "end": 1219,
+          "start": 360
+        },
+        {
+          "end": 1480,
+          "start": 1220
+        },
+        {
+          "end": 1688,
+          "start": 1481
+        },
+        {
+          "end": 4799,
+          "start": 3661
+        }
+      ],
+      "unread_signal_windows": 4,
+      "semantic_accuracy": "UNKNOWN"
+    }
+  ],
+  "native_parser_benchmark": {
+    "at": "2026-10-13T12:55:39.481096+00:00",
+    "status": "PASS",
+    "input_kind": "REAL_NATIVE_HTML",
+    "url": "https://www.eia.gov/coal/production/quarterly/",
+    "raw_sha256": "11e1afcc0178b36103040ab40c4844fd86ce794f539fd37a9b959e4fad688544",
+    "bytes": 113819,
+    "anchors": [
+      "125.4",
+      "61.6",
+      "26.8",
+      "0.7",
+      "98.8",
+      "118.3"
+    ],
+    "rows": [
+      {
+        "repeat": 1,
+        "cpu_seconds": {
+          "baseline": 0.08288302400000003,
+          "trafilatura": 1.0805329320000001
+        },
+        "baseline_chars": 10259,
+        "trafilatura_chars": 4646,
+        "baseline_anchors_retained": 6,
+        "trafilatura_anchors_retained": 6
+      },
+      {
+        "repeat": 2,
+        "cpu_seconds": {
+          "baseline": 0.07283965900000045,
+          "trafilatura": 0.29251018499999937
+        },
+        "baseline_chars": 10259,
+        "trafilatura_chars": 4646,
+        "baseline_anchors_retained": 6,
+        "trafilatura_anchors_retained": 6
+      },
+      {
+        "repeat": 3,
+        "cpu_seconds": {
+          "baseline": 0.0912623960000003,
+          "trafilatura": 0.3008578039999996
+        },
+        "baseline_chars": 10259,
+        "trafilatura_chars": 4646,
+        "baseline_anchors_retained": 6,
+        "trafilatura_anchors_retained": 6
+      },
+      {
+        "repeat": 4,
+        "cpu_seconds": {
+          "baseline": 0.10188091599999982,
+          "trafilatura": 0.2143441829999997
+        },
+        "baseline_chars": 10259,
+        "trafilatura_chars": 4646,
+        "baseline_anchors_retained": 6,
+        "trafilatura_anchors_retained": 6
+      },
+      {
+        "repeat": 5,
+        "cpu_seconds": {
+          "baseline": 0.07917403800000056,
+          "trafilatura": 0.2728280079999994
+        },
+        "baseline_chars": 10259,
+        "trafilatura_chars": 4646,
+        "baseline_anchors_retained": 6,
+        "trafilatura_anchors_retained": 6
+      }
+    ],
+    "process_peak_rss_mib": 96.44921875,
+    "full_text_recall": "UNKNOWN",
+    "target_role_accuracy": "UNKNOWN",
+    "limits": "One document, six selected numeric anchors, cumulative process RSS, no per-parser RAM attribution"
+  },
+  "actual_pdf": {
+    "status": "PASS",
+    "input_kind": "REAL_OFFICIAL_PDF",
+    "url": "https://www.eia.gov/coal/production/quarterly/pdf/qcr.pdf",
+    "pages": 55,
+    "chars": 94494,
+    "body_status": "PARTIAL",
+    "provenance": "BLOCKED",
+    "raw_sha256": "cfcc3095f4ac76ed5ab37fcc25d47416d44fd31a58cb3f1bf6b5c83117aa3d83",
+    "cpu_seconds": 3.827239291,
+    "process_peak_rss_mib": 73.76953125,
+    "table_accuracy": "UNKNOWN",
+    "OCR": "NOT_RUN"
+  },
+  "actual_restore": {
+    "status": "PASS",
+    "restored_document_count": 21,
+    "restored_runs": 4,
+    "backup_is_earlier_snapshot": true,
+    "integrity": "ok",
+    "all_restored_rows_match_immutable_original": true
+  },
+  "original_code_unchanged": true,
+  "model_repeat_setup": "PASS twice after excluding generated manifest from its own checksum list; raw weights retain official checksum checks",
+  "early_success_cases": 0,
+  "real_forecast_candidates": 0,
+  "new_verified_target_discoveries": 0,
+  "known_target_vs_new_performance": "UNKNOWN: V33 operated corpus not imported",
+  "paid_api_calls": 0,
+  "additional_api_cost": 0,
+  "unmeasured_costs": [
+    "electricity",
+    "platform/execution usage",
+    "daily throughput"
+  ],
+  "code": [
+    {
+      "file": "src/bct/v4/__init__.py",
+      "sha256": "a59130e6f6d52885a0e188b681c165576b1e093cab60b403f97bd145766b5257"
+    },
+    {
+      "file": "src/bct/v4/__main__.py",
+      "sha256": "656eb51d52feb10163a9b2c54aa384297d8179de57bee7fbebd4d1d7306d87b4"
+    },
+    {
+      "file": "src/bct/v4/adapters.py",
+      "sha256": "6636a3e7f0923b1a357cc402525972df4b7272d18807338a40280fe20d697d2a"
+    },
+    {
+      "file": "src/bct/v4/pipeline.py",
+      "sha256": "c247efb9316f927b88a46820f1fbe26e4a71a8e72fac02a61db427dea7647046"
+    },
+    {
+      "file": "src/bct/v4/store.py",
+      "sha256": "254371cdca79249a8e0b106a5d98391cc7bf879dea336457d435295f191e6af7"
+    }
+  ],
+  "private_receipt_hashes": [
+    {
+      "path": "var/v4/evidence/actual-ai-config.json",
+      "bytes": 314,
+      "sha256": "db2f43ee14f4a230742508f5b2a9bb3af41f27cdc3611386b5321e92c71aea13",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/actual-ai-cycle.json",
+      "bytes": 1803191,
+      "sha256": "080f73fe5240f51bf0b171cf628b782fafad1e31d3c6c90dc8fbab0b31cf4d93",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/actual-ai-final-config.json",
+      "bytes": 351,
+      "sha256": "99bbe7af906438d8687c4a747e04303a65c820e884635ebcd64bea4990a27d7e",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/actual-ai-final-cycle.json",
+      "bytes": 1810892,
+      "sha256": "550c7af9926dbcc2e1154dccefdf930592c2d621517c023c027a3cbd27d71e4c",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/actual-ai-final-cycle.log",
+      "bytes": 989,
+      "sha256": "30be80d0831184ac9a7ba1c82b4f6ff6cd998de109ede3f3d28360d55fe256ca",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/actual-backup-restore.json",
+      "bytes": 191,
+      "sha256": "cf717bbebd17736de005ed12b1bbee12c5448b7c685d7c403061db6197f87ebe",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/actual-pdf.json",
+      "bytes": 422,
+      "sha256": "aef06c484abeabccdf25711e02d46d9af0c9ff130e55ac3269f5f928fd995a96",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/cpu-smoke-final.log",
+      "bytes": 320,
+      "sha256": "a053bf631a9fd9c778699830624f2258205e4fa6407331e62e7680060add9a86",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/cpu-smoke-fixed.log",
+      "bytes": 716,
+      "sha256": "bfaf3659b2832d9be07eb589cec6b905ae50a86309cf0df01c2e9571e3fd1b3b",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/cpu-smoke.json",
+      "bytes": 3063,
+      "sha256": "b308021e11abbfb69b8e435a569fe79bc61f4dc04d666377570c881a97e7f269",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/cpu-smoke.log",
+      "bytes": 711,
+      "sha256": "ca945276fe76177eecc7b55501ba755ba43ebcc04595229ccfa7368e568957d5",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/final-export.json",
+      "bytes": 484,
+      "sha256": "98b18e30803c9b7e04fece6f964358248732b5dbd76016124b5a6a2e62e7c3bb",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/final-regression-current.log",
+      "bytes": 456,
+      "sha256": "86dd3aa5bf80bcab9e545f9dd7c8fe3e4b588b38edd1cc3105599f3aecfbb535",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/final-regression-current.xml",
+      "bytes": 37744,
+      "sha256": "9d20bad3b1a3d8dcab23a7101e7dfa4aaad11b6341e0f1fdf7b0e1ba5e24d45b",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/final-regression.log",
+      "bytes": 448,
+      "sha256": "accc052d8ffdac9a182c32e19866b56737c5cf1a32b68e1846eee719d44309a3",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/final-regression.xml",
+      "bytes": 37744,
+      "sha256": "6af9ef06e29791c8be0b84331cbf6a1414edc539fe7defd1a082bd9f3f39b877",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/final-status.json",
+      "bytes": 294,
+      "sha256": "db20a38b56e2d6196c354a2e0b19d09e2f4534e8df9efaac23f6d47b8ab944c8",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/final-verified.log",
+      "bytes": 446,
+      "sha256": "bf5c01bef374c2801dda19e1973fc774393dd906b9035d7c243fe086a818929f",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/final-verified.xml",
+      "bytes": 37744,
+      "sha256": "3b95c1bbde5336cf39ba5a6ef349d8ff5d5a8467f7af1877b9edab3b1aed9259",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/install-ai-local.log",
+      "bytes": 10705,
+      "sha256": "112f8fedc5ceda036eb0f4e2b10ab7b2ccfb51b02b0b362ae14dc0ae51548fb2",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/install-ai.log",
+      "bytes": 2756,
+      "sha256": "dae10129adcc90600503ae73415a01d966629bff8e94900845b4a6b71244b154",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/install-core.log",
+      "bytes": 11216,
+      "sha256": "e62f30e4d1c42a01804c96550b030414899d7ae3fc695d04d4cce5d791fdc192",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/install-cpu.log",
+      "bytes": 2895,
+      "sha256": "a3fa8ead5dd0c5e91057cb7b78c6c03719f263eeb105f626fdfcb402a0902de9",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/installed-license-check.json",
+      "bytes": 3885,
+      "sha256": "fd73d023c39b2391fa61724b6c134bd4b922a34d8809278383758810f1096a27",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/live-cycle-with-sec.json",
+      "bytes": 73616,
+      "sha256": "d469975b0f6fe6acd948903960ecf266abdbde8ba6953a7cbdd0eb608f772308",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/live-cycle.json",
+      "bytes": 2765,
+      "sha256": "bcbe37a449a1d558ad796a94820c11bc8946c8f48291dcede07ad2a90acf598d",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/model-download-diagnosis.json",
+      "bytes": 260,
+      "sha256": "c663b5d7ce5dfe90f5b7fe4c984a5212d9df7e44e48596c1acab1f794409a914",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/model-prepare-cache-fail.json",
+      "bytes": 476,
+      "sha256": "2d24ef72996139f212118e090adc80f7caeecee44e7ccc7c2f2d10f1acc100c4",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/model-prepare-cdn-blocked.json",
+      "bytes": 55,
+      "sha256": "d8271b633eb443e592d013a54dc95f14d521e92fa1c0a72ed5485c042467f428",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/model-prepare-hub-http-fail.json",
+      "bytes": 55,
+      "sha256": "d8271b633eb443e592d013a54dc95f14d521e92fa1c0a72ed5485c042467f428",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/model-prepare-xet-stalled.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/model-prepare.json",
+      "bytes": 1589,
+      "sha256": "99815cf9be71042dd73ff30dedfafc25c7962ede4632cc8f710b0b7f1739e9bb",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/native-acquisition.json",
+      "bytes": 7016,
+      "sha256": "73a32996a878936679a8508f83b7205ae6041976b2451c24a926cfc8b93689d0",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/native-parser-benchmark.json",
+      "bytes": 2040,
+      "sha256": "9a2dcde8d1dc5f74c90c960991a7eb65f98e65994c46f257388c75ce6ec4814c",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/native-parser-benchmark.log",
+      "bytes": 2040,
+      "sha256": "9a2dcde8d1dc5f74c90c960991a7eb65f98e65994c46f257388c75ce6ec4814c",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/official-sec-rss-capture.json",
+      "bytes": 1742306,
+      "sha256": "ee49829b715cb09f7897b6b13c44292ff557c82d253b656adbef66678663793b",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/official-source-test-config.json",
+      "bytes": 410,
+      "sha256": "a1e56c6dd488eca0877f78d9eab825992b2e256c4d7cd3a518706523668d2d67",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/public-export.json",
+      "bytes": 484,
+      "sha256": "4ed87cf2f81a56685b1eba4a0559a0bb758d3dc57c29af5cd42f9187dda14bfd",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/setup-repeat-fixed-second.log",
+      "bytes": 13419,
+      "sha256": "f720c3c7d7c9ccfc1c19b4a4b6b11f44bb32468e8ae54252d540c985388e7dcc",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/setup-repeat-fixed.log",
+      "bytes": 13419,
+      "sha256": "6e72a632eb6069df6c82172ea1e0a6f673d72b6b2a361286e29ec7b05b5709ae",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/setup-repeat.log",
+      "bytes": 13550,
+      "sha256": "83b701ba532ac16c3ca457a7917c7911272a67c9a173a17803018350d0143aa2",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/stage1-initial-not-run.log",
+      "bytes": 178,
+      "sha256": "f8be1a0249c1984e617ec2d01d83f949877b56d326547cee1b8a924f1868ba61",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/stage1-initial-not-run.xml",
+      "bytes": 238,
+      "sha256": "b5ea7319464e928fffd582c7bd7523f0b187b27f78b5c7c726867a08f5e34c31",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/stage1.log",
+      "bytes": 438,
+      "sha256": "df10730b76bfe43bac466ac81aaa64aa3350111aa9b3343f2502aeeeebbe530c",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/stage1.xml",
+      "bytes": 35397,
+      "sha256": "40c490fac4a1f26d1245ecb80d82e1ced8e68381984a1b6dbd00fe0286f60c3f",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/v4-functional-initial-fail.log",
+      "bytes": 4228,
+      "sha256": "1aef2ed7191ce10a7af58dca35e662873b7079ee608703b56cf2922c5c760303",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/v4-functional-initial-fail.xml",
+      "bytes": 6263,
+      "sha256": "a42753db5b28d095dcea745d023c29cd4947e22cb2811adb6eab8d0a10a987e8",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/v4-functional.log",
+      "bytes": 193,
+      "sha256": "068f8ccff18f8a392c601c25ce6643dc0431a62e4e617f3464625f4b6f3d8de6",
+      "retained_in_private_workspace": true
+    },
+    {
+      "path": "var/v4/evidence/v4-functional.xml",
+      "bytes": 2596,
+      "sha256": "37edf6685750309e583d7db58cd18d6438b361a19afe8309281ffe057360ada0",
+      "retained_in_private_workspace": true
+    }
+  ]
+}
