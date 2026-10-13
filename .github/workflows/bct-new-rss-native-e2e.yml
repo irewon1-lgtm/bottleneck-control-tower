@@ -105,10 +105,13 @@ jobs:
                   except Exception:
                       if time.monotonic()>=ready:raise TimeoutError('native server startup')
                       time.sleep(1)
-              reader=LocalCPUQuickReader(setup_receipt,receipt_observer=lambda value:observed.append(value))
+              reader=LocalCPUQuickReader(setup_receipt,timeout=600,receipt_observer=lambda value:observed.append(value))
               report=run_worker(LocalJSONTransport(),str(cp),str(tp),reader=reader,cache_dir=cache,
                   limit=1,max_input_chars=12000,review_mode='API_REVIEW',
                   source_eligible=lambda value:value['document_id']==doc and value['body_sha256']==sha)
+              diagnostics={'report':report,'native_receipts':observed,'production_ref_writes':0,'scope':'ISOLATED ACTUAL EXECUTION; not a PASS if any assertion fails'}
+              (root/'worker-execution.json').write_text(json.dumps(diagnostics,indent=2))
+              print('WORKER_EXECUTION_JSON='+json.dumps(report,separators=(',',':')),flush=True)
               assert report['state']=='FINISHED' and report['model_calls']==1 and report['counts']=={'SUCCESS':1}
               assert len(observed)==1 and report['results'][0]['document_id']==doc
               after=json.loads(tp.read_text())
@@ -138,6 +141,8 @@ jobs:
         if: always()
         with:
           name: bct-new-rss-native-proof-${{ github.run_id }}
-          path: ${{ runner.temp }}/bct-new-rss-native/new-rss-native-receipt.json
+          path: |
+            ${{ runner.temp }}/bct-new-rss-native/new-rss-native-receipt.json
+            ${{ runner.temp }}/bct-new-rss-native/worker-execution.json
           retention-days: 30
           if-no-files-found: error
