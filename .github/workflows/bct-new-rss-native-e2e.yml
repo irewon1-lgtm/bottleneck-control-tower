@@ -116,7 +116,13 @@ jobs:
               assert len(observed)==1 and report['results'][0]['document_id']==doc
               after=json.loads(tp.read_text())
               assert document_complete(after,item),'actual complete source reading required; INCOMPLETE is not PASS'
-              assert json.loads(cp.read_text())==c
+              current=json.loads(cp.read_text())
+              assert current['results']==c['results'] and report['source_records_unchanged'] is True
+              changed={key for key in set(c)|set(current) if c.get(key)!=current.get(key)}
+              assert changed <= {'summary','operations'},'only queue summary and append-only operation journal may change'
+              assert current['summary']['review_queue']==report['after']
+              assert all(current.get('operations',{}).get(key)==value for key,value in c.get('operations',{}).items())
+              assert all(after.get('reviews',{}).get(key)==value for key,value in before.get('reviews',{}).items())
               preservation=verify(c,after,json.loads(Path('config/bct-recovery-preservation.json').read_text()))
               review=after['reviews'][report['results'][0]['review_id']]
               assert review['body_sha256']==sha and review['document_id']==doc
