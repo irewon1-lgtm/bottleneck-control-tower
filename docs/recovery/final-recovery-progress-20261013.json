@@ -1,6 +1,6 @@
 {
   "format": "bct-final-recovery-progress-v1",
-  "observed_at": "2026-10-13T01:55:05.850Z",
+  "observed_at": "2026-10-13T02:32:09.610Z",
   "status": "IN_PROGRESS_NOT_CLEAN_PASS",
   "main_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
   "merged_prs": [
@@ -927,20 +927,156 @@
     }
   },
   "new_rss_exact_cpu": {
-    "run_id": 38332438586,
-    "workflow_status": "FAIL_AUDIT_ASSERTION",
-    "worker_status": "FINISHED",
+    "status": "PASS",
+    "actual_execution": true,
+    "checked_out_code_sha": "d4b3130f8a5c0f2261fa851c7a35cb1c19fd5b5c",
+    "audit_run_id": "38334067719",
+    "code": {
+      "status": "PASS",
+      "gate_run_id": 38316734425,
+      "verified_code_files": 234,
+      "validated_code_sha": "956325a578a5e39a9ac2d88f35bb45f3581fa0bd",
+      "artifact_id": 11778321087
+    },
+    "rss_run": 38326068143,
+    "precursor_run": 38326295131,
+    "candidate_run": 38326295081,
+    "candidate_commit": "ce5752df6d2ad8ba74846e9178931ed4e1e07901",
+    "document_id": "3d61549c-7b3d-4110-935e-0e85dfbc1ee3",
+    "body_sha256": "05cf535b8d07e5eeb652227505044ab7d4d54367acee4d49b820843fd8725b80",
+    "original_html_sha256": "83ac8441eae2df6d346c7b63a851c7c9a7943588563f75ba5f13e9e22c16cf85",
+    "source_records_unchanged": true,
+    "preservation": {
+      "status": "PASS",
+      "preserved_candidates": 2865,
+      "preserved_completed_versions": 184,
+      "preserved_failure_versions": 3696,
+      "preserved_reviews": 213
+    },
     "model_calls": 1,
-    "successful_calls": 1,
-    "source_whole_complete": true,
-    "production_writes": 0,
-    "audit_failure": "Entire candidate document equality asserted despite existing worker's authorized queue-summary update; source records report unchanged. Corrected audit requires source exact equality, preserves all historical reviews and operation entries, permits only summary and append-only operations.",
-    "corrected_audit_commit": "6ce1608b645bd564623a81ac8309c96d2e056620",
-    "corrected_status": "FAIL_SUMMARY_ASSERTION",
-    "latest_audit_run": 38333271495,
-    "reason": "Actual worker succeeded, whole source complete and source records unchanged. Summary uses existing preserving deep-merge for preview lists; compare exact current numeric queue counts, not whole merged preview array. Full diagnostics now include actual saved review and historical-review equality before assertions.",
-    "next_audit_run": 38334067719,
-    "next_status": "IN_PROGRESS_NOT_PASS"
+    "actual_returned_native_calls": 1,
+    "actual_complete_read": true,
+    "review": {
+      "as_of": "2026-10-13",
+      "body_sha256": "05cf535b8d07e5eeb652227505044ab7d4d54367acee4d49b820843fd8725b80",
+      "candidate_state": "REVIEWED",
+      "disposition": "CHANGE",
+      "document_id": "3d61549c-7b3d-4110-935e-0e85dfbc1ee3",
+      "kind": "quick",
+      "read_complete": true,
+      "read_end": 4455,
+      "read_start": 0,
+      "reader_version": "bct-v33-reader-1",
+      "reason": "Microsoft has significantly upgraded its Maia 300 accelerator, increasing HBM bandwidth and delivering more AI inference computing power.",
+      "review_id": "auto-quick-24620d5359eaa8a76aadc16477fe23ef",
+      "reviewed_at": "2026-10-13T01:57:00.181574+00:00",
+      "source_access": {
+        "body_sha256": "05cf535b8d07e5eeb652227505044ab7d4d54367acee4d49b820843fd8725b80",
+        "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST",
+        "url": "https://www.hpcwire.com/2026/10/12/microsoft-boosts-hbm-bandwidth-by-2-5x-with-maia-300-accelerator/"
+      },
+      "worker_event_id": "event-ef845413b957e6d94811d366",
+      "worker_model": "Qwen/Qwen2.5-7B-Instruct-GGUF",
+      "worker_provider": "local-cpu"
+    },
+    "review_sha256": "063f92bc472347520f919ee15e49fa8060c864f62ff6c0b142b3be34922c614d",
+    "native_receipts": [
+      {
+        "document_id": "3d61549c-7b3d-4110-935e-0e85dfbc1ee3",
+        "body_sha256": "05cf535b8d07e5eeb652227505044ab7d4d54367acee4d49b820843fd8725b80",
+        "expected_read_end": 4455,
+        "prompt_tokens": 1597,
+        "model": "bct-recovery-qwen2.5-7b",
+        "truncated": false,
+        "stop_type": "eos",
+        "tokens_evaluated": 1597,
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 1597,
+          "prompt_ms": 34584.182,
+          "prompt_per_token_ms": 21.655718221665623,
+          "prompt_per_second": 46.17718007614001,
+          "predicted_n": 47,
+          "predicted_ms": 10520.94,
+          "predicted_per_token_ms": 228.71608695652176,
+          "predicted_per_second": 4.372232899341693
+        },
+        "content": "{\"disposition\": \"CHANGE\", \"reason\": \"Microsoft has significantly upgraded its Maia 300 accelerator, increasing HBM bandwidth and delivering more AI inference computing power.\",\"read_end\": 4455}",
+        "response_sha256": "e9f612310e8722b3a25d3f6816dd54c6fb52e92f3bb0904c5d3a374baf899833"
+      }
+    ],
+    "production_ref_writes": 0,
+    "production_reviews_added": 0,
+    "paid_fallback_calls": 0,
+    "prediction_performance": "UNVERIFIED",
+    "scope": "Exact newest real RSS source read by unchanged CPU worker in isolated local copy; production import not performed",
+    "actual_zip_sha256": "fc2de357ced83cbdfa1dc3103550af79b065f105756b51f7b39e1a01dc0837ed",
+    "actual_artifact_id": 11784282874,
+    "related_review_lead_records": [
+      {
+        "path": "queue/dec3ca1902e4a946f36dbc302981e976c5aece17f84ba5041de51383f0c9056e.json",
+        "record": {
+          "document_id": "3d61549c-7b3d-4110-935e-0e85dfbc1ee3",
+          "body_sha256": "05cf535b8d07e5eeb652227505044ab7d4d54367acee4d49b820843fd8725b80",
+          "published_at": "2026-10-12T22:46:01+00:00",
+          "acquired_at": "2026-10-13T00:15:25.396680+00:00",
+          "available_at": "2026-10-13T00:15:25.396680+00:00",
+          "mode": "PROSPECTIVE_REVIEW",
+          "status": "HOLD"
+        }
+      },
+      {
+        "path": "store/intake/bd454c6d058bf44505c7c96e28443f81c6f257baa7e83a1fe9e871a755396ddb.json",
+        "record": {
+          "document_id": "3d61549c-7b3d-4110-935e-0e85dfbc1ee3",
+          "body_sha256": "05cf535b8d07e5eeb652227505044ab7d4d54367acee4d49b820843fd8725b80",
+          "origin_url": "https://www.hpcwire.com/2026/10/12/microsoft-boosts-hbm-bandwidth-by-2-5x-with-maia-300-accelerator/",
+          "provenance_verified": true,
+          "final_status": "HOLD",
+          "reason": "SEMANTIC_REVIEW_REQUIRED",
+          "formal_TARGET_id": null,
+          "mode": "PROSPECTIVE_REVIEW"
+        }
+      }
+    ],
+    "final_native_code_reuse": {
+      "status": "PASS",
+      "actual_remote_sha_check": true,
+      "main_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+      "files": [
+        {
+          "path": "src/bct/future_worker.py",
+          "before": "116a6880b2c98599086930692f7e7619a4d7cf00",
+          "after": "116a6880b2c98599086930692f7e7619a4d7cf00"
+        },
+        {
+          "path": "src/bct/future_local_reader.py",
+          "before": "2a120f8419714ca764b2fba9e80e572f1fb18d81",
+          "after": "2a120f8419714ca764b2fba9e80e572f1fb18d81"
+        },
+        {
+          "path": "src/bct/future_review.py",
+          "before": "549ab78d42f2a0289844aaaea38096fb40b6639a",
+          "after": "549ab78d42f2a0289844aaaea38096fb40b6639a"
+        },
+        {
+          "path": "src/bct/future_store.py",
+          "before": "b4d72637572202511c6397c4dfcf75bdc2316190",
+          "after": "b4d72637572202511c6397c4dfcf75bdc2316190"
+        },
+        {
+          "path": "src/bct/future_github.py",
+          "before": "b2226a175ec5153f7c326a273871ef84a74b72c3",
+          "after": "b2226a175ec5153f7c326a273871ef84a74b72c3"
+        },
+        {
+          "path": "config/bct-local-reader.json",
+          "before": "2bcc79a4af6d750ccb2a261a2aa2b2b728dcd67c",
+          "after": "2bcc79a4af6d750ccb2a261a2aa2b2b728dcd67c"
+        }
+      ]
+    },
+    "production_import_status": "NOT_RUN"
   },
   "exact_release_receipt": {
     "status": "PASS",
@@ -1094,8 +1230,21 @@
       "run_id": 38334212709,
       "ops_sha": "a6ee3bdde9cfad1b79fa44db3abeaf1aea8f5c58",
       "status": "IN_PROGRESS_NOT_PASS",
-      "current_stage": "actual operating engine",
+      "gates_0_to_6": "PASS_ACTUAL_LIVE_LOG",
+      "publication_candidate_run": 38336983221,
+      "publication_state": "RUNNING",
+      "gate7": "NOT_COMPLETED",
       "clean_streak": "NOT_CONFIRMED"
     }
-  ]
+  ],
+  "next_final_schedule": {
+    "observed_at": "2026-10-13T02:32:09.610Z",
+    "main_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+    "actual_browser_enabled_signal": "Workflow options menu offers Disable workflow",
+    "enabled": true,
+    "latest_observed_scheduled_run": 38326068143,
+    "final_main_next_automatic_run": "NOT_OBSERVED",
+    "cron_changed": false,
+    "schedule_slot_attribution": "UNKNOWN: event.schedule not persisted; cannot assert exact missed slot or provider cause"
+  }
 }
