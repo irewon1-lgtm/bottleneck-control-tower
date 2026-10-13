@@ -2,8 +2,8 @@
   "at": "2026-10-14T07:46:06.839804+09:00",
   "base_sha": "fd199ea1feafbb32cce553e63c51351211a78289",
   "scope": "Stage 2 only",
-  "overall_status": "BLOCKED_NEW_LIVE_CONTRACT_CHECK",
-  "source_coordinate_item_check": "PASS_ON_HASH_IDENTICAL_SAVED_REAL_RESPONSE",
+  "overall_status": "PASS_STAGE2_CONNECTIVITY_AND_GROUNDING",
+  "source_coordinate_item_check": "PASS_NEW_REAL_RESPONSE_3_ITEMS_7_EXACT_QUOTES",
   "original_artifacts": {
     "status": "PASS_EXACT_SAVED_ARTIFACTS",
     "source_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
@@ -564,37 +564,141 @@
     "expected": "New decoded reading: exact unique quotes, Python offsets, SQLite API_VALIDATION/API_RESPONSE; all semantics kept advisory, no S promotion."
   },
   "current_live_result": {
-    "at": "2026-10-14T07:42:50.798790+09:00",
-    "new_live_call_status": "BLOCKED_HTTP_400_SCHEMA",
-    "new_live_received_responses": 0,
+    "at": "2026-10-14T08:16:53.220738+09:00",
+    "new_live_call_status": "PASS",
     "current_task_calls": 1,
-    "failed_call_usage": "UNKNOWN_NOT_REPORTED",
+    "new_live_received_responses": 1,
+    "input_tokens": 904,
+    "output_tokens": 701,
+    "total_tokens": 1605,
     "api_cost_usd": 0,
-    "cost_basis": "Existing user-confirmed Free Plan; no paid path or account changes",
-    "api_error": {
-      "at": "2026-10-13T22:33:37.341999+00:00",
-      "attempt_id": "1c208621f563412988fdbd6a8b1fdb80",
-      "diagnostics": {
-        "error_code": "invalid_request_error",
-        "flags": [
-          "SCHEMA"
-        ],
-        "http_status": 400
+    "cost_basis": "Existing user-confirmed Groq Free Plan; no paid path or billing changes",
+    "api_errors": [],
+    "retries": 0,
+    "grounded_items": 3,
+    "rejected_items": 0,
+    "exact_quote_checks": 7,
+    "literal_named_entities": 2,
+    "physical_product_families": 1,
+    "projects": 1,
+    "general_context_items": 1,
+    "model_coordinate_ranges_discarded": 7,
+    "sqlite_storage": "PASS_API_RECEIVED_VALIDATION_RESPONSE_JOB",
+    "sqlite_fresh_process_and_backup": "PASS",
+    "real_response_cache": "PASS_0_DUPLICATE_NETWORK_CALLS",
+    "response_sha256": "cb6957caa286f53ed053e647f9e62d16d05330a1034b85b31026e464fc2fd47f",
+    "quota_headers": {
+      "x-ratelimit-limit-requests": "1000",
+      "x-ratelimit-limit-tokens": "8000",
+      "x-ratelimit-remaining-requests": "999",
+      "x-ratelimit-remaining-tokens": "6702",
+      "x-ratelimit-reset-requests": "1m26.4s",
+      "x-ratelimit-reset-tokens": "9.735s"
+    },
+    "source": {
+      "url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+      "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+      "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+      "raw_sha256": "e5a5b7f82c86fbbc758def29824d412091223058dc5bf12fa198b47fb6a12f13",
+      "published_at": "2026-07-25T12:47:13-04:00",
+      "scope": "REVIEWED_PUBLIC_EXCERPT_NOT_FULL_DOCUMENT",
+      "body_status": "PARTIAL",
+      "provenance": "BLOCKED"
+    },
+    "quote_checks": [
+      {
+        "item_index": 0,
+        "field": "context",
+        "quote": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel.",
+        "start": 5905,
+        "end": 6066,
+        "exact_unique_within_input": true,
+        "ai_positions_discarded": true
       },
-      "error_kind": "INPUT_INVALID",
-      "input_key": "d164570f70e9c9df7820f5ca66f10b6be189d9ae791c04311d0916ba6a9c9634",
-      "provider": "groq",
-      "run_id": "api-6accaeb2426a48838e6a535805fe5487"
+      {
+        "item_index": 0,
+        "field": "entity",
+        "quote": "Advanced Nuclear Fuel Line Pilot Projects",
+        "start": 5961,
+        "end": 6002,
+        "exact_unique_within_input": true,
+        "ai_positions_discarded": true
+      },
+      {
+        "item_index": 1,
+        "field": "context",
+        "quote": "October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad.",
+        "start": 6067,
+        "end": 6306,
+        "exact_unique_within_input": true,
+        "ai_positions_discarded": true
+      },
+      {
+        "item_index": 2,
+        "field": "context",
+        "quote": "December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs.",
+        "start": 6307,
+        "end": 6442,
+        "exact_unique_within_input": true,
+        "ai_positions_discarded": true
+      },
+      {
+        "item_index": 2,
+        "field": "entity",
+        "quote": "advanced light-water SMRs",
+        "start": 6416,
+        "end": 6441,
+        "exact_unique_within_input": true,
+        "ai_positions_discarded": true
+      },
+      {
+        "item_index": 2,
+        "field": "quantity",
+        "quote": "$800 million",
+        "start": 6355,
+        "end": 6367,
+        "exact_unique_within_input": true,
+        "ai_positions_discarded": true
+      },
+      {
+        "item_index": 2,
+        "field": "customer_group",
+        "quote": "TVA and Holtec",
+        "start": 6371,
+        "end": 6385,
+        "exact_unique_within_input": true,
+        "ai_positions_discarded": true
+      }
+    ],
+    "limited_semantic_checks": {
+      "project_kind": "PASS",
+      "SMR_family_kind": "PASS_AFTER_EXISTING_RULE",
+      "funding_and_partnership_not_supply": "PASS_ROLE_UNKNOWN"
     },
-    "after_failure_additional_calls": 0,
-    "stored_real_response_revalidation": {
-      "accepted_source_items": 1,
-      "rejected_items": 4,
-      "source_status": "PARTIAL_REVIEW",
-      "semantics": "UNKNOWN_REQUIRES_REVIEW"
-    },
-    "restored_wire_schema": "Exactly equals prior Groq-accepted schema; ignored coordinate compatibility fields; local verification PASS, new real call NOT_RUN after cap exhausted",
-    "full_stage2_status": "BLOCKED_NEW_LIVE_CONTRACT_CHECK",
+    "semantic_accuracy": "UNKNOWN",
+    "semantic_review_issues": [
+      {
+        "item_index": 2,
+        "field": "quantity",
+        "value": "$800 million",
+        "reason": "Funding amount, not product units or production capacity."
+      },
+      {
+        "item_index": 2,
+        "field": "customer_group",
+        "value": "TVA and Holtec",
+        "reason": "Named funding recipients; source does not establish actual product customers."
+      },
+      {
+        "item_index": 1,
+        "field": "entity",
+        "value": null,
+        "reason": "Westinghouse technology name not extracted; UNKNOWN preserved, completeness not established."
+      }
+    ],
+    "model_position_instruction_compliance": "Model returned nonzero incorrect positions; all are ignored and Python recomputes exact unique positions",
+    "full_stage2_status": "PASS_CONNECTIVITY_AND_GROUNDING_NOT_GENERAL_ACCURACY",
+    "S_stage_promotions": 0,
     "stage3_started": false,
     "shadow_started": false
   },
@@ -603,10 +707,11 @@
     "baseline_sha": "fd199ea1feafbb32cce553e63c51351211a78289",
     "wire_schema_equals_previously_accepted_schema": true,
     "model_coordinate_values": "Ignored, never used for resolving ambiguity or citation verification",
-    "new_compatibility_live_check": "NOT_RUN_MAX_ONE_CALL_EXHAUSTED",
+    "new_compatibility_live_check": "PASS_ONE_NEW_REAL_REQUEST",
     "new_api_calls_after_failure": 0,
     "current_request_reservation": 6124,
-    "source_budget_check": "PASS_LOCAL_UNDER_6400"
+    "source_budget_check": "PASS_LOCAL_UNDER_6400",
+    "prior_live_recheck_status": "NOT_RUN_MAX_ONE_CALL_EXHAUSTED"
   },
   "local_sqlite_restart_and_backup": {
     "status": "PASS_STORED_REAL_RESPONSE_REVALIDATION",
@@ -660,12 +765,515 @@
     "stage3_started": false,
     "shadow_started": false
   },
-  "next_start": "Restored exact supported wire schema; one future bounded Groq call, then positive exact-source/SQLite verification. No additional current-task API call; no auth/model/reinstallation repeat.",
+  "next_start": "Stage 2 connectivity and exact grounding completed. If separately authorized, stage 3 starts with funding amount/product quantity and recipient/customer distinctions; do not start stage 3 or Shadow in this task.",
   "delivery": {
+    "status": "LOCAL_COMPLETE_PENDING_PUSH",
+    "branch": "codex/bct-v4-integration",
+    "base_sha": "599c4b7df9c2290f0c626b74f93e42c39f83e9f3",
+    "main_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797"
+  },
+  "prior_live_result": {
+    "at": "2026-10-14T07:42:50.798790+09:00",
+    "new_live_call_status": "BLOCKED_HTTP_400_SCHEMA",
+    "new_live_received_responses": 0,
+    "current_task_calls": 1,
+    "failed_call_usage": "UNKNOWN_NOT_REPORTED",
+    "api_cost_usd": 0,
+    "cost_basis": "Existing user-confirmed Free Plan; no paid path or account changes",
+    "api_error": {
+      "at": "2026-10-13T22:33:37.341999+00:00",
+      "attempt_id": "1c208621f563412988fdbd6a8b1fdb80",
+      "diagnostics": {
+        "error_code": "invalid_request_error",
+        "flags": [
+          "SCHEMA"
+        ],
+        "http_status": 400
+      },
+      "error_kind": "INPUT_INVALID",
+      "input_key": "d164570f70e9c9df7820f5ca66f10b6be189d9ae791c04311d0916ba6a9c9634",
+      "provider": "groq",
+      "run_id": "api-6accaeb2426a48838e6a535805fe5487"
+    },
+    "after_failure_additional_calls": 0,
+    "stored_real_response_revalidation": {
+      "accepted_source_items": 1,
+      "rejected_items": 4,
+      "source_status": "PARTIAL_REVIEW",
+      "semantics": "UNKNOWN_REQUIRES_REVIEW"
+    },
+    "restored_wire_schema": "Exactly equals prior Groq-accepted schema; ignored coordinate compatibility fields; local verification PASS, new real call NOT_RUN after cap exhausted",
+    "full_stage2_status": "BLOCKED_NEW_LIVE_CONTRACT_CHECK",
+    "stage3_started": false,
+    "shadow_started": false
+  },
+  "previous_delivery": {
     "status": "PASS_VERIFIED_REMOTE_IMPLEMENTATION",
     "sha": "48cac90a8601e3227c4c31fe96b41b2c33afcaef",
     "branch": "codex/bct-v4-integration",
     "main_unchanged_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
     "receipt_note": "The commit containing this receipt advances HEAD; final remote ref is separately verified and reported."
+  },
+  "updated_at": "2026-10-14T08:16:53.220738+09:00",
+  "continued_from_sha": "599c4b7df9c2290f0c626b74f93e42c39f83e9f3",
+  "current_live_artifacts": {
+    "raw_response_text": "{\n  \"items\": [\n    {\n      \"kind\": \"PROJECT\",\n      \"role\": \"UNKNOWN\",\n      \"actuality\": \"ACTUAL\",\n      \"context\": {\n        \"quote\": \"2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel.\",\n        \"start\": 5905,\n        \"end\": 5985\n      },\n      \"entity\": {\n        \"value\": \"Advanced Nuclear Fuel Line Pilot Projects\",\n        \"quote\": \"Advanced Nuclear Fuel Line Pilot Projects\",\n        \"start\": 6220,\n        \"end\": 6291\n      },\n      \"facts\": [\n        {\n          \"field\": \"specification\",\n          \"value\": null,\n          \"quote\": \"\",\n          \"start\": 0,\n          \"end\": 0\n        }\n      ]\n    },\n    {\n      \"kind\": \"GENERAL_EXPRESSION\",\n      \"role\": \"UNKNOWN\",\n      \"actuality\": \"ACTUAL\",\n      \"context\": {\n        \"quote\": \"October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad.\",\n        \"start\": 5986,\n        \"end\": 6210\n      },\n      \"entity\": {\n        \"value\": null,\n        \"quote\": \"\",\n        \"start\": 0,\n        \"end\": 0\n      },\n      \"facts\": [\n        {\n          \"field\": \"relief\",\n          \"value\": null,\n          \"quote\": \"\",\n          \"start\": 0,\n          \"end\": 0\n        }\n      ]\n    },\n    {\n      \"kind\": \"PHYSICAL_PRODUCT\",\n      \"role\": \"UNKNOWN\",\n      \"actuality\": \"ACTUAL\",\n      \"context\": {\n        \"quote\": \"December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs.\",\n        \"start\": 6211,\n        \"end\": 6422\n      },\n      \"entity\": {\n        \"value\": \"advanced light-water SMRs\",\n        \"quote\": \"advanced light-water SMRs\",\n        \"start\": 6350,\n        \"end\": 6390\n      },\n      \"facts\": [\n        {\n          \"field\": \"quantity\",\n          \"value\": \"$800 million\",\n          \"quote\": \"$800 million\",\n          \"start\": 6275,\n          \"end\": 6290\n        },\n        {\n          \"field\": \"customer_group\",\n          \"value\": \"TVA and Holtec\",\n          \"quote\": \"TVA and Holtec\",\n          \"start\": 6283,\n          \"end\": 6299\n        }\n      ]\n    }\n  ]\n}",
+    "validated_result": {
+      "items": [
+        {
+          "actuality": "ACTUAL",
+          "context": {
+            "end": 6066,
+            "quote": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel.",
+            "start": 5905,
+            "reference": {
+              "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+              "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+              "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "locator": {
+                "start": 5905,
+                "end": 6066
+              },
+              "source_quote": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel.",
+              "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "origin_publisher": "Energy.gov",
+              "published_at": "2026-07-25T12:47:13-04:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "entity": {
+            "end": 6002,
+            "quote": "Advanced Nuclear Fuel Line Pilot Projects",
+            "start": 5961,
+            "value": "Advanced Nuclear Fuel Line Pilot Projects",
+            "reference": {
+              "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+              "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+              "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "locator": {
+                "start": 5961,
+                "end": 6002
+              },
+              "source_quote": "Advanced Nuclear Fuel Line Pilot Projects",
+              "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "origin_publisher": "Energy.gov",
+              "published_at": "2026-07-25T12:47:13-04:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "facts": [
+            {
+              "end": 0,
+              "field": "specification",
+              "quote": "",
+              "start": 0,
+              "value": null,
+              "reference": null
+            }
+          ],
+          "kind": "PROJECT",
+          "role": "UNKNOWN",
+          "target": {
+            "product": null,
+            "specification": null,
+            "region": null,
+            "customer_group": null,
+            "supply_pool": null
+          },
+          "source_verified": true,
+          "semantic_status": "UNKNOWN_REQUIRES_REVIEW",
+          "s_stage": "UNKNOWN",
+          "forecast_candidate": false,
+          "physical_exploration_lead": false,
+          "model_classification": {
+            "kind": "PROJECT",
+            "role": "UNKNOWN",
+            "actuality": "ACTUAL"
+          },
+          "semantic_checks": {
+            "kind": "EXPLICIT_PROJECT_HEAD",
+            "physical_event_support": false,
+            "role_retained": false,
+            "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+          },
+          "input_item_index": 0,
+          "coordinate_origin": "PYTHON_EXACT_UNIQUE_QUOTE"
+        },
+        {
+          "actuality": "ACTUAL",
+          "context": {
+            "end": 6306,
+            "quote": "October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad.",
+            "start": 6067,
+            "reference": {
+              "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+              "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+              "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "locator": {
+                "start": 6067,
+                "end": 6306
+              },
+              "source_quote": "October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad.",
+              "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "origin_publisher": "Energy.gov",
+              "published_at": "2026-07-25T12:47:13-04:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "entity": {
+            "end": 0,
+            "quote": "",
+            "start": 0,
+            "value": null,
+            "reference": null
+          },
+          "facts": [
+            {
+              "end": 0,
+              "field": "relief",
+              "quote": "",
+              "start": 0,
+              "value": null,
+              "reference": null
+            }
+          ],
+          "kind": "GENERAL_EXPRESSION",
+          "role": "UNKNOWN",
+          "target": {
+            "product": null,
+            "specification": null,
+            "region": null,
+            "customer_group": null,
+            "supply_pool": null
+          },
+          "source_verified": true,
+          "semantic_status": "UNKNOWN_REQUIRES_REVIEW",
+          "s_stage": "UNKNOWN",
+          "forecast_candidate": false,
+          "physical_exploration_lead": false,
+          "model_classification": {
+            "kind": "GENERAL_EXPRESSION",
+            "role": "UNKNOWN",
+            "actuality": "ACTUAL"
+          },
+          "semantic_checks": {
+            "kind": "UNKNOWN_MODEL_CLASSIFICATION",
+            "physical_event_support": false,
+            "role_retained": false,
+            "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+          },
+          "input_item_index": 1,
+          "coordinate_origin": "PYTHON_EXACT_UNIQUE_QUOTE"
+        },
+        {
+          "actuality": "ACTUAL",
+          "context": {
+            "end": 6442,
+            "quote": "December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs.",
+            "start": 6307,
+            "reference": {
+              "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+              "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+              "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "locator": {
+                "start": 6307,
+                "end": 6442
+              },
+              "source_quote": "December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs.",
+              "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "origin_publisher": "Energy.gov",
+              "published_at": "2026-07-25T12:47:13-04:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "entity": {
+            "end": 6441,
+            "quote": "advanced light-water SMRs",
+            "start": 6416,
+            "value": "advanced light-water SMRs",
+            "reference": {
+              "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+              "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+              "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "locator": {
+                "start": 6416,
+                "end": 6441
+              },
+              "source_quote": "advanced light-water SMRs",
+              "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "origin_publisher": "Energy.gov",
+              "published_at": "2026-07-25T12:47:13-04:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "facts": [
+            {
+              "end": 6367,
+              "field": "quantity",
+              "quote": "$800 million",
+              "start": 6355,
+              "value": "$800 million",
+              "reference": {
+                "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+                "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+                "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "locator": {
+                  "start": 6355,
+                  "end": 6367
+                },
+                "source_quote": "$800 million",
+                "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "origin_publisher": "Energy.gov",
+                "published_at": "2026-07-25T12:47:13-04:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            },
+            {
+              "end": 6385,
+              "field": "customer_group",
+              "quote": "TVA and Holtec",
+              "start": 6371,
+              "value": "TVA and Holtec",
+              "reference": {
+                "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+                "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+                "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "locator": {
+                  "start": 6371,
+                  "end": 6385
+                },
+                "source_quote": "TVA and Holtec",
+                "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "origin_publisher": "Energy.gov",
+                "published_at": "2026-07-25T12:47:13-04:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "kind": "PRODUCT_FAMILY",
+          "role": "UNKNOWN",
+          "target": {
+            "product": {
+              "end": 6441,
+              "quote": "advanced light-water SMRs",
+              "start": 6416,
+              "value": "advanced light-water SMRs",
+              "reference": {
+                "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+                "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+                "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "locator": {
+                  "start": 6416,
+                  "end": 6441
+                },
+                "source_quote": "advanced light-water SMRs",
+                "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "origin_publisher": "Energy.gov",
+                "published_at": "2026-07-25T12:47:13-04:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            },
+            "specification": null,
+            "region": null,
+            "customer_group": {
+              "end": 6385,
+              "field": "customer_group",
+              "quote": "TVA and Holtec",
+              "start": 6371,
+              "value": "TVA and Holtec",
+              "reference": {
+                "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+                "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+                "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "locator": {
+                  "start": 6371,
+                  "end": 6385
+                },
+                "source_quote": "TVA and Holtec",
+                "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "origin_publisher": "Energy.gov",
+                "published_at": "2026-07-25T12:47:13-04:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            },
+            "supply_pool": null
+          },
+          "source_verified": true,
+          "semantic_status": "UNKNOWN_REQUIRES_REVIEW",
+          "s_stage": "UNKNOWN",
+          "forecast_candidate": false,
+          "physical_exploration_lead": true,
+          "model_classification": {
+            "kind": "PHYSICAL_PRODUCT",
+            "role": "UNKNOWN",
+            "actuality": "ACTUAL"
+          },
+          "semantic_checks": {
+            "kind": "EXPLICIT_REACTOR_PRODUCT_HEAD",
+            "physical_event_support": false,
+            "role_retained": false,
+            "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+          },
+          "input_item_index": 2,
+          "coordinate_origin": "PYTHON_EXACT_UNIQUE_QUOTE"
+        }
+      ],
+      "rejected_items": [],
+      "coverage": {
+        "windows": [
+          {
+            "start": 5905,
+            "end": 6505,
+            "text": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel. October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad. December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs. January 5, 2026: The Energy Department announced a $2.7 billio"
+          }
+        ],
+        "publication": {
+          "published_at": "2026-07-25T12:47:13-04:00",
+          "precision": "TIMESTAMP"
+        },
+        "provenance_scope": "REVIEWED_PUBLIC_EXCERPT_NOT_FULL_DOCUMENT",
+        "selected_characters": 600,
+        "body_characters": 8053,
+        "coverage": "BOUNDED_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "source_status": "PASS",
+      "semantic_accuracy": "UNKNOWN",
+      "forecast_performance": "BLOCKED"
+    },
+    "local_paths": {
+      "preflight.json": "var/v4/groq-stage2/restored-live-check/preflight.json",
+      "live-result.json": "var/v4/groq-stage2/restored-live-check/live-result.json",
+      "live-reopen.json": "var/v4/groq-stage2/restored-live-check/live-reopen.json",
+      "backup-reopen.json": "var/v4/groq-stage2/restored-live-check/backup-reopen.json"
+    },
+    "local_sha256": {
+      "preflight.json": "a1620a59bb04410ab3495e32486fc51484401a670c8d5b9713f4417f3365c0c1",
+      "live-result.json": "e43ebc50000ac9e2638869a23a1b4779f957d374cea6faf8749491872e6b5557",
+      "live-reopen.json": "7293a318b32d2cce966c3191fdd418a2f0b96efeaba8b84000608f44df9bc68a",
+      "backup-reopen.json": "588332fe5a0c4ac6664c91958db91d815d8b75980e356f3565452e4e2751dda6"
+    },
+    "verification_scripts": {
+      "preflight.py": "import hashlib\nimport json\nfrom pathlib import Path\nimport subprocess\nfrom datetime import datetime, timezone\n\nfrom bct.v4.free_ai import (GROQ_SCHEMA, HTTPAdapter, Router, SYSTEM, QUOTE_SCHEMA,\n                          VERSION, checked_config, source_input, validate_reading)\nfrom bct.v4.store import Ledger, encode, sha\n\nOUT = Path('var/v4/groq-stage2/restored-live-check')\nBASE = '599c4b7df9c2290f0c626b74f93e42c39f83e9f3'\nassert subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() == BASE\nassert not (OUT / 'live-result.json').exists(), 'CURRENT_TASK_ALREADY_ATTEMPTED'\nconfig = checked_config(json.loads(Path('var/v4/groq-stage2/trial-config.json').read_text()))\nassert config['providers'] == ['groq'] and config['max_calls_per_run'] == 1\nassert config['accounts']['groq']['verified_free'] is True\nassert config['accounts']['groq']['tier'] == 'Free'\n\nnamespace = {'__name__': 'bct.v4.accepted_baseline', '__package__': 'bct.v4'}\nbaseline = subprocess.check_output(['git', 'show', 'fd199ea1feafbb32cce553e63c51351211a78289:src/bct/v4/free_ai.py'], text=True)\nexec(compile(baseline, '<accepted-schema-baseline>', 'exec'), namespace)\nassert GROQ_SCHEMA == namespace['GROQ_SCHEMA'], 'SCHEMA_DIFFERS_FROM_ACCEPTED_BASELINE'\n\ndef check_schema(node):\n    if isinstance(node, dict):\n        if node.get('type') == 'object':\n            assert node['additionalProperties'] is False\n            assert set(node['required']) == set(node['properties'])\n        assert 'maxItems' not in node\n        for value in node.values():\n            check_schema(value)\n    elif isinstance(node, list):\n        for value in node:\n            check_schema(value)\ncheck_schema(GROQ_SCHEMA)\nassert 'Use zero for all start/end' in SYSTEM\n\nledger = Ledger('var/v4/groq-stage2/live')\ntry:\n    router = Router(ledger, config)\n    assert router.available('groq') is None, 'FREE_ACCOUNT_NOT_AVAILABLE'\n    doc = router.reviewed_document(ledger.latest_documents()[0])\n    old = json.loads(Path('var/v4/groq-stage2/quote-repair/artifacts-verified.json').read_text())\n    assert doc['document_id'] == old['document_id']\n    body_sha = hashlib.sha256(doc['body'].encode()).hexdigest()\n    raw = ledger.db.execute('SELECT data FROM blobs WHERE id=?', (doc['raw_sha256'],)).fetchone()[0]\n    assert body_sha == old['body_sha256'] == doc['body_sha256']\n    assert hashlib.sha256(raw).hexdigest() == old['raw_sha256'] == doc['raw_sha256']\n    received = router.events('API_RECEIVED')\n    old_response = next(x for x in received if hashlib.sha256(x['text'].encode()).hexdigest() == old['response_sha256'])\n    source = source_input(doc, config, router.env)\n    previous_validation = validate_reading(old_response['text'], doc, source)\n    assert len(previous_validation['items']) == 1 and len(previous_validation['rejected_items']) == 4\n    url, _, payload = HTTPAdapter({}).request('groq', source, config['max_output_tokens'])\n    assert url == 'https://api.groq.com/openai/v1/chat/completions'\n    assert payload['response_format']['json_schema']['schema'] == GROQ_SCHEMA\n    assert payload['model'] == 'openai/gpt-oss-20b' and payload['max_completion_tokens'] == 2048\n    assert payload['reasoning_effort'] == 'low' and 'tools' not in payload\n    reserve = len(encode(payload).encode()) + config['max_output_tokens']\n    assert reserve == 6124 and router.budget('groq', reserve) is None\n    assert not any(x['request_contract'] == router.request_contract for x in router.events('API_CONFIG_ERROR'))\n    key = sha([VERSION, SYSTEM, QUOTE_SCHEMA, source, doc['body_sha256']])\n    assert not any(x['input_key'] == key for x in router.events('API_ATTEMPT'))\n    reused = json.loads(Path('docs/v4/GROQ_QUOTE_REPAIR_RESULTS.json').read_text())['evidence_reuse']\n    for entry in reused['unchanged_files']:\n        assert hashlib.sha256(Path(entry['file']).read_bytes()).hexdigest() == entry['sha256']\n    tracked = ['src/bct/v4/free_ai.py', 'src/bct/v4/store.py', 'tests/test_v4_free_ai.py', 'tests/test_v4_quote_binding.py']\n    code_hashes = {}\n    for name in tracked:\n        prior = subprocess.check_output(['git', 'show', f'{BASE}:{name}'])\n        assert prior == Path(name).read_bytes()\n        code_hashes[name] = hashlib.sha256(prior).hexdigest()\n    evidence_files = sorted(Path('docs/v4').glob('QUOTE_REPAIR_*TESTS.xml'))\n    report = {\n        'at': datetime.now(timezone.utc).isoformat(), 'status': 'PASS_LOCAL_PREFLIGHT', 'base_sha': BASE,\n        'wire_schema_matches_accepted_baseline': True, 'wire_schema_sha256': sha(GROQ_SCHEMA),\n        'payload_sha256': sha(payload), 'request_contract': router.request_contract, 'input_key': key,\n        'original_artifacts': old, 'source': source, 'provenance': doc['provenance'],\n        'body_status': doc['body_status'], 'reservation_tokens': reserve, 'budget_cap': 6400,\n        'generation_cap': 1, 'api_calls': 0, 'baseline_attempts': len(router.events('API_ATTEMPT')),\n        'baseline_received': len(received), 'baseline_seq': ledger.db.execute('SELECT MAX(seq) FROM events').fetchone()[0],\n        'saved_response_revalidation': {'accepted': 1, 'rejected': 4, 'source_status': previous_validation['source_status']},\n        'unchanged_runtime_code_sha256': code_hashes,\n        'reused_test_evidence_sha256': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in evidence_files},\n        'test_reuse': '38 new + 25 affected prior PASS reused unchanged; historical 99/261 not rerun',\n        'core_reuse_unchanged_files': len(reused['unchanged_files']),\n        'free_plan': 'Previously user-confirmed Free; current evidence and guards reused',\n        'gemini': 'DISABLED_NOT_CALLED', 'reacquisition_requests': 0,\n    }\n    (OUT / 'preflight.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\\n')\n    print(json.dumps({k: report[k] for k in ('status', 'baseline_attempts', 'baseline_received', 'reservation_tokens', 'generation_cap', 'saved_response_revalidation')}, ensure_ascii=False))\nfinally:\n    ledger.close()\n",
+      "verify_saved.py": "import hashlib\nimport json\nfrom pathlib import Path\nimport sys\nfrom datetime import datetime, timezone\n\nfrom bct.v4.free_ai import Router, source_input, validate_reading\nfrom bct.v4.store import Ledger\n\nOUT = Path('var/v4/groq-stage2/restored-live-check')\npre = json.loads((OUT / 'preflight.json').read_text())\nconfig = json.loads(Path('var/v4/groq-stage2/trial-config.json').read_text())\nroot = sys.argv[1] if len(sys.argv) > 1 else 'var/v4/groq-stage2/live'\n\nclass NoNetwork:\n    def call(self, *args, **kwargs):\n        raise AssertionError('UNEXPECTED_DUPLICATE_NETWORK_CALL')\n\nledger = Ledger(root)\ntry:\n    with ledger.worker():\n        router = Router(ledger, config, adapter=NoNetwork())\n        attempts = router.events('API_ATTEMPT')\n        assert len(attempts) == pre['baseline_attempts'] + 1\n        last = attempts[-1]\n        assert last['input_key'] == pre['input_key']\n        received = [x for x in router.events('API_RECEIVED') if x['attempt_id'] == last['attempt_id']]\n        responses = [x for x in router.events('API_RESPONSE') if x['attempt_id'] == last['attempt_id']]\n        validations = [x for x in router.events('API_VALIDATION') if x['attempt_id'] == last['attempt_id']]\n        assert len(received) == len(responses) == len(validations) == 1\n        raw = received[0]\n        assert raw['text'] == responses[0]['text']\n        assert raw['usage'] == {'input_tokens': 904, 'output_tokens': 701, 'total_tokens': 1605}\n        doc = router.reviewed_document(ledger.latest_documents()[0])\n        original = pre['original_artifacts']\n        assert doc['body_sha256'] == original['body_sha256']\n        assert hashlib.sha256(doc['body'].encode()).hexdigest() == original['body_sha256']\n        blob = ledger.db.execute('SELECT data FROM blobs WHERE id=?', (doc['raw_sha256'],)).fetchone()[0]\n        assert hashlib.sha256(blob).hexdigest() == original['raw_sha256']\n        assert any(hashlib.sha256(x['text'].encode()).hexdigest() == original['response_sha256'] for x in router.events('API_RECEIVED'))\n        selected = source_input(doc, config, router.env)\n        assert selected == pre['source']\n        result = validate_reading(raw['text'], doc, selected)\n        assert result == validations[0]['result']\n        assert result['source_status'] == 'PASS' and not result['rejected_items'] and len(result['items']) == 3\n        raw_items = json.loads(raw['text'])['items']\n        quote_checks = []\n        corrected_ranges = 0\n        for item in result['items']:\n            assert item['s_stage'] == 'UNKNOWN' and item['forecast_candidate'] is False\n            assert item['semantic_status'] == 'UNKNOWN_REQUIRES_REVIEW'\n            assert item['role'] == 'UNKNOWN'\n            source_item = raw_items[item['input_item_index']]\n            citations = [('context', item['context'], source_item['context']),\n                         ('entity', item['entity'], source_item['entity'])]\n            citations += [(fact['field'], fact, old) for fact, old in zip(item['facts'], source_item['facts'])]\n            for field, citation, ai_citation in citations:\n                if field != 'context' and citation['value'] is None:\n                    assert citation['quote'] == '' and citation['reference'] is None\n                    continue\n                a, b, text = citation['start'], citation['end'], citation['quote']\n                assert doc['body'][a:b] == text\n                assert doc['body'].find(text) == a and doc['body'].find(text, a + 1) == -1\n                assert any(w['start'] <= a < b <= w['end'] for w in selected['windows'])\n                if field != 'context':\n                    assert citation['value'] in text\n                ref = citation['reference']\n                assert ref['source_quote'] == text and ref['locator'] == {'start': a, 'end': b}\n                assert ref['published_at'] == doc['published_at']\n                assert ref['body_sha256'] == doc['body_sha256']\n                corrected = (ai_citation['start'], ai_citation['end']) != (a, b)\n                corrected_ranges += int(corrected)\n                quote_checks.append({'item_index': item['input_item_index'], 'field': field,\n                                     'quote': text, 'start': a, 'end': b,\n                                     'exact_unique_within_input': True,\n                                     'ai_positions_discarded': corrected})\n        assert len(quote_checks) == 7 and corrected_ranges == 7\n        project, partnership, product = result['items']\n        assert project['entity']['value'] == 'Advanced Nuclear Fuel Line Pilot Projects'\n        assert project['kind'] == 'PROJECT' and project['target']['product'] is None\n        assert partnership['entity']['value'] is None and partnership['kind'] == 'GENERAL_EXPRESSION'\n        assert product['entity']['value'] == 'advanced light-water SMRs' and product['kind'] == 'PRODUCT_FAMILY'\n        cached = router.read(doc, probe_provider='groq')\n        assert cached['status'] == 'PASS' and cached['cached'] is True and cached['result'] == result\n        assert router.calls == 0 and len(router.events('API_ATTEMPT')) == len(attempts)\n        assert doc['body_status'] == 'PARTIAL' and doc['provenance'] == 'BLOCKED'\n        assert ledger.db.execute('PRAGMA integrity_check').fetchone()[0] == 'ok'\n        observation = {\n            'root': root, 'at': datetime.now(timezone.utc).isoformat(), 'status': 'PASS_SQLITE_REOPEN_CACHE',\n            'source_items': len(result['items']), 'rejected_items': 0, 'exact_quotes': len(quote_checks),\n            'quote_checks': quote_checks, 'model_ranges_ignored_and_recomputed': corrected_ranges,\n            'duplicate_network_calls': router.calls, 'cumulative_attempts': len(attempts),\n            'usage': raw['usage'], 'response_sha256': hashlib.sha256(raw['text'].encode()).hexdigest(),\n            'raw_response': json.loads(raw['text']), 'raw_response_text': raw['text'],\n            'quota_headers': raw.get('quota_headers'), 'stored_validated_result': result,\n            'source': {'url': doc['origin_url'], 'document_id': doc['document_id'],\n                       'body_sha256': doc['body_sha256'], 'raw_sha256': doc['raw_sha256'],\n                       'published_at': doc['published_at'], 'scope': selected['provenance_scope'],\n                       'body_status': doc['body_status'], 'provenance': doc['provenance']},\n            'limited_semantic_checks': {'project_kind': 'PASS', 'SMR_family_kind': 'PASS_AFTER_EXISTING_RULE',\n                                        'funding_and_partnership_not_supply': 'PASS_ROLE_UNKNOWN'},\n            'semantic_accuracy': 'UNKNOWN',\n            'semantic_review_issues': [\n                {'item_index': 2, 'field': 'quantity', 'value': '$800 million',\n                 'reason': 'Funding amount, not product units or production capacity.'},\n                {'item_index': 2, 'field': 'customer_group', 'value': 'TVA and Holtec',\n                 'reason': 'Named funding recipients; source does not establish actual product customers.'},\n                {'item_index': 1, 'field': 'entity', 'value': None,\n                 'reason': 'Westinghouse technology name not extracted; UNKNOWN preserved, completeness not established.'},\n            ],\n            's_stage_promotions': 0, 'stage3_started': False, 'shadow_started': False,\n        }\n        name = 'live-reopen.json' if root.endswith('/live') else 'backup-reopen.json'\n        (OUT / name).write_text(json.dumps(observation, ensure_ascii=False, indent=2) + '\\n')\n        if root.endswith('/live'):\n            ledger.backup(OUT / 'final-backup/v4.sqlite3')\n        print(json.dumps({k: observation[k] for k in ('root', 'status', 'source_items', 'exact_quotes', 'model_ranges_ignored_and_recomputed', 'duplicate_network_calls', 'cumulative_attempts', 'semantic_accuracy')}, ensure_ascii=False))\nfinally:\n    ledger.close()\n"
+    }
+  },
+  "current_evidence_reuse": {
+    "status": "PASS_UNCHANGED_HASHES_AND_CODE",
+    "preflight": {
+      "at": "2026-10-13T23:13:44.601300+00:00",
+      "status": "PASS_LOCAL_PREFLIGHT",
+      "base_sha": "599c4b7df9c2290f0c626b74f93e42c39f83e9f3",
+      "wire_schema_matches_accepted_baseline": true,
+      "wire_schema_sha256": "f82cb554568f98a496cb3f339294395e734ae9e430b17c35929ceae06b5c99e2",
+      "payload_sha256": "7269b209e5f12484b83fd7188cffeea38c681b469e4f88905de4d61539c5a271",
+      "request_contract": "b29edff2710fa9df32d2d209085d6e58d6672334e7014b89d6f8804432ba5dca",
+      "input_key": "18b774a82be2306c1967e004c50395c3a9451d72bc3b93c976ce258c73560004",
+      "original_artifacts": {
+        "status": "PASS_EXACT_SAVED_ARTIFACTS",
+        "source_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+        "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+        "raw_sha256": "e5a5b7f82c86fbbc758def29824d412091223058dc5bf12fa198b47fb6a12f13",
+        "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+        "response_sha256": "7766287934519eccf792ad990378379f32a598d522ce7e5b0ad6e9caf4bdd158",
+        "published_at": "2026-07-25T12:47:13-04:00",
+        "reacquisition_requests": 0,
+        "groq_calls": 0,
+        "base_sha": "fd199ea1feafbb32cce553e63c51351211a78289",
+        "source_body_characters": 8053
+      },
+      "source": {
+        "windows": [
+          {
+            "start": 5905,
+            "end": 6505,
+            "text": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel. October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad. December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs. January 5, 2026: The Energy Department announced a $2.7 billio"
+          }
+        ],
+        "publication": {
+          "published_at": "2026-07-25T12:47:13-04:00",
+          "precision": "TIMESTAMP"
+        },
+        "provenance_scope": "REVIEWED_PUBLIC_EXCERPT_NOT_FULL_DOCUMENT",
+        "selected_characters": 600,
+        "body_characters": 8053,
+        "coverage": "BOUNDED_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "provenance": "BLOCKED",
+      "body_status": "PARTIAL",
+      "reservation_tokens": 6124,
+      "budget_cap": 6400,
+      "generation_cap": 1,
+      "api_calls": 0,
+      "baseline_attempts": 4,
+      "baseline_received": 1,
+      "baseline_seq": 27,
+      "saved_response_revalidation": {
+        "accepted": 1,
+        "rejected": 4,
+        "source_status": "PARTIAL_REVIEW"
+      },
+      "unchanged_runtime_code_sha256": {
+        "src/bct/v4/free_ai.py": "32e1fcae4f89dd4ba9ba69f410a448dc49646a565aae5c712afba1494e20c773",
+        "src/bct/v4/store.py": "254371cdca79249a8e0b106a5d98391cc7bf879dea336457d435295f191e6af7",
+        "tests/test_v4_free_ai.py": "7fc6df3892bfe4632fa0d2ccdd602010b5c5869961c3be187e0d544678ee0d9c",
+        "tests/test_v4_quote_binding.py": "b2830406503b18eabc90c9891133653633a33f37b074a0154b981cb50271537e"
+      },
+      "reused_test_evidence_sha256": {
+        "docs/v4/QUOTE_REPAIR_CACHE_CONTRACT_TESTS.xml": "02d1d2dd6be93d9aaf61dbed5dc7c877616e67ceee26fb02255a6c32e1c85234",
+        "docs/v4/QUOTE_REPAIR_COMPATIBILITY_TESTS.xml": "dff7e90a99cd4318d54d1ee85c3838ce76186e0e44b8f0be01b1deac7a4e1fdd",
+        "docs/v4/QUOTE_REPAIR_EVENT_FINAL_TESTS.xml": "16f2c69137d998a94a8f902220d6c2863b64f2aac224a8556cec0c633e392ef4",
+        "docs/v4/QUOTE_REPAIR_NEW_TESTS.xml": "048285897b728d29707ecdba0fed7034566e431ad0f3706b5807562aaf231eb5",
+        "docs/v4/QUOTE_REPAIR_RELATED_TESTS.xml": "3afd600849d6da724c2620efc470a77a5e0a2aec2f086b24b973e9ea58664ca9"
+      },
+      "test_reuse": "38 new + 25 affected prior PASS reused unchanged; historical 99/261 not rerun",
+      "core_reuse_unchanged_files": 22,
+      "free_plan": "Previously user-confirmed Free; current evidence and guards reused",
+      "gemini": "DISABLED_NOT_CALLED",
+      "reacquisition_requests": 0
+    },
+    "prior_38_new_and_25_related_passes": "REUSED_UNCHANGED_NOT_RERUN",
+    "prior_99": "HISTORICAL_BASELINE_NOT_RERUN",
+    "prior_261_and_one_skip": "REUSED_22_UNCHANGED_FILES_NOT_RERUN",
+    "new_current_checks": [
+      "Exact accepted-schema equality and payload/Free budget preflight",
+      "Hash-identical original and old-response revalidation (1 accepted, 4 held)",
+      "One actual generation and 3/3 items, 7/7 exact quote verification",
+      "Live ledger reopened in fresh process, cache read with forbidden network adapter",
+      "SQLite backup reopened in second process, matching response and result"
+    ],
+    "new_pytest_cases": 0,
+    "installation_changes": 0,
+    "runtime_code_changes": 0
+  },
+  "stage2_final_checks": {
+    "Groq_only_Free_guards": "PASS_EXISTING_TESTS_REUSED_AND_CURRENT_PREFLIGHT",
+    "actual_response_and_grounding": "PASS_3_ITEMS_7_QUOTES",
+    "storage_reopen_backup_and_duplicate_prevention": "PASS_REAL_RESPONSE",
+    "quota_WAIT_API_and_wait_restart": "PASS_MOCK_EXISTING_EVIDENCE_REUSED",
+    "live_quota_exhaustion": "NOT_RUN_NOT_INDUCED",
+    "related_regression": "PASS_EXISTING_38_AND_25_REUSED_UNCHANGED",
+    "semantic_accuracy": "UNKNOWN_REQUIRES_REVIEW",
+    "CPU_comparison": "BLOCKED_PRIOR_CPU_OUTPUT_OR_WEIGHTS_MISSING_NOT_REINSTALLED",
+    "full_document_completeness": "PARTIAL_BLOCKED_UNCHANGED",
+    "stage3_and_shadow": "NOT_RUN",
+    "future_bottleneck_performance": "NOT_RUN"
   }
 }

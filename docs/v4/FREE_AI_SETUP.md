@@ -2,11 +2,21 @@
 
 Updated 2026-10-14 (Asia/Seoul). Read `EXECUTION_PLAN.md` and `PROGRESS.json` first. The fixed eight-stage goal and CPU GLiNER2 engine remain unchanged. Active AI: **GroqCloud Free Plan only**. Gemini code is retained, but routing/probes and key requirements are disabled. No third provider, paid fallback, upgrade or billing action.
 
-## Current quote repair (2026-10-14)
+## Current stage 2 completion (2026-10-14)
+
+Continued from `599c4b7df9c2290f0c626b74f93e42c39f83e9f3`. The wire JSON schema exactly matches the previously accepted version. Runtime code, Python quote binding, original/response hashes and saved tests were reused unchanged. Local preflight reserved 6,124 under the 6,400 cap; no model/auth/setup queries or reinstall were repeated.
+
+Exactly **one** new Groq Free generation succeeded: **904 input + 701 output = 1,605 tokens, $0**. All **3/3 items and 7/7 nonempty quotes** passed exact unique source matching within the same reviewed 600-character excerpt. The model still supplied incorrect coordinates; Python discarded all seven and calculated strict verified ranges. Raw response, validation and accepted cache were stored in SQLite. Separate processes reopened the live ledger and backup, with identical results and **zero additional network calls** during cache reads.
+
+**Stage 2 connectivity and grounding PASS; general semantic accuracy UNKNOWN.** The existing guard identifies the named fuel-line Projects as a PROJECT and SMRs as a PRODUCT_FAMILY, while funding/partnership roles stay UNKNOWN. Remaining semantic review: `$800 million` is funding rather than product quantity, TVA/Holtec are stated funding recipients rather than established product customers, and the Westinghouse technology name was omitted. No S-stage promotion, stage 3 evaluation or Shadow was started. See `GROQ_QUOTE_REPAIR_RESULTS.json` → `current_live_result` / `current_live_artifacts`.
+
+The prior 38 quote tests and 25 affected regression cases were reused with unchanged code/evidence hashes; the historical 99 and 261 suites were not rerun. Prior mock WAIT_API/restart evidence is separate from the newly verified real cache/SQLite results. Live quota exhaustion was not induced. Full-document completeness and unavailable historical CPU comparison remain separate limitations.
+
+## Prior quote repair (preserved history)
 
 Python now binds exact unique quotes and discards every model coordinate. Saved original/response hashes matched; one SMR item passed strict source verification and was stored as PRODUCT_FAMILY with role UNKNOWN. Four invalid alias/null-evidence items remain rejected. General semantic accuracy is UNKNOWN. New tests: 38 PASS; selected existing tests: 25 PASS; prior 261 core regression passes reused without a whole rerun or reinstall.
 
-The one permitted new live request returned HTTP 400 / invalid_request_error / SCHEMA. No new response or token usage was received; no retry was made. The exact formerly accepted wire schema is restored; start/end remain ignored zero compatibility fields while Python computes all real coordinates. Its final live recheck is NOT_RUN because this task’s one-call allowance is exhausted. Overall stage 2 remains BLOCKED; stay in stage 2 for one later bounded check, do not start stage 3 or Shadow. See `GROQ_QUOTE_REPAIR_RESULTS.json`.
+That earlier task's one permitted live request returned HTTP 400 / invalid_request_error / SCHEMA. No new response or token usage was received; no retry was made. The exact formerly accepted wire schema was then restored; start/end are untrusted compatibility fields while Python computes all real coordinates. Its real recheck was NOT_RUN within that earlier task's exhausted allowance. That historical stage-2 BLOCKED result is preserved under `prior_live_result` in `GROQ_QUOTE_REPAIR_RESULTS.json`; the subsequent one-call success above completes the remaining connection/grounding check.
 
 ## Prior connection trial (preserved history)
 
@@ -20,7 +30,7 @@ Full public response, failures and the ten requested checks: `GROQ_STAGE2_RESULT
 
 ## Quotas and runtime
 
-Official defaults: 30 RPM / 1,000 RPD / 8,000 TPM / 200,000 TPD. Actual headers: RPD **1,000**, TPM **8,000**, remaining requests **999**, remaining tokens **6,756**. RPM/TPD are published conservative caps, not observed account overrides. Other organization traffic is not visible locally.
+Official defaults: 30 RPM / 1,000 RPD / 8,000 TPM / 200,000 TPD. Latest actual headers: RPD **1,000**, TPM **8,000**, remaining requests **999**, remaining tokens **6,702** (earlier response: 6,756). RPM/TPD are published conservative caps, not observed account overrides. Other organization traffic is not visible locally.
 
 Tracked `config/v4-free-ai.json` remains disabled and its generic account unverified. Current ignored configuration: `var/v4/groq-stage2/trial-config.json`, with dated user Free confirmation and quota evidence. Verification expires after seven days. Do not activate an account merely from public pricing or create another key.
 
@@ -40,14 +50,13 @@ Default urllib reproduced 403/1010 on a read-only request; the identifying BCT c
 
 The old adapter did not retain the second POST HTTP detail; its exact rejecting parameter is unknown. The next changed-contract request returned JSON. New errors retain only HTTP status and recognized safe diagnostic labels, never raw credential-bearing error text. Unchanged invalid contracts remain held; only a changed contract may reopen an INPUT_INVALID hold. Received usage and transport recovery are saved independently of source validation. A null unverified `checked_at` now returns WAIT_API safely.
 
-Next: fix the exact quote/offset contract using the saved response first, then require a source-valid stored live reading in a new bounded run. Do not relax citation checks, rewrite invented aliases to get PASS, or change TARGET's five fields/S1/S2/S3. Missing facts remain UNKNOWN. No more API calls occurred after the received response. Main, V3.3 operating DB, Actions and alerts were not changed.
+The quote/offset contract and real SQLite verification are complete. The next separately authorized development step is stage 3 semantic assessment, beginning with funding amounts/product quantities and funding recipients/product customers. General accuracy remains UNKNOWN. TARGET's five fields/S1/S2/S3 are unchanged. This task ends at stage 2; main, V3.3 operating DB, Actions and alerts were not changed.
 
 Local inspection without network:
 
 ```bash
 cd /workspace/bottleneck-control-tower
 .venv/bin/python -m bct.v4 --root var/v4/groq-stage2/live status
-.venv/bin/python -m pytest -q tests/test_v4_free_ai.py tests/test_v4_integration.py
 ```
 
 Do not repeat the live trial to seek a desired answer. Wrong-source jobs stay REVIEW_REQUIRED; unavailable Groq stays WAIT_API. Collection stays separate and sources are retained.

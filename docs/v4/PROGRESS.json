@@ -2,31 +2,29 @@
   "plan_version": "1.2",
   "plan_sha256": "1e4c1889d8809c0cc9a0381269c9e094e6cf1056f1d43b8fda1d2260d6907b3a",
   "stage": 2,
-  "status": "BLOCKED_NEW_LIVE_CONTRACT_CHECK",
-  "handoff_sha": "fd199ea1feafbb32cce553e63c51351211a78289",
-  "base_remote_sha": "fd199ea1feafbb32cce553e63c51351211a78289",
-  "last_completed": "Hash-identical original/real response reused; exact quote binding revalidated 1 source item and rejected 4 invalid items; new 38 PASS and related prior 25 PASS; 261 regression passes reused without whole rerun; supported wire schema restored unchanged; local revalidation saved/reopened/backed up",
-  "next_action": "Stay in stage 2: one later authorized bounded Groq check using the restored previously accepted schema and current Python quote binding. Require a source-valid stored new response; no auth/model/setup redo, no extra key, no stage 3 or Shadow.",
-  "blockers": [
-    "Current-task single live call rejected the coordinate-free wire schema: HTTP 400 / invalid_request_error / SCHEMA. No new response or usage returned.",
-    "The previously accepted wire schema has been restored exactly; its new prompt/Python-binding path is verified locally, but its real recheck is NOT_RUN because the user capped this task at 1 live call.",
-    "Prior stored response is only PARTIAL_REVIEW: 1 exact-source item accepted, 4 non-literal/null-evidence items remain rejected. General semantic accuracy stays UNKNOWN."
-  ],
+  "status": "PASS_STAGE2_CONNECTIVITY_AND_GROUNDING",
+  "handoff_sha": "599c4b7df9c2290f0c626b74f93e42c39f83e9f3",
+  "base_remote_sha": "599c4b7df9c2290f0c626b74f93e42c39f83e9f3",
+  "last_completed": "Restored accepted schema reused unchanged; 1 new Groq Free generation (904+701=1605 tokens, $0), 3/3 grounded items and 7/7 exact quotes, stored and reopened from live SQLite and backup, 0 duplicate calls",
+  "next_action": "Stage 2 complete. Await separately authorized stage 3 semantic checks for funding amount versus physical quantity and funding recipient versus product customer. Stage 3 and Shadow NOT_RUN.",
+  "blockers": [],
   "tests": {
     "api_mock_functional": "Prior 99 retained as historical baseline; not rerun wholesale",
     "existing_regression": "Prior 261 PASS + 1 skip REUSED: unchanged 22 core/CPU/fixture/pin files; not rerun wholesale",
     "gemini_live": "DISABLED_NOT_RUN_NO_KEY_REQUIREMENT",
-    "groq_live": "PRIOR_CONNECTION_PASS_REUSED; CURRENT_CALL_BLOCKED_HTTP400_SCHEMA",
+    "groq_live": "PASS_CURRENT_ONE_FREE_REQUEST",
     "semantic_accuracy": "UNKNOWN_GENERAL; specific product/project/event rule cases separately checked",
     "stage3_plus": "NOT_RUN",
     "shadow_7_days": "NOT_RUN",
-    "groq_source_validation": "PASS_SAVED_REAL_ACCEPTED_ITEM; CURRENT_NEW_RESPONSE_NOT_RECEIVED",
-    "restart_and_backup": "PASS_RAW_RESPONSE_REVIEW_HOLD_AND_SIMULATED_WAIT",
-    "duplicate_prevention": "PASS_FAILED_INPUT_HOLD; positive cache PASS_MOCK_ONLY",
-    "quote_new_tests": "38 PASS unique current new cases",
-    "quote_related_regression": "25 prior affected cases PASS, selected only",
-    "saved_real_response_grounding": "PASS_PER_ITEM: 1 accepted / 4 rejected; original full batch remains PARTIAL_REVIEW",
-    "current_live_calls": 1
+    "groq_source_validation": "PASS_CURRENT_REAL_3_OF_3_ITEMS_7_OF_7_EXACT_QUOTES",
+    "restart_and_backup": "PASS_CURRENT_REAL_RESPONSE_REOPEN; prior simulated WAIT restart evidence reused",
+    "duplicate_prevention": "PASS_CURRENT_REAL_CACHE_0_EXTRA_NETWORK_CALLS",
+    "quote_new_tests": "Prior 38 PASS REUSED_UNCHANGED_NOT_RERUN",
+    "quote_related_regression": "Prior 25 PASS REUSED_UNCHANGED_NOT_RERUN",
+    "saved_real_response_grounding": "PRIOR_RESPONSE_REUSED_1_ACCEPTED_4_HELD; NEW_RESPONSE_3_ACCEPTED_0_REJECTED",
+    "current_live_calls": 1,
+    "local_request_preflight": "PASS_EXACT_ACCEPTED_SCHEMA_6124_RESERVED_UNDER_6400",
+    "new_current_pytest_cases": 0
   },
   "commits": [
     {
@@ -58,8 +56,8 @@
       "role": "Python quote binding/product-event safeguards and executed evidence; push verified against remote ref"
     }
   ],
-  "scope": "Stage 2 exact-source repair; source item revalidation PASS but new live contract remains BLOCKED. No stage 3 accuracy evaluation or Shadow.",
-  "updated_at": "2026-10-14T07:54:44.319780+09:00",
+  "scope": "Stage 2 connectivity, exact source grounding and SQLite verification complete; semantic accuracy UNKNOWN, no S-stage promotion, stage 3 and Shadow NOT_RUN.",
+  "updated_at": "2026-10-14T08:16:53.220738+09:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
@@ -78,11 +76,12 @@
     "verified_preserved_upstream_blobs": 466,
     "main_verified": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
     "receipt_commit_note": "Implementation commit SHA is recorded after verified push; the final receipt commit may advance HEAD. Read the current remote branch ref for final delivery SHA.",
-    "current_delivery": "PASS_VERIFIED_QUOTE_REPAIR_PUSH",
+    "current_delivery": "LOCAL_COMPLETE_PENDING_PUSH",
     "local_new_trial_root": "var/v4/groq-stage2 (ignored; not restored historical V4 DB)",
     "implementation_remote_sha": "5447c30a9f00ad2e6f67255e0e8f552d5cedb195",
-    "current_handoff_verified": "fd199ea1feafbb32cce553e63c51351211a78289",
-    "quote_repair_implementation_sha": "48cac90a8601e3227c4c31fe96b41b2c33afcaef"
+    "current_handoff_verified": "599c4b7df9c2290f0c626b74f93e42c39f83e9f3",
+    "quote_repair_implementation_sha": "48cac90a8601e3227c4c31fe96b41b2c33afcaef",
+    "current_runtime_evidence": "var/v4/groq-stage2/restored-live-check"
   },
   "user_setup": [],
   "pr": {
@@ -92,15 +91,16 @@
     "reason": "Prior Forbidden remains; no changed PR permission evidence"
   },
   "api_usage": {
-    "generation_posts": 3,
-    "received_responses": 1,
-    "measured_input_tokens": 843,
-    "measured_output_tokens": 1139,
-    "measured_total_tokens": 1982,
-    "failed_post_tokens": "UNKNOWN",
+    "generation_posts": 5,
+    "received_responses": 2,
+    "successful_validated_responses": 1,
+    "measured_input_tokens": 1747,
+    "measured_output_tokens": 1840,
+    "measured_total_tokens": 3587,
+    "failed_post_tokens": "UNKNOWN_NOT_REPORTED",
     "api_cost_usd": 0,
-    "basis": "User-confirmed Groq Free Plan; billing account not independently queried; no paid path",
-    "scope": "Prior connection trial only; current-task usage is separate"
+    "basis": "Previously user-confirmed Groq Free Plan; no paid path or billing changes",
+    "scope": "Cumulative V4 development trial ledger, including three prior failed posts"
   },
   "providers": {
     "active": [
@@ -112,9 +112,59 @@
   },
   "api_usage_current_task": {
     "generation_posts": 1,
-    "received_responses": 0,
-    "tokens": "UNKNOWN_NOT_REPORTED",
+    "received_responses": 1,
+    "input_tokens": 904,
+    "output_tokens": 701,
+    "total_tokens": 1605,
     "api_cost_usd": 0,
-    "basis": "Existing user-confirmed Groq Free Plan; no billing or paid path changes; no retry after failure"
+    "basis": "Previously user-confirmed Groq Free Plan; existing key reused, no retry"
+  },
+  "remaining_issues": [
+    {
+      "item_index": 2,
+      "field": "quantity",
+      "value": "$800 million",
+      "reason": "Funding amount, not product units or production capacity."
+    },
+    {
+      "item_index": 2,
+      "field": "customer_group",
+      "value": "TVA and Holtec",
+      "reason": "Named funding recipients; source does not establish actual product customers."
+    },
+    {
+      "item_index": 1,
+      "field": "entity",
+      "value": null,
+      "reason": "Westinghouse technology name not extracted; UNKNOWN preserved, completeness not established."
+    },
+    {
+      "scope": "source",
+      "reason": "Full-document completeness remains PARTIAL/BLOCKED; validated only the hash-reviewed 600-character public excerpt."
+    },
+    {
+      "scope": "CPU comparison",
+      "reason": "Prior same-source CPU outputs/weights missing; no reinstall or comparison claimed."
+    }
+  ],
+  "api_usage_previous_trials": {
+    "initial_connection_trial": {
+      "generation_posts": 3,
+      "received_responses": 1,
+      "measured_input_tokens": 843,
+      "measured_output_tokens": 1139,
+      "measured_total_tokens": 1982,
+      "failed_post_tokens": "UNKNOWN",
+      "api_cost_usd": 0,
+      "basis": "User-confirmed Groq Free Plan; billing account not independently queried; no paid path",
+      "scope": "Prior connection trial only; current-task usage is separate"
+    },
+    "quote_repair_trial": {
+      "generation_posts": 1,
+      "received_responses": 0,
+      "tokens": "UNKNOWN_NOT_REPORTED",
+      "api_cost_usd": 0,
+      "basis": "Existing user-confirmed Groq Free Plan; no billing or paid path changes; no retry after failure"
+    }
   }
 }
