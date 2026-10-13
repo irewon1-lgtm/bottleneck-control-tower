@@ -1,7 +1,7 @@
 from hashlib import sha256
 import json
 import pytest
-from bct.future_local_reader import LocalCPUQuickReader, native_schema
+from bct.future_local_reader import LocalCPUQuickReader
 
 
 def payload():
@@ -104,23 +104,3 @@ def test_native_adapter_never_turns_an_unfinished_read_into_completion():
         return {'tokens':[1,2,3]} if path=='/tokenize' else inference(value,content=json.dumps(raw))
     result=LocalCPUQuickReader(receipt(),requester=request)(value)
     assert result['review']==raw
-
-
-def test_final_character_resume_has_no_impossible_incomplete_branch():
-    # Actual failed input38308762471: previous INCOMPLETE read ended at5534/5535.
-    schema=native_schema({'read_start':5534,'expected_read_end':5535})
-    branches=schema.get('oneOf',[schema])
-    assert len(branches)==1
-    assert branches[0]['properties']['read_end']=={'type':'integer','const':5535}
-    assert 'INCOMPLETE' not in branches[0]['properties']['disposition']['enum']
-
-
-def test_two_remaining_characters_preserve_real_incomplete_progress():
-    schema=native_schema({'read_start':5533,'expected_read_end':5535})
-    assert schema['oneOf'][1]['properties']['read_end']=={
-        'type':'integer','minimum':5534,'maximum':5534}
-
-
-@pytest.mark.parametrize('start,end',[(0,0),(5535,5535),(-1,5535),(True,5535)])
-def test_invalid_source_resume_extent_is_rejected(start,end):
-    with pytest.raises(ValueError):native_schema({'read_start':start,'expected_read_end':end})

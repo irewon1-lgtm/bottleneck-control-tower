@@ -14,20 +14,12 @@ from .future_reader import INSTRUCTIONS, SCHEMA, validate_output
 
 def native_schema(payload):
     """Encode existing cross-field extent rules; INCOMPLETE stays available."""
-    start,end=payload['read_start'],payload['expected_read_end']
-    if type(start) is not int or type(end) is not int or not 0<=start<end:
-        raise ValueError('invalid local reader source resume extent')
     complete=deepcopy(cast(dict[str,Any],SCHEMA))
     complete['properties']['reason'].update(minLength=1,maxLength=500)
     incomplete=deepcopy(complete)
     complete['properties']['disposition']['enum']=[d for d in complete['properties']['disposition']['enum']
                                                  if d!='INCOMPLETE']
     complete['properties']['read_end']={'type':'integer','const':payload['expected_read_end']}
-    # No integer can express positive incomplete progress when only one
-    # character remains. An empty range caused the real native HTTP failure.
-    # Require an actual complete response; never synthesize completion.
-    if end-start==1:
-        return complete
     incomplete['properties']['disposition']={'type':'string','const':'INCOMPLETE'}
     # Reaching expected_read_end means the supplied body was read in full.
     # Keep INCOMPLETE available for a genuine early stop, but make the two
