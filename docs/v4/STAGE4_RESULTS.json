@@ -1,0 +1,2992 @@
+{
+  "at": "2026-10-14T01:05:52.806946+00:00",
+  "base_sha": "28656473efe7ad44ed3c5ae4d225870de5b5443e",
+  "stage": 4,
+  "status": "BLOCKED_STAGE4_CORPUS_AND_CPU_COMPARISON",
+  "preserved_stages": {
+    "1": "PASS_REUSED",
+    "2": "PASS_FIXED_REUSED",
+    "3": "PASS_FUNCTIONAL_REUSED"
+  },
+  "scope": "ONE_OFFICIAL_DEVELOPMENT_DOCUMENT_600_CHARACTER_INPUT; not 50 documents, not independent evaluation, not general accuracy.",
+  "documents": {
+    "native_verified": 2,
+    "full": 0,
+    "partial": 2,
+    "new_downloads": 0,
+    "development_scored": 1,
+    "independent_evaluation_scored": 0,
+    "evaluation_candidate_unprocessed": 1,
+    "candidate_urls_not_acquired": 245
+  },
+  "selection_evidence": "docs/v4/STAGE4_SELECTION.json",
+  "gold_evidence": "docs/v4/STAGE4_GOLD.json",
+  "changes": [
+    {
+      "file": "src/bct/v4/semantics.py",
+      "change": "Missing region from one explicit geographic deployment/production/delivery-of-product construction; reuse existing geography vocabulary; preserve ambiguity, negation and intended deployment modality."
+    },
+    {
+      "file": "src/bct/v4/free_ai.py",
+      "change": "Original AI evidence passes unchanged binder/strict validator first; derived literal region is then validated with those same functions. Wire schema, source functions, cache input and Router unchanged."
+    },
+    {
+      "file": "scripts/v4/accuracy_review.py",
+      "change": "Scoped offline, hash-bound standard Precision/Recall/F1 accounting, absent-vs-missed UNKNOWN, source grounding, coverage and separate SQLite review persistence."
+    }
+  ],
+  "official_source_review": {
+    "source": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+    "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+    "publication": "2026-07-25T12:47:13-04:00",
+    "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+    "raw_sha256": "e5a5b7f82c86fbbc758def29824d412091223058dc5bf12fa198b47fb6a12f13",
+    "response_sha256": "cb6957caa286f53ed053e647f9e62d16d05330a1034b85b31026e464fc2fd47f",
+    "gold_sha256": "d0df942f47fb6a7b0fb9f7633a0f8ec87e676a658f1c9b1c50079b8867856260",
+    "gold_authority": "Separately checked literal official source and explicit relation rules; evaluated Groq/Qwen answers are not gold. Executing assistant source review, not independently human-adjudicated corpus gold.",
+    "development_source_previously_seen": true,
+    "declared_field_slots": 48,
+    "known_positive_fields": 4,
+    "truth_absent_fields": 44,
+    "raw_Groq_metrics": {
+      "micro": {
+        "TP": 1,
+        "FP": 2,
+        "FN": 3,
+        "UNKNOWN": 33,
+        "truth_absent_unknown": 31,
+        "known_truth_missed": 3,
+        "unreturned_record_field_slots": 12,
+        "truth_absent_no_record": 11,
+        "unreturned_record_positive_fields": 1,
+        "precision_denominator": 3,
+        "recall_denominator": 4,
+        "precision": 0.3333333333333333,
+        "recall": 0.25,
+        "f1": 0.2857142857142857
+      },
+      "by_field": {
+        "product": {
+          "TP": 1,
+          "FP": 0,
+          "FN": 1,
+          "UNKNOWN": 2,
+          "truth_absent_unknown": 2,
+          "known_truth_missed": 1,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 0,
+          "unreturned_record_positive_fields": 1,
+          "precision_denominator": 1,
+          "recall_denominator": 2,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666
+        },
+        "demand_supply_role": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "UNKNOWN": 3,
+          "truth_absent_unknown": 3,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 1,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "quantity_unit_period": {
+          "TP": 0,
+          "FP": 1,
+          "FN": 0,
+          "UNKNOWN": 8,
+          "truth_absent_unknown": 8,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 3,
+          "truth_absent_no_record": 3,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 1,
+          "recall_denominator": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "customer": {
+          "TP": 0,
+          "FP": 1,
+          "FN": 0,
+          "UNKNOWN": 2,
+          "truth_absent_unknown": 2,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 1,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 1,
+          "recall_denominator": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "qualified_supplier": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "UNKNOWN": 3,
+          "truth_absent_unknown": 3,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 1,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "specification": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 1,
+          "UNKNOWN": 3,
+          "truth_absent_unknown": 2,
+          "known_truth_missed": 1,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 1,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 1,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "region": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 1,
+          "UNKNOWN": 3,
+          "truth_absent_unknown": 2,
+          "known_truth_missed": 1,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 1,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 1,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "time": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "UNKNOWN": 9,
+          "truth_absent_unknown": 9,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 3,
+          "truth_absent_no_record": 3,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        }
+      },
+      "observations": [
+        {
+          "row_id": "pilot-selection",
+          "field": "product",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "role",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "quantity",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "unit",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "period",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "customer_group",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "supply_pool",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "specification",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "region",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "need_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "ready_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "lead_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "product",
+          "expected": "nuclear fuel",
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "known_truth_missed": 1,
+            "FN": 1,
+            "unreturned_record_field_slots": 1,
+            "unreturned_record_positive_fields": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "role",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "quantity",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "unit",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "period",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "customer_group",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "supply_pool",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "specification",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "region",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "need_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "ready_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "lead_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "product",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "role",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "quantity",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "unit",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "period",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "customer_group",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "supply_pool",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "specification",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "region",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "need_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "ready_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "lead_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "product",
+          "expected": "advanced light-water SMRs",
+          "actual": "advanced light-water SMRs",
+          "record_returned": true,
+          "counts": {
+            "TP": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "role",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "quantity",
+          "expected": null,
+          "actual": "$800 million",
+          "record_returned": true,
+          "counts": {
+            "FP": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "unit",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "period",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "customer_group",
+          "expected": null,
+          "actual": "TVA and Holtec",
+          "record_returned": true,
+          "counts": {
+            "FP": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "supply_pool",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "specification",
+          "expected": "light-water",
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "FN": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "region",
+          "expected": "U.S.",
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "FN": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "need_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "ready_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "lead_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        }
+      ],
+      "unreturned_records": [
+        "nuclear-fuel-family"
+      ],
+      "exploration_mentions": [
+        {
+          "row_id": "technology-partnership",
+          "field": "exploration_mention",
+          "value": "Westinghouse’s nuclear reactor technologies",
+          "physical_identity": "UNKNOWN_TECHNOLOGY_DESCRIPTION",
+          "quote": "October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad.",
+          "reason": "Literal technical description; not a proven physical product, order, customer, or qualified supply.",
+          "extracted": false
+        }
+      ],
+      "exploration_mention_recall": 0.0,
+      "unscored_predictions": [],
+      "scope": "DECLARED_DEVELOPMENT_CONTEXTS_ONLY_NOT_WHOLE_DOCUMENT_OR_HOLDOUT"
+    },
+    "before_development_fix": {
+      "micro": {
+        "TP": 1,
+        "FP": 0,
+        "FN": 3,
+        "UNKNOWN": 35,
+        "truth_absent_unknown": 33,
+        "known_truth_missed": 3,
+        "unreturned_record_field_slots": 12,
+        "truth_absent_no_record": 11,
+        "unreturned_record_positive_fields": 1,
+        "precision_denominator": 1,
+        "recall_denominator": 4,
+        "precision": 1.0,
+        "recall": 0.25,
+        "f1": 0.4
+      },
+      "by_field": {
+        "product": {
+          "TP": 1,
+          "FP": 0,
+          "FN": 1,
+          "UNKNOWN": 2,
+          "truth_absent_unknown": 2,
+          "known_truth_missed": 1,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 0,
+          "unreturned_record_positive_fields": 1,
+          "precision_denominator": 1,
+          "recall_denominator": 2,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666
+        },
+        "demand_supply_role": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "UNKNOWN": 3,
+          "truth_absent_unknown": 3,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 1,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "quantity_unit_period": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "UNKNOWN": 9,
+          "truth_absent_unknown": 9,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 3,
+          "truth_absent_no_record": 3,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "customer": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "UNKNOWN": 3,
+          "truth_absent_unknown": 3,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 1,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "qualified_supplier": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "UNKNOWN": 3,
+          "truth_absent_unknown": 3,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 1,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "specification": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 1,
+          "UNKNOWN": 3,
+          "truth_absent_unknown": 2,
+          "known_truth_missed": 1,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 1,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 1,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "region": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 1,
+          "UNKNOWN": 3,
+          "truth_absent_unknown": 2,
+          "known_truth_missed": 1,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 1,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 1,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "time": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "UNKNOWN": 9,
+          "truth_absent_unknown": 9,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 3,
+          "truth_absent_no_record": 3,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        }
+      },
+      "observations": [
+        {
+          "row_id": "pilot-selection",
+          "field": "product",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "role",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "quantity",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "unit",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "period",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "customer_group",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "supply_pool",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "specification",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "region",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "need_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "ready_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "lead_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "product",
+          "expected": "nuclear fuel",
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "known_truth_missed": 1,
+            "FN": 1,
+            "unreturned_record_field_slots": 1,
+            "unreturned_record_positive_fields": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "role",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "quantity",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "unit",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "period",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "customer_group",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "supply_pool",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "specification",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "region",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "need_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "ready_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "lead_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "product",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "role",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "quantity",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "unit",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "period",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "customer_group",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "supply_pool",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "specification",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "region",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "need_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "ready_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "lead_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "product",
+          "expected": "advanced light-water SMRs",
+          "actual": "advanced light-water SMRs",
+          "record_returned": true,
+          "counts": {
+            "TP": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "role",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "quantity",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "unit",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "period",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "customer_group",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "supply_pool",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "specification",
+          "expected": "light-water",
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "FN": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "region",
+          "expected": "U.S.",
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "FN": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "need_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "ready_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "lead_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        }
+      ],
+      "unreturned_records": [
+        "nuclear-fuel-family"
+      ],
+      "exploration_mentions": [
+        {
+          "row_id": "technology-partnership",
+          "field": "exploration_mention",
+          "value": "Westinghouse’s nuclear reactor technologies",
+          "physical_identity": "UNKNOWN_TECHNOLOGY_DESCRIPTION",
+          "quote": "October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad.",
+          "reason": "Literal technical description; not a proven physical product, order, customer, or qualified supply.",
+          "extracted": false
+        }
+      ],
+      "exploration_mention_recall": 0.0,
+      "unscored_predictions": [],
+      "scope": "DECLARED_DEVELOPMENT_CONTEXTS_ONLY_NOT_WHOLE_DOCUMENT_OR_HOLDOUT"
+    },
+    "after_development_fix": {
+      "micro": {
+        "TP": 2,
+        "FP": 0,
+        "FN": 2,
+        "UNKNOWN": 34,
+        "truth_absent_unknown": 33,
+        "known_truth_missed": 2,
+        "unreturned_record_field_slots": 12,
+        "truth_absent_no_record": 11,
+        "unreturned_record_positive_fields": 1,
+        "precision_denominator": 2,
+        "recall_denominator": 4,
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6666666666666666
+      },
+      "by_field": {
+        "product": {
+          "TP": 1,
+          "FP": 0,
+          "FN": 1,
+          "UNKNOWN": 2,
+          "truth_absent_unknown": 2,
+          "known_truth_missed": 1,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 0,
+          "unreturned_record_positive_fields": 1,
+          "precision_denominator": 1,
+          "recall_denominator": 2,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666
+        },
+        "demand_supply_role": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "UNKNOWN": 3,
+          "truth_absent_unknown": 3,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 1,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "quantity_unit_period": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "UNKNOWN": 9,
+          "truth_absent_unknown": 9,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 3,
+          "truth_absent_no_record": 3,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "customer": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "UNKNOWN": 3,
+          "truth_absent_unknown": 3,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 1,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "qualified_supplier": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "UNKNOWN": 3,
+          "truth_absent_unknown": 3,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 1,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "specification": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 1,
+          "UNKNOWN": 3,
+          "truth_absent_unknown": 2,
+          "known_truth_missed": 1,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 1,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 1,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "region": {
+          "TP": 1,
+          "FP": 0,
+          "FN": 0,
+          "UNKNOWN": 2,
+          "truth_absent_unknown": 2,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 1,
+          "truth_absent_no_record": 1,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 1,
+          "recall_denominator": 1,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "time": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "UNKNOWN": 9,
+          "truth_absent_unknown": 9,
+          "known_truth_missed": 0,
+          "unreturned_record_field_slots": 3,
+          "truth_absent_no_record": 3,
+          "unreturned_record_positive_fields": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        }
+      },
+      "observations": [
+        {
+          "row_id": "pilot-selection",
+          "field": "product",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "role",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "quantity",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "unit",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "period",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "customer_group",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "supply_pool",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "specification",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "region",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "need_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "ready_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "pilot-selection",
+          "field": "lead_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "product",
+          "expected": "nuclear fuel",
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "known_truth_missed": 1,
+            "FN": 1,
+            "unreturned_record_field_slots": 1,
+            "unreturned_record_positive_fields": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "role",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "quantity",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "unit",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "period",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "customer_group",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "supply_pool",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "specification",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "region",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "need_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "ready_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "nuclear-fuel-family",
+          "field": "lead_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": false,
+          "counts": {
+            "UNKNOWN": 0,
+            "truth_absent_unknown": 0,
+            "unreturned_record_field_slots": 1,
+            "truth_absent_no_record": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "product",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "role",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "quantity",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "unit",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "period",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "customer_group",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "supply_pool",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "specification",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "region",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "need_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "ready_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "technology-partnership",
+          "field": "lead_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "product",
+          "expected": "advanced light-water SMRs",
+          "actual": "advanced light-water SMRs",
+          "record_returned": true,
+          "counts": {
+            "TP": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "role",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "quantity",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "unit",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "period",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "customer_group",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "supply_pool",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "specification",
+          "expected": "light-water",
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "FN": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "region",
+          "expected": "U.S.",
+          "actual": "U.S.",
+          "record_returned": true,
+          "counts": {
+            "TP": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "need_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "ready_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        },
+        {
+          "row_id": "smr-funding",
+          "field": "lead_time",
+          "expected": null,
+          "actual": null,
+          "record_returned": true,
+          "counts": {
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1
+          }
+        }
+      ],
+      "unreturned_records": [
+        "nuclear-fuel-family"
+      ],
+      "exploration_mentions": [
+        {
+          "row_id": "technology-partnership",
+          "field": "exploration_mention",
+          "value": "Westinghouse’s nuclear reactor technologies",
+          "physical_identity": "UNKNOWN_TECHNOLOGY_DESCRIPTION",
+          "quote": "October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad.",
+          "reason": "Literal technical description; not a proven physical product, order, customer, or qualified supply.",
+          "extracted": false
+        }
+      ],
+      "exploration_mention_recall": 0.0,
+      "unscored_predictions": [],
+      "scope": "DECLARED_DEVELOPMENT_CONTEXTS_ONLY_NOT_WHOLE_DOCUMENT_OR_HOLDOUT"
+    },
+    "grounding_before": {
+      "passed": 7,
+      "total": 7,
+      "rate": 1.0,
+      "meaning": "LITERAL_SOURCE_REFERENCES_INCLUDING_HELD_FACT_AUDITS_NOT_SEMANTIC_ACCURACY"
+    },
+    "grounding_after": {
+      "passed": 8,
+      "total": 8,
+      "rate": 1.0,
+      "meaning": "LITERAL_SOURCE_REFERENCES_INCLUDING_HELD_FACT_AUDITS_NOT_SEMANTIC_ACCURACY"
+    },
+    "coverage": {
+      "windows": [
+        {
+          "start": 5905,
+          "end": 6505,
+          "text": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel. October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad. December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs. January 5, 2026: The Energy Department announced a $2.7 billio"
+        }
+      ],
+      "publication": {
+        "published_at": "2026-07-25T12:47:13-04:00",
+        "precision": "TIMESTAMP"
+      },
+      "provenance_scope": "REVIEWED_PUBLIC_EXCERPT_NOT_FULL_DOCUMENT",
+      "selected_characters": 600,
+      "body_characters": 8053,
+      "coverage": "BOUNDED_WINDOWS_NOT_FULL_DOCUMENT",
+      "unread_ranges": [
+        {
+          "start": 0,
+          "end": 5905
+        },
+        {
+          "start": 6505,
+          "end": 8053
+        }
+      ],
+      "unread_characters": 7453
+    },
+    "coverage_fraction_of_saved_DOE_body": 0.07450639513224885,
+    "corpus_AI_read_fraction_of_saved_bodies": 0.021009874641081307,
+    "whole_document_recall": "BLOCKED_NOT_EXHAUSTIVE_GOLD_AND_PARTIAL_SOURCE",
+    "outside_input_curated_positive_audit": [
+      {
+        "value": "Mark-0",
+        "quote": "On June 4, 2026, the Energy Department celebrated Antares Nuclear’s advanced reactor, Mark-0, successfully reaching criticality through a test demonstration at INL. This achievement was the first time in over 40 years that a new privately developed non-light-water nuclear reactor reached criticality in America. The zero-power fueled criticality demonstration confirmed the reactor would be able to operate safely and established a baseline for allowing subsequent reactors to produce electricity in 2027 and the following years.",
+        "start": 2472,
+        "end": 3002,
+        "meaning": "Reached zero-power test criticality; not commercial production.",
+        "inside_AI_input": false
+      },
+      {
+        "value": "Ward 250",
+        "quote": "On June 18, 2026, the Energy Department announced Valar Atomics’ advanced test reactor, Ward 250, successfully reached criticality at the Utah San Rafael Energy Lab in Emery County, Utah.",
+        "start": 3003,
+        "end": 3190,
+        "meaning": "Advanced test reactor criticality; 250 is part of the model name, not units.",
+        "inside_AI_input": false
+      },
+      {
+        "value": "Unity",
+        "quote": "On June 30, 2026, Deployable Energy’s Unity completed a criticality demonstration, also hosted at INL—marking the third reactor to reach criticality ahead of the July 4 deadline.",
+        "start": 3191,
+        "end": 3369,
+        "meaning": "Completed a criticality test, not delivery or qualified commercial production.",
+        "inside_AI_input": false
+      },
+      {
+        "value": "Aalo-X",
+        "quote": "On July 4, 2026, Aalo Atomics’ test reactor, Aalo-X, completed a zero-power fueled criticality demonstration at INL, marking the fourth reactor to reach the Energy Department’s criticality milestone.",
+        "start": 3370,
+        "end": 3569,
+        "meaning": "Zero-power criticality test, not qualified commercial production.",
+        "inside_AI_input": false
+      },
+      {
+        "value": "800 MW",
+        "quote": "Thanks to the Office of Energy Dominance Financing (EDF), bolstered by the Working Families Tax Cut, the Energy Department is bringing previously shuttered nuclear power plants back online, and financing the development of new nuclear projects in the United States. On June 23, 2026, the Energy Department announced financing for long-lead time supply chain items to accelerate the timeline for the deployment of 10 new large-scale commercial nuclear reactors. The Energy Department is supporting the restart of previously shut-down nuclear power plants; including, Palisades 800 MW nuclear generating station in Michigan, and the Crane Restart project—an 835 MW nuclear plant in Pennsylvania. More restarts are expected to be announced in the future. In March 2026, the Energy Department’s Office of Nuclear Energy (in collaboration with EDF) launched the Utility Power Reactor Incremental Scaling Effort (UPRISE) initiative to accelerate domestic nuclear energy production. UPRISE aims to add 2.5 GW of nuclear capacity by 2027, and 5 GW by 2029—the equivalent of five new nuclear reactor years sooner than any other nuclear technology.",
+        "start": 3661,
+        "end": 4799,
+        "meaning": "Restart project nameplate rating, not added operating capacity.",
+        "inside_AI_input": false
+      },
+      {
+        "value": "835 MW",
+        "quote": "Thanks to the Office of Energy Dominance Financing (EDF), bolstered by the Working Families Tax Cut, the Energy Department is bringing previously shuttered nuclear power plants back online, and financing the development of new nuclear projects in the United States. On June 23, 2026, the Energy Department announced financing for long-lead time supply chain items to accelerate the timeline for the deployment of 10 new large-scale commercial nuclear reactors. The Energy Department is supporting the restart of previously shut-down nuclear power plants; including, Palisades 800 MW nuclear generating station in Michigan, and the Crane Restart project—an 835 MW nuclear plant in Pennsylvania. More restarts are expected to be announced in the future. In March 2026, the Energy Department’s Office of Nuclear Energy (in collaboration with EDF) launched the Utility Power Reactor Incremental Scaling Effort (UPRISE) initiative to accelerate domestic nuclear energy production. UPRISE aims to add 2.5 GW of nuclear capacity by 2027, and 5 GW by 2029—the equivalent of five new nuclear reactor years sooner than any other nuclear technology.",
+        "start": 3661,
+        "end": 4799,
+        "meaning": "Restart project rating, not completed supply increase.",
+        "inside_AI_input": false
+      },
+      {
+        "value": "2.5 GW",
+        "quote": "Thanks to the Office of Energy Dominance Financing (EDF), bolstered by the Working Families Tax Cut, the Energy Department is bringing previously shuttered nuclear power plants back online, and financing the development of new nuclear projects in the United States. On June 23, 2026, the Energy Department announced financing for long-lead time supply chain items to accelerate the timeline for the deployment of 10 new large-scale commercial nuclear reactors. The Energy Department is supporting the restart of previously shut-down nuclear power plants; including, Palisades 800 MW nuclear generating station in Michigan, and the Crane Restart project—an 835 MW nuclear plant in Pennsylvania. More restarts are expected to be announced in the future. In March 2026, the Energy Department’s Office of Nuclear Energy (in collaboration with EDF) launched the Utility Power Reactor Incremental Scaling Effort (UPRISE) initiative to accelerate domestic nuclear energy production. UPRISE aims to add 2.5 GW of nuclear capacity by 2027, and 5 GW by 2029—the equivalent of five new nuclear reactor years sooner than any other nuclear technology.",
+        "start": 3661,
+        "end": 4799,
+        "meaning": "UPRISE aim, not actual supply.",
+        "inside_AI_input": false
+      },
+      {
+        "value": "5 GW",
+        "quote": "Thanks to the Office of Energy Dominance Financing (EDF), bolstered by the Working Families Tax Cut, the Energy Department is bringing previously shuttered nuclear power plants back online, and financing the development of new nuclear projects in the United States. On June 23, 2026, the Energy Department announced financing for long-lead time supply chain items to accelerate the timeline for the deployment of 10 new large-scale commercial nuclear reactors. The Energy Department is supporting the restart of previously shut-down nuclear power plants; including, Palisades 800 MW nuclear generating station in Michigan, and the Crane Restart project—an 835 MW nuclear plant in Pennsylvania. More restarts are expected to be announced in the future. In March 2026, the Energy Department’s Office of Nuclear Energy (in collaboration with EDF) launched the Utility Power Reactor Incremental Scaling Effort (UPRISE) initiative to accelerate domestic nuclear energy production. UPRISE aims to add 2.5 GW of nuclear capacity by 2027, and 5 GW by 2029—the equivalent of five new nuclear reactor years sooner than any other nuclear technology.",
+        "start": 3661,
+        "end": 4799,
+        "meaning": "UPRISE aim, not actual supply.",
+        "inside_AI_input": false
+      }
+    ],
+    "outside_input_audit_exhaustive": false,
+    "no_output_against_unread_truth_counted_as_model_error": true,
+    "industry_event_scope": {
+      "nuclear_government_selection_partnership_funding": 1,
+      "actual_order_decrease_delay_relief_comparison": "BLOCKED_NO_ADJUDICATED_NATIVE_CORPUS"
+    },
+    "EIA_candidate": {
+      "document_id": "v4doc-95747233913bebbc3be389e57f3335a942d5502b13be8f3fb32851862d030814",
+      "url": "https://www.eia.gov/electricity/monthly/",
+      "body_sha256": "50dc12fd84e755dc9654e59b982e2afd8b1c03e0200a08ffc0f76f641d95ebb7",
+      "published_at_in_existing_metadata": null,
+      "observed_report_header": "Data for July 2026 Release Date: September 24, 2026 Next Release Date: October 23, 2026",
+      "provenance_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication",
+        "full_accessible_body"
+      ],
+      "existing_source_input_guard": "POLICY",
+      "prediction": "BLOCKED_NOT_RUN",
+      "scored_as_unknown_or_false_negative": false,
+      "metadata_or_policy_relaxed": false
+    },
+    "reference_revision_history": [
+      {
+        "previous_sha256": "705b7a74fd70e764d2737f49ad4cf0cfe1c739c36192bc09bae70f8734031ef8",
+        "reason": "Independent source scope recheck found nuclear fuel as a literal physical product family in the pilot-selection sentence; expanded the original one-entity-per-context annotation. This is development data; no evaluation output was used. Baseline and final outputs are rescored against the same expanded reference."
+      }
+    ],
+    "absent_engine_record": [
+      "nuclear-fuel-family"
+    ],
+    "normalized_reading": {
+      "items": [
+        {
+          "actuality": "ACTUAL",
+          "context": {
+            "end": 6066,
+            "quote": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel.",
+            "start": 5905,
+            "reference": {
+              "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+              "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+              "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "locator": {
+                "start": 5905,
+                "end": 6066
+              },
+              "source_quote": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel.",
+              "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "origin_publisher": "Energy.gov",
+              "published_at": "2026-07-25T12:47:13-04:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "entity": {
+            "end": 6002,
+            "quote": "Advanced Nuclear Fuel Line Pilot Projects",
+            "start": 5961,
+            "value": "Advanced Nuclear Fuel Line Pilot Projects",
+            "reference": {
+              "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+              "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+              "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "locator": {
+                "start": 5961,
+                "end": 6002
+              },
+              "source_quote": "Advanced Nuclear Fuel Line Pilot Projects",
+              "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "origin_publisher": "Energy.gov",
+              "published_at": "2026-07-25T12:47:13-04:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "facts": [
+            {
+              "end": 0,
+              "field": "specification",
+              "quote": "",
+              "start": 0,
+              "value": null,
+              "reference": null
+            }
+          ],
+          "kind": "PROJECT",
+          "role": "UNKNOWN",
+          "target": {
+            "product": null,
+            "specification": null,
+            "region": null,
+            "customer_group": null,
+            "supply_pool": null
+          },
+          "source_verified": true,
+          "semantic_status": "UNKNOWN_REQUIRES_REVIEW",
+          "s_stage": "UNKNOWN",
+          "forecast_candidate": false,
+          "physical_exploration_lead": false,
+          "model_classification": {
+            "kind": "PROJECT",
+            "role": "UNKNOWN",
+            "actuality": "ACTUAL"
+          },
+          "semantic_policy_version": "bct-v4-semantics-2",
+          "semantic_review": [],
+          "semantic_checks": {
+            "kind": "EXPLICIT_PROJECT_HEAD",
+            "field_decisions": [
+              {
+                "field": "specification",
+                "status": "UNKNOWN",
+                "reason": "MISSING_SOURCE_FACT"
+              }
+            ],
+            "physical_event_support": false,
+            "role_retained": false,
+            "event_scope": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel.",
+            "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+          },
+          "input_item_index": 0,
+          "coordinate_origin": "PYTHON_EXACT_UNIQUE_QUOTE",
+          "source_literal_additions": []
+        },
+        {
+          "actuality": "ACTUAL",
+          "context": {
+            "end": 6306,
+            "quote": "October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad.",
+            "start": 6067,
+            "reference": {
+              "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+              "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+              "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "locator": {
+                "start": 6067,
+                "end": 6306
+              },
+              "source_quote": "October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad.",
+              "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "origin_publisher": "Energy.gov",
+              "published_at": "2026-07-25T12:47:13-04:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "entity": {
+            "end": 0,
+            "quote": "",
+            "start": 0,
+            "value": null,
+            "reference": null
+          },
+          "facts": [
+            {
+              "end": 0,
+              "field": "relief",
+              "quote": "",
+              "start": 0,
+              "value": null,
+              "reference": null
+            }
+          ],
+          "kind": "GENERAL_EXPRESSION",
+          "role": "UNKNOWN",
+          "target": {
+            "product": null,
+            "specification": null,
+            "region": null,
+            "customer_group": null,
+            "supply_pool": null
+          },
+          "source_verified": true,
+          "semantic_status": "UNKNOWN_REQUIRES_REVIEW",
+          "s_stage": "UNKNOWN",
+          "forecast_candidate": false,
+          "physical_exploration_lead": false,
+          "model_classification": {
+            "kind": "GENERAL_EXPRESSION",
+            "role": "UNKNOWN",
+            "actuality": "ACTUAL"
+          },
+          "semantic_policy_version": "bct-v4-semantics-2",
+          "semantic_review": [],
+          "semantic_checks": {
+            "kind": "UNKNOWN_MODEL_CLASSIFICATION",
+            "field_decisions": [
+              {
+                "field": "relief",
+                "status": "UNKNOWN",
+                "reason": "MISSING_SOURCE_FACT"
+              }
+            ],
+            "physical_event_support": false,
+            "role_retained": false,
+            "event_scope": "October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad.",
+            "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+          },
+          "input_item_index": 1,
+          "coordinate_origin": "PYTHON_EXACT_UNIQUE_QUOTE",
+          "source_literal_additions": []
+        },
+        {
+          "actuality": "ACTUAL",
+          "context": {
+            "end": 6442,
+            "quote": "December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs.",
+            "start": 6307,
+            "reference": {
+              "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+              "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+              "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "locator": {
+                "start": 6307,
+                "end": 6442
+              },
+              "source_quote": "December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs.",
+              "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "origin_publisher": "Energy.gov",
+              "published_at": "2026-07-25T12:47:13-04:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "entity": {
+            "end": 6441,
+            "quote": "advanced light-water SMRs",
+            "start": 6416,
+            "value": "advanced light-water SMRs",
+            "reference": {
+              "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+              "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+              "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "locator": {
+                "start": 6416,
+                "end": 6441
+              },
+              "source_quote": "advanced light-water SMRs",
+              "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "origin_publisher": "Energy.gov",
+              "published_at": "2026-07-25T12:47:13-04:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "facts": [
+            {
+              "end": 0,
+              "field": "quantity",
+              "quote": "",
+              "start": 0,
+              "value": null,
+              "reference": null
+            },
+            {
+              "end": 0,
+              "field": "customer_group",
+              "quote": "",
+              "start": 0,
+              "value": null,
+              "reference": null
+            },
+            {
+              "end": 6442,
+              "field": "region",
+              "quote": "December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs.",
+              "start": 6307,
+              "value": "U.S.",
+              "reference": {
+                "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+                "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+                "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "locator": {
+                  "start": 6307,
+                  "end": 6442
+                },
+                "source_quote": "December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs.",
+                "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "origin_publisher": "Energy.gov",
+                "published_at": "2026-07-25T12:47:13-04:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              },
+              "semantic_actuality": "PLAN"
+            }
+          ],
+          "kind": "PRODUCT_FAMILY",
+          "role": "UNKNOWN",
+          "target": {
+            "product": {
+              "end": 6441,
+              "quote": "advanced light-water SMRs",
+              "start": 6416,
+              "value": "advanced light-water SMRs",
+              "reference": {
+                "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+                "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+                "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "locator": {
+                  "start": 6416,
+                  "end": 6441
+                },
+                "source_quote": "advanced light-water SMRs",
+                "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "origin_publisher": "Energy.gov",
+                "published_at": "2026-07-25T12:47:13-04:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            },
+            "specification": null,
+            "region": {
+              "end": 6442,
+              "field": "region",
+              "quote": "December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs.",
+              "start": 6307,
+              "value": "U.S.",
+              "reference": {
+                "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+                "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+                "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "locator": {
+                  "start": 6307,
+                  "end": 6442
+                },
+                "source_quote": "December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs.",
+                "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "origin_publisher": "Energy.gov",
+                "published_at": "2026-07-25T12:47:13-04:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              },
+              "semantic_actuality": "PLAN"
+            },
+            "customer_group": null,
+            "supply_pool": null
+          },
+          "source_verified": true,
+          "semantic_status": "UNKNOWN_REQUIRES_REVIEW",
+          "s_stage": "UNKNOWN",
+          "forecast_candidate": false,
+          "physical_exploration_lead": true,
+          "model_classification": {
+            "kind": "PHYSICAL_PRODUCT",
+            "role": "UNKNOWN",
+            "actuality": "ACTUAL"
+          },
+          "semantic_policy_version": "bct-v4-semantics-2",
+          "semantic_review": [
+            {
+              "field": "quantity",
+              "reason": "FINANCIAL_AMOUNT_NOT_PHYSICAL_QUANTITY",
+              "source_fact": {
+                "end": 6367,
+                "field": "quantity",
+                "quote": "$800 million",
+                "start": 6355,
+                "value": "$800 million",
+                "reference": {
+                  "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+                  "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+                  "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                  "locator": {
+                    "start": 6355,
+                    "end": 6367
+                  },
+                  "source_quote": "$800 million",
+                  "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                  "origin_publisher": "Energy.gov",
+                  "published_at": "2026-07-25T12:47:13-04:00",
+                  "publication_precision": "TIMESTAMP",
+                  "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+                  "assertion": "DIRECT_SOURCE_FACT"
+                }
+              }
+            },
+            {
+              "field": "customer_group",
+              "reason": "ACTUAL_PRODUCT_BUYER_RELATION_REQUIRED",
+              "source_fact": {
+                "end": 6385,
+                "field": "customer_group",
+                "quote": "TVA and Holtec",
+                "start": 6371,
+                "value": "TVA and Holtec",
+                "reference": {
+                  "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+                  "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+                  "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                  "locator": {
+                    "start": 6371,
+                    "end": 6385
+                  },
+                  "source_quote": "TVA and Holtec",
+                  "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                  "origin_publisher": "Energy.gov",
+                  "published_at": "2026-07-25T12:47:13-04:00",
+                  "publication_precision": "TIMESTAMP",
+                  "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+                  "assertion": "DIRECT_SOURCE_FACT"
+                }
+              }
+            }
+          ],
+          "semantic_checks": {
+            "kind": "EXPLICIT_PHYSICAL_FAMILY_HEAD",
+            "field_decisions": [
+              {
+                "field": "quantity",
+                "status": "UNKNOWN",
+                "reason": "FINANCIAL_AMOUNT_NOT_PHYSICAL_QUANTITY",
+                "actuality": "ACTUAL"
+              },
+              {
+                "field": "customer_group",
+                "status": "UNKNOWN",
+                "reason": "ACTUAL_PRODUCT_BUYER_RELATION_REQUIRED",
+                "actuality": "ACTUAL"
+              },
+              {
+                "field": "region",
+                "status": "ADOPTED",
+                "reason": "EXPLICIT_GEOGRAPHIC_PRODUCT_CONSTRUCTION",
+                "actuality": "PLAN"
+              }
+            ],
+            "physical_event_support": false,
+            "role_retained": false,
+            "event_scope": "December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs.",
+            "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+          },
+          "input_item_index": 2,
+          "coordinate_origin": "PYTHON_EXACT_UNIQUE_QUOTE",
+          "source_literal_additions": [
+            "region"
+          ]
+        }
+      ],
+      "rejected_items": [],
+      "coverage": {
+        "windows": [
+          {
+            "start": 5905,
+            "end": 6505,
+            "text": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel. October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad. December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs. January 5, 2026: The Energy Department announced a $2.7 billio"
+          }
+        ],
+        "publication": {
+          "published_at": "2026-07-25T12:47:13-04:00",
+          "precision": "TIMESTAMP"
+        },
+        "provenance_scope": "REVIEWED_PUBLIC_EXCERPT_NOT_FULL_DOCUMENT",
+        "selected_characters": 600,
+        "body_characters": 8053,
+        "coverage": "BOUNDED_WINDOWS_NOT_FULL_DOCUMENT",
+        "unread_ranges": [
+          {
+            "start": 0,
+            "end": 5905
+          },
+          {
+            "start": 6505,
+            "end": 8053
+          }
+        ],
+        "unread_characters": 7453
+      },
+      "source_status": "PASS",
+      "semantic_accuracy": "UNKNOWN",
+      "forecast_performance": "BLOCKED"
+    }
+  },
+  "meaning_vs_grounding": {
+    "all_literal_references": {
+      "passed": 8,
+      "total": 8,
+      "rate": 1.0,
+      "meaning": "LITERAL_SOURCE_REFERENCES_INCLUDING_HELD_FACT_AUDITS_NOT_SEMANTIC_ACCURACY"
+    },
+    "semantic_accuracy": "UNKNOWN_GENERAL",
+    "corrected_source_literal_region": "U.S.",
+    "new_region_semantic_actuality": "PLAN_NOT_QUALIFIED_SUPPLY_INCREASE",
+    "physical_quantity_customer_qualified_supplier_need_time_ready_time": "UNKNOWN_SOURCE_HAS_NO_SUPPORTED_ANSWER",
+    "still_missed": [
+      {
+        "field": "product",
+        "value": "nuclear fuel",
+        "included_in_fact_FN": true,
+        "reason": "Physical manufactured fuel family explicitly present in the project-selection sentence, but no matching entity record returned."
+      },
+      {
+        "field": "specification",
+        "value": "light-water",
+        "included_in_fact_FN": true,
+        "reason": "Explicit product technology type omitted; no inferred numeric rating."
+      },
+      {
+        "field": "exploration_mention",
+        "value": "Westinghouse’s nuclear reactor technologies",
+        "included_in_fact_FN": false,
+        "included_in_separate_mention_FN": true,
+        "physical_identity": "UNKNOWN_TECHNOLOGY_DESCRIPTION"
+      }
+    ]
+  },
+  "tests": {
+    "new_authored_and_metric_cases": {
+      "passed": 20,
+      "failed": 0,
+      "evidence": "docs/v4/STAGE4_NEW_TESTS.xml",
+      "official_source_accuracy_proof": false
+    },
+    "selected_related_regression": {
+      "passed": 25,
+      "failed": 0,
+      "deselected": 177,
+      "evidence": "docs/v4/STAGE4_RELATED_TESTS.xml"
+    },
+    "full_99_261_suites": "REUSED_HISTORICAL_NOT_RERUN",
+    "stage2_connection_and_quote_engine": "REUSED_UNCHANGED_NOT_REBUILT",
+    "SQLite_review": "PASS_SEPARATE_STAGE4_STORE_REOPENED",
+    "evaluation_tuning": false
+  },
+  "resources": {
+    "offline_validation_cpu_seconds": 0.008121724999999996,
+    "offline_validation_wall_seconds": 0.008121764003590215,
+    "process_peak_rss_mib": 36.0234375,
+    "CPU_model_inference": "BLOCKED_NO_WEIGHTS_OR_MATCHING_SAVED_OUTPUT",
+    "historical_Groq_generation_seconds": "UNKNOWN_NOT_RECORDED"
+  },
+  "api_usage_current_task": {
+    "generation_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "total_tokens": 0,
+    "API_cost_USD": 0,
+    "reason": "Stored response only; no new generation, key probe, or Gemini call.",
+    "historical_response_usage_reused_not_new": {
+      "input_tokens": 904,
+      "output_tokens": 701,
+      "total_tokens": 1605
+    },
+    "execution_environment_cost": "UNKNOWN_NOT_EXPOSED"
+  },
+  "SQLite": {
+    "review_path": "var/v4/stage4/review/v4.sqlite3",
+    "source_path": "var/v4/groq-stage2/live/v4.sqlite3",
+    "source_ledger_sha256_unchanged": "0d08401f6b549493aae9ee07fc0327f6214aca899dc56f051e78dd343d7d8b0f",
+    "result_persistence": "PASS_SEPARATE_STAGE4_SQLITE_REOPENED"
+  },
+  "verdict": {
+    "A_actual_original_accuracy_measurement": "PARTIAL_SCOPED_1_DOCUMENT; BLOCKED_50_DOCUMENT_INDEPENDENT_MEASUREMENT",
+    "B_CPU_improvement_proven": "BLOCKED_NO_SAME_INPUT_CPU_OUTPUT_OR_WEIGHTS",
+    "C_before_bottleneck_news_performance": "NOT_RUN_STAGE6",
+    "stage4": "BLOCKED_NOT_PASS",
+    "stage5": "NOT_RUN",
+    "shadow_7_days": "NOT_RUN"
+  },
+  "blockers": [
+    {
+      "code": "OFFICIAL_SOURCE_DOMAINS_NOT_APPLIED",
+      "evidence": {
+        "draft_status": "SAVED_CONFIRMED_BY_READ_BACK",
+        "draft_revision": 5,
+        "requires_publish": true,
+        "draft_custom_domains": [
+          "api.groq.com",
+          "console.groq.com",
+          "investors.bakerhughes.com",
+          "ir.coherent.com",
+          "www.aehr.com",
+          "www.eia.gov",
+          "www.energy.gov",
+          "www.esa.int",
+          "www.nist.gov",
+          "www.sec.gov"
+        ],
+        "active_spec_revision": "4",
+        "active_allowed_custom_domains": [
+          "api.groq.com"
+        ],
+        "observations_current": true,
+        "enforcement_state": "unknown",
+        "install_script_unchanged": true,
+        "start_instructions_unchanged": true,
+        "secret_binding_preserved": true,
+        "official_source_fetch_requests_this_task": 0,
+        "network_or_proxy_bypass": false,
+        "required_user_action": "Review/save the saved domain changes in environment settings, publish the environment, then resume after the running environment permits these official hosts."
+      },
+      "effect": "No new official downloads; 50-document corpus not acquired."
+    },
+    {
+      "code": "INSUFFICIENT_DISTINCT_NATIVE_ORIGINALS",
+      "actual": 2,
+      "target": 50,
+      "split_actual": {
+        "development": 1,
+        "evaluation_candidate": 1,
+        "evaluation_frozen_20": 0
+      }
+    },
+    {
+      "code": "NO_MATCHING_CPU_OUTPUT_OR_MODEL",
+      "effect": "Same-input CPU/Groq improvement BLOCKED; no substitute output or installation."
+    },
+    {
+      "code": "PARTIAL_SOURCE_AND_LIMITED_INPUT",
+      "effect": "No complete-document accuracy claim; 7453/8053 saved DOE characters outside AI input."
+    },
+    {
+      "code": "NOT_INDEPENDENTLY_ADJUDICATED_GOLD",
+      "effect": "Source-checked executing-assistant development annotations only, not independent human review or a held-out corpus."
+    },
+    {
+      "code": "EXISTING_SOURCE_TRANSFER_GATES",
+      "effect": "EIA report candidate still fails original identity/publication/publisher/full-body checks. Query-bearing source URLs also remain forbidden by the preserved transfer guard; URL candidates are not promises of Groq eligibility."
+    }
+  ],
+  "preservation": {
+    "source_HTTP_Router_storage_functions_AST_identical": [
+      "obj",
+      "_without_coordinates",
+      "APIError",
+      "instant",
+      "checked_config",
+      "source_input",
+      "shape",
+      "no_duplicate_keys",
+      "validate_output",
+      "exact_quote_range",
+      "bind_quotes",
+      "retry_after",
+      "NoRedirect",
+      "HTTPAdapter",
+      "Router",
+      "api_status",
+      "annotate"
+    ],
+    "CPU_storage_pipeline_fixture_historical_results_byte_identical": [
+      "src/bct/v4/adapters.py",
+      "src/bct/v4/store.py",
+      "src/bct/v4/pipeline.py",
+      "src/bct/precursor_scope_reader.py",
+      "scripts/v4/requirements.lock",
+      "tests/fixtures/v4_stage3_official_source.json",
+      "docs/v4/STAGE3_RESULTS.json",
+      "docs/v4/GROQ_QUOTE_REPAIR_RESULTS.json"
+    ],
+    "base_sha": "28656473efe7ad44ed3c5ae4d225870de5b5443e",
+    "S_stage_promotions": 0,
+    "Gemini_calls": 0,
+    "third_provider": false,
+    "paid_API_or_billing_changes": false,
+    "operating_Actions_alerts_main_changes": false,
+    "new_installs": 0
+  },
+  "next_start": "Publish/apply the saved official-domain draft; acquire actual original versions from the recorded candidates, verify URL/publication/hash/coverage, then freeze 30 development/20 evaluation before new predictions. Keep stage4 open and CPU comparison BLOCKED until matching evidence exists.",
+  "reproducible_commands": [
+    ".venv/bin/python scripts/v4/accuracy_review.py --output var/v4/stage4/after.json --store-root var/v4/stage4/review",
+    ".venv/bin/python -m pytest -q tests/test_v4_stage4_accuracy.py --junitxml=docs/v4/STAGE4_NEW_TESTS.xml"
+  ]
+}

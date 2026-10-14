@@ -1,20 +1,80 @@
 {
-  "plan_version": "1.3",
-  "plan_sha256": "712e3c45640a3cd6719a23b6c6a655b6b683f42e889765b7b0956ce47fc8b71e",
-  "stage": 3,
-  "status": "PASS_STAGE3_FUNCTIONAL_VERIFICATION",
-  "handoff_sha": "47df6e76badcbce189329a9d52329ecd9da8dbd3",
-  "base_remote_sha": "47df6e76badcbce189329a9d52329ecd9da8dbd3",
-  "last_completed": "Stage 3 meaning guards: 85 new and 37 selected prior cases PASS; saved real source 1 doc/3 items, 23 fields: correct8/wrong0/UNKNOWN15 (including 3 role labels), 2 separate omissions retained; separate SQLite restart/backup PASS; new API calls0",
-  "next_action": "Await separately authorized stage 4 official-source comparison. Keep missing technology/region extractions and unknown physical quantity/customer/qualified-supply/time visible; no stage 4 or Shadow in current task.",
-  "blockers": [],
+  "plan_version": "1.4",
+  "plan_sha256": "30a90650d4702ea166e5495fcd8bcda1e21454fedec778a38cb7bc7ee3485496",
+  "stage": 4,
+  "status": "BLOCKED_STAGE4_CORPUS_AND_CPU_COMPARISON",
+  "handoff_sha": "28656473efe7ad44ed3c5ae4d225870de5b5443e",
+  "base_remote_sha": "28656473efe7ad44ed3c5ae4d225870de5b5443e",
+  "last_completed": "Stage4 scoped source audit: native originals2 PARTIAL, development1/600 characters scored, independent evaluation0; final TP2 FP0 FN2, precision2/2 recall2/4, separate technology-mention miss1; literal U.S. region repaired; 20 new +25 related tests PASS; new Groq calls0.",
+  "next_action": "Publish/apply the saved official-domain draft; acquire actual original versions from the recorded candidates, verify URL/publication/hash/coverage, then freeze 30 development/20 evaluation before new predictions. Keep stage4 open and CPU comparison BLOCKED until matching evidence exists.",
+  "blockers": [
+    {
+      "code": "OFFICIAL_SOURCE_DOMAINS_NOT_APPLIED",
+      "evidence": {
+        "draft_status": "SAVED_CONFIRMED_BY_READ_BACK",
+        "draft_revision": 5,
+        "requires_publish": true,
+        "draft_custom_domains": [
+          "api.groq.com",
+          "console.groq.com",
+          "investors.bakerhughes.com",
+          "ir.coherent.com",
+          "www.aehr.com",
+          "www.eia.gov",
+          "www.energy.gov",
+          "www.esa.int",
+          "www.nist.gov",
+          "www.sec.gov"
+        ],
+        "active_spec_revision": "4",
+        "active_allowed_custom_domains": [
+          "api.groq.com"
+        ],
+        "observations_current": true,
+        "enforcement_state": "unknown",
+        "install_script_unchanged": true,
+        "start_instructions_unchanged": true,
+        "secret_binding_preserved": true,
+        "official_source_fetch_requests_this_task": 0,
+        "network_or_proxy_bypass": false,
+        "required_user_action": "Review/save the saved domain changes in environment settings, publish the environment, then resume after the running environment permits these official hosts."
+      },
+      "effect": "No new official downloads; 50-document corpus not acquired."
+    },
+    {
+      "code": "INSUFFICIENT_DISTINCT_NATIVE_ORIGINALS",
+      "actual": 2,
+      "target": 50,
+      "split_actual": {
+        "development": 1,
+        "evaluation_candidate": 1,
+        "evaluation_frozen_20": 0
+      }
+    },
+    {
+      "code": "NO_MATCHING_CPU_OUTPUT_OR_MODEL",
+      "effect": "Same-input CPU/Groq improvement BLOCKED; no substitute output or installation."
+    },
+    {
+      "code": "PARTIAL_SOURCE_AND_LIMITED_INPUT",
+      "effect": "No complete-document accuracy claim; 7453/8053 saved DOE characters outside AI input."
+    },
+    {
+      "code": "NOT_INDEPENDENTLY_ADJUDICATED_GOLD",
+      "effect": "Source-checked executing-assistant development annotations only, not independent human review or a held-out corpus."
+    },
+    {
+      "code": "EXISTING_SOURCE_TRANSFER_GATES",
+      "effect": "EIA report candidate still fails original identity/publication/publisher/full-body checks. Query-bearing source URLs also remain forbidden by the preserved transfer guard; URL candidates are not promises of Groq eligibility."
+    }
+  ],
   "tests": {
     "api_mock_functional": "Prior 99 retained as historical baseline; not rerun wholesale",
     "existing_regression": "Prior 261 PASS + 1 skip REUSED: unchanged 22 core/CPU/fixture/pin files; not rerun wholesale",
     "gemini_live": "DISABLED_NOT_RUN_NO_KEY_REQUIREMENT",
     "groq_live": "PASS_STAGE2_FIXED_REUSED_NOT_RETESTED",
-    "semantic_accuracy": "UNKNOWN_GENERAL; one-official-source selected-field review only",
-    "stage3_plus": "STAGE3_FUNCTIONAL_PASS; STAGE4_PLUS_NOT_RUN",
+    "semantic_accuracy": "UNKNOWN_GENERAL; scoped development annotations only",
+    "stage3_plus": "STAGE3_FUNCTIONAL_PASS_REUSED; STAGE4_SCOPED_MEASUREMENT_PARTIAL_BLOCKED",
     "shadow_7_days": "NOT_RUN",
     "groq_source_validation": "PASS_STAGE2_REUSED; 7 references preserved after current semantic reprocessing",
     "restart_and_backup": "PASS_CURRENT_SEMANTIC_RESULT_PERSISTENCE; prior WAIT/transport checks reused",
@@ -26,7 +86,14 @@
     "local_request_preflight": "PASS_EXACT_ACCEPTED_SCHEMA_6124_RESERVED_UNDER_6400",
     "new_current_pytest_cases": 0,
     "stage3_new_cases": "85 PASS unique, authored and saved-real response cases labelled separately",
-    "stage3_selected_regression": "37 PASS unique prior affected cases only"
+    "stage3_selected_regression": "37 PASS unique prior affected cases only",
+    "stage4_new_cases": "20 PASS authored/arithmetic/source-reference cases; not 20 official documents",
+    "stage4_selected_regression": "25 PASS, 177 deselected; not full99/261 rerun",
+    "stage4_official_document_accuracy": "1 development document /600 saved input characters; TP2 FP0 FN2; independent evaluation0",
+    "stage4_CPU_comparison": "BLOCKED_NO_MODEL_OR_MATCHING_OUTPUT",
+    "stage4_full_accuracy": "BLOCKED_NO_50_DOCUMENT_CORPUS_AND_NO_EXHAUSTIVE_INDEPENDENT_GOLD",
+    "stage4_SQLite": "PASS_NEW_SEPARATE_REVIEW_RECORD_REOPENED",
+    "stage4_grounding": "8/8 literal references; meaning accuracy is separate"
   },
   "commits": [
     {
@@ -72,10 +139,14 @@
     {
       "sha": "e182b54737a063036b07f74ebc8d49397f7110df",
       "role": "Stage 3 meaning rules, 85 new + 37 selected prior PASS and saved-response/SQLite evidence; push verified against remote ref"
+    },
+    {
+      "sha": "28656473efe7ad44ed3c5ae4d225870de5b5443e",
+      "role": "Stage4 handoff; remote branch verified before work, stages1-3 fixed/reused"
     }
   ],
-  "scope": "Stage 3 functional guards PASS; stage 2 fixed PASS; general meaning accuracy UNKNOWN, one-source smoke only; stage 4/Shadow NOT_RUN.",
-  "updated_at": "2026-10-14T09:06:39.454090+09:00",
+  "scope": "ONE_OFFICIAL_DEVELOPMENT_DOCUMENT_600_CHARACTER_INPUT; not 50 documents, not independent evaluation, not general accuracy.",
+  "updated_at": "2026-10-14T01:05:52.806946+00:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
@@ -91,26 +162,38 @@
     "docs/v4/STAGE3_SEMANTIC_TESTS.xml",
     "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml",
     "docs/v4/STAGE3_INTEGRATION_TESTS.xml",
-    "docs/v4/STAGE3_BASELINE_ERRORS.xml"
+    "docs/v4/STAGE3_BASELINE_ERRORS.xml",
+    "docs/v4/STAGE4_SELECTION.json",
+    "docs/v4/STAGE4_GOLD.json",
+    "docs/v4/STAGE4_RESULTS.json",
+    "docs/v4/STAGE4_NEW_TESTS.xml",
+    "docs/v4/STAGE4_RELATED_TESTS.xml"
   ],
   "storage": {
     "branch": "codex/bct-v4-integration",
-    "implementation_push": "PASS_VERIFIED_STAGE3_RESULT_PUSH",
-    "latest_remote_verified": "e182b54737a063036b07f74ebc8d49397f7110df",
+    "implementation_push": "PENDING_STAGE4_COMMIT_PUSH",
+    "latest_remote_verified": "28656473efe7ad44ed3c5ae4d225870de5b5443e",
     "verified_preserved_upstream_blobs": 466,
     "main_verified": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
     "receipt_commit_note": "Implementation commit SHA is recorded after verified push; the final receipt commit may advance HEAD. Read the current remote branch ref for final delivery SHA.",
-    "current_delivery": "PASS_VERIFIED_STAGE3_RESULT_PUSH",
+    "current_delivery": "PENDING_STAGE4_DEVELOPMENT_COMMIT_PUSH",
     "local_new_trial_root": "var/v4/groq-stage2 (ignored; not restored historical V4 DB)",
     "implementation_remote_sha": "5447c30a9f00ad2e6f67255e0e8f552d5cedb195",
-    "current_handoff_verified": "47df6e76badcbce189329a9d52329ecd9da8dbd3",
+    "current_handoff_verified": "28656473efe7ad44ed3c5ae4d225870de5b5443e",
     "quote_repair_implementation_sha": "48cac90a8601e3227c4c31fe96b41b2c33afcaef",
-    "current_runtime_evidence": "var/v4/stage3",
+    "current_runtime_evidence": "var/v4/stage4",
     "stage2_result_commit_sha": "96abceb903d9d88b4cf8ca8f95be45059a7dd486",
     "stage3_SQLite": "var/v4/stage3/replay (separate copy; stage2 source read-only)",
-    "stage3_result_commit_sha": "e182b54737a063036b07f74ebc8d49397f7110df"
+    "stage3_result_commit_sha": "e182b54737a063036b07f74ebc8d49397f7110df",
+    "stage4_SQLite": "var/v4/stage4/review (new; original native ledger read-only)"
   },
-  "user_setup": [],
+  "user_setup": [
+    {
+      "action": "Review/save and Publish the already saved official-domain draft; resume after those hosts are applied to the running environment.",
+      "reason": "Configuration tool returned requires_publish=true; draft revision5 saved and read back, but active custom allowlist remains api.groq.com at revision4.",
+      "extra_key_or_Free_Plan_confirmation_required": false
+    }
+  ],
   "pr": {
     "status": "BLOCKED_GITHUB_API_403_PRIOR",
     "evidence": "docs/v4/DELIVERY.json",
@@ -142,41 +225,44 @@
     "input_tokens": 0,
     "output_tokens": 0,
     "total_tokens": 0,
-    "api_cost_usd": 0,
-    "reason": "Saved actual response reused; all current processing offline with a forbidden-network adapter",
-    "historical_usage_not_new": {
+    "API_cost_USD": 0,
+    "reason": "Stored response only; no new generation, key probe, or Gemini call.",
+    "historical_response_usage_reused_not_new": {
       "input_tokens": 904,
       "output_tokens": 701,
       "total_tokens": 1605
-    }
+    },
+    "execution_environment_cost": "UNKNOWN_NOT_EXPOSED"
   },
   "remaining_issues": [
     {
-      "scope": "extraction omission",
-      "item_index": 1,
-      "field": "entity_mention",
+      "field": "product",
+      "value": "nuclear fuel",
+      "included_in_fact_FN": true,
+      "reason": "Physical manufactured fuel family explicitly present in the project-selection sentence, but no matching entity record returned."
+    },
+    {
+      "field": "specification",
+      "value": "light-water",
+      "included_in_fact_FN": true,
+      "reason": "Explicit product technology type omitted; no inferred numeric rating."
+    },
+    {
+      "field": "exploration_mention",
       "value": "Westinghouse’s nuclear reactor technologies",
-      "physical_identity": "UNKNOWN_TECHNOLOGY_DESCRIPTION",
-      "reason": "Literal source mention omitted; no fact fabricated to fill it"
+      "included_in_fact_FN": false,
+      "included_in_separate_mention_FN": true,
+      "physical_identity": "UNKNOWN_TECHNOLOGY_DESCRIPTION"
     },
     {
-      "scope": "extraction omission",
-      "item_index": 2,
-      "field": "region",
-      "value": "U.S.",
-      "reason": "Literal source mention omitted; no fact fabricated to fill it"
+      "scope": "unread source",
+      "characters": 7453,
+      "total_saved_DOE_characters": 8053,
+      "reason": "Prior 600-character input retained; outside-input audit is not exhaustive full-document gold."
     },
     {
-      "scope": "general_accuracy",
-      "reason": "UNKNOWN: only one official development source; 50-document comparison NOT_RUN."
-    },
-    {
-      "scope": "source",
-      "reason": "Full-document completeness remains PARTIAL/BLOCKED; 7453 of 8053 saved characters were outside the AI windows."
-    },
-    {
-      "scope": "CPU comparison",
-      "reason": "Prior same-source CPU output/weights unavailable; engine preserved, no reinstall/comparison claim."
+      "scope": "independent comparison",
+      "reason": "50 native documents and evaluation20 not acquired/frozen; CPU evidence missing; source/domain readiness blocks remain."
     }
   ],
   "api_usage_previous_trials": {
@@ -213,5 +299,53 @@
     "handoff_sha": "47df6e76badcbce189329a9d52329ecd9da8dbd3",
     "evidence": "docs/v4/GROQ_QUOTE_REPAIR_RESULTS.json",
     "retest_or_rebuild": false
+  },
+  "stage3_fixed": {
+    "status": "PASS_FUNCTIONAL_VERIFICATION_REUSED",
+    "handoff_sha": "28656473efe7ad44ed3c5ae4d225870de5b5443e",
+    "evidence": "docs/v4/STAGE3_RESULTS.json",
+    "historical_summary": {
+      "stage": 3,
+      "status": "PASS_STAGE3_FUNCTIONAL_VERIFICATION",
+      "last_completed": "Stage 3 meaning guards: 85 new and 37 selected prior cases PASS; saved real source 1 doc/3 items, 23 fields: correct8/wrong0/UNKNOWN15 (including 3 role labels), 2 separate omissions retained; separate SQLite restart/backup PASS; new API calls0",
+      "api_usage_current_task": {
+        "generation_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "api_cost_usd": 0,
+        "reason": "Saved actual response reused; all current processing offline with a forbidden-network adapter",
+        "historical_usage_not_new": {
+          "input_tokens": 904,
+          "output_tokens": 701,
+          "total_tokens": 1605
+        }
+      }
+    },
+    "whole_suites_retested": false
+  },
+  "stage4_verdict": {
+    "A_actual_original_accuracy_measurement": "PARTIAL_SCOPED_1_DOCUMENT; BLOCKED_50_DOCUMENT_INDEPENDENT_MEASUREMENT",
+    "B_CPU_improvement_proven": "BLOCKED_NO_SAME_INPUT_CPU_OUTPUT_OR_WEIGHTS",
+    "C_before_bottleneck_news_performance": "NOT_RUN_STAGE6",
+    "stage4": "BLOCKED_NOT_PASS",
+    "stage5": "NOT_RUN",
+    "shadow_7_days": "NOT_RUN"
+  },
+  "stage4_metrics": {
+    "TP": 2,
+    "FP": 0,
+    "FN": 2,
+    "UNKNOWN": 34,
+    "truth_absent_unknown": 33,
+    "known_truth_missed": 2,
+    "unreturned_record_field_slots": 12,
+    "truth_absent_no_record": 11,
+    "unreturned_record_positive_fields": 1,
+    "precision_denominator": 2,
+    "recall_denominator": 4,
+    "precision": 1.0,
+    "recall": 0.5,
+    "f1": 0.6666666666666666
   }
 }

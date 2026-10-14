@@ -304,10 +304,18 @@ def validate_reading(text, doc, selected):
     accepted, rejected = [], []
     for index, item in enumerate(data["items"]):
         try:
+            from .semantics import literal_region_fields
             bound = bind_quotes(item, doc, selected)
             verified = validate_output(encode({"items": [bound]}), doc, selected)["items"][0]
+            # A derived candidate must not repair or hide invalid AI evidence.
+            # Verify the original first, then reuse both strict validators.
+            supplemented = literal_region_fields(item)
+            if supplemented != item:
+                bound = bind_quotes(supplemented, doc, selected)
+                verified = validate_output(encode({"items": [bound]}), doc, selected)["items"][0]
             accepted.append({**advisory_classification(verified), "input_item_index": index,
-                             "coordinate_origin": "PYTHON_EXACT_UNIQUE_QUOTE"})
+                             "coordinate_origin": "PYTHON_EXACT_UNIQUE_QUOTE",
+                             "source_literal_additions": ["region"] if supplemented != item else []})
         except APIError as error:
             rejected.append({"input_item_index": index, "reason": error.kind})
     # Report unprocessed source ranges without changing the API input/cache key.

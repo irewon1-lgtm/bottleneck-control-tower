@@ -8,9 +8,9 @@ from copy import deepcopy
 import calendar
 import re
 
-from bct.precursor_scope_reader import FIELDS, GENERIC, NONPRODUCT_IDENTIFIER, SPEC
+from bct.precursor_scope_reader import FIELDS, GENERIC, NONPRODUCT_IDENTIFIER, REGION, SPEC
 
-VERSION = "bct-v4-semantics-1"
+VERSION = "bct-v4-semantics-2"
 PHYSICAL = ("PHYSICAL_PRODUCT", "PRODUCT_FAMILY", "MANUFACTURING_EQUIPMENT", "PRODUCTION_SLOT")
 TIME_WORDS = re.compile(r"\b(?:year|month|week|quarter|" + "|".join(calendar.month_name[1:]) + r")\b", re.I)
 FAMILY = r"(?:SMRs|reactors|battery cells|batteries|transceivers|heat pumps|turbines|transformers|wafers|chips|trucks|engines|lasers|connectors)"
@@ -89,6 +89,36 @@ def identity(item):
     return item["kind"], "UNKNOWN_MODEL_CLASSIFICATION"
 
 
+def region_constructions(entity, text):
+    # Geographic vocabulary is reused from the existing reader. Require a
+    # literal relation to this product, rather than any location in a document.
+    if not entity:
+        return []
+    return list(re.finditer(r"\b(?P<region>" + REGION + r")\s+"
+        r"(?:deployment|production|manufacturing|delivery)\s+of\s+"
+        + re.escape(entity) + r"(?!\w)", text, re.I))
+
+
+def literal_region_fields(item):
+    """One unambiguous, missing region candidate; the caller must bind/verify it.
+
+    Only the already quoted context is read. No fuzzy match, outside-window
+    lookup, party inference, production claim, or extra API request is made.
+    """
+    facts = item["facts"]
+    if identity(item)[0] not in PHYSICAL or any(f["field"] == "region" and f["value"] is not None for f in facts):
+        return item
+    matches = region_constructions(item["entity"]["value"], item["context"]["quote"])
+    if len(matches) != 1 or (not any(f["field"] == "region" for f in facts) and len(facts) >= 16):
+        return item
+    candidate = {"field": "region", "value": matches[0]["region"], "quote": item["context"]["quote"]}
+    result = deepcopy(item)
+    result["facts"] = [candidate if f["field"] == "region" else f for f in result["facts"]]
+    if not any(f["field"] == "region" for f in facts):
+        result["facts"].append(candidate)
+    return result
+
+
 def event_reading(item):
     name = item["entity"]["value"] or ""
     wanted = item["role"]
@@ -164,6 +194,12 @@ def buyer_matches(claim, scope):
 
 
 def field_modality(fact, scope, entity=""):
+    if fact["field"] == "region":
+        if NEGATION.search(scope):
+            return "NEGATED"
+        regions = region_constructions(entity, scope)
+        if len(regions) == 1 and re.search(r"\bto\s+(?:advance|support|accelerate|enable)\b", scope[:regions[0].start()], re.I):
+            return "PLAN"  # Intended deployment region is not completed supply.
     if fact["field"] in ("quantity", "unit"):
         matches = [m for m in physical_pairs(scope, entity) if fact["value"].casefold() in
                    (m["amount"].casefold(), m[0].casefold(), m["unit"].casefold())]
@@ -213,6 +249,9 @@ def fact_support(item, fact, scope):
     if field == "region":
         if MONEY.search(claim) or re.search(r"\d", claim) or TIME_WORDS.search(claim):
             return False, "NON_GEOGRAPHIC_VALUE"
+        constructions = region_constructions(entity, scope)
+        if len(constructions) == 1 and constructions[0]["region"] == claim:
+            return True, "EXPLICIT_GEOGRAPHIC_PRODUCT_CONSTRUCTION"
         for match in re.finditer(r"\b(?:in|for|across|within|at|to|from)\s+(?:the )?" + re.escape(claim) + r"\b", scope, re.I):
             prefix = scope[:match.start()]
             corporate = [m.start() for m in re.finditer(r"\b(?:headquartered|headquarters|office|incorporated|registered)\b", prefix, re.I)]

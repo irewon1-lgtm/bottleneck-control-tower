@@ -1,0 +1,2604 @@
+{
+  "at": "2026-10-14T01:01:42.095569+00:00",
+  "base_sha": "28656473efe7ad44ed3c5ae4d225870de5b5443e",
+  "target": {
+    "documents": 50,
+    "development": 30,
+    "independent_evaluation": 20
+  },
+  "initial_selection_file_sha256": "b3e64ac806bc6f9625387bb5e4157fdecd8e4739a2e1e566fafc426b71137c60",
+  "initial_selection": {
+    "at": "2026-10-14T00:41:27.914311+00:00",
+    "base_sha": "28656473efe7ad44ed3c5ae4d225870de5b5443e",
+    "selection_criteria": [
+      "Issuer/government primary URLs only; third-party articles excluded",
+      "Require stored native snapshot and independently matching raw/body SHA; URL/hash inventories alone do not count as acquired documents",
+      "Prior development or seen model outputs stay in development",
+      "New evaluation documents are frozen by URL/date/source hashes and input ranges before predictions; no rule changes from evaluation results",
+      "Target 30 development/20 evaluation across industry and actual orders/decrease/delay/relief/irrelevant announcements; insufficient diversity/sample size remains BLOCKED"
+    ],
+    "target_counts": {
+      "development": 30,
+      "evaluation": 20
+    },
+    "actual_native_documents": 2,
+    "actual_full": 0,
+    "actual_partial": 2,
+    "frozen_development": 1,
+    "evaluation_candidates": 1,
+    "independent_evaluation_20_status": "BLOCKED_INSUFFICIENT_NATIVE_CORPUS_AND_METADATA",
+    "documents": [
+      {
+        "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+        "url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+        "publisher": "Energy.gov",
+        "published_at": "2026-07-25T12:47:13-04:00",
+        "publication_precision": "TIMESTAMP",
+        "raw_sha256": "e5a5b7f82c86fbbc758def29824d412091223058dc5bf12fa198b47fb6a12f13",
+        "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+        "body_characters": 8053,
+        "body_status": "PARTIAL",
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "full_accessible_body"
+        ],
+        "split": "development",
+        "reason": "Known prior development/tuning document",
+        "native_artifact": "SQLite blobs in var/v4/groq-stage2/live (read-only)",
+        "native_bytes": 127183,
+        "prior_AI_result_seen": true
+      },
+      {
+        "document_id": "v4doc-95747233913bebbc3be389e57f3335a942d5502b13be8f3fb32851862d030814",
+        "url": "https://www.eia.gov/electricity/monthly/",
+        "publisher": "UNKNOWN",
+        "published_at": null,
+        "publication_precision": "UNKNOWN",
+        "raw_sha256": "b3d65a459311caad677d74bf5845148d00102e84f5387cbc42518c5f011a2850",
+        "body_sha256": "50dc12fd84e755dc9654e59b982e2afd8b1c03e0200a08ffc0f76f641d95ebb7",
+        "body_characters": 20505,
+        "body_status": "PARTIAL",
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "original_identity",
+          "publisher_observed",
+          "attribution_consistent",
+          "original_publication",
+          "full_accessible_body"
+        ],
+        "split": "evaluation_candidate",
+        "reason": "No Groq output observed; metadata/provenance pending source review",
+        "native_artifact": "SQLite blobs in var/v4/groq-stage2/live (read-only)",
+        "native_bytes": 132208,
+        "prior_AI_result_seen": false
+      }
+    ],
+    "prediction_outputs_read_for_candidate_eval": false,
+    "rule_tuning_on_evaluation": false,
+    "source_collection_network_preflight": "Official destinations missing from reported allowlist; user setup pending, no forbidden request or proxy bypass",
+    "CPU_model_search": "No saved GLiNER2 weights or matching historical V4 CPU outputs found; initialized canonical DB is empty",
+    "stage5_and_shadow": "NOT_RUN",
+    "freeze_sha256": "b37929072029568842ce55a3e2e28f9f0fcfbeb30c188f68d278dd147acbc8ec"
+  },
+  "available_native_documents": 2,
+  "full": 0,
+  "partial": 2,
+  "development_documents": 1,
+  "evaluation_candidates": 1,
+  "frozen_independent_evaluation_20": "BLOCKED_NOT_CREATED",
+  "evaluated_holdout_documents": 0,
+  "candidate_inventory_note": "SOURCE URL CANDIDATES ONLY: no prior AI labels used; not acquired or gold documents",
+  "candidate_count_not_acquired": 245,
+  "candidates": [
+    {
+      "url": "https://investors.bakerhughes.com/files/doc_financials/2025/Q2/Second-Quarter-2025-Earnings-Conference-Call-Slides.pdf",
+      "host": "investors.bakerhughes.com",
+      "metadata_sources": [
+        "docs/registrations/novalt16/sources.json"
+      ],
+      "publication_hint": "2025-07-23",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://investors.bakerhughes.com/files/doc_financials/2025/Q4/Baker-Hughes-4Q25-Earnings-Call-Prepared-Remarks-1-25-2025.pdf",
+      "host": "investors.bakerhughes.com",
+      "metadata_sources": [
+        "docs/registrations/novalt16/sources.json"
+      ],
+      "publication_hint": "2026-01-26",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://investors.bakerhughes.com/news/press-releases/news-details/2025/Baker-Hughes-Secures-Order-to-Provide-Reliable-and-Efficient-Power-to-U-S--Data-Centers-03-13-2025/default.aspx",
+      "host": "investors.bakerhughes.com",
+      "metadata_sources": [
+        "docs/registrations/novalt16/sources.json"
+      ],
+      "publication_hint": "2025-03-13",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://investors.bakerhughes.com/news/press-releases/news-details/2025/Baker-Hughes-to-Supply-NovaLT-Gas-Turbines-for-Frontier-Infrastructures-U-S--Data-Center-Project-Delivering-270-MW-of-Reliable-Power-05-29-2025/default.aspx",
+      "host": "investors.bakerhughes.com",
+      "metadata_sources": [
+        "docs/registrations/novalt16/sources.json"
+      ],
+      "publication_hint": "2025-05-29",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://investors.bakerhughes.com/news/press-releases/news-details/2026/Baker-Hughes-Receives-Gas-Turbine-Order-from-Twenty20-Energy-to-Power-U-S--Data-Center-Infrastructure/default.aspx",
+      "host": "investors.bakerhughes.com",
+      "metadata_sources": [
+        "docs/registrations/novalt16/sources.json"
+      ],
+      "publication_hint": "2026-02-11",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://investors.bakerhughes.com/news/press-releases/news-details/2026/Dynamis-Power-Solutions-Awards-Baker-Hughes-Major-Power-Generation-Order-for-Data-Centers-Oil--Gas/default.aspx",
+      "host": "investors.bakerhughes.com",
+      "metadata_sources": [
+        "docs/registrations/novalt16/sources.json"
+      ],
+      "publication_hint": "2026-07-29",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://investors.bakerhughes.com/news/press-releases/news-details/2026/Kodiak-Gas-Services-Baker-Hughes-Announce-Multi-Year-Gas-Turbine-Order-Agreement-to-Support-U-S--Data-Center-Growth/default.aspx",
+      "host": "investors.bakerhughes.com",
+      "metadata_sources": [
+        "docs/registrations/novalt16/sources.json"
+      ],
+      "publication_hint": "2026-07-08",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://ir.coherent.com/static-files/80d6a0b9-4ea5-422d-af1c-9f886021d518",
+      "host": "ir.coherent.com",
+      "metadata_sources": [
+        "docs/registrations/cpo-cw/sources.json"
+      ],
+      "publication_hint": "2026-09-21",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.aehr.com/2021/03/aehr-receives-fox-xp-multi-wafer-test-burn-in-solution-order-as-silicon-photonics-customer-makes-transition-to-volume-production/",
+      "host": "www.aehr.com",
+      "metadata_sources": [
+        "docs/registrations/siph-cpo-20261006/sources.json"
+      ],
+      "publication_hint": "2021-03-01",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.aehr.com/2026/03/aehr-wins-major-new-silicon-photonics-customer-with-high-power-fox-xp-wafer-level-burn-in-system-for-hyperscale-data-center-optical-interconnect-market/",
+      "host": "www.aehr.com",
+      "metadata_sources": [
+        "docs/registrations/siph-cpo-20261006/sources.json"
+      ],
+      "publication_hint": "2026-03-31",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.aehr.com/2026/06/aehr-receives-follow-on-order-from-major-silicon-photonics-customer-for-fully-automated-wafer-level-burn-in-system-for-hyperscale-data-center-optical-interconnect/",
+      "host": "www.aehr.com",
+      "metadata_sources": [
+        "docs/registrations/siph-cpo-20261006/sources.json"
+      ],
+      "publication_hint": "2026-06-17",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/",
+      "host": "www.aehr.com",
+      "metadata_sources": [
+        "docs/registrations/siph-cpo-20261006/sources.json"
+      ],
+      "publication_hint": "2026-07-09",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.aehr.com/2026/08/aehr-test-systems-expands-silicon-photonics-production-momentum-with-follow-on-production-order-from-lead-customer/",
+      "host": "www.aehr.com",
+      "metadata_sources": [
+        "docs/registrations/siph-cpo-20261006/sources.json"
+      ],
+      "publication_hint": "2026-08-04",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68064",
+      "host": "www.eia.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68084",
+      "host": "www.eia.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68104",
+      "host": "www.eia.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68124",
+      "host": "www.eia.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68125",
+      "host": "www.eia.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68144",
+      "host": "www.eia.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68164",
+      "host": "www.eia.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68184",
+      "host": "www.eia.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68204",
+      "host": "www.eia.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68224",
+      "host": "www.eia.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68225",
+      "host": "www.eia.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68244",
+      "host": "www.eia.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68245",
+      "host": "www.eia.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68264",
+      "host": "www.eia.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/About_Us/Business_with_ESA/Record_participation_in_ESA_s_Industry_Space_Days_2026",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/About_Us/Corporate_news/ESA_at_IAC_2026_Day_1",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/About_Us/Corporate_news/ESA_at_IAC_2026_Day_2",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/About_Us/Corporate_news/ESA_at_IAC_2026_Day_3",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/About_Us/Corporate_news/ESA_at_the_77th_International_Astronautical_Congress",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/About_Us/ESOC/Where_missions_come_alive",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Applications/Connectivity_and_Secure_Communications/One_beam_many_possibilities_the_ScyLight_programme_patch",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-3/Sentinel-3C_returns_its_first_views_of_Earth",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Applications/Observing_the_Earth/FutureEO/EarthCARE/EarthCARE_s_view_of_volcanic_plume_boosts_air_safety",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Applications/Satellite_navigation/Celeste/ESA_s_Celeste_demonstrates_5G_positioning_signals_from_low_Earth_orbit",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Applications/Satellite_navigation/Jammertest_pumps_up_the_jam_in_Norway",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Applications/Satellite_navigation/No_signal_left_behind_new_ways_to_detect_jamming_and_spoofing",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Applications/Satellite_navigation/The_director_s_take_telling_Galileo_s_story_through_film",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2025/05/Plato_s_dialogue",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/06/Antenna_pointing_mechanism_for_Galileo_second_generation_intersatellite_links_Airbus_Defence_and_Space",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/06/Arctic_isolation_for_science",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/07/Navigation_Training_Course_2026",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/07/OpSTAR_mission_patch",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/08/Proba-3_s_eclipse_hours_before_totality_in_Europe",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/09/A_galaxy_spinning_out_of_sync",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/09/CubeSat_for_safer_seas_and_cleaner_orbits_ready_to_launch",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/09/ESTEC_ESA_s_technical_heart_seen_from_orbit",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/09/Earth_from_Space_Venetian_Lagoon",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/09/Galaxies_in_a_cosmic_house_of_mirrors",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/09/Hubble_s_superbubble_scene",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/09/MIRROR_robot_reflects_future_of_in-orbit_assembly",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/09/Paris_France",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/09/Pikachu_in_the_Cupola",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/09/Space_explorers_in_the_land_of_volcanoes",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/09/Vega-C_flight_VV30_with_FLEX_and_Sentinel-3C",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/10/Earth_from_Space_Namibia_s_biggest_salt_pan",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/10/Earth_from_Space_Typhoon_Surigae",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/10/Geraldine_Naja_with_the_WIA-Europe_award",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/10/Tiny_thrusters_3D-printed_in_space",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/10/Webb_captures_commotion_from_nebula_s_stellar_jets",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/10/When_the_Sun_turns_black",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2022/11/What_is_ESA_s_Moonlight_initiative",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2024/11/Advanced_Research_in_Telecommunications_Systems_ARTES_4.0",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2024/11/ESA_s_Space_Systems_for_Safety_and_Security_4S_programme",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2025/01/ESA_s_Civil_Security_from_Space",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2025/05/Estrack_-_Half_a_century_of_European_satellite_tracking",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2025/09/Gravity_assists_trading_energy_with_the_planets",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2025/10/Hera_s_first_year_in_space",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2026/07/ESA_Academy_s_Navigation_Training_Course",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2026/08/Media_briefing_BepiColombo_s_next_milestone_towards_Mercury",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2026/09/BepiColombo_s_Mercury_arrival_begins_-_full_replay",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2026/09/EVA-98_suiting_up",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2026/09/FLEX_and_Sentinel-3C_launch_highlights",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2026/09/HydRON_Fibre_in_the_sky",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2026/09/MTG-I2_timelapse_from_arrival_at_Europe_s_Spaceport_to_launch",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2026/09/Relive_the_launch_of_FLEX_and_Sentinel-3C",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2026/10/A_guide_to_blood_draws_in_orbit",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2026/10/Beyond_the_airlock_-_Sophie_Adenot_s_three_spacewalks",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2026/10/Juice_s_September_2026_Earth_flyby_the_movie",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2026/10/The_Incredible_Adventures_of_the_Hera_mission_The_space_detectives_arrive",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2026/10/Vacuuming_the_ventilation_grids_in_Columbus",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/ESA_Multimedia/Videos/2026/10/What_happened_this_month_at_the_European_Space_Agency_September_2026",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Enabling_Support/Space_Engineering_Technology/Phoenix_3_concept_study_for_a_reusable_European_spacecraft",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Enabling_Support/Space_Engineering_Technology/Shaping_the_Future/GOMX-5_successfully_launched",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Enabling_Support/Space_Transportation/Boost/Rocket_Factory_Augsburg_Boost!_extension_in_run-up_to_first_launch",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Enabling_Support/Space_Transportation/Everything_rockets",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Enabling_Support/Space_Transportation/Future_space_transportation/Themis_completes_second_fuelling_rehearsal",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Enabling_Support/Space_Transportation/How_to_record_rocket_emissions",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/ESA_investigates_potential_future_European-led_orbital_outpost",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/European_rover_trains_for_Mars_in_the_desert",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Farewell_to_the_Fluid_Science_Laboratory_after_18_years_in_orbit",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/epsilon",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/epsilon/Splashdown_confirmed_for_Sophie_Adenot",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/epsilon/Watch_Sophie_Adenot_return_to_Earth",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Science_Exploration/Space_Science/BepiColombo/Latest_updates_BepiColombo_s_arrival_at_Mercury",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Mars_s_oddest_cloud_may_be_even_odder_than_we_thought",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Space_Safety/Clean_Space/Keeping_the_sky_dark_and_quiet",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Space_Safety/Hera/Brake!_Time_for_ESA_s_Hera_asteroid_mission_to_go_slow",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Space_Safety/Hera/Finding_Hera_s_way_ESA_s_Flight_Dynamics_team_into_action",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.esa.int/Space_Safety/Hera/Finding_Hera_s_way_Flight_Dynamics_team_in_action",
+      "host": "www.esa.int",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/manufacturing-innovation-blog/back-basics-simple-questions-assessing-industrial-artificial",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/manufacturing-innovation-blog/building-resilient-supply-chains-strategies-and-successes",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/manufacturing-innovation-blog/challenges-solutions-and-success-stories-across-mep-national",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/manufacturing-innovation-blog/garden-state-magnolia-state-mississippi-polymer-institute",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/manufacturing-innovation-blog/how-find-right-balance-data-your-industrial-ai-system",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/manufacturing-innovation-blog/how-smaller-manufacturers-can-leverage-reshoring-opportunities",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/manufacturing-innovation-blog/manufacturing-america-contributing-our-economy-employment-and",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/manufacturing-innovation-blog/rethink-your-supply-chain-strategy-better-outcomes",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/manufacturing-innovation-blog/take-child-work-day-opening-doors-and-minds-manufacturing",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/manufacturing-innovation-blog/whats-coming-us-manufacturing-2025",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/taking-measure/enjoy-espresso-you-can-thank-precise-temperature-measurements",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/taking-measure/home-gut-microbiome-tests-give-varying-results",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/taking-measure/how-oj-simpson-trial-inspired-my-career-forensic-science",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/taking-measure/international-system-units-never-ending-quest-perfect-measurement-system",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/taking-measure/lasers-and-math-can-help-doctors-deliver-just-right-amount-medicine",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/taking-measure/lithium-batteries-may-help-unravel-mystery-ancient-papyrus-scrolls",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/taking-measure/nist-experts-help-preserve-250-years-american-history",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/taking-measure/nist-inventions-are-powering-our-world",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/taking-measure/quantum-computers-may-put-internet-traffic-risk-nist-safeguarding-computers-new",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/taking-measure/science-behind-ketchup-pouring-could-lead-ceramic-3d-printing",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/taking-measure/si-never-ending-quest-perfect-measurement-system",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/blogs/taking-measure/when-scientists-become-accidental-detectives",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2023/09/photopolymer-additive-manufacturing-alliance-pama-2023-workshop-building",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2025/08/second-seminar-building-space-circular-economy",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/04/nist-diffusion-workshop-data-and-model-needs-efficient-critical-material",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/05/c63-meeting",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/05/quantum-pre-standardization-workshop-metrology-quantum-technologies",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/06/advanced-metrology-defect-management-ceramic-additive-manufacturing",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/07/2026-time-and-frequency-seminar",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/08/2026-nist-nsf-disaster-resilience-research-symposium",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/09/national-construction-safety-team-advisory-committee-meeting-fall-2026",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/09/nist-supply-chain-traceability-and-manufacturing-meta-framework-webinar",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/09/plastic-composition-analysis-workshop-identifying-reference-material-data",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/09/synergy-conference",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/10/devsecops-and-impact-agentic-ai",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/10/devsecops-and-impact-agentic-si-0",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/10/mep-state-competition-kick-conference",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/10/nccoe-cybersecurity-connections-event-national-cybersecurity-awareness",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/11/2026-nist-photometry-short-course",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2026/12/second-semiconductor-traceability-and-provenance-workshop",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/events/2027/10/nist-owm-mass-metrology-seminar-october-2027",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2018/03/zero-field-switching-zfs-effect-nanomagnetic-device",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2018/05/convective-accelerometer",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2024/09/nist-leaders-overview-cps-and-iot-program-doe-executive-lunch-and-learn",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2024/10/nist-awards-15-million-astm-international-establish-standardization-center",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2024/10/nist-researchers-hold-automated-vehicle-research-day",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2024/10/nist-researchers-publish-report-assessing-autonomous-vehicle-performance",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2024/10/smart-new-laser-technology-can-monitor-greenhouse-gases-faster-more",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2024/11/nist-leader-provides-insights-connected-technologies-smart-infrastructures",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2024/12/biden-harris-administration-announces-chips-incentives-awards-globalwafers",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "docs/registrations/photonics-soi-deep/sources.json"
+      ],
+      "publication_hint": "2024-12-17",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2024/12/nist-researchers-and-collaborators-receive-best-paper-presentation-award",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2025/01/nist-researchers-meet-nhtsa-experts-share-approaches-assessment-automated",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2025/01/owm-completes-pilot-test-blended-course-retail-motor-fuel-dispensers",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2025/01/owm-recognizes-proficiency-testing-coordinators-2024-rmaps",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2025/02/calibration-leaders-and-researchers-nist-sources-and-detectors-group",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2025/06/2025-material-flammability-research-highlights",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2025/07/evse-metrology-trainings-are-go",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2025/07/new-nist-method-precisely-measures-radioactivity-tiny-samples",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2025/08/nist-provide-updates-construction-safety-team-investigations-september",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2025/09/champlain-towers-south-investigation-nears-completion-technical-work",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2025/09/nist-engineers-design-5-new-ways-connect-concrete-pieces-more-resilient",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2025/11/building-sustainable-metals-infrastructure-nist-report-highlights-key",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2025/11/nists-glenn-bell-awarded-institution-structural-engineers-gold-medal",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/01/nanoscale-mechanical-characterization-hybrid-bonding-ready-structures",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/02/srm-story-srms-3672a-and-3673a-organic-contaminants-smokers-and-nonsmokers",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/03/nist-submits-annual-report-congress-summarizing-fy-2025-progress-national",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/04/srm-story-srm-1947a-great-lakes-fish-tissue",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/05/department-commerce-announces-letters-intent-9-companies-2-billion",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/05/wear-and-tear-changes-measurable-pfas-levels-firefighter-hoods-gloves-and",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/06/department-commerce-announces-definitive-agreement-i-pulse-250-million",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/06/department-commerce-announces-definitive-agreement-sandboxaq-500-million",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/06/department-commerce-announces-finalization-chips-incentives-xlight-support",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/06/department-commerces-chips-program-announces-letter-intent-coherent-50",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "docs/registrations/cpo-cw/sources.json",
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": "2026-06-16",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/06/nist-expands-its-library-chemical-fingerprints-identify-unknown-substances",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/06/nist-launches-center-drive-manufacture-quantum-technologies",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/06/nist-releases-technical-findings-what-caused-2021-partial-collapse",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/07/department-commerce-announces-direct-funding-agreement-bosch-225-million",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/07/department-commerce-announces-letters-intent-7-companies-874-million",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/07/new-fabric-test-material-could-help-strengthen-domestic-supply-chain",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/07/nist-receives-new-patent-microbe-killing-water-heater",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/07/spotlight-how-nist-helps-make-sure-fish-you-catch-are-safe-eat",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/08/niimbl-announces-project-call-101-advance-biopharmaceutical-manufacturing",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/08/nist-joins-national-genesis-mission-accelerate-ai-innovation",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/08/nist-national-construction-safety-team-advisory-committee-meeting-scheduled",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/08/nist-researchers-correct-common-error-confounding-nanotech-measurements",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/08/nist-researchers-supersize-quantum-technology-help-detect-faint-photons",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/08/spooky-particles-transit-dc-suburbs-step-toward-quantum-network",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/08/spotlight-changing-materials-magnetic-properties",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/08/spotlight-researchers-develop-quality-control-tool-bird-flu",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/08/spotlight-using-ai-discovery-engine-materials-exploration",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/comments-software-and-agentic-ai-identity-concept-paper",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/department-commerce-announces-finalization-chips-rd-award-anderon",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/department-commerce-announces-finalization-chips-rd-award-d-wave",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/department-commerce-announces-finalization-chips-rd-award-globalfoundries",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/department-commerce-announces-finalization-chips-rd-award-psiquantum",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/department-commerce-announces-finalization-chips-rd-award-quantinuum",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/department-commerce-announces-finalization-chips-rd-award-rigetti",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/digitalized-standards-progress-towards-next-generation-standards-delivery",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/draft-5g-white-paper-now-available-false-base-station",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/enhancing-public-safety-communication-reliability-through-5g-sidelink",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/finalized-manufacturing-supply-chain-traceability-meta-framework",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/inside-2026-ncwm-annual-meeting-key-decisions-technical-updates-and",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/my-introduction-laboratory-metrology-nist-summer-undergraduate-research",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/new-nist-nccoe-resources-devsecops-and-october-28-webinar-agentic-ai",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/nist-awards-more-17-million-support-cybersecurity-workforce-development",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/nist-awards-more-30-million-mep-centers-11-states-and-puerto-rico",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/nist-developed-quantum-sensors-improve-nuclear-monitoring",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/nist-finalizes-guidelines-protecting-online-identity-and-access-tokens",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/nist-provides-updates-national-construction-safety-team-activities",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/nist-updates-5g-open-source-testbed-tools",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/spotlight-closer-look-fingerprint-landscape",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/spotlight-nist-programmer-develops-software-libraries",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/spotlight-researchers-use-tissue-bank-study-marine-mammal-health",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/validating-spectrum-cbrs-band-models-measurements",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/where-design-inspires-learning-nist-summer-undergraduate-research",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/10/evse-training-weights-and-measures-officials-and-service-agents",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/10/nist-joins-white-house-effort-drive-new-golden-age-science",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/10/nist-publishes-reports-open-radio-access-network-o-ran-security",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/10/nist-study-shows-how-toxic-substances-mixed-fentanyl-vary-across-us-and",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/10/owm-recognizes-proficiency-testing-coordinators-2025-rmaps",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/10/physicist-jun-ye-wins-wolf-prize-physics",
+      "host": "www.nist.gov",
+      "metadata_sources": [
+        "research/archives/2026-10-11-qwen-fullscan/artifacts/BCT_FULLSCAN_REPORT.zip#url-results.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1040470/000165495426006919/aehr_10k.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/siph-cpo-20261006/sources.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1047127/000104712726000036/ex-991amkorinvestorprese.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/optical-supplychain/sources.json"
+      ],
+      "publication_hint": null,
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926027677/axti20260630_10q.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/cpo-cw/sources.json"
+      ],
+      "publication_hint": "2026-08-07",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1051627/000143774926027677/ex_996841.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/cpo-cw/sources.json"
+      ],
+      "publication_hint": "2026-08-07",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1462223/000168316826004843/nixxy_ex1001.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/novalt16/sources.json"
+      ],
+      "publication_hint": "2026-06-15",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1633978/000119312526085412/d41019d8k.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/cpo-cw/sources.json"
+      ],
+      "publication_hint": "2026-03-02",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1633978/000162828026057358/lite-20260627.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/cpo-cw/sources.json"
+      ],
+      "publication_hint": "2026-08-17",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1697500/000119312526397255/d182097dex991.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/novalt16/sources.json"
+      ],
+      "publication_hint": "2026-09-22",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1697500/000162828026054349/R25.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/novalt16/sources.json"
+      ],
+      "publication_hint": "2026-08-06",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1701605/000170160526000007/bkr-20251231.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/novalt16/sources.json"
+      ],
+      "publication_hint": "2026-02-05",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1701605/000170160526000023/bkr-20260630.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/novalt16/sources.json"
+      ],
+      "publication_hint": "2026-07-27",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1709048/000119312521290644/d192411dex103.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/photonics-soi-deep/sources.json"
+      ],
+      "publication_hint": "2021-10-04",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1709048/000170904825000024/exhibit413-gfsoitecaddendu.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/photonics-soi-deep/sources.json"
+      ],
+      "publication_hint": "2025-03-20",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1709048/000170904826000022/gfs-20251231.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/photonics-soi-deep/sources.json"
+      ],
+      "publication_hint": "2026-02-27",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1709048/000170904826000218/globalfoundries2q2026earni.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/siph-foundry-deep/sources.json"
+      ],
+      "publication_hint": "2026-08-05",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/2101698/000121390026099734/ea030468201ex10-5.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/hemerdon-elmt/sources.json"
+      ],
+      "publication_hint": "2026-09-11",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/2101698/000121390026102242/ea0306073-8k_elmet.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/hemerdon-elmt/sources.json"
+      ],
+      "publication_hint": "2026-09-22",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/820318/000082031826000020/iivi-20260630.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/cpo-cw/sources.json"
+      ],
+      "publication_hint": "2026-08-14",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/928876/000117891326000404/exhibit_99-1.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/siph-foundry-deep/sources.json"
+      ],
+      "publication_hint": "2026-02-11",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/928876/000117891326002318/zk2635149.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/siph-foundry-deep/sources.json"
+      ],
+      "publication_hint": "2026-04-30",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/928876/000117891326002609/zk2635309.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/optical-supplychain/sources.json",
+        "docs/registrations/photonics-soi-deep/sources.json",
+        "docs/registrations/siph-foundry-deep/sources.json"
+      ],
+      "publication_hint": "2026-05-13",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/928876/000117891326003477/zk2635682.htm",
+      "host": "www.sec.gov",
+      "metadata_sources": [
+        "docs/registrations/optical-supplychain/sources.json",
+        "docs/registrations/siph-foundry-deep/sources.json"
+      ],
+      "publication_hint": "2026-07-14",
+      "native_status": "NOT_ACQUIRED",
+      "split": "UNASSIGNED_BEFORE_ACQUISITION"
+    }
+  ],
+  "prior_AI_outputs_used_for_selection_or_gold": false,
+  "known_prior_development_source_never_counted_as_holdout": true,
+  "evaluation_outputs_viewed_before_rule_freeze": false,
+  "development_input": {
+    "windows": [
+      {
+        "start": 5905,
+        "end": 6505,
+        "text": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel. October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad. December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs. January 5, 2026: The Energy Department announced a $2.7 billio"
+      }
+    ],
+    "publication": {
+      "published_at": "2026-07-25T12:47:13-04:00",
+      "precision": "TIMESTAMP"
+    },
+    "provenance_scope": "REVIEWED_PUBLIC_EXCERPT_NOT_FULL_DOCUMENT",
+    "selected_characters": 600,
+    "body_characters": 8053,
+    "coverage": "BOUNDED_WINDOWS_NOT_FULL_DOCUMENT"
+  },
+  "development_gold_sha256": "d0df942f47fb6a7b0fb9f7633a0f8ec87e676a658f1c9b1c50079b8867856260",
+  "network": {
+    "draft_status": "SAVED_CONFIRMED_BY_READ_BACK",
+    "draft_revision": 5,
+    "requires_publish": true,
+    "draft_custom_domains": [
+      "api.groq.com",
+      "console.groq.com",
+      "investors.bakerhughes.com",
+      "ir.coherent.com",
+      "www.aehr.com",
+      "www.eia.gov",
+      "www.energy.gov",
+      "www.esa.int",
+      "www.nist.gov",
+      "www.sec.gov"
+    ],
+    "active_spec_revision": "4",
+    "active_allowed_custom_domains": [
+      "api.groq.com"
+    ],
+    "observations_current": true,
+    "enforcement_state": "unknown",
+    "install_script_unchanged": true,
+    "start_instructions_unchanged": true,
+    "secret_binding_preserved": true,
+    "official_source_fetch_requests_this_task": 0,
+    "network_or_proxy_bypass": false,
+    "required_user_action": "Review/save the saved domain changes in environment settings, publish the environment, then resume after the running environment permits these official hosts."
+  },
+  "development_reference_revision_history": [
+    {
+      "previous_sha256": "705b7a74fd70e764d2737f49ad4cf0cfe1c739c36192bc09bae70f8734031ef8",
+      "reason": "Independent source scope recheck found nuclear fuel as a literal physical product family in the pilot-selection sentence; expanded the original one-entity-per-context annotation. This is development data; no evaluation output was used. Baseline and final outputs are rescored against the same expanded reference."
+    }
+  ]
+}

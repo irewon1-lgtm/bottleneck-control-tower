@@ -1,0 +1,229 @@
+{
+  "version": "bct-v4-stage4-reference-2",
+  "frozen_at": "2026-10-14T00:52:39.159153+00:00",
+  "base_sha": "28656473efe7ad44ed3c5ae4d225870de5b5443e",
+  "split": "development",
+  "source_body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+  "source_raw_sha256": "e5a5b7f82c86fbbc758def29824d412091223058dc5bf12fa198b47fb6a12f13",
+  "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+  "authority": "Separately checked literal official source and explicit relation rules; evaluated Groq/Qwen answers are not gold. Executing assistant source review, not independently human-adjudicated corpus gold.",
+  "scope": "Twelve declared fields for four product/event records across three contexts in the 600-character historical input; curated outside-input audit is NOT exhaustive whole-document gold.",
+  "policy": {
+    "positive_truth": "Literal physical product or an explicitly related value; unknown physical identity is excluded from physical-product positives.",
+    "exact_value": "Case- and punctuation-sensitive values; predeclared aliases only, none currently.",
+    "wrong_known": "A wrong non-null value counts both FP and FN; unsupported non-null counts FP; null/UNKNOWN against known truth counts FN.",
+    "absent_truth": "Null/UNKNOWN when source gives no answer contributes no positive denominator.",
+    "blocked_document": "No output is BLOCKED, never correct UNKNOWN or model FN.",
+    "physical_role": "Role and modality assessed together; actual business announcement alone is not physical demand/supply.",
+    "specification": "light-water is the explicitly named technology type, not an inferred power rating.",
+    "overall_metrics": "Micro-average only declared fact fields; exploration mention misses have a separate denominator.",
+    "whole_body_recall": "BLOCKED_NOT_EXHAUSTIVELY_ADJUDICATED"
+  },
+  "selected_input": {
+    "windows": [
+      {
+        "start": 5905,
+        "end": 6505,
+        "text": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel. October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad. December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs. January 5, 2026: The Energy Department announced a $2.7 billio"
+      }
+    ],
+    "publication": {
+      "published_at": "2026-07-25T12:47:13-04:00",
+      "precision": "TIMESTAMP"
+    },
+    "provenance_scope": "REVIEWED_PUBLIC_EXCERPT_NOT_FULL_DOCUMENT",
+    "selected_characters": 600,
+    "body_characters": 8053,
+    "coverage": "BOUNDED_WINDOWS_NOT_FULL_DOCUMENT"
+  },
+  "rows": [
+    {
+      "id": "pilot-selection",
+      "quote": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel.",
+      "start": 5905,
+      "end": 6066,
+      "expected": {
+        "product": null,
+        "role": null,
+        "quantity": null,
+        "unit": null,
+        "period": null,
+        "customer_group": null,
+        "supply_pool": null,
+        "specification": null,
+        "region": null,
+        "need_time": null,
+        "ready_time": null,
+        "lead_time": null
+      },
+      "truth_unknown_reasons": [
+        "No physical order, completed production change, qualified supplier, physical quantity/unit, or customer need/supply readiness date in this source context.",
+        "Funding recipients and partnership participants are not demonstrated buyers. Event dates are not delivery/readiness dates."
+      ],
+      "basis": "Companies selected for pilot projects; company count is not a product quantity.",
+      "match_entity": "Advanced Nuclear Fuel Line Pilot Projects"
+    },
+    {
+      "id": "nuclear-fuel-family",
+      "quote": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel.",
+      "start": 5905,
+      "end": 6066,
+      "expected": {
+        "product": "nuclear fuel",
+        "role": null,
+        "quantity": null,
+        "unit": null,
+        "period": null,
+        "customer_group": null,
+        "supply_pool": null,
+        "specification": null,
+        "region": null,
+        "need_time": null,
+        "ready_time": null,
+        "lead_time": null
+      },
+      "truth_unknown_reasons": [
+        "No physical order, completed production change, qualified supplier, physical quantity/unit, or customer need/supply readiness date in this source context.",
+        "Funding recipients and partnership participants are not demonstrated buyers. Event dates are not delivery/readiness dates."
+      ],
+      "basis": "The sentence explicitly names nuclear fuel, a physical manufactured material/product family, as the subject of domestic supply chains. A goal to strengthen those chains does not establish a physical order, qualified increase, quantity, buyer, or delivery time.",
+      "match_entity": "nuclear fuel"
+    },
+    {
+      "id": "technology-partnership",
+      "quote": "October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad.",
+      "start": 6067,
+      "end": 6306,
+      "expected": {
+        "product": null,
+        "role": null,
+        "quantity": null,
+        "unit": null,
+        "period": null,
+        "customer_group": null,
+        "supply_pool": null,
+        "specification": null,
+        "region": null,
+        "need_time": null,
+        "ready_time": null,
+        "lead_time": null
+      },
+      "truth_unknown_reasons": [
+        "No physical order, completed production change, qualified supplier, physical quantity/unit, or customer need/supply readiness date in this source context.",
+        "Funding recipients and partnership participants are not demonstrated buyers. Event dates are not delivery/readiness dates."
+      ],
+      "basis": "The partnership is an actual business event; the named technologies have UNKNOWN physical-product identity."
+    },
+    {
+      "id": "smr-funding",
+      "quote": "December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs.",
+      "start": 6307,
+      "end": 6442,
+      "expected": {
+        "product": "advanced light-water SMRs",
+        "role": null,
+        "quantity": null,
+        "unit": null,
+        "period": null,
+        "customer_group": null,
+        "supply_pool": null,
+        "specification": "light-water",
+        "region": "U.S.",
+        "need_time": null,
+        "ready_time": null,
+        "lead_time": null
+      },
+      "truth_unknown_reasons": [
+        "No physical order, completed production change, qualified supplier, physical quantity/unit, or customer need/supply readiness date in this source context.",
+        "Funding recipients and partnership participants are not demonstrated buyers. Event dates are not delivery/readiness dates."
+      ],
+      "basis": "SMRs explicitly names a reactor product family; light-water is its stated technology type, not a numerical rating; U.S. is the deployment region. Dollars are financial support and TVA/Holtec its recipients.",
+      "match_entity": "advanced light-water SMRs"
+    }
+  ],
+  "exploration_mentions": [
+    {
+      "row_id": "technology-partnership",
+      "field": "exploration_mention",
+      "value": "Westinghouse’s nuclear reactor technologies",
+      "physical_identity": "UNKNOWN_TECHNOLOGY_DESCRIPTION",
+      "quote": "October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad.",
+      "reason": "Literal technical description; not a proven physical product, order, customer, or qualified supply."
+    }
+  ],
+  "outside_input_audit": [
+    {
+      "value": "Mark-0",
+      "quote": "On June 4, 2026, the Energy Department celebrated Antares Nuclear’s advanced reactor, Mark-0, successfully reaching criticality through a test demonstration at INL. This achievement was the first time in over 40 years that a new privately developed non-light-water nuclear reactor reached criticality in America. The zero-power fueled criticality demonstration confirmed the reactor would be able to operate safely and established a baseline for allowing subsequent reactors to produce electricity in 2027 and the following years.",
+      "start": 2472,
+      "end": 3002,
+      "meaning": "Reached zero-power test criticality; not commercial production.",
+      "inside_AI_input": false
+    },
+    {
+      "value": "Ward 250",
+      "quote": "On June 18, 2026, the Energy Department announced Valar Atomics’ advanced test reactor, Ward 250, successfully reached criticality at the Utah San Rafael Energy Lab in Emery County, Utah.",
+      "start": 3003,
+      "end": 3190,
+      "meaning": "Advanced test reactor criticality; 250 is part of the model name, not units.",
+      "inside_AI_input": false
+    },
+    {
+      "value": "Unity",
+      "quote": "On June 30, 2026, Deployable Energy’s Unity completed a criticality demonstration, also hosted at INL—marking the third reactor to reach criticality ahead of the July 4 deadline.",
+      "start": 3191,
+      "end": 3369,
+      "meaning": "Completed a criticality test, not delivery or qualified commercial production.",
+      "inside_AI_input": false
+    },
+    {
+      "value": "Aalo-X",
+      "quote": "On July 4, 2026, Aalo Atomics’ test reactor, Aalo-X, completed a zero-power fueled criticality demonstration at INL, marking the fourth reactor to reach the Energy Department’s criticality milestone.",
+      "start": 3370,
+      "end": 3569,
+      "meaning": "Zero-power criticality test, not qualified commercial production.",
+      "inside_AI_input": false
+    },
+    {
+      "value": "800 MW",
+      "quote": "Thanks to the Office of Energy Dominance Financing (EDF), bolstered by the Working Families Tax Cut, the Energy Department is bringing previously shuttered nuclear power plants back online, and financing the development of new nuclear projects in the United States. On June 23, 2026, the Energy Department announced financing for long-lead time supply chain items to accelerate the timeline for the deployment of 10 new large-scale commercial nuclear reactors. The Energy Department is supporting the restart of previously shut-down nuclear power plants; including, Palisades 800 MW nuclear generating station in Michigan, and the Crane Restart project—an 835 MW nuclear plant in Pennsylvania. More restarts are expected to be announced in the future. In March 2026, the Energy Department’s Office of Nuclear Energy (in collaboration with EDF) launched the Utility Power Reactor Incremental Scaling Effort (UPRISE) initiative to accelerate domestic nuclear energy production. UPRISE aims to add 2.5 GW of nuclear capacity by 2027, and 5 GW by 2029—the equivalent of five new nuclear reactor years sooner than any other nuclear technology.",
+      "start": 3661,
+      "end": 4799,
+      "meaning": "Restart project nameplate rating, not added operating capacity.",
+      "inside_AI_input": false
+    },
+    {
+      "value": "835 MW",
+      "quote": "Thanks to the Office of Energy Dominance Financing (EDF), bolstered by the Working Families Tax Cut, the Energy Department is bringing previously shuttered nuclear power plants back online, and financing the development of new nuclear projects in the United States. On June 23, 2026, the Energy Department announced financing for long-lead time supply chain items to accelerate the timeline for the deployment of 10 new large-scale commercial nuclear reactors. The Energy Department is supporting the restart of previously shut-down nuclear power plants; including, Palisades 800 MW nuclear generating station in Michigan, and the Crane Restart project—an 835 MW nuclear plant in Pennsylvania. More restarts are expected to be announced in the future. In March 2026, the Energy Department’s Office of Nuclear Energy (in collaboration with EDF) launched the Utility Power Reactor Incremental Scaling Effort (UPRISE) initiative to accelerate domestic nuclear energy production. UPRISE aims to add 2.5 GW of nuclear capacity by 2027, and 5 GW by 2029—the equivalent of five new nuclear reactor years sooner than any other nuclear technology.",
+      "start": 3661,
+      "end": 4799,
+      "meaning": "Restart project rating, not completed supply increase.",
+      "inside_AI_input": false
+    },
+    {
+      "value": "2.5 GW",
+      "quote": "Thanks to the Office of Energy Dominance Financing (EDF), bolstered by the Working Families Tax Cut, the Energy Department is bringing previously shuttered nuclear power plants back online, and financing the development of new nuclear projects in the United States. On June 23, 2026, the Energy Department announced financing for long-lead time supply chain items to accelerate the timeline for the deployment of 10 new large-scale commercial nuclear reactors. The Energy Department is supporting the restart of previously shut-down nuclear power plants; including, Palisades 800 MW nuclear generating station in Michigan, and the Crane Restart project—an 835 MW nuclear plant in Pennsylvania. More restarts are expected to be announced in the future. In March 2026, the Energy Department’s Office of Nuclear Energy (in collaboration with EDF) launched the Utility Power Reactor Incremental Scaling Effort (UPRISE) initiative to accelerate domestic nuclear energy production. UPRISE aims to add 2.5 GW of nuclear capacity by 2027, and 5 GW by 2029—the equivalent of five new nuclear reactor years sooner than any other nuclear technology.",
+      "start": 3661,
+      "end": 4799,
+      "meaning": "UPRISE aim, not actual supply.",
+      "inside_AI_input": false
+    },
+    {
+      "value": "5 GW",
+      "quote": "Thanks to the Office of Energy Dominance Financing (EDF), bolstered by the Working Families Tax Cut, the Energy Department is bringing previously shuttered nuclear power plants back online, and financing the development of new nuclear projects in the United States. On June 23, 2026, the Energy Department announced financing for long-lead time supply chain items to accelerate the timeline for the deployment of 10 new large-scale commercial nuclear reactors. The Energy Department is supporting the restart of previously shut-down nuclear power plants; including, Palisades 800 MW nuclear generating station in Michigan, and the Crane Restart project—an 835 MW nuclear plant in Pennsylvania. More restarts are expected to be announced in the future. In March 2026, the Energy Department’s Office of Nuclear Energy (in collaboration with EDF) launched the Utility Power Reactor Incremental Scaling Effort (UPRISE) initiative to accelerate domestic nuclear energy production. UPRISE aims to add 2.5 GW of nuclear capacity by 2027, and 5 GW by 2029—the equivalent of five new nuclear reactor years sooner than any other nuclear technology.",
+      "start": 3661,
+      "end": 4799,
+      "meaning": "UPRISE aim, not actual supply.",
+      "inside_AI_input": false
+    }
+  ],
+  "evaluation_annotations_used_for_tuning": false,
+  "independent_human_review": "NOT_RUN",
+  "revision_at": "2026-10-14T01:03:43.475787+00:00",
+  "revision_history": [
+    {
+      "previous_sha256": "705b7a74fd70e764d2737f49ad4cf0cfe1c739c36192bc09bae70f8734031ef8",
+      "reason": "Independent source scope recheck found nuclear fuel as a literal physical product family in the pilot-selection sentence; expanded the original one-entity-per-context annotation. This is development data; no evaluation output was used. Baseline and final outputs are rescored against the same expanded reference."
+    }
+  ]
+}
