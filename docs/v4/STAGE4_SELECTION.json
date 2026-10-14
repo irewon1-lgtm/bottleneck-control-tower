@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-14T01:01:42.095569+00:00",
+  "at": "2026-10-14T02:09:22.179142+00:00",
   "base_sha": "28656473efe7ad44ed3c5ae4d225870de5b5443e",
   "target": {
     "documents": 50,
@@ -80,12 +80,12 @@
     "stage5_and_shadow": "NOT_RUN",
     "freeze_sha256": "b37929072029568842ce55a3e2e28f9f0fcfbeb30c188f68d278dd147acbc8ec"
   },
-  "available_native_documents": 2,
-  "full": 0,
-  "partial": 2,
-  "development_documents": 1,
-  "evaluation_candidates": 1,
-  "frozen_independent_evaluation_20": "BLOCKED_NOT_CREATED",
+  "available_native_documents": 43,
+  "full": 37,
+  "partial": 81,
+  "development_documents": 30,
+  "evaluation_candidates": 20,
+  "frozen_independent_evaluation_20": "FROZEN20_NOT_EXECUTED",
   "evaluated_holdout_documents": 0,
   "candidate_inventory_note": "SOURCE URL CANDIDATES ONLY: no prior AI labels used; not acquired or gold documents",
   "candidate_count_not_acquired": 245,
@@ -2567,38 +2567,90 @@
   },
   "development_gold_sha256": "d0df942f47fb6a7b0fb9f7633a0f8ec87e676a658f1c9b1c50079b8867856260",
   "network": {
-    "draft_status": "SAVED_CONFIRMED_BY_READ_BACK",
-    "draft_revision": 5,
-    "requires_publish": true,
-    "draft_custom_domains": [
-      "api.groq.com",
-      "console.groq.com",
-      "investors.bakerhughes.com",
-      "ir.coherent.com",
-      "www.aehr.com",
-      "www.eia.gov",
-      "www.energy.gov",
-      "www.esa.int",
-      "www.nist.gov",
-      "www.sec.gov"
-    ],
-    "active_spec_revision": "4",
-    "active_allowed_custom_domains": [
-      "api.groq.com"
-    ],
+    "status": "PASS_CURRENT_PUBLISHED_ENVIRONMENT_AND_REAL_HTTP_ACCESS",
     "observations_current": true,
-    "enforcement_state": "unknown",
-    "install_script_unchanged": true,
-    "start_instructions_unchanged": true,
-    "secret_binding_preserved": true,
-    "official_source_fetch_requests_this_task": 0,
-    "network_or_proxy_bypass": false,
-    "required_user_action": "Review/save the saved domain changes in environment settings, publish the environment, then resume after the running environment permits these official hosts."
+    "spec_revision": "7",
+    "network_state": "enforced",
+    "mode": "unrestricted",
+    "GROQ_secret_state": "ready",
+    "actual_access_checks": [
+      {
+        "label": "DOE",
+        "url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+        "at": "2026-10-14T01:30:46.869641+00:00",
+        "status": 200,
+        "final_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+        "bytes": 127318,
+        "content_type": "text/html",
+        "sha256": "f97a3e4c7e7debb1e68ef1f5972a850190900f10752aed3b959f64a8ca30f59f",
+        "seconds": 0.2398735260000251
+      },
+      {
+        "label": "NIST",
+        "url": "https://www.nist.gov/news-events/news",
+        "at": "2026-10-14T01:30:47.109556+00:00",
+        "status": 200,
+        "final_url": "https://www.nist.gov/news-events/news",
+        "bytes": 126212,
+        "content_type": "text/html",
+        "sha256": "038b2c63cbe37e68c1d6e0457340d56e67a0e27c3cfd47cae4b8c95542fe2f3a",
+        "seconds": 0.15039431499999978
+      },
+      {
+        "label": "ESA",
+        "url": "https://www.esa.int/Newsroom",
+        "at": "2026-10-14T01:30:47.260005+00:00",
+        "status": 200,
+        "final_url": "https://www.esa.int/Newsroom",
+        "bytes": 38100,
+        "content_type": "text/html",
+        "sha256": "d18047e2a61af53bc9750d42ca3d3de2d5b5fddbed0127103b58bad769549e7e",
+        "seconds": 1.7895387160000098
+      },
+      {
+        "label": "EIA",
+        "url": "https://www.eia.gov/electricity/monthly/",
+        "at": "2026-10-14T01:30:49.049577+00:00",
+        "status": 200,
+        "final_url": "https://www.eia.gov/electricity/monthly/",
+        "bytes": 132208,
+        "content_type": "text/html",
+        "sha256": "b3d65a459311caad677d74bf5845148d00102e84f5387cbc42518c5f011a2850",
+        "seconds": 0.629402787999993
+      },
+      {
+        "label": "GitHub_actions",
+        "url": "https://api.github.com/repos/irewon1-lgtm/bottleneck-control-tower/actions/artifacts?per_page=100",
+        "at": "2026-10-14T01:30:49.679015+00:00",
+        "status": 200,
+        "final_url": "https://api.github.com/repos/irewon1-lgtm/bottleneck-control-tower/actions/artifacts?per_page=100",
+        "bytes": 73568,
+        "content_type": "application/json",
+        "sha256": "a04451b9b6dab50e7e8f77c9699ff8e39b8710d6996e87e5a7b3749b256c5421",
+        "seconds": 0.6346462289999977
+      }
+    ],
+    "configuration_changed_this_task": false
   },
   "development_reference_revision_history": [
     {
       "previous_sha256": "705b7a74fd70e764d2737f49ad4cf0cfe1c739c36192bc09bae70f8734031ef8",
       "reason": "Independent source scope recheck found nuclear fuel as a literal physical product family in the pilot-selection sentence; expanded the original one-entity-per-context annotation. This is development data; no evaluation output was used. Baseline and final outputs are rescored against the same expanded reference."
     }
-  ]
+  ],
+  "current_task_base_sha": "9c7f6796cc27a804ddcc1bfcfdf614ba398d51da",
+  "available_original_documents": 118,
+  "available_extracted_text_only_documents": 75,
+  "frozen_manifest": "docs/v4/stage4-corpus/manifest.json",
+  "frozen_manifest_sha256": "6f288a8165158a28cb05a46c3fa4d264b709e752eea052f0191276f356da6d07",
+  "frozen_counts": {
+    "development": 30,
+    "evaluation": 20,
+    "FULL": 30,
+    "PARTIAL": 20
+  },
+  "current_source_preparation": "PASS_MATERIAL_AND_SPLIT_INTEGRITY_ONLY",
+  "current_meaning_gold": "UNVERIFIED",
+  "evaluation_predictions_seen": false,
+  "rule_tuning_on_evaluation": false
 }

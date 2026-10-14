@@ -1,0 +1,3813 @@
+{
+  "version": "bct-v4-stage4-frozen-corpus-1",
+  "frozen_at": "2026-10-14T02:01:14.129013+00:00",
+  "base_sha": "9c7f6796cc27a804ddcc1bfcfdf614ba398d51da",
+  "source_and_algorithm_freeze_before_new_AI_generation": true,
+  "new_Groq_calls_before_freeze": 0,
+  "classification_algorithm_changed": false,
+  "selection_criteria": [
+    "30 development /20 evaluation; one unique URL and unique body SHA per document",
+    "Existing development references, 245 prior candidate URLs, previous collection URLs, archived URL inventory and known body hashes excluded from evaluation",
+    "Primary issuer/government bodies only; publisher/date literal evidence and material SHA required; URL-only and title-only records excluded",
+    "Recovered issuer text stays PARTIAL without native HTML; FULL preserves the existing structural parser verdict for accessible HTML text",
+    "No historical AI answers or eligibility/semantic scores used for truth labels or holdout selection; metadata/topic hints are not gold"
+  ],
+  "exclusion_registry": {
+    "known_URLs": 4327,
+    "known_body_hashes": 1708,
+    "evaluation_overlap_URLs": 0,
+    "evaluation_overlap_hashes": 0
+  },
+  "scope_note": "Source-corpus preparation; not completed product/role/quantity/customer/time adjudication or model accuracy. FULL means accessible HTML text; linked media and attachments are not included.",
+  "gold_status": "UNVERIFIED_INDEPENDENT_TARGET_FACT_ADJUDICATION_REQUIRED",
+  "documents": [
+    {
+      "url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+      "status": "ACQUIRED",
+      "published_at": "2026-07-25T12:47:13-04:00",
+      "publication_proof": {
+        "date": "2026-07-25",
+        "method": "PREVIOUS_NATIVE_V4_PUBLICATION_VERIFICATION",
+        "evidence": "docs/v4/GROQ_QUOTE_REPAIR_RESULTS.json"
+      },
+      "publisher_host": "www.energy.gov",
+      "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+      "body_status": "PARTIAL",
+      "recovery_kind": "REUSED_ORIGINAL_V4_SQLITE_NATIVE",
+      "BCT_source_provenance": "BLOCKED",
+      "BCT_source_blockers": [
+        "full_accessible_body"
+      ],
+      "prior_development_use": true,
+      "raw_sha256": "e5a5b7f82c86fbbc758def29824d412091223058dc5bf12fa198b47fb6a12f13",
+      "document_id": "stage4doc-4a61038c45673f9f6629c28ddcd2ae7feb704c7c784f7222105bd2282773ac6e",
+      "body_characters": 8053,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 8053
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 1,
+      "body_path": "docs/v4/stage4-corpus/text/d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/e5a5b7f82c86fbbc758def29824d412091223058dc5bf12fa198b47fb6a12f13.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 8053
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "full_accessible_body"
+        ],
+        "checks": {
+          "attribution_consistent": true,
+          "available_at_recorded": true,
+          "body_hash_matches": true,
+          "full_accessible_body": false,
+          "http_success": true,
+          "not_republication": true,
+          "original_identity": true,
+          "original_publication": true,
+          "publication_before_acquisition": true,
+          "publisher_observed": true
+        },
+        "body_status": "PARTIAL",
+        "published_at": "2026-07-25T12:47:13-04:00",
+        "origin_publisher": "Energy.gov"
+      },
+      "planned_AI_input": {
+        "windows": [
+          {
+            "start": 5905,
+            "end": 6505,
+            "text": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel. October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad. December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs. January 5, 2026: The Energy Department announced a $2.7 billio"
+          }
+        ],
+        "publication": {
+          "published_at": "2026-07-25T12:47:13-04:00",
+          "precision": "TIMESTAMP"
+        },
+        "provenance_scope": "REVIEWED_PUBLIC_EXCERPT_NOT_FULL_DOCUMENT",
+        "selected_characters": 600,
+        "body_characters": 8053,
+        "coverage": "BOUNDED_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "AI_transfer_preflight": "REUSED_PRIOR_PUBLIC_EXCERPT_REVIEW_NO_RETEST",
+      "prior_AI_read_ranges": [
+        {
+          "start": 5905,
+          "end": 6505
+        }
+      ],
+      "planned_API_input_key": "18b774a82be2306c1967e004c50395c3a9451d72bc3b93c976ce258c73560004"
+    },
+    {
+      "url": "https://www.eia.gov/electricity/monthly/",
+      "status": "ACQUIRED",
+      "published_at": "2026-09-24",
+      "publication_proof": {
+        "date": "2026-09-24",
+        "method": "LITERAL_EIA_REPORT_RELEASE_HEADER",
+        "literal_evidence": "Release Date: September 24, 2026"
+      },
+      "publisher_host": "www.eia.gov",
+      "body_sha256": "50dc12fd84e755dc9654e59b982e2afd8b1c03e0200a08ffc0f76f641d95ebb7",
+      "body_status": "PARTIAL",
+      "recovery_kind": "REUSED_ORIGINAL_V4_SQLITE_NATIVE",
+      "BCT_source_provenance": "BLOCKED",
+      "BCT_source_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication",
+        "full_accessible_body"
+      ],
+      "prior_development_use": true,
+      "raw_sha256": "b3d65a459311caad677d74bf5845148d00102e84f5387cbc42518c5f011a2850",
+      "document_id": "stage4doc-1719ff79c0fab7cf3612c035a8d965f6dc099bdb19b098c7d6cdc300ea2e1ad8",
+      "body_characters": 20505,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 20505
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 2,
+      "body_path": "docs/v4/stage4-corpus/text/50dc12fd84e755dc9654e59b982e2afd8b1c03e0200a08ffc0f76f641d95ebb7.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/b3d65a459311caad677d74bf5845148d00102e84f5387cbc42518c5f011a2850.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 20505
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "original_identity",
+          "publisher_observed",
+          "attribution_consistent",
+          "original_publication",
+          "full_accessible_body"
+        ],
+        "checks": {
+          "attribution_consistent": false,
+          "available_at_recorded": true,
+          "body_hash_matches": true,
+          "full_accessible_body": false,
+          "http_success": true,
+          "not_republication": true,
+          "original_identity": false,
+          "original_publication": false,
+          "publisher_observed": false
+        },
+        "body_status": "PARTIAL",
+        "published_at": null,
+        "origin_publisher": "UNKNOWN"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/spotlight-researchers-use-tissue-bank-study-marine-mammal-health",
+      "title": "Spotlight: Researchers Use Tissue Bank to Study Marine Mammal Health",
+      "status": "ACQUIRED",
+      "published_at": "2026-09-02",
+      "publication_proof": {
+        "method": "RESTORED_ISSUER_TEXT_LITERAL_HEADER_DATE_AND_ORIGIN_URL",
+        "literal_evidence": "Spotlight: Researchers Use Tissue Bank to Study Marine Mammal Health | NIST\nSkip to main content\nOfficial websites use .gov A .gov website belongs to an official government organization in the United States.\nSecure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.\nhttps://www.nist.gov/news-events/news/2026/09/spotlight-researchers-use-tissue-bank-study-marine-mammal-health\nUPDATES\nSpotlight: Researchers Use Tissue Bank to Study Marine Mammal Health\nSeptember 2, 2026",
+        "date": "2026-09-02"
+      },
+      "publisher_host": "www.nist.gov",
+      "body_status": "PARTIAL",
+      "body_sha256": "db2c539bc8674ac6fe28e6b128636040bf3dcdb84b577554176856afe4bf13d1",
+      "raw_sha256": null,
+      "recovery_kind": "REUSED_OFFICIAL_EXTRACTED_TEXT_FROM_ACTIONS",
+      "artifact_id": 11862652751,
+      "artifact_zip_sha256": "39a9054bfe9167f6c5b35b87a230d669831fccfceeced6e0e2968922f6cfc678",
+      "artifact_entry": "automatic-local-reader/private-source-cache/db2c539bc8674ac6fe28e6b128636040bf3dcdb84b577554176856afe4bf13d1.txt",
+      "prior_development_use": true,
+      "BCT_source_provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT",
+      "completeness_limits": [
+        "Native HTML not in recovered cache; structural FULL cannot be verified",
+        "No AI results used as source truth"
+      ],
+      "document_id": "stage4doc-e0877913c8eeafe1adf9c573a20fe94f4712334abd1128ece2be4dd048a5be17",
+      "body_characters": 1654,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 1654
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 3,
+      "body_path": "docs/v4/stage4-corpus/text/db2c539bc8674ac6fe28e6b128636040bf3dcdb84b577554176856afe4bf13d1.txt",
+      "raw_path": null,
+      "raw_encoding": "NOT_AVAILABLE_EXTRACTED_ORIGINAL_TEXT_ONLY",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 1654
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/08/nist-national-construction-safety-team-advisory-committee-meeting-scheduled",
+      "title": "NIST National Construction Safety Team Advisory Committee Meeting Scheduled for Sept. 23 and 24, 2026",
+      "status": "ACQUIRED",
+      "published_at": "2026-08-13",
+      "publication_proof": {
+        "method": "RESTORED_ISSUER_TEXT_LITERAL_HEADER_DATE_AND_ORIGIN_URL",
+        "literal_evidence": "NIST National Construction Safety Team Advisory Committee Meeting Scheduled for Sept. 23 and 24, 2026 | NIST\nSkip to main content\nOfficial websites use .gov A .gov website belongs to an official government organization in the United States.\nSecure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.\nhttps://www.nist.gov/news-events/news/2026/08/nist-national-construction-safety-team-advisory-committee-meeting-scheduled\nNEWS\nNIST National Construction Safety Team Advisory Committee Meeting Scheduled for Sept. 23 and 24, 2026\nAugust 13, 2026",
+        "date": "2026-08-13"
+      },
+      "publisher_host": "www.nist.gov",
+      "body_status": "PARTIAL",
+      "body_sha256": "afe71beb1cd044ad43a09da4f58ff775226e03b29de5c1a632df865236867619",
+      "raw_sha256": null,
+      "recovery_kind": "REUSED_OFFICIAL_EXTRACTED_TEXT_FROM_ACTIONS",
+      "artifact_id": 11862652751,
+      "artifact_zip_sha256": "39a9054bfe9167f6c5b35b87a230d669831fccfceeced6e0e2968922f6cfc678",
+      "artifact_entry": "automatic-local-reader/private-source-cache/afe71beb1cd044ad43a09da4f58ff775226e03b29de5c1a632df865236867619.txt",
+      "prior_development_use": true,
+      "BCT_source_provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT",
+      "completeness_limits": [
+        "Native HTML not in recovered cache; structural FULL cannot be verified",
+        "No AI results used as source truth"
+      ],
+      "document_id": "stage4doc-ee7b17e254155d809978fa28adee731ebfa689b34f7a1512d7fd48cc2257e3dc",
+      "body_characters": 2454,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 2454
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 4,
+      "body_path": "docs/v4/stage4-corpus/text/afe71beb1cd044ad43a09da4f58ff775226e03b29de5c1a632df865236867619.txt",
+      "raw_path": null,
+      "raw_encoding": "NOT_AVAILABLE_EXTRACTED_ORIGINAL_TEXT_ONLY",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 2454
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/10/nist-publishes-reports-open-radio-access-network-o-ran-security",
+      "title": "NIST Publishes Reports on Open Radio Access Network (O-RAN) Security",
+      "status": "ACQUIRED",
+      "published_at": "2026-10-08",
+      "publication_proof": {
+        "method": "RESTORED_ISSUER_TEXT_LITERAL_HEADER_DATE_AND_ORIGIN_URL",
+        "literal_evidence": "NIST Publishes Reports on Open Radio Access Network (O-RAN) Security | NIST\nSkip to main content\nOfficial websites use .gov A .gov website belongs to an official government organization in the United States.\nSecure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.\nhttps://www.nist.gov/news-events/news/2026/10/nist-publishes-reports-open-radio-access-network-o-ran-security\nUPDATES\nNIST Publishes Reports on Open Radio Access Network (O-RAN) Security\nExamining security issues in RAN Intelligent Controllers and mapping O-RAN security to the CSF.\nOctober 8, 2026",
+        "date": "2026-10-08"
+      },
+      "publisher_host": "www.nist.gov",
+      "body_status": "PARTIAL",
+      "body_sha256": "5c9a2d423140800d5c37743b27adae607f67df65b17225670b0abbb8705b1d71",
+      "raw_sha256": null,
+      "recovery_kind": "REUSED_OFFICIAL_EXTRACTED_TEXT_FROM_ACTIONS",
+      "artifact_id": 11862652751,
+      "artifact_zip_sha256": "39a9054bfe9167f6c5b35b87a230d669831fccfceeced6e0e2968922f6cfc678",
+      "artifact_entry": "automatic-local-reader/private-source-cache/5c9a2d423140800d5c37743b27adae607f67df65b17225670b0abbb8705b1d71.txt",
+      "prior_development_use": true,
+      "BCT_source_provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT",
+      "completeness_limits": [
+        "Native HTML not in recovered cache; structural FULL cannot be verified",
+        "No AI results used as source truth"
+      ],
+      "document_id": "stage4doc-e5705f109ec017ef9cbd84ffcc21b0457674b72f5f01dd708171537a91462ec3",
+      "body_characters": 2914,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 2914
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 5,
+      "body_path": "docs/v4/stage4-corpus/text/5c9a2d423140800d5c37743b27adae607f67df65b17225670b0abbb8705b1d71.txt",
+      "raw_path": null,
+      "raw_encoding": "NOT_AVAILABLE_EXTRACTED_ORIGINAL_TEXT_ONLY",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 2914
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/07/nist-receives-new-patent-microbe-killing-water-heater",
+      "title": "NIST Receives New Patent for Microbe-Killing Water Heater",
+      "status": "ACQUIRED",
+      "published_at": "2026-07-14",
+      "publication_proof": {
+        "method": "RESTORED_ISSUER_TEXT_LITERAL_HEADER_DATE_AND_ORIGIN_URL",
+        "literal_evidence": "NIST Receives New Patent for Microbe-Killing Water Heater | NIST\nSkip to main content\nOfficial websites use .gov A .gov website belongs to an official government organization in the United States.\nSecure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.\nhttps://www.nist.gov/news-events/news/2026/07/nist-receives-new-patent-microbe-killing-water-heater\nNEWS\nNIST Receives New Patent for Microbe-Killing Water Heater\nJuly 14, 2026",
+        "date": "2026-07-14"
+      },
+      "publisher_host": "www.nist.gov",
+      "body_status": "PARTIAL",
+      "body_sha256": "95c712dbe54d7a8b3bfe8acb49c203fb4d21d651f0d08e2ec7868031437b3828",
+      "raw_sha256": null,
+      "recovery_kind": "REUSED_OFFICIAL_EXTRACTED_TEXT_FROM_ACTIONS",
+      "artifact_id": 11862652751,
+      "artifact_zip_sha256": "39a9054bfe9167f6c5b35b87a230d669831fccfceeced6e0e2968922f6cfc678",
+      "artifact_entry": "automatic-local-reader/private-source-cache/95c712dbe54d7a8b3bfe8acb49c203fb4d21d651f0d08e2ec7868031437b3828.txt",
+      "prior_development_use": true,
+      "BCT_source_provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT",
+      "completeness_limits": [
+        "Native HTML not in recovered cache; structural FULL cannot be verified",
+        "No AI results used as source truth"
+      ],
+      "document_id": "stage4doc-3c51d2a414aed1faeab8ce1b0ef057f15649eb2abfe8920ae5f631e768e81852",
+      "body_characters": 7009,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 7009
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 6,
+      "body_path": "docs/v4/stage4-corpus/text/95c712dbe54d7a8b3bfe8acb49c203fb4d21d651f0d08e2ec7868031437b3828.txt",
+      "raw_path": null,
+      "raw_encoding": "NOT_AVAILABLE_EXTRACTED_ORIGINAL_TEXT_ONLY",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 7009
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2025/07/evse-metrology-trainings-are-go",
+      "title": "EVSE Metrology Trainings are a Go!",
+      "status": "ACQUIRED",
+      "published_at": "2025-07-07",
+      "publication_proof": {
+        "method": "RESTORED_ISSUER_TEXT_LITERAL_HEADER_DATE_AND_ORIGIN_URL",
+        "literal_evidence": "EVSE Metrology Trainings are a Go! | NIST\nSkip to main content\nOfficial websites use .gov A .gov website belongs to an official government organization in the United States.\nSecure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.\nhttps://www.nist.gov/news-events/news/2025/07/evse-metrology-trainings-are-go\nUPDATES\nEVSE Metrology Trainings are a Go!\nJuly 7, 2025",
+        "date": "2025-07-07"
+      },
+      "publisher_host": "www.nist.gov",
+      "body_status": "PARTIAL",
+      "body_sha256": "bc80f7ba7b99559bd57408a7756a384b8a560524472badf12402c8995394ff6d",
+      "raw_sha256": null,
+      "recovery_kind": "REUSED_OFFICIAL_EXTRACTED_TEXT_FROM_ACTIONS",
+      "artifact_id": 11862652751,
+      "artifact_zip_sha256": "39a9054bfe9167f6c5b35b87a230d669831fccfceeced6e0e2968922f6cfc678",
+      "artifact_entry": "automatic-local-reader/private-source-cache/bc80f7ba7b99559bd57408a7756a384b8a560524472badf12402c8995394ff6d.txt",
+      "prior_development_use": true,
+      "BCT_source_provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT",
+      "completeness_limits": [
+        "Native HTML not in recovered cache; structural FULL cannot be verified",
+        "No AI results used as source truth"
+      ],
+      "document_id": "stage4doc-64b3fb4b7837465b2eacf95cdf4ff2394de42ab4b9c8d47ce6e82f2322efa3bf",
+      "body_characters": 2294,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 2294
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 7,
+      "body_path": "docs/v4/stage4-corpus/text/bc80f7ba7b99559bd57408a7756a384b8a560524472badf12402c8995394ff6d.txt",
+      "raw_path": null,
+      "raw_encoding": "NOT_AVAILABLE_EXTRACTED_ORIGINAL_TEXT_ONLY",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 2294
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/enhancing-public-safety-communication-reliability-through-5g-sidelink",
+      "title": "Enhancing Public Safety Communication Reliability Through 5G Sidelink",
+      "status": "ACQUIRED",
+      "published_at": "2026-09-14",
+      "publication_proof": {
+        "method": "RESTORED_ISSUER_TEXT_LITERAL_HEADER_DATE_AND_ORIGIN_URL",
+        "literal_evidence": "Enhancing Public Safety Communication Reliability Through 5G Sidelink | NIST\nSkip to main content\nOfficial websites use .gov A .gov website belongs to an official government organization in the United States.\nSecure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.\nhttps://www.nist.gov/news-events/news/2026/09/enhancing-public-safety-communication-reliability-through-5g-sidelink\nUPDATES\nEnhancing Public Safety Communication Reliability Through 5G Sidelink\nSeptember 14, 2026",
+        "date": "2026-09-14"
+      },
+      "publisher_host": "www.nist.gov",
+      "body_status": "PARTIAL",
+      "body_sha256": "853be15506eafc2fb4d7a7b6b59457997fe1a29b5ff9a64ab6cafa69dc9fcfbb",
+      "raw_sha256": null,
+      "recovery_kind": "REUSED_OFFICIAL_EXTRACTED_TEXT_FROM_ACTIONS",
+      "artifact_id": 11862652751,
+      "artifact_zip_sha256": "39a9054bfe9167f6c5b35b87a230d669831fccfceeced6e0e2968922f6cfc678",
+      "artifact_entry": "automatic-local-reader/private-source-cache/853be15506eafc2fb4d7a7b6b59457997fe1a29b5ff9a64ab6cafa69dc9fcfbb.txt",
+      "prior_development_use": true,
+      "BCT_source_provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT",
+      "completeness_limits": [
+        "Native HTML not in recovered cache; structural FULL cannot be verified",
+        "No AI results used as source truth"
+      ],
+      "document_id": "stage4doc-3338cd005bc606cc673ac13bff97043446f2890eaacbdc1b0929bd988aedd5df",
+      "body_characters": 5757,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 5757
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 8,
+      "body_path": "docs/v4/stage4-corpus/text/853be15506eafc2fb4d7a7b6b59457997fe1a29b5ff9a64ab6cafa69dc9fcfbb.txt",
+      "raw_path": null,
+      "raw_encoding": "NOT_AVAILABLE_EXTRACTED_ORIGINAL_TEXT_ONLY",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 5757
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2025/01/owm-recognizes-proficiency-testing-coordinators-2024-rmaps",
+      "title": "OWM Recognizes Proficiency Testing Coordinators of the 2024 RMAPs",
+      "status": "ACQUIRED",
+      "published_at": "2025-01-07",
+      "publication_proof": {
+        "method": "RESTORED_ISSUER_TEXT_LITERAL_HEADER_DATE_AND_ORIGIN_URL",
+        "literal_evidence": "OWM Recognizes Proficiency Testing Coordinators of the 2024 RMAPs | NIST\nSkip to main content\nOfficial websites use .gov A .gov website belongs to an official government organization in the United States.\nSecure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.\nhttps://www.nist.gov/news-events/news/2025/01/owm-recognizes-proficiency-testing-coordinators-2024-rmaps\nUPDATES\nOWM Recognizes Proficiency Testing Coordinators of the 2024 RMAPs\nJanuary 7, 2025",
+        "date": "2025-01-07"
+      },
+      "publisher_host": "www.nist.gov",
+      "body_status": "PARTIAL",
+      "body_sha256": "8af4feb1f0f021f16e0d6c20e166027cdc8feca39241472ec44ad7c45f51aa5e",
+      "raw_sha256": null,
+      "recovery_kind": "REUSED_OFFICIAL_EXTRACTED_TEXT_FROM_ACTIONS",
+      "artifact_id": 11862652751,
+      "artifact_zip_sha256": "39a9054bfe9167f6c5b35b87a230d669831fccfceeced6e0e2968922f6cfc678",
+      "artifact_entry": "automatic-local-reader/private-source-cache/8af4feb1f0f021f16e0d6c20e166027cdc8feca39241472ec44ad7c45f51aa5e.txt",
+      "prior_development_use": true,
+      "BCT_source_provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT",
+      "completeness_limits": [
+        "Native HTML not in recovered cache; structural FULL cannot be verified",
+        "No AI results used as source truth"
+      ],
+      "document_id": "stage4doc-7ba3d41a838290c12a00fb771b28b6721d7481ed52d02d80879e8c3244a7887d",
+      "body_characters": 4196,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4196
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 9,
+      "body_path": "docs/v4/stage4-corpus/text/8af4feb1f0f021f16e0d6c20e166027cdc8feca39241472ec44ad7c45f51aa5e.txt",
+      "raw_path": null,
+      "raw_encoding": "NOT_AVAILABLE_EXTRACTED_ORIGINAL_TEXT_ONLY",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4196
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/where-design-inspires-learning-nist-summer-undergraduate-research",
+      "title": "Where Design Inspires Learning: NIST Summer Undergraduate Research Fellowship (SURF) Program",
+      "status": "ACQUIRED",
+      "published_at": "2026-09-08",
+      "publication_proof": {
+        "method": "RESTORED_ISSUER_TEXT_LITERAL_HEADER_DATE_AND_ORIGIN_URL",
+        "literal_evidence": "Where Design Inspires Learning: NIST Summer Undergraduate Research Fellowship (SURF) Program | NIST\nSkip to main content\nOfficial websites use .gov A .gov website belongs to an official government organization in the United States.\nSecure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.\nhttps://www.nist.gov/news-events/news/2026/09/where-design-inspires-learning-nist-summer-undergraduate-research\nUPDATES\nWhere Design Inspires Learning: NIST Summer Undergraduate Research Fellowship (SURF) Program\nYoon Thwel | School: University of Maryland College Park\nSeptember 8, 2026",
+        "date": "2026-09-08"
+      },
+      "publisher_host": "www.nist.gov",
+      "body_status": "PARTIAL",
+      "body_sha256": "a7f3e052816f8c5096aa6334f4d3deb51f7ffe2c7ca1df88eed9711a024e0c8f",
+      "raw_sha256": null,
+      "recovery_kind": "REUSED_OFFICIAL_EXTRACTED_TEXT_FROM_ACTIONS",
+      "artifact_id": 11862652751,
+      "artifact_zip_sha256": "39a9054bfe9167f6c5b35b87a230d669831fccfceeced6e0e2968922f6cfc678",
+      "artifact_entry": "automatic-local-reader/private-source-cache/a7f3e052816f8c5096aa6334f4d3deb51f7ffe2c7ca1df88eed9711a024e0c8f.txt",
+      "prior_development_use": true,
+      "BCT_source_provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT",
+      "completeness_limits": [
+        "Native HTML not in recovered cache; structural FULL cannot be verified",
+        "No AI results used as source truth"
+      ],
+      "document_id": "stage4doc-4d8e525087222bfb8e3b3e33e70a6304507785598c1d02f37c6e440d670c6327",
+      "body_characters": 5110,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 5110
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 10,
+      "body_path": "docs/v4/stage4-corpus/text/a7f3e052816f8c5096aa6334f4d3deb51f7ffe2c7ca1df88eed9711a024e0c8f.txt",
+      "raw_path": null,
+      "raw_encoding": "NOT_AVAILABLE_EXTRACTED_ORIGINAL_TEXT_ONLY",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 5110
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/finalized-manufacturing-supply-chain-traceability-meta-framework",
+      "title": "Finalized Manufacturing Supply Chain Traceability Meta-Framework",
+      "status": "ACQUIRED",
+      "published_at": "2026-09-09",
+      "publication_proof": {
+        "method": "RESTORED_ISSUER_TEXT_LITERAL_HEADER_DATE_AND_ORIGIN_URL",
+        "literal_evidence": "Finalized Manufacturing Supply Chain Traceability Meta-Framework | NIST\nSkip to main content\nOfficial websites use .gov A .gov website belongs to an official government organization in the United States.\nSecure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.\nhttps://www.nist.gov/news-events/news/2026/09/finalized-manufacturing-supply-chain-traceability-meta-framework\nUPDATES\nFinalized Manufacturing Supply Chain Traceability Meta-Framework\nSeptember 9, 2026",
+        "date": "2026-09-09"
+      },
+      "publisher_host": "www.nist.gov",
+      "body_status": "PARTIAL",
+      "body_sha256": "968fb3b8540a37794da979d177fcdc3e58789940464f229d44f40b4b68ec2012",
+      "raw_sha256": null,
+      "recovery_kind": "REUSED_OFFICIAL_EXTRACTED_TEXT_FROM_ACTIONS",
+      "artifact_id": 11862652751,
+      "artifact_zip_sha256": "39a9054bfe9167f6c5b35b87a230d669831fccfceeced6e0e2968922f6cfc678",
+      "artifact_entry": "automatic-local-reader/private-source-cache/968fb3b8540a37794da979d177fcdc3e58789940464f229d44f40b4b68ec2012.txt",
+      "prior_development_use": true,
+      "BCT_source_provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT",
+      "completeness_limits": [
+        "Native HTML not in recovered cache; structural FULL cannot be verified",
+        "No AI results used as source truth"
+      ],
+      "document_id": "stage4doc-3bb862559586839cc381df021fc400144a2dfbcc1788032f26eebe4982f5ee93",
+      "body_characters": 2997,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 2997
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 11,
+      "body_path": "docs/v4/stage4-corpus/text/968fb3b8540a37794da979d177fcdc3e58789940464f229d44f40b4b68ec2012.txt",
+      "raw_path": null,
+      "raw_encoding": "NOT_AVAILABLE_EXTRACTED_ORIGINAL_TEXT_ONLY",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 2997
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/09/nist-awards-more-30-million-mep-centers-11-states-and-puerto-rico",
+      "title": "NIST Awards More Than $30 Million for MEP Centers in 11 States and Puerto Rico",
+      "status": "ACQUIRED",
+      "published_at": "2026-09-15",
+      "publication_proof": {
+        "method": "RESTORED_ISSUER_TEXT_LITERAL_HEADER_DATE_AND_ORIGIN_URL",
+        "literal_evidence": "NIST Awards More Than $30 Million for MEP Centers in 11 States and Puerto Rico | NIST\nSkip to main content\nOfficial websites use .gov A .gov website belongs to an official government organization in the United States.\nSecure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.\nhttps://www.nist.gov/news-events/news/2026/09/nist-awards-more-30-million-mep-centers-11-states-and-puerto-rico\nNEWS\nNIST Awards More Than $30 Million for MEP Centers in 11 States and Puerto Rico\nSeptember 15, 2026",
+        "date": "2026-09-15"
+      },
+      "publisher_host": "www.nist.gov",
+      "body_status": "PARTIAL",
+      "body_sha256": "97797f8d1aab629d78e0b4f014a11503aa3b31a43bacbf64c37fa3e3be40ad72",
+      "raw_sha256": null,
+      "recovery_kind": "REUSED_OFFICIAL_EXTRACTED_TEXT_FROM_ACTIONS",
+      "artifact_id": 11862652751,
+      "artifact_zip_sha256": "39a9054bfe9167f6c5b35b87a230d669831fccfceeced6e0e2968922f6cfc678",
+      "artifact_entry": "automatic-local-reader/private-source-cache/97797f8d1aab629d78e0b4f014a11503aa3b31a43bacbf64c37fa3e3be40ad72.txt",
+      "prior_development_use": true,
+      "BCT_source_provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT",
+      "completeness_limits": [
+        "Native HTML not in recovered cache; structural FULL cannot be verified",
+        "No AI results used as source truth"
+      ],
+      "document_id": "stage4doc-208dbc262232e0033f85eaf3e4b3a1a9f446bd4ce04cc20141bb3e67427fbe6f",
+      "body_characters": 4035,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4035
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 12,
+      "body_path": "docs/v4/stage4-corpus/text/97797f8d1aab629d78e0b4f014a11503aa3b31a43bacbf64c37fa3e3be40ad72.txt",
+      "raw_path": null,
+      "raw_encoding": "NOT_AVAILABLE_EXTRACTED_ORIGINAL_TEXT_ONLY",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4035
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2025/11/nists-glenn-bell-awarded-institution-structural-engineers-gold-medal",
+      "title": "NIST’s Glenn Bell Is Awarded Institution of Structural Engineers Gold Medal",
+      "status": "ACQUIRED",
+      "published_at": "2025-11-14",
+      "publication_proof": {
+        "method": "RESTORED_ISSUER_TEXT_LITERAL_HEADER_DATE_AND_ORIGIN_URL",
+        "literal_evidence": "NIST’s Glenn Bell Is Awarded Institution of Structural Engineers Gold Medal | NIST\nSkip to main content\nOfficial websites use .gov A .gov website belongs to an official government organization in the United States.\nSecure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.\nhttps://www.nist.gov/news-events/news/2025/11/nists-glenn-bell-awarded-institution-structural-engineers-gold-medal\nUPDATES\nNIST’s Glenn Bell Is Awarded Institution of Structural Engineers Gold Medal\nNovember 14, 2025",
+        "date": "2025-11-14"
+      },
+      "publisher_host": "www.nist.gov",
+      "body_status": "PARTIAL",
+      "body_sha256": "efba14a0d53fc132ad4ae0c7c7b2dcec380a33f8e5d72a7a5c67682cb14d25aa",
+      "raw_sha256": null,
+      "recovery_kind": "REUSED_OFFICIAL_EXTRACTED_TEXT_FROM_ACTIONS",
+      "artifact_id": 11862652751,
+      "artifact_zip_sha256": "39a9054bfe9167f6c5b35b87a230d669831fccfceeced6e0e2968922f6cfc678",
+      "artifact_entry": "automatic-local-reader/private-source-cache/efba14a0d53fc132ad4ae0c7c7b2dcec380a33f8e5d72a7a5c67682cb14d25aa.txt",
+      "prior_development_use": true,
+      "BCT_source_provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT",
+      "completeness_limits": [
+        "Native HTML not in recovered cache; structural FULL cannot be verified",
+        "No AI results used as source truth"
+      ],
+      "document_id": "stage4doc-632d6c8d3848d76c0c9414ee2f2844df5cd1f243e52b707e8478253a211b1419",
+      "body_characters": 3354,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 3354
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 13,
+      "body_path": "docs/v4/stage4-corpus/text/efba14a0d53fc132ad4ae0c7c7b2dcec380a33f8e5d72a7a5c67682cb14d25aa.txt",
+      "raw_path": null,
+      "raw_encoding": "NOT_AVAILABLE_EXTRACTED_ORIGINAL_TEXT_ONLY",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 3354
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2024/09/nist-leaders-overview-cps-and-iot-program-doe-executive-lunch-and-learn",
+      "title": "NIST Leaders Overview CPS and IoT Program at DOE Executive Lunch and Learn",
+      "status": "ACQUIRED",
+      "published_at": "2024-09-01",
+      "publication_proof": {
+        "method": "RESTORED_ISSUER_TEXT_LITERAL_HEADER_DATE_AND_ORIGIN_URL",
+        "literal_evidence": "NIST Leaders Overview CPS and IoT Program at DOE Executive Lunch and Learn | NIST\nSkip to main content\nOfficial websites use .gov A .gov website belongs to an official government organization in the United States.\nSecure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.\nhttps://www.nist.gov/news-events/news/2024/09/nist-leaders-overview-cps-and-iot-program-doe-executive-lunch-and-learn\nUPDATES\nNIST Leaders Overview CPS and IoT Program at DOE Executive Lunch and Learn\nSeptember 1, 2024",
+        "date": "2024-09-01"
+      },
+      "publisher_host": "www.nist.gov",
+      "body_status": "PARTIAL",
+      "body_sha256": "5842267985adc1093713809672cafed7afa761d393d27ea9fd0335b7c8cc81b2",
+      "raw_sha256": null,
+      "recovery_kind": "REUSED_OFFICIAL_EXTRACTED_TEXT_FROM_ACTIONS",
+      "artifact_id": 11862652751,
+      "artifact_zip_sha256": "39a9054bfe9167f6c5b35b87a230d669831fccfceeced6e0e2968922f6cfc678",
+      "artifact_entry": "automatic-local-reader/private-source-cache/5842267985adc1093713809672cafed7afa761d393d27ea9fd0335b7c8cc81b2.txt",
+      "prior_development_use": true,
+      "BCT_source_provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT",
+      "completeness_limits": [
+        "Native HTML not in recovered cache; structural FULL cannot be verified",
+        "No AI results used as source truth"
+      ],
+      "document_id": "stage4doc-54b035520103db5ae90a75115388df2f45187be56bba6f856b8f4d73b57ba5d3",
+      "body_characters": 4022,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4022
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 14,
+      "body_path": "docs/v4/stage4-corpus/text/5842267985adc1093713809672cafed7afa761d393d27ea9fd0335b7c8cc81b2.txt",
+      "raw_path": null,
+      "raw_encoding": "NOT_AVAILABLE_EXTRACTED_ORIGINAL_TEXT_ONLY",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4022
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/07/spotlight-how-nist-helps-make-sure-fish-you-catch-are-safe-eat",
+      "title": "Spotlight: How NIST Helps Make Sure the Fish You Catch Are Safe to Eat",
+      "status": "ACQUIRED",
+      "published_at": "2026-07-08",
+      "publication_proof": {
+        "method": "RESTORED_ISSUER_TEXT_LITERAL_HEADER_DATE_AND_ORIGIN_URL",
+        "literal_evidence": "Spotlight: How NIST Helps Make Sure the Fish You Catch Are Safe to Eat | NIST\nSkip to main content\nOfficial websites use .gov A .gov website belongs to an official government organization in the United States.\nSecure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.\nhttps://www.nist.gov/news-events/news/2026/07/spotlight-how-nist-helps-make-sure-fish-you-catch-are-safe-eat\nUPDATES\nSpotlight: How NIST Helps Make Sure the Fish You Catch Are Safe to Eat\nJuly 8, 2026",
+        "date": "2026-07-08"
+      },
+      "publisher_host": "www.nist.gov",
+      "body_status": "PARTIAL",
+      "body_sha256": "b1024a0f4c3e8f1222affa53735f5e21098a93c855284216876f656c753912cf",
+      "raw_sha256": null,
+      "recovery_kind": "REUSED_OFFICIAL_EXTRACTED_TEXT_FROM_ACTIONS",
+      "artifact_id": 11862652751,
+      "artifact_zip_sha256": "39a9054bfe9167f6c5b35b87a230d669831fccfceeced6e0e2968922f6cfc678",
+      "artifact_entry": "automatic-local-reader/private-source-cache/b1024a0f4c3e8f1222affa53735f5e21098a93c855284216876f656c753912cf.txt",
+      "prior_development_use": true,
+      "BCT_source_provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT",
+      "completeness_limits": [
+        "Native HTML not in recovered cache; structural FULL cannot be verified",
+        "No AI results used as source truth"
+      ],
+      "document_id": "stage4doc-956c43146cf41ced59b7d980797d105eb4b6a3c1dab83b8cf10b3dee2adf911d",
+      "body_characters": 2086,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 2086
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 15,
+      "body_path": "docs/v4/stage4-corpus/text/b1024a0f4c3e8f1222affa53735f5e21098a93c855284216876f656c753912cf.txt",
+      "raw_path": null,
+      "raw_encoding": "NOT_AVAILABLE_EXTRACTED_ORIGINAL_TEXT_ONLY",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 2086
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT"
+    },
+    {
+      "url": "https://www.nist.gov/news-events/news/2026/08/niimbl-announces-project-call-101-advance-biopharmaceutical-manufacturing",
+      "title": "NIIMBL Announces Project Call 10.1 to Advance Biopharmaceutical Manufacturing Technology and Workforce Capabilities",
+      "status": "ACQUIRED",
+      "published_at": "2026-08-03",
+      "publication_proof": {
+        "method": "RESTORED_ISSUER_TEXT_LITERAL_HEADER_DATE_AND_ORIGIN_URL",
+        "literal_evidence": "NIIMBL Announces Project Call 10.1 to Advance Biopharmaceutical Manufacturing Technology and Workforce Capabilities | NIST\nSkip to main content\nOfficial websites use .gov A .gov website belongs to an official government organization in the United States.\nSecure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.\nhttps://www.nist.gov/news-events/news/2026/08/niimbl-announces-project-call-101-advance-biopharmaceutical-manufacturing\nUPDATES\nNIIMBL Announces Project Call 10.1 to Advance Biopharmaceutical Manufacturing Technology and Workforce Capabilities\nAugust 3, 2026",
+        "date": "2026-08-03"
+      },
+      "publisher_host": "www.nist.gov",
+      "body_status": "PARTIAL",
+      "body_sha256": "03bdb28d22d8796c3dd0923866f56d5e1f6a6e70387f9f05640fa8e6a2c3e527",
+      "raw_sha256": null,
+      "recovery_kind": "REUSED_OFFICIAL_EXTRACTED_TEXT_FROM_ACTIONS",
+      "artifact_id": 11862652751,
+      "artifact_zip_sha256": "39a9054bfe9167f6c5b35b87a230d669831fccfceeced6e0e2968922f6cfc678",
+      "artifact_entry": "automatic-local-reader/private-source-cache/03bdb28d22d8796c3dd0923866f56d5e1f6a6e70387f9f05640fa8e6a2c3e527.txt",
+      "prior_development_use": true,
+      "BCT_source_provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT",
+      "completeness_limits": [
+        "Native HTML not in recovered cache; structural FULL cannot be verified",
+        "No AI results used as source truth"
+      ],
+      "document_id": "stage4doc-21ee1fb5dd30ac377bef16b65f849c6dac75c0861e925d80e7fca106d10b907b",
+      "body_characters": 3184,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 3184
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "split": "development",
+      "split_index": 16,
+      "body_path": "docs/v4/stage4-corpus/text/03bdb28d22d8796c3dd0923866f56d5e1f6a6e70387f9f05640fa8e6a2c3e527.txt",
+      "raw_path": null,
+      "raw_encoding": "NOT_AVAILABLE_EXTRACTED_ORIGINAL_TEXT_ONLY",
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 3184
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED_NATIVE_HTML_NOT_PRESENT"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT"
+    },
+    {
+      "url": "https://www.esa.int/Applications/Connectivity_and_Secure_Communications/One_beam_many_possibilities_the_ScyLight_programme_patch",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.esa.int/Applications/Connectivity_and_Secure_Communications/One_beam_many_possibilities_the_ScyLight_programme_patch",
+      "raw_sha256": "1aa43ea6dd584ceb1f4c62dbd8d5e3940b30acd59ccf6676a93db77b7f7a7e9c",
+      "status": "ACQUIRED",
+      "title": "One beam, many possibilities: the ScyLight programme patch",
+      "published_at": "2026-10-05",
+      "publication_proof": {
+        "date": "2026-10-05",
+        "precision": "DATE",
+        "method": "ESA_VISIBLE_ARTICLE_DATE",
+        "literal_evidence": "05/10/2026",
+        "native_sha256": "1aa43ea6dd584ceb1f4c62dbd8d5e3940b30acd59ccf6676a93db77b7f7a7e9c",
+        "native_character_start": 4658,
+        "native_character_end": 4668
+      },
+      "publisher_host": "www.esa.int",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 0,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "77bf2a32624f82966656462dc139f45dd392495a073f45411776d956f19f28b0",
+      "BCT_source_provenance": "BLOCKED",
+      "BCT_source_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication"
+      ],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "AEROSPACE_OFFICIAL_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-19cbb69c42ab7d40b6e26fe411f1266ca45004886cd5261e28eddc019a283061",
+      "body_characters": 4282,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4282
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "development",
+      "split": "development",
+      "split_index": 17,
+      "body_path": "docs/v4/stage4-corpus/text/77bf2a32624f82966656462dc139f45dd392495a073f45411776d956f19f28b0.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/1aa43ea6dd584ceb1f4c62dbd8d5e3940b30acd59ccf6676a93db77b7f7a7e9c.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": true,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4282
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "original_identity",
+          "publisher_observed",
+          "attribution_consistent",
+          "original_publication"
+        ],
+        "checks": {
+          "http_success": true,
+          "original_identity": false,
+          "publisher_observed": false,
+          "attribution_consistent": false,
+          "original_publication": false,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true
+        },
+        "body_status": "FULL",
+        "published_at": null,
+        "origin_publisher": "UNKNOWN"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.esa.int/About_Us/Business_with_ESA/Record_participation_in_ESA_s_Industry_Space_Days_2026",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.esa.int/About_Us/Business_with_ESA/Record_participation_in_ESA_s_Industry_Space_Days_2026",
+      "raw_sha256": "0620b0eacb1acb7626403350fd95f28d1bb0fbbe18c7c029a522478dd6830f01",
+      "status": "ACQUIRED",
+      "title": "Record participation in ESA’s Industry Space Days 2026",
+      "published_at": "2026-09-24",
+      "publication_proof": {
+        "date": "2026-09-24",
+        "precision": "DATE",
+        "method": "ESA_VISIBLE_ARTICLE_DATE",
+        "literal_evidence": "24/09/2026",
+        "native_sha256": "0620b0eacb1acb7626403350fd95f28d1bb0fbbe18c7c029a522478dd6830f01",
+        "native_character_start": 4909,
+        "native_character_end": 4919
+      },
+      "publisher_host": "www.esa.int",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 0,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "2e65bbcc873f1ec6adf9d04134ea2c48c0d6ee8ce05fc1f1722be3acee673da2",
+      "BCT_source_provenance": "BLOCKED",
+      "BCT_source_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication"
+      ],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "AEROSPACE_OFFICIAL_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-9d126c2a5a26749a049403c1c0d49add0a3cbc4f5c377ea28f2912964846039d",
+      "body_characters": 4070,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4070
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "development",
+      "split": "development",
+      "split_index": 18,
+      "body_path": "docs/v4/stage4-corpus/text/2e65bbcc873f1ec6adf9d04134ea2c48c0d6ee8ce05fc1f1722be3acee673da2.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/0620b0eacb1acb7626403350fd95f28d1bb0fbbe18c7c029a522478dd6830f01.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": true,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4070
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "original_identity",
+          "publisher_observed",
+          "attribution_consistent",
+          "original_publication"
+        ],
+        "checks": {
+          "http_success": true,
+          "original_identity": false,
+          "publisher_observed": false,
+          "attribution_consistent": false,
+          "original_publication": false,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true
+        },
+        "body_status": "FULL",
+        "published_at": null,
+        "origin_publisher": "UNKNOWN"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-3/Sentinel-3C_returns_its_first_views_of_Earth",
+      "transport": "REUSE_CURRENT_ACCESS_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-3/Sentinel-3C_returns_its_first_views_of_Earth",
+      "raw_sha256": "9994a7e8b2d00a7eb17461e72454606a7670ad1d0152b7ed5581d6e93a5813f8",
+      "status": "ACQUIRED",
+      "title": "Sentinel-3C returns its first views of Earth",
+      "published_at": "2026-10-08",
+      "publication_proof": {
+        "date": "2026-10-08",
+        "precision": "DATE",
+        "method": "ESA_VISIBLE_ARTICLE_DATE",
+        "literal_evidence": "08/10/2026",
+        "native_sha256": "9994a7e8b2d00a7eb17461e72454606a7670ad1d0152b7ed5581d6e93a5813f8",
+        "native_character_start": 5075,
+        "native_character_end": 5085
+      },
+      "publisher_host": "www.esa.int",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 0,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "386a71ea3ae1dbcedc7433c21943845defb4b32e8b88768d9f2207e01bd3f994",
+      "BCT_source_provenance": "BLOCKED",
+      "BCT_source_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication"
+      ],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "OFFICIAL_SOURCE_METADATA_REVIEW_NOT_AI_GOLD",
+      "document_id": "stage4doc-b06d3b9aa32c712c564a3e2ffdf4cf26704d237cc52623938bcb03e5735f6bb7",
+      "body_characters": 7591,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 7591
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "development",
+      "prior_metadata_failure": "var/v4/stage4-recovery/metadata-repair-history/56f30abb3e4daf2733b1598fba74a73d873b23335b44855b4e44bb17ca9ffd2f.json",
+      "metadata_review_new_HTTP_requests": 0,
+      "split": "development",
+      "split_index": 19,
+      "body_path": "docs/v4/stage4-corpus/text/386a71ea3ae1dbcedc7433c21943845defb4b32e8b88768d9f2207e01bd3f994.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/9994a7e8b2d00a7eb17461e72454606a7670ad1d0152b7ed5581d6e93a5813f8.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": true,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 7591
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "original_identity",
+          "publisher_observed",
+          "attribution_consistent",
+          "original_publication"
+        ],
+        "checks": {
+          "http_success": true,
+          "original_identity": false,
+          "publisher_observed": false,
+          "attribution_consistent": false,
+          "original_publication": false,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true
+        },
+        "body_status": "FULL",
+        "published_at": null,
+        "origin_publisher": "UNKNOWN"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Farewell_to_the_Fluid_Science_Laboratory_after_18_years_in_orbit",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Farewell_to_the_Fluid_Science_Laboratory_after_18_years_in_orbit",
+      "raw_sha256": "b360623845043d459eff1c49fc7e6a3a1f90260e754a24198ca5dc9d42976bc6",
+      "status": "ACQUIRED",
+      "title": "Farewell to the Fluid Science Laboratory after 18 years in orbit",
+      "published_at": "2026-10-09",
+      "publication_proof": {
+        "date": "2026-10-09",
+        "precision": "DATE",
+        "method": "ESA_VISIBLE_ARTICLE_DATE",
+        "literal_evidence": "09/10/2026",
+        "native_sha256": "b360623845043d459eff1c49fc7e6a3a1f90260e754a24198ca5dc9d42976bc6",
+        "native_character_start": 4912,
+        "native_character_end": 4922
+      },
+      "publisher_host": "www.esa.int",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 0,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "ea7caf99f9887c4f52b7a4c2d52b6cd6138080dfdffa70c22aab5f99863f6068",
+      "BCT_source_provenance": "BLOCKED",
+      "BCT_source_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication"
+      ],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "AEROSPACE_OFFICIAL_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-5b70d9c9ac5b46d268f409b8711993c21140c67c72f6531eac8b3570ce197078",
+      "body_characters": 5576,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 5576
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "development",
+      "split": "development",
+      "split_index": 20,
+      "body_path": "docs/v4/stage4-corpus/text/ea7caf99f9887c4f52b7a4c2d52b6cd6138080dfdffa70c22aab5f99863f6068.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/b360623845043d459eff1c49fc7e6a3a1f90260e754a24198ca5dc9d42976bc6.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": true,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 5576
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "original_identity",
+          "publisher_observed",
+          "attribution_consistent",
+          "original_publication"
+        ],
+        "checks": {
+          "http_success": true,
+          "original_identity": false,
+          "publisher_observed": false,
+          "attribution_consistent": false,
+          "original_publication": false,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true
+        },
+        "body_status": "FULL",
+        "published_at": null,
+        "origin_publisher": "UNKNOWN"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.esa.int/About_Us/Corporate_news/ESA_at_IAC_2026_Day_1",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.esa.int/About_Us/Corporate_news/ESA_at_IAC_2026_Day_1",
+      "raw_sha256": "19c016e0167eadecc126e96d882668e712aff7b80308ca001d9d845828fb1ef4",
+      "status": "ACQUIRED",
+      "title": "ESA at IAC 2026 – Day 1",
+      "published_at": "2026-10-05",
+      "publication_proof": {
+        "date": "2026-10-05",
+        "precision": "DATE",
+        "method": "ESA_VISIBLE_ARTICLE_DATE",
+        "literal_evidence": "05/10/2026",
+        "native_sha256": "19c016e0167eadecc126e96d882668e712aff7b80308ca001d9d845828fb1ef4",
+        "native_character_start": 5106,
+        "native_character_end": 5116
+      },
+      "publisher_host": "www.esa.int",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 0,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "b4b070807ef8342b9260d0a7e2d822fa9ceb0d09ee51222d47fd7ce2aebd2358",
+      "BCT_source_provenance": "BLOCKED",
+      "BCT_source_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication"
+      ],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "AEROSPACE_OFFICIAL_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-c51500870da02cac33cbf6f15045bf4f10f42123762e4fe2615d5f1b6bdbebeb",
+      "body_characters": 5847,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 5847
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "development",
+      "split": "development",
+      "split_index": 21,
+      "body_path": "docs/v4/stage4-corpus/text/b4b070807ef8342b9260d0a7e2d822fa9ceb0d09ee51222d47fd7ce2aebd2358.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/19c016e0167eadecc126e96d882668e712aff7b80308ca001d9d845828fb1ef4.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": true,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 5847
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "original_identity",
+          "publisher_observed",
+          "attribution_consistent",
+          "original_publication"
+        ],
+        "checks": {
+          "http_success": true,
+          "original_identity": false,
+          "publisher_observed": false,
+          "attribution_consistent": false,
+          "original_publication": false,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true
+        },
+        "body_status": "FULL",
+        "published_at": null,
+        "origin_publisher": "UNKNOWN"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2021/03/aehr-receives-fox-xp-multi-wafer-test-burn-in-solution-order-as-silicon-photonics-customer-makes-transition-to-volume-production/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2021/03/aehr-receives-fox-xp-multi-wafer-test-burn-in-solution-order-as-silicon-photonics-customer-makes-transition-to-volume-production/",
+      "raw_sha256": "6b6c6a611d9bec8759c5764f29b383133c4244528769c93af731602e8312cc53",
+      "status": "ACQUIRED",
+      "title": "Aehr Receives FOX-XP™ Multi-Wafer Test & Burn-in Solution Order as Silicon Photonics Customer Makes Transition to Volume Production - Aehr Test Systems",
+      "published_at": "2021-03-02",
+      "publication_proof": {
+        "date": "2021-03-02",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2021-03-02T01:12:03+00:00\" />",
+        "native_sha256": "6b6c6a611d9bec8759c5764f29b383133c4244528769c93af731602e8312cc53",
+        "native_character_start": 1682,
+        "native_character_end": 1760
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "b2ac2db923d50312c33c6c00d188f247e25df3026ce014f394d872987a9c4cda",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_ISSUER_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-8b4570d75e922fc5ad5de347a02b4af9079bbc7e8710c8a8c645bf907c2e4ac4",
+      "body_characters": 10505,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 10505
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "development",
+      "split": "development",
+      "split_index": 22,
+      "body_path": "docs/v4/stage4-corpus/text/b2ac2db923d50312c33c6c00d188f247e25df3026ce014f394d872987a9c4cda.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/6b6c6a611d9bec8759c5764f29b383133c4244528769c93af731602e8312cc53.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": true,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 10505
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2021-03-02T01:12:03+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.esa.int/About_Us/Corporate_news/ESA_at_IAC_2026_Day_2",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.esa.int/About_Us/Corporate_news/ESA_at_IAC_2026_Day_2",
+      "raw_sha256": "f131f69c167af1ca427d9d003d6f8597b35cfee1ebc59defcf72bb81c54a0a27",
+      "status": "ACQUIRED",
+      "title": "ESA at IAC 2026 – Day 2",
+      "published_at": "2026-10-06",
+      "publication_proof": {
+        "date": "2026-10-06",
+        "precision": "DATE",
+        "method": "ESA_VISIBLE_ARTICLE_DATE",
+        "literal_evidence": "06/10/2026",
+        "native_sha256": "f131f69c167af1ca427d9d003d6f8597b35cfee1ebc59defcf72bb81c54a0a27",
+        "native_character_start": 5184,
+        "native_character_end": 5194
+      },
+      "publisher_host": "www.esa.int",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 0,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "15d9dacacf58477d8f78ad7f4c8087ac404a1881dbdd3bd432b1f3463afc2810",
+      "BCT_source_provenance": "BLOCKED",
+      "BCT_source_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication"
+      ],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "AEROSPACE_OFFICIAL_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-54d89ac913410ac236b7aa049631b212868aaa8e71bdc7cce8ff0b53beea7f69",
+      "body_characters": 2721,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 2721
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "development",
+      "split": "development",
+      "split_index": 23,
+      "body_path": "docs/v4/stage4-corpus/text/15d9dacacf58477d8f78ad7f4c8087ac404a1881dbdd3bd432b1f3463afc2810.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/f131f69c167af1ca427d9d003d6f8597b35cfee1ebc59defcf72bb81c54a0a27.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": true,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 2721
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "original_identity",
+          "publisher_observed",
+          "attribution_consistent",
+          "original_publication"
+        ],
+        "checks": {
+          "http_success": true,
+          "original_identity": false,
+          "publisher_observed": false,
+          "attribution_consistent": false,
+          "original_publication": false,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true
+        },
+        "body_status": "FULL",
+        "published_at": null,
+        "origin_publisher": "UNKNOWN"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/03/aehr-wins-major-new-silicon-photonics-customer-with-high-power-fox-xp-wafer-level-burn-in-system-for-hyperscale-data-center-optical-interconnect-market/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/03/aehr-wins-major-new-silicon-photonics-customer-with-high-power-fox-xp-wafer-level-burn-in-system-for-hyperscale-data-center-optical-interconnect-market/",
+      "raw_sha256": "eb3e84a1eb51ae5f6933d1aad9e876e41dedc2edf818439139eb0e67116910b7",
+      "status": "ACQUIRED",
+      "title": "Aehr Wins Major New Silicon Photonics Customer with High-Power FOX-XP Wafer-Level Burn-In System for Hyperscale Data Center Optical Interconnect Market - Aehr Test Systems",
+      "published_at": "2026-03-31",
+      "publication_proof": {
+        "date": "2026-03-31",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-03-31T11:36:58+00:00\" />",
+        "native_sha256": "eb3e84a1eb51ae5f6933d1aad9e876e41dedc2edf818439139eb0e67116910b7",
+        "native_character_start": 1768,
+        "native_character_end": 1846
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "5da8a363e1ce806cdbc5cfc5702fbb1c88babc9997f0996444ba4d25eb482d53",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_ISSUER_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-ef5e1814139d8bd2d5d24a713bf516cf7d901d0146e1b46400bc680fb60bec71",
+      "body_characters": 9305,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 9305
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "development",
+      "split": "development",
+      "split_index": 24,
+      "body_path": "docs/v4/stage4-corpus/text/5da8a363e1ce806cdbc5cfc5702fbb1c88babc9997f0996444ba4d25eb482d53.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/eb3e84a1eb51ae5f6933d1aad9e876e41dedc2edf818439139eb0e67116910b7.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": true,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 9305
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-03-31T11:36:58+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/06/aehr-receives-follow-on-order-from-major-silicon-photonics-customer-for-fully-automated-wafer-level-burn-in-system-for-hyperscale-data-center-optical-interconnect/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/06/aehr-receives-follow-on-order-from-major-silicon-photonics-customer-for-fully-automated-wafer-level-burn-in-system-for-hyperscale-data-center-optical-interconnect/",
+      "raw_sha256": "3ec4460a675d6261bf0fb25a1bb61190c497e2f1b99691bc19f3c54b7073bda2",
+      "status": "ACQUIRED",
+      "title": "Aehr Receives Follow-On Order from Major Silicon Photonics Customer for Fully Automated Wafer-Level Burn-In System for Hyperscale Data Center Optical Interconnect - Aehr Test Systems",
+      "published_at": "2026-06-17",
+      "publication_proof": {
+        "date": "2026-06-17",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-06-17T12:34:46+00:00\" />",
+        "native_sha256": "3ec4460a675d6261bf0fb25a1bb61190c497e2f1b99691bc19f3c54b7073bda2",
+        "native_character_start": 1811,
+        "native_character_end": 1889
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "3003bff77feb4a0e5cd11f71aa7e1a383fd6fad062666be1b456817643cd2432",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_ISSUER_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-709d77ffa3ace57bd3b0344485539f2d5a00d1f902bf6e4ac4cb048390893655",
+      "body_characters": 9382,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 9382
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "development",
+      "split": "development",
+      "split_index": 25,
+      "body_path": "docs/v4/stage4-corpus/text/3003bff77feb4a0e5cd11f71aa7e1a383fd6fad062666be1b456817643cd2432.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/3ec4460a675d6261bf0fb25a1bb61190c497e2f1b99691bc19f3c54b7073bda2.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": true,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 9382
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-06-17T12:34:46+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/",
+      "raw_sha256": "a02cb7e8c992432a0a6a2c506e4454f9a9f92572c4f01c9e0050888730c87321",
+      "status": "ACQUIRED",
+      "title": "Aehr Receives Follow-On Production Order from Lead Silicon Photonics Customer for Fully Automated FOX-XP Wafer-Level Burn-In System - Aehr Test Systems",
+      "published_at": "2026-07-09",
+      "publication_proof": {
+        "date": "2026-07-09",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-07-09T11:29:40+00:00\" />",
+        "native_sha256": "a02cb7e8c992432a0a6a2c506e4454f9a9f92572c4f01c9e0050888730c87321",
+        "native_character_start": 1691,
+        "native_character_end": 1769
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "850ee76ba3a99af6d7e0b9c989e8c205e158c091c27f8c7c442e663a4aa8ce8a",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_ISSUER_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-7b0adb76aad1d07c72aa37250c3e8e9cee0226d81ee3c5dd5df4ec989b3e3ed9",
+      "body_characters": 9323,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 9323
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "development",
+      "split": "development",
+      "split_index": 26,
+      "body_path": "docs/v4/stage4-corpus/text/850ee76ba3a99af6d7e0b9c989e8c205e158c091c27f8c7c442e663a4aa8ce8a.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/a02cb7e8c992432a0a6a2c506e4454f9a9f92572c4f01c9e0050888730c87321.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": true,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 9323
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-07-09T11:29:40+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/08/aehr-test-systems-expands-silicon-photonics-production-momentum-with-follow-on-production-order-from-lead-customer/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/08/aehr-test-systems-expands-silicon-photonics-production-momentum-with-follow-on-production-order-from-lead-customer/",
+      "raw_sha256": "58b231f869562adced3ff6bea6b991782501288a5d085d5694d00138ea8d1c9a",
+      "status": "ACQUIRED",
+      "title": "Aehr Test Systems Expands Silicon Photonics Production Momentum with Follow-On Production Order from Lead Customer - Aehr Test Systems",
+      "published_at": "2026-08-04",
+      "publication_proof": {
+        "date": "2026-08-04",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-08-04T11:29:26+00:00\" />",
+        "native_sha256": "58b231f869562adced3ff6bea6b991782501288a5d085d5694d00138ea8d1c9a",
+        "native_character_start": 1622,
+        "native_character_end": 1700
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "5036f98fa0739941eea01125adcf674ff35876ca08edfeb2f8c79a47e70b0556",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_ISSUER_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-940490f1114e70420b1fcfe9118370b459dd1cec0cfc3cd701f7e85c17f1184b",
+      "body_characters": 10269,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 10269
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "development",
+      "split": "development",
+      "split_index": 27,
+      "body_path": "docs/v4/stage4-corpus/text/5036f98fa0739941eea01125adcf674ff35876ca08edfeb2f8c79a47e70b0556.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/58b231f869562adced3ff6bea6b991782501288a5d085d5694d00138ea8d1c9a.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": true,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 10269
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-08-04T11:29:26+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68064",
+      "transport": "REUSE_CURRENT_ACCESS_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.eia.gov/todayinenergy/detail.php?id=68064",
+      "raw_sha256": "e03b6cf0102a0be963109959581445aed0f028bf4e2a2e0d663f83039ef5cdc8",
+      "status": "ACQUIRED",
+      "title": "U.S. Energy Information Administration - EIA - Independent Statistics and Analysis Today in Energy U.S. LNG exports rose 23% in the first half of 2026 because of higher capacity",
+      "published_at": "2026-09-01",
+      "publication_proof": {
+        "date": "2026-09-01",
+        "precision": "DATE",
+        "method": "EIA_VISIBLE_DATE",
+        "literal_evidence": "September 1, 2026",
+        "native_sha256": "e03b6cf0102a0be963109959581445aed0f028bf4e2a2e0d663f83039ef5cdc8",
+        "native_character_start": 10968,
+        "native_character_end": 10985
+      },
+      "publisher_host": "www.eia.gov",
+      "body_status": "PARTIAL",
+      "completeness": {
+        "explicit_body_scope": false,
+        "body_scope_closed": false,
+        "captured_table_rows": 0,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [
+        "UNVERIFIED_BODY_SCOPE"
+      ],
+      "body_sha256": "8fbc8d7fad1cb7706f4204eef4fc5faecda06453d00de9624c4609df7ff8b890",
+      "BCT_source_provenance": "BLOCKED",
+      "BCT_source_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication",
+        "full_accessible_body"
+      ],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "OFFICIAL_SOURCE_METADATA_REVIEW_NOT_AI_GOLD",
+      "document_id": "stage4doc-6b74ca28972a5d4d1744b591184d1ddc77b6e0b3ab2f5de764c74be189528b01",
+      "body_characters": 7051,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 7051
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "development",
+      "prior_metadata_failure": "var/v4/stage4-recovery/metadata-repair-history/ffda70c20a7584dc7513221817fed6ac83e2b3f15b8e830a439fa0839d20fb86.json",
+      "metadata_review_new_HTTP_requests": 0,
+      "split": "development",
+      "split_index": 28,
+      "body_path": "docs/v4/stage4-corpus/text/8fbc8d7fad1cb7706f4204eef4fc5faecda06453d00de9624c4609df7ff8b890.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/e03b6cf0102a0be963109959581445aed0f028bf4e2a2e0d663f83039ef5cdc8.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": true,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 7051
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "original_identity",
+          "publisher_observed",
+          "attribution_consistent",
+          "original_publication",
+          "full_accessible_body"
+        ],
+        "checks": {
+          "http_success": true,
+          "original_identity": false,
+          "publisher_observed": false,
+          "attribution_consistent": false,
+          "original_publication": false,
+          "available_at_recorded": true,
+          "full_accessible_body": false,
+          "not_republication": true,
+          "body_hash_matches": true
+        },
+        "body_status": "PARTIAL",
+        "published_at": null,
+        "origin_publisher": "UNKNOWN"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68084",
+      "transport": "REUSE_CURRENT_ACCESS_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.eia.gov/todayinenergy/detail.php?id=68084",
+      "raw_sha256": "3dcaa789afde64adcb8713f6fd7471a20e3c1d7dcc1d5b201bfba3ae50b425d9",
+      "status": "ACQUIRED",
+      "title": "U.S. Energy Information Administration - EIA - Independent Statistics and Analysis Today in Energy Weekly average load in ERCOT continues near record high",
+      "published_at": "2026-09-03",
+      "publication_proof": {
+        "date": "2026-09-03",
+        "precision": "DATE",
+        "method": "EIA_VISIBLE_DATE",
+        "literal_evidence": "September 3, 2026",
+        "native_sha256": "3dcaa789afde64adcb8713f6fd7471a20e3c1d7dcc1d5b201bfba3ae50b425d9",
+        "native_character_start": 10874,
+        "native_character_end": 10891
+      },
+      "publisher_host": "www.eia.gov",
+      "body_status": "PARTIAL",
+      "completeness": {
+        "explicit_body_scope": false,
+        "body_scope_closed": false,
+        "captured_table_rows": 0,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [
+        "UNVERIFIED_BODY_SCOPE"
+      ],
+      "body_sha256": "12dbfff2295953f632d8a1bff070d39dd73bef4f2e721042dbe2b257b8e7c0cc",
+      "BCT_source_provenance": "BLOCKED",
+      "BCT_source_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication",
+        "full_accessible_body"
+      ],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "OFFICIAL_SOURCE_METADATA_REVIEW_NOT_AI_GOLD",
+      "document_id": "stage4doc-79742cfba6ebd8cdd1f05713848c912e519d5c15a5581c1f3809c0448dce9c3b",
+      "body_characters": 4980,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4980
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "development",
+      "prior_metadata_failure": "var/v4/stage4-recovery/metadata-repair-history/ddc4d7a8713badb0124664b740d4d67fa902c9d341bd97304c678059f8bad2c2.json",
+      "metadata_review_new_HTTP_requests": 0,
+      "split": "development",
+      "split_index": 29,
+      "body_path": "docs/v4/stage4-corpus/text/12dbfff2295953f632d8a1bff070d39dd73bef4f2e721042dbe2b257b8e7c0cc.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/3dcaa789afde64adcb8713f6fd7471a20e3c1d7dcc1d5b201bfba3ae50b425d9.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": true,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4980
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "original_identity",
+          "publisher_observed",
+          "attribution_consistent",
+          "original_publication",
+          "full_accessible_body"
+        ],
+        "checks": {
+          "http_success": true,
+          "original_identity": false,
+          "publisher_observed": false,
+          "attribution_consistent": false,
+          "original_publication": false,
+          "available_at_recorded": true,
+          "full_accessible_body": false,
+          "not_republication": true,
+          "body_hash_matches": true
+        },
+        "body_status": "PARTIAL",
+        "published_at": null,
+        "origin_publisher": "UNKNOWN"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68104",
+      "transport": "REUSE_CURRENT_ACCESS_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.eia.gov/todayinenergy/detail.php?id=68104",
+      "raw_sha256": "067f1111572fdb5e62991a0282a68734b8f318c433dadbdf6677f81c283e7b6e",
+      "status": "ACQUIRED",
+      "title": "U.S. Energy Information Administration - EIA - Independent Statistics and Analysis Today in Energy Elevated crack spreads and crude oil prices contribute to higher prices at the pump",
+      "published_at": "2026-09-04",
+      "publication_proof": {
+        "date": "2026-09-04",
+        "precision": "DATE",
+        "method": "EIA_VISIBLE_DATE",
+        "literal_evidence": "September 4, 2026",
+        "native_sha256": "067f1111572fdb5e62991a0282a68734b8f318c433dadbdf6677f81c283e7b6e",
+        "native_character_start": 10991,
+        "native_character_end": 11008
+      },
+      "publisher_host": "www.eia.gov",
+      "body_status": "PARTIAL",
+      "completeness": {
+        "explicit_body_scope": false,
+        "body_scope_closed": false,
+        "captured_table_rows": 0,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [
+        "UNVERIFIED_BODY_SCOPE"
+      ],
+      "body_sha256": "7752655cd4702cd49d2dd6fc2b7b3c01adb68aa99013a452d45146ecfe88cf17",
+      "BCT_source_provenance": "BLOCKED",
+      "BCT_source_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication",
+        "full_accessible_body"
+      ],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "OFFICIAL_SOURCE_METADATA_REVIEW_NOT_AI_GOLD",
+      "document_id": "stage4doc-d456a257dc33e825135d29f127f8b78a234019d1373c0cde3e78f35ee142ba5c",
+      "body_characters": 7379,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 7379
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "development",
+      "prior_metadata_failure": "var/v4/stage4-recovery/metadata-repair-history/aa6979c4c99abd0495ce8c036d985afe734fc8f982198126c79942b33263a272.json",
+      "metadata_review_new_HTTP_requests": 0,
+      "split": "development",
+      "split_index": 30,
+      "body_path": "docs/v4/stage4-corpus/text/7752655cd4702cd49d2dd6fc2b7b3c01adb68aa99013a452d45146ecfe88cf17.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/067f1111572fdb5e62991a0282a68734b8f318c433dadbdf6677f81c283e7b6e.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": true,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 7379
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "original_identity",
+          "publisher_observed",
+          "attribution_consistent",
+          "original_publication",
+          "full_accessible_body"
+        ],
+        "checks": {
+          "http_success": true,
+          "original_identity": false,
+          "publisher_observed": false,
+          "attribution_consistent": false,
+          "original_publication": false,
+          "available_at_recorded": true,
+          "full_accessible_body": false,
+          "not_republication": true,
+          "body_hash_matches": true
+        },
+        "body_status": "PARTIAL",
+        "published_at": null,
+        "origin_publisher": "UNKNOWN"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.esa.int/About_Us/Corporate_news/ESA_and_ISRO_extend_and_broaden_cooperation_agreement",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.esa.int/About_Us/Corporate_news/ESA_and_ISRO_extend_and_broaden_cooperation_agreement",
+      "raw_sha256": "1f8792aaff242631aa3d52172463df4c2efdcd9b01a0745bd8ef51b998e3b7ea",
+      "status": "ACQUIRED",
+      "title": "ESA and ISRO extend and broaden cooperation agreement",
+      "published_at": "2026-09-21",
+      "publication_proof": {
+        "date": "2026-09-21",
+        "precision": "DATE",
+        "method": "ESA_VISIBLE_ARTICLE_DATE",
+        "literal_evidence": "21/09/2026",
+        "native_sha256": "1f8792aaff242631aa3d52172463df4c2efdcd9b01a0745bd8ef51b998e3b7ea",
+        "native_character_start": 4918,
+        "native_character_end": 4928
+      },
+      "publisher_host": "www.esa.int",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 0,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "e76b0c7df67f16d7df375fc38b182fef98586ab95f05e118ed9c38e795a36ee6",
+      "BCT_source_provenance": "BLOCKED",
+      "BCT_source_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication"
+      ],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "AEROSPACE_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-43bbc73c34d36affaac68018c51886b2897bbc0126d9df12b814ead65738046c",
+      "body_characters": 2450,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 2450
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 1,
+      "body_path": "docs/v4/stage4-corpus/text/e76b0c7df67f16d7df375fc38b182fef98586ab95f05e118ed9c38e795a36ee6.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/1f8792aaff242631aa3d52172463df4c2efdcd9b01a0745bd8ef51b998e3b7ea.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 2450
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "original_identity",
+          "publisher_observed",
+          "attribution_consistent",
+          "original_publication"
+        ],
+        "checks": {
+          "http_success": true,
+          "original_identity": false,
+          "publisher_observed": false,
+          "attribution_consistent": false,
+          "original_publication": false,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true
+        },
+        "body_status": "FULL",
+        "published_at": null,
+        "origin_publisher": "UNKNOWN"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.esa.int/Enabling_Support/Space_Transportation/First_contracts_kick_off_European_Launcher_Challenge",
+      "transport": "REUSE_CURRENT_ACCESS_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.esa.int/Enabling_Support/Space_Transportation/First_contracts_kick_off_European_Launcher_Challenge",
+      "raw_sha256": "f9acf911e387059e5a15a3a890dea1925a3b80249e0f65d1a42b302093ea1534",
+      "status": "ACQUIRED",
+      "title": "First contracts kick off European Launcher Challenge",
+      "published_at": "2026-08-27",
+      "publication_proof": {
+        "date": "2026-08-27",
+        "precision": "DATE",
+        "method": "ESA_VISIBLE_ARTICLE_DATE",
+        "literal_evidence": "\t<h1 class=\"heading heading--main article__item\">First contracts kick off European Launcher Challenge</h1>\n\t<div class=\"meta article__item\">\n\t\t  \n\t\t\t\t\t\t<span>27/08/2026",
+        "native_sha256": "f9acf911e387059e5a15a3a890dea1925a3b80249e0f65d1a42b302093ea1534",
+        "native_character_start": 4219,
+        "native_character_end": 4387
+      },
+      "publisher_host": "www.esa.int",
+      "body_status": "PARTIAL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 0,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [
+        "PREVIEW_OR_SUMMARY_CONTENT"
+      ],
+      "body_sha256": "d3d8b6364995f9b1727903a8075aaf4c7f00d53ad855b292edca9c7bfdd1250c",
+      "BCT_source_provenance": "BLOCKED",
+      "BCT_source_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication",
+        "full_accessible_body"
+      ],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "OFFICIAL_SOURCE_METADATA_REVIEW_NOT_AI_GOLD",
+      "document_id": "stage4doc-3fd9a480cb21be25a3d28465399232ce56a35c896627813ed1c8925dc86c6e4d",
+      "body_characters": 4468,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4468
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "prior_metadata_failure": "var/v4/stage4-recovery/metadata-repair-history/e4257ef8233a736d6062b43d41faf0d1bd144832e196f9f79916c706f8d4a90f.json",
+      "metadata_review_new_HTTP_requests": 0,
+      "split": "evaluation",
+      "split_index": 2,
+      "body_path": "docs/v4/stage4-corpus/text/d3d8b6364995f9b1727903a8075aaf4c7f00d53ad855b292edca9c7bfdd1250c.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/f9acf911e387059e5a15a3a890dea1925a3b80249e0f65d1a42b302093ea1534.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4468
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "original_identity",
+          "publisher_observed",
+          "attribution_consistent",
+          "original_publication",
+          "full_accessible_body"
+        ],
+        "checks": {
+          "http_success": true,
+          "original_identity": false,
+          "publisher_observed": false,
+          "attribution_consistent": false,
+          "original_publication": false,
+          "available_at_recorded": true,
+          "full_accessible_body": false,
+          "not_republication": true,
+          "body_hash_matches": true
+        },
+        "body_status": "PARTIAL",
+        "published_at": null,
+        "origin_publisher": "UNKNOWN"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.esa.int/About_Us/Business_with_ESA/ESA_brings_public_and_private_capital_together_to_accelerate_Europe_s_space_economy",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.esa.int/About_Us/Business_with_ESA/ESA_brings_public_and_private_capital_together_to_accelerate_Europe_s_space_economy",
+      "raw_sha256": "879f7bfe21814b4acd5ec58716ef61160dc1dfdcef854ff6d133aded4351350f",
+      "status": "ACQUIRED",
+      "title": "ESA brings public and private capital together to accelerate Europe’s space economy",
+      "published_at": "2026-09-21",
+      "publication_proof": {
+        "date": "2026-09-21",
+        "precision": "DATE",
+        "method": "ESA_VISIBLE_ARTICLE_DATE",
+        "literal_evidence": "21/09/2026",
+        "native_sha256": "879f7bfe21814b4acd5ec58716ef61160dc1dfdcef854ff6d133aded4351350f",
+        "native_character_start": 5523,
+        "native_character_end": 5533
+      },
+      "publisher_host": "www.esa.int",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 0,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "bfc6a077e3c4931fbacde1730853626c7f27993bf36b77843b9ee3d0ed01ddf0",
+      "BCT_source_provenance": "BLOCKED",
+      "BCT_source_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication"
+      ],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "AEROSPACE_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-7a75ee8cf8b87edb671b75f519f36b1ff8f50c69dcc9b1c8dfd0a6795bd708d3",
+      "body_characters": 4152,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4152
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 3,
+      "body_path": "docs/v4/stage4-corpus/text/bfc6a077e3c4931fbacde1730853626c7f27993bf36b77843b9ee3d0ed01ddf0.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/879f7bfe21814b4acd5ec58716ef61160dc1dfdcef854ff6d133aded4351350f.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4152
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "original_identity",
+          "publisher_observed",
+          "attribution_consistent",
+          "original_publication"
+        ],
+        "checks": {
+          "http_success": true,
+          "original_identity": false,
+          "publisher_observed": false,
+          "attribution_consistent": false,
+          "original_publication": false,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true
+        },
+        "body_status": "FULL",
+        "published_at": null,
+        "origin_publisher": "UNKNOWN"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.esa.int/Science_Exploration/Space_Science/Webb/Webb_reveals_stunning_panorama_of_star_formation",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.esa.int/Science_Exploration/Space_Science/Webb/Webb_reveals_stunning_panorama_of_star_formation",
+      "raw_sha256": "964a9ea158fd1eca004c32edf9a4d25bd5ae4042cef87346e2bf7e55476cdaee",
+      "status": "ACQUIRED",
+      "title": "Webb reveals stunning panorama of star formation",
+      "published_at": "2026-09-15",
+      "publication_proof": {
+        "date": "2026-09-15",
+        "precision": "DATE",
+        "method": "ESA_VISIBLE_ARTICLE_DATE",
+        "literal_evidence": "15/09/2026",
+        "native_sha256": "964a9ea158fd1eca004c32edf9a4d25bd5ae4042cef87346e2bf7e55476cdaee",
+        "native_character_start": 5314,
+        "native_character_end": 5324
+      },
+      "publisher_host": "www.esa.int",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 0,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "5a9aa1d06b68b3ff0b362bc66c7121110522f33d484c38553894725e242695aa",
+      "BCT_source_provenance": "BLOCKED",
+      "BCT_source_blockers": [
+        "original_identity",
+        "publisher_observed",
+        "attribution_consistent",
+        "original_publication"
+      ],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "AEROSPACE_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-bd5e28cdcc32f2dab1907d42ed6015ab3fa3ff62a4b8ab4632cd6fc4bd8b5f49",
+      "body_characters": 5740,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 5740
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 4,
+      "body_path": "docs/v4/stage4-corpus/text/5a9aa1d06b68b3ff0b362bc66c7121110522f33d484c38553894725e242695aa.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/964a9ea158fd1eca004c32edf9a4d25bd5ae4042cef87346e2bf7e55476cdaee.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 5740
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "BLOCKED",
+        "provenance_blockers": [
+          "original_identity",
+          "publisher_observed",
+          "attribution_consistent",
+          "original_publication"
+        ],
+        "checks": {
+          "http_success": true,
+          "original_identity": false,
+          "publisher_observed": false,
+          "attribution_consistent": false,
+          "original_publication": false,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true
+        },
+        "body_status": "FULL",
+        "published_at": null,
+        "origin_publisher": "UNKNOWN"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/10/aehr-receives-follow-on-sonoma-production-orders-for-lead-hyperscale-customer-s-next-generation-ai-processor/",
+      "transport": "REUSE_CURRENT_ACCESS_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/10/aehr-receives-follow-on-sonoma-production-orders-for-lead-hyperscale-customer-s-next-generation-ai-processor/",
+      "raw_sha256": "d50a9faf83d7a96e24b4ec72d788b4a50a69aae81b5aaf4fd8d43033e9639962",
+      "status": "ACQUIRED",
+      "title": "Aehr Receives Follow-On Sonoma™ Production Orders for Lead Hyperscale Customer’s Next-Generation AI Processor - Aehr Test Systems",
+      "published_at": "2026-10-07",
+      "publication_proof": {
+        "date": "2026-10-07",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-10-07T11:30:24+00:00\" />",
+        "native_sha256": "d50a9faf83d7a96e24b4ec72d788b4a50a69aae81b5aaf4fd8d43033e9639962",
+        "native_character_start": 1593,
+        "native_character_end": 1671
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_characters": 9258,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 9258
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 5,
+      "body_path": "docs/v4/stage4-corpus/text/8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/d50a9faf83d7a96e24b4ec72d788b4a50a69aae81b5aaf4fd8d43033e9639962.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 9258
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-10-07T11:30:24+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/10/aehr-test-systems-to-announce-first-quarter-fiscal-2027-financial-results-on-november-2-2026/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/10/aehr-test-systems-to-announce-first-quarter-fiscal-2027-financial-results-on-november-2-2026/",
+      "raw_sha256": "e22f93770700f40fb33adaf5a306a8b82536a890651080297a2c47e1c5e9f0ad",
+      "status": "ACQUIRED",
+      "title": "Aehr Test Systems to Announce First Quarter Fiscal 2027 Financial Results on November 2, 2026 - Aehr Test Systems",
+      "published_at": "2026-10-08",
+      "publication_proof": {
+        "date": "2026-10-08",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-10-08T11:30:37+00:00\" />",
+        "native_sha256": "e22f93770700f40fb33adaf5a306a8b82536a890651080297a2c47e1c5e9f0ad",
+        "native_character_start": 1538,
+        "native_character_end": 1616
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 7,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "8dcdca05daee6bbaa48ece1a39bea1fc0f22fe722ea34d302a3595a7c17edaef",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-025c928ba5520cbac8b09ce54c385c604a5e735c371c7c5df1c9f9b721753f7f",
+      "body_characters": 4484,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4484
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 6,
+      "body_path": "docs/v4/stage4-corpus/text/8dcdca05daee6bbaa48ece1a39bea1fc0f22fe722ea34d302a3595a7c17edaef.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/e22f93770700f40fb33adaf5a306a8b82536a890651080297a2c47e1c5e9f0ad.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4484
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-10-08T11:30:37+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/08/aehr-test-systems-to-participate-in-the-jefferies-semiconductor-it-hardware-communications-technology-conference-on-august-25-2026/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/08/aehr-test-systems-to-participate-in-the-jefferies-semiconductor-it-hardware-communications-technology-conference-on-august-25-2026/",
+      "raw_sha256": "dc6eab0227c27640b17d96132afeaaff22fed0cba7ab0a0a7415b047a23dab14",
+      "status": "ACQUIRED",
+      "title": "Aehr Test Systems to Participate in the Jefferies Semiconductor, IT Hardware & Communications Technology Conference on August 25, 2026 - Aehr Test Systems",
+      "published_at": "2026-08-23",
+      "publication_proof": {
+        "date": "2026-08-23",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-08-23T11:30:14+00:00\" />",
+        "native_sha256": "dc6eab0227c27640b17d96132afeaaff22fed0cba7ab0a0a7415b047a23dab14",
+        "native_character_start": 1704,
+        "native_character_end": 1782
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "26fc6dedb1b1aa9ef17d35086c2f6d4c0d78dd0d2d4483ea4f0381e61b2c9dd6",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-bdbfa4da2717014b69fc68106232e8fbd8a1bc6df83a7195dcfd6b0fabaa5fe2",
+      "body_characters": 4729,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4729
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 7,
+      "body_path": "docs/v4/stage4-corpus/text/26fc6dedb1b1aa9ef17d35086c2f6d4c0d78dd0d2d4483ea4f0381e61b2c9dd6.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/dc6eab0227c27640b17d96132afeaaff22fed0cba7ab0a0a7415b047a23dab14.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4729
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-08-23T11:30:14+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/09/aehr-test-systems-to-participate-in-18th-annual-ceo-investor-summit-2026-in-san-francisco/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/09/aehr-test-systems-to-participate-in-18th-annual-ceo-investor-summit-2026-in-san-francisco/",
+      "raw_sha256": "291849e5dae2b6d2dacd0dbefd041bdfcab043ebd444febd42709ce9b21c1f98",
+      "status": "ACQUIRED",
+      "title": "Aehr Test Systems to Participate in 18th Annual CEO Investor Summit 2026 in San Francisco - Aehr Test Systems",
+      "published_at": "2026-09-28",
+      "publication_proof": {
+        "date": "2026-09-28",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-09-28T11:30:28+00:00\" />",
+        "native_sha256": "291849e5dae2b6d2dacd0dbefd041bdfcab043ebd444febd42709ce9b21c1f98",
+        "native_character_start": 1522,
+        "native_character_end": 1600
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 3,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "fcd60873d8964ac12cb43abb77ed7259015810685edfdf76d25ce9c833fe5bf5",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-ff0e43f4ed27883f76a922c663ca90721ec4ab4cb134e8cc4bb4ed351dfa36f8",
+      "body_characters": 5647,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 5647
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 8,
+      "body_path": "docs/v4/stage4-corpus/text/fcd60873d8964ac12cb43abb77ed7259015810685edfdf76d25ce9c833fe5bf5.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/291849e5dae2b6d2dacd0dbefd041bdfcab043ebd444febd42709ce9b21c1f98.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 5647
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-09-28T11:30:28+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/09/aehr-test-systems-to-participate-in-the-10th-annual-lake-street-capital-markets-best-ideas-growth-conference-on-september-10/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/09/aehr-test-systems-to-participate-in-the-10th-annual-lake-street-capital-markets-best-ideas-growth-conference-on-september-10/",
+      "raw_sha256": "2c9e47041a73e97d77f0d7d31db0ad7dfa3a906e6b13c2971e9afc638936accd",
+      "status": "ACQUIRED",
+      "title": "Aehr Test Systems to Participate in the 10th Annual Lake Street Capital Markets Best Ideas Growth Conference on September 10 - Aehr Test Systems",
+      "published_at": "2026-09-03",
+      "publication_proof": {
+        "date": "2026-09-03",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-09-03T20:05:02+00:00\" />",
+        "native_sha256": "2c9e47041a73e97d77f0d7d31db0ad7dfa3a906e6b13c2971e9afc638936accd",
+        "native_character_start": 1661,
+        "native_character_end": 1739
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "84bd980477f6ecc5c07717d97e3c3ac0704d635784987adb1c7bef61c4bf0a23",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-21cb171fc279fbe3b131ee719c68fd51dd7a5e8d4115cf2ca866acdb99cc877a",
+      "body_characters": 4701,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4701
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 9,
+      "body_path": "docs/v4/stage4-corpus/text/84bd980477f6ecc5c07717d97e3c3ac0704d635784987adb1c7bef61c4bf0a23.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/2c9e47041a73e97d77f0d7d31db0ad7dfa3a906e6b13c2971e9afc638936accd.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4701
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-09-03T20:05:02+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/08/aehr-test-systems-to-participate-in-the-needham-virtual-semiconductor-and-semicap-1x1-conference-on-august-19/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/08/aehr-test-systems-to-participate-in-the-needham-virtual-semiconductor-and-semicap-1x1-conference-on-august-19/",
+      "raw_sha256": "031cb4ba3f24dae275ed9a46a7974a0c71706dfaf3e7951c1def643b8b41da69",
+      "status": "ACQUIRED",
+      "title": "Aehr Test Systems to Participate in the Needham Virtual Semiconductor and SemiCap 1x1 Conference on August 19 - Aehr Test Systems",
+      "published_at": "2026-08-13",
+      "publication_proof": {
+        "date": "2026-08-13",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-08-13T11:28:33+00:00\" />",
+        "native_sha256": "031cb4ba3f24dae275ed9a46a7974a0c71706dfaf3e7951c1def643b8b41da69",
+        "native_character_start": 1603,
+        "native_character_end": 1681
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "bd707a46bdfd2ece9c19b8322a3ee6585e30c6fc95f860566d369e361b2329c0",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-2c8e2b9c3deb65cf70ed60c46622863c6e65e013b34bbe36c7083a538b24c365",
+      "body_characters": 4655,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4655
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 10,
+      "body_path": "docs/v4/stage4-corpus/text/bd707a46bdfd2ece9c19b8322a3ee6585e30c6fc95f860566d369e361b2329c0.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/031cb4ba3f24dae275ed9a46a7974a0c71706dfaf3e7951c1def643b8b41da69.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4655
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-08-13T11:28:33+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/07/aehr-test-systems-reports-fiscal-2026-fourth-quarter-and-full-year-financial-results-with-record-quarterly-bookings-and-100-million-effective-backlog/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/07/aehr-test-systems-reports-fiscal-2026-fourth-quarter-and-full-year-financial-results-with-record-quarterly-bookings-and-100-million-effective-backlog/",
+      "raw_sha256": "e26f81ba3a724e8f67e245933e195f7f4a84ce7958b78b1a59289de85ac6fe75",
+      "status": "ACQUIRED",
+      "title": "Aehr Test Systems Reports Fiscal 2026 Fourth Quarter and Full Year Financial Results with Record Quarterly Bookings and $100 Million Effective Backlog - Aehr Test Systems",
+      "published_at": "2026-07-14",
+      "publication_proof": {
+        "date": "2026-07-14",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-07-14T20:44:43+00:00\" />",
+        "native_sha256": "e26f81ba3a724e8f67e245933e195f7f4a84ce7958b78b1a59289de85ac6fe75",
+        "native_character_start": 1750,
+        "native_character_end": 1828
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "76f06aa61c368647fe4ff62bdcd9ce9fca6ead1e983bd5806fe5bef7a990fdf4",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-8863919aedd5421d4f6122236527b82424465e4cf90fabeec7dcc6b2e13b93d3",
+      "body_characters": 16174,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 16174
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 11,
+      "body_path": "docs/v4/stage4-corpus/text/76f06aa61c368647fe4ff62bdcd9ce9fca6ead1e983bd5806fe5bef7a990fdf4.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/e26f81ba3a724e8f67e245933e195f7f4a84ce7958b78b1a59289de85ac6fe75.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 16174
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-07-14T20:44:43+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/08/aehr-receives-22-million-follow-on-order-for-ai-processor-wafer-level-burn-in-systems/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/08/aehr-receives-22-million-follow-on-order-for-ai-processor-wafer-level-burn-in-systems/",
+      "raw_sha256": "2aa4e0311432cac326612d5adb5a1a8880201bdc134a050344a7c21f462519b8",
+      "status": "ACQUIRED",
+      "title": "Aehr Receives $22 Million Follow-On Order for AI Processor Wafer-Level Burn-In Systems - Aehr Test Systems",
+      "published_at": "2026-08-12",
+      "publication_proof": {
+        "date": "2026-08-12",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-08-12T11:28:14+00:00\" />",
+        "native_sha256": "2aa4e0311432cac326612d5adb5a1a8880201bdc134a050344a7c21f462519b8",
+        "native_character_start": 1499,
+        "native_character_end": 1577
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "54811824263eeaeb5cee2ce87ae993f689785572ce1c03f730d2a87265e4e2f5",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+      "body_characters": 7882,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 7882
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 12,
+      "body_path": "docs/v4/stage4-corpus/text/54811824263eeaeb5cee2ce87ae993f689785572ce1c03f730d2a87265e4e2f5.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/2aa4e0311432cac326612d5adb5a1a8880201bdc134a050344a7c21f462519b8.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 7882
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-08-12T11:28:14+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/07/aehr-receives-more-than-8-million-in-new-silicon-carbide-wafer-level-burn-in-orders-as-global-electric-vehicle-programs-accelerate/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/07/aehr-receives-more-than-8-million-in-new-silicon-carbide-wafer-level-burn-in-orders-as-global-electric-vehicle-programs-accelerate/",
+      "raw_sha256": "efb044241884a5d4befd4d0a824ff5e22e70ad2aea7e4638c0253b8270ac9d29",
+      "status": "ACQUIRED",
+      "title": "Aehr Receives More Than $8 Million in New Silicon Carbide Wafer-Level Burn-In Orders as Global Electric Vehicle Programs Accelerate - Aehr Test Systems",
+      "published_at": "2026-07-14",
+      "publication_proof": {
+        "date": "2026-07-14",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-07-14T20:33:53+00:00\" />",
+        "native_sha256": "efb044241884a5d4befd4d0a824ff5e22e70ad2aea7e4638c0253b8270ac9d29",
+        "native_character_start": 1678,
+        "native_character_end": 1756
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "6c053a3e0213e8fa2ef7432e0ca223aff82236ac58401a02ba902141e2d71b36",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-fe6fe733066583784bc6a77dddc1cf0f9b6f6e705e72fed6cacedcca479e8c99",
+      "body_characters": 9423,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 9423
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 13,
+      "body_path": "docs/v4/stage4-corpus/text/6c053a3e0213e8fa2ef7432e0ca223aff82236ac58401a02ba902141e2d71b36.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/efb044241884a5d4befd4d0a824ff5e22e70ad2aea7e4638c0253b8270ac9d29.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 9423
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-07-14T20:33:53+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/07/aehr-test-systems-to-announce-fiscal-2026-fourth-quarter-and-full-year-financial-results-on-july-14-2026/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/07/aehr-test-systems-to-announce-fiscal-2026-fourth-quarter-and-full-year-financial-results-on-july-14-2026/",
+      "raw_sha256": "bb598f22255a8588b1f799966a43b72f837656e3c5b4f7cfccacb4275bfc5ffd",
+      "status": "ACQUIRED",
+      "title": "Aehr Test Systems to Announce Fiscal 2026 Fourth Quarter and Full Year Financial Results on July 14, 2026 - Aehr Test Systems",
+      "published_at": "2026-07-07",
+      "publication_proof": {
+        "date": "2026-07-07",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-07-07T12:17:39+00:00\" />",
+        "native_sha256": "bb598f22255a8588b1f799966a43b72f837656e3c5b4f7cfccacb4275bfc5ffd",
+        "native_character_start": 1581,
+        "native_character_end": 1659
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "46b6823716c760d1df6838e6eacae0bcc2faea4e6114ca38f65932773cd2cabb",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-7f359b839cff11a0d54cc0392a66f5c2a87a8ec43b50546364cad89ac3e51480",
+      "body_characters": 4247,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4247
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 14,
+      "body_path": "docs/v4/stage4-corpus/text/46b6823716c760d1df6838e6eacae0bcc2faea4e6114ca38f65932773cd2cabb.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/bb598f22255a8588b1f799966a43b72f837656e3c5b4f7cfccacb4275bfc5ffd.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4247
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-07-07T12:17:39+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/05/aehr-test-systems-to-present-at-william-blair-46th-annual-growth-stock-conference-on-june-2/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/05/aehr-test-systems-to-present-at-william-blair-46th-annual-growth-stock-conference-on-june-2/",
+      "raw_sha256": "187347e593a3622f5364380ed2bcb43775d108495657a282543e4ad4de30659b",
+      "status": "ACQUIRED",
+      "title": "Aehr Test Systems to Present at William Blair 46th Annual Growth Stock Conference on June 2 - Aehr Test Systems",
+      "published_at": "2026-05-29",
+      "publication_proof": {
+        "date": "2026-05-29",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-05-29T04:32:06+00:00\" />",
+        "native_sha256": "187347e593a3622f5364380ed2bcb43775d108495657a282543e4ad4de30659b",
+        "native_character_start": 1529,
+        "native_character_end": 1607
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "2abf513b2da9a57eff3f1d4b3ce51ab83f1158d07ecf2645f784674ba2bdea22",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-5e51382e173d815ad84313ca01dfe0b70dd12dcad97b8e198e65b05b638a40ca",
+      "body_characters": 4780,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4780
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 15,
+      "body_path": "docs/v4/stage4-corpus/text/2abf513b2da9a57eff3f1d4b3ce51ab83f1158d07ecf2645f784674ba2bdea22.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/187347e593a3622f5364380ed2bcb43775d108495657a282543e4ad4de30659b.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4780
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-05-29T04:32:06+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/05/aehr-test-systems-to-participate-in-the-23rd-annual-craig-hallum-institutional-investor-conference-on-may-28/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/05/aehr-test-systems-to-participate-in-the-23rd-annual-craig-hallum-institutional-investor-conference-on-may-28/",
+      "raw_sha256": "635fd8f8aa146471e75ea0e745d0aaeeb8a7fac2d6151fe289ae1e7a43e1670a",
+      "status": "ACQUIRED",
+      "title": "Aehr Test Systems to Participate in the 23rd Annual Craig-Hallum Institutional Investor Conference on May 28 - Aehr Test Systems",
+      "published_at": "2026-05-21",
+      "publication_proof": {
+        "date": "2026-05-21",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-05-21T11:30:46+00:00\" />",
+        "native_sha256": "635fd8f8aa146471e75ea0e745d0aaeeb8a7fac2d6151fe289ae1e7a43e1670a",
+        "native_character_start": 1592,
+        "native_character_end": 1670
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "96616a8e7b014c79e0e7254ea667e4ad99753cff020895cdd46c080610357f86",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-26e241d88935e5b3a0295f446ceb42035c398fffd3061b47a6ba3e2e25f7cd8d",
+      "body_characters": 3747,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 3747
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 16,
+      "body_path": "docs/v4/stage4-corpus/text/96616a8e7b014c79e0e7254ea667e4ad99753cff020895cdd46c080610357f86.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/635fd8f8aa146471e75ea0e745d0aaeeb8a7fac2d6151fe289ae1e7a43e1670a.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 3747
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-05-21T11:30:46+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/04/aehr-receives-record-41-million-production-order-from-lead-hyperscale-ai-customer-second-half-bookings-exceed-92-million/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/04/aehr-receives-record-41-million-production-order-from-lead-hyperscale-ai-customer-second-half-bookings-exceed-92-million/",
+      "raw_sha256": "764d0f82016f3ec8823630be066528e790303029985c83be811b3497799cb9a5",
+      "status": "ACQUIRED",
+      "title": "Aehr Receives Record $41 Million Production Order from Lead Hyperscale AI Customer; Second-Half Bookings Exceed $92 Million - Aehr Test Systems",
+      "published_at": "2026-04-16",
+      "publication_proof": {
+        "date": "2026-04-16",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-04-16T11:30:03+00:00\" />",
+        "native_sha256": "764d0f82016f3ec8823630be066528e790303029985c83be811b3497799cb9a5",
+        "native_character_start": 1651,
+        "native_character_end": 1729
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_characters": 9108,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 9108
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 17,
+      "body_path": "docs/v4/stage4-corpus/text/998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/764d0f82016f3ec8823630be066528e790303029985c83be811b3497799cb9a5.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 9108
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-04-16T11:30:03+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/04/aehr-test-systems-reports-over-37-million-in-quarterly-bookings-driven-by-strong-ai-and-data-center-infrastructure-demand/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/04/aehr-test-systems-reports-over-37-million-in-quarterly-bookings-driven-by-strong-ai-and-data-center-infrastructure-demand/",
+      "raw_sha256": "1be23e35b11025d6ea763c1ebce548071d4eb4d943f34b7c4b875e81c858b9f3",
+      "status": "ACQUIRED",
+      "title": "Aehr Test Systems Reports Over $37 Million in Quarterly Bookings Driven by Strong AI and Data Center Infrastructure Demand - Aehr Test Systems",
+      "published_at": "2026-04-07",
+      "publication_proof": {
+        "date": "2026-04-07",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-04-07T20:57:30+00:00\" />",
+        "native_sha256": "1be23e35b11025d6ea763c1ebce548071d4eb4d943f34b7c4b875e81c858b9f3",
+        "native_character_start": 1654,
+        "native_character_end": 1732
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_characters": 16107,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 16107
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 18,
+      "body_path": "docs/v4/stage4-corpus/text/03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/1be23e35b11025d6ea763c1ebce548071d4eb4d943f34b7c4b875e81c858b9f3.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 16107
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-04-07T20:57:30+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/03/aehr-test-systems-to-announce-third-quarter-fiscal-2026-financial-results-on-april-7-2026/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/03/aehr-test-systems-to-announce-third-quarter-fiscal-2026-financial-results-on-april-7-2026/",
+      "raw_sha256": "f90380e1516485745107f16b91f58356cfd9702f75702aacff2038d02bc7922b",
+      "status": "ACQUIRED",
+      "title": "Aehr Test Systems to Announce Third Quarter Fiscal 2026 Financial Results on April 7, 2026 - Aehr Test Systems",
+      "published_at": "2026-03-30",
+      "publication_proof": {
+        "date": "2026-03-30",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-03-30T11:30:47+00:00\" />",
+        "native_sha256": "f90380e1516485745107f16b91f58356cfd9702f75702aacff2038d02bc7922b",
+        "native_character_start": 1521,
+        "native_character_end": 1599
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "e97a84cbd76c415b0e863dc659c1ad439b8812edbe2f959760eb8ba1995e7db7",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-6f529c986d52ad4d65cdc2ede17eb8630af37512ff71a797b90d71e090543216",
+      "body_characters": 4196,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4196
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 19,
+      "body_path": "docs/v4/stage4-corpus/text/e97a84cbd76c415b0e863dc659c1ad439b8812edbe2f959760eb8ba1995e7db7.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/f90380e1516485745107f16b91f58356cfd9702f75702aacff2038d02bc7922b.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4196
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-03-30T11:30:47+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    },
+    {
+      "url": "https://www.aehr.com/2026/02/aehr-test-systems-to-participate-in-the-susquehanna-15th-annual-technology-conference-on-february-26-2026/",
+      "transport": "NEW_OFFICIAL_NATIVE_CAPTURE",
+      "http_status": 200,
+      "final_url": "https://www.aehr.com/2026/02/aehr-test-systems-to-participate-in-the-susquehanna-15th-annual-technology-conference-on-february-26-2026/",
+      "raw_sha256": "e52e21651763032351b1381f0eb933a5ba18f5113edd902def5ea11912928a10",
+      "status": "ACQUIRED",
+      "title": "Aehr Test Systems to Participate in the Susquehanna 15th Annual Technology Conference on February 26, 2026 - Aehr Test Systems",
+      "published_at": "2026-02-19",
+      "publication_proof": {
+        "date": "2026-02-19",
+        "precision": "DATE",
+        "method": "META_article:published_time",
+        "literal_evidence": "<meta property=\"article:published_time\" content=\"2026-02-19T12:30:42+00:00\" />",
+        "native_sha256": "e52e21651763032351b1381f0eb933a5ba18f5113edd902def5ea11912928a10",
+        "native_character_start": 1589,
+        "native_character_end": 1667
+      },
+      "publisher_host": "www.aehr.com",
+      "body_status": "FULL",
+      "completeness": {
+        "explicit_body_scope": true,
+        "body_scope_closed": true,
+        "captured_table_rows": 2,
+        "assessment": "ACCESSIBLE_STRUCTURE_ONLY"
+      },
+      "completeness_limits": [],
+      "body_sha256": "61135820fbaf9e55c0da0a927ddf3c6f4f755057213f61c1f1bdb06d21fe9626",
+      "BCT_source_provenance": "PASS",
+      "BCT_source_blockers": [],
+      "recovery_kind": "NATIVE_HTTP_BYTES_AND_EXTRACTED_TEXT",
+      "topic_hint": "SEMICONDUCTOR_EQUIPMENT_UNSEEN_SOURCE_TOPIC_NOT_GOLD",
+      "document_id": "stage4doc-e136b06558ff587cd833e3ceef3115908e8772e2cc772c0bbae7789bb685403e",
+      "body_characters": 4589,
+      "AI_read_ranges": [],
+      "AI_unread_ranges": [
+        {
+          "start": 0,
+          "end": 4589
+        }
+      ],
+      "meaning_gold": "UNVERIFIED_REQUIRES_INDEPENDENT_ADJUDICATION",
+      "planned_split": "evaluation",
+      "split": "evaluation",
+      "split_index": 20,
+      "body_path": "docs/v4/stage4-corpus/text/61135820fbaf9e55c0da0a927ddf3c6f4f755057213f61c1f1bdb06d21fe9626.txt",
+      "raw_path": "docs/v4/stage4-corpus/native/e52e21651763032351b1381f0eb933a5ba18f5113edd902def5ea11912928a10.html.gz",
+      "raw_encoding": "GZIP_ORIGINAL_HTTP_HTML_BYTES",
+      "prior_development_use": false,
+      "old_results_used_as_gold": false,
+      "AI_result_viewed_before_freeze": false,
+      "AI_read_ranges_this_task": [],
+      "AI_unread_ranges_this_task": [
+        {
+          "start": 0,
+          "end": 4589
+        }
+      ],
+      "BCT_source_checks": {
+        "provenance": "PASS",
+        "provenance_blockers": [],
+        "checks": {
+          "http_success": true,
+          "original_identity": true,
+          "publisher_observed": true,
+          "attribution_consistent": true,
+          "original_publication": true,
+          "available_at_recorded": true,
+          "full_accessible_body": true,
+          "not_republication": true,
+          "body_hash_matches": true,
+          "publication_before_acquisition": true
+        },
+        "body_status": "FULL",
+        "published_at": "2026-02-19T12:30:42+00:00",
+        "origin_publisher": "Aehr Test Systems"
+      },
+      "planned_AI_input": null,
+      "AI_transfer_preflight": "BLOCKED_POLICY"
+    }
+  ],
+  "freeze_revision_note": {
+    "previous_metadata_freeze_sha256": "b532a71f8bfdd77990f173460cd04e5fe208d7a291e6774d8975bf26455c2520",
+    "reason": "Reused the existing hash-bound DOE public-excerpt review and exact historical input; document versions and 30/20 partition unchanged; new generation calls remain zero."
+  },
+  "freeze_sha256": "6f288a8165158a28cb05a46c3fa4d264b709e752eea052f0191276f356da6d07"
+}
