@@ -49,6 +49,8 @@ Netlify team `ire-won1`: Free, $0/month, 300 credits/month,
 - 원본 인증 누락·틀린/다중 바이트 키 거부, gateway 목적지·redirect·쓰기 제한 PASS.
 - 로컬 pytest: BLOCKED (현재 환경에 pytest 없음). GitHub/Netlify는 build 시작 시 pytest를 설치한다.
 - GitHub push와 원격 CI: 이 문서 게시 후 실제 결과를 확인한다.
+- 첫 실제 push CI `38593853498`는 공통 conftest가 요구하는 PyYAML 누락으로 FAIL.
+  기존 project 의존성을 함께 설치하도록 최소 수정 후 새 commit으로 재시험한다.
 - GitHub push → Netlify 자동 배포 → 기존 URL readback: NOT_RUN.
 - 실제 실패 커밋의 이전 정상 버전 보존: NOT_RUN.
 

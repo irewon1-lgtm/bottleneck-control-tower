@@ -6,7 +6,7 @@ if [[ "${NETLIFY:-}" == "true" ]]; then
   [[ "${CONTEXT:-}" == "production" ]] || { echo "Preview publication is disabled"; exit 1; }
 fi
 export PYTHONPATH=src
-python3 -m pip install --disable-pip-version-check 'pytest>=8,<9'
+python3 -m pip install --disable-pip-version-check -e . 'pytest>=8,<9'
 python3 -m pytest -q tests/test_v4_dashboard.py
 node --test tests/test_readable_view_model.js tests/test_future_ui_clarity.js
 python3 tools/v4_dashboard_hosting.py --output var/v4/netlify
