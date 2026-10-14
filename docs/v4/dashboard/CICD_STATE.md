@@ -40,6 +40,8 @@ Netlify team `ire-won1`: Free, $0/month, 300 credits/month,
 새 Netlify project: `bct-v4-ci-origin`, ID `def4b8b3-4d62-4eb6-9813-b2332f1e1b17`.
 아직 Git 저장소 미연결·배포 없음·private 상태다.
 원본 인증 비밀은 Netlify Functions secret으로만 생성했으며 파일·GitHub에 넣지 않았다.
+동일 비밀과 원본 URL을 기존 Sites runtime 환경에도 설정했으나, 기존 화면 버전을
+다시 배포하거나 gateway로 전환하지 않았다. 비밀은 두 서비스의 서버 설정에만 있다.
 `.netlify/`는 gitignore에 추가했다.
 
 ## 현재 실행 증거
@@ -48,9 +50,12 @@ Netlify team `ire-won1`: Free, $0/month, 300 credits/month,
 - 실제 검증된 DB로 포장·549 상세 근거·조회/다운로드/경로 boundary PASS.
 - 원본 인증 누락·틀린/다중 바이트 키 거부, gateway 목적지·redirect·쓰기 제한 PASS.
 - 로컬 pytest: BLOCKED (현재 환경에 pytest 없음). GitHub/Netlify는 build 시작 시 pytest를 설치한다.
-- GitHub push와 원격 CI: 이 문서 게시 후 실제 결과를 확인한다.
+- 실제 GitHub push 자동 감지 및 원격 CI: PASS.
 - 첫 실제 push CI `38593853498`는 공통 conftest가 요구하는 PyYAML 누락으로 FAIL.
   기존 project 의존성을 함께 설치하도록 최소 수정 후 새 commit으로 재시험한다.
+- 수정 SHA `5c9c5a9fe69ee2fd1d5c0c99feae929ac3532bbf`, CI run `38594092882`: success.
+  원격 Python 17 PASS, Node UI 8 PASS, 549 상세·schema·assets·download·route 보호 PASS,
+  원본 인증 및 gateway redirect/destination 보호 PASS. 위 마지막 수정의 재시험 결과다.
 - GitHub push → Netlify 자동 배포 → 기존 URL readback: NOT_RUN.
 - 실제 실패 커밋의 이전 정상 버전 보존: NOT_RUN.
 
