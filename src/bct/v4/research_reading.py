@@ -19,24 +19,41 @@ PROMPT=('Extract physical products and separate events using EXACT source senten
 
 
 class JSONAdapter(HTTPAdapter):
+    def __init__(self, env=None, *, system=None):
+        super().__init__(env)
+        self.system = PROMPT if system is None else system
+
     def request(self,provider,source,max_output):
         if provider!='groq':raise ValueError('NO_OTHER_PROVIDER')
         return ('https://api.groq.com/openai/v1/chat/completions',
           {'Content-Type':'application/json','User-Agent':HTTP_USER_AGENT,'Authorization':'Bearer '+self.env.get('GROQ_API_KEY','')},
-          {'model':MODELS['groq'],'messages':[{'role':'system','content':PROMPT},{'role':'user','content':source['prompt']}],
+          {'model':MODELS['groq'],'messages':[{'role':'system','content':self.system},{'role':'user','content':source['prompt']}],
            'max_completion_tokens':max_output,'reasoning_effort':'low','response_format':{'type':'json_object'}})
 
 
-def generate(ledger,config,prompt,doc,input_scope,*,phase):
-    router=Router(ledger,config);source={'prompt':prompt};adapter=JSONAdapter(router.env)
+def generate(ledger,config,prompt,doc,input_scope,*,phase,system=None,run_id=None):
+    router=Router(ledger,config,run_id=run_id);source={'prompt':prompt};adapter=JSONAdapter(router.env,system=system)
     payload=adapter.request('groq',source,config['max_output_tokens'])[2]
-    contract=sha(['RESEARCH_JSON_MODE_1',PROMPT,adapter.request('groq',{'prompt':''},config['max_output_tokens'])[::2]])
+    contract=sha(['RESEARCH_JSON_MODE_1',adapter.system,adapter.request('groq',{'prompt':''},config['max_output_tokens'])[::2]])
     key=sha([contract,doc['document_id'],doc['body_sha256'],input_scope,prompt])
     # Failed document/body inputs never migrate to another contract to retry.
     failures=[x for x in router.events('API_JOB')if x.get('document_id')==doc['document_id']and (x.get('status')=='INPUT_ERROR' or any(f.get('reason')=='AUTH'for f in x.get('failures',[])))]
+    # JSON-mode failures do not necessarily have an API_JOB. Join their durable
+    # attempt before considering a new contract, so a prompt change cannot
+    # silently retry a document that failed with HTTP400/401.
+    errors=[e for e in router.events('API_ERROR') if e.get('error_kind') in ('AUTH','INPUT_INVALID')
+            or e.get('diagnostics',{}).get('http_status') in (400,401)]
+    failures += [a for a in router.events('API_ATTEMPT') if a.get('document_id')==doc['document_id']
+                 and any((e.get('attempt_id') and e['attempt_id']==a.get('attempt_id'))
+                         or (e.get('input_key') and e['input_key']==a.get('input_key')) for e in errors)]
     if failures:return {'status':'BLOCKED_PREVIOUS_FAILED_DOCUMENT_NO_RETRY'}
     if any(x.get('request_contract')==contract for x in router.events('API_CONFIG_ERROR')):return {'status':'BLOCKED_REQUEST_CONTRACT'}
     if any(x.get('input_key')==key for x in router.events('API_ATTEMPT')):return {'status':'ALREADY_ATTEMPTED_NO_RETRY'}
+    # A supplied task ID binds the cap across restarts, not only this object.
+    # Historical callers retain their original default contract and behaviour.
+    if run_id is not None:
+        previous=[a for a in router.events('API_ATTEMPT') if a.get('run_id')==run_id]
+        router.calls=len(previous);router.reserved=sum(a['reserved_tokens'] for a in previous)
     reason=router.available('groq');reserve=len(encode(payload).encode())+config['max_output_tokens']
     reason=reason or router.budget('groq',reserve)
     if reason:return {'status':'WAIT_API','reason':reason,'reserved':reserve}

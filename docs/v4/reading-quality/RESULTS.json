@@ -1,0 +1,1534 @@
+{
+  "at": "2026-10-14T16:09:00.492558+00:00",
+  "start_sha": "548a9382a2fbc497fc866989d77d1cd135cc2e4d",
+  "historical13": {
+    "responses_read": 13,
+    "originals_or_scores_changed": false,
+    "new_calls": 0
+  },
+  "same_input_development": {
+    "documents": 6,
+    "CPU_products": {
+      "TP": 16,
+      "FP": 13,
+      "FN": 9,
+      "precision_denominator": 29,
+      "recall_denominator": 25,
+      "precision": 0.5517241379310345,
+      "recall": 0.64,
+      "f1": 0.5925925925925926
+    },
+    "AI_raw_products": {
+      "TP": 10,
+      "FP": 4,
+      "FN": 15,
+      "precision_denominator": 14,
+      "recall_denominator": 25,
+      "precision": 0.7142857142857143,
+      "recall": 0.4,
+      "f1": 0.5128205128205128
+    },
+    "before_strict_packet_products": {
+      "TP": 4,
+      "FP": 2,
+      "FN": 21,
+      "precision_denominator": 6,
+      "recall_denominator": 25,
+      "precision": 0.6666666666666666,
+      "recall": 0.16,
+      "f1": 0.25806451612903225
+    },
+    "prior_existing_packet_isolation_diagnostic_products": {
+      "TP": 7,
+      "FP": 2,
+      "FN": 18,
+      "source": "docs/v4/path-comparison/final/packet-isolation-diagnostic.json"
+    },
+    "final_products": {
+      "TP": 7,
+      "FP": 0,
+      "FN": 18,
+      "precision_denominator": 7,
+      "recall_denominator": 25,
+      "precision": 1.0,
+      "recall": 0.28,
+      "f1": 0.4375
+    },
+    "final_events": {
+      "TP": 0,
+      "FP": 0,
+      "FN": 10,
+      "precision_denominator": 0,
+      "recall_denominator": 10,
+      "precision": null,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "scope": "Consumed development partial windows, not new independent performance; packet recovery mechanism already had a prior diagnostic.",
+    "documents_detail": [
+      {
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "products": {
+          "TP": 1,
+          "FP": 0,
+          "FN": 3,
+          "ambiguous": 0,
+          "precision_denominator": 1,
+          "recall_denominator": 4,
+          "precision": 1.0,
+          "recall": 0.25,
+          "f1": 0.4
+        },
+        "events": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 1,
+          "ambiguous_event_predictions": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 1,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "validation": {
+          "version": "bct-reading-quality-2",
+          "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+          "original_response": "{\"extractions\":[{\"event\":\"received a follow-on purchase order from its lead silicon photonics customer for production wafer-level test and burn-in of silicon photonics integrated circuits used in data center optical interconnects and emerging optical I/O architectures for AI processors.\",\"event_attributes\":{\"product\":\"silicon photonics integrated circuits\",\"role\":\"DEMAND_INCREASE\",\"actuality\":\"ACTUAL\"}}]}",
+          "records": [
+            {
+              "id": "ee723b32d0c405bdaab15f03f657d001c11a8e4c50a90931fee4adc48fd1ab3c",
+              "version": "bct-located-evidence-1",
+              "original_proposal": {
+                "reference": {
+                  "start": 316,
+                  "end": 1023,
+                  "quote": "Fremont, CA (March 3, 2026) – Aehr Test Systems (NASDAQ: AEHR), a leading provider of test and burn-in solutions for semiconductor devices used in artificial intelligence (AI), data center, automotive, and industrial applications, today announced it has received a follow-on purchase order from its lead silicon photonics customer for production wafer-level test and burn-in of silicon photonics integrated circuits used in data center optical interconnects and emerging optical I/O architectures for AI processors.\nThe order reflects expanding production volumes as demand accelerates for optical connectivity solutions powering next-generation AI training and inference infrastructure.\nThe order includes:"
+                },
+                "extraction_reference": {
+                  "start": 570,
+                  "end": 831,
+                  "quote": "received a follow-on purchase order from its lead silicon photonics customer for production wafer-level test and burn-in of silicon photonics integrated circuits used in data center optical interconnects and emerging optical I/O architectures for AI processors."
+                },
+                "evidence_origin": "EXACT_ENCLOSING_TRANSMITTED_WINDOW",
+                "product": {
+                  "value": "silicon photonics integrated circuits",
+                  "reference": {
+                    "start": 694,
+                    "end": 731,
+                    "quote": "silicon photonics integrated circuits"
+                  }
+                },
+                "role": "DEMAND_INCREASE",
+                "actuality": "ACTUAL",
+                "fields": {},
+                "origin": "MODEL_JSON_EXTRACTION"
+              },
+              "context": {
+                "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+                "body_sha256": "46e75f874054d889f57961091c4add7f55f4da0831094cd498ae1115382f0557",
+                "origin_url": "https://www.aehr.com/2026/03/aehr-receives-follow-on-order-for-fully-automated-wafer-level-burn-in-systems-powering-ai-optical-i-o-and-data-center-interconnects/",
+                "published_at": "2026-03-03T12:30:37+00:00",
+                "acquired_at": "2026-10-14T01:49:23.368265+00:00",
+                "start": 316,
+                "end": 1023,
+                "quote": "Fremont, CA (March 3, 2026) – Aehr Test Systems (NASDAQ: AEHR), a leading provider of test and burn-in solutions for semiconductor devices used in artificial intelligence (AI), data center, automotive, and industrial applications, today announced it has received a follow-on purchase order from its lead silicon photonics customer for production wafer-level test and burn-in of silicon photonics integrated circuits used in data center optical interconnects and emerging optical I/O architectures for AI processors.\nThe order reflects expanding production volumes as demand accelerates for optical connectivity solutions powering next-generation AI training and inference infrastructure.\nThe order includes:"
+              },
+              "product": {
+                "surface": "silicon photonics integrated circuits",
+                "normalized": "silicon photonics integrated circuits",
+                "reference": {
+                  "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+                  "body_sha256": "46e75f874054d889f57961091c4add7f55f4da0831094cd498ae1115382f0557",
+                  "origin_url": "https://www.aehr.com/2026/03/aehr-receives-follow-on-order-for-fully-automated-wafer-level-burn-in-systems-powering-ai-optical-i-o-and-data-center-interconnects/",
+                  "published_at": "2026-03-03T12:30:37+00:00",
+                  "acquired_at": "2026-10-14T01:49:23.368265+00:00",
+                  "start": 694,
+                  "end": 731,
+                  "quote": "silicon photonics integrated circuits"
+                }
+              },
+              "discovery_status": "SOURCE_LOCATED",
+              "meaning_status": "RELATION_HELD",
+              "event_status": "DISCOVERY_ONLY",
+              "role": "DEMAND_INCREASE",
+              "actuality": "ACTUAL",
+              "target": {
+                "product": {
+                  "surface": "silicon photonics integrated circuits",
+                  "normalized": "silicon photonics integrated circuits",
+                  "reference": {
+                    "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+                    "body_sha256": "46e75f874054d889f57961091c4add7f55f4da0831094cd498ae1115382f0557",
+                    "origin_url": "https://www.aehr.com/2026/03/aehr-receives-follow-on-order-for-fully-automated-wafer-level-burn-in-systems-powering-ai-optical-i-o-and-data-center-interconnects/",
+                    "published_at": "2026-03-03T12:30:37+00:00",
+                    "acquired_at": "2026-10-14T01:49:23.368265+00:00",
+                    "start": 694,
+                    "end": 731,
+                    "quote": "silicon photonics integrated circuits"
+                  }
+                },
+                "specification": null,
+                "region": null,
+                "customer_group": null,
+                "supply_pool": null
+              },
+              "fields": {},
+              "s_stage": "UNKNOWN",
+              "research_only": true,
+              "relation_check": "ORDER_OBJECT_RELATION_UNPROVEN",
+              "original_model_item": {
+                "event": "received a follow-on purchase order from its lead silicon photonics customer for production wafer-level test and burn-in of silicon photonics integrated circuits used in data center optical interconnects and emerging optical I/O architectures for AI processors.",
+                "event_attributes": {
+                  "product": "silicon photonics integrated circuits",
+                  "role": "DEMAND_INCREASE",
+                  "actuality": "ACTUAL"
+                }
+              },
+              "semantic_audit": {
+                "kind": "UNKNOWN_MODEL_CLASSIFICATION",
+                "field_decisions": [],
+                "physical_event_support": true,
+                "role_retained": true,
+                "event_scope": "Fremont, CA (March 3, 2026) – Aehr Test Systems (NASDAQ: AEHR), a leading provider of test and burn-in solutions for semiconductor devices used in artificial intelligence (AI), data center, automotive, and industrial applications, today announced it has received a follow-on purchase order from its lead silicon photonics customer for production wafer-level test and burn-in of silicon photonics integrated circuits used in data center optical interconnects and emerging optical I/O architectures for AI processors",
+                "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+              },
+              "rejected_fields": [],
+              "source_verified": true,
+              "semantic_accuracy": "UNVERIFIED_LIMITED_RULES",
+              "reading_quality_version": "bct-reading-quality-2"
+            }
+          ],
+          "held": [],
+          "coverage": {
+            "read_ranges": [
+              {
+                "start": 146,
+                "end": 167
+              },
+              {
+                "start": 316,
+                "end": 1023
+              }
+            ],
+            "read_characters": 728,
+            "body_characters": 8331,
+            "unread_ranges": [
+              {
+                "start": 0,
+                "end": 146
+              },
+              {
+                "start": 167,
+                "end": 316
+              },
+              {
+                "start": 1023,
+                "end": 8331
+              }
+            ],
+            "unread_characters": 7603
+          },
+          "S1_S2_S3": [
+            0,
+            0,
+            0
+          ],
+          "operational_integration_enabled": false,
+          "semantic_accuracy": "NOT_MEASURED_BY_SOURCE_MATCH",
+          "objective_version": "bct-objective-1",
+          "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+        }
+      },
+      {
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "products": {
+          "TP": 2,
+          "FP": 0,
+          "FN": 1,
+          "ambiguous": 0,
+          "precision_denominator": 2,
+          "recall_denominator": 3,
+          "precision": 1.0,
+          "recall": 0.6666666666666666,
+          "f1": 0.8
+        },
+        "events": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 1,
+          "ambiguous_event_predictions": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 1,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "validation": {
+          "version": "bct-reading-quality-2",
+          "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+          "original_response": "{\"extractions\":[{\"event\":\"This is a key early production win for a next-generation AI processor with this world leading hyperscaler\",\"event_attributes\":{\"product\":\"next-generation AI processor\",\"role\":\"SUPPLY_INCREASE\",\"actuality\":\"ACTUAL\"}},{\"event\":\"Prior disclosures in Aehr’s press releases and earnings call transcripts described this customer’s plans to introduce substantially higher-power AI processors\",\"event_attributes\":{\"product\":\"substantially higher-power AI processor\",\"role\":\"DEMAND_INCREASE\",\"actuality\":\"PLAN\"}},{\"event\":\"Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems\",\"event_attributes\":{\"product\":\"high-temperature operating life (HTOL) qualification burn-in modules\",\"role\":\"SUPPLY_INCREASE\",\"actuality\":\"ACTUAL\"}},{\"event\":\"This order announcement is important, as until now, Aehr had not officially been awarded the production burn-in business for this new device\",\"event_attributes\":{\"product\":\"production burn-in business for this new device\",\"role\":\"SUPPLY_INCREASE\",\"actuality\":\"ACTUAL\"}}]}",
+          "records": [
+            {
+              "id": "d20b834aa6f38b7ed6dd6c1ced0049065e22e1025b3fc77284f343b563667e1d",
+              "version": "bct-located-evidence-1",
+              "original_proposal": {
+                "reference": {
+                  "start": 1489,
+                  "end": 2487,
+                  "quote": "“This is a key early production win for a next-generation AI processor with this world leading hyperscaler,” said Gayn Erickson, President and CEO of Aehr Test Systems. “Our Sonoma ultra-high-power systems are uniquely well suited for these new devices, which require very high power and current levels and incorporate multiple thermal zones with independent thermal control per zone on each device during burn-in.\n“Prior disclosures in Aehr’s press releases and earnings call transcripts described this customer’s plans to introduce substantially higher-power AI processors, and that Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems. This order announcement is important, as until now, Aehr had not officially been awarded the production burn-in business for this new device, so we are very excited about this new win."
+                },
+                "extraction_reference": {
+                  "start": 1490,
+                  "end": 1595,
+                  "quote": "This is a key early production win for a next-generation AI processor with this world leading hyperscaler"
+                },
+                "evidence_origin": "EXACT_ENCLOSING_TRANSMITTED_WINDOW",
+                "product": {
+                  "value": "next-generation AI processor",
+                  "reference": {
+                    "start": 1531,
+                    "end": 1559,
+                    "quote": "next-generation AI processor"
+                  }
+                },
+                "role": "SUPPLY_INCREASE",
+                "actuality": "ACTUAL",
+                "fields": {},
+                "origin": "MODEL_JSON_EXTRACTION"
+              },
+              "context": {
+                "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+                "body_sha256": "d8e72ad2ab877464236d72e31492b28ec44fce0152c2b734cb64d3f1443a09e9",
+                "origin_url": "https://www.aehr.com/2026/02/aehr-secures-key-ai-production-burn-in-win-with-initial-order-of-sonoma-systems-for-lead-hyperscale-customers-next-generation-ai-asic-processors/",
+                "published_at": "2026-02-11T12:30:44+00:00",
+                "acquired_at": "2026-10-14T01:49:23.873008+00:00",
+                "start": 1489,
+                "end": 2487,
+                "quote": "“This is a key early production win for a next-generation AI processor with this world leading hyperscaler,” said Gayn Erickson, President and CEO of Aehr Test Systems. “Our Sonoma ultra-high-power systems are uniquely well suited for these new devices, which require very high power and current levels and incorporate multiple thermal zones with independent thermal control per zone on each device during burn-in.\n“Prior disclosures in Aehr’s press releases and earnings call transcripts described this customer’s plans to introduce substantially higher-power AI processors, and that Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems. This order announcement is important, as until now, Aehr had not officially been awarded the production burn-in business for this new device, so we are very excited about this new win."
+              },
+              "product": {
+                "surface": "next-generation AI processor",
+                "normalized": "next-generation ai processor",
+                "reference": {
+                  "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+                  "body_sha256": "d8e72ad2ab877464236d72e31492b28ec44fce0152c2b734cb64d3f1443a09e9",
+                  "origin_url": "https://www.aehr.com/2026/02/aehr-secures-key-ai-production-burn-in-win-with-initial-order-of-sonoma-systems-for-lead-hyperscale-customers-next-generation-ai-asic-processors/",
+                  "published_at": "2026-02-11T12:30:44+00:00",
+                  "acquired_at": "2026-10-14T01:49:23.873008+00:00",
+                  "start": 1531,
+                  "end": 1559,
+                  "quote": "next-generation AI processor"
+                }
+              },
+              "discovery_status": "SOURCE_LOCATED",
+              "meaning_status": "RELATION_HELD",
+              "event_status": "DISCOVERY_ONLY",
+              "role": "SUPPLY_INCREASE",
+              "actuality": "PLAN",
+              "target": {
+                "product": {
+                  "surface": "next-generation AI processor",
+                  "normalized": "next-generation ai processor",
+                  "reference": {
+                    "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+                    "body_sha256": "d8e72ad2ab877464236d72e31492b28ec44fce0152c2b734cb64d3f1443a09e9",
+                    "origin_url": "https://www.aehr.com/2026/02/aehr-secures-key-ai-production-burn-in-win-with-initial-order-of-sonoma-systems-for-lead-hyperscale-customers-next-generation-ai-asic-processors/",
+                    "published_at": "2026-02-11T12:30:44+00:00",
+                    "acquired_at": "2026-10-14T01:49:23.873008+00:00",
+                    "start": 1531,
+                    "end": 1559,
+                    "quote": "next-generation AI processor"
+                  }
+                },
+                "specification": null,
+                "region": null,
+                "customer_group": null,
+                "supply_pool": null
+              },
+              "fields": {},
+              "s_stage": "UNKNOWN",
+              "research_only": true,
+              "relation_check": "RELATION_NOT_ESTABLISHED",
+              "original_model_item": {
+                "event": "This is a key early production win for a next-generation AI processor with this world leading hyperscaler",
+                "event_attributes": {
+                  "product": "next-generation AI processor",
+                  "role": "SUPPLY_INCREASE",
+                  "actuality": "ACTUAL"
+                }
+              },
+              "semantic_audit": {
+                "kind": "UNKNOWN_MODEL_CLASSIFICATION",
+                "field_decisions": [],
+                "physical_event_support": false,
+                "role_retained": false,
+                "event_scope": "“This is a key early production win for a next-generation AI processor with this world leading hyperscaler,” said Gayn Erickson, President and CEO of Aehr Test Systems. “Our Sonoma ultra-high-power systems are uniquely well suited for these new devices, which require very high power and current levels and incorporate multiple thermal zones with independent thermal control per zone on each device during burn-in.\n“Prior disclosures in Aehr’s press releases and earnings call transcripts described this customer’s plans to introduce substantially higher-power AI processors, and that Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems",
+                "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+              },
+              "rejected_fields": [],
+              "source_verified": true,
+              "semantic_accuracy": "UNVERIFIED_LIMITED_RULES",
+              "reading_quality_version": "bct-reading-quality-2"
+            },
+            {
+              "id": "a8210995643452123bc44c94dfe51a72492ef1369e8f4911f69533b010161296",
+              "version": "bct-located-evidence-1",
+              "original_proposal": {
+                "reference": {
+                  "start": 1489,
+                  "end": 2487,
+                  "quote": "“This is a key early production win for a next-generation AI processor with this world leading hyperscaler,” said Gayn Erickson, President and CEO of Aehr Test Systems. “Our Sonoma ultra-high-power systems are uniquely well suited for these new devices, which require very high power and current levels and incorporate multiple thermal zones with independent thermal control per zone on each device during burn-in.\n“Prior disclosures in Aehr’s press releases and earnings call transcripts described this customer’s plans to introduce substantially higher-power AI processors, and that Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems. This order announcement is important, as until now, Aehr had not officially been awarded the production burn-in business for this new device, so we are very excited about this new win."
+                },
+                "extraction_reference": {
+                  "start": 2074,
+                  "end": 2301,
+                  "quote": "Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems"
+                },
+                "evidence_origin": "EXACT_ENCLOSING_TRANSMITTED_WINDOW",
+                "product": {
+                  "value": "high-temperature operating life (HTOL) qualification burn-in modules",
+                  "reference": {
+                    "start": 2102,
+                    "end": 2170,
+                    "quote": "high-temperature operating life (HTOL) qualification burn-in modules"
+                  }
+                },
+                "role": "SUPPLY_INCREASE",
+                "actuality": "ACTUAL",
+                "fields": {},
+                "origin": "MODEL_JSON_EXTRACTION"
+              },
+              "context": {
+                "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+                "body_sha256": "d8e72ad2ab877464236d72e31492b28ec44fce0152c2b734cb64d3f1443a09e9",
+                "origin_url": "https://www.aehr.com/2026/02/aehr-secures-key-ai-production-burn-in-win-with-initial-order-of-sonoma-systems-for-lead-hyperscale-customers-next-generation-ai-asic-processors/",
+                "published_at": "2026-02-11T12:30:44+00:00",
+                "acquired_at": "2026-10-14T01:49:23.873008+00:00",
+                "start": 1489,
+                "end": 2487,
+                "quote": "“This is a key early production win for a next-generation AI processor with this world leading hyperscaler,” said Gayn Erickson, President and CEO of Aehr Test Systems. “Our Sonoma ultra-high-power systems are uniquely well suited for these new devices, which require very high power and current levels and incorporate multiple thermal zones with independent thermal control per zone on each device during burn-in.\n“Prior disclosures in Aehr’s press releases and earnings call transcripts described this customer’s plans to introduce substantially higher-power AI processors, and that Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems. This order announcement is important, as until now, Aehr had not officially been awarded the production burn-in business for this new device, so we are very excited about this new win."
+              },
+              "product": {
+                "surface": "high-temperature operating life (HTOL) qualification burn-in modules",
+                "normalized": "high-temperature operating life (htol) qualification burn-in modules",
+                "reference": {
+                  "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+                  "body_sha256": "d8e72ad2ab877464236d72e31492b28ec44fce0152c2b734cb64d3f1443a09e9",
+                  "origin_url": "https://www.aehr.com/2026/02/aehr-secures-key-ai-production-burn-in-win-with-initial-order-of-sonoma-systems-for-lead-hyperscale-customers-next-generation-ai-asic-processors/",
+                  "published_at": "2026-02-11T12:30:44+00:00",
+                  "acquired_at": "2026-10-14T01:49:23.873008+00:00",
+                  "start": 2102,
+                  "end": 2170,
+                  "quote": "high-temperature operating life (HTOL) qualification burn-in modules"
+                }
+              },
+              "discovery_status": "SOURCE_LOCATED",
+              "meaning_status": "RELATION_HELD",
+              "event_status": "DISCOVERY_ONLY",
+              "role": "SUPPLY_INCREASE",
+              "actuality": "PLAN",
+              "target": {
+                "product": {
+                  "surface": "high-temperature operating life (HTOL) qualification burn-in modules",
+                  "normalized": "high-temperature operating life (htol) qualification burn-in modules",
+                  "reference": {
+                    "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+                    "body_sha256": "d8e72ad2ab877464236d72e31492b28ec44fce0152c2b734cb64d3f1443a09e9",
+                    "origin_url": "https://www.aehr.com/2026/02/aehr-secures-key-ai-production-burn-in-win-with-initial-order-of-sonoma-systems-for-lead-hyperscale-customers-next-generation-ai-asic-processors/",
+                    "published_at": "2026-02-11T12:30:44+00:00",
+                    "acquired_at": "2026-10-14T01:49:23.873008+00:00",
+                    "start": 2102,
+                    "end": 2170,
+                    "quote": "high-temperature operating life (HTOL) qualification burn-in modules"
+                  }
+                },
+                "specification": null,
+                "region": null,
+                "customer_group": null,
+                "supply_pool": null
+              },
+              "fields": {},
+              "s_stage": "UNKNOWN",
+              "research_only": true,
+              "relation_check": "RELATION_NOT_ESTABLISHED",
+              "original_model_item": {
+                "event": "Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems",
+                "event_attributes": {
+                  "product": "high-temperature operating life (HTOL) qualification burn-in modules",
+                  "role": "SUPPLY_INCREASE",
+                  "actuality": "ACTUAL"
+                }
+              },
+              "semantic_audit": {
+                "kind": "UNKNOWN_MODEL_CLASSIFICATION",
+                "field_decisions": [],
+                "physical_event_support": false,
+                "role_retained": false,
+                "event_scope": "“This is a key early production win for a next-generation AI processor with this world leading hyperscaler,” said Gayn Erickson, President and CEO of Aehr Test Systems. “Our Sonoma ultra-high-power systems are uniquely well suited for these new devices, which require very high power and current levels and incorporate multiple thermal zones with independent thermal control per zone on each device during burn-in.\n“Prior disclosures in Aehr’s press releases and earnings call transcripts described this customer’s plans to introduce substantially higher-power AI processors, and that Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems",
+                "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+              },
+              "rejected_fields": [],
+              "source_verified": true,
+              "semantic_accuracy": "UNVERIFIED_LIMITED_RULES",
+              "reading_quality_version": "bct-reading-quality-2"
+            }
+          ],
+          "held": [
+            {
+              "index": 1,
+              "reason": "PRODUCT_TOKEN_BOUNDARY"
+            },
+            {
+              "index": 3,
+              "reason": "NON_PRODUCT_RELATIONAL_HEAD"
+            }
+          ],
+          "coverage": {
+            "read_ranges": [
+              {
+                "start": 164,
+                "end": 185
+              },
+              {
+                "start": 1489,
+                "end": 2487
+              }
+            ],
+            "read_characters": 1019,
+            "body_characters": 8052,
+            "unread_ranges": [
+              {
+                "start": 0,
+                "end": 164
+              },
+              {
+                "start": 185,
+                "end": 1489
+              },
+              {
+                "start": 2487,
+                "end": 8052
+              }
+            ],
+            "unread_characters": 7033
+          },
+          "S1_S2_S3": [
+            0,
+            0,
+            0
+          ],
+          "operational_integration_enabled": false,
+          "semantic_accuracy": "NOT_MEASURED_BY_SOURCE_MATCH",
+          "objective_version": "bct-objective-1",
+          "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+        }
+      },
+      {
+        "document_id": "v4doc-81fa48b05fa7c273b7e2d9d26e453a98a07ff4389ec1a6b6bac740db8921ec01",
+        "products": {
+          "TP": 1,
+          "FP": 0,
+          "FN": 3,
+          "ambiguous": 0,
+          "precision_denominator": 1,
+          "recall_denominator": 4,
+          "precision": 1.0,
+          "recall": 0.25,
+          "f1": 0.4
+        },
+        "events": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 2,
+          "ambiguous_event_predictions": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 2,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "validation": {
+          "version": "bct-reading-quality-2",
+          "document_id": "v4doc-81fa48b05fa7c273b7e2d9d26e453a98a07ff4389ec1a6b6bac740db8921ec01",
+          "original_response": "{\"extractions\":[{\"event\":\"LyondellBasell ended refining operations at its 263,776-b/cd refinery in Houston in March 2025, and Phillips 66 ceased operations at its 138,700-b/cd refinery in Los Angeles in October 2025.\",\"event_attributes\":{\"product\":\"refinery capacity\",\"role\":\"SUPPLY_DECREASE\",\"actuality\":\"ACTUAL\"}},{\"event\":\"Combined, the closure of the two facilities represents a reduction in operable U.S. refinery capacity of about 400,000 b/d.\",\"event_attributes\":{\"product\":\"refinery capacity\",\"role\":\"SUPPLY_DECREASE\",\"actuality\":\"ACTUAL\"}}]}",
+          "records": [
+            {
+              "id": "7ba369d81f4b3aba476a617f5f1956f3589d2072e1d36b5ecfd5621ea2a55c79",
+              "version": "bct-located-evidence-1",
+              "original_proposal": {
+                "reference": {
+                  "start": 1126,
+                  "end": 1834,
+                  "quote": "Stream day capacity reflects the maximum input that a distillation facility can process within a 24-hour period when running at full capacity with an optimal crude oil and product slate and with no allowance for downtime. Stream day capacity is typically about 6% higher than calendar day capacity.\nThis year’s Refinery Capacity Report includes 130 operable refineries, two fewer than in 2025. LyondellBasell ended refining operations at its 263,776-b/cd refinery in Houston in March 2025, and Phillips 66 ceased operations at its 138,700-b/cd refinery in Los Angeles in October 2025. Combined, the closure of the two facilities represents a reduction in operable U.S. refinery capacity of about 400,000 b/d."
+                },
+                "extraction_reference": {
+                  "start": 1711,
+                  "end": 1834,
+                  "quote": "Combined, the closure of the two facilities represents a reduction in operable U.S. refinery capacity of about 400,000 b/d."
+                },
+                "evidence_origin": "EXACT_ENCLOSING_TRANSMITTED_WINDOW",
+                "product": {
+                  "value": "refinery capacity",
+                  "reference": {
+                    "start": 1795,
+                    "end": 1812,
+                    "quote": "refinery capacity"
+                  }
+                },
+                "role": "SUPPLY_DECREASE",
+                "actuality": "ACTUAL",
+                "fields": {},
+                "origin": "MODEL_JSON_EXTRACTION"
+              },
+              "context": {
+                "document_id": "v4doc-81fa48b05fa7c273b7e2d9d26e453a98a07ff4389ec1a6b6bac740db8921ec01",
+                "body_sha256": "05946d92f83028fa0c7418fa787de34bb933043da36e2cd352aaa0620e85604d",
+                "origin_url": "https://www.eia.gov/todayinenergy/detail.php?id=67807",
+                "published_at": "2026-06-29",
+                "acquired_at": "2026-10-14T11:48:12.678665+00:00",
+                "start": 1126,
+                "end": 1834,
+                "quote": "Stream day capacity reflects the maximum input that a distillation facility can process within a 24-hour period when running at full capacity with an optimal crude oil and product slate and with no allowance for downtime. Stream day capacity is typically about 6% higher than calendar day capacity.\nThis year’s Refinery Capacity Report includes 130 operable refineries, two fewer than in 2025. LyondellBasell ended refining operations at its 263,776-b/cd refinery in Houston in March 2025, and Phillips 66 ceased operations at its 138,700-b/cd refinery in Los Angeles in October 2025. Combined, the closure of the two facilities represents a reduction in operable U.S. refinery capacity of about 400,000 b/d."
+              },
+              "product": {
+                "surface": "refinery capacity",
+                "normalized": "refinery capacity",
+                "reference": {
+                  "document_id": "v4doc-81fa48b05fa7c273b7e2d9d26e453a98a07ff4389ec1a6b6bac740db8921ec01",
+                  "body_sha256": "05946d92f83028fa0c7418fa787de34bb933043da36e2cd352aaa0620e85604d",
+                  "origin_url": "https://www.eia.gov/todayinenergy/detail.php?id=67807",
+                  "published_at": "2026-06-29",
+                  "acquired_at": "2026-10-14T11:48:12.678665+00:00",
+                  "start": 1795,
+                  "end": 1812,
+                  "quote": "refinery capacity"
+                }
+              },
+              "discovery_status": "SOURCE_LOCATED",
+              "meaning_status": "RELATION_HELD",
+              "event_status": "DISCOVERY_ONLY",
+              "role": "SUPPLY_DECREASE",
+              "actuality": "ACTUAL",
+              "target": {
+                "product": {
+                  "surface": "refinery capacity",
+                  "normalized": "refinery capacity",
+                  "reference": {
+                    "document_id": "v4doc-81fa48b05fa7c273b7e2d9d26e453a98a07ff4389ec1a6b6bac740db8921ec01",
+                    "body_sha256": "05946d92f83028fa0c7418fa787de34bb933043da36e2cd352aaa0620e85604d",
+                    "origin_url": "https://www.eia.gov/todayinenergy/detail.php?id=67807",
+                    "published_at": "2026-06-29",
+                    "acquired_at": "2026-10-14T11:48:12.678665+00:00",
+                    "start": 1795,
+                    "end": 1812,
+                    "quote": "refinery capacity"
+                  }
+                },
+                "specification": null,
+                "region": null,
+                "customer_group": null,
+                "supply_pool": null
+              },
+              "fields": {},
+              "s_stage": "UNKNOWN",
+              "research_only": true,
+              "relation_check": "RELATION_NOT_ESTABLISHED",
+              "original_model_item": {
+                "event": "Combined, the closure of the two facilities represents a reduction in operable U.S. refinery capacity of about 400,000 b/d.",
+                "event_attributes": {
+                  "product": "refinery capacity",
+                  "role": "SUPPLY_DECREASE",
+                  "actuality": "ACTUAL"
+                }
+              },
+              "semantic_audit": {
+                "kind": "UNKNOWN_MODEL_CLASSIFICATION",
+                "field_decisions": [],
+                "physical_event_support": false,
+                "role_retained": false,
+                "event_scope": "Combined, the closure of the two facilities represents a reduction in operable U.S. refinery capacity of about 400,000 b/d.",
+                "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+              },
+              "rejected_fields": [],
+              "source_verified": true,
+              "semantic_accuracy": "UNVERIFIED_LIMITED_RULES",
+              "reading_quality_version": "bct-reading-quality-2"
+            }
+          ],
+          "held": [
+            {
+              "index": 0,
+              "reason": "PRODUCT_NOT_LITERAL_IN_EXTRACTION"
+            }
+          ],
+          "coverage": {
+            "read_ranges": [
+              {
+                "start": 0,
+                "end": 91
+              },
+              {
+                "start": 1126,
+                "end": 1834
+              }
+            ],
+            "read_characters": 799,
+            "body_characters": 7868,
+            "unread_ranges": [
+              {
+                "start": 91,
+                "end": 1126
+              },
+              {
+                "start": 1834,
+                "end": 7868
+              }
+            ],
+            "unread_characters": 7069
+          },
+          "S1_S2_S3": [
+            0,
+            0,
+            0
+          ],
+          "operational_integration_enabled": false,
+          "semantic_accuracy": "NOT_MEASURED_BY_SOURCE_MATCH",
+          "objective_version": "bct-objective-1",
+          "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+        }
+      },
+      {
+        "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+        "products": {
+          "TP": 3,
+          "FP": 0,
+          "FN": 5,
+          "ambiguous": 0,
+          "precision_denominator": 3,
+          "recall_denominator": 8,
+          "precision": 1.0,
+          "recall": 0.375,
+          "f1": 0.5454545454545454
+        },
+        "events": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 4,
+          "ambiguous_event_predictions": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 4,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "validation": {
+          "version": "bct-reading-quality-2",
+          "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+          "original_response": "{\"extractions\":[{\"event\":\"Commercial crude oil inventories increased by 2.0 million barrels\",\"event_attributes\":{\"product\":\"commercial crude oil\",\"role\":\"SUPPLY_INCREASE\",\"actuality\":\"ACTUAL\"}},{\"event\":\"Gasoline demand increased 1% to 8.9 million b/d\",\"event_attributes\":{\"product\":\"gasoline\",\"role\":\"DEMAND_INCREASE\",\"actuality\":\"ACTUAL\"}},{\"event\":\"Distillate demand increased 2% to 3.7 million b/d\",\"event_attributes\":{\"product\":\"distillate\",\"role\":\"DEMAND_INCREASE\",\"actuality\":\"ACTUAL\"}},{\"event\":\"Jet fuel demand increased 9% year over year\",\"event_attributes\":{\"product\":\"jet fuel\",\"role\":\"DEMAND_INCREASE\",\"actuality\":\"ACTUAL\"}},{\"event\":\"decreasing demand in residual fuel oil, propane, and other oils\",\"event_attributes\":{\"product\":\"residual fuel oil\",\"role\":\"DEMAND_DECREASE\",\"actuality\":\"ACTUAL\"}},{\"event\":\"decreasing demand in residual fuel oil, propane, and other oils\",\"event_attributes\":{\"product\":\"propane\",\"role\":\"DEMAND_DECREASE\",\"actuality\":\"ACTUAL\"}},{\"event\":\"decreasing demand in residual fuel oil, propane, and other oils\",\"event_attributes\":{\"product\":\"other oils\",\"role\":\"DEMAND_DECREASE\",\"actuality\":\"ACTUAL\"}}]}",
+          "records": [
+            {
+              "id": "61ebe5cfa13584b5c67e44332d307b99518ac385ebc90e7a6948015bfd082494",
+              "version": "bct-located-evidence-1",
+              "original_proposal": {
+                "reference": {
+                  "start": 1661,
+                  "end": 2033,
+                  "quote": "Over the past four weeks, total product demand averaged 20.4 million b/d, down 1% year over year. Gasoline demand increased 1% to 8.9 million b/d, while distillate demand increased 2% to 3.7 million b/d. Jet fuel demand increased 9% year over year. The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+                },
+                "extraction_reference": {
+                  "start": 1969,
+                  "end": 2032,
+                  "quote": "decreasing demand in residual fuel oil, propane, and other oils"
+                },
+                "evidence_origin": "EXACT_ENCLOSING_TRANSMITTED_WINDOW",
+                "product": {
+                  "value": "residual fuel oil",
+                  "reference": {
+                    "start": 1990,
+                    "end": 2007,
+                    "quote": "residual fuel oil"
+                  }
+                },
+                "role": "DEMAND_DECREASE",
+                "actuality": "ACTUAL",
+                "fields": {},
+                "origin": "MODEL_JSON_EXTRACTION"
+              },
+              "context": {
+                "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+                "body_sha256": "40b131105ff3c052ad95eeabcb50fc2737ae184b9dcbbe927a28f0309e6e5d75",
+                "origin_url": "https://www.eia.gov/todayinenergy/detail.php?id=67868",
+                "published_at": "2026-07-22",
+                "acquired_at": "2026-10-14T11:48:13.467720+00:00",
+                "start": 1661,
+                "end": 2033,
+                "quote": "Over the past four weeks, total product demand averaged 20.4 million b/d, down 1% year over year. Gasoline demand increased 1% to 8.9 million b/d, while distillate demand increased 2% to 3.7 million b/d. Jet fuel demand increased 9% year over year. The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+              },
+              "product": {
+                "surface": "residual fuel oil",
+                "normalized": "residual fuel oil",
+                "reference": {
+                  "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+                  "body_sha256": "40b131105ff3c052ad95eeabcb50fc2737ae184b9dcbbe927a28f0309e6e5d75",
+                  "origin_url": "https://www.eia.gov/todayinenergy/detail.php?id=67868",
+                  "published_at": "2026-07-22",
+                  "acquired_at": "2026-10-14T11:48:13.467720+00:00",
+                  "start": 1990,
+                  "end": 2007,
+                  "quote": "residual fuel oil"
+                }
+              },
+              "discovery_status": "SOURCE_LOCATED",
+              "meaning_status": "UNKNOWN",
+              "event_status": "DISCOVERY_ONLY",
+              "role": "UNKNOWN",
+              "actuality": "ACTUAL",
+              "target": {
+                "product": {
+                  "surface": "residual fuel oil",
+                  "normalized": "residual fuel oil",
+                  "reference": {
+                    "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+                    "body_sha256": "40b131105ff3c052ad95eeabcb50fc2737ae184b9dcbbe927a28f0309e6e5d75",
+                    "origin_url": "https://www.eia.gov/todayinenergy/detail.php?id=67868",
+                    "published_at": "2026-07-22",
+                    "acquired_at": "2026-10-14T11:48:13.467720+00:00",
+                    "start": 1990,
+                    "end": 2007,
+                    "quote": "residual fuel oil"
+                  }
+                },
+                "specification": null,
+                "region": null,
+                "customer_group": null,
+                "supply_pool": null
+              },
+              "fields": {},
+              "s_stage": "UNKNOWN",
+              "research_only": true,
+              "original_model_item": {
+                "event": "decreasing demand in residual fuel oil, propane, and other oils",
+                "event_attributes": {
+                  "product": "residual fuel oil",
+                  "role": "DEMAND_DECREASE",
+                  "actuality": "ACTUAL"
+                }
+              },
+              "semantic_audit": {
+                "kind": "UNKNOWN_MODEL_CLASSIFICATION",
+                "field_decisions": [],
+                "physical_event_support": false,
+                "role_retained": false,
+                "event_scope": "The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils.",
+                "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+              },
+              "rejected_fields": [],
+              "source_verified": true,
+              "semantic_accuracy": "UNVERIFIED_LIMITED_RULES",
+              "reading_quality_version": "bct-reading-quality-2"
+            },
+            {
+              "id": "1bbc02c9e648a3caa7bfed518d3f2a8b07fe395bd5271cd4a826bf1eaa76a4bb",
+              "version": "bct-located-evidence-1",
+              "original_proposal": {
+                "reference": {
+                  "start": 1661,
+                  "end": 2033,
+                  "quote": "Over the past four weeks, total product demand averaged 20.4 million b/d, down 1% year over year. Gasoline demand increased 1% to 8.9 million b/d, while distillate demand increased 2% to 3.7 million b/d. Jet fuel demand increased 9% year over year. The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+                },
+                "extraction_reference": {
+                  "start": 1969,
+                  "end": 2032,
+                  "quote": "decreasing demand in residual fuel oil, propane, and other oils"
+                },
+                "evidence_origin": "EXACT_ENCLOSING_TRANSMITTED_WINDOW",
+                "product": {
+                  "value": "propane",
+                  "reference": {
+                    "start": 2009,
+                    "end": 2016,
+                    "quote": "propane"
+                  }
+                },
+                "role": "DEMAND_DECREASE",
+                "actuality": "ACTUAL",
+                "fields": {},
+                "origin": "MODEL_JSON_EXTRACTION"
+              },
+              "context": {
+                "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+                "body_sha256": "40b131105ff3c052ad95eeabcb50fc2737ae184b9dcbbe927a28f0309e6e5d75",
+                "origin_url": "https://www.eia.gov/todayinenergy/detail.php?id=67868",
+                "published_at": "2026-07-22",
+                "acquired_at": "2026-10-14T11:48:13.467720+00:00",
+                "start": 1661,
+                "end": 2033,
+                "quote": "Over the past four weeks, total product demand averaged 20.4 million b/d, down 1% year over year. Gasoline demand increased 1% to 8.9 million b/d, while distillate demand increased 2% to 3.7 million b/d. Jet fuel demand increased 9% year over year. The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+              },
+              "product": {
+                "surface": "propane",
+                "normalized": "propane",
+                "reference": {
+                  "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+                  "body_sha256": "40b131105ff3c052ad95eeabcb50fc2737ae184b9dcbbe927a28f0309e6e5d75",
+                  "origin_url": "https://www.eia.gov/todayinenergy/detail.php?id=67868",
+                  "published_at": "2026-07-22",
+                  "acquired_at": "2026-10-14T11:48:13.467720+00:00",
+                  "start": 2009,
+                  "end": 2016,
+                  "quote": "propane"
+                }
+              },
+              "discovery_status": "SOURCE_LOCATED",
+              "meaning_status": "UNKNOWN",
+              "event_status": "DISCOVERY_ONLY",
+              "role": "UNKNOWN",
+              "actuality": "ACTUAL",
+              "target": {
+                "product": {
+                  "surface": "propane",
+                  "normalized": "propane",
+                  "reference": {
+                    "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+                    "body_sha256": "40b131105ff3c052ad95eeabcb50fc2737ae184b9dcbbe927a28f0309e6e5d75",
+                    "origin_url": "https://www.eia.gov/todayinenergy/detail.php?id=67868",
+                    "published_at": "2026-07-22",
+                    "acquired_at": "2026-10-14T11:48:13.467720+00:00",
+                    "start": 2009,
+                    "end": 2016,
+                    "quote": "propane"
+                  }
+                },
+                "specification": null,
+                "region": null,
+                "customer_group": null,
+                "supply_pool": null
+              },
+              "fields": {},
+              "s_stage": "UNKNOWN",
+              "research_only": true,
+              "original_model_item": {
+                "event": "decreasing demand in residual fuel oil, propane, and other oils",
+                "event_attributes": {
+                  "product": "propane",
+                  "role": "DEMAND_DECREASE",
+                  "actuality": "ACTUAL"
+                }
+              },
+              "semantic_audit": {
+                "kind": "UNKNOWN_MODEL_CLASSIFICATION",
+                "field_decisions": [],
+                "physical_event_support": false,
+                "role_retained": false,
+                "event_scope": "The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils.",
+                "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+              },
+              "rejected_fields": [],
+              "source_verified": true,
+              "semantic_accuracy": "UNVERIFIED_LIMITED_RULES",
+              "reading_quality_version": "bct-reading-quality-2"
+            },
+            {
+              "id": "c1cb349a43071ae4fecf3b798f0d0a12059741f99d5b1d7cac0f78d23ad7c693",
+              "version": "bct-located-evidence-1",
+              "original_proposal": {
+                "reference": {
+                  "start": 1661,
+                  "end": 2033,
+                  "quote": "Over the past four weeks, total product demand averaged 20.4 million b/d, down 1% year over year. Gasoline demand increased 1% to 8.9 million b/d, while distillate demand increased 2% to 3.7 million b/d. Jet fuel demand increased 9% year over year. The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+                },
+                "extraction_reference": {
+                  "start": 1969,
+                  "end": 2032,
+                  "quote": "decreasing demand in residual fuel oil, propane, and other oils"
+                },
+                "evidence_origin": "EXACT_ENCLOSING_TRANSMITTED_WINDOW",
+                "product": {
+                  "value": "other oils",
+                  "reference": {
+                    "start": 2022,
+                    "end": 2032,
+                    "quote": "other oils"
+                  }
+                },
+                "role": "DEMAND_DECREASE",
+                "actuality": "ACTUAL",
+                "fields": {},
+                "origin": "MODEL_JSON_EXTRACTION"
+              },
+              "context": {
+                "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+                "body_sha256": "40b131105ff3c052ad95eeabcb50fc2737ae184b9dcbbe927a28f0309e6e5d75",
+                "origin_url": "https://www.eia.gov/todayinenergy/detail.php?id=67868",
+                "published_at": "2026-07-22",
+                "acquired_at": "2026-10-14T11:48:13.467720+00:00",
+                "start": 1661,
+                "end": 2033,
+                "quote": "Over the past four weeks, total product demand averaged 20.4 million b/d, down 1% year over year. Gasoline demand increased 1% to 8.9 million b/d, while distillate demand increased 2% to 3.7 million b/d. Jet fuel demand increased 9% year over year. The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+              },
+              "product": {
+                "surface": "other oils",
+                "normalized": "other oils",
+                "reference": {
+                  "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+                  "body_sha256": "40b131105ff3c052ad95eeabcb50fc2737ae184b9dcbbe927a28f0309e6e5d75",
+                  "origin_url": "https://www.eia.gov/todayinenergy/detail.php?id=67868",
+                  "published_at": "2026-07-22",
+                  "acquired_at": "2026-10-14T11:48:13.467720+00:00",
+                  "start": 2022,
+                  "end": 2032,
+                  "quote": "other oils"
+                }
+              },
+              "discovery_status": "SOURCE_LOCATED",
+              "meaning_status": "UNKNOWN",
+              "event_status": "DISCOVERY_ONLY",
+              "role": "UNKNOWN",
+              "actuality": "ACTUAL",
+              "target": {
+                "product": {
+                  "surface": "other oils",
+                  "normalized": "other oils",
+                  "reference": {
+                    "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+                    "body_sha256": "40b131105ff3c052ad95eeabcb50fc2737ae184b9dcbbe927a28f0309e6e5d75",
+                    "origin_url": "https://www.eia.gov/todayinenergy/detail.php?id=67868",
+                    "published_at": "2026-07-22",
+                    "acquired_at": "2026-10-14T11:48:13.467720+00:00",
+                    "start": 2022,
+                    "end": 2032,
+                    "quote": "other oils"
+                  }
+                },
+                "specification": null,
+                "region": null,
+                "customer_group": null,
+                "supply_pool": null
+              },
+              "fields": {},
+              "s_stage": "UNKNOWN",
+              "research_only": true,
+              "original_model_item": {
+                "event": "decreasing demand in residual fuel oil, propane, and other oils",
+                "event_attributes": {
+                  "product": "other oils",
+                  "role": "DEMAND_DECREASE",
+                  "actuality": "ACTUAL"
+                }
+              },
+              "semantic_audit": {
+                "kind": "UNKNOWN_MODEL_CLASSIFICATION",
+                "field_decisions": [],
+                "physical_event_support": false,
+                "role_retained": false,
+                "event_scope": "The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils.",
+                "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+              },
+              "rejected_fields": [],
+              "source_verified": true,
+              "semantic_accuracy": "UNVERIFIED_LIMITED_RULES",
+              "reading_quality_version": "bct-reading-quality-2"
+            }
+          ],
+          "held": [
+            {
+              "index": 0,
+              "reason": "PRODUCT_NOT_LITERAL_IN_EXTRACTION"
+            },
+            {
+              "index": 1,
+              "reason": "PRODUCT_NOT_LITERAL_IN_EXTRACTION"
+            },
+            {
+              "index": 2,
+              "reason": "EXTRACTION_LOCATION_AMBIGUOUS_OR_ABSENT"
+            },
+            {
+              "index": 3,
+              "reason": "PRODUCT_NOT_LITERAL_IN_EXTRACTION"
+            },
+            {
+              "index": 4,
+              "reason": "UNSUPPORTED_ROLE_OR_ACTUALITY_EVENT_HELD_PRODUCT_ONLY"
+            },
+            {
+              "index": 5,
+              "reason": "UNSUPPORTED_ROLE_OR_ACTUALITY_EVENT_HELD_PRODUCT_ONLY"
+            },
+            {
+              "index": 6,
+              "reason": "UNSUPPORTED_ROLE_OR_ACTUALITY_EVENT_HELD_PRODUCT_ONLY"
+            }
+          ],
+          "coverage": {
+            "read_ranges": [
+              {
+                "start": 0,
+                "end": 112
+              },
+              {
+                "start": 1661,
+                "end": 2033
+              }
+            ],
+            "read_characters": 484,
+            "body_characters": 5712,
+            "unread_ranges": [
+              {
+                "start": 112,
+                "end": 1661
+              },
+              {
+                "start": 2033,
+                "end": 5712
+              }
+            ],
+            "unread_characters": 5228
+          },
+          "S1_S2_S3": [
+            0,
+            0,
+            0
+          ],
+          "operational_integration_enabled": false,
+          "semantic_accuracy": "NOT_MEASURED_BY_SOURCE_MATCH",
+          "objective_version": "bct-objective-1",
+          "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+        }
+      },
+      {
+        "document_id": "v4doc-629ba59abcbbe5d3e30004699cd2bcee12275db4562fbb8c39317c5a120e88f4",
+        "products": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 6,
+          "ambiguous": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 6,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "events": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 2,
+          "ambiguous_event_predictions": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 2,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "validation": {
+          "version": "bct-reading-quality-2",
+          "document_id": "v4doc-629ba59abcbbe5d3e30004699cd2bcee12275db4562fbb8c39317c5a120e88f4",
+          "original_response": "{\"extractions\":[{\"event\":\"U.S. power plant owners and operators plan to retire nearly 11 gigawatts (GW) of utility‑scale electric generating capacity from the U.S. power grid this year\",\"event_attributes\":{\"product\":\"utility‑scale electric generating capacity\",\"role\":\"SUPPLY_DECREASE\",\"actuality\":\"PLAN\"}}]}",
+          "records": [],
+          "held": [
+            {
+              "index": 0,
+              "reason": "EXTRACTION_LOCATION_AMBIGUOUS_OR_ABSENT"
+            }
+          ],
+          "coverage": {
+            "read_ranges": [
+              {
+                "start": 0,
+                "end": 122
+              },
+              {
+                "start": 196,
+                "end": 779
+              }
+            ],
+            "read_characters": 705,
+            "body_characters": 6987,
+            "unread_ranges": [
+              {
+                "start": 122,
+                "end": 196
+              },
+              {
+                "start": 779,
+                "end": 6987
+              }
+            ],
+            "unread_characters": 6282
+          },
+          "S1_S2_S3": [
+            0,
+            0,
+            0
+          ],
+          "operational_integration_enabled": false,
+          "semantic_accuracy": "NOT_MEASURED_BY_SOURCE_MATCH",
+          "objective_version": "bct-objective-1",
+          "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+        }
+      },
+      {
+        "document_id": "v4doc-9f3e742d8dc714214766ac470fe216fe36d2851e98c9a13b3b2b5ebe092b2cab",
+        "products": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "ambiguous": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "events": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "ambiguous_event_predictions": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "validation": {
+          "version": "bct-reading-quality-2",
+          "document_id": "v4doc-9f3e742d8dc714214766ac470fe216fe36d2851e98c9a13b3b2b5ebe092b2cab",
+          "original_response": "{\"extractions\":[]}",
+          "records": [],
+          "held": [],
+          "coverage": {
+            "read_ranges": [
+              {
+                "start": 0,
+                "end": 280
+              },
+              {
+                "start": 281,
+                "end": 482
+              }
+            ],
+            "read_characters": 481,
+            "body_characters": 2468,
+            "unread_ranges": [
+              {
+                "start": 280,
+                "end": 281
+              },
+              {
+                "start": 482,
+                "end": 2468
+              }
+            ],
+            "unread_characters": 1987
+          },
+          "S1_S2_S3": [
+            0,
+            0,
+            0
+          ],
+          "operational_integration_enabled": false,
+          "semantic_accuracy": "NOT_MEASURED_BY_SOURCE_MATCH",
+          "objective_version": "bct-objective-1",
+          "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+        }
+      }
+    ]
+  },
+  "new_AI": {
+    "documents": 1,
+    "characters": 709,
+    "body_characters": 3230,
+    "unread_characters": 2521,
+    "raw_extractions": 3,
+    "final_validation": {
+      "version": "bct-reading-quality-2",
+      "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+      "original_response": "{\"extractions\":[{\"event\":\"Buildings slated for construction include a biologics production facility to support clinical and commercial supply\",\"event_attributes\":{\"product\":\"biologics production facility\",\"role\":\"SUPPLY_INCREASE\",\"actuality\":\"PLAN\"}},{\"event\":\"GSK also plans to build a centralized quality control lab\",\"event_attributes\":{\"product\":\"centralized quality control lab\",\"role\":\"SUPPLY_INCREASE\",\"actuality\":\"PLAN\"}},{\"event\":\"GSK also plans to build a manufacturing science and technology hub\",\"event_attributes\":{\"product\":\"manufacturing science and technology hub\",\"role\":\"SUPPLY_INCREASE\",\"actuality\":\"PLAN\"}}]}",
+      "records": [
+        {
+          "id": "167223b176176837b0722b400ef2d08c8788854b1421bbf5d49e671fc8a28432",
+          "version": "bct-located-evidence-1",
+          "original_proposal": {
+            "reference": {
+              "start": 657,
+              "end": 1123,
+              "quote": "Buildings slated for construction include a biologics production facility to support clinical and commercial supply and a co-located R&D pilot plant “to accelerate tech transfer and process development,” according to the announcement from Pennsylvania Governor Josh Shapiro and Department of Community and Economic Development Secretary Rick Siger. GSK also plans to build a centralized quality control lab and a manufacturing science and technology hub at the site."
+            },
+            "extraction_reference": {
+              "start": 657,
+              "end": 772,
+              "quote": "Buildings slated for construction include a biologics production facility to support clinical and commercial supply"
+            },
+            "evidence_origin": "EXACT_ENCLOSING_TRANSMITTED_WINDOW",
+            "product": {
+              "value": "biologics production facility",
+              "reference": {
+                "start": 701,
+                "end": 730,
+                "quote": "biologics production facility"
+              }
+            },
+            "role": "SUPPLY_INCREASE",
+            "actuality": "PLAN",
+            "fields": {},
+            "origin": "MODEL_JSON_EXTRACTION"
+          },
+          "context": {
+            "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+            "body_sha256": "c91d8b5af853ca3e2aa26703e33f95dbfec01fe2985876c06fec9a3bbd597725",
+            "origin_url": "https://www.biospace.com/business/gsk-pledges-800m-to-add-biologics-production-capabilities-in-pennsylvania",
+            "published_at": "2026-10-12T11:21:45.650000+00:00",
+            "acquired_at": "2026-10-14T15:14:56.052499+00:00",
+            "start": 657,
+            "end": 1123,
+            "quote": "Buildings slated for construction include a biologics production facility to support clinical and commercial supply and a co-located R&D pilot plant “to accelerate tech transfer and process development,” according to the announcement from Pennsylvania Governor Josh Shapiro and Department of Community and Economic Development Secretary Rick Siger. GSK also plans to build a centralized quality control lab and a manufacturing science and technology hub at the site."
+          },
+          "product": {
+            "surface": "biologics production facility",
+            "normalized": "biologics production facility",
+            "reference": {
+              "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+              "body_sha256": "c91d8b5af853ca3e2aa26703e33f95dbfec01fe2985876c06fec9a3bbd597725",
+              "origin_url": "https://www.biospace.com/business/gsk-pledges-800m-to-add-biologics-production-capabilities-in-pennsylvania",
+              "published_at": "2026-10-12T11:21:45.650000+00:00",
+              "acquired_at": "2026-10-14T15:14:56.052499+00:00",
+              "start": 701,
+              "end": 730,
+              "quote": "biologics production facility"
+            }
+          },
+          "discovery_status": "SOURCE_LOCATED",
+          "meaning_status": "RELATION_HELD",
+          "event_status": "DISCOVERY_ONLY",
+          "role": "SUPPLY_INCREASE",
+          "actuality": "PLAN",
+          "target": {
+            "product": {
+              "surface": "biologics production facility",
+              "normalized": "biologics production facility",
+              "reference": {
+                "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+                "body_sha256": "c91d8b5af853ca3e2aa26703e33f95dbfec01fe2985876c06fec9a3bbd597725",
+                "origin_url": "https://www.biospace.com/business/gsk-pledges-800m-to-add-biologics-production-capabilities-in-pennsylvania",
+                "published_at": "2026-10-12T11:21:45.650000+00:00",
+                "acquired_at": "2026-10-14T15:14:56.052499+00:00",
+                "start": 701,
+                "end": 730,
+                "quote": "biologics production facility"
+              }
+            },
+            "specification": null,
+            "region": null,
+            "customer_group": null,
+            "supply_pool": null
+          },
+          "fields": {},
+          "s_stage": "UNKNOWN",
+          "research_only": true,
+          "relation_check": "RELATION_NOT_ESTABLISHED",
+          "original_model_item": {
+            "event": "Buildings slated for construction include a biologics production facility to support clinical and commercial supply",
+            "event_attributes": {
+              "product": "biologics production facility",
+              "role": "SUPPLY_INCREASE",
+              "actuality": "PLAN"
+            }
+          },
+          "semantic_audit": {
+            "kind": "UNKNOWN_MODEL_CLASSIFICATION",
+            "field_decisions": [],
+            "physical_event_support": false,
+            "role_retained": false,
+            "event_scope": "Buildings slated for construction include a biologics production facility to support clinical and commercial supply and a co-located R&D pilot plant “to accelerate tech transfer and process development,” according to the announcement from Pennsylvania Governor Josh Shapiro and Department of Community and Economic Development Secretary Rick Siger",
+            "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+          },
+          "rejected_fields": [],
+          "source_verified": true,
+          "semantic_accuracy": "UNVERIFIED_LIMITED_RULES",
+          "reading_quality_version": "bct-reading-quality-2"
+        },
+        {
+          "id": "56344d075081392b788668183f94aa12aebab28115ffb5408c7cb78d3df6de47",
+          "version": "bct-located-evidence-1",
+          "original_proposal": {
+            "reference": {
+              "start": 657,
+              "end": 1123,
+              "quote": "Buildings slated for construction include a biologics production facility to support clinical and commercial supply and a co-located R&D pilot plant “to accelerate tech transfer and process development,” according to the announcement from Pennsylvania Governor Josh Shapiro and Department of Community and Economic Development Secretary Rick Siger. GSK also plans to build a centralized quality control lab and a manufacturing science and technology hub at the site."
+            },
+            "extraction_reference": {
+              "start": 1006,
+              "end": 1063,
+              "quote": "GSK also plans to build a centralized quality control lab"
+            },
+            "evidence_origin": "EXACT_ENCLOSING_TRANSMITTED_WINDOW",
+            "product": {
+              "value": "centralized quality control lab",
+              "reference": {
+                "start": 1032,
+                "end": 1063,
+                "quote": "centralized quality control lab"
+              }
+            },
+            "role": "SUPPLY_INCREASE",
+            "actuality": "PLAN",
+            "fields": {},
+            "origin": "MODEL_JSON_EXTRACTION"
+          },
+          "context": {
+            "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+            "body_sha256": "c91d8b5af853ca3e2aa26703e33f95dbfec01fe2985876c06fec9a3bbd597725",
+            "origin_url": "https://www.biospace.com/business/gsk-pledges-800m-to-add-biologics-production-capabilities-in-pennsylvania",
+            "published_at": "2026-10-12T11:21:45.650000+00:00",
+            "acquired_at": "2026-10-14T15:14:56.052499+00:00",
+            "start": 657,
+            "end": 1123,
+            "quote": "Buildings slated for construction include a biologics production facility to support clinical and commercial supply and a co-located R&D pilot plant “to accelerate tech transfer and process development,” according to the announcement from Pennsylvania Governor Josh Shapiro and Department of Community and Economic Development Secretary Rick Siger. GSK also plans to build a centralized quality control lab and a manufacturing science and technology hub at the site."
+          },
+          "product": {
+            "surface": "centralized quality control lab",
+            "normalized": "centralized quality control lab",
+            "reference": {
+              "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+              "body_sha256": "c91d8b5af853ca3e2aa26703e33f95dbfec01fe2985876c06fec9a3bbd597725",
+              "origin_url": "https://www.biospace.com/business/gsk-pledges-800m-to-add-biologics-production-capabilities-in-pennsylvania",
+              "published_at": "2026-10-12T11:21:45.650000+00:00",
+              "acquired_at": "2026-10-14T15:14:56.052499+00:00",
+              "start": 1032,
+              "end": 1063,
+              "quote": "centralized quality control lab"
+            }
+          },
+          "discovery_status": "SOURCE_LOCATED",
+          "meaning_status": "RELATION_HELD",
+          "event_status": "DISCOVERY_ONLY",
+          "role": "SUPPLY_INCREASE",
+          "actuality": "PLAN",
+          "target": {
+            "product": {
+              "surface": "centralized quality control lab",
+              "normalized": "centralized quality control lab",
+              "reference": {
+                "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+                "body_sha256": "c91d8b5af853ca3e2aa26703e33f95dbfec01fe2985876c06fec9a3bbd597725",
+                "origin_url": "https://www.biospace.com/business/gsk-pledges-800m-to-add-biologics-production-capabilities-in-pennsylvania",
+                "published_at": "2026-10-12T11:21:45.650000+00:00",
+                "acquired_at": "2026-10-14T15:14:56.052499+00:00",
+                "start": 1032,
+                "end": 1063,
+                "quote": "centralized quality control lab"
+              }
+            },
+            "specification": null,
+            "region": null,
+            "customer_group": null,
+            "supply_pool": null
+          },
+          "fields": {},
+          "s_stage": "UNKNOWN",
+          "research_only": true,
+          "relation_check": "RELATION_NOT_ESTABLISHED",
+          "original_model_item": {
+            "event": "GSK also plans to build a centralized quality control lab",
+            "event_attributes": {
+              "product": "centralized quality control lab",
+              "role": "SUPPLY_INCREASE",
+              "actuality": "PLAN"
+            }
+          },
+          "semantic_audit": {
+            "kind": "UNKNOWN_MODEL_CLASSIFICATION",
+            "field_decisions": [],
+            "physical_event_support": false,
+            "role_retained": false,
+            "event_scope": "GSK also plans to build a centralized quality control lab and a manufacturing science and technology hub at the site.",
+            "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+          },
+          "rejected_fields": [],
+          "source_verified": true,
+          "semantic_accuracy": "UNVERIFIED_LIMITED_RULES",
+          "reading_quality_version": "bct-reading-quality-2"
+        }
+      ],
+      "held": [
+        {
+          "index": 2,
+          "reason": "EXTRACTION_LOCATION_AMBIGUOUS_OR_ABSENT"
+        }
+      ],
+      "coverage": {
+        "read_ranges": [
+          {
+            "start": 0,
+            "end": 243
+          },
+          {
+            "start": 657,
+            "end": 1123
+          }
+        ],
+        "read_characters": 709,
+        "body_characters": 3230,
+        "unread_ranges": [
+          {
+            "start": 243,
+            "end": 657
+          },
+          {
+            "start": 1123,
+            "end": 3230
+          }
+        ],
+        "unread_characters": 2521
+      },
+      "S1_S2_S3": [
+        0,
+        0,
+        0
+      ],
+      "operational_integration_enabled": false,
+      "semantic_accuracy": "NOT_MEASURED_BY_SOURCE_MATCH",
+      "objective_version": "bct-objective-1",
+      "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+    },
+    "transport_seconds_from_ledger": 0.810558,
+    "source": "BioSpace original report, primary government/company announcement NOT independently verified",
+    "manual_source_check": "Same-session Codex AI source inspection only; not independent truth; no P/R assigned.",
+    "CPU_same_input": "live-cpu.json; original pinned model, no reinstall; no verified product gold hence unscored"
+  },
+  "independent_evaluation": {
+    "required": 20,
+    "verified_unused_documents": 0,
+    "scored_documents": 0,
+    "verdict": "BLOCKED_DEVELOPMENT_HISTORY_AND_NO_INDEPENDENT_REVIEWER",
+    "old_holdouts_reused_as_new": false
+  },
+  "quality_adoption": "FAIL_DEVELOPMENT_RECALL_BELOW_CPU_AND_EVENT_EXTRACTION_UNRESOLVED; INDEPENDENT_GATE_BLOCKED",
+  "S1_S2_S3_change": [
+    0,
+    0,
+    0
+  ],
+  "pairing": "NOT_RUN_CURRENT_STEP2_ONLY",
+  "forecast": "NOT_RUN",
+  "usage": {
+    "POST": 1,
+    "auth_GET": 0,
+    "reported_tokens": {
+      "input_tokens": 560,
+      "output_tokens": 300,
+      "total_tokens": 860
+    },
+    "Free_API_cost_KRW": 0,
+    "CPU_new_documents": 1,
+    "platform_usage_cost": "UNKNOWN_SEPARATE",
+    "additional_API_calls_allowed_this_task": 0
+  },
+  "next_step3_verified_inputs": {
+    "source_located_product_discoveries": 2,
+    "verified_actual_demand_or_supply_events": 0,
+    "independent_pairs": 0,
+    "hold": "Facility plans only. Need independent semantic review and actual order/qualified supply/need-period evidence."
+  }
+}
