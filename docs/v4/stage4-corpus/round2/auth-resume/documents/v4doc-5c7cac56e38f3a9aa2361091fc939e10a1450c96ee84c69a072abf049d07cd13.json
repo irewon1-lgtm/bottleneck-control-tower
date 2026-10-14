@@ -1,0 +1,152 @@
+{
+  "document_id": "v4doc-5c7cac56e38f3a9aa2361091fc939e10a1450c96ee84c69a072abf049d07cd13",
+  "at": "2026-10-14T09:02:57.103241+00:00",
+  "status": "REVIEW_REQUIRED",
+  "calls": 1,
+  "cached": false,
+  "input_key": "862e998db57eff78ce89352d25b290342d0f2137637df561a79aac84ced0acae",
+  "attempt": {
+    "seq": 116,
+    "kind": "API_ATTEMPT",
+    "at": "2026-10-14T09:02:56.492781+00:00",
+    "attempt_id": "84bb7b7722354562b23c75e4cbb50fde",
+    "connection_probe": false,
+    "input_key": "862e998db57eff78ce89352d25b290342d0f2137637df561a79aac84ced0acae",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "recovery_probe": false,
+    "request_contract": "f3838c2bca2ce8dad97a2fbcb03b9013177bd0a7d0fac081ea34629c1e9a1e31",
+    "reserved_tokens": 6154,
+    "run_id": "api-a60e828bc4114a1aab94451b3c8ead29"
+  },
+  "response": {
+    "seq": 117,
+    "kind": "API_RECEIVED",
+    "at": "2026-10-14T09:02:57.093262+00:00",
+    "attempt_id": "84bb7b7722354562b23c75e4cbb50fde",
+    "input_key": "862e998db57eff78ce89352d25b290342d0f2137637df561a79aac84ced0acae",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "quota_headers": {
+      "x-ratelimit-limit-requests": "1000",
+      "x-ratelimit-limit-tokens": "8000",
+      "x-ratelimit-remaining-requests": "997",
+      "x-ratelimit-remaining-tokens": "7036",
+      "x-ratelimit-reset-requests": "4m19.2s",
+      "x-ratelimit-reset-tokens": "7.23s"
+    },
+    "run_id": "api-a60e828bc4114a1aab94451b3c8ead29",
+    "text": "{\"items\":[{\"kind\":\"PHYSICAL_PRODUCT\",\"role\":\"SUPPLY_INCREASE\",\"actuality\":\"ACTUAL\",\"context\":{\"quote\":\"Marignane, France, 10 September 2026 – The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025. This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme. Delivery of the systems is scheduled for 2027.\",\"start\":0,\"end\":540},\"entity\":{\"quote\":\"U050 Capa-X system\",\"start\":87,\"end\":107,\"value\":\"U050 Capa-X system\"},\"facts\":[{\"field\":\"product\",\"quote\":\"U050 Capa-X system\",\"start\":87,\"end\":107,\"value\":\"U050 Capa-X system\"},{\"field\":\"quantity\",\"quote\":\"four systems\",\"start\":178,\"end\":189,\"value\":\"4\"},{\"field\":\"region\",\"quote\":\"France\",\"start\":0,\"end\":7,\"value\":\"France\"},{\"field\":\"need_time\",\"quote\":\"2027\",\"start\":507,\"end\":511,\"value\":\"2027\"}]}]}",
+    "usage": {
+      "input_tokens": 939,
+      "output_tokens": 354,
+      "total_tokens": 1293
+    }
+  },
+  "validation": {
+    "seq": 119,
+    "kind": "API_VALIDATION",
+    "at": "2026-10-14T09:02:57.098395+00:00",
+    "attempt_id": "84bb7b7722354562b23c75e4cbb50fde",
+    "input_key": "862e998db57eff78ce89352d25b290342d0f2137637df561a79aac84ced0acae",
+    "provider": "groq",
+    "result": {
+      "coverage": {
+        "available_pages": 3,
+        "body_characters": 2866,
+        "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+        "input_policy_version": "bct-v4-context-pages-2",
+        "page_index": 0,
+        "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+        "publication": {
+          "precision": "DATE",
+          "published_at": "2026-09-10"
+        },
+        "selected_characters": 540,
+        "unplanned_contexts_at_page_cap": 0,
+        "unread_characters": 2326,
+        "unread_ranges": [
+          {
+            "end": 2866,
+            "start": 540
+          }
+        ],
+        "windows": [
+          {
+            "end": 540,
+            "start": 0,
+            "text": "Marignane, France, 10 September 2026 – The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025. This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme. Delivery of the systems is scheduled for 2027."
+          }
+        ],
+        "withheld_context_count": 1
+      },
+      "forecast_performance": "BLOCKED",
+      "items": [],
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "VALUE_NOT_LITERAL"
+        }
+      ],
+      "semantic_accuracy": "UNKNOWN",
+      "source_status": "REVIEW_REQUIRED"
+    },
+    "run_id": "api-a60e828bc4114a1aab94451b3c8ead29"
+  },
+  "error": {
+    "seq": 120,
+    "kind": "API_ERROR",
+    "at": "2026-10-14T09:02:57.099995+00:00",
+    "attempt_id": "84bb7b7722354562b23c75e4cbb50fde",
+    "diagnostics": {},
+    "error_kind": "SOURCE",
+    "input_key": "862e998db57eff78ce89352d25b290342d0f2137637df561a79aac84ced0acae",
+    "provider": "groq",
+    "run_id": "api-a60e828bc4114a1aab94451b3c8ead29"
+  },
+  "reading": {
+    "document_id": "v4doc-5c7cac56e38f3a9aa2361091fc939e10a1450c96ee84c69a072abf049d07cd13",
+    "body_sha256": "032c2848c531a05cabac2209e90104c43d30dd7e8822b26ffec50533d34fa84c",
+    "version": "bct-v4-free-ai-1",
+    "input_key": "862e998db57eff78ce89352d25b290342d0f2137637df561a79aac84ced0acae",
+    "status": "REVIEW_REQUIRED",
+    "s_stage": "UNKNOWN",
+    "forecast_candidate": false,
+    "failures": [
+      {
+        "provider": "groq",
+        "reason": "SOURCE"
+      }
+    ],
+    "coverage": {
+      "windows": [
+        {
+          "start": 0,
+          "end": 540,
+          "text": "Marignane, France, 10 September 2026 – The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025. This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme. Delivery of the systems is scheduled for 2027."
+        }
+      ],
+      "publication": {
+        "published_at": "2026-09-10",
+        "precision": "DATE"
+      },
+      "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+      "selected_characters": 540,
+      "body_characters": 2866,
+      "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+      "input_policy_version": "bct-v4-context-pages-2",
+      "page_index": 0,
+      "available_pages": 3,
+      "withheld_context_count": 1,
+      "unplanned_contexts_at_page_cap": 0
+    }
+  },
+  "provider_state_after": {
+    "at": "2026-10-14T09:02:57.096145+00:00",
+    "blocked": false,
+    "last_check": "PASS_TRANSPORT",
+    "provider": "groq",
+    "run_id": "api-a60e828bc4114a1aab94451b3c8ead29"
+  },
+  "evidence_kind": "SEQUENTIAL_UNATTEMPTED_EVALUATION"
+}

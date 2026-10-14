@@ -1,0 +1,149 @@
+{
+  "document_id": "v4doc-66d7013e8fb0937c7b186be781af89758b0261f99c9904fb2253c7cbc75633c7",
+  "at": "2026-10-14T09:07:17.060235+00:00",
+  "status": "PASS",
+  "calls": 1,
+  "cached": false,
+  "input_key": "997e44ba123f381d6e05dbd3ba34fde85a350a0969ff1eab4fac982e7ef5c829",
+  "attempt": {
+    "seq": 144,
+    "kind": "API_ATTEMPT",
+    "at": "2026-10-14T09:07:16.639575+00:00",
+    "attempt_id": "3de4d7b8471f43249213d978007104cd",
+    "connection_probe": false,
+    "input_key": "997e44ba123f381d6e05dbd3ba34fde85a350a0969ff1eab4fac982e7ef5c829",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "recovery_probe": false,
+    "request_contract": "f3838c2bca2ce8dad97a2fbcb03b9013177bd0a7d0fac081ea34629c1e9a1e31",
+    "reserved_tokens": 5779,
+    "run_id": "api-1f41d4777d1645d7897248fa803ec37e"
+  },
+  "response": {
+    "seq": 145,
+    "kind": "API_RECEIVED",
+    "at": "2026-10-14T09:07:17.041954+00:00",
+    "attempt_id": "3de4d7b8471f43249213d978007104cd",
+    "input_key": "997e44ba123f381d6e05dbd3ba34fde85a350a0969ff1eab4fac982e7ef5c829",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "quota_headers": {
+      "x-ratelimit-limit-requests": "1000",
+      "x-ratelimit-limit-tokens": "8000",
+      "x-ratelimit-remaining-requests": "993",
+      "x-ratelimit-remaining-tokens": "6594",
+      "x-ratelimit-reset-requests": "10m4.8s",
+      "x-ratelimit-reset-tokens": "10.545s"
+    },
+    "run_id": "api-1f41d4777d1645d7897248fa803ec37e",
+    "text": "{\"items\":[]}",
+    "usage": {
+      "input_tokens": 858,
+      "output_tokens": 81,
+      "total_tokens": 939
+    }
+  },
+  "validation": {
+    "seq": 147,
+    "kind": "API_VALIDATION",
+    "at": "2026-10-14T09:07:17.050494+00:00",
+    "attempt_id": "3de4d7b8471f43249213d978007104cd",
+    "input_key": "997e44ba123f381d6e05dbd3ba34fde85a350a0969ff1eab4fac982e7ef5c829",
+    "provider": "groq",
+    "result": {
+      "coverage": {
+        "available_pages": 1,
+        "body_characters": 2096,
+        "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+        "input_policy_version": "bct-v4-context-pages-2",
+        "page_index": 0,
+        "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+        "publication": {
+          "precision": "TIMESTAMP",
+          "published_at": "2026-10-08T09:15:10-04:00"
+        },
+        "selected_characters": 148,
+        "unplanned_contexts_at_page_cap": 0,
+        "unread_characters": 1948,
+        "unread_ranges": [
+          {
+            "end": 2096,
+            "start": 148
+          }
+        ],
+        "windows": [
+          {
+            "end": 148,
+            "start": 0,
+            "text": "The U.S. Department of Energy (DOE) authorized the emergency exchange to alleviate supply disruption due to inclement weather in the Gulf of America"
+          }
+        ],
+        "withheld_context_count": 1
+      },
+      "forecast_performance": "BLOCKED",
+      "items": [],
+      "rejected_items": [],
+      "semantic_accuracy": "UNKNOWN",
+      "source_status": "PASS"
+    },
+    "run_id": "api-1f41d4777d1645d7897248fa803ec37e"
+  },
+  "error": null,
+  "reading": {
+    "document_id": "v4doc-66d7013e8fb0937c7b186be781af89758b0261f99c9904fb2253c7cbc75633c7",
+    "body_sha256": "bd971a9e0bfca2766a452469f1cf334178833b676520ffeaa88d5def8da70d28",
+    "version": "bct-v4-free-ai-1",
+    "input_key": "997e44ba123f381d6e05dbd3ba34fde85a350a0969ff1eab4fac982e7ef5c829",
+    "status": "PASS",
+    "s_stage": "UNKNOWN",
+    "forecast_candidate": false,
+    "provider": "groq",
+    "model": "openai/gpt-oss-20b",
+    "cached": false,
+    "result": {
+      "items": [],
+      "rejected_items": [],
+      "coverage": {
+        "windows": [
+          {
+            "start": 0,
+            "end": 148,
+            "text": "The U.S. Department of Energy (DOE) authorized the emergency exchange to alleviate supply disruption due to inclement weather in the Gulf of America"
+          }
+        ],
+        "publication": {
+          "published_at": "2026-10-08T09:15:10-04:00",
+          "precision": "TIMESTAMP"
+        },
+        "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+        "selected_characters": 148,
+        "body_characters": 2096,
+        "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+        "input_policy_version": "bct-v4-context-pages-2",
+        "page_index": 0,
+        "available_pages": 1,
+        "withheld_context_count": 1,
+        "unplanned_contexts_at_page_cap": 0,
+        "unread_ranges": [
+          {
+            "start": 148,
+            "end": 2096
+          }
+        ],
+        "unread_characters": 1948
+      },
+      "source_status": "PASS",
+      "semantic_accuracy": "UNKNOWN",
+      "forecast_performance": "BLOCKED"
+    },
+    "failures": []
+  },
+  "provider_state_after": {
+    "at": "2026-10-14T09:07:17.048051+00:00",
+    "blocked": false,
+    "last_check": "PASS_TRANSPORT",
+    "provider": "groq",
+    "run_id": "api-1f41d4777d1645d7897248fa803ec37e"
+  },
+  "evidence_kind": "SEQUENTIAL_UNATTEMPTED_EVALUATION"
+}

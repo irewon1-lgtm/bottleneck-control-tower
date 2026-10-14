@@ -1,0 +1,170 @@
+{
+  "document_id": "v4doc-b88d2b22062aaa75cf761dd43f48df376bc9756ab1803767077a37f0c0d17f57",
+  "at": "2026-10-14T09:05:07.658830+00:00",
+  "status": "REVIEW_REQUIRED",
+  "calls": 1,
+  "cached": false,
+  "input_key": "cf0a1aa5bf98e342aad54cb816a4f4fe4f4012b04cdf66ef5ac4dd7bcd4a0372",
+  "attempt": {
+    "seq": 130,
+    "kind": "API_ATTEMPT",
+    "at": "2026-10-14T09:05:06.543787+00:00",
+    "attempt_id": "bfed38a16f224957a7d12c44e4b0b99c",
+    "connection_probe": false,
+    "input_key": "cf0a1aa5bf98e342aad54cb816a4f4fe4f4012b04cdf66ef5ac4dd7bcd4a0372",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "recovery_probe": false,
+    "request_contract": "f3838c2bca2ce8dad97a2fbcb03b9013177bd0a7d0fac081ea34629c1e9a1e31",
+    "reserved_tokens": 6249,
+    "run_id": "api-5fd7db99957b491185b4dbcf92953fdb"
+  },
+  "response": {
+    "seq": 131,
+    "kind": "API_RECEIVED",
+    "at": "2026-10-14T09:05:07.648360+00:00",
+    "attempt_id": "bfed38a16f224957a7d12c44e4b0b99c",
+    "input_key": "cf0a1aa5bf98e342aad54cb816a4f4fe4f4012b04cdf66ef5ac4dd7bcd4a0372",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "quota_headers": {
+      "x-ratelimit-limit-requests": "1000",
+      "x-ratelimit-limit-tokens": "8000",
+      "x-ratelimit-remaining-requests": "995",
+      "x-ratelimit-remaining-tokens": "6301",
+      "x-ratelimit-reset-requests": "7m12s",
+      "x-ratelimit-reset-tokens": "12.742s"
+    },
+    "run_id": "api-5fd7db99957b491185b4dbcf92953fdb",
+    "text": "{\n  \"items\": [\n    {\n      \"kind\": \"PHYSICAL_PRODUCT\",\n      \"role\": \"SUPPLY_INCREASE\",\n      \"actuality\": \"ACTUAL\",\n      \"context\": {\n        \"quote\": \"CAIRO, EGYPT - (September 23, 2026) - GE Vernova Inc. (NYSE: GEV) announced today a services agreement to provide Rotor Life Extension (RLE) solutions for five GE Vernova 9F gas turbines at the Kureimat, Nubaria, and Cairo North power plants in Egypt. The agreement is with affiliates of the Egyptian Electricity Holding Company (EEHC) - Upper Egypt Electricity Production Company (UEEPC), Middle Delta Electricity Production Company (MDEPC), and Cairo Electricity Production Company (CEPC) - and was endorsed by EEHC.\",\n        \"start\": 485,\n        \"end\": 1003\n      },\n      \"entity\": {\n        \"value\": \"Rotor Life Extension solutions\",\n        \"quote\": \"Rotor Life Extension (RLE) solutions\",\n        \"start\": 485,\n        \"end\": 1003\n      },\n      \"facts\": [\n        {\n          \"field\": \"quantity\",\n          \"value\": \"5\",\n          \"quote\": \"five\",\n          \"start\": 485,\n          \"end\": 1003\n        },\n        {\n          \"field\": \"unit\",\n          \"value\": \"turbines\",\n          \"quote\": \"GE Vernova 9F gas turbines\",\n          \"start\": 485,\n          \"end\": 1003\n        }\n      ]\n    }\n  ]\n}",
+    "usage": {
+      "input_tokens": 979,
+      "output_tokens": 522,
+      "total_tokens": 1501
+    }
+  },
+  "validation": {
+    "seq": 133,
+    "kind": "API_VALIDATION",
+    "at": "2026-10-14T09:05:07.653070+00:00",
+    "attempt_id": "bfed38a16f224957a7d12c44e4b0b99c",
+    "input_key": "cf0a1aa5bf98e342aad54cb816a4f4fe4f4012b04cdf66ef5ac4dd7bcd4a0372",
+    "provider": "groq",
+    "result": {
+      "coverage": {
+        "available_pages": 8,
+        "body_characters": 7621,
+        "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+        "input_policy_version": "bct-v4-context-pages-2",
+        "page_index": 0,
+        "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+        "publication": {
+          "precision": "DATE",
+          "published_at": "2026-09-23"
+        },
+        "selected_characters": 585,
+        "unplanned_contexts_at_page_cap": 0,
+        "unread_characters": 7036,
+        "unread_ranges": [
+          {
+            "end": 485,
+            "start": 0
+          },
+          {
+            "end": 7231,
+            "start": 1003
+          },
+          {
+            "end": 7621,
+            "start": 7298
+          }
+        ],
+        "windows": [
+          {
+            "end": 1003,
+            "start": 485,
+            "text": "CAIRO, EGYPT - (September 23, 2026) - GE Vernova Inc. (NYSE: GEV) announced today a services agreement to provide Rotor Life Extension (RLE) solutions for five GE Vernova 9F gas turbines at the Kureimat, Nubaria, and Cairo North power plants in Egypt. The agreement is with affiliates of the Egyptian Electricity Holding Company (EEHC) - Upper Egypt Electricity Production Company (UEEPC), Middle Delta Electricity Production Company (MDEPC), and Cairo Electricity Production Company (CEPC) - and was endorsed by EEHC."
+          },
+          {
+            "end": 7298,
+            "start": 7231,
+            "text": "The order mentioned in the announcement was booked in Q2 of 2026. ."
+          }
+        ],
+        "withheld_context_count": 2
+      },
+      "forecast_performance": "BLOCKED",
+      "items": [],
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "VALUE_NOT_LITERAL"
+        }
+      ],
+      "semantic_accuracy": "UNKNOWN",
+      "source_status": "REVIEW_REQUIRED"
+    },
+    "run_id": "api-5fd7db99957b491185b4dbcf92953fdb"
+  },
+  "error": {
+    "seq": 134,
+    "kind": "API_ERROR",
+    "at": "2026-10-14T09:05:07.654843+00:00",
+    "attempt_id": "bfed38a16f224957a7d12c44e4b0b99c",
+    "diagnostics": {},
+    "error_kind": "SOURCE",
+    "input_key": "cf0a1aa5bf98e342aad54cb816a4f4fe4f4012b04cdf66ef5ac4dd7bcd4a0372",
+    "provider": "groq",
+    "run_id": "api-5fd7db99957b491185b4dbcf92953fdb"
+  },
+  "reading": {
+    "document_id": "v4doc-b88d2b22062aaa75cf761dd43f48df376bc9756ab1803767077a37f0c0d17f57",
+    "body_sha256": "283e3288bc68dc35310c7bdca99123cc98c5bbbcc1c0d4ef2ee8b2b0429b5884",
+    "version": "bct-v4-free-ai-1",
+    "input_key": "cf0a1aa5bf98e342aad54cb816a4f4fe4f4012b04cdf66ef5ac4dd7bcd4a0372",
+    "status": "REVIEW_REQUIRED",
+    "s_stage": "UNKNOWN",
+    "forecast_candidate": false,
+    "failures": [
+      {
+        "provider": "groq",
+        "reason": "SOURCE"
+      }
+    ],
+    "coverage": {
+      "windows": [
+        {
+          "start": 485,
+          "end": 1003,
+          "text": "CAIRO, EGYPT - (September 23, 2026) - GE Vernova Inc. (NYSE: GEV) announced today a services agreement to provide Rotor Life Extension (RLE) solutions for five GE Vernova 9F gas turbines at the Kureimat, Nubaria, and Cairo North power plants in Egypt. The agreement is with affiliates of the Egyptian Electricity Holding Company (EEHC) - Upper Egypt Electricity Production Company (UEEPC), Middle Delta Electricity Production Company (MDEPC), and Cairo Electricity Production Company (CEPC) - and was endorsed by EEHC."
+        },
+        {
+          "start": 7231,
+          "end": 7298,
+          "text": "The order mentioned in the announcement was booked in Q2 of 2026. ."
+        }
+      ],
+      "publication": {
+        "published_at": "2026-09-23",
+        "precision": "DATE"
+      },
+      "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+      "selected_characters": 585,
+      "body_characters": 7621,
+      "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+      "input_policy_version": "bct-v4-context-pages-2",
+      "page_index": 0,
+      "available_pages": 8,
+      "withheld_context_count": 2,
+      "unplanned_contexts_at_page_cap": 0
+    }
+  },
+  "provider_state_after": {
+    "at": "2026-10-14T09:05:07.651380+00:00",
+    "blocked": false,
+    "last_check": "PASS_TRANSPORT",
+    "provider": "groq",
+    "run_id": "api-5fd7db99957b491185b4dbcf92953fdb"
+  },
+  "evidence_kind": "SEQUENTIAL_UNATTEMPTED_EVALUATION"
+}

@@ -1,0 +1,152 @@
+{
+  "document_id": "v4doc-c3ce56c9861165f5d811a5897473c74755883b871135a747a0f470dca020c396",
+  "at": "2026-10-14T09:00:47.510934+00:00",
+  "status": "REVIEW_REQUIRED",
+  "calls": 1,
+  "cached": false,
+  "input_key": "54becd41c6eb0d7cb3006952c0005e72567992fdba489ea8bcb8046fbd1c3b93",
+  "attempt": {
+    "seq": 102,
+    "kind": "API_ATTEMPT",
+    "at": "2026-10-14T09:00:46.421946+00:00",
+    "attempt_id": "66647812df14445a92e1103d9c0f7368",
+    "connection_probe": false,
+    "input_key": "54becd41c6eb0d7cb3006952c0005e72567992fdba489ea8bcb8046fbd1c3b93",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "recovery_probe": true,
+    "request_contract": "f3838c2bca2ce8dad97a2fbcb03b9013177bd0a7d0fac081ea34629c1e9a1e31",
+    "reserved_tokens": 6063,
+    "run_id": "api-b939cab8fc2449ef986bbe064c7874e7"
+  },
+  "response": {
+    "seq": 103,
+    "kind": "API_RECEIVED",
+    "at": "2026-10-14T09:00:47.495398+00:00",
+    "attempt_id": "66647812df14445a92e1103d9c0f7368",
+    "input_key": "54becd41c6eb0d7cb3006952c0005e72567992fdba489ea8bcb8046fbd1c3b93",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "quota_headers": {
+      "x-ratelimit-limit-requests": "1000",
+      "x-ratelimit-limit-tokens": "8000",
+      "x-ratelimit-remaining-requests": "999",
+      "x-ratelimit-remaining-tokens": "6444",
+      "x-ratelimit-reset-requests": "1m26.4s",
+      "x-ratelimit-reset-tokens": "11.67s"
+    },
+    "run_id": "api-b939cab8fc2449ef986bbe064c7874e7",
+    "text": "{\"items\":[{\"kind\":\"PHYSICAL_PRODUCT\",\"role\":\"UNKNOWN\",\"actuality\":\"ACTUAL\",\"context\":{\"quote\":\"Ottobrunn / Taufkirchen, Germany, 12 October 2026 – Airbus, in partnership with Kratos Defense & Security Solutions, Inc. (NASDAQ: KTOS), has successfully completed the first flight of the “U740-Valkyrie” in Europe. This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces.\",\"start\":0,\"end\":446},\"entity\":{\"quote\":\"Ottobrunn / Taufkirchen, Germany, 12 October 2026 – Airbus, in partnership with Kratos Defense & Security Solutions, Inc. (NASDAQ: KTOS), has successfully completed the first flight of the “U740-Valkyrie” in Europe. This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces.\",\"start\":0,\"end\":446,\"value\":\"U740-Valkyrie\"},\"facts\":[{\"field\":\"product\",\"value\":\"U740-Valkyrie\",\"quote\":\"U740-Valkyrie\",\"start\":78,\"end\":92},{\"field\":\"region\",\"value\":\"Germany\",\"quote\":\"Germany\",\"start\":47,\"end\":54},{\"field\":\"customer_group\",\"value\":\"German and other European Armed Forces\",\"quote\":\"German and other European Armed Forces\",\"start\":236,\"end\":298},{\"field\":\"ready_time\",\"value\":\"2029\",\"quote\":\"by 2029\",\"start\":193,\"end\":197}]}]}",
+    "usage": {
+      "input_tokens": 919,
+      "output_tokens": 596,
+      "total_tokens": 1515
+    }
+  },
+  "validation": {
+    "seq": 105,
+    "kind": "API_VALIDATION",
+    "at": "2026-10-14T09:00:47.504726+00:00",
+    "attempt_id": "66647812df14445a92e1103d9c0f7368",
+    "input_key": "54becd41c6eb0d7cb3006952c0005e72567992fdba489ea8bcb8046fbd1c3b93",
+    "provider": "groq",
+    "result": {
+      "coverage": {
+        "available_pages": 1,
+        "body_characters": 3480,
+        "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+        "input_policy_version": "bct-v4-context-pages-2",
+        "page_index": 0,
+        "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+        "publication": {
+          "precision": "DATE",
+          "published_at": "2026-10-12"
+        },
+        "selected_characters": 446,
+        "unplanned_contexts_at_page_cap": 0,
+        "unread_characters": 3034,
+        "unread_ranges": [
+          {
+            "end": 3480,
+            "start": 446
+          }
+        ],
+        "windows": [
+          {
+            "end": 446,
+            "start": 0,
+            "text": "Ottobrunn / Taufkirchen, Germany, 12 October 2026 – Airbus, in partnership with Kratos Defense & Security Solutions, Inc. (NASDAQ: KTOS), has successfully completed the first flight of the “U740-Valkyrie” in Europe. This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces."
+          }
+        ],
+        "withheld_context_count": 0
+      },
+      "forecast_performance": "BLOCKED",
+      "items": [],
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "AMBIGUOUS_QUOTE"
+        }
+      ],
+      "semantic_accuracy": "UNKNOWN",
+      "source_status": "REVIEW_REQUIRED"
+    },
+    "run_id": "api-b939cab8fc2449ef986bbe064c7874e7"
+  },
+  "error": {
+    "seq": 106,
+    "kind": "API_ERROR",
+    "at": "2026-10-14T09:00:47.506464+00:00",
+    "attempt_id": "66647812df14445a92e1103d9c0f7368",
+    "diagnostics": {},
+    "error_kind": "SOURCE",
+    "input_key": "54becd41c6eb0d7cb3006952c0005e72567992fdba489ea8bcb8046fbd1c3b93",
+    "provider": "groq",
+    "run_id": "api-b939cab8fc2449ef986bbe064c7874e7"
+  },
+  "reading": {
+    "document_id": "v4doc-c3ce56c9861165f5d811a5897473c74755883b871135a747a0f470dca020c396",
+    "body_sha256": "e472564e0ed11b9ed84e99db8b0839afc390904724dcbe1d69e9ee935b36b46a",
+    "version": "bct-v4-free-ai-1",
+    "input_key": "54becd41c6eb0d7cb3006952c0005e72567992fdba489ea8bcb8046fbd1c3b93",
+    "status": "REVIEW_REQUIRED",
+    "s_stage": "UNKNOWN",
+    "forecast_candidate": false,
+    "failures": [
+      {
+        "provider": "groq",
+        "reason": "SOURCE"
+      }
+    ],
+    "coverage": {
+      "windows": [
+        {
+          "start": 0,
+          "end": 446,
+          "text": "Ottobrunn / Taufkirchen, Germany, 12 October 2026 – Airbus, in partnership with Kratos Defense & Security Solutions, Inc. (NASDAQ: KTOS), has successfully completed the first flight of the “U740-Valkyrie” in Europe. This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces."
+        }
+      ],
+      "publication": {
+        "published_at": "2026-10-12",
+        "precision": "DATE"
+      },
+      "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+      "selected_characters": 446,
+      "body_characters": 3480,
+      "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+      "input_policy_version": "bct-v4-context-pages-2",
+      "page_index": 0,
+      "available_pages": 1,
+      "withheld_context_count": 0,
+      "unplanned_contexts_at_page_cap": 0
+    }
+  },
+  "provider_state_after": {
+    "at": "2026-10-14T09:00:47.501839+00:00",
+    "blocked": false,
+    "last_check": "PASS_TRANSPORT",
+    "provider": "groq",
+    "run_id": "api-b939cab8fc2449ef986bbe064c7874e7"
+  },
+  "evidence_kind": "FRESH_GENERATION_PROBE"
+}

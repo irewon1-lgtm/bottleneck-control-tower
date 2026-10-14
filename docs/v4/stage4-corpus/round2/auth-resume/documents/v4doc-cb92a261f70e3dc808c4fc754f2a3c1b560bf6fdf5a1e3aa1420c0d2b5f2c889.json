@@ -1,0 +1,156 @@
+{
+  "document_id": "v4doc-cb92a261f70e3dc808c4fc754f2a3c1b560bf6fdf5a1e3aa1420c0d2b5f2c889",
+  "at": "2026-10-14T09:11:37.479481+00:00",
+  "status": "REVIEW_REQUIRED",
+  "calls": 1,
+  "cached": false,
+  "input_key": "1a81978b514273dc404ed8bb86567d23e3b0b1624d760a6aee619d69a2cfe9f3",
+  "attempt": {
+    "seq": 172,
+    "kind": "API_ATTEMPT",
+    "at": "2026-10-14T09:11:36.768107+00:00",
+    "attempt_id": "ccaabd84569c4bcf9e7e9faf22b3bb31",
+    "connection_probe": false,
+    "input_key": "1a81978b514273dc404ed8bb86567d23e3b0b1624d760a6aee619d69a2cfe9f3",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "recovery_probe": false,
+    "request_contract": "f3838c2bca2ce8dad97a2fbcb03b9013177bd0a7d0fac081ea34629c1e9a1e31",
+    "reserved_tokens": 6173,
+    "run_id": "api-f4a1bdcf16034b06a362572daa43b91a"
+  },
+  "response": {
+    "seq": 173,
+    "kind": "API_RECEIVED",
+    "at": "2026-10-14T09:11:37.468111+00:00",
+    "attempt_id": "ccaabd84569c4bcf9e7e9faf22b3bb31",
+    "input_key": "1a81978b514273dc404ed8bb86567d23e3b0b1624d760a6aee619d69a2cfe9f3",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "quota_headers": {
+      "x-ratelimit-limit-requests": "1000",
+      "x-ratelimit-limit-tokens": "8000",
+      "x-ratelimit-remaining-requests": "989",
+      "x-ratelimit-remaining-tokens": "6639",
+      "x-ratelimit-reset-requests": "15m50.4s",
+      "x-ratelimit-reset-tokens": "10.207s"
+    },
+    "run_id": "api-f4a1bdcf16034b06a362572daa43b91a",
+    "text": "{\"items\":[{\"kind\":\"PHYSICAL_PRODUCT\",\"role\":\"SUPPLY_DECREASE\",\"actuality\":\"ACTUAL\",\"context\":{\"quote\":\"Hurricane Isaias’s forecasted path toward the Gulf Coast has already impacted crude oil and natural gas production in the region. The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas. The U.S. Gulf Coast is home to a large portion of the U.S. refining fleet, and the impacts from Hurricane Isaias could affect refinery operations .\",\"start\":887,\"end\":1444},\"entity\":{\"value\":\"crude oil\",\"quote\":\"crude oil\",\"start\":1043,\"end\":1052},\"facts\":[{\"field\":\"product\",\"value\":\"crude oil\",\"quote\":\"crude oil\",\"start\":1043,\"end\":1052},{\"field\":\"quantity\",\"value\":\"1.3 million barrels per day\",\"quote\":\"about 1.3 million barrels per day\",\"start\":1105,\"end\":1134},{\"field\":\"unit\",\"value\":\"barrels per day\",\"quote\":\"barrels per day\",\"start\":1124,\"end\":1134}]}]}",
+    "usage": {
+      "input_tokens": 935,
+      "output_tokens": 352,
+      "total_tokens": 1287
+    }
+  },
+  "validation": {
+    "seq": 175,
+    "kind": "API_VALIDATION",
+    "at": "2026-10-14T09:11:37.472448+00:00",
+    "attempt_id": "ccaabd84569c4bcf9e7e9faf22b3bb31",
+    "input_key": "1a81978b514273dc404ed8bb86567d23e3b0b1624d760a6aee619d69a2cfe9f3",
+    "provider": "groq",
+    "result": {
+      "coverage": {
+        "available_pages": 4,
+        "body_characters": 5096,
+        "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+        "input_policy_version": "bct-v4-context-pages-2",
+        "page_index": 0,
+        "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+        "publication": {
+          "precision": "DATE",
+          "published_at": "2026-10-09"
+        },
+        "selected_characters": 557,
+        "unplanned_contexts_at_page_cap": 0,
+        "unread_characters": 4539,
+        "unread_ranges": [
+          {
+            "end": 887,
+            "start": 0
+          },
+          {
+            "end": 5096,
+            "start": 1444
+          }
+        ],
+        "windows": [
+          {
+            "end": 1444,
+            "start": 887,
+            "text": "Hurricane Isaias’s forecasted path toward the Gulf Coast has already impacted crude oil and natural gas production in the region. The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas. The U.S. Gulf Coast is home to a large portion of the U.S. refining fleet, and the impacts from Hurricane Isaias could affect refinery operations ."
+          }
+        ],
+        "withheld_context_count": 1
+      },
+      "forecast_performance": "BLOCKED",
+      "items": [],
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "AMBIGUOUS_QUOTE"
+        }
+      ],
+      "semantic_accuracy": "UNKNOWN",
+      "source_status": "REVIEW_REQUIRED"
+    },
+    "run_id": "api-f4a1bdcf16034b06a362572daa43b91a"
+  },
+  "error": {
+    "seq": 176,
+    "kind": "API_ERROR",
+    "at": "2026-10-14T09:11:37.474815+00:00",
+    "attempt_id": "ccaabd84569c4bcf9e7e9faf22b3bb31",
+    "diagnostics": {},
+    "error_kind": "SOURCE",
+    "input_key": "1a81978b514273dc404ed8bb86567d23e3b0b1624d760a6aee619d69a2cfe9f3",
+    "provider": "groq",
+    "run_id": "api-f4a1bdcf16034b06a362572daa43b91a"
+  },
+  "reading": {
+    "document_id": "v4doc-cb92a261f70e3dc808c4fc754f2a3c1b560bf6fdf5a1e3aa1420c0d2b5f2c889",
+    "body_sha256": "a629e0c8106b394ca7ed22ca71ec2b8339c4f7aff629bf282a9084915775fdda",
+    "version": "bct-v4-free-ai-1",
+    "input_key": "1a81978b514273dc404ed8bb86567d23e3b0b1624d760a6aee619d69a2cfe9f3",
+    "status": "REVIEW_REQUIRED",
+    "s_stage": "UNKNOWN",
+    "forecast_candidate": false,
+    "failures": [
+      {
+        "provider": "groq",
+        "reason": "SOURCE"
+      }
+    ],
+    "coverage": {
+      "windows": [
+        {
+          "start": 887,
+          "end": 1444,
+          "text": "Hurricane Isaias’s forecasted path toward the Gulf Coast has already impacted crude oil and natural gas production in the region. The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas. The U.S. Gulf Coast is home to a large portion of the U.S. refining fleet, and the impacts from Hurricane Isaias could affect refinery operations ."
+        }
+      ],
+      "publication": {
+        "published_at": "2026-10-09",
+        "precision": "DATE"
+      },
+      "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+      "selected_characters": 557,
+      "body_characters": 5096,
+      "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+      "input_policy_version": "bct-v4-context-pages-2",
+      "page_index": 0,
+      "available_pages": 4,
+      "withheld_context_count": 1,
+      "unplanned_contexts_at_page_cap": 0
+    }
+  },
+  "provider_state_after": {
+    "at": "2026-10-14T09:11:37.470572+00:00",
+    "blocked": false,
+    "last_check": "PASS_TRANSPORT",
+    "provider": "groq",
+    "run_id": "api-f4a1bdcf16034b06a362572daa43b91a"
+  },
+  "evidence_kind": "SEQUENTIAL_UNATTEMPTED_EVALUATION"
+}

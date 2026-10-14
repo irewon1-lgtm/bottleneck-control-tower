@@ -2,7 +2,21 @@
 
 Updated 2026-10-14 (Asia/Seoul). Read `EXECUTION_PLAN.md` and `PROGRESS.json` first. The fixed eight-stage goal and CPU GLiNER2 engine remain unchanged. Active AI: **GroqCloud Free Plan only**. Gemini code is retained, but routing/probes and key requirements are disabled. No third provider, paid fallback, upgrade or billing action.
 
-## Current approved sequential research (2026-10-14)
+## Authentication recovery and unchanged evaluation resume (2026-10-14 UTC)
+
+Existing `GROQ_API_KEY`, Free account, proxy/CA and settings revision were preserved. The preceding read-only models GET at08:51:34 returned200. Its receipt is retained in `stage4-corpus/round2/auth-resume/auth-evidence.json`; readiness metadata still saysunknown, and the past401 cause is not established. Explicit one-shot recovery uses fresh evidence (at most1hour old), consumes authorization before HTTP, forbids attempted inputs and retains the original AUTH block until the unchanged router receives a real generation. No key/setting changes or additional authentication GETs occurred.
+
+The fresh U740 input received a generation at09:00:47; its short quotations failed strict source validation. After inspecting that transport success, the remaining10 untouched eligible inputs ran with the exact frozen inference closure and existing quota spacing/caps. **11 new POSTs /11 responses /10,093 input +2,921 output =13,014 reported tokens /Free API cost0**. The former401 input was not retried; its earlier unknown usage/reservation remains. New evaluation results are additive artifacts: original responses, truth and scores remain unchanged.
+
+Cumulative same-round evaluation:14 attempted/13 responses; contact4/context2 remain held. The13 response windows total5,717 characters (8.77% of all20 bodies); this is not whole-document accuracy. Returned10 items:8 rejected (4 AMBIGUOUS_QUOTE,4 VALUE_NOT_LITERAL),2 older source-valid advisories;6 empty responses are reported separately. Fixed product scoring on common13: CPU TP8/FP15/FN7 (P34.8%,R53.3%); Groq source-adopted TP0/FP2/FN15 (P0%,R0%). Raw model context/identity metrics and semantic roles are separate in the new report. Quantity-prefixed identities, nonliteral numeric values and order/supply confusion are preserved, not repaired. AI source-only gold is not human verification. Product FN increased: **adoption/AI Shadow HOLD**. Known development research S1/S2/S3 remains1/0/0; no evaluation item was promoted.
+
+Evidence and offline report: `stage4-corpus/round2/auth-resume/scores.json`, `quote-diagnostics.json`, `storage-preservation.json`. Existing178 corpus artifacts,68 frozen contract hashes and99 prior SQLite events were preserved. New11 raw responses/jobs matched requery, and a restored owned-ledger copy matched every table in a fresh process. New auth guards17 +existing free-AI tests79 passed locally; final exact-commit CI is checked after push. CPU/model preparation, collection and prior whole local tests were not repeated. Operating main/DB/Actions/UI/alerts and AI schedules are unchanged.
+
+Operator commands use the existing owned API ledger and shared rolling budget: `tools/v4_auth_resume.py --probe` requires unused fresh authorized evidence; `--continue` requires a received probe and skips every attempted input. These inputs are now exhausted: do not rerun either to seek better outputs. `tools/v4_auth_resume_report.py` writes once using unchanged scoring. Future inference fixes must use development cases and other unused evaluation documents. No cloud configuration change is needed for this recovered runtime.
+
+The following sections retain earlier dated task results and blockers; use the latest PROGRESS authentication_resume for current state.
+
+## Prior approved sequential research (2026-10-14)
 
 Plan v1.8 continues from the actual remote `ef3321609210281757141d9b897e792333d9d5c7`. Original118/frozen50, consumed evaluation20, seven rejected items and stages1–3 remain unchanged. The new source20 and exact bounded input/model/prompt/scoring closure were frozen before predictions at `stage4-corpus/round2/freeze.json`. CPU weights/environment were reused; no install or model preparation was repeated. Read `round2/scores.json` and `round2/sequential-evidence.json` for current results; earlier sections below are dated history.
 

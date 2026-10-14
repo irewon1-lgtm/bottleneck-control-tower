@@ -1,0 +1,152 @@
+{
+  "document_id": "v4doc-6e6a99c7c153bd019eb22e9c86acb8a8424ea84e03bb85eaa23d2d7e392fb3c6",
+  "at": "2026-10-14T09:04:02.321164+00:00",
+  "status": "REVIEW_REQUIRED",
+  "calls": 1,
+  "cached": false,
+  "input_key": "96db540d5a5877b87ca89693af6fb46a5b99aa555e5931f01699113f29312067",
+  "attempt": {
+    "seq": 123,
+    "kind": "API_ATTEMPT",
+    "at": "2026-10-14T09:04:01.510961+00:00",
+    "attempt_id": "f7b65745ad0b4305be42f76ed022dfb2",
+    "connection_probe": false,
+    "input_key": "96db540d5a5877b87ca89693af6fb46a5b99aa555e5931f01699113f29312067",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "recovery_probe": false,
+    "request_contract": "f3838c2bca2ce8dad97a2fbcb03b9013177bd0a7d0fac081ea34629c1e9a1e31",
+    "reserved_tokens": 6116,
+    "run_id": "api-676b7e47c9864c3fabdbd6260de32bb6"
+  },
+  "response": {
+    "seq": 124,
+    "kind": "API_RECEIVED",
+    "at": "2026-10-14T09:04:02.309059+00:00",
+    "attempt_id": "f7b65745ad0b4305be42f76ed022dfb2",
+    "input_key": "96db540d5a5877b87ca89693af6fb46a5b99aa555e5931f01699113f29312067",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "quota_headers": {
+      "x-ratelimit-limit-requests": "1000",
+      "x-ratelimit-limit-tokens": "8000",
+      "x-ratelimit-remaining-requests": "996",
+      "x-ratelimit-remaining-tokens": "6458",
+      "x-ratelimit-reset-requests": "5m45.6s",
+      "x-ratelimit-reset-tokens": "11.565s"
+    },
+    "run_id": "api-676b7e47c9864c3fabdbd6260de32bb6",
+    "text": "{\"items\":[{\"kind\":\"PHYSICAL_PRODUCT\",\"role\":\"SUPPLY_INCREASE\",\"actuality\":\"ACTUAL\",\"context\":{\"quote\":\"Tenova , a leading provider of sustainable solutions for the metals and mining industries, has been selected by Nippon Steel Corporation to supply a record-breaking Consteel ® Electric Arc Furnace (EAF) for Nippon Steel’s Yawata Area at Kyushu Works. Tenova has teamed up with GE Vernova , whose Direct Feed system will power the EAF. For more information please visit the Tenova newsroom https://tenova.com/newsroom/press-releases/tenova-collaboration-ge-vernova-supply-worlds-largest-eaf-nippon-steels\",\"start\":0,\"end\":503},\"entity\":{\"value\":\"Consteel ® Electric Arc Furnace (EAF)\",\"quote\":\"Consteel ® Electric Arc Furnace (EAF)\",\"start\":89,\"end\":133},\"facts\":[{\"field\":\"product\",\"value\":\"Consteel ® Electric Arc Furnace (EAF)\",\"quote\":\"Consteel ® Electric Arc Furnace (EAF)\",\"start\":89,\"end\":133},{\"field\":\"specification\",\"value\":\"record-breaking\",\"quote\":\"record-breaking\",\"start\":93,\"end\":109},{\"field\":\"region\",\"value\":\"Yawata Area at Kyushu Works\",\"quote\":\"Yawata Area at Kyushu Works\",\"start\":147,\"end\":183},{\"field\":\"customer_group\",\"value\":\"Nippon Steel Corporation\",\"quote\":\"Nippon Steel Corporation\",\"start\":49,\"end\":71},{\"field\":\"supply_pool\",\"value\":\"Tenova\",\"quote\":\"Tenova\",\"start\":0,\"end\":5},{\"field\":\"alternative\",\"value\":\"GE Vernova Direct Feed system\",\"quote\":\"GE Vernova , whose Direct Feed system\",\"start\":155,\"end\":198}]}]}",
+    "usage": {
+      "input_tokens": 933,
+      "output_tokens": 426,
+      "total_tokens": 1359
+    }
+  },
+  "validation": {
+    "seq": 126,
+    "kind": "API_VALIDATION",
+    "at": "2026-10-14T09:04:02.315013+00:00",
+    "attempt_id": "f7b65745ad0b4305be42f76ed022dfb2",
+    "input_key": "96db540d5a5877b87ca89693af6fb46a5b99aa555e5931f01699113f29312067",
+    "provider": "groq",
+    "result": {
+      "coverage": {
+        "available_pages": 1,
+        "body_characters": 742,
+        "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+        "input_policy_version": "bct-v4-context-pages-2",
+        "page_index": 0,
+        "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+        "publication": {
+          "precision": "DATE",
+          "published_at": "2026-09-29"
+        },
+        "selected_characters": 503,
+        "unplanned_contexts_at_page_cap": 0,
+        "unread_characters": 239,
+        "unread_ranges": [
+          {
+            "end": 742,
+            "start": 503
+          }
+        ],
+        "windows": [
+          {
+            "end": 503,
+            "start": 0,
+            "text": "Tenova , a leading provider of sustainable solutions for the metals and mining industries, has been selected by Nippon Steel Corporation to supply a record-breaking Consteel ® Electric Arc Furnace (EAF) for Nippon Steel’s Yawata Area at Kyushu Works. Tenova has teamed up with GE Vernova , whose Direct Feed system will power the EAF. For more information please visit the Tenova newsroom https://tenova.com/newsroom/press-releases/tenova-collaboration-ge-vernova-supply-worlds-largest-eaf-nippon-steels"
+          }
+        ],
+        "withheld_context_count": 0
+      },
+      "forecast_performance": "BLOCKED",
+      "items": [],
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "AMBIGUOUS_QUOTE"
+        }
+      ],
+      "semantic_accuracy": "UNKNOWN",
+      "source_status": "REVIEW_REQUIRED"
+    },
+    "run_id": "api-676b7e47c9864c3fabdbd6260de32bb6"
+  },
+  "error": {
+    "seq": 127,
+    "kind": "API_ERROR",
+    "at": "2026-10-14T09:04:02.317547+00:00",
+    "attempt_id": "f7b65745ad0b4305be42f76ed022dfb2",
+    "diagnostics": {},
+    "error_kind": "SOURCE",
+    "input_key": "96db540d5a5877b87ca89693af6fb46a5b99aa555e5931f01699113f29312067",
+    "provider": "groq",
+    "run_id": "api-676b7e47c9864c3fabdbd6260de32bb6"
+  },
+  "reading": {
+    "document_id": "v4doc-6e6a99c7c153bd019eb22e9c86acb8a8424ea84e03bb85eaa23d2d7e392fb3c6",
+    "body_sha256": "2a64f968fb5652858750323876002e129f5b0a09b9342202e9c8ab1cddeb93f3",
+    "version": "bct-v4-free-ai-1",
+    "input_key": "96db540d5a5877b87ca89693af6fb46a5b99aa555e5931f01699113f29312067",
+    "status": "REVIEW_REQUIRED",
+    "s_stage": "UNKNOWN",
+    "forecast_candidate": false,
+    "failures": [
+      {
+        "provider": "groq",
+        "reason": "SOURCE"
+      }
+    ],
+    "coverage": {
+      "windows": [
+        {
+          "start": 0,
+          "end": 503,
+          "text": "Tenova , a leading provider of sustainable solutions for the metals and mining industries, has been selected by Nippon Steel Corporation to supply a record-breaking Consteel ® Electric Arc Furnace (EAF) for Nippon Steel’s Yawata Area at Kyushu Works. Tenova has teamed up with GE Vernova , whose Direct Feed system will power the EAF. For more information please visit the Tenova newsroom https://tenova.com/newsroom/press-releases/tenova-collaboration-ge-vernova-supply-worlds-largest-eaf-nippon-steels"
+        }
+      ],
+      "publication": {
+        "published_at": "2026-09-29",
+        "precision": "DATE"
+      },
+      "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+      "selected_characters": 503,
+      "body_characters": 742,
+      "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+      "input_policy_version": "bct-v4-context-pages-2",
+      "page_index": 0,
+      "available_pages": 1,
+      "withheld_context_count": 0,
+      "unplanned_contexts_at_page_cap": 0
+    }
+  },
+  "provider_state_after": {
+    "at": "2026-10-14T09:04:02.312299+00:00",
+    "blocked": false,
+    "last_check": "PASS_TRANSPORT",
+    "provider": "groq",
+    "run_id": "api-676b7e47c9864c3fabdbd6260de32bb6"
+  },
+  "evidence_kind": "SEQUENTIAL_UNATTEMPTED_EVALUATION"
+}

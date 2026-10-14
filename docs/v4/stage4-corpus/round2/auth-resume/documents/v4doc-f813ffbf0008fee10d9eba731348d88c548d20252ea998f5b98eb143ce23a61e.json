@@ -1,0 +1,167 @@
+{
+  "document_id": "v4doc-f813ffbf0008fee10d9eba731348d88c548d20252ea998f5b98eb143ce23a61e",
+  "at": "2026-10-14T09:08:22.184372+00:00",
+  "status": "PASS",
+  "calls": 1,
+  "cached": false,
+  "input_key": "62fa04c20944da8fce83596166c988fc8c3f8850b5b8f7a0288471aa4cfc1613",
+  "attempt": {
+    "seq": 151,
+    "kind": "API_ATTEMPT",
+    "at": "2026-10-14T09:08:21.690470+00:00",
+    "attempt_id": "c251b6341b05402caec8dd97d2959f0e",
+    "connection_probe": false,
+    "input_key": "62fa04c20944da8fce83596166c988fc8c3f8850b5b8f7a0288471aa4cfc1613",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "recovery_probe": false,
+    "request_contract": "f3838c2bca2ce8dad97a2fbcb03b9013177bd0a7d0fac081ea34629c1e9a1e31",
+    "reserved_tokens": 5905,
+    "run_id": "api-0589d92a77b248f8ad213514809f6173"
+  },
+  "response": {
+    "seq": 152,
+    "kind": "API_RECEIVED",
+    "at": "2026-10-14T09:08:22.166027+00:00",
+    "attempt_id": "c251b6341b05402caec8dd97d2959f0e",
+    "input_key": "62fa04c20944da8fce83596166c988fc8c3f8850b5b8f7a0288471aa4cfc1613",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "quota_headers": {
+      "x-ratelimit-limit-requests": "1000",
+      "x-ratelimit-limit-tokens": "8000",
+      "x-ratelimit-remaining-requests": "992",
+      "x-ratelimit-remaining-tokens": "6688",
+      "x-ratelimit-reset-requests": "11m31.2s",
+      "x-ratelimit-reset-tokens": "9.84s"
+    },
+    "run_id": "api-0589d92a77b248f8ad213514809f6173",
+    "text": "{\"items\":[] }",
+    "usage": {
+      "input_tokens": 886,
+      "output_tokens": 65,
+      "total_tokens": 951
+    }
+  },
+  "validation": {
+    "seq": 154,
+    "kind": "API_VALIDATION",
+    "at": "2026-10-14T09:08:22.174129+00:00",
+    "attempt_id": "c251b6341b05402caec8dd97d2959f0e",
+    "input_key": "62fa04c20944da8fce83596166c988fc8c3f8850b5b8f7a0288471aa4cfc1613",
+    "provider": "groq",
+    "result": {
+      "coverage": {
+        "available_pages": 1,
+        "body_characters": 1981,
+        "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+        "input_policy_version": "bct-v4-context-pages-2",
+        "page_index": 0,
+        "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+        "publication": {
+          "precision": "TIMESTAMP",
+          "published_at": "2026-10-08T09:15:10-04:00"
+        },
+        "selected_characters": 224,
+        "unplanned_contexts_at_page_cap": 0,
+        "unread_characters": 1757,
+        "unread_ranges": [
+          {
+            "end": 1803,
+            "start": 112
+          },
+          {
+            "end": 1981,
+            "start": 1915
+          }
+        ],
+        "windows": [
+          {
+            "end": 112,
+            "start": 0,
+            "text": "Secretary Wright issues an emergency order to stabilize the mid-Atlantic grid and mitigate the risk of blackouts"
+          },
+          {
+            "end": 1915,
+            "start": 1803,
+            "text": "Energy Department Authorizes Strategic Petroleum Reserve Exchange to Address Supply Disruptions Due to Hurricane"
+          }
+        ],
+        "withheld_context_count": 1
+      },
+      "forecast_performance": "BLOCKED",
+      "items": [],
+      "rejected_items": [],
+      "semantic_accuracy": "UNKNOWN",
+      "source_status": "PASS"
+    },
+    "run_id": "api-0589d92a77b248f8ad213514809f6173"
+  },
+  "error": null,
+  "reading": {
+    "document_id": "v4doc-f813ffbf0008fee10d9eba731348d88c548d20252ea998f5b98eb143ce23a61e",
+    "body_sha256": "79ea88acc5e74eb79dee1dd9b879b0ef1fcab743f34c2b7dc9c4975175e991ea",
+    "version": "bct-v4-free-ai-1",
+    "input_key": "62fa04c20944da8fce83596166c988fc8c3f8850b5b8f7a0288471aa4cfc1613",
+    "status": "PASS",
+    "s_stage": "UNKNOWN",
+    "forecast_candidate": false,
+    "provider": "groq",
+    "model": "openai/gpt-oss-20b",
+    "cached": false,
+    "result": {
+      "items": [],
+      "rejected_items": [],
+      "coverage": {
+        "windows": [
+          {
+            "start": 0,
+            "end": 112,
+            "text": "Secretary Wright issues an emergency order to stabilize the mid-Atlantic grid and mitigate the risk of blackouts"
+          },
+          {
+            "start": 1803,
+            "end": 1915,
+            "text": "Energy Department Authorizes Strategic Petroleum Reserve Exchange to Address Supply Disruptions Due to Hurricane"
+          }
+        ],
+        "publication": {
+          "published_at": "2026-10-08T09:15:10-04:00",
+          "precision": "TIMESTAMP"
+        },
+        "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+        "selected_characters": 224,
+        "body_characters": 1981,
+        "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+        "input_policy_version": "bct-v4-context-pages-2",
+        "page_index": 0,
+        "available_pages": 1,
+        "withheld_context_count": 1,
+        "unplanned_contexts_at_page_cap": 0,
+        "unread_ranges": [
+          {
+            "start": 112,
+            "end": 1803
+          },
+          {
+            "start": 1915,
+            "end": 1981
+          }
+        ],
+        "unread_characters": 1757
+      },
+      "source_status": "PASS",
+      "semantic_accuracy": "UNKNOWN",
+      "forecast_performance": "BLOCKED"
+    },
+    "failures": []
+  },
+  "provider_state_after": {
+    "at": "2026-10-14T09:08:22.171747+00:00",
+    "blocked": false,
+    "last_check": "PASS_TRANSPORT",
+    "provider": "groq",
+    "run_id": "api-0589d92a77b248f8ad213514809f6173"
+  },
+  "evidence_kind": "SEQUENTIAL_UNATTEMPTED_EVALUATION"
+}

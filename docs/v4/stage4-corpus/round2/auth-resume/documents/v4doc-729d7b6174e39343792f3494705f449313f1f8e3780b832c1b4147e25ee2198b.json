@@ -1,0 +1,166 @@
+{
+  "document_id": "v4doc-729d7b6174e39343792f3494705f449313f1f8e3780b832c1b4147e25ee2198b",
+  "at": "2026-10-14T09:09:27.411462+00:00",
+  "status": "REVIEW_REQUIRED",
+  "calls": 1,
+  "cached": false,
+  "input_key": "99cc0ce5c6ce374ad74e3d49a147dad4f955a8ab8b184803a5f9cc1327b5affe",
+  "attempt": {
+    "seq": 158,
+    "kind": "API_ATTEMPT",
+    "at": "2026-10-14T09:09:26.712223+00:00",
+    "attempt_id": "4c79f49875df4d23af8469468dc6dc74",
+    "connection_probe": false,
+    "input_key": "99cc0ce5c6ce374ad74e3d49a147dad4f955a8ab8b184803a5f9cc1327b5affe",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "recovery_probe": false,
+    "request_contract": "f3838c2bca2ce8dad97a2fbcb03b9013177bd0a7d0fac081ea34629c1e9a1e31",
+    "reserved_tokens": 6171,
+    "run_id": "api-88b13295deb1416798407bfa64b8d4ca"
+  },
+  "response": {
+    "seq": 159,
+    "kind": "API_RECEIVED",
+    "at": "2026-10-14T09:09:27.393483+00:00",
+    "attempt_id": "4c79f49875df4d23af8469468dc6dc74",
+    "input_key": "99cc0ce5c6ce374ad74e3d49a147dad4f955a8ab8b184803a5f9cc1327b5affe",
+    "model": "openai/gpt-oss-20b",
+    "provider": "groq",
+    "quota_headers": {
+      "x-ratelimit-limit-requests": "1000",
+      "x-ratelimit-limit-tokens": "8000",
+      "x-ratelimit-remaining-requests": "991",
+      "x-ratelimit-remaining-tokens": "6465",
+      "x-ratelimit-reset-requests": "12m57.599s",
+      "x-ratelimit-reset-tokens": "11.512s"
+    },
+    "run_id": "api-88b13295deb1416798407bfa64b8d4ca",
+    "text": "{\"items\":[{\"kind\":\"PHYSICAL_PRODUCT\",\"role\":\"SUPPLY_INCREASE\",\"actuality\":\"PLAN\",\"context\":{\"start\":0,\"end\":96,\"quote\":\"The Energy Department Announces Intention to Support Adding 2.5 GW of Grid Capacity and 800 Jobs\"},\"entity\":{\"start\":0,\"end\":96,\"quote\":\"The Energy Department Announces Intention to Support Adding 2.5 GW of Grid Capacity and 800 Jobs\",\"value\":\"2.5 GW of grid capacity\"},\"facts\":[{\"field\":\"product\",\"start\":0,\"end\":96,\"quote\":\"The Energy Department Announces Intention to Support Adding 2.5 GW of Grid Capacity and 800 Jobs\",\"value\":\"2.5 GW of grid capacity\"},{\"field\":\"quantity\",\"start\":0,\"end\":96,\"quote\":\"The Energy Department Announces Intention to Support Adding 2.5 GW of Grid Capacity and 800 Jobs\",\"value\":\"2.5\"},{\"field\":\"unit\",\"start\":0,\"end\":96,\"quote\":\"The Energy Department Announces Intention to Support Adding 2.5 GW of Grid Capacity and 800 Jobs\",\"value\":\"GW\"}]}]}",
+    "usage": {
+      "input_tokens": 939,
+      "output_tokens": 398,
+      "total_tokens": 1337
+    }
+  },
+  "validation": {
+    "seq": 161,
+    "kind": "API_VALIDATION",
+    "at": "2026-10-14T09:09:27.404197+00:00",
+    "attempt_id": "4c79f49875df4d23af8469468dc6dc74",
+    "input_key": "99cc0ce5c6ce374ad74e3d49a147dad4f955a8ab8b184803a5f9cc1327b5affe",
+    "provider": "groq",
+    "result": {
+      "coverage": {
+        "available_pages": 4,
+        "body_characters": 3283,
+        "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+        "input_policy_version": "bct-v4-context-pages-2",
+        "page_index": 0,
+        "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+        "publication": {
+          "precision": "TIMESTAMP",
+          "published_at": "2026-10-08T09:15:10-04:00"
+        },
+        "selected_characters": 483,
+        "unplanned_contexts_at_page_cap": 0,
+        "unread_characters": 2800,
+        "unread_ranges": [
+          {
+            "end": 1802,
+            "start": 96
+          },
+          {
+            "end": 3283,
+            "start": 2189
+          }
+        ],
+        "windows": [
+          {
+            "end": 96,
+            "start": 0,
+            "text": "The Energy Department Announces Intention to Support Adding 2.5 GW of Grid Capacity and 800 Jobs"
+          },
+          {
+            "end": 2189,
+            "start": 1802,
+            "text": "“America's electric grid cannot become a roadblock to economic growth,” said Office of Electricity (OE) Assistant Secretary Katie Jereza . “By bringing TVA and local utilities together, we're helping reduce costly outages and deliver more power where it's needed. That means fewer disruptions for families, more opportunities for businesses, and a stronger foundation for American jobs.”"
+          }
+        ],
+        "withheld_context_count": 1
+      },
+      "forecast_performance": "BLOCKED",
+      "items": [],
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "VALUE_NOT_LITERAL"
+        }
+      ],
+      "semantic_accuracy": "UNKNOWN",
+      "source_status": "REVIEW_REQUIRED"
+    },
+    "run_id": "api-88b13295deb1416798407bfa64b8d4ca"
+  },
+  "error": {
+    "seq": 162,
+    "kind": "API_ERROR",
+    "at": "2026-10-14T09:09:27.407117+00:00",
+    "attempt_id": "4c79f49875df4d23af8469468dc6dc74",
+    "diagnostics": {},
+    "error_kind": "SOURCE",
+    "input_key": "99cc0ce5c6ce374ad74e3d49a147dad4f955a8ab8b184803a5f9cc1327b5affe",
+    "provider": "groq",
+    "run_id": "api-88b13295deb1416798407bfa64b8d4ca"
+  },
+  "reading": {
+    "document_id": "v4doc-729d7b6174e39343792f3494705f449313f1f8e3780b832c1b4147e25ee2198b",
+    "body_sha256": "55c94497aa66b24ffeb64c0ee092692ca5b4f0db7f03d073468e5889db7c4a56",
+    "version": "bct-v4-free-ai-1",
+    "input_key": "99cc0ce5c6ce374ad74e3d49a147dad4f955a8ab8b184803a5f9cc1327b5affe",
+    "status": "REVIEW_REQUIRED",
+    "s_stage": "UNKNOWN",
+    "forecast_candidate": false,
+    "failures": [
+      {
+        "provider": "groq",
+        "reason": "SOURCE"
+      }
+    ],
+    "coverage": {
+      "windows": [
+        {
+          "start": 0,
+          "end": 96,
+          "text": "The Energy Department Announces Intention to Support Adding 2.5 GW of Grid Capacity and 800 Jobs"
+        },
+        {
+          "start": 1802,
+          "end": 2189,
+          "text": "“America's electric grid cannot become a roadblock to economic growth,” said Office of Electricity (OE) Assistant Secretary Katie Jereza . “By bringing TVA and local utilities together, we're helping reduce costly outages and deliver more power where it's needed. That means fewer disruptions for families, more opportunities for businesses, and a stronger foundation for American jobs.”"
+        }
+      ],
+      "publication": {
+        "published_at": "2026-10-08T09:15:10-04:00",
+        "precision": "TIMESTAMP"
+      },
+      "provenance_scope": "VERIFIED_PUBLIC_EXCERPT_ONLY_NOT_ENGINE_PROVENANCE",
+      "selected_characters": 483,
+      "body_characters": 3283,
+      "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+      "input_policy_version": "bct-v4-context-pages-2",
+      "page_index": 0,
+      "available_pages": 4,
+      "withheld_context_count": 1,
+      "unplanned_contexts_at_page_cap": 0
+    }
+  },
+  "provider_state_after": {
+    "at": "2026-10-14T09:09:27.399804+00:00",
+    "blocked": false,
+    "last_check": "PASS_TRANSPORT",
+    "provider": "groq",
+    "run_id": "api-88b13295deb1416798407bfa64b8d4ca"
+  },
+  "evidence_kind": "SEQUENTIAL_UNATTEMPTED_EVALUATION"
+}
