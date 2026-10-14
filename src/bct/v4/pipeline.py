@@ -51,9 +51,12 @@ def analyze(documents, *, mode="LIVE", as_of=None, new_ids=None):
     return stamp_export(result)
 
 
-def cycle(root, config, *, use_ai=True, client=None, api_config=None, api_adapter=None):
+def cycle(root, config, *, use_ai=True, client=None, api_config=None, api_adapter=None, mode="LIVE"):
     """One bounded pass. Failed sources remain failures; no automatic retry loop."""
     ledger = Ledger(root)
+    if mode not in ("LIVE", "BACKFILL"):
+        ledger.close()
+        raise ValueError("COLLECTION_MODE_MUST_BE_LIVE_OR_BACKFILL")
     client = client or SourceClient()
     limit = config.get("document_limit", 10)
     if type(limit) is not int or not 1 <= limit <= 100:
@@ -63,6 +66,7 @@ def cycle(root, config, *, use_ai=True, client=None, api_config=None, api_adapte
     started_wall = time.monotonic()
     run_id = "v4-" + uuid.uuid4().hex
     failures, new_ids, readings, exploration = [], [], [], []
+    unchanged = []
     def failure(kind, url, exc):
         from bct.precursor_source_search import error_status
         item = {"kind": kind, "url": url, "status": "BLOCKED" if isinstance(exc, ValueError) else error_status(exc),
@@ -77,7 +81,7 @@ def cycle(root, config, *, use_ai=True, client=None, api_config=None, api_adapte
                 from .free_ai import Router
                 api_router = Router(ledger, api_config, run_id=run_id, adapter=api_adapter)
             with ledger.db:
-                ledger.event("RUN_STARTED", {"run_id": run_id, "mode": "LIVE", "config_sha256": sha(config)})
+                ledger.event("RUN_STARTED", {"run_id": run_id, "mode": mode, "config_sha256": sha(config)})
             urls = list(config.get("urls", []))
             for cik in config.get("ciks", []):
                 try:
@@ -106,6 +110,16 @@ def cycle(root, config, *, use_ai=True, client=None, api_config=None, api_adapte
             for url in list(dict.fromkeys(urls))[:limit]:
                 try:
                     doc, raw, views = client.document(url)
+                    previous = ledger.db.execute("SELECT payload FROM documents WHERE id=?", (doc["document_id"],)).fetchone()
+                    if previous and all(json.loads(previous[0]).get(k) == doc.get(k) for k in ("origin_url", "raw_sha256", "body_sha256")):
+                        # A real refresh established identical content. Reuse its
+                        # reading instead of repeating CPU/API work or captures.
+                        unchanged.append(doc["document_id"])
+                        readings.append({"document_id": doc["document_id"], "ai_status": "NOT_RUN_UNCHANGED_CONTENT"})
+                        with ledger.db:
+                            ledger.event("SOURCE_REFRESH_UNCHANGED", {"run_id": run_id, "document_id": doc["document_id"]})
+                        captured += 1
+                        continue
                     reading = {"parser_comparison": views}
                     if extractor:
                         try:
@@ -132,6 +146,10 @@ def cycle(root, config, *, use_ai=True, client=None, api_config=None, api_adapte
                         reading["ai"] = {"status": "NOT_RUN", "reason": "explicit --no-ai"}
                     if ledger.capture(doc, raw, reading):
                         new_ids.append(doc["document_id"])
+                        with ledger.db:
+                            ledger.event("READ_QUEUE", {"document_id": doc["document_id"], "state": "PENDING",
+                                "source_role": config.get("source_roles", {}).get(url, "BROAD_EXPLORATION"),
+                                "source_version": doc["body_sha256"]})
                     if api_router and len(readings) < api_router.config["document_limit"]:
                         # Raw and CPU reading are committed first. API WAIT/denial
                         # cannot erase a captured source or mark it analyzed.
@@ -140,13 +158,15 @@ def cycle(root, config, *, use_ai=True, client=None, api_config=None, api_adapte
                     captured += 1
                 except Exception as exc:
                     failure("DOCUMENT_CAPTURE", url, exc)
-            result = analyze(ledger.latest_documents(), mode="LIVE", new_ids=new_ids)
-            result.update(run_id=run_id, live_captured=captured, new_document_ids=new_ids, failures=failures,
+            result = analyze(ledger.latest_documents(), mode=mode, new_ids=new_ids)
+            result.update(run_id=run_id, live_captured=captured if mode == "LIVE" else 0,
+                          acquired_or_reused_documents=captured, new_document_ids=new_ids, failures=failures,
+                          unchanged_document_ids=unchanged,
                           readings=readings, exploration_targets=exploration,
                           known_target_check_count=len(result.get("outcomes", [])),
                           new_verified_target_discoveries=0,
                           integration_status="BLOCKED" if failures or not captured else
-                          "PASS" if all(r["ai_status"] == "PASS" for r in readings) else "PARTIAL",
+                          "PASS" if all(r["ai_status"] in ("PASS", "NOT_RUN_UNCHANGED_CONTENT") for r in readings) else "PARTIAL",
                           cpu_seconds=time.process_time()-started_cpu, wall_seconds=time.monotonic()-started_wall,
                           process_peak_rss_mib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1024,
                           paid_api_calls=0, additional_api_cost=0,
@@ -156,7 +176,7 @@ def cycle(root, config, *, use_ai=True, client=None, api_config=None, api_adapte
                 result["api_annotations"] = api_status(ledger)
                 result["api_calls_this_run"] = api_router.calls
                 result["api_semantic_accuracy"] = "UNKNOWN"
-            return ledger.save_run(run_id, result, "LIVE")
+            return ledger.save_run(run_id, result, mode)
     finally:
         ledger.close()
 

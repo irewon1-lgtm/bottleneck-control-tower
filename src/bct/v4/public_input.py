@@ -5,6 +5,7 @@ footers are excluded by coordinates, never redacted or sent to the provider.
 """
 from datetime import datetime, timezone
 import hashlib
+import json
 import re
 from urllib.parse import parse_qsl, urlsplit
 
@@ -22,6 +23,8 @@ PUBLISHERS = {"www.esa.int": ("ESA", "European Space Agency"),
               "www.aehr.com": ("Aehr", "Aehr Test Systems"),
               "www.eia.gov": ("U.S. Energy Information Administration", "Energy Information Administration"),
               "www.nist.gov": ("National Institute of Standards and Technology",),
+              "www.airbus.com": ("Airbus",),
+              "www.gevernova.com": ("GE Vernova",),
               "www.energy.gov": ("Energy.gov", "Department of Energy")}
 
 
@@ -64,6 +67,24 @@ def _public_date(record, raw_text):
                 return any(x.text_content().strip() == day.strftime("%B %d, %Y").replace(" 0", " ") for x in dates)
             dates = dom.xpath('//span[@class="date"]')
             return any(x.text_content().strip() == day.strftime("%B %d, %Y").replace(" 0", " ") for x in dates)
+        if host == "www.gevernova.com" and urlsplit(record["url"]).path.startswith("/news/press-releases/"):
+            titles = dom.xpath('//h1')
+            if len(titles) != 1 or dom.xpath('//link[@rel="canonical"]/@href') != [record["url"]]:
+                return False
+            title = " ".join(titles[0].text_content().split())
+            dates = []
+            for node in dom.xpath('//script[@type="application/ld+json"]'):
+                pending = [json.loads(node.text or "{}")]
+                while pending:
+                    item = pending.pop()
+                    if isinstance(item, list):
+                        pending.extend(item)
+                    elif isinstance(item, dict):
+                        if (item.get("@type") == "NewsArticle" and item.get("headline") == title
+                                and item.get("datePublished")):
+                            dates.append(datetime.fromisoformat(item["datePublished"]).date())
+                        pending.extend(item.get("@graph", []))
+            return dates == [day]
         # article:published_time, not sidebar/news dates or a guessed URL date
         dates = dom.xpath('//meta[@property="article:published_time"]/@content')
         return any(datetime.fromisoformat(x.replace("Z", "+00:00")).date() == day for x in dates)
@@ -159,6 +180,8 @@ def selected_input(doc, config, review, env):
             current = [paragraph]
     if current:
         groups.append(current)
+    if config.get("input_policy") == "sentence-context-v2":
+        return _context_page(doc, config, review, env, groups)
     ranked = sorted(groups, key=lambda g: (-len(SIGNAL.findall(body[g[0].start():g[-1].end()])), g[0].start()))
     windows, held = [], []
     remaining = config["max_input_characters"]
@@ -181,6 +204,62 @@ def selected_input(doc, config, review, env):
                 "input_policy_version": VERSION}
     # No review identity, raw source, contact text or local env is transmitted.
     from .store import encode
+    if CONTACT.search(encode(selected)) or SECRET.search(encode(selected)):
+        raise ValueError("UNSAFE_SERIALIZED_INPUT")
+    return selected
+
+
+def _context_page(doc, config, review, env, groups):
+    """Opt-in research pages; old frozen inputs retain their original policy.
+
+    Only an oversized, independent paragraph can be split at the existing
+    reader's complete sentence boundaries. Pronouns, conditions and contrary
+    evidence keep the whole group together, even when that means withholding.
+    """
+    from bct.precursor_scope_reader import sentences
+    from .store import encode
+    page = config.get("input_page", 0)
+    if type(page) is not int or not 0 <= page < 16:
+        raise ValueError("INPUT_PAGE_MUST_BE_0_TO_15")
+    body = doc["body"]
+    dependent = re.compile(r"\b(?:it|its|they|their|this|these|those|such|however|whereas|unless|although|if|not|never|subject to|provided that)\b", re.I)
+    chunks, held = [], []
+    for group in groups:
+        a, b = group[0].start(), group[-1].end()
+        text = body[a:b]
+        if b-a > config["max_input_characters"] and len(group) == 1 and not dependent.search(text) and not COUNTER.search(text):
+            parts = list(sentences(doc, [{"quote": text, "start": a, "end": b, "paragraph_start": a}]))
+            spans = [(p["start"], p["end"]) for p in parts]
+        else:
+            spans = [(a, b)]
+        for a, b in spans:
+            text = body[a:b]
+            if not SIGNAL.search(text):
+                continue
+            if b-a > config["max_input_characters"]:
+                held.append({"start": a, "end": b, "reason": "COMPLETE_CONTEXT_EXCEEDS_FIXED_BUDGET"})
+            elif body.count(text) != 1:
+                held.append({"start": a, "end": b, "reason": "DUPLICATE_FULL_CONTEXT"})
+            else:
+                chunks.append({"start": a, "end": b, "text": text})
+    chunks.sort(key=lambda w: (-len(SIGNAL.findall(w["text"])), w["start"]))
+    pages = []
+    while chunks and len(pages) < 16:
+        selected, remaining = [], config["max_input_characters"]
+        for w in list(chunks):
+            if len(selected) < config["max_windows"] and len(w["text"]) <= remaining:
+                selected.append(w); remaining -= len(w["text"]); chunks.remove(w)
+        pages.append(sorted(selected, key=lambda w: w["start"]))
+    if page >= len(pages):
+        raise ValueError("NO_COMPLETE_SAFE_SIGNAL_CONTEXT_WITHIN_BUDGET" if not pages and held else
+                         "NO_SIGNAL_CONTEXT_IN_SOURCE" if not pages else "NO_FURTHER_SAFE_CONTEXT_PAGE")
+    selected = {"windows": pages[page], "publication": {"published_at": doc.get("published_at"),
+                "precision": doc.get("publication_precision", "UNKNOWN")}, "provenance_scope": review["scope"],
+                "selected_characters": sum(w["end"]-w["start"] for w in pages[page]),
+                "body_characters": len(body), "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
+                "input_policy_version": "bct-v4-context-pages-2", "page_index": page,
+                "available_pages": len(pages), "withheld_context_count": len(held),
+                "unplanned_contexts_at_page_cap": len(chunks)}
     if CONTACT.search(encode(selected)) or SECRET.search(encode(selected)):
         raise ValueError("UNSAFE_SERIALIZED_INPUT")
     return selected
