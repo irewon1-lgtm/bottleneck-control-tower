@@ -1,72 +1,114 @@
 {
   "plan_version": "1.6",
-  "plan_sha256": "1d4e8acd2f60421e8127a8379c098be4f89cbcfb7f7dec9c1c3135242817c56a",
+  "plan_sha256": "af1e1d0405046991e7ce17743049cb980bc0442208b5f5630635aaba89fc7cc0",
   "stage": 4,
-  "status": "IN_PROGRESS_APPROVED_REPAIR",
-  "handoff_sha": "9c7f6796cc27a804ddcc1bfcfdf614ba398d51da",
-  "base_remote_sha": "9c7f6796cc27a804ddcc1bfcfdf614ba398d51da",
-  "last_completed": "Published access PASS; reused77 issuer originals and acquired41 current native documents (118 unique: FULL37/PARTIAL81). Exported/froze50 (development30/evaluation20; FULL30/PARTIAL20), checked hashes/publication evidence and reopened separate50-document SQLite; new Groq0; no algorithm changes.",
-  "next_action": "Frozen code: separate-source holdout gold review, bounded Groq run-one calls with one shared rolling budget; do not tune on evaluation results.",
+  "status": "BLOCKED_STAGE4_ADOPTION_SOURCE_OUTPUT_AND_PARTIAL_ACCURACY",
+  "handoff_sha": "ca013abdb28f235c1d53dfad770d2e367497eaa6",
+  "base_remote_sha": "ca013abdb28f235c1d53dfad770d2e367497eaa6",
+  "last_completed": "Repaired clean test install; safe input derivation; typed research bridge positive/negative cases; pinned new CPU baseline; frozen partial evaluation; final regression, restart/backup/restore and offline replay; implementation push and exact-SHA CI. No overall accuracy PASS.",
+  "next_action": "Run the committed offline evidence replay; inspect development source/quote and alias-mapping diagnostics, preserve original frozen50 and consumed holdout. No same failed API retry, stage6 or Shadow. Reuse pinned CPU runtime and stored raw responses, no additional keys/models/providers.",
   "blockers": [
     {
-      "code": "INDEPENDENT_TARGET_FACT_GOLD_UNVERIFIED",
-      "effect": "Source publication/identity/hash evidence is prepared. Product/role/quantity/buyer/qualified-supplier/specification/time truth for the frozen50 is not independently adjudicated. No Groq/self-generated labels used as gold.",
-      "unverified_field_slots": 750,
-      "template": "docs/v4/stage4-corpus/independent-gold-template.json"
+      "code": "FROZEN50_NOT_FULLY_READ_OR_HUMAN_VERIFIED",
+      "reason": "29 eligible,13 held,8 blocked. Only1 development and6 evaluation actual responses; event gold reviews20 development/9 evaluation bounded inputs. Remaining input/truth unreviewed is not source absence.",
+      "scope": "No whole-document/50-document accuracy or stage6 lead-performance claim."
     },
     {
-      "code": "EXISTING_PUBLIC_INPUT_GATES_PRESERVED",
-      "effect": "New source texts still fail existing transfer guards; no cropping, fabricated review, relaxed source checks or API retry used.",
-      "source_preflight": {
-        "REUSED_PRIOR_PUBLIC_EXCERPT_REVIEW_NO_RETEST": 1,
-        "BLOCKED_POLICY": 35,
-        "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT": 14
+      "code": "STRICT_SOURCE_OUTPUT_REJECTED",
+      "documents": 6,
+      "items": 7,
+      "reasons": {
+        "AMBIGUOUS_QUOTE": 3,
+        "NULL_WITH_EVIDENCE": 1,
+        "SOURCE": 1,
+        "QUOTE_NOT_IN_SOURCE": 2
       },
-      "diagnostic_counts_may_overlap": {
-        "existing_source_provenance_gate": 14,
-        "existing_contact_data_gate": 22,
-        "existing_query_URL_gate": 3,
-        "restored_text_without_native_HTML": 14
-      },
-      "legacy_DOE": "Prior exact reviewed600-character input reused, connectivity PASS remains fixed."
+      "resume": "Use development30 plus stored raw responses to improve exact source-supported quotations; retain strict validator and consumed evaluation history, no same request retry."
     },
     {
-      "code": "NO_SAME_INPUT_GLiNER2_COMPARISON",
-      "effect": "Historical CPU report recovered, but no exact frozen-source/body-hash/input-window pairing or prepared model weights/runtime. Comparison stays BLOCKED.",
-      "historical_model": "fastino/gliner2-base-v1",
-      "historical_input_characters": 1666,
-      "historical_accuracy": "NOT_MEASURED",
-      "current_gliner_package": false,
-      "model_files_in_inspected_workspace_and_user_cache": 0
+      "code": "GROQ_HTTP400_REQUEST_CONTRACT_BLOCK",
+      "http_status": 400,
+      "error_code": "invalid_request_error",
+      "flags": [],
+      "provider_detail": "UNKNOWN; raw error text intentionally not retained. No repeat to recover it.",
+      "remaining_eligible_not_attempted": 2,
+      "resume_document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "resume": "Preserve API_CONFIG_ERROR and SQLite. Validate any genuinely changed request contract locally first; do not rerun the same failed input/contract."
+    },
+    {
+      "code": "CONTACT_FOOTER_OR_COMPLETE_CONTEXT_HELD",
+      "contact_footer_not_safely_identified": 7,
+      "complete_context_exceeds600": 6,
+      "no_signal_context": 7,
+      "resume": "Use development inputs only. Frozen evaluation gate outcomes must not be tuned and relabelled as unused."
+    },
+    {
+      "code": "ONE_NATIVE_VERSION_DIFFERS_FROZEN_TEXT",
+      "documents": 1,
+      "resume": "Old source remains PARTIAL; new native/body version is separate. Do not replace frozen text/ID/hash."
+    },
+    {
+      "code": "SEMANTIC_IDENTITY_MAPPING_AND_REVIEW_LIMITS",
+      "reason": "Fixed literal/alias mapping may leave valid short/long product forms unmapped. Raw counts are not general semantic truth. Gold is AI review, not human; original sessions disclosed status-metadata exposure, not evaluated answer values.",
+      "clean_source_audit": "docs/v4/stage4-corpus/source-only-audit-evaluation-v1.json",
+      "resume": "Read source-only review packets/adjudication and independent audit. Do not silently change aliases or claimed holdout status."
     }
   ],
   "tests": {
-    "api_mock_functional": "Prior 99 retained as historical baseline; not rerun wholesale",
-    "existing_regression": "Prior 261 PASS + 1 skip REUSED: unchanged 22 core/CPU/fixture/pin files; not rerun wholesale",
-    "gemini_live": "DISABLED_NOT_RUN_NO_KEY_REQUIREMENT",
-    "groq_live": "PASS_STAGE2_FIXED_REUSED_NOT_RETESTED",
-    "semantic_accuracy": "UNVERIFIED_FOR_NEW50; historical source1-scoped result preserved",
-    "stage3_plus": "STAGE3_FUNCTIONAL_PASS_REUSED; STAGE4_SCOPED_MEASUREMENT_PARTIAL_BLOCKED",
+    "stages1_3": "PASS_PRESERVED; functional completion is not general accuracy",
+    "historical99_261": "Retained in before_repair_metadata.tests as historical results; current final full regression is separately measured",
+    "initial_CI_dependency_failure": "REPRODUCED15_FAILED6_PASSED; FIXED21_PASSED after minimal lightweight test extras",
+    "impact_passed": 220,
+    "repair_new_cases_passed": 36,
+    "final_python": {
+      "passed": 1220,
+      "failed": 0,
+      "existing_skipped": 1,
+      "seconds": 35.0,
+      "log": "var/v4/repair/final-code-pytest.log"
+    },
+    "node": {
+      "passed": 34,
+      "failed": 0,
+      "skipped": 0,
+      "reused_same_unchanged_Node_code": true,
+      "log": "var/v4/repair/final-node.log"
+    },
+    "remote_implementation_CI": {
+      "id": 38512076649,
+      "head_sha": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/38512076649"
+    },
+    "final_evidence_commit_CI": "MUST_VERIFY_EXACT_HEAD_AFTER_PUSH; do not substitute implementation CI",
+    "source_grounding_current_evaluation": {
+      "raw_response_items": 7,
+      "individually_validated_items": 0,
+      "source_rejected_items": 7,
+      "adopted_items": 0,
+      "rejection_reason_counts": {
+        "AMBIGUOUS_QUOTE": 3,
+        "NULL_WITH_EVIDENCE": 1,
+        "SOURCE": 1,
+        "QUOTE_NOT_IN_SOURCE": 2
+      },
+      "raw_context_unscored_reason_counts": {
+        "QUOTE_NOT_IN_SOURCE": 2
+      },
+      "source_rejection_is_not_transport_failure_or_unread_input": true,
+      "cpu": {
+        "source_verified_spans": 86,
+        "non_product_spans_not_compared": 68,
+        "product_spans": 18
+      }
+    },
+    "storage_restart_backup_restore": "PASS_RESEARCH_ADAPTER_AND_API_ERROR_STATE; zero new POSTs on replay",
+    "portable_evidence_replay": "PASS_ZERO_API_CALLS; frozen inference/rubric hashes and same-input source spans checked",
+    "whole50_accuracy": "BLOCKED_PARTIAL_SCOPE; no whole-document or lead-performance claim",
+    "CPU_comparison": "NEW_SAME_INPUT_PRODUCT_ONLY_BASELINE; improvement not demonstrated",
     "shadow_7_days": "NOT_RUN",
-    "groq_source_validation": "PASS_STAGE2_REUSED; 7 references preserved after current semantic reprocessing",
-    "restart_and_backup": "PASS_CURRENT_SEMANTIC_RESULT_PERSISTENCE; prior WAIT/transport checks reused",
-    "duplicate_prevention": "PASS_CURRENT_CACHED_REANALYSIS_0_NETWORK_CALLS",
-    "quote_new_tests": "Stage2 binding-only cases REUSED_UNCHANGED; 25 affected quote kind/event/cache cases rerun in stage3",
-    "quote_related_regression": "Prior broader suites retained; stage3 selected 37 PASS",
-    "saved_real_response_grounding": "PRIOR_RESPONSE_REUSED_1_ACCEPTED_4_HELD; NEW_RESPONSE_3_ACCEPTED_0_REJECTED",
-    "current_live_calls": 0,
-    "local_request_preflight": "PASS_EXACT_ACCEPTED_SCHEMA_6124_RESERVED_UNDER_6400",
-    "new_current_pytest_cases": 0,
-    "stage3_new_cases": "85 PASS unique, authored and saved-real response cases labelled separately",
-    "stage3_selected_regression": "37 PASS unique prior affected cases only",
-    "stage4_new_cases": "HISTORICAL_REUSED_NOT_RERUN: 20 PASS authored/arithmetic/source-reference cases; not 20 official documents",
-    "stage4_selected_regression": "HISTORICAL_REUSED_NOT_RERUN: 25 PASS, 177 deselected; not full99/261 rerun",
-    "stage4_official_document_accuracy": "NEW50 NOT_RUN; independent semantic truth unverified; old1-document figures historical only",
-    "stage4_CPU_comparison": "BLOCKED_NO_EXACT_MATCH; recovered historical1666-character GLiNER2 smoke report, not matching current frozen input",
-    "stage4_full_accuracy": "BLOCKED_INDEPENDENT_GOLD_AND_SOURCE_TRANSFER_GATES",
-    "stage4_SQLite": "PASS50 source docs in separate new SQLite; reopened/integrity ok; API_attempts0",
-    "stage4_grounding": "HISTORICAL_REUSED_NOT_RERUN: 8/8 literal references; meaning accuracy is separate",
-    "stage4_corpus_integrity": "PASS50 files/36 native snapshots/14 restored issuer texts;30/20 split; tampered descriptor rejected"
+    "Gemini": "DISABLED_NOT_RUN"
   },
   "commits": [
     {
@@ -128,10 +170,18 @@
     {
       "sha": "f318285836abd1b00f9cdedc96168e4f16630124",
       "role": "Source recovery118 / frozen50(30+20), literal/date/hash integrity and stored source materials; new Groq0; stage4 accuracy remains BLOCKED; remote/main verified"
+    },
+    {
+      "sha": "ca013abdb28f235c1d53dfad770d2e367497eaa6",
+      "role": "Verified actual repair start; no forced reset"
+    },
+    {
+      "sha": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
+      "role": "Pushed repair implementation; exact-SHA CI run38512076649 PASS"
     }
   ],
-  "scope": "SOURCE_REUSE_AND_FROZEN50_PREPARATION; no accuracy algorithm changes",
-  "updated_at": "2026-10-14T04:30:35.755490+00:00",
+  "scope": "Approved v1.6 repair: test dependencies, exact safe public spans, event-level AI source review, research-only engine adapter, frozen partial evaluation and new pinned CPU baseline; operational integration OFF.",
+  "updated_at": "2026-10-14T05:08:27.253790+00:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
@@ -155,27 +205,42 @@
     "docs/v4/STAGE4_RELATED_TESTS.xml",
     "docs/v4/stage4-corpus/manifest.json",
     "docs/v4/stage4-corpus/independent-gold-template.json",
-    "docs/v4/history/STAGE4_SCOPED_RESULTS_9c7f679.json"
+    "docs/v4/history/STAGE4_SCOPED_RESULTS_9c7f679.json",
+    "docs/v4/EVENT_REVIEW_POLICY.md",
+    "docs/v4/stage4-corpus/adjudication-development-v1.json",
+    "docs/v4/stage4-corpus/adjudication-evaluation-v1.json",
+    "docs/v4/stage4-corpus/cpu-baseline-repair-v1.json",
+    "docs/v4/stage4-corpus/evaluation-scores-repair-v1.json",
+    "docs/v4/stage4-corpus/event-gold-development-v1.json",
+    "docs/v4/stage4-corpus/event-gold-evaluation-v1.json",
+    "docs/v4/stage4-corpus/groq-responses-repair-v1.json",
+    "docs/v4/stage4-corpus/native-recovery-repair-v1.json",
+    "docs/v4/stage4-corpus/safe-inputs-v1.json",
+    "docs/v4/stage4-corpus/source-only-audit-evaluation-v1.json",
+    "docs/v4/stage4-corpus/source-only-blind-evaluation-v1.json"
   ],
   "storage": {
     "branch": "codex/bct-v4-integration",
     "implementation_push": "PASS_VERIFIED_SOURCE_CORPUS_PUSH",
-    "latest_remote_verified": "f318285836abd1b00f9cdedc96168e4f16630124",
+    "latest_remote_verified": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
     "verified_preserved_upstream_blobs": 466,
     "main_verified": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
     "receipt_commit_note": "Implementation commit SHA is recorded after verified push; the final receipt commit may advance HEAD. Read the current remote branch ref for final delivery SHA.",
-    "current_delivery": "PASS_VERIFIED_SOURCE_CORPUS_PUSH",
+    "current_delivery": "Implementation3ff3801 pushed and its CI PASS; final evidence commit ref/CI must be checked after push",
     "local_new_trial_root": "var/v4/groq-stage2 (ignored; not restored historical V4 DB)",
     "implementation_remote_sha": "5447c30a9f00ad2e6f67255e0e8f552d5cedb195",
-    "current_handoff_verified": "9c7f6796cc27a804ddcc1bfcfdf614ba398d51da",
+    "current_handoff_verified": "ca013abdb28f235c1d53dfad770d2e367497eaa6",
     "quote_repair_implementation_sha": "48cac90a8601e3227c4c31fe96b41b2c33afcaef",
-    "current_runtime_evidence": "var/v4/stage4-recovery",
+    "current_runtime_evidence": "var/v4/repair",
     "stage2_result_commit_sha": "96abceb903d9d88b4cf8ca8f95be45059a7dd486",
     "stage3_SQLite": "var/v4/stage3/replay (separate copy; stage2 source read-only)",
     "stage3_result_commit_sha": "e182b54737a063036b07f74ebc8d49397f7110df",
     "stage4_SQLite": "var/v4/stage4-recovery/corpus-ledger/v4.sqlite3",
     "stage4_result_commit_sha": "160d7b383b3ea8d24889b97107da827a41864760",
-    "stage4_corpus_commit_sha": "f318285836abd1b00f9cdedc96168e4f16630124"
+    "stage4_corpus_commit_sha": "f318285836abd1b00f9cdedc96168e4f16630124",
+    "research_adapter_SQLite": "var/v4/repair/adapter-ledger/v4.sqlite3",
+    "repair_API_SQLite": "var/v4/repair/api-ledger/v4.sqlite3",
+    "old_stage4_SQLite_preserved_readonly": true
   },
   "user_setup": [],
   "pr": {
@@ -194,7 +259,7 @@
     "failed_post_tokens": "UNKNOWN_NOT_REPORTED",
     "api_cost_usd": 0,
     "basis": "Previously user-confirmed Groq Free Plan; no paid path or billing changes",
-    "scope": "Cumulative V4 development trial ledger, including three prior failed posts"
+    "scope": "Historical V4 trial totals before this repair only; current repair usage is api_usage_current_task."
   },
   "providers": {
     "active": [
@@ -205,47 +270,70 @@
     "third_provider": false
   },
   "api_usage_current_task": {
-    "generation_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "total_tokens": 0,
-    "API_cost_USD": 0,
-    "Gemini_calls": 0,
-    "third_AI_provider": false,
-    "reason": "Dataset/source preparation and preflight only; no independently adjudicated new semantic truth and existing input gates preserved.",
-    "execution_environment_cost": "UNKNOWN_NOT_EXPOSED"
+    "providers_called": [
+      "groq"
+    ],
+    "model": "openai/gpt-oss-20b",
+    "generation_POSTs": 8,
+    "same_input_retries": 0,
+    "reported_response_documents": 7,
+    "input_tokens": 6242,
+    "output_tokens": 2809,
+    "reported_total_tokens": 9051,
+    "unreported_failed_request_usage_calls": 1,
+    "api_cost_usd": 0,
+    "api_cost_basis": "Existing user-confirmed Groq Free Plan; no paid plan, billing action, provider/model fallback or invoice query. Failed-call tokens UNKNOWN, not zero.",
+    "prior_attempts_imported_for_same_account_budget_not_new": 5,
+    "historical_responses_imported_as_cache_without_regeneration_or_redundant_revalidation": true,
+    "quota": "Existing 30RPM/1000RPD/8000TPM/200000TPD; 80% rolling local accounting, same ledger, unchanged one POST/run,6400 reservation,2048 output,600 chars,2 windows,60s.",
+    "reservation_sum_new_attempts": 48891,
+    "paid_API_calls": 0
   },
   "remaining_issues": [
     {
-      "code": "INDEPENDENT_TARGET_FACT_GOLD_UNVERIFIED",
-      "effect": "Source publication/identity/hash evidence is prepared. Product/role/quantity/buyer/qualified-supplier/specification/time truth for the frozen50 is not independently adjudicated. No Groq/self-generated labels used as gold.",
-      "unverified_field_slots": 750,
-      "template": "docs/v4/stage4-corpus/independent-gold-template.json"
+      "code": "FROZEN50_NOT_FULLY_READ_OR_HUMAN_VERIFIED",
+      "reason": "29 eligible,13 held,8 blocked. Only1 development and6 evaluation actual responses; event gold reviews20 development/9 evaluation bounded inputs. Remaining input/truth unreviewed is not source absence.",
+      "scope": "No whole-document/50-document accuracy or stage6 lead-performance claim."
     },
     {
-      "code": "EXISTING_PUBLIC_INPUT_GATES_PRESERVED",
-      "effect": "New source texts still fail existing transfer guards; no cropping, fabricated review, relaxed source checks or API retry used.",
-      "source_preflight": {
-        "REUSED_PRIOR_PUBLIC_EXCERPT_REVIEW_NO_RETEST": 1,
-        "BLOCKED_POLICY": 35,
-        "BLOCKED_NATIVE_PROVENANCE_NOT_PRESENT": 14
+      "code": "STRICT_SOURCE_OUTPUT_REJECTED",
+      "documents": 6,
+      "items": 7,
+      "reasons": {
+        "AMBIGUOUS_QUOTE": 3,
+        "NULL_WITH_EVIDENCE": 1,
+        "SOURCE": 1,
+        "QUOTE_NOT_IN_SOURCE": 2
       },
-      "diagnostic_counts_may_overlap": {
-        "existing_source_provenance_gate": 14,
-        "existing_contact_data_gate": 22,
-        "existing_query_URL_gate": 3,
-        "restored_text_without_native_HTML": 14
-      },
-      "legacy_DOE": "Prior exact reviewed600-character input reused, connectivity PASS remains fixed."
+      "resume": "Use development30 plus stored raw responses to improve exact source-supported quotations; retain strict validator and consumed evaluation history, no same request retry."
     },
     {
-      "code": "NO_SAME_INPUT_GLiNER2_COMPARISON",
-      "effect": "Historical CPU report recovered, but no exact frozen-source/body-hash/input-window pairing or prepared model weights/runtime. Comparison stays BLOCKED.",
-      "historical_model": "fastino/gliner2-base-v1",
-      "historical_input_characters": 1666,
-      "historical_accuracy": "NOT_MEASURED",
-      "current_gliner_package": false,
-      "model_files_in_inspected_workspace_and_user_cache": 0
+      "code": "GROQ_HTTP400_REQUEST_CONTRACT_BLOCK",
+      "http_status": 400,
+      "error_code": "invalid_request_error",
+      "flags": [],
+      "provider_detail": "UNKNOWN; raw error text intentionally not retained. No repeat to recover it.",
+      "remaining_eligible_not_attempted": 2,
+      "resume_document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "resume": "Preserve API_CONFIG_ERROR and SQLite. Validate any genuinely changed request contract locally first; do not rerun the same failed input/contract."
+    },
+    {
+      "code": "CONTACT_FOOTER_OR_COMPLETE_CONTEXT_HELD",
+      "contact_footer_not_safely_identified": 7,
+      "complete_context_exceeds600": 6,
+      "no_signal_context": 7,
+      "resume": "Use development inputs only. Frozen evaluation gate outcomes must not be tuned and relabelled as unused."
+    },
+    {
+      "code": "ONE_NATIVE_VERSION_DIFFERS_FROZEN_TEXT",
+      "documents": 1,
+      "resume": "Old source remains PARTIAL; new native/body version is separate. Do not replace frozen text/ID/hash."
+    },
+    {
+      "code": "SEMANTIC_IDENTITY_MAPPING_AND_REVIEW_LIMITS",
+      "reason": "Fixed literal/alias mapping may leave valid short/long product forms unmapped. Raw counts are not general semantic truth. Gold is AI review, not human; original sessions disclosed status-metadata exposure, not evaluated answer values.",
+      "clean_source_audit": "docs/v4/stage4-corpus/source-only-audit-evaluation-v1.json",
+      "resume": "Read source-only review packets/adjudication and independent audit. Do not silently change aliases or claimed holdout status."
     }
   ],
   "api_usage_previous_trials": {
@@ -308,70 +396,122 @@
     "whole_suites_retested": false
   },
   "stage4_verdict": {
-    "source_reuse_and_50_document_preparation": "PASS_MATERIAL_AND_SPLIT_INTEGRITY_ONLY",
-    "A_actual_50_document_accuracy": "NOT_RUN_GOLD_UNVERIFIED_AND_NEW_INPUTS_HELD",
-    "B_CPU_improvement": "BLOCKED_NO_MATCHING_INPUT",
-    "C_before_bottleneck_news_performance": "NOT_RUN_STAGE6",
-    "stage4": "BLOCKED_NOT_PASS",
-    "stage5_and_Shadow": "NOT_RUN"
+    "A": "PARTIAL_FROZEN_EXCERPT_MEASUREMENT_ONLY_NOT50_FULL_DOCUMENTS",
+    "B": "NOT_DEMONSTRATED",
+    "C": "NOT_RUN"
   },
   "stage4_metrics": {
-    "status": "NOT_RUN_INDEPENDENT_GOLD_UNVERIFIED",
-    "documents_scored": 0,
-    "independent_evaluation_documents_scored": 0,
-    "TP": null,
-    "FP": null,
-    "FN": null,
-    "UNKNOWN_source_absent": null,
-    "unverified_truth_fields": 750,
-    "precision": null,
-    "recall": null,
-    "f1": null,
-    "grounding_success_rate": null,
-    "reason": "No new model answers or verified semantic labels; unadjudicated truth is not counted as UNKNOWN correctness."
+    "verdict": "BLOCKED_ADOPTION_CRITERIA_AND_FULL_CORPUS_ACCURACY",
+    "measurement_completed_for": "Six actual evaluation response documents on frozen windows; four have uniquely source-bound raw contexts. Pipeline adoption recall and raw literal/alias metrics are separate.",
+    "adopted_pipeline": {
+      "TP": 0,
+      "FP": 0,
+      "FN": 38,
+      "UNKNOWN": 100,
+      "known_truth_missed": 38,
+      "truth_absent_unknown": 62,
+      "truth_unverified_claims": 0,
+      "truth_unverified_fields": 5,
+      "precision_denominator": 0,
+      "recall_denominator": 38,
+      "precision": null,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "raw_literal_alias_four_documents": {
+      "TP": 1,
+      "FP": 7,
+      "FN": 30,
+      "unmatched_predictions": 4,
+      "UNKNOWN": 68,
+      "known_truth_missed": 28,
+      "truth_absent_unknown": 40,
+      "truth_unverified_claims": 0,
+      "truth_unverified_fields": 3,
+      "precision_denominator": 8,
+      "recall_denominator": 31,
+      "precision": 0.125,
+      "recall": 0.03225806451612903,
+      "f1": 0.05128205128205128
+    },
+    "common_product_only_six_documents": {
+      "cpu": {
+        "no_frozen_alias_event_match": 7,
+        "FP": 7,
+        "TP": 2,
+        "FN": 4,
+        "truth_unverified_events_excluded": 1,
+        "unscored_ambiguous_event": 1,
+        "precision_denominator": 9,
+        "recall_denominator": 6,
+        "precision": 0.2222222222222222,
+        "recall": 0.3333333333333333,
+        "f1": 0.26666666666666666
+      },
+      "groq_adopted": {
+        "FN": 6,
+        "truth_unverified_events_excluded": 1,
+        "TP": 0,
+        "FP": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 6,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "groq_raw_context_entity_grounded": {
+        "FN": 6,
+        "truth_unverified_events_excluded": 1,
+        "TP": 0,
+        "FP": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 6,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "unmatched_or_ambiguous_source_forms_not_general_semantic_errors": true,
+    "source_grounding": {
+      "raw_response_items": 7,
+      "individually_validated_items": 0,
+      "source_rejected_items": 7,
+      "adopted_items": 0,
+      "rejection_reason_counts": {
+        "AMBIGUOUS_QUOTE": 3,
+        "NULL_WITH_EVIDENCE": 1,
+        "SOURCE": 1,
+        "QUOTE_NOT_IN_SOURCE": 2
+      },
+      "raw_context_unscored_reason_counts": {
+        "QUOTE_NOT_IN_SOURCE": 2
+      },
+      "source_rejection_is_not_transport_failure_or_unread_input": true,
+      "cpu": {
+        "source_verified_spans": 86,
+        "non_product_spans_not_compared": 68,
+        "product_spans": 18
+      }
+    },
+    "coverage": {
+      "all_evaluation_body_characters": 130537,
+      "eligible_frozen_window_characters": 4642,
+      "received_and_reviewed_window_characters": 3059,
+      "received_and_reviewed_body_characters": 44384,
+      "received_and_reviewed_outside_window_characters": 41325,
+      "received_and_reviewed_window_fraction": 0.06892123287671233,
+      "scope": "EXACT_FROZEN_INPUT_WINDOWS_ONLY"
+    },
+    "blocked_http_no_response": 1,
+    "eligible_unrun": 2,
+    "transfer_ineligible": 11,
+    "evidence": "docs/v4/stage4-corpus/evaluation-scores-repair-v1.json"
   },
   "repair": {
     "start_sha": "ca013abdb28f235c1d53dfad770d2e367497eaa6",
-    "source_freeze_sha256": "6f288a8165158a28cb05a46c3fa4d264b709e752eea052f0191276f356da6d07",
-    "ci_dependency_repair": {
-      "remote_failure": {
-        "run": 38500317584,
-        "job": 115645455911,
-        "failed": 15,
-        "passed": 1169,
-        "skipped": 1,
-        "missing": [
-          "networkx",
-          "trafilatura",
-          "feedparser",
-          "dateparser",
-          "pypdf"
-        ]
-      },
-      "clean_before": {
-        "failed": 15,
-        "passed": 6
-      },
-      "clean_after": {
-        "passed": 21,
-        "failed": 0
-      },
-      "logs": "var/v4/repair",
-      "model_dependencies_in_default_tests": false
-    },
-    "evaluation20_outputs_exposed_to_developer": false,
-    "operational_adapter_enabled": false,
-    "code_development_status": "PASS_SCOPED_FUNCTIONAL_TESTS",
-    "affected_tests": {
-      "passed": 220,
-      "failed": 0,
-      "log": "var/v4/repair/affected-final.log"
-    },
-    "development_input_counts": {
-      "ELIGIBLE": 20,
-      "HELD_CONTEXT": 9,
-      "BLOCKED": 1
-    },
+    "implementation_sha": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
+    "inference_rubric_changed_after_evaluation_freeze": false,
+    "reporting_replay_added_after_freeze": "scripts/v4/replay_repair_evidence.py; same frozen assess/product rules, no inference changes or new POSTs",
     "evaluation_freeze": {
       "at": "2026-10-14T04:30:35.700420+00:00",
       "models": {
@@ -406,24 +546,628 @@
       "source_freeze_sha256": "6f288a8165158a28cb05a46c3fa4d264b709e752eea052f0191276f356da6d07",
       "policy": "No tuning after holdout results. Partial input accuracy only; no human validation or early-performance claim."
     },
-    "cpu_preparation": {
-      "status": "PASS_NEW_MODEL_PREPARATION_AND_INFERENCE",
-      "historical_restoration": false,
+    "source_preservation": {
+      "status": "PASS",
+      "protected_files_and_private_DB_fingerprints_checked": 90,
+      "changed": [],
+      "existing_unique_documents": 118,
+      "existing_FULL": 37,
+      "existing_PARTIAL": 81,
+      "frozen_documents": 50,
+      "development": 30,
+      "evaluation": 20,
+      "frozen_FULL": 30,
+      "frozen_PARTIAL": 20,
+      "source_freeze_sha256": "6f288a8165158a28cb05a46c3fa4d264b709e752eea052f0191276f356da6d07"
+    },
+    "native_recovery": {
+      "historical_artifact_native_HTML_found": false,
+      "official_fetches": 14,
+      "identical_frozen_parsed_body": 13,
+      "changed_version_not_substituted": 1,
+      "historical_HTML_restoration_claimed": false,
+      "evidence": "docs/v4/stage4-corpus/native-recovery-repair-v1.json"
+    },
+    "source_gate": {
+      "status": "PASS_FUNCTIONAL_SAFETY_NOT_ALL_DOCUMENTS_ELIGIBLE",
+      "unique_document_counts": {
+        "ELIGIBLE": 29,
+        "HELD_CONTEXT": 13,
+        "BLOCKED": 8
+      },
+      "development": {
+        "ELIGIBLE": 20,
+        "HELD_CONTEXT": 9,
+        "BLOCKED": 1
+      },
+      "evaluation": {
+        "ELIGIBLE": 9,
+        "HELD_CONTEXT": 4,
+        "BLOCKED": 7
+      },
+      "overlapping_reason_counts": {
+        "NO_SIGNAL_CONTEXT_IN_SOURCE": 7,
+        "NO_COMPLETE_SAFE_SIGNAL_CONTEXT_WITHIN_BUDGET": 6,
+        "NATIVE_ORIGINAL_MISSING": 1,
+        "URL_OR_REDIRECT_NOT_APPROVED": 1,
+        "REFETCHED_BODY_DIFFERS_FROZEN_VERSION_NOT_REPLACED": 1,
+        "CONTACT_OUTSIDE_VERIFIED_TERMINAL_FOOTER": 7
+      },
+      "safety_tests": "36 repair tests (including adapter/evaluation/CPU window cases) plus affected220; credentials/flags outside windows remain blocked; safe footer excluded by original span, unknown/query/redirect guards preserved.",
+      "evidence": "docs/v4/stage4-corpus/safe-inputs-v1.json"
+    },
+    "ci_dependency_repair": {
+      "remote_failure": {
+        "run": 38500317584,
+        "job": 115645455911,
+        "failed": 15,
+        "passed": 1169,
+        "skipped": 1,
+        "missing": [
+          "networkx",
+          "trafilatura",
+          "feedparser",
+          "dateparser",
+          "pypdf"
+        ]
+      },
+      "clean_before": {
+        "failed": 15,
+        "passed": 6
+      },
+      "clean_after": {
+        "passed": 21,
+        "failed": 0
+      },
+      "logs": "var/v4/repair",
+      "model_dependencies_in_default_tests": false
+    },
+    "tests": {
+      "impact_passed": 220,
+      "repair_cases_passed": 36,
+      "final_python": {
+        "passed": 1220,
+        "failed": 0,
+        "existing_skipped": 1,
+        "seconds": 35.0,
+        "log": "var/v4/repair/final-code-pytest.log"
+      },
+      "node": {
+        "passed": 34,
+        "failed": 0,
+        "skipped": 0,
+        "reused_same_unchanged_Node_code": true,
+        "log": "var/v4/repair/final-node.log"
+      },
+      "first_remote_code_CI": {
+        "id": 38512076649,
+        "head_sha": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/38512076649"
+      },
+      "remote_actual_log_counts": {
+        "python_passed": 1220,
+        "existing_skip": 1,
+        "node_passed": 34,
+        "job_id": 115682606564
+      },
+      "portable_offline_replay": "PASS: exact same TP/FP/FN/P/R/F1 as frozen isolated evaluator, zero new API calls"
+    },
+    "actual_development_adapter": {
+      "status": "PASS",
+      "actual_source_docs_replayed": 30,
+      "on": {
+        "bottleneck_research_candidates": 0,
+        "demand_signals": 1,
+        "engine_observations_with_AI_events": 1,
+        "linked_pairs": 0,
+        "product_exploration": 1,
+        "supply_signals": 0
+      },
+      "off": {
+        "bottleneck_research_candidates": 0,
+        "demand_signals": 0,
+        "engine_observations_with_AI_events": 0,
+        "linked_pairs": 0,
+        "product_exploration": 0,
+        "supply_signals": 0
+      },
+      "operational_integration_enabled": false,
+      "backup_integrity": "ok",
+      "reopen_matches_original": true,
+      "idempotent_counts": {
+        "runs": 4,
+        "firsts": 0,
+        "captures": 120
+      },
+      "fresh_process_API_cache": {
+        "status": "PASS",
+        "cached": true,
+        "new_POSTs": 0
+      },
+      "raw_advisory_sha256": "0b24f89936e00040cc471611670910a35446e6dbb1dc73e9d5652311364340f9"
+    },
+    "api_state_restart_restore": {
+      "status": "PASS_REAL_API_STATE_BACKUP_RESTORE",
+      "initial_probe": "Unattempted source had no stored safe review and correctly remained POLICY; corrected probe uses actual already reviewed failed-request source. Initial evidence retained.",
+      "original_counts": {
+        "events": 73,
+        "documents": 8,
+        "blobs": 0
+      },
+      "restored_check": {
+        "counts_before_local_check": {
+          "events": 73,
+          "documents": 8,
+          "blobs": 0
+        },
+        "status": "INPUT_ERROR",
+        "reason": "LOCAL_REQUEST_CONTRACT_FIX_REQUIRED",
+        "new_POSTs": 0,
+        "integrity": "ok"
+      },
+      "backup_sha256": "8bdbc963f1002b9f1a986f736452dfa8154b5e80ebbd1451ad395ca0634368c5"
+    },
+    "gold": {
+      "method": "Separate context-isolated AI source-only author/reviewer sessions, then source-based adjudication; no target Groq/CPU answers used as labels, no human verification. Shared filesystem/procedural allowlist rather than OS-enforced independent machines.",
+      "development": {
+        "reviewed_documents": 20,
+        "unreviewed_documents": 10,
+        "events": 39,
+        "AMBIGUOUS_facts": 24
+      },
+      "evaluation": {
+        "counts": {
+          "effectively_reviewed_documents": 9,
+          "unreviewed_documents": 11,
+          "gold_events": 15,
+          "VERIFIED_PRESENT": 83,
+          "VERIFIED_ABSENT": 133,
+          "AMBIGUOUS": 9,
+          "event_fields_excluded_from_fact_denominators": 9,
+          "missing_gold_documents": 0
+        },
+        "by_field_status_counts": {
+          "actuality": {
+            "VERIFIED_PRESENT": 14,
+            "VERIFIED_ABSENT": 1
+          },
+          "alternative": {
+            "VERIFIED_ABSENT": 15
+          },
+          "customer_group": {
+            "VERIFIED_PRESENT": 4,
+            "AMBIGUOUS": 4,
+            "VERIFIED_ABSENT": 7
+          },
+          "lead_time": {
+            "VERIFIED_ABSENT": 15
+          },
+          "need_time": {
+            "VERIFIED_ABSENT": 13,
+            "VERIFIED_PRESENT": 2
+          },
+          "period": {
+            "VERIFIED_ABSENT": 7,
+            "VERIFIED_PRESENT": 8
+          },
+          "product": {
+            "VERIFIED_PRESENT": 14,
+            "AMBIGUOUS": 1
+          },
+          "quantity": {
+            "VERIFIED_ABSENT": 13,
+            "VERIFIED_PRESENT": 2
+          },
+          "ready_time": {
+            "VERIFIED_ABSENT": 10,
+            "VERIFIED_PRESENT": 5
+          },
+          "region": {
+            "VERIFIED_ABSENT": 10,
+            "VERIFIED_PRESENT": 5
+          },
+          "relief": {
+            "VERIFIED_ABSENT": 15
+          },
+          "role": {
+            "VERIFIED_PRESENT": 12,
+            "VERIFIED_ABSENT": 2,
+            "AMBIGUOUS": 1
+          },
+          "specification": {
+            "VERIFIED_ABSENT": 9,
+            "VERIFIED_PRESENT": 6
+          },
+          "supply_pool": {
+            "VERIFIED_PRESENT": 4,
+            "VERIFIED_ABSENT": 8,
+            "AMBIGUOUS": 3
+          },
+          "unit": {
+            "VERIFIED_ABSENT": 8,
+            "VERIFIED_PRESENT": 7
+          }
+        },
+        "final_gold_is_independent_AI_review_not_human_validation": true,
+        "strict_source_isolation_procedurally_pristine": false,
+        "procedural_metadata_exposure_incidents": 2,
+        "evaluated_values_or_gold_answers_reported_exposed": false,
+        "source_adjudication_difference_counts": {
+          "total_decisions": 37,
+          "source_resolved_differences": 35,
+          "unresolved_differences": 2,
+          "unresolved_source_facts_in_final": 9
+        }
+      },
+      "clean_source_audit": {
+        "status": "COMPLETE_SOURCE_ONLY_AI_AUDIT_WITH_TWO_UNRESOLVED_RELATIONS",
+        "evidence": "docs/v4/stage4-corpus/source-only-audit-evaluation-v1.json",
+        "blind_draft": "docs/v4/stage4-corpus/source-only-blind-evaluation-v1.json",
+        "audit_sha256": "391c4502dc223edc2a06156241aa0d49b07c8a75551479946110004e258d8f54",
+        "reviewer": {
+          "type": "AI_INDEPENDENT_SESSION",
+          "session": "/root/clean_source_audit",
+          "model": "UNKNOWN",
+          "human_verified": false,
+          "exposed_to_target_model_outputs": false,
+          "exposed_to_other_session_status_queries": false
+        },
+        "source_coverage": {
+          "documents_total": 20,
+          "review_complete_documents": 9,
+          "unreviewed_empty_window_documents": 11,
+          "reviewed_windows": 14,
+          "reviewed_characters": 4642,
+          "captured_body_characters_for_reviewed_documents": 79022,
+          "reviewed_fraction_of_captured_bodies_for_reviewed_documents": 0.05874313482321379,
+          "outside_window_semantics_reviewed": false,
+          "full_document_review_complete": false,
+          "attachments_video_tables_verified": false
+        },
+        "present_fact_summary": {
+          "gold_present_facts_examined": 83,
+          "source_quote_coordinate_checks_passed": 83,
+          "raw_literal_or_enum_evidence_checks_passed": 83,
+          "source_supported_with_stated_scope": 81,
+          "source_semantically_unresolved_field_relations": 2,
+          "source_definitely_contradicted_present_facts": 0,
+          "not_an_accuracy_or_gold_agreement_metric": true
+        },
+        "outcome": {
+          "agreement_present_fact_count": 81,
+          "disagreement_definite_source_contradiction_count": 0,
+          "unresolved_gold_present_field_mapping_count": 2,
+          "retained_existing_ambiguous_count": 9,
+          "total_unresolved_fact_relations": 11,
+          "gold_edited": false,
+          "frozen_blind_draft_edited_after_gold_exposure": false,
+          "source_first_draft_is_independent_of_gold": true,
+          "audit_after_gold_exposure_is_not_a_second_blind_draft": true,
+          "human_verification": false,
+          "evaluated_model_accuracy": "NOT_ASSESSED_TARGET_OUTPUTS_NEVER_READ",
+          "gold_agreement_is_accuracy_evidence": false,
+          "full_document_recall_claim": false,
+          "decision_method": "No majority vote or score threshold. Source quotations, explicit product/event relation, actual-versus-planned scope, and fixed policy only."
+        },
+        "unresolved_findings": [
+          {
+            "event_id": "d17-e02",
+            "field": "need_time",
+            "reason": "원문은 다음 회계연도에 잠재적 수요가 증가할 가능성을 명시하므로 period는 확인된다. 고객이 그때까지 물품을 필요로 한다는 별도 필요 시점/요구 납기 관계는 명시되지 않는다. 고정 정책은 period와 need_time을 별도 필드로 나누므로 같은 기간을 need_time에 중복 배정하는 것은 확정하지 못한다. 값의 원문 존재를 부정하지 않으며 field 관계만 AMBIGUOUS로 제안한다."
+          },
+          {
+            "event_id": "d17-e03",
+            "field": "need_time",
+            "reason": "원문은 다음 회계연도에 잠재적 수요가 증가할 가능성을 명시하므로 period는 확인된다. 고객이 그때까지 물품을 필요로 한다는 별도 필요 시점/요구 납기 관계는 명시되지 않는다. 고정 정책은 period와 need_time을 별도 필드로 나누므로 같은 기간을 need_time에 중복 배정하는 것은 확정하지 못한다. 값의 원문 존재를 부정하지 않으며 field 관계만 AMBIGUOUS로 제안한다."
+          }
+        ],
+        "unresolved_present_relations_are_in_unattempted_document": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a; six scored response-document denominators unchanged",
+        "original_review_metadata_exposure_incidents_retained": 2,
+        "gold_or_evaluation_outputs_changed_after_audit": false,
+        "limitations": [
+          "검토 대상은 9문서의 14 windows이다. 빈 windows 11문서는 미검토이며 ABSENT가 아니다.",
+          "source-first 초안 고정 후 기존 gold를 읽은 대조 검토다. AI 검토이며 사람 검증이 아니다.",
+          "모델 답·독립 인간 정답을 보지 않았으므로 여기의 동의/보류 수는 평가 모델 정확도나 gold 정확도 추정치가 아니다.",
+          "원문 인용이 맞는 것과 그 값이 올바른 의미 필드·사건에 연결되는 것은 별개이며 둘을 분리해 기록했다.",
+          "검토한 원문도 기사상의 주장이다. 명목 능력 발표나 수주 사실이 실제 적격 공급/납품 실증을 대체하지 않는다."
+        ]
+      },
+      "event_schema": "document -> target -> event -> facts; PRESENT/ABSENT/UNVERIFIED/AMBIGUOUS; original flat750 template retained as historical UNVERIFIED template, not current truth."
+    },
+    "accuracy": {
+      "verdict": "BLOCKED_ADOPTION_CRITERIA_AND_FULL_CORPUS_ACCURACY",
+      "measurement_completed_for": "Six actual evaluation response documents on frozen windows; four have uniquely source-bound raw contexts. Pipeline adoption recall and raw literal/alias metrics are separate.",
+      "adopted_pipeline": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 38,
+        "UNKNOWN": 100,
+        "known_truth_missed": 38,
+        "truth_absent_unknown": 62,
+        "truth_unverified_claims": 0,
+        "truth_unverified_fields": 5,
+        "precision_denominator": 0,
+        "recall_denominator": 38,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "raw_literal_alias_four_documents": {
+        "TP": 1,
+        "FP": 7,
+        "FN": 30,
+        "unmatched_predictions": 4,
+        "UNKNOWN": 68,
+        "known_truth_missed": 28,
+        "truth_absent_unknown": 40,
+        "truth_unverified_claims": 0,
+        "truth_unverified_fields": 3,
+        "precision_denominator": 8,
+        "recall_denominator": 31,
+        "precision": 0.125,
+        "recall": 0.03225806451612903,
+        "f1": 0.05128205128205128
+      },
+      "common_product_only_six_documents": {
+        "cpu": {
+          "no_frozen_alias_event_match": 7,
+          "FP": 7,
+          "TP": 2,
+          "FN": 4,
+          "truth_unverified_events_excluded": 1,
+          "unscored_ambiguous_event": 1,
+          "precision_denominator": 9,
+          "recall_denominator": 6,
+          "precision": 0.2222222222222222,
+          "recall": 0.3333333333333333,
+          "f1": 0.26666666666666666
+        },
+        "groq_adopted": {
+          "FN": 6,
+          "truth_unverified_events_excluded": 1,
+          "TP": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 6,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "groq_raw_context_entity_grounded": {
+          "FN": 6,
+          "truth_unverified_events_excluded": 1,
+          "TP": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 6,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "unmatched_or_ambiguous_source_forms_not_general_semantic_errors": true,
+      "source_grounding": {
+        "raw_response_items": 7,
+        "individually_validated_items": 0,
+        "source_rejected_items": 7,
+        "adopted_items": 0,
+        "rejection_reason_counts": {
+          "AMBIGUOUS_QUOTE": 3,
+          "NULL_WITH_EVIDENCE": 1,
+          "SOURCE": 1,
+          "QUOTE_NOT_IN_SOURCE": 2
+        },
+        "raw_context_unscored_reason_counts": {
+          "QUOTE_NOT_IN_SOURCE": 2
+        },
+        "source_rejection_is_not_transport_failure_or_unread_input": true,
+        "cpu": {
+          "source_verified_spans": 86,
+          "non_product_spans_not_compared": 68,
+          "product_spans": 18
+        }
+      },
+      "coverage": {
+        "all_evaluation_body_characters": 130537,
+        "eligible_frozen_window_characters": 4642,
+        "received_and_reviewed_window_characters": 3059,
+        "received_and_reviewed_body_characters": 44384,
+        "received_and_reviewed_outside_window_characters": 41325,
+        "received_and_reviewed_window_fraction": 0.06892123287671233,
+        "scope": "EXACT_FROZEN_INPUT_WINDOWS_ONLY"
+      },
+      "blocked_http_no_response": 1,
+      "eligible_unrun": 2,
+      "transfer_ineligible": 11,
+      "evidence": "docs/v4/stage4-corpus/evaluation-scores-repair-v1.json"
+    },
+    "CPU": {
+      "status": "PASS_NEW_SAME_INPUT_BASELINE_NOT_HISTORICAL_RESTORATION",
       "model": "fastino/gliner2-base-v1",
       "revision": "f9634218e53580c56edf0de97ca1a7d3f1c2354e",
-      "scope": "20 newly computed development same-input documents; model not installed in general test environment"
+      "Apache2_weights_verified_with_upstream_checksums": true,
+      "isolated_preparation_once": true,
+      "prepared_model_directory": "var/v4/repair/cpu/runtime",
+      "development_same_input_documents": 20,
+      "evaluation_same_input_documents": 9,
+      "direct_comparison_response_documents": 6,
+      "supported_common_comparison": "product entity only; no role/actuality or generic-party/geographic NER vs semantic relation comparison",
+      "inference_CPU_seconds_excluding_load_install": 73.89520484500002,
+      "inference_wall_seconds_excluding_load_install": 22.51367560000108,
+      "peak_RSS_MiB": 2101.609375,
+      "model_runtime_disk": "2.0 GiB observed (environment plus pinned weights)"
     },
-    "actual_development_call": {
-      "calls": 1,
-      "input_tokens": 907,
-      "output_tokens": 371,
-      "total_tokens": 1278,
+    "actual_usage": {
+      "providers_called": [
+        "groq"
+      ],
+      "model": "openai/gpt-oss-20b",
+      "generation_POSTs": 8,
+      "same_input_retries": 0,
+      "reported_response_documents": 7,
+      "input_tokens": 6242,
+      "output_tokens": 2809,
+      "reported_total_tokens": 9051,
+      "unreported_failed_request_usage_calls": 1,
       "api_cost_usd": 0,
-      "free_plan": true,
-      "source_status": "PASS",
-      "engine_AI_events": 1,
-      "demand_signals": 1,
-      "operational_promotions": 0
+      "api_cost_basis": "Existing user-confirmed Groq Free Plan; no paid plan, billing action, provider/model fallback or invoice query. Failed-call tokens UNKNOWN, not zero.",
+      "prior_attempts_imported_for_same_account_budget_not_new": 5,
+      "historical_responses_imported_as_cache_without_regeneration_or_redundant_revalidation": true,
+      "quota": "Existing 30RPM/1000RPD/8000TPM/200000TPD; 80% rolling local accounting, same ledger, unchanged one POST/run,6400 reservation,2048 output,600 chars,2 windows,60s.",
+      "reservation_sum_new_attempts": 48891,
+      "paid_API_calls": 0
+    },
+    "platform_usage": {
+      "Groq_API_cost_is_not_platform_usage": true,
+      "assistant_review_sessions_CPU_storage_billing": "NOT_AVAILABLE: platform billing/token telemetry is not exposed. Do not report as $0.",
+      "CPU_inference_resource_metrics": "See CPU section; CPU model download/install and platform agent time are separate."
+    },
+    "actual_read_scope": {
+      "new_POST_documents": 8,
+      "new_response_documents": 7,
+      "POST_window_characters": 4154,
+      "response_window_characters": 3644,
+      "response_document_available_body_characters": 53707,
+      "all50_available_body_characters": 308442,
+      "scope": "Exact transmitted windows, not comprehension or whole original document/attachments",
+      "development_findings": "Source-bound FOX-XP order/product; incomplete region/customer/qualified supply and no independent gap. One event reached existing engine observations; zero research bottleneck candidates.",
+      "real_evaluation_accepted_findings": 0,
+      "evaluation_relief_or_missing_product_semantics": "Not inferred from rejected quotes, unreviewed ranges or absent returned events."
+    },
+    "scope": {
+      "main_operating_DB_data_branches_Actions_alerts_web_unchanged": true,
+      "live_operational_adapter_enabled": false,
+      "stage1_3_PASS_preserved": true,
+      "stage5": "RESEARCH_ADAPTER_FUNCTIONS_AND_SYNTHETIC_DEVELOPMENT_BACKFILL_ONLY",
+      "stage6_lead_performance": "NOT_RUN",
+      "seven_day_shadow": "NOT_RUN"
+    },
+    "verdict": {
+      "environment_reproducibility": "PASS_LIGHTWEIGHT_CLEAN_INSTALL_AND_CI",
+      "input_safety": "PASS_SCOPED_FUNCTIONAL_GATES_WITH29_ELIGIBLE21_HELD_BLOCKED",
+      "AI_to_engine_functional_connection": "PASS_SYNTHETIC_POSITIVE_AND_ONE_REAL_DEVELOPMENT_EVENT",
+      "frozen50_general_semantic_accuracy": "BLOCKED",
+      "CPU_improvement": "NOT_DEMONSTRATED_ADOPTION_CRITERIA_NOT_MET",
+      "remote_implementation_delivery": "PASS_EXACT_CODE_SHA_CI",
+      "leading_performance": "NOT_RUN"
+    },
+    "blockers": [
+      {
+        "code": "FROZEN50_NOT_FULLY_READ_OR_HUMAN_VERIFIED",
+        "reason": "29 eligible,13 held,8 blocked. Only1 development and6 evaluation actual responses; event gold reviews20 development/9 evaluation bounded inputs. Remaining input/truth unreviewed is not source absence.",
+        "scope": "No whole-document/50-document accuracy or stage6 lead-performance claim."
+      },
+      {
+        "code": "STRICT_SOURCE_OUTPUT_REJECTED",
+        "documents": 6,
+        "items": 7,
+        "reasons": {
+          "AMBIGUOUS_QUOTE": 3,
+          "NULL_WITH_EVIDENCE": 1,
+          "SOURCE": 1,
+          "QUOTE_NOT_IN_SOURCE": 2
+        },
+        "resume": "Use development30 plus stored raw responses to improve exact source-supported quotations; retain strict validator and consumed evaluation history, no same request retry."
+      },
+      {
+        "code": "GROQ_HTTP400_REQUEST_CONTRACT_BLOCK",
+        "http_status": 400,
+        "error_code": "invalid_request_error",
+        "flags": [],
+        "provider_detail": "UNKNOWN; raw error text intentionally not retained. No repeat to recover it.",
+        "remaining_eligible_not_attempted": 2,
+        "resume_document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+        "resume": "Preserve API_CONFIG_ERROR and SQLite. Validate any genuinely changed request contract locally first; do not rerun the same failed input/contract."
+      },
+      {
+        "code": "CONTACT_FOOTER_OR_COMPLETE_CONTEXT_HELD",
+        "contact_footer_not_safely_identified": 7,
+        "complete_context_exceeds600": 6,
+        "no_signal_context": 7,
+        "resume": "Use development inputs only. Frozen evaluation gate outcomes must not be tuned and relabelled as unused."
+      },
+      {
+        "code": "ONE_NATIVE_VERSION_DIFFERS_FROZEN_TEXT",
+        "documents": 1,
+        "resume": "Old source remains PARTIAL; new native/body version is separate. Do not replace frozen text/ID/hash."
+      },
+      {
+        "code": "SEMANTIC_IDENTITY_MAPPING_AND_REVIEW_LIMITS",
+        "reason": "Fixed literal/alias mapping may leave valid short/long product forms unmapped. Raw counts are not general semantic truth. Gold is AI review, not human; original sessions disclosed status-metadata exposure, not evaluated answer values.",
+        "clean_source_audit": "docs/v4/stage4-corpus/source-only-audit-evaluation-v1.json",
+        "resume": "Read source-only review packets/adjudication and independent audit. Do not silently change aliases or claimed holdout status."
+      }
+    ],
+    "next_start": "Run the committed offline evidence replay; inspect development source/quote and alias-mapping diagnostics, preserve original frozen50 and consumed holdout. No same failed API retry, stage6 or Shadow. Reuse pinned CPU runtime and stored raw responses, no additional keys/models/providers."
+  },
+  "before_repair_metadata": {
+    "handoff_sha": "9c7f6796cc27a804ddcc1bfcfdf614ba398d51da",
+    "base_remote_sha": "9c7f6796cc27a804ddcc1bfcfdf614ba398d51da",
+    "scope": "SOURCE_REUSE_AND_FROZEN50_PREPARATION; no accuracy algorithm changes",
+    "tests": {
+      "api_mock_functional": "Prior 99 retained as historical baseline; not rerun wholesale",
+      "existing_regression": "Prior 261 PASS + 1 skip REUSED: unchanged 22 core/CPU/fixture/pin files; not rerun wholesale",
+      "gemini_live": "DISABLED_NOT_RUN_NO_KEY_REQUIREMENT",
+      "groq_live": "PASS_STAGE2_FIXED_REUSED_NOT_RETESTED",
+      "semantic_accuracy": "UNVERIFIED_FOR_NEW50; historical source1-scoped result preserved",
+      "stage3_plus": "STAGE3_FUNCTIONAL_PASS_REUSED; STAGE4_SCOPED_MEASUREMENT_PARTIAL_BLOCKED",
+      "shadow_7_days": "NOT_RUN",
+      "groq_source_validation": "PASS_STAGE2_REUSED; 7 references preserved after current semantic reprocessing",
+      "restart_and_backup": "PASS_CURRENT_SEMANTIC_RESULT_PERSISTENCE; prior WAIT/transport checks reused",
+      "duplicate_prevention": "PASS_CURRENT_CACHED_REANALYSIS_0_NETWORK_CALLS",
+      "quote_new_tests": "Stage2 binding-only cases REUSED_UNCHANGED; 25 affected quote kind/event/cache cases rerun in stage3",
+      "quote_related_regression": "Prior broader suites retained; stage3 selected 37 PASS",
+      "saved_real_response_grounding": "PRIOR_RESPONSE_REUSED_1_ACCEPTED_4_HELD; NEW_RESPONSE_3_ACCEPTED_0_REJECTED",
+      "current_live_calls": 0,
+      "local_request_preflight": "PASS_EXACT_ACCEPTED_SCHEMA_6124_RESERVED_UNDER_6400",
+      "new_current_pytest_cases": 0,
+      "stage3_new_cases": "85 PASS unique, authored and saved-real response cases labelled separately",
+      "stage3_selected_regression": "37 PASS unique prior affected cases only",
+      "stage4_new_cases": "HISTORICAL_REUSED_NOT_RERUN: 20 PASS authored/arithmetic/source-reference cases; not 20 official documents",
+      "stage4_selected_regression": "HISTORICAL_REUSED_NOT_RERUN: 25 PASS, 177 deselected; not full99/261 rerun",
+      "stage4_official_document_accuracy": "NEW50 NOT_RUN; independent semantic truth unverified; old1-document figures historical only",
+      "stage4_CPU_comparison": "BLOCKED_NO_EXACT_MATCH; recovered historical1666-character GLiNER2 smoke report, not matching current frozen input",
+      "stage4_full_accuracy": "BLOCKED_INDEPENDENT_GOLD_AND_SOURCE_TRANSFER_GATES",
+      "stage4_SQLite": "PASS50 source docs in separate new SQLite; reopened/integrity ok; API_attempts0",
+      "stage4_grounding": "HISTORICAL_REUSED_NOT_RERUN: 8/8 literal references; meaning accuracy is separate",
+      "stage4_corpus_integrity": "PASS50 files/36 native snapshots/14 restored issuer texts;30/20 split; tampered descriptor rejected"
+    },
+    "storage": {
+      "branch": "codex/bct-v4-integration",
+      "implementation_push": "PASS_VERIFIED_SOURCE_CORPUS_PUSH",
+      "latest_remote_verified": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
+      "verified_preserved_upstream_blobs": 466,
+      "main_verified": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+      "receipt_commit_note": "Implementation commit SHA is recorded after verified push; the final receipt commit may advance HEAD. Read the current remote branch ref for final delivery SHA.",
+      "current_delivery": "Implementation3ff3801 pushed and its CI PASS; final evidence commit ref/CI must be checked after push",
+      "local_new_trial_root": "var/v4/groq-stage2 (ignored; not restored historical V4 DB)",
+      "implementation_remote_sha": "5447c30a9f00ad2e6f67255e0e8f552d5cedb195",
+      "current_handoff_verified": "ca013abdb28f235c1d53dfad770d2e367497eaa6",
+      "quote_repair_implementation_sha": "48cac90a8601e3227c4c31fe96b41b2c33afcaef",
+      "current_runtime_evidence": "var/v4/repair",
+      "stage2_result_commit_sha": "96abceb903d9d88b4cf8ca8f95be45059a7dd486",
+      "stage3_SQLite": "var/v4/stage3/replay (separate copy; stage2 source read-only)",
+      "stage3_result_commit_sha": "e182b54737a063036b07f74ebc8d49397f7110df",
+      "stage4_SQLite": "var/v4/stage4-recovery/corpus-ledger/v4.sqlite3",
+      "stage4_result_commit_sha": "160d7b383b3ea8d24889b97107da827a41864760",
+      "stage4_corpus_commit_sha": "f318285836abd1b00f9cdedc96168e4f16630124",
+      "research_adapter_SQLite": "var/v4/repair/adapter-ledger/v4.sqlite3",
+      "repair_API_SQLite": "var/v4/repair/api-ledger/v4.sqlite3",
+      "old_stage4_SQLite_preserved_readonly": true
+    },
+    "api_usage": {
+      "generation_posts": 5,
+      "received_responses": 2,
+      "successful_validated_responses": 1,
+      "measured_input_tokens": 1747,
+      "measured_output_tokens": 1840,
+      "measured_total_tokens": 3587,
+      "failed_post_tokens": "UNKNOWN_NOT_REPORTED",
+      "api_cost_usd": 0,
+      "basis": "Previously user-confirmed Groq Free Plan; no paid path or billing changes",
+      "scope": "Historical V4 trial totals before this repair only; current repair usage is api_usage_current_task."
     }
   }
 }

@@ -1,8 +1,33 @@
-# GroqCloud only, Gemini disabled — stage 3 meaning guards
+# GroqCloud only, Gemini disabled — V4 repair and frozen evaluation
 
 Updated 2026-10-14 (Asia/Seoul). Read `EXECUTION_PLAN.md` and `PROGRESS.json` first. The fixed eight-stage goal and CPU GLiNER2 engine remain unchanged. Active AI: **GroqCloud Free Plan only**. Gemini code is retained, but routing/probes and key requirements are disabled. No third provider, paid fallback, upgrade or billing action.
 
-## Current stage 3 functional verification
+## Current repair (2026-10-14)
+
+The approved scope is plan v1.6. Stages 1–3 remain PASS. The original 118 documents and frozen50/source hashes/split are unchanged. Native recovery obtained 13 new HTML captures whose parsed bodies exactly match the frozen text; one changed version was retained separately. This is not recovery of historical HTML. FULL30/PARTIAL20 remains the original corpus classification.
+
+Public input reviews separate source/date/native hashes from transmitted spans. Only a verified terminal public press-contact footer may be excluded; secrets anywhere, explicit restrictions and unknown URL parameters remain blocked. EIA's single decimal `id` is allowed only on the verified official article endpoint. Whole paragraphs and adjacent caveats are retained; oversized contexts are held. All50: eligible29, held13, blocked8. Scope and reasons: `stage4-corpus/safe-inputs-v1.json`.
+
+The small research adapter preserves original AI outputs and feeds separately verified events to the unchanged engine. LIVE/operational integration stays disabled. One real development response passed source validation and supplied one order event to an engine observation; incomplete TARGET and missing independent supply yielded no research bottleneck candidate. Synthetic positives and adverse cases are distinct from real findings.
+
+New requests: **8 POSTs**, **6,242 input + 2,809 output = 9,051 reported tokens**, Free Plan **$0**; **one HTTP failure has unreported token usage**. Seven responses were received including the successful development response. Evaluation stopped at HTTP400 `invalid_request_error`, flags=[]; its detailed provider cause is UNKNOWN because raw error text is not retained. Six earlier evaluation responses failed strict source validation. No same-input retries or additional calls were made. One shared rolling budget includes the five historical attempts; changing run IDs cannot reset it.
+
+Evaluation is limited to frozen excerpts and AI source review, not human verification or full-document accuracy. Pipeline adoption on six response documents: TP0/FP0/FN38; precision undefined, recall0. Raw literal/alias scoring has separate context and name-mapping limitations. CPU comparison uses newly computed pinned GLiNER2 product entities on the same six inputs, not historical output. General improvement and independent adoption criteria remain unmet. See `STAGE4_RESULTS.json` and `PROGRESS.json` for review limitations and resume points.
+
+A further source-only AI session wrote its blind draft before reading the existing gold. It checked nine documents/14 windows: 81 of 83 PRESENT relations were supported with their stated scope; two remain unresolved in an unattempted document. Nine previously ambiguous facts remain ambiguous. This is a source audit, not a gold-agreement accuracy estimate or human verification. Original review sessions' status-metadata exposure is retained in the record. Gold and scored denominators were not changed after evaluation.
+
+Lightweight test setup is `python -m pip install -e '.[test]'`; it excludes model weights/torch. The selected CPU model was prepared once in `var/v4/repair/cpu/env` with pinned, checksum-verified weights in `var/v4/repair/cpu/runtime`. Reuse it; model preparation is not a startup/test prerequisite.
+
+Offline evidence replay (no network, keys or model runtime):
+
+```bash
+cd /workspace/bottleneck-control-tower
+.venv/bin/python -m scripts.v4.replay_repair_evidence
+```
+
+Do not rerun evaluation preparation/freeze or a live request to seek a better result. Preserve the recorded freeze and HTTP contract block. Further source-quote or scoring work must use development evidence first and retain the consumed evaluation history. Seven-day Shadow, operating Actions/DB, main and alerts remain untouched. The sections below are historical evidence, not current usage or current blockers.
+
+## Historical stage 3 functional verification
 
 Stage 2 remains fixed PASS. The request schema, prompt, input/cache keys, exact quote validator and CPU engine were preserved. `semantics.py` reviews source-verified facts: money requires separate physical quantity evidence, customers require actual product purchase/delivery relations, and supplier pools require actual product qualification. Plans, forecasts, negation, relief, project/product/equipment/slot types and product-specific quantity/time/region/specification relations are checked. Rejected meanings stay null with the original source fact retained in the audit; no S-stage promotion occurs.
 
@@ -10,7 +35,7 @@ Stage 2 remains fixed PASS. The request schema, prompt, input/cache keys, exact 
 
 New generation calls **0**, new tokens **0**, cost **$0**. Separate stage-3 SQLite copy `var/v4/stage3/replay` stored the reprocessed job and review. Fresh-process/cache and backup checks preserved the two semantic holds and all seven source references. The stage-2 source ledger was opened read-only. The 50-document comparison and Shadow remain NOT_RUN. Details: `STAGE3_RESULTS.json`.
 
-## Current stage 2 completion (2026-10-14)
+## Historical stage 2 completion (2026-10-14, PASS preserved)
 
 Continued from `599c4b7df9c2290f0c626b74f93e42c39f83e9f3`. The wire JSON schema exactly matches the previously accepted version. Runtime code, Python quote binding, original/response hashes and saved tests were reused unchanged. Local preflight reserved 6,124 under the 6,400 cap; no model/auth/setup queries or reinstall were repeated.
 

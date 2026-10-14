@@ -1,0 +1,2600 @@
+{
+  "version": "bct-clean-source-first-audit-1",
+  "created_at_utc": "2026-10-14T05:04:04.432922+00:00",
+  "reviewer": {
+    "type": "AI_INDEPENDENT_SESSION",
+    "session": "/root/clean_source_audit",
+    "model": "UNKNOWN",
+    "human_verified": false,
+    "exposed_to_target_model_outputs": false,
+    "exposed_to_other_session_status_queries": false
+  },
+  "review_order": [
+    {
+      "step": 1,
+      "action": "Read fixed policy and evaluation packet only; inspect every supplied window against its body SHA and exact character coordinates.",
+      "inputs": [
+        "docs/v4/EVENT_REVIEW_POLICY.md",
+        "var/v4/repair/review-packets/evaluation.json",
+        "packet body_path bytes and windows for nine nonempty documents"
+      ]
+    },
+    {
+      "step": 2,
+      "action": "Independently author and freeze own source-only draft before opening any gold.",
+      "path": "var/v4/repair/reviews/evaluation-clean-blind.json",
+      "frozen_at_utc": "2026-10-14T04:59:31.143274+00:00",
+      "sha256": "fdffc5934ddaf5c03d343f73d5305d3b147a776d6a6b2baab4ea3dae173fd577"
+    },
+    {
+      "step": 3,
+      "action": "After the freeze, read only the two additionally authorized gold/adjudication files. Initial large output was truncated; compact per-event field lists and all adjudication decision reasons were subsequently inspected.",
+      "inputs": [
+        "var/v4/repair/reviews/evaluation-final.json",
+        "var/v4/repair/reviews/adjudication-evaluation.json"
+      ]
+    },
+    {
+      "step": 4,
+      "action": "Judge every PRESENT fact and its product/event relation against source windows; separately record semantic field ambiguity and own draft omissions. Preserve all prior artifacts."
+    }
+  ],
+  "exposure_log": {
+    "before_freeze": [
+      "fixed review policy",
+      "evaluation packet metadata and all 14 supplied windows",
+      "nine allowed body_path files for hashing/length and window equality",
+      "own draft as it was written"
+    ],
+    "after_freeze_additions": [
+      "evaluation-final.json",
+      "adjudication-evaluation.json",
+      "own frozen source-only draft"
+    ],
+    "gold_embedded_metadata_seen_after_freeze": true,
+    "gold_embedded_metadata_note": "지정 gold/adjudication 안의 과거 AI 검토자 메타데이터·절차 한계는 초안 고정 후 노출되었다. 별도 세션 조회/다른 초안 파일/대상 모델 답은 열지 않았다.",
+    "not_read_or_called": [
+      "evaluated Groq/GLiNER2 outputs",
+      "CPU outputs",
+      "implementation/operational code",
+      "tests",
+      "Git",
+      "other session status/list_agents",
+      "other review draft files",
+      "network or external API"
+    ],
+    "read_empty_window_bodies": false,
+    "helper_operations": "Only standard-library JSON reading/writing, SHA256/length checks, and exact string-coordinate checks of authorized files; no operational code or tests read/run.",
+    "new_or_unreported_exposure": null
+  },
+  "artifact_hashes": {
+    "docs/v4/EVENT_REVIEW_POLICY.md": "64b3fbb7e443e5eddd05d2c358fcf2fd00e3f4b02cd667aeebd64893b1704ef1",
+    "var/v4/repair/review-packets/evaluation.json": "8fdeed9bcd9647ef610c8c1d7f69d60bf6393b63a39d5c3b7118639e1bfcf8e1",
+    "var/v4/repair/reviews/evaluation-clean-blind.json": "fdffc5934ddaf5c03d343f73d5305d3b147a776d6a6b2baab4ea3dae173fd577",
+    "var/v4/repair/reviews/evaluation-final.json": "0bf92e81df587034a62a4df6564d1d563cd9de9abda455b212061e50bcea0f9c",
+    "var/v4/repair/reviews/adjudication-evaluation.json": "55777d49b7ed27d946908704680989641f20010d4c658eb841ca5c6999408b63"
+  },
+  "source_coverage": {
+    "documents_total": 20,
+    "review_complete_documents": 9,
+    "unreviewed_empty_window_documents": 11,
+    "reviewed_windows": 14,
+    "reviewed_characters": 4642,
+    "captured_body_characters_for_reviewed_documents": 79022,
+    "reviewed_fraction_of_captured_bodies_for_reviewed_documents": 0.05874313482321379,
+    "outside_window_semantics_reviewed": false,
+    "full_document_review_complete": false,
+    "attachments_video_tables_verified": false,
+    "documents": [
+      {
+        "document_id": "stage4doc-43bbc73c34d36affaac68018c51886b2897bbc0126d9df12b814ead65738046c",
+        "body_sha256": "e76b0c7df67f16d7df375fc38b182fef98586ab95f05e118ed9c38e795a36ee6",
+        "review_complete": true,
+        "reviewed_ranges": [
+          {
+            "start": 433,
+            "end": 965
+          }
+        ],
+        "coverage": {
+          "body_status": "FULL",
+          "available_body_characters": 2450,
+          "reviewed_characters": 532,
+          "reviewed_fraction_of_available_body": 0.21714285714285714,
+          "outside_input_unreviewed_ranges": [
+            {
+              "start": 0,
+              "end": 433
+            },
+            {
+              "start": 965,
+              "end": 2450
+            }
+          ],
+          "body_sha_verified": true,
+          "all_packet_windows_match_body": true,
+          "limitations": "FULL/PARTIAL describes available text; attachments, videos, tables and outside windows are not verified."
+        },
+        "review_status": "COMPLETE_ALL_SUPPLIED_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-3fd9a480cb21be25a3d28465399232ce56a35c896627813ed1c8925dc86c6e4d",
+        "body_sha256": "d3d8b6364995f9b1727903a8075aaf4c7f00d53ad855b292edca9c7bfdd1250c",
+        "review_complete": true,
+        "reviewed_ranges": [
+          {
+            "start": 141,
+            "end": 269
+          },
+          {
+            "start": 510,
+            "end": 793
+          }
+        ],
+        "coverage": {
+          "body_status": "PARTIAL",
+          "available_body_characters": 4468,
+          "reviewed_characters": 411,
+          "reviewed_fraction_of_available_body": 0.09198746642793196,
+          "outside_input_unreviewed_ranges": [
+            {
+              "start": 0,
+              "end": 141
+            },
+            {
+              "start": 269,
+              "end": 510
+            },
+            {
+              "start": 793,
+              "end": 4468
+            }
+          ],
+          "body_sha_verified": true,
+          "all_packet_windows_match_body": true,
+          "limitations": "FULL/PARTIAL describes available text; attachments, videos, tables and outside windows are not verified."
+        },
+        "review_status": "COMPLETE_ALL_SUPPLIED_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-7a75ee8cf8b87edb671b75f519f36b1ff8f50c69dcc9b1c8dfd0a6795bd708d3",
+        "body_sha256": "bfc6a077e3c4931fbacde1730853626c7f27993bf36b77843b9ee3d0ed01ddf0",
+        "review_complete": true,
+        "reviewed_ranges": [
+          {
+            "start": 35,
+            "end": 511
+          }
+        ],
+        "coverage": {
+          "body_status": "FULL",
+          "available_body_characters": 4152,
+          "reviewed_characters": 476,
+          "reviewed_fraction_of_available_body": 0.11464354527938343,
+          "outside_input_unreviewed_ranges": [
+            {
+              "start": 0,
+              "end": 35
+            },
+            {
+              "start": 511,
+              "end": 4152
+            }
+          ],
+          "body_sha_verified": true,
+          "all_packet_windows_match_body": true,
+          "limitations": "FULL/PARTIAL describes available text; attachments, videos, tables and outside windows are not verified."
+        },
+        "review_status": "COMPLETE_ALL_SUPPLIED_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-bd5e28cdcc32f2dab1907d42ed6015ab3fa3ff62a4b8ab4632cd6fc4bd8b5f49",
+        "body_sha256": "5a9aa1d06b68b3ff0b362bc66c7121110522f33d484c38553894725e242695aa",
+        "review_complete": false,
+        "reviewed_ranges": [],
+        "coverage": null,
+        "review_status": "UNVERIFIED_EMPTY_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+        "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+        "review_complete": true,
+        "reviewed_ranges": [
+          {
+            "start": 0,
+            "end": 109
+          },
+          {
+            "start": 870,
+            "end": 1276
+          }
+        ],
+        "coverage": {
+          "body_status": "FULL",
+          "available_body_characters": 9258,
+          "reviewed_characters": 515,
+          "reviewed_fraction_of_available_body": 0.05562756534888745,
+          "outside_input_unreviewed_ranges": [
+            {
+              "start": 109,
+              "end": 870
+            },
+            {
+              "start": 1276,
+              "end": 9258
+            }
+          ],
+          "body_sha_verified": true,
+          "all_packet_windows_match_body": true,
+          "limitations": "FULL/PARTIAL describes available text; attachments, videos, tables and outside windows are not verified."
+        },
+        "review_status": "COMPLETE_ALL_SUPPLIED_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-025c928ba5520cbac8b09ce54c385c604a5e735c371c7c5df1c9f9b721753f7f",
+        "body_sha256": "8dcdca05daee6bbaa48ece1a39bea1fc0f22fe722ea34d302a3595a7c17edaef",
+        "review_complete": false,
+        "reviewed_ranges": [],
+        "coverage": null,
+        "review_status": "UNVERIFIED_EMPTY_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-bdbfa4da2717014b69fc68106232e8fbd8a1bc6df83a7195dcfd6b0fabaa5fe2",
+        "body_sha256": "26fc6dedb1b1aa9ef17d35086c2f6d4c0d78dd0d2d4483ea4f0381e61b2c9dd6",
+        "review_complete": false,
+        "reviewed_ranges": [],
+        "coverage": null,
+        "review_status": "UNVERIFIED_EMPTY_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-ff0e43f4ed27883f76a922c663ca90721ec4ab4cb134e8cc4bb4ed351dfa36f8",
+        "body_sha256": "fcd60873d8964ac12cb43abb77ed7259015810685edfdf76d25ce9c833fe5bf5",
+        "review_complete": false,
+        "reviewed_ranges": [],
+        "coverage": null,
+        "review_status": "UNVERIFIED_EMPTY_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-21cb171fc279fbe3b131ee719c68fd51dd7a5e8d4115cf2ca866acdb99cc877a",
+        "body_sha256": "84bd980477f6ecc5c07717d97e3c3ac0704d635784987adb1c7bef61c4bf0a23",
+        "review_complete": false,
+        "reviewed_ranges": [],
+        "coverage": null,
+        "review_status": "UNVERIFIED_EMPTY_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-2c8e2b9c3deb65cf70ed60c46622863c6e65e013b34bbe36c7083a538b24c365",
+        "body_sha256": "bd707a46bdfd2ece9c19b8322a3ee6585e30c6fc95f860566d369e361b2329c0",
+        "review_complete": false,
+        "reviewed_ranges": [],
+        "coverage": null,
+        "review_status": "UNVERIFIED_EMPTY_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-8863919aedd5421d4f6122236527b82424465e4cf90fabeec7dcc6b2e13b93d3",
+        "body_sha256": "76f06aa61c368647fe4ff62bdcd9ce9fca6ead1e983bd5806fe5bef7a990fdf4",
+        "review_complete": true,
+        "reviewed_ranges": [
+          {
+            "start": 1543,
+            "end": 1665
+          },
+          {
+            "start": 3087,
+            "end": 3563
+          }
+        ],
+        "coverage": {
+          "body_status": "FULL",
+          "available_body_characters": 16174,
+          "reviewed_characters": 598,
+          "reviewed_fraction_of_available_body": 0.03697291950043279,
+          "outside_input_unreviewed_ranges": [
+            {
+              "start": 0,
+              "end": 1543
+            },
+            {
+              "start": 1665,
+              "end": 3087
+            },
+            {
+              "start": 3563,
+              "end": 16174
+            }
+          ],
+          "body_sha_verified": true,
+          "all_packet_windows_match_body": true,
+          "limitations": "FULL/PARTIAL describes available text; attachments, videos, tables and outside windows are not verified."
+        },
+        "review_status": "COMPLETE_ALL_SUPPLIED_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+        "body_sha256": "54811824263eeaeb5cee2ce87ae993f689785572ce1c03f730d2a87265e4e2f5",
+        "review_complete": true,
+        "reviewed_ranges": [
+          {
+            "start": 1365,
+            "end": 1892
+          }
+        ],
+        "coverage": {
+          "body_status": "FULL",
+          "available_body_characters": 7882,
+          "reviewed_characters": 527,
+          "reviewed_fraction_of_available_body": 0.06686120274042122,
+          "outside_input_unreviewed_ranges": [
+            {
+              "start": 0,
+              "end": 1365
+            },
+            {
+              "start": 1892,
+              "end": 7882
+            }
+          ],
+          "body_sha_verified": true,
+          "all_packet_windows_match_body": true,
+          "limitations": "FULL/PARTIAL describes available text; attachments, videos, tables and outside windows are not verified."
+        },
+        "review_status": "COMPLETE_ALL_SUPPLIED_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-fe6fe733066583784bc6a77dddc1cf0f9b6f6e705e72fed6cacedcca479e8c99",
+        "body_sha256": "6c053a3e0213e8fa2ef7432e0ca223aff82236ac58401a02ba902141e2d71b36",
+        "review_complete": true,
+        "reviewed_ranges": [
+          {
+            "start": 1747,
+            "end": 2257
+          }
+        ],
+        "coverage": {
+          "body_status": "FULL",
+          "available_body_characters": 9423,
+          "reviewed_characters": 510,
+          "reviewed_fraction_of_available_body": 0.054122890799108564,
+          "outside_input_unreviewed_ranges": [
+            {
+              "start": 0,
+              "end": 1747
+            },
+            {
+              "start": 2257,
+              "end": 9423
+            }
+          ],
+          "body_sha_verified": true,
+          "all_packet_windows_match_body": true,
+          "limitations": "FULL/PARTIAL describes available text; attachments, videos, tables and outside windows are not verified."
+        },
+        "review_status": "COMPLETE_ALL_SUPPLIED_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-7f359b839cff11a0d54cc0392a66f5c2a87a8ec43b50546364cad89ac3e51480",
+        "body_sha256": "46b6823716c760d1df6838e6eacae0bcc2faea4e6114ca38f65932773cd2cabb",
+        "review_complete": false,
+        "reviewed_ranges": [],
+        "coverage": null,
+        "review_status": "UNVERIFIED_EMPTY_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-5e51382e173d815ad84313ca01dfe0b70dd12dcad97b8e198e65b05b638a40ca",
+        "body_sha256": "2abf513b2da9a57eff3f1d4b3ce51ab83f1158d07ecf2645f784674ba2bdea22",
+        "review_complete": false,
+        "reviewed_ranges": [],
+        "coverage": null,
+        "review_status": "UNVERIFIED_EMPTY_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-26e241d88935e5b3a0295f446ceb42035c398fffd3061b47a6ba3e2e25f7cd8d",
+        "body_sha256": "96616a8e7b014c79e0e7254ea667e4ad99753cff020895cdd46c080610357f86",
+        "review_complete": false,
+        "reviewed_ranges": [],
+        "coverage": null,
+        "review_status": "UNVERIFIED_EMPTY_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+        "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+        "review_complete": true,
+        "reviewed_ranges": [
+          {
+            "start": 0,
+            "end": 123
+          },
+          {
+            "start": 1929,
+            "end": 2371
+          }
+        ],
+        "coverage": {
+          "body_status": "FULL",
+          "available_body_characters": 9108,
+          "reviewed_characters": 565,
+          "reviewed_fraction_of_available_body": 0.06203337725076855,
+          "outside_input_unreviewed_ranges": [
+            {
+              "start": 123,
+              "end": 1929
+            },
+            {
+              "start": 2371,
+              "end": 9108
+            }
+          ],
+          "body_sha_verified": true,
+          "all_packet_windows_match_body": true,
+          "limitations": "FULL/PARTIAL describes available text; attachments, videos, tables and outside windows are not verified."
+        },
+        "review_status": "COMPLETE_ALL_SUPPLIED_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+        "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+        "review_complete": true,
+        "reviewed_ranges": [
+          {
+            "start": 1798,
+            "end": 1929
+          },
+          {
+            "start": 7241,
+            "end": 7618
+          }
+        ],
+        "coverage": {
+          "body_status": "FULL",
+          "available_body_characters": 16107,
+          "reviewed_characters": 508,
+          "reviewed_fraction_of_available_body": 0.03153908238654001,
+          "outside_input_unreviewed_ranges": [
+            {
+              "start": 0,
+              "end": 1798
+            },
+            {
+              "start": 1929,
+              "end": 7241
+            },
+            {
+              "start": 7618,
+              "end": 16107
+            }
+          ],
+          "body_sha_verified": true,
+          "all_packet_windows_match_body": true,
+          "limitations": "FULL/PARTIAL describes available text; attachments, videos, tables and outside windows are not verified."
+        },
+        "review_status": "COMPLETE_ALL_SUPPLIED_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-6f529c986d52ad4d65cdc2ede17eb8630af37512ff71a797b90d71e090543216",
+        "body_sha256": "e97a84cbd76c415b0e863dc659c1ad439b8812edbe2f959760eb8ba1995e7db7",
+        "review_complete": false,
+        "reviewed_ranges": [],
+        "coverage": null,
+        "review_status": "UNVERIFIED_EMPTY_WINDOWS"
+      },
+      {
+        "document_id": "stage4doc-e136b06558ff587cd833e3ceef3115908e8772e2cc772c0bbae7789bb685403e",
+        "body_sha256": "61135820fbaf9e55c0da0a927ddf3c6f4f755057213f61c1f1bdb06d21fe9626",
+        "review_complete": false,
+        "reviewed_ranges": [],
+        "coverage": null,
+        "review_status": "UNVERIFIED_EMPTY_WINDOWS"
+      }
+    ]
+  },
+  "blind_draft_summary": {
+    "packet_documents": 20,
+    "review_complete_documents": 9,
+    "unreviewed_empty_window_documents": 11,
+    "reviewed_windows": 14,
+    "reviewed_characters": 4642,
+    "targets": 9,
+    "events": 10,
+    "event_fact_status_counts": {
+      "VERIFIED_PRESENT": 52,
+      "VERIFIED_ABSENT": 20,
+      "AMBIGUOUS": 4,
+      "UNVERIFIED": 0
+    },
+    "exploration_fact_status_counts": {
+      "VERIFIED_PRESENT": 4,
+      "VERIFIED_ABSENT": 0,
+      "AMBIGUOUS": 0,
+      "UNVERIFIED": 0
+    },
+    "omitted_fields_mean": "Unlisted event fields were not asserted; this draft deliberately does not manufacture a complete 15-field vector. Explicit absence/ambiguity is recorded where materially needed."
+  },
+  "present_fact_audit_summary": {
+    "gold_present_facts_examined": 83,
+    "source_quote_coordinate_checks_passed": 83,
+    "raw_literal_or_enum_evidence_checks_passed": 83,
+    "source_supported_with_stated_scope": 81,
+    "source_semantically_unresolved_field_relations": 2,
+    "source_definitely_contradicted_present_facts": 0,
+    "not_an_accuracy_or_gold_agreement_metric": true
+  },
+  "gold_existing_ambiguous_fact_audit_summary": {
+    "examined": 9,
+    "retained_ambiguous": 9,
+    "resolved_by_guessing_or_majority": 0
+  },
+  "absence_scope_note": {
+    "gold_absent_fact_entries_inspected": 133,
+    "absence_field_inventory": {
+      "quantity": 13,
+      "unit": 8,
+      "period": 7,
+      "specification": 9,
+      "region": 10,
+      "need_time": 13,
+      "ready_time": 10,
+      "lead_time": 15,
+      "relief": 15,
+      "alternative": 15,
+      "supply_pool": 8,
+      "role": 2,
+      "actuality": 1,
+      "customer_group": 7
+    },
+    "method": "각 사건 phase 및 지정 인용에서 해당 값이 명시되지 않았는지 전체 입력과 대조했다. ABSENT는 그 event/phase의 원문 관계 범위에만 적용한다. 다른 phase에 같은 target의 정보가 있거나 window 밖에 정보가 있을 수 있으므로 문서 전체·현실의 부재로 해석하지 않는다.",
+    "no_new_complete_15_field_vector_created": true,
+    "not_counted_as_independent_accuracy_evidence": true
+  },
+  "present_fact_checks": [
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t01",
+      "target_entity": "Sonoma™ high-power package-level test and burn-in systems",
+      "event_id": "d05-e01",
+      "gold_fact_index": 0,
+      "field": "product",
+      "gold_value": "Sonoma™",
+      "source_reference": {
+        "start": 24,
+        "end": 31,
+        "quote": "Sonoma™"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "제목의 Sonoma™는 장비 주문 대상이며 다음 window의 장비명과 동일한 원문 상표다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t01",
+      "target_entity": "Sonoma™ high-power package-level test and burn-in systems",
+      "event_id": "d05-e01",
+      "gold_fact_index": 1,
+      "field": "role",
+      "gold_value": "DEMAND_INCREASE",
+      "source_reference": {
+        "start": 0,
+        "end": 109,
+        "quote": "Aehr Receives Follow-On Sonoma™ Production Orders for Lead Hyperscale Customer’s Next-Generation AI Processor"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "Receives Follow-On ... Production Orders는 이미 추가 발주가 존재하는 수요 사건이다. 전체 시장 수요/부족 판정은 아니다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t01",
+      "target_entity": "Sonoma™ high-power package-level test and burn-in systems",
+      "event_id": "d05-e01",
+      "gold_fact_index": 2,
+      "field": "actuality",
+      "gold_value": "ACTUAL",
+      "source_reference": {
+        "start": 0,
+        "end": 109,
+        "quote": "Aehr Receives Follow-On Sonoma™ Production Orders for Lead Hyperscale Customer’s Next-Generation AI Processor"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "Receives라는 주문 수령의 현재 확정 보도다. 인도 완료의 ACTUAL로 해석하지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t01",
+      "target_entity": "Sonoma™ high-power package-level test and burn-in systems",
+      "event_id": "d05-e01",
+      "gold_fact_index": 6,
+      "field": "customer_group",
+      "gold_value": "Lead Hyperscale Customer",
+      "source_reference": {
+        "start": 0,
+        "end": 109,
+        "quote": "Aehr Receives Follow-On Sonoma™ Production Orders for Lead Hyperscale Customer’s Next-Generation AI Processor"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "제목은 Sonoma 생산 주문을 Lead Hyperscale Customer에 직접 연결한다. 프로세서 구매 고객으로 옮기지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t01",
+      "target_entity": "Sonoma™ high-power package-level test and burn-in systems",
+      "event_id": "d05-e01",
+      "gold_fact_index": 7,
+      "field": "supply_pool",
+      "gold_value": "Aehr",
+      "source_reference": {
+        "start": 0,
+        "end": 109,
+        "quote": "Aehr Receives Follow-On Sonoma™ Production Orders for Lead Hyperscale Customer’s Next-Generation AI Processor"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "같은 제목에서 Aehr가 Sonoma 주문을 수령한다. 거래의 개별 공급 주체 관계만 지지하며 전체 적격 공급량/잔여 능력은 아니다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t01",
+      "target_entity": "Sonoma™ high-power package-level test and burn-in systems",
+      "event_id": "d05-e02",
+      "gold_fact_index": 0,
+      "field": "product",
+      "gold_value": "Sonoma™ high-power package-level test and burn-in systems",
+      "source_reference": {
+        "start": 870,
+        "end": 1069,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "orders include와 systems라는 후속 배치 문장이 Sonoma 물리 시험·번인 장비에 직접 연결된다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t01",
+      "target_entity": "Sonoma™ high-power package-level test and burn-in systems",
+      "event_id": "d05-e02",
+      "gold_fact_index": 1,
+      "field": "role",
+      "gold_value": "SUPPLY_INCREASE",
+      "source_reference": {
+        "start": 870,
+        "end": 1276,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements. The systems and consumables will be deployed at one of the customer’s outsourced semiconductor assembly and test (OSAT) partners in Taiwan. Deliveries under the order are scheduled over the next six months."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "추가 장비의 예정 인도는 미래 SUPPLY_INCREASE 관찰이다. 이미 공급된 대수는 아니다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t01",
+      "target_entity": "Sonoma™ high-power package-level test and burn-in systems",
+      "event_id": "d05-e02",
+      "gold_fact_index": 2,
+      "field": "actuality",
+      "gold_value": "PLAN",
+      "source_reference": {
+        "start": 1210,
+        "end": 1276,
+        "quote": "Deliveries under the order are scheduled over the next six months."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "scheduled이므로 인도 일정은 PLAN이다. 실제 주문과 다른 이행 단계다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t01",
+      "target_entity": "Sonoma™ high-power package-level test and burn-in systems",
+      "event_id": "d05-e02",
+      "gold_fact_index": 4,
+      "field": "unit",
+      "gold_value": "systems",
+      "source_reference": {
+        "start": 900,
+        "end": 957,
+        "quote": "Sonoma™ high-power package-level test and burn-in systems"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "systems는 해당 물리 장비의 계수 명사다. 숫자가 없다는 이유로 단위도 없다고 하지는 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t01",
+      "target_entity": "Sonoma™ high-power package-level test and burn-in systems",
+      "event_id": "d05-e02",
+      "gold_fact_index": 5,
+      "field": "period",
+      "gold_value": "the next six months",
+      "source_reference": {
+        "start": 1210,
+        "end": 1276,
+        "quote": "Deliveries under the order are scheduled over the next six months."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "인도 기간인 the next six months를 그대로 기록한다. 주문일-인도일 간 리드타임으로 변환하지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t01",
+      "target_entity": "Sonoma™ high-power package-level test and burn-in systems",
+      "event_id": "d05-e02",
+      "gold_fact_index": 8,
+      "field": "specification",
+      "gold_value": "high-power package-level test and burn-in",
+      "source_reference": {
+        "start": 870,
+        "end": 1069,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "high-power/package-level/test and burn-in은 이 장비에 직접 붙는 수식어다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t01",
+      "target_entity": "Sonoma™ high-power package-level test and burn-in systems",
+      "event_id": "d05-e02",
+      "gold_fact_index": 9,
+      "field": "region",
+      "gold_value": "Taiwan",
+      "source_reference": {
+        "start": 1070,
+        "end": 1209,
+        "quote": "The systems and consumables will be deployed at one of the customer’s outsourced semiconductor assembly and test (OSAT) partners in Taiwan."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "Taiwan은 systems and consumables의 예정 OSAT 배치 지역이다. 공급자 소재지로 옮기지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t01",
+      "target_entity": "Sonoma™ high-power package-level test and burn-in systems",
+      "event_id": "d05-e02",
+      "gold_fact_index": 11,
+      "field": "ready_time",
+      "gold_value": "over the next six months",
+      "source_reference": {
+        "start": 1210,
+        "end": 1276,
+        "quote": "Deliveries under the order are scheduled over the next six months."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "향후 인도 예정 범위로만 지지한다. 이미 준비됐거나 전 기간 가동된다는 의미는 없다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t02",
+      "target_entity": "fully turnkey burn-in modules",
+      "event_id": "d05-e03",
+      "gold_fact_index": 0,
+      "field": "product",
+      "gold_value": "fully turnkey burn-in modules",
+      "source_reference": {
+        "start": 870,
+        "end": 1069,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "fully turnkey burn-in modules는 orders include의 물리 구성품이다. BIMs는 괄호 안 명시 약어다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t02",
+      "target_entity": "fully turnkey burn-in modules",
+      "event_id": "d05-e03",
+      "gold_fact_index": 1,
+      "field": "role",
+      "gold_value": "DEMAND_INCREASE",
+      "source_reference": {
+        "start": 870,
+        "end": 1069,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "존재하는 추가 주문의 구성품이므로 DEMAND_INCREASE다. 소프트웨어나 프로세서 주문으로 바꾸지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t02",
+      "target_entity": "fully turnkey burn-in modules",
+      "event_id": "d05-e03",
+      "gold_fact_index": 2,
+      "field": "actuality",
+      "gold_value": "ACTUAL",
+      "source_reference": {
+        "start": 870,
+        "end": 1069,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "The orders include는 현재 존재하는 주문 구성에 관한 진술이다. 인도 일정이 미래인 사실과 구별한다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t02",
+      "target_entity": "fully turnkey burn-in modules",
+      "event_id": "d05-e03",
+      "gold_fact_index": 4,
+      "field": "unit",
+      "gold_value": "modules",
+      "source_reference": {
+        "start": 870,
+        "end": 1069,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "modules라는 물리 계수 명사가 명시되며 대수는 제시되지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t02",
+      "target_entity": "fully turnkey burn-in modules",
+      "event_id": "d05-e03",
+      "gold_fact_index": 5,
+      "field": "period",
+      "gold_value": "the next six months",
+      "source_reference": {
+        "start": 1210,
+        "end": 1276,
+        "quote": "Deliveries under the order are scheduled over the next six months."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "Deliveries under the order가 이 주문의 구성품에도 적용되는 향후 인도 구간이다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t02",
+      "target_entity": "fully turnkey burn-in modules",
+      "event_id": "d05-e03",
+      "gold_fact_index": 8,
+      "field": "specification",
+      "gold_value": "fully turnkey",
+      "source_reference": {
+        "start": 870,
+        "end": 1069,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "fully turnkey는 모듈의 직접 수식어다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t02",
+      "target_entity": "fully turnkey burn-in modules",
+      "event_id": "d05-e03",
+      "gold_fact_index": 9,
+      "field": "region",
+      "gold_value": "Taiwan",
+      "source_reference": {
+        "start": 1070,
+        "end": 1209,
+        "quote": "The systems and consumables will be deployed at one of the customer’s outsourced semiconductor assembly and test (OSAT) partners in Taiwan."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "systems and consumables의 예정 배치 지역 Taiwan이다. 직접 구매 고객/제조국으로 바꾸지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t02",
+      "target_entity": "fully turnkey burn-in modules",
+      "event_id": "d05-e03",
+      "gold_fact_index": 11,
+      "field": "ready_time",
+      "gold_value": "over the next six months",
+      "source_reference": {
+        "start": 1210,
+        "end": 1276,
+        "quote": "Deliveries under the order are scheduled over the next six months."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "under the order에 속한 구성품의 향후 인도 일정이다. 실제 인도/발주 리드타임은 아니다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t03",
+      "target_entity": "device-specific sockets",
+      "event_id": "d05-e04",
+      "gold_fact_index": 0,
+      "field": "product",
+      "gold_value": "device-specific sockets",
+      "source_reference": {
+        "start": 870,
+        "end": 1069,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "device-specific sockets는 orders include에 열거된 별도의 물리 소모품이다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t03",
+      "target_entity": "device-specific sockets",
+      "event_id": "d05-e04",
+      "gold_fact_index": 1,
+      "field": "role",
+      "gold_value": "DEMAND_INCREASE",
+      "source_reference": {
+        "start": 870,
+        "end": 1069,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "실제 추가 주문의 명시 구성품이므로 DEMAND_INCREASE다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t03",
+      "target_entity": "device-specific sockets",
+      "event_id": "d05-e04",
+      "gold_fact_index": 2,
+      "field": "actuality",
+      "gold_value": "ACTUAL",
+      "source_reference": {
+        "start": 870,
+        "end": 1069,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "현재 존재하는 주문에 포함된다는 진술이다. 미래 예정 인도가 완료됐다는 의미는 없다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t03",
+      "target_entity": "device-specific sockets",
+      "event_id": "d05-e04",
+      "gold_fact_index": 4,
+      "field": "unit",
+      "gold_value": "sockets",
+      "source_reference": {
+        "start": 870,
+        "end": 1069,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "sockets는 물리 계수 명사다. 숫자는 없지만 단위 명시는 있다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t03",
+      "target_entity": "device-specific sockets",
+      "event_id": "d05-e04",
+      "gold_fact_index": 5,
+      "field": "period",
+      "gold_value": "the next six months",
+      "source_reference": {
+        "start": 1210,
+        "end": 1276,
+        "quote": "Deliveries under the order are scheduled over the next six months."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "Deliveries under the order가 해당 주문 소켓의 향후 인도 구간에 적용된다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t03",
+      "target_entity": "device-specific sockets",
+      "event_id": "d05-e04",
+      "gold_fact_index": 8,
+      "field": "specification",
+      "gold_value": "device-specific",
+      "source_reference": {
+        "start": 870,
+        "end": 1069,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "device-specific은 소켓의 장치 전용 규격을 직접 수식한다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t03",
+      "target_entity": "device-specific sockets",
+      "event_id": "d05-e04",
+      "gold_fact_index": 9,
+      "field": "region",
+      "gold_value": "Taiwan",
+      "source_reference": {
+        "start": 1070,
+        "end": 1209,
+        "quote": "The systems and consumables will be deployed at one of the customer’s outsourced semiconductor assembly and test (OSAT) partners in Taiwan."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "소켓을 포함한 consumables의 예정 OSAT 배치 지역이다. 공급자 주소가 아니다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t03",
+      "target_entity": "device-specific sockets",
+      "event_id": "d05-e04",
+      "gold_fact_index": 11,
+      "field": "ready_time",
+      "gold_value": "over the next six months",
+      "source_reference": {
+        "start": 1210,
+        "end": 1276,
+        "quote": "Deliveries under the order are scheduled over the next six months."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "해당 주문의 예정 인도 범위다. 실제 납품 또는 준비 완료와 구별한다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t04",
+      "target_entity": "Next-Generation AI Processor",
+      "event_id": "d05-e05",
+      "gold_fact_index": 0,
+      "field": "product",
+      "gold_value": "Next-Generation AI Processor",
+      "source_reference": {
+        "start": 0,
+        "end": 109,
+        "quote": "Aehr Receives Follow-On Sonoma™ Production Orders for Lead Hyperscale Customer’s Next-Generation AI Processor"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "제목이 직접 언급하는 물리 응용 제품이다. Sonoma 장비 발주를 이 프로세서의 주문으로 바꾸지 않고 탐색 사실만 남기는 판단을 지지한다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "target_id": "d05-t04",
+      "target_entity": "Next-Generation AI Processor",
+      "event_id": "d05-e05",
+      "gold_fact_index": 8,
+      "field": "specification",
+      "gold_value": "Next-Generation",
+      "source_reference": {
+        "start": 0,
+        "end": 109,
+        "quote": "Aehr Receives Follow-On Sonoma™ Production Orders for Lead Hyperscale Customer’s Next-Generation AI Processor"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "Next-Generation은 프로세서의 직접 세대 수식어다. 정확한 성능 수치나 호환 규격이 있다는 뜻은 아니다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+      "body_sha256": "54811824263eeaeb5cee2ce87ae993f689785572ce1c03f730d2a87265e4e2f5",
+      "target_id": "d12-t01",
+      "target_entity": "FOX-XP platform",
+      "event_id": "d12-e01",
+      "gold_fact_index": 0,
+      "field": "product",
+      "gold_value": "FOX-XP platform",
+      "source_reference": {
+        "start": 1365,
+        "end": 1651,
+        "quote": "“This $22 million follow-on order represents another significant expansion of WLBI capacity by our lead AI processor customer and further validates the use of our FOX-XP platform in high-volume production,” said Gayn Erickson, President and Chief Executive Officer of Aehr Test Systems."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "후속 주문, 고객 WLBI 용량 확대, our FOX-XP platform의 양산 사용이 하나의 발언에 직접 연결된다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+      "body_sha256": "54811824263eeaeb5cee2ce87ae993f689785572ce1c03f730d2a87265e4e2f5",
+      "target_id": "d12-t01",
+      "target_entity": "FOX-XP platform",
+      "event_id": "d12-e01",
+      "gold_fact_index": 1,
+      "field": "role",
+      "gold_value": "DEMAND_INCREASE",
+      "source_reference": {
+        "start": 1365,
+        "end": 1651,
+        "quote": "“This $22 million follow-on order represents another significant expansion of WLBI capacity by our lead AI processor customer and further validates the use of our FOX-XP platform in high-volume production,” said Gayn Erickson, President and Chief Executive Officer of Aehr Test Systems."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "follow-on order/another significant expansion이므로 추가 장비 수요 사건이다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+      "body_sha256": "54811824263eeaeb5cee2ce87ae993f689785572ce1c03f730d2a87265e4e2f5",
+      "target_id": "d12-t01",
+      "target_entity": "FOX-XP platform",
+      "event_id": "d12-e01",
+      "gold_fact_index": 2,
+      "field": "actuality",
+      "gold_value": "ACTUAL",
+      "source_reference": {
+        "start": 1365,
+        "end": 1651,
+        "quote": "“This $22 million follow-on order represents another significant expansion of WLBI capacity by our lead AI processor customer and further validates the use of our FOX-XP platform in high-volume production,” said Gayn Erickson, President and Chief Executive Officer of Aehr Test Systems."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "This $22 million follow-on order는 현재 존재하는 주문이다. $22 million은 물리 수량이 아니다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+      "body_sha256": "54811824263eeaeb5cee2ce87ae993f689785572ce1c03f730d2a87265e4e2f5",
+      "target_id": "d12-t01",
+      "target_entity": "FOX-XP platform",
+      "event_id": "d12-e01",
+      "gold_fact_index": 6,
+      "field": "customer_group",
+      "gold_value": "our lead AI processor customer",
+      "source_reference": {
+        "start": 1365,
+        "end": 1651,
+        "quote": "“This $22 million follow-on order represents another significant expansion of WLBI capacity by our lead AI processor customer and further validates the use of our FOX-XP platform in high-volume production,” said Gayn Erickson, President and Chief Executive Officer of Aehr Test Systems."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "our lead AI processor customer가 해당 주문의 WLBI 용량 확대 주체다. 뒤의 협의 회사들을 확정 고객으로 추가하지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+      "body_sha256": "54811824263eeaeb5cee2ce87ae993f689785572ce1c03f730d2a87265e4e2f5",
+      "target_id": "d12-t01",
+      "target_entity": "FOX-XP platform",
+      "event_id": "d12-e01",
+      "gold_fact_index": 7,
+      "field": "supply_pool",
+      "gold_value": "Aehr Test Systems",
+      "source_reference": {
+        "start": 1365,
+        "end": 1651,
+        "quote": "“This $22 million follow-on order represents another significant expansion of WLBI capacity by our lead AI processor customer and further validates the use of our FOX-XP platform in high-volume production,” said Gayn Erickson, President and Chief Executive Officer of Aehr Test Systems."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "Aehr Test Systems 경영자가 our FOX-XP platform과 현재 주문을 직접 연결한다. 개별 거래 공급 주체만 지지한다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+      "body_sha256": "54811824263eeaeb5cee2ce87ae993f689785572ce1c03f730d2a87265e4e2f5",
+      "target_id": "d12-t01",
+      "target_entity": "FOX-XP platform",
+      "event_id": "d12-e02",
+      "gold_fact_index": 2,
+      "field": "actuality",
+      "gold_value": "PLAN",
+      "source_reference": {
+        "start": 1652,
+        "end": 1892,
+        "quote": "“We are encouraged that the customer’s current production plans contemplate capacity beyond this order and that we continue to engage with additional semiconductor companies and hyperscalers following positive wafer-level benchmark results."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "current production plans contemplate capacity beyond this order는 계획임을 직접 밝힌다. 추가 FOX-XP 발주 확정이 아니다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+      "body_sha256": "54811824263eeaeb5cee2ce87ae993f689785572ce1c03f730d2a87265e4e2f5",
+      "target_id": "d12-t01",
+      "target_entity": "FOX-XP platform",
+      "event_id": "d12-e02",
+      "gold_fact_index": 6,
+      "field": "customer_group",
+      "gold_value": "our lead AI processor customer",
+      "source_reference": {
+        "start": 1365,
+        "end": 1892,
+        "quote": "“This $22 million follow-on order represents another significant expansion of WLBI capacity by our lead AI processor customer and further validates the use of our FOX-XP platform in high-volume production,” said Gayn Erickson, President and Chief Executive Officer of Aehr Test Systems. “We are encouraged that the customer’s current production plans contemplate capacity beyond this order and that we continue to engage with additional semiconductor companies and hyperscalers following positive wafer-level benchmark results."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "동일한 연속 인용의 the customer는 바로 앞 our lead AI processor customer를 가리킨다. 제품/역할 연결은 따로 미해결이다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-fe6fe733066583784bc6a77dddc1cf0f9b6f6e705e72fed6cacedcca479e8c99",
+      "body_sha256": "6c053a3e0213e8fa2ef7432e0ca223aff82236ac58401a02ba902141e2d71b36",
+      "target_id": "d13-t01",
+      "target_entity": "WaferPak",
+      "event_id": "d13-e01",
+      "gold_fact_index": 0,
+      "field": "product",
+      "gold_value": "WaferPak",
+      "source_reference": {
+        "start": 2031,
+        "end": 2257,
+        "quote": "Our lead silicon carbide production customer continues to expand capacity with additional WaferPak orders supporting new electric vehicle programs, particularly in China where electric vehicle adoption continues to accelerate."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "additional WaferPak orders가 물리 주문품을 직접 명시한다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-fe6fe733066583784bc6a77dddc1cf0f9b6f6e705e72fed6cacedcca479e8c99",
+      "body_sha256": "6c053a3e0213e8fa2ef7432e0ca223aff82236ac58401a02ba902141e2d71b36",
+      "target_id": "d13-t01",
+      "target_entity": "WaferPak",
+      "event_id": "d13-e01",
+      "gold_fact_index": 1,
+      "field": "role",
+      "gold_value": "DEMAND_INCREASE",
+      "source_reference": {
+        "start": 2031,
+        "end": 2257,
+        "quote": "Our lead silicon carbide production customer continues to expand capacity with additional WaferPak orders supporting new electric vehicle programs, particularly in China where electric vehicle adoption continues to accelerate."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "continues to expand capacity with additional ... orders는 실제 추가 주문 수요다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-fe6fe733066583784bc6a77dddc1cf0f9b6f6e705e72fed6cacedcca479e8c99",
+      "body_sha256": "6c053a3e0213e8fa2ef7432e0ca223aff82236ac58401a02ba902141e2d71b36",
+      "target_id": "d13-t01",
+      "target_entity": "WaferPak",
+      "event_id": "d13-e01",
+      "gold_fact_index": 2,
+      "field": "actuality",
+      "gold_value": "ACTUAL",
+      "source_reference": {
+        "start": 2031,
+        "end": 2257,
+        "quote": "Our lead silicon carbide production customer continues to expand capacity with additional WaferPak orders supporting new electric vehicle programs, particularly in China where electric vehicle adoption continues to accelerate."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "현재의 추가 주문을 서술한다. 설치/인도 완료량은 확인되지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-fe6fe733066583784bc6a77dddc1cf0f9b6f6e705e72fed6cacedcca479e8c99",
+      "body_sha256": "6c053a3e0213e8fa2ef7432e0ca223aff82236ac58401a02ba902141e2d71b36",
+      "target_id": "d13-t01",
+      "target_entity": "WaferPak",
+      "event_id": "d13-e01",
+      "gold_fact_index": 6,
+      "field": "customer_group",
+      "gold_value": "Our lead silicon carbide production customer",
+      "source_reference": {
+        "start": 2031,
+        "end": 2257,
+        "quote": "Our lead silicon carbide production customer continues to expand capacity with additional WaferPak orders supporting new electric vehicle programs, particularly in China where electric vehicle adoption continues to accelerate."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "Our lead silicon carbide production customer가 WaferPak 추가 발주 주체다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-fe6fe733066583784bc6a77dddc1cf0f9b6f6e705e72fed6cacedcca479e8c99",
+      "body_sha256": "6c053a3e0213e8fa2ef7432e0ca223aff82236ac58401a02ba902141e2d71b36",
+      "target_id": "d13-t01",
+      "target_entity": "WaferPak",
+      "event_id": "d13-e01",
+      "gold_fact_index": 7,
+      "field": "supply_pool",
+      "gold_value": "Aehr Test Systems",
+      "source_reference": {
+        "start": 1747,
+        "end": 2257,
+        "quote": "Gayn Erickson, President and CEO of Aehr Test Systems, commented, “We are very pleased to announce these new orders, which we believe reflect strengthening momentum in the power semiconductor WLBI market and the beginning of the next phase of growth for this portion of our business. Our lead silicon carbide production customer continues to expand capacity with additional WaferPak orders supporting new electric vehicle programs, particularly in China where electric vehicle adoption continues to accelerate."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "Aehr Test Systems 경영자의 our business/Our lead ... customer/주문 진술이 현재 거래 공급 관계를 연결한다. 총 적격 공급 풀은 아니다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-fe6fe733066583784bc6a77dddc1cf0f9b6f6e705e72fed6cacedcca479e8c99",
+      "body_sha256": "6c053a3e0213e8fa2ef7432e0ca223aff82236ac58401a02ba902141e2d71b36",
+      "target_id": "d13-t01",
+      "target_entity": "WaferPak",
+      "event_id": "d13-e01",
+      "gold_fact_index": 9,
+      "field": "region",
+      "gold_value": "China",
+      "source_reference": {
+        "start": 2031,
+        "end": 2257,
+        "quote": "Our lead silicon carbide production customer continues to expand capacity with additional WaferPak orders supporting new electric vehicle programs, particularly in China where electric vehicle adoption continues to accelerate."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "China는 이 주문이 지원하는 새 전기차 프로그램의 중심 지역이다. WaferPak 인도국 또는 제조자 소재지라는 추가 해석은 지지하지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d17-e01",
+      "gold_fact_index": 0,
+      "field": "product",
+      "gold_value": "Sonoma systems",
+      "source_reference": {
+        "start": 1929,
+        "end": 2184,
+        "quote": "“This customer is also developing a significantly higher-power AI accelerator ASIC expected to move to production later this year, and they have already placed an initial order with us for multiple Sonoma systems to be used for production for that device."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "already placed an initial order ... for multiple Sonoma systems가 직접 주문품을 특정한다. 제목의 $41 million 주문과 동일시하지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d17-e01",
+      "gold_fact_index": 1,
+      "field": "role",
+      "gold_value": "DEMAND_INCREASE",
+      "source_reference": {
+        "start": 1929,
+        "end": 2184,
+        "quote": "“This customer is also developing a significantly higher-power AI accelerator ASIC expected to move to production later this year, and they have already placed an initial order with us for multiple Sonoma systems to be used for production for that device."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "이미 초기 주문을 넣었다는 추가 수요가 명시된다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d17-e01",
+      "gold_fact_index": 2,
+      "field": "actuality",
+      "gold_value": "ACTUAL",
+      "source_reference": {
+        "start": 1929,
+        "end": 2184,
+        "quote": "“This customer is also developing a significantly higher-power AI accelerator ASIC expected to move to production later this year, and they have already placed an initial order with us for multiple Sonoma systems to be used for production for that device."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "already placed ... order는 ACTUAL 주문이다. ASIC 예상 생산 시점과 구별한다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d17-e01",
+      "gold_fact_index": 3,
+      "field": "quantity",
+      "gold_value": "multiple",
+      "source_reference": {
+        "start": 2118,
+        "end": 2141,
+        "quote": "multiple Sonoma systems"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "multiple은 수치가 정확하지 않은 복수라는 명시적 물리 수량 표현이다. 임의 대수를 만들지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d17-e01",
+      "gold_fact_index": 4,
+      "field": "unit",
+      "gold_value": "systems",
+      "source_reference": {
+        "start": 2118,
+        "end": 2141,
+        "quote": "multiple Sonoma systems"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "multiple Sonoma systems에서 계수 단위 systems가 직접 드러난다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d17-e02",
+      "gold_fact_index": 0,
+      "field": "product",
+      "gold_value": "Sonoma systems",
+      "source_reference": {
+        "start": 2185,
+        "end": 2371,
+        "quote": "As these next-generation devices move into volume production, we see the potential for further substantial increases in demand for Sonoma systems and consumables in our next fiscal year."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "수요 증가 가능성의 대상에 Sonoma systems가 직접 열거된다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d17-e02",
+      "gold_fact_index": 1,
+      "field": "role",
+      "gold_value": "DEMAND_INCREASE",
+      "source_reference": {
+        "start": 2185,
+        "end": 2371,
+        "quote": "As these next-generation devices move into volume production, we see the potential for further substantial increases in demand for Sonoma systems and consumables in our next fiscal year."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "potential for further substantial increases in demand는 조건부 DEMAND_INCREASE 전망이다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d17-e02",
+      "gold_fact_index": 2,
+      "field": "actuality",
+      "gold_value": "FORECAST",
+      "source_reference": {
+        "start": 2185,
+        "end": 2371,
+        "quote": "As these next-generation devices move into volume production, we see the potential for further substantial increases in demand for Sonoma systems and consumables in our next fiscal year."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "potential/As ... move into volume production은 조건부 FORECAST이며 확정 주문이 아니다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d17-e02",
+      "gold_fact_index": 4,
+      "field": "unit",
+      "gold_value": "systems",
+      "source_reference": {
+        "start": 2185,
+        "end": 2371,
+        "quote": "As these next-generation devices move into volume production, we see the potential for further substantial increases in demand for Sonoma systems and consumables in our next fiscal year."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "전망 대상의 물리 계수 명사 systems만 확인한다. 증가 대수는 없다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d17-e02",
+      "gold_fact_index": 5,
+      "field": "period",
+      "gold_value": "our next fiscal year",
+      "source_reference": {
+        "start": 2185,
+        "end": 2371,
+        "quote": "As these next-generation devices move into volume production, we see the potential for further substantial increases in demand for Sonoma systems and consumables in our next fiscal year."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "our next fiscal year는 조건부 수요 전망 기간이다. 절대 날짜나 확정 발주 일정으로 계산하지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d17-e02",
+      "gold_fact_index": 10,
+      "field": "need_time",
+      "gold_value": "our next fiscal year",
+      "source_reference": {
+        "start": 2185,
+        "end": 2371,
+        "quote": "As these next-generation devices move into volume production, we see the potential for further substantial increases in demand for Sonoma systems and consumables in our next fiscal year."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "UNRESOLVED_FIELD_RELATION",
+      "reason": "원문은 다음 회계연도에 잠재적 수요가 증가할 가능성을 명시하므로 period는 확인된다. 고객이 그때까지 물품을 필요로 한다는 별도 필요 시점/요구 납기 관계는 명시되지 않는다. 고정 정책은 period와 need_time을 별도 필드로 나누므로 같은 기간을 need_time에 중복 배정하는 것은 확정하지 못한다. 값의 원문 존재를 부정하지 않으며 field 관계만 AMBIGUOUS로 제안한다.",
+      "proposed_status_without_editing_gold": "AMBIGUOUS"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t02",
+      "target_entity": "consumables",
+      "event_id": "d17-e03",
+      "gold_fact_index": 0,
+      "field": "product",
+      "gold_value": "consumables",
+      "source_reference": {
+        "start": 2185,
+        "end": 2371,
+        "quote": "As these next-generation devices move into volume production, we see the potential for further substantial increases in demand for Sonoma systems and consumables in our next fiscal year."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "Sonoma systems와 함께 consumables라는 소모품군의 잠재 수요가 직접 명시된다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t02",
+      "target_entity": "consumables",
+      "event_id": "d17-e03",
+      "gold_fact_index": 1,
+      "field": "role",
+      "gold_value": "DEMAND_INCREASE",
+      "source_reference": {
+        "start": 2185,
+        "end": 2371,
+        "quote": "As these next-generation devices move into volume production, we see the potential for further substantial increases in demand for Sonoma systems and consumables in our next fiscal year."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "소모품도 further ... increases in demand의 대상이다. 확정 발주 증가는 아니다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t02",
+      "target_entity": "consumables",
+      "event_id": "d17-e03",
+      "gold_fact_index": 2,
+      "field": "actuality",
+      "gold_value": "FORECAST",
+      "source_reference": {
+        "start": 2185,
+        "end": 2371,
+        "quote": "As these next-generation devices move into volume production, we see the potential for further substantial increases in demand for Sonoma systems and consumables in our next fiscal year."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "potential과 양산 전환 조건이 붙어 있으므로 FORECAST다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t02",
+      "target_entity": "consumables",
+      "event_id": "d17-e03",
+      "gold_fact_index": 5,
+      "field": "period",
+      "gold_value": "our next fiscal year",
+      "source_reference": {
+        "start": 2185,
+        "end": 2371,
+        "quote": "As these next-generation devices move into volume production, we see the potential for further substantial increases in demand for Sonoma systems and consumables in our next fiscal year."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "our next fiscal year는 소모품 조건부 수요 전망의 기간이다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t02",
+      "target_entity": "consumables",
+      "event_id": "d17-e03",
+      "gold_fact_index": 10,
+      "field": "need_time",
+      "gold_value": "our next fiscal year",
+      "source_reference": {
+        "start": 2185,
+        "end": 2371,
+        "quote": "As these next-generation devices move into volume production, we see the potential for further substantial increases in demand for Sonoma systems and consumables in our next fiscal year."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "UNRESOLVED_FIELD_RELATION",
+      "reason": "원문은 다음 회계연도에 잠재적 수요가 증가할 가능성을 명시하므로 period는 확인된다. 고객이 그때까지 물품을 필요로 한다는 별도 필요 시점/요구 납기 관계는 명시되지 않는다. 고정 정책은 period와 need_time을 별도 필드로 나누므로 같은 기간을 need_time에 중복 배정하는 것은 확정하지 못한다. 값의 원문 존재를 부정하지 않으며 field 관계만 AMBIGUOUS로 제안한다.",
+      "proposed_status_without_editing_gold": "AMBIGUOUS"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t03",
+      "target_entity": "AI accelerator ASIC",
+      "event_id": "d17-e04",
+      "gold_fact_index": 0,
+      "field": "product",
+      "gold_value": "AI accelerator ASIC",
+      "source_reference": {
+        "start": 1929,
+        "end": 2184,
+        "quote": "“This customer is also developing a significantly higher-power AI accelerator ASIC expected to move to production later this year, and they have already placed an initial order with us for multiple Sonoma systems to be used for production for that device."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "developing ... AI accelerator ASIC은 구체적인 물리 제품의 개발 탐색 사실이다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t03",
+      "target_entity": "AI accelerator ASIC",
+      "event_id": "d17-e04",
+      "gold_fact_index": 2,
+      "field": "actuality",
+      "gold_value": "ACTUAL",
+      "source_reference": {
+        "start": 1929,
+        "end": 2184,
+        "quote": "“This customer is also developing a significantly higher-power AI accelerator ASIC expected to move to production later this year, and they have already placed an initial order with us for multiple Sonoma systems to be used for production for that device."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "is also developing은 현재 개발 중임을 직접 진술한다. ACTUAL 개발과 미래 생산을 구분하며 공급 역할은 부여하지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t03",
+      "target_entity": "AI accelerator ASIC",
+      "event_id": "d17-e04",
+      "gold_fact_index": 8,
+      "field": "specification",
+      "gold_value": "significantly higher-power",
+      "source_reference": {
+        "start": 1929,
+        "end": 2184,
+        "quote": "“This customer is also developing a significantly higher-power AI accelerator ASIC expected to move to production later this year, and they have already placed an initial order with us for multiple Sonoma systems to be used for production for that device."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "significantly higher-power는 ASIC 자체의 직접 수식어다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t03",
+      "target_entity": "AI accelerator ASIC",
+      "event_id": "d17-e05",
+      "gold_fact_index": 0,
+      "field": "product",
+      "gold_value": "AI accelerator ASIC",
+      "source_reference": {
+        "start": 1929,
+        "end": 2184,
+        "quote": "“This customer is also developing a significantly higher-power AI accelerator ASIC expected to move to production later this year, and they have already placed an initial order with us for multiple Sonoma systems to be used for production for that device."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "expected to move to production의 주체는 AI accelerator ASIC이다. Sonoma 장비와 다른 제품으로 유지한다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t03",
+      "target_entity": "AI accelerator ASIC",
+      "event_id": "d17-e05",
+      "gold_fact_index": 1,
+      "field": "role",
+      "gold_value": "SUPPLY_INCREASE",
+      "source_reference": {
+        "start": 1929,
+        "end": 2184,
+        "quote": "“This customer is also developing a significantly higher-power AI accelerator ASIC expected to move to production later this year, and they have already placed an initial order with us for multiple Sonoma systems to be used for production for that device."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "개발 제품이 생산으로 전환될 것이라는 새 생산 공급의 전망으로만 SUPPLY_INCREASE를 지지한다. 가동/적격 물량 확보가 아니다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t03",
+      "target_entity": "AI accelerator ASIC",
+      "event_id": "d17-e05",
+      "gold_fact_index": 2,
+      "field": "actuality",
+      "gold_value": "FORECAST",
+      "source_reference": {
+        "start": 1929,
+        "end": 2184,
+        "quote": "“This customer is also developing a significantly higher-power AI accelerator ASIC expected to move to production later this year, and they have already placed an initial order with us for multiple Sonoma systems to be used for production for that device."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "expected to move to production은 FORECAST다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t03",
+      "target_entity": "AI accelerator ASIC",
+      "event_id": "d17-e05",
+      "gold_fact_index": 5,
+      "field": "period",
+      "gold_value": "later this year",
+      "source_reference": {
+        "start": 1929,
+        "end": 2184,
+        "quote": "“This customer is also developing a significantly higher-power AI accelerator ASIC expected to move to production later this year, and they have already placed an initial order with us for multiple Sonoma systems to be used for production for that device."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "later this year는 ASIC 예상 생산 전환의 기간이다. Sonoma 주문의 인도 기간으로 옮기지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t03",
+      "target_entity": "AI accelerator ASIC",
+      "event_id": "d17-e05",
+      "gold_fact_index": 8,
+      "field": "specification",
+      "gold_value": "significantly higher-power",
+      "source_reference": {
+        "start": 1929,
+        "end": 2184,
+        "quote": "“This customer is also developing a significantly higher-power AI accelerator ASIC expected to move to production later this year, and they have already placed an initial order with us for multiple Sonoma systems to be used for production for that device."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "동일 개발 ASIC을 significantly higher-power가 직접 수식한다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "target_id": "d17-t03",
+      "target_entity": "AI accelerator ASIC",
+      "event_id": "d17-e05",
+      "gold_fact_index": 11,
+      "field": "ready_time",
+      "gold_value": "later this year",
+      "source_reference": {
+        "start": 1929,
+        "end": 2184,
+        "quote": "“This customer is also developing a significantly higher-power AI accelerator ASIC expected to move to production later this year, and they have already placed an initial order with us for multiple Sonoma systems to be used for production for that device."
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "ASIC의 예상 생산 전환 시점으로만 지지한다. 출하 완료일/고객 납기/장비 준비일은 아니다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "target_id": "d18-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d18-e01",
+      "gold_fact_index": 0,
+      "field": "product",
+      "gold_value": "Sonoma systems",
+      "source_reference": {
+        "start": 7441,
+        "end": 7617,
+        "quote": "we expect to begin shipping Sonoma systems this quarter from a newly upgraded contract manufacturing facility with global capacity for more than 20 additional systems per month"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "Sonoma systems 출하 문장에 붙은 위탁 시설의 명목 제조능력이다. 다른 제품/이전 Fremont 시설로 옮기지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "target_id": "d18-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d18-e01",
+      "gold_fact_index": 1,
+      "field": "role",
+      "gold_value": "SUPPLY_INCREASE",
+      "source_reference": {
+        "start": 7502,
+        "end": 7617,
+        "quote": "a newly upgraded contract manufacturing facility with global capacity for more than 20 additional systems per month"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "more than 20 additional systems per month라는 개선 시설의 추가 명목 능력이 직접 서술된다. 실제 출하량/병목 해소는 아니다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "target_id": "d18-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d18-e01",
+      "gold_fact_index": 2,
+      "field": "actuality",
+      "gold_value": "ACTUAL",
+      "source_reference": {
+        "start": 7502,
+        "end": 7617,
+        "quote": "a newly upgraded contract manufacturing facility with global capacity for more than 20 additional systems per month"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "newly upgraded ... with ... capacity는 현재 공표 명목능력의 주장이다. ACTUAL의 범위를 이 발표 사실에 한정하며 적격 출하 실증으로 표시하지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "target_id": "d18-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d18-e01",
+      "gold_fact_index": 3,
+      "field": "quantity",
+      "gold_value": "more than 20",
+      "source_reference": {
+        "start": 7502,
+        "end": 7617,
+        "quote": "a newly upgraded contract manufacturing facility with global capacity for more than 20 additional systems per month"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "more than 20은 추가 월간 명목 능력 수치다. 분기 실제 출하량으로 계산하지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "target_id": "d18-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d18-e01",
+      "gold_fact_index": 4,
+      "field": "unit",
+      "gold_value": "systems",
+      "source_reference": {
+        "start": 7502,
+        "end": 7617,
+        "quote": "a newly upgraded contract manufacturing facility with global capacity for more than 20 additional systems per month"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "명목 능력의 물리 계수 단위 systems는 원문 그대로다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "target_id": "d18-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d18-e01",
+      "gold_fact_index": 5,
+      "field": "period",
+      "gold_value": "per month",
+      "source_reference": {
+        "start": 7502,
+        "end": 7617,
+        "quote": "a newly upgraded contract manufacturing facility with global capacity for more than 20 additional systems per month"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "per month는 능력 비율의 시간 분모다. 예상 출하 this quarter와 별개다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "target_id": "d18-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d18-e01",
+      "gold_fact_index": 9,
+      "field": "region",
+      "gold_value": "global",
+      "source_reference": {
+        "start": 7502,
+        "end": 7617,
+        "quote": "a newly upgraded contract manufacturing facility with global capacity for more than 20 additional systems per month"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "global은 capacity에 붙은 범위 표현으로만 지지한다. 공장 소재지/인도국이 확인됐다는 의미는 없다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "target_id": "d18-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d18-e02",
+      "gold_fact_index": 0,
+      "field": "product",
+      "gold_value": "Sonoma systems",
+      "source_reference": {
+        "start": 7441,
+        "end": 7617,
+        "quote": "we expect to begin shipping Sonoma systems this quarter from a newly upgraded contract manufacturing facility with global capacity for more than 20 additional systems per month"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "expect to begin shipping의 대상이 Sonoma systems다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "target_id": "d18-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d18-e02",
+      "gold_fact_index": 1,
+      "field": "role",
+      "gold_value": "SUPPLY_INCREASE",
+      "source_reference": {
+        "start": 7441,
+        "end": 7617,
+        "quote": "we expect to begin shipping Sonoma systems this quarter from a newly upgraded contract manufacturing facility with global capacity for more than 20 additional systems per month"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "새 위탁 생산시설에서 출하를 시작할 전망이므로 미래 공급 확대 관찰이다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "target_id": "d18-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d18-e02",
+      "gold_fact_index": 2,
+      "field": "actuality",
+      "gold_value": "FORECAST",
+      "source_reference": {
+        "start": 7441,
+        "end": 7617,
+        "quote": "we expect to begin shipping Sonoma systems this quarter from a newly upgraded contract manufacturing facility with global capacity for more than 20 additional systems per month"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "expect이므로 FORECAST다. ACTUAL 명목 능력 또는 출하 완료와 합치지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "target_id": "d18-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d18-e02",
+      "gold_fact_index": 4,
+      "field": "unit",
+      "gold_value": "systems",
+      "source_reference": {
+        "start": 7469,
+        "end": 7483,
+        "quote": "Sonoma systems"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "shipping Sonoma systems에서 물리 계수 명사만 확인한다. 출하 대수는 제시되지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "target_id": "d18-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d18-e02",
+      "gold_fact_index": 5,
+      "field": "period",
+      "gold_value": "this quarter",
+      "source_reference": {
+        "start": 7441,
+        "end": 7617,
+        "quote": "we expect to begin shipping Sonoma systems this quarter from a newly upgraded contract manufacturing facility with global capacity for more than 20 additional systems per month"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "this quarter는 예상 출하 개시 구간이다. 월간 명목 능력의 per month와 분리한다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "target_id": "d18-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d18-e02",
+      "gold_fact_index": 7,
+      "field": "supply_pool",
+      "gold_value": "a newly upgraded contract manufacturing facility",
+      "source_reference": {
+        "start": 7441,
+        "end": 7617,
+        "quote": "we expect to begin shipping Sonoma systems this quarter from a newly upgraded contract manufacturing facility with global capacity for more than 20 additional systems per month"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "from a newly upgraded contract manufacturing facility가 예정 출하의 공급원으로 직접 연결된다. 현재 적격 납품 완료 공급자 목록은 아니다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "target_id": "d18-t01",
+      "target_entity": "Sonoma systems",
+      "event_id": "d18-e02",
+      "gold_fact_index": 11,
+      "field": "ready_time",
+      "gold_value": "this quarter",
+      "source_reference": {
+        "start": 7441,
+        "end": 7617,
+        "quote": "we expect to begin shipping Sonoma systems this quarter from a newly upgraded contract manufacturing facility with global capacity for more than 20 additional systems per month"
+      },
+      "source_coordinate_and_quote_match": true,
+      "value_is_literal_or_evidenced_enum": true,
+      "judgment": "SOURCE_SUPPORTED_WITH_STATED_SCOPE",
+      "reason": "this quarter는 예상 출하 개시 시점이다. 정확한 달력 날짜/주문-인도 리드타임을 보충하지 않는다.",
+      "proposed_status_without_editing_gold": "VERIFIED_PRESENT"
+    }
+  ],
+  "existing_ambiguous_fact_checks": [
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "target_id": "d05-t01",
+      "event_id": "d05-e02",
+      "field": "customer_group",
+      "judgment": "RETAIN_AMBIGUOUS",
+      "source_reference": {
+        "start": 870,
+        "end": 1276,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements. The systems and consumables will be deployed at one of the customer’s outsourced semiconductor assembly and test (OSAT) partners in Taiwan. Deliveries under the order are scheduled over the next six months."
+      },
+      "reason": "이 범위는 the customer와 그 OSAT 배치 파트너를 말한다. OSAT 파트너는 명시된 장비 배치처이며 장비 구매 고객이라고 단정할 수 없다. 고객 유형은 별도 첫 입력 범위에 있으므로 이 단일 사건 인용에 합치지 않았다.",
+      "independent_confirmation": "입력의 관계 한계를 원문으로 재확인했다. OSAT 배치처를 고객으로, 계획을 추가 제품 주문으로, 개발자를 적격 제조공급자로, 공표 능력을 실제 적격 공급으로 확정하지 않는다."
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "target_id": "d05-t02",
+      "event_id": "d05-e03",
+      "field": "customer_group",
+      "judgment": "RETAIN_AMBIGUOUS",
+      "source_reference": {
+        "start": 870,
+        "end": 1276,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements. The systems and consumables will be deployed at one of the customer’s outsourced semiconductor assembly and test (OSAT) partners in Taiwan. Deliveries under the order are scheduled over the next six months."
+      },
+      "reason": "이 단일 인용 범위에는 고객 유형이 없고 OSAT 파트너는 배치처다. 이를 직접 구매 고객으로 바꾸지 않는다.",
+      "independent_confirmation": "입력의 관계 한계를 원문으로 재확인했다. OSAT 배치처를 고객으로, 계획을 추가 제품 주문으로, 개발자를 적격 제조공급자로, 공표 능력을 실제 적격 공급으로 확정하지 않는다."
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "target_id": "d05-t03",
+      "event_id": "d05-e04",
+      "field": "customer_group",
+      "judgment": "RETAIN_AMBIGUOUS",
+      "source_reference": {
+        "start": 870,
+        "end": 1276,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements. The systems and consumables will be deployed at one of the customer’s outsourced semiconductor assembly and test (OSAT) partners in Taiwan. Deliveries under the order are scheduled over the next six months."
+      },
+      "reason": "이 단일 인용 범위에는 고객 유형이 없고 OSAT 파트너는 배치처다. 이를 직접 구매 고객으로 바꾸지 않는다.",
+      "independent_confirmation": "입력의 관계 한계를 원문으로 재확인했다. OSAT 배치처를 고객으로, 계획을 추가 제품 주문으로, 개발자를 적격 제조공급자로, 공표 능력을 실제 적격 공급으로 확정하지 않는다."
+    },
+    {
+      "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+      "target_id": "d12-t01",
+      "event_id": "d12-e02",
+      "field": "product",
+      "judgment": "RETAIN_AMBIGUOUS",
+      "source_reference": {
+        "start": 1365,
+        "end": 1892,
+        "quote": "“This $22 million follow-on order represents another significant expansion of WLBI capacity by our lead AI processor customer and further validates the use of our FOX-XP platform in high-volume production,” said Gayn Erickson, President and Chief Executive Officer of Aehr Test Systems. “We are encouraged that the customer’s current production plans contemplate capacity beyond this order and that we continue to engage with additional semiconductor companies and hyperscalers following positive wafer-level benchmark results."
+      },
+      "reason": "원문은 고객의 capacity beyond this order를 포함한 current production plans를 말한다. 계획이 추가 FOX-XP 주문 또는 특정 장비만의 증설이라는 직접 명시는 없어 제품-계획 관계를 보류한다.",
+      "independent_confirmation": "입력의 관계 한계를 원문으로 재확인했다. OSAT 배치처를 고객으로, 계획을 추가 제품 주문으로, 개발자를 적격 제조공급자로, 공표 능력을 실제 적격 공급으로 확정하지 않는다."
+    },
+    {
+      "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+      "target_id": "d12-t01",
+      "event_id": "d12-e02",
+      "field": "role",
+      "judgment": "RETAIN_AMBIGUOUS",
+      "source_reference": {
+        "start": 1365,
+        "end": 1892,
+        "quote": "“This $22 million follow-on order represents another significant expansion of WLBI capacity by our lead AI processor customer and further validates the use of our FOX-XP platform in high-volume production,” said Gayn Erickson, President and Chief Executive Officer of Aehr Test Systems. “We are encouraged that the customer’s current production plans contemplate capacity beyond this order and that we continue to engage with additional semiconductor companies and hyperscalers following positive wafer-level benchmark results."
+      },
+      "reason": "추가 생산능력을 상정한 고객 계획은 명시돼 있으나 추가 FOX-XP 확정 수요·주문이나 이미 확보된 적격 공급으로 단정할 수 없다.",
+      "independent_confirmation": "입력의 관계 한계를 원문으로 재확인했다. OSAT 배치처를 고객으로, 계획을 추가 제품 주문으로, 개발자를 적격 제조공급자로, 공표 능력을 실제 적격 공급으로 확정하지 않는다."
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "target_id": "d17-t01",
+      "event_id": "d17-e01",
+      "field": "customer_group",
+      "judgment": "RETAIN_AMBIGUOUS",
+      "source_reference": {
+        "start": 1929,
+        "end": 2371,
+        "quote": "“This customer is also developing a significantly higher-power AI accelerator ASIC expected to move to production later this year, and they have already placed an initial order with us for multiple Sonoma systems to be used for production for that device. As these next-generation devices move into volume production, we see the potential for further substantial increases in demand for Sonoma systems and consumables in our next fiscal year."
+      },
+      "reason": "이 사건 인용은 This customer/they만 사용한다. 구매 행위는 확실하지만 구체 고객 유형은 분리된 제목 범위에 있으므로 단일 사건 인용 안의 확정 고객 집단 값으로 합치지 않았다.",
+      "independent_confirmation": "입력의 관계 한계를 원문으로 재확인했다. OSAT 배치처를 고객으로, 계획을 추가 제품 주문으로, 개발자를 적격 제조공급자로, 공표 능력을 실제 적격 공급으로 확정하지 않는다."
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "target_id": "d17-t01",
+      "event_id": "d17-e01",
+      "field": "supply_pool",
+      "judgment": "RETAIN_AMBIGUOUS",
+      "source_reference": {
+        "start": 1929,
+        "end": 2371,
+        "quote": "“This customer is also developing a significantly higher-power AI accelerator ASIC expected to move to production later this year, and they have already placed an initial order with us for multiple Sonoma systems to be used for production for that device. As these next-generation devices move into volume production, we see the potential for further substantial increases in demand for Sonoma systems and consumables in our next fiscal year."
+      },
+      "reason": "with us는 주문 수취자를 가리키지만 이 입력 범위에는 공급 법인명이 없다. 분리된 제목 회사명을 이 단일 사건 인용에 끌어오지 않았다.",
+      "independent_confirmation": "입력의 관계 한계를 원문으로 재확인했다. OSAT 배치처를 고객으로, 계획을 추가 제품 주문으로, 개발자를 적격 제조공급자로, 공표 능력을 실제 적격 공급으로 확정하지 않는다."
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "target_id": "d17-t03",
+      "event_id": "d17-e05",
+      "field": "supply_pool",
+      "judgment": "RETAIN_AMBIGUOUS",
+      "source_reference": {
+        "start": 1929,
+        "end": 2371,
+        "quote": "“This customer is also developing a significantly higher-power AI accelerator ASIC expected to move to production later this year, and they have already placed an initial order with us for multiple Sonoma systems to be used for production for that device. As these next-generation devices move into volume production, we see the potential for further substantial increases in demand for Sonoma systems and consumables in our next fiscal year."
+      },
+      "reason": "This customer가 ASIC을 개발하고 있으나 그 익명 개발 주체가 실제 적격 제조·공급 풀이라는 증거와 생산 가동 완료는 없다.",
+      "independent_confirmation": "입력의 관계 한계를 원문으로 재확인했다. OSAT 배치처를 고객으로, 계획을 추가 제품 주문으로, 개발자를 적격 제조공급자로, 공표 능력을 실제 적격 공급으로 확정하지 않는다."
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "target_id": "d18-t01",
+      "event_id": "d18-e01",
+      "field": "supply_pool",
+      "judgment": "RETAIN_AMBIGUOUS",
+      "source_reference": {
+        "start": 7441,
+        "end": 7617,
+        "quote": "we expect to begin shipping Sonoma systems this quarter from a newly upgraded contract manufacturing facility with global capacity for more than 20 additional systems per month"
+      },
+      "reason": "추가 시설의 공표 capacity는 있으나 첫 shipping은 expect 단계다. 고객 규격·기간을 만족하는 실제 적격 공급량이나 전체 적격 공급자 집합은 확인되지 않았다.",
+      "independent_confirmation": "입력의 관계 한계를 원문으로 재확인했다. OSAT 배치처를 고객으로, 계획을 추가 제품 주문으로, 개발자를 적격 제조공급자로, 공표 능력을 실제 적격 공급으로 확정하지 않는다."
+    }
+  ],
+  "source_based_reconciliation": [
+    {
+      "comparison_id": "clean-01",
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "kind": "BLIND_EVENT_BOUNDARY_REFINEMENT",
+      "reason": "본인 초안은 실제 주문과 미래 인도 일정을 한 사건에 넣었다. 원문은 주문 수령 ACTUAL과 scheduled delivery PLAN을 구분하므로 gold의 phase 분리가 더 명확하다. 두 phase를 별도의 새 주문 두 건으로 세어서는 안 된다.",
+      "source_reference": {
+        "start": 1210,
+        "end": 1276,
+        "quote": "Deliveries under the order are scheduled over the next six months."
+      },
+      "judgment": "SOURCE_SUPPORTS_PHASE_SPLIT"
+    },
+    {
+      "comparison_id": "clean-02",
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "kind": "BLIND_MISSING_UNIT_FACTS",
+      "reason": "초안은 물리 수량 미기재를 기록했지만 systems/modules/sockets의 단위 명시를 생략했다. 숫자 없이 단위만 PRESENT로 두는 것은 원문이 지지한다.",
+      "source_reference": {
+        "start": 870,
+        "end": 1023,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets"
+      },
+      "judgment": "SOURCE_SUPPORTS_GOLD_ADDITIONAL_FACTS"
+    },
+    {
+      "comparison_id": "clean-03",
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "kind": "BLIND_MISSING_PERIOD_FACTS",
+      "reason": "초안 ready_time에만 적은 향후 6개월은 예정 인도 period로도 원문에 직접 있다. period를 추가하되 lead_time으로 바꾸지 않는다.",
+      "source_reference": {
+        "start": 1210,
+        "end": 1276,
+        "quote": "Deliveries under the order are scheduled over the next six months."
+      },
+      "judgment": "SOURCE_SUPPORTS_GOLD_ADDITIONAL_FACTS"
+    },
+    {
+      "comparison_id": "clean-04",
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "kind": "BLIND_MISSING_EXPLORATION_TARGET",
+      "reason": "본인 초안은 고객 응용 제품을 문맥 관찰로만 남겼다. 원문에 있는 물리 AI 프로세서를 수급 role 없이 탐색 target으로 따로 보존하는 gold 판단은 정책에 부합한다.",
+      "source_reference": {
+        "start": 81,
+        "end": 109,
+        "quote": "Next-Generation AI Processor"
+      },
+      "judgment": "SOURCE_SUPPORTS_GOLD_EXPLORATION_RECORD"
+    },
+    {
+      "comparison_id": "clean-05",
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "kind": "BLIND_MISSING_TRANSACTION_SUPPLIER",
+      "reason": "제목이 Aehr를 Sonoma 주문 수취자로 직접 연결한다. 본인 초안에서 개별 거래 공급 주체 사실을 빠뜨렸다. 총 적격 공급 풀이 확인된 것은 아니다.",
+      "source_reference": {
+        "start": 0,
+        "end": 49,
+        "quote": "Aehr Receives Follow-On Sonoma™ Production Orders"
+      },
+      "judgment": "SOURCE_SUPPORTS_GOLD_ADDITIONAL_FACT"
+    },
+    {
+      "comparison_id": "clean-06",
+      "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+      "kind": "BLIND_MISSING_TRANSACTION_SUPPLIER",
+      "reason": "본인 초안은 FOX-XP 후속 주문과 경영자의 회사/our platform 연결에서 개별 공급 주체를 기록하지 않았다. gold의 거래 관계 한정 공급 주체는 원문으로 지지된다.",
+      "source_reference": {
+        "start": 1572,
+        "end": 1651,
+        "quote": "said Gayn Erickson, President and Chief Executive Officer of Aehr Test Systems."
+      },
+      "judgment": "SOURCE_SUPPORTS_GOLD_ADDITIONAL_FACT"
+    },
+    {
+      "comparison_id": "clean-07",
+      "document_id": "stage4doc-fe6fe733066583784bc6a77dddc1cf0f9b6f6e705e72fed6cacedcca479e8c99",
+      "kind": "BLIND_MISSING_TRANSACTION_SUPPLIER",
+      "reason": "WaferPak 추가 주문 발언에서 경영자·회사·our business/customer가 직접 연결된다. 초안에 빠진 개별 거래 공급 주체는 지지되며 실제 설치능력이나 전체 공급 풀을 추론할 수는 없다.",
+      "source_reference": {
+        "start": 1747,
+        "end": 1811,
+        "quote": "Gayn Erickson, President and CEO of Aehr Test Systems, commented"
+      },
+      "judgment": "SOURCE_SUPPORTS_GOLD_ADDITIONAL_FACT"
+    },
+    {
+      "comparison_id": "clean-08",
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "kind": "BLIND_MISSING_ACTUAL_DEVELOPMENT_OBSERVATION",
+      "reason": "초안은 물리 ASIC의 탐색 및 미래 생산만 구조화했다. is also developing이 현재 개발을 명시하므로 gold의 ACTUAL 개발 탐색 사실을 별도로 남기는 판단을 지지한다. 공급 역할은 없는 개발 관찰이다.",
+      "source_reference": {
+        "start": 1930,
+        "end": 2011,
+        "quote": "This customer is also developing a significantly higher-power AI accelerator ASIC"
+      },
+      "judgment": "SOURCE_SUPPORTS_GOLD_ADDITIONAL_EXPLORATION_FACT"
+    },
+    {
+      "comparison_id": "clean-09",
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "kind": "BLIND_COMBINED_NOMINAL_CAPACITY_AND_FORECAST",
+      "reason": "초안은 공표 명목능력과 예상 출하를 FORECAST 사건 하나로 합쳤다. 신규 개선 시설의 명목능력 주장과 expect shipping은 다른 시점/사실 수준이므로 gold의 분리가 원문을 더 정확하게 표현한다. ACTUAL 명목능력은 실제 적격 공급 실증이 아니다.",
+      "source_reference": {
+        "start": 7502,
+        "end": 7617,
+        "quote": "a newly upgraded contract manufacturing facility with global capacity for more than 20 additional systems per month"
+      },
+      "judgment": "SOURCE_SUPPORTS_SPLIT_WITH_LIMITS"
+    },
+    {
+      "comparison_id": "clean-10",
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "kind": "BLIND_PRONOUN_IS_NOT_CUSTOMER_GROUP",
+      "reason": "초안은 This customer를 PRESENT customer_group으로도 기록했다. 지시 고객의 존재는 확실하지만 분류/신원은 이 연속 인용에 없다. gold처럼 유형 관계를 AMBIGUOUS로 남기는 것이 적절하다.",
+      "source_reference": {
+        "start": 1930,
+        "end": 1962,
+        "quote": "This customer is also developing"
+      },
+      "judgment": "BLIND_DRAFT_PRESENT_SHOULD_BE_NARROWED"
+    },
+    {
+      "comparison_id": "clean-11",
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "kind": "CROSS_WINDOW_CUSTOMER_RELATION_NOT_EVENT_LOCAL",
+      "reason": "초안은 제목 고객군을 세 주문 구성품에 공통 배정했다. 제목의 Sonoma 고객군 자체는 지지되지만, 다른 입력 범위를 인용하는 배치/구성품 사건의 단일 근거에서 고객 분류는 직접 확인되지 않는다. OSAT는 배치 파트너다. 관계를 합치려면 별도 연속 근거가 필요하므로 gold의 해당 AMBIGUOUS를 유지한다.",
+      "source_reference": {
+        "start": 1118,
+        "end": 1208,
+        "quote": "one of the customer’s outsourced semiconductor assembly and test (OSAT) partners in Taiwan"
+      },
+      "judgment": "RETAIN_GOLD_EVENT_LOCAL_AMBIGUITY"
+    },
+    {
+      "comparison_id": "clean-12",
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "kind": "BLIND_REFERENCE_PRODUCT_RELATION_LIMIT",
+      "reason": "본인 초안의 BIM/socket role은 Sonoma 제목을 근거로 가리켰다. 두 구성품의 직접 추가 주문 근거는 The orders include 문장이어야 한다. freeze는 수정하지 않으며 잘못 좁은 근거 선택을 본 audit에 고지한다.",
+      "source_reference": {
+        "start": 870,
+        "end": 1023,
+        "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets"
+      },
+      "judgment": "BLIND_DRAFT_REFERENCE_CORRECTION_NEEDED",
+      "affected_blind_facts": 2
+    },
+    {
+      "comparison_id": "clean-13",
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "kind": "REGION_IS_CAPACITY_SCOPE_ONLY",
+      "reason": "초안은 global의 지역 필드 의미를 보류했다. gold의 region=global은 넓은 capacity 범위 표현에 한정한다는 설명과 함께라면 지지한다. 실제 공장 소재지/선적 목적지의 지역으로는 확인되지 않는다.",
+      "source_reference": {
+        "start": 7556,
+        "end": 7571,
+        "quote": "global capacity"
+      },
+      "judgment": "SOURCE_SUPPORTS_LITERAL_SCOPE_WITH_LIMITS"
+    },
+    {
+      "comparison_id": "clean-14",
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "kind": "UNRESOLVED_FORECAST_PERIOD_VERSUS_NEED_TIME",
+      "reason": "두 전망 사건에서 our next fiscal year는 명시된 수요 전망 기간이다. 이를 별도 customer need_time으로도 단정하는 관계는 원문이 충분히 구분하지 않아 gold의 PRESENT 2개를 AMBIGUOUS로 제안한다. source 값 자체는 정확하다.",
+      "source_reference": {
+        "start": 2247,
+        "end": 2371,
+        "quote": "we see the potential for further substantial increases in demand for Sonoma systems and consumables in our next fiscal year."
+      },
+      "judgment": "UNRESOLVED_FIELD_RELATION",
+      "affected_gold_present_facts": 2
+    }
+  ],
+  "document_level_findings": [
+    {
+      "document_id": "stage4doc-43bbc73c34d36affaac68018c51886b2897bbc0126d9df12b814ead65738046c",
+      "judgment": "SOURCE_SUPPORTS_NO_RELEVANT_PHYSICAL_EVENT",
+      "reason": "국제협력과 갱신 협약에 관한 일반 문장이다. 제품·제조장비·생산 슬롯이나 그 수급 변화는 지정 범위에 명시되지 않았다.",
+      "reviewed_ranges": [
+        {
+          "start": 433,
+          "end": 965
+        }
+      ]
+    },
+    {
+      "document_id": "stage4doc-3fd9a480cb21be25a3d28465399232ce56a35c896627813ed1c8925dc86c6e4d",
+      "judgment": "SOURCE_SUPPORTS_NO_RELEVANT_PHYSICAL_EVENT",
+      "reason": "European Launcher Challenge는 initiative/프로젝트명이다. launch service 공급 확대 목적과 계약 체결은 명시되지만 구체적인 물리 제품·발사 장비·생산 슬롯 또는 적격 공급량은 없다. 물리 탐색 범위에서는 target/event를 만들지 않는다.",
+      "reviewed_ranges": [
+        {
+          "start": 141,
+          "end": 269
+        },
+        {
+          "start": 510,
+          "end": 793
+        }
+      ]
+    },
+    {
+      "document_id": "stage4doc-7a75ee8cf8b87edb671b75f519f36b1ff8f50c69dcc9b1c8dfd0a6795bd708d3",
+      "judgment": "SOURCE_SUPPORTS_NO_RELEVANT_PHYSICAL_EVENT",
+      "reason": "Investor Forum 2026 금융 행사와 공공 수요·민간 자본 논의이다. 구체적인 물리 제품, 주문 또는 공급 사건이 없다.",
+      "reviewed_ranges": [
+        {
+          "start": 35,
+          "end": 511
+        }
+      ]
+    },
+    {
+      "document_id": "stage4doc-8863919aedd5421d4f6122236527b82424465e4cf90fabeec7dcc6b2e13b93d3",
+      "judgment": "SOURCE_SUPPORTS_NO_RELEVANT_PHYSICAL_EVENT",
+      "reason": "수주잔고 금액, 향후 매출 및 성장률 전망, 미확정 추가 주문 추구만 있다. 제품이 명시되지 않아 구체적인 물리 target이나 제품별 사건을 만들지 않는다.",
+      "reviewed_ranges": [
+        {
+          "start": 1543,
+          "end": 1665
+        },
+        {
+          "start": 3087,
+          "end": 3563
+        }
+      ]
+    }
+  ],
+  "conditional_and_negative_evidence_note": "실제 주문, 예정 인도, 양산 전환 기대, potential/As 조건, 생산계획, 협의, 금융 잔고/매출을 분리했다. 14 windows에는 특정 부족/지연의 명시적 부정, 확정 병목 완화 또는 대체 공급 경로가 없다. 단순 추가 능력을 병목 해소로 만들지 않았다.",
+  "unresolved_findings": [
+    {
+      "event_id": "d17-e02",
+      "field": "need_time",
+      "reason": "원문은 다음 회계연도에 잠재적 수요가 증가할 가능성을 명시하므로 period는 확인된다. 고객이 그때까지 물품을 필요로 한다는 별도 필요 시점/요구 납기 관계는 명시되지 않는다. 고정 정책은 period와 need_time을 별도 필드로 나누므로 같은 기간을 need_time에 중복 배정하는 것은 확정하지 못한다. 값의 원문 존재를 부정하지 않으며 field 관계만 AMBIGUOUS로 제안한다."
+    },
+    {
+      "event_id": "d17-e03",
+      "field": "need_time",
+      "reason": "원문은 다음 회계연도에 잠재적 수요가 증가할 가능성을 명시하므로 period는 확인된다. 고객이 그때까지 물품을 필요로 한다는 별도 필요 시점/요구 납기 관계는 명시되지 않는다. 고정 정책은 period와 need_time을 별도 필드로 나누므로 같은 기간을 need_time에 중복 배정하는 것은 확정하지 못한다. 값의 원문 존재를 부정하지 않으며 field 관계만 AMBIGUOUS로 제안한다."
+    }
+  ],
+  "review_outcome": {
+    "agreement_present_fact_count": 81,
+    "disagreement_definite_source_contradiction_count": 0,
+    "unresolved_gold_present_field_mapping_count": 2,
+    "retained_existing_ambiguous_count": 9,
+    "total_unresolved_fact_relations": 11,
+    "gold_edited": false,
+    "frozen_blind_draft_edited_after_gold_exposure": false,
+    "source_first_draft_is_independent_of_gold": true,
+    "audit_after_gold_exposure_is_not_a_second_blind_draft": true,
+    "human_verification": false,
+    "evaluated_model_accuracy": "NOT_ASSESSED_TARGET_OUTPUTS_NEVER_READ",
+    "gold_agreement_is_accuracy_evidence": false,
+    "full_document_recall_claim": false,
+    "decision_method": "No majority vote or score threshold. Source quotations, explicit product/event relation, actual-versus-planned scope, and fixed policy only."
+  },
+  "limitations": [
+    "검토 대상은 9문서의 14 windows이다. 빈 windows 11문서는 미검토이며 ABSENT가 아니다.",
+    "source-first 초안 고정 후 기존 gold를 읽은 대조 검토다. AI 검토이며 사람 검증이 아니다.",
+    "모델 답·독립 인간 정답을 보지 않았으므로 여기의 동의/보류 수는 평가 모델 정확도나 gold 정확도 추정치가 아니다.",
+    "원문 인용이 맞는 것과 그 값이 올바른 의미 필드·사건에 연결되는 것은 별개이며 둘을 분리해 기록했다.",
+    "검토한 원문도 기사상의 주장이다. 명목 능력 발표나 수주 사실이 실제 적격 공급/납품 실증을 대체하지 않는다."
+  ]
+}

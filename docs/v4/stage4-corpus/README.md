@@ -1,6 +1,6 @@
 # 4단계 동결 원문 50건
 
-개발 30건과 평가 20건을 새 Groq 실행 전에 동결했다. manifest의 문서 ID·URL·공개일 근거·본문 및 원본 해시·분할·미판독 범위를 보존한다. 평가군은 확인한 기존 개발 URL 4,327개와 본문 해시 1,708개에 겹치지 않는다. 현재 코드의 정확도 규칙은 수정하지 않았다.
+개발 30건과 평가 20건을 새 Groq 실행 전에 동결했다. manifest의 문서 ID·URL·공개일 근거·본문 및 원본 해시·분할·미판독 범위를 보존한다. 평가군은 확인한 기존 개발 URL 4,327개와 본문 해시 1,708개에 겹치지 않는다. 아래 첫 절은 원래 자료 준비 시점의 기록이며, 이번 수정·부분 평가 증거는 마지막 절에 구분한다.
 
 | 구분 | FULL | PARTIAL | 합계 |
 | --- | ---: | ---: | ---: |
@@ -27,3 +27,11 @@
 ```
 
 이 명령은 네트워크·모델·운영 DB를 사용하지 않는다. 자료·동결 무결성 PASS와 의미 정확도·CPU 개선·병목 선행 성능 판정을 분리한다. 전체 기능시험 반복, 5단계, 7일 Shadow는 수행하지 않았다.
+
+## Repair evidence added after the original source freeze
+
+The original manifest, source bytes, IDs/hashes and development30/evaluation20 split remain unchanged. Derived `safe-inputs-v1.json`, event gold/adjudication, raw responses, CPU baseline and evaluation scores record the separately approved repair. They are evidence, not another progress ledger. `PROGRESS.json` remains the resume ledger.
+
+Gold is separate AI-session source review, not human verification. Original review sessions disclosed ancillary status-metadata exposure; their exact limits remain in adjudication records. The evaluation is partial and literal/alias scoped. Offline replay: `python -m scripts.v4.replay_repair_evidence`. No model/API calls are made by replay. Native NIST recovery matched frozen parsed text for13 documents; it does not prove historical HTML identity. One changed native/text version was not substituted. Do not reinterpret the original preparation-only zero-call fields as current repair usage.
+
+`source-only-blind-evaluation-v1.json` and `source-only-audit-evaluation-v1.json` preserve an additional AI session's source-first draft and subsequent gold audit. It did not read evaluated model answers or query other session statuses. Of 83 PRESENT facts, 81 were source-supported and two field relationships remain unresolved in a document without a generation response; nine prior ambiguous facts remain unresolved. No gold labels, aliases or scoring rules were changed. Agreement is not model accuracy, and unreviewed ranges are not information absence.

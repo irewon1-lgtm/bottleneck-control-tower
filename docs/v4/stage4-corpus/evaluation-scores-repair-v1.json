@@ -1,0 +1,2878 @@
+{
+  "version": "bct-frozen-holdout-scores-1",
+  "created_at": "2026-10-14T04:54:53.675996+00:00",
+  "evaluator_version": "bct-event-evaluation-1",
+  "reproduce": {
+    "command": "python -B var/v4/repair/score_frozen.py",
+    "network_calls": 0,
+    "script_sha256": "114cbbda76ee0f92b20dceb1066c6e154b23cb70b00eb023ab2f17035135c61b",
+    "freeze_sha256": "64ea359b09fb52e7b501dc2ff50b555f315ca922cfdfad1674320716e1a5ffca",
+    "input_file_sha256": "bc9ba12a5ec7e5d5e54fef5bba9d563d882a3be7a674c106f4f8d10891287c4a",
+    "gold_file_sha256": "0bf92e81df587034a62a4df6564d1d563cd9de9abda455b212061e50bcea0f9c",
+    "adjudication_file_sha256": "55777d49b7ed27d946908704680989641f20010d4c658eb841ca5c6999408b63",
+    "gold_documents_sha256": "034c5919bc5731cb61f46827d2510e3a6f3f575d646d6b0a605fab2114bce69a",
+    "cpu_file_sha256": "9267b38187af16acbb9355876770b7e561c5c3d5234f71089af7bfed6b53c38b",
+    "batch_receipt_sha256": "6ef6a62d5c5c67c74ba59b1aee98fe3bf0fcb9bf2e66b86fef27d577f26ed51a",
+    "ledger_events_sha256": "58373882a7424bc798e60f51067c2ce7fc9ed23d1883ab33958aeda18dbc5bdd"
+  },
+  "validation_steps": [
+    {
+      "step": "frozen_code_prompt_policy_input_hashes",
+      "status": "PASS"
+    },
+    {
+      "step": "input_body_and_window_references",
+      "status": "PASS"
+    },
+    {
+      "step": "cpu_same_input_model_revision_and_all_source_spans",
+      "status": "PASS"
+    },
+    {
+      "step": "all_provided_gold_check_gold_and_source_aliases",
+      "status": "PASS"
+    },
+    {
+      "step": "one_attempt_each_and_stored_validation_replay",
+      "status": "PASS"
+    },
+    {
+      "step": "actual_frozen_assess_execution",
+      "status": "PASS"
+    }
+  ],
+  "scope": {
+    "evaluation_documents": 20,
+    "initially_transfer_eligible_documents": 9,
+    "completed_attempts": 7,
+    "received_model_response_documents": 6,
+    "common_response_and_review_documents": 6,
+    "execution_counts": {
+      "RECEIVED_MODEL_RESPONSE": 6,
+      "NOT_RUN_TRANSFER_INELIGIBLE": 11,
+      "ATTEMPTED_HTTP_NO_MODEL_RESPONSE": 1,
+      "NOT_RUN_AFTER_REQUEST_CONTRACT_BLOCK": 2
+    },
+    "human_verified": false,
+    "whole_document_accuracy_measured": false,
+    "fifty_document_accuracy_measured": false,
+    "leading_performance": "NOT_RUN"
+  },
+  "truth": {
+    "counts": {
+      "effectively_reviewed_documents": 9,
+      "unreviewed_documents": 11,
+      "gold_events": 15,
+      "VERIFIED_PRESENT": 83,
+      "VERIFIED_ABSENT": 133,
+      "AMBIGUOUS": 9,
+      "event_fields_excluded_from_fact_denominators": 9,
+      "missing_gold_documents": 0
+    },
+    "by_field_status_counts": {
+      "actuality": {
+        "VERIFIED_PRESENT": 14,
+        "VERIFIED_ABSENT": 1
+      },
+      "alternative": {
+        "VERIFIED_ABSENT": 15
+      },
+      "customer_group": {
+        "VERIFIED_PRESENT": 4,
+        "AMBIGUOUS": 4,
+        "VERIFIED_ABSENT": 7
+      },
+      "lead_time": {
+        "VERIFIED_ABSENT": 15
+      },
+      "need_time": {
+        "VERIFIED_ABSENT": 13,
+        "VERIFIED_PRESENT": 2
+      },
+      "period": {
+        "VERIFIED_ABSENT": 7,
+        "VERIFIED_PRESENT": 8
+      },
+      "product": {
+        "VERIFIED_PRESENT": 14,
+        "AMBIGUOUS": 1
+      },
+      "quantity": {
+        "VERIFIED_ABSENT": 13,
+        "VERIFIED_PRESENT": 2
+      },
+      "ready_time": {
+        "VERIFIED_ABSENT": 10,
+        "VERIFIED_PRESENT": 5
+      },
+      "region": {
+        "VERIFIED_ABSENT": 10,
+        "VERIFIED_PRESENT": 5
+      },
+      "relief": {
+        "VERIFIED_ABSENT": 15
+      },
+      "role": {
+        "VERIFIED_PRESENT": 12,
+        "VERIFIED_ABSENT": 2,
+        "AMBIGUOUS": 1
+      },
+      "specification": {
+        "VERIFIED_ABSENT": 9,
+        "VERIFIED_PRESENT": 6
+      },
+      "supply_pool": {
+        "VERIFIED_PRESENT": 4,
+        "VERIFIED_ABSENT": 8,
+        "AMBIGUOUS": 3
+      },
+      "unit": {
+        "VERIFIED_ABSENT": 8,
+        "VERIFIED_PRESENT": 7
+      }
+    },
+    "final_gold_is_independent_AI_review_not_human_validation": true,
+    "strict_source_isolation_procedurally_pristine": false,
+    "procedural_metadata_exposure_incidents": 2,
+    "evaluated_values_or_gold_answers_reported_exposed": false,
+    "source_adjudication_difference_counts": {
+      "total_decisions": 37,
+      "source_resolved_differences": 35,
+      "unresolved_differences": 2,
+      "unresolved_source_facts_in_final": 9
+    }
+  },
+  "http": {
+    "error_status_counts": {
+      "400": 1
+    },
+    "current_request_contract_blocked": true,
+    "further_requests_performed": false,
+    "received_responses_exact_success_status_not_recorded": true
+  },
+  "source_grounding": {
+    "raw_response_items": 7,
+    "individually_validated_items": 0,
+    "source_rejected_items": 7,
+    "adopted_items": 0,
+    "rejection_reason_counts": {
+      "AMBIGUOUS_QUOTE": 3,
+      "NULL_WITH_EVIDENCE": 1,
+      "SOURCE": 1,
+      "QUOTE_NOT_IN_SOURCE": 2
+    },
+    "raw_context_unscored_reason_counts": {
+      "QUOTE_NOT_IN_SOURCE": 2
+    },
+    "source_rejection_is_not_transport_failure_or_unread_input": true,
+    "cpu": {
+      "source_verified_spans": 86,
+      "non_product_spans_not_compared": 68,
+      "product_spans": 18
+    }
+  },
+  "coverage": {
+    "all_evaluation_body_characters": 130537,
+    "eligible_frozen_window_characters": 4642,
+    "received_and_reviewed_window_characters": 3059,
+    "received_and_reviewed_body_characters": 44384,
+    "received_and_reviewed_outside_window_characters": 41325,
+    "received_and_reviewed_window_fraction": 0.06892123287671233,
+    "scope": "EXACT_FROZEN_INPUT_WINDOWS_ONLY"
+  },
+  "groq_adopted": {
+    "scored_documents": 6,
+    "metrics": {
+      "TP": 0,
+      "FP": 0,
+      "FN": 38,
+      "UNKNOWN": 100,
+      "known_truth_missed": 38,
+      "truth_absent_unknown": 62,
+      "truth_unverified_claims": 0,
+      "truth_unverified_fields": 5,
+      "precision_denominator": 0,
+      "recall_denominator": 38,
+      "precision": null,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "by_field": {
+      "product": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 6,
+        "UNKNOWN": 6,
+        "known_truth_missed": 6,
+        "truth_unverified_claims": 0,
+        "truth_unverified_fields": 1,
+        "precision_denominator": 0,
+        "recall_denominator": 6,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "role": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 5,
+        "UNKNOWN": 6,
+        "known_truth_missed": 5,
+        "truth_absent_unknown": 1,
+        "truth_unverified_claims": 0,
+        "truth_unverified_fields": 1,
+        "precision_denominator": 0,
+        "recall_denominator": 5,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "actuality": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 6,
+        "UNKNOWN": 7,
+        "known_truth_missed": 6,
+        "truth_absent_unknown": 1,
+        "precision_denominator": 0,
+        "recall_denominator": 6,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "quantity": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "UNKNOWN": 7,
+        "truth_absent_unknown": 7,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "unit": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 3,
+        "UNKNOWN": 7,
+        "truth_absent_unknown": 4,
+        "known_truth_missed": 3,
+        "precision_denominator": 0,
+        "recall_denominator": 3,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "period": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 3,
+        "UNKNOWN": 7,
+        "truth_absent_unknown": 4,
+        "known_truth_missed": 3,
+        "precision_denominator": 0,
+        "recall_denominator": 3,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "customer_group": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 3,
+        "UNKNOWN": 4,
+        "known_truth_missed": 3,
+        "truth_unverified_claims": 0,
+        "truth_unverified_fields": 3,
+        "truth_absent_unknown": 1,
+        "precision_denominator": 0,
+        "recall_denominator": 3,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "supply_pool": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 2,
+        "UNKNOWN": 7,
+        "known_truth_missed": 2,
+        "truth_absent_unknown": 5,
+        "precision_denominator": 0,
+        "recall_denominator": 2,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "specification": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 4,
+        "UNKNOWN": 7,
+        "truth_absent_unknown": 3,
+        "known_truth_missed": 4,
+        "precision_denominator": 0,
+        "recall_denominator": 4,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "region": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 3,
+        "UNKNOWN": 7,
+        "truth_absent_unknown": 4,
+        "known_truth_missed": 3,
+        "precision_denominator": 0,
+        "recall_denominator": 3,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "need_time": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "UNKNOWN": 7,
+        "truth_absent_unknown": 7,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "ready_time": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 3,
+        "UNKNOWN": 7,
+        "truth_absent_unknown": 4,
+        "known_truth_missed": 3,
+        "precision_denominator": 0,
+        "recall_denominator": 3,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "lead_time": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "UNKNOWN": 7,
+        "truth_absent_unknown": 7,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "relief": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "UNKNOWN": 7,
+        "truth_absent_unknown": 7,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "alternative": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "UNKNOWN": 7,
+        "truth_absent_unknown": 7,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      }
+    },
+    "unmatched_reason_counts": {
+      "NO_REVIEWED_TARGET_EVENT": 0,
+      "AMBIGUOUS_EVENT": 0
+    },
+    "unmatched_reason_unit": "RETURNED_ITEMS",
+    "duplicate_predictions": 0,
+    "unknown_accounting": {
+      "counts": {
+        "gold_events_with_returned_item": 0,
+        "gold_events_without_returned_item": 7,
+        "no_returned_event_positive_FN": 38,
+        "no_returned_event_known_field": 100,
+        "no_returned_event_verified_absence": 62,
+        "returned_event_field_without_claim": 0,
+        "returned_event_missing_positive_FN": 0,
+        "returned_event_positive_FN_total": 0,
+        "returned_event_wrong_value_FN": 0,
+        "returned_event_verified_absence_without_claim": 0,
+        "engine_explicit_UNKNOWN": 0,
+        "engine_explicit_null": 0,
+        "returned_event_field_omitted_or_not_product_claim": 0
+      },
+      "by_field": {
+        "actuality": {
+          "no_returned_event_positive_FN": 6,
+          "no_returned_event_known_field": 7,
+          "no_returned_event_verified_absence": 1
+        },
+        "alternative": {
+          "no_returned_event_positive_FN": 0,
+          "no_returned_event_known_field": 7,
+          "no_returned_event_verified_absence": 7
+        },
+        "customer_group": {
+          "no_returned_event_positive_FN": 3,
+          "no_returned_event_known_field": 4,
+          "no_returned_event_verified_absence": 1
+        },
+        "lead_time": {
+          "no_returned_event_positive_FN": 0,
+          "no_returned_event_known_field": 7,
+          "no_returned_event_verified_absence": 7
+        },
+        "need_time": {
+          "no_returned_event_positive_FN": 0,
+          "no_returned_event_known_field": 7,
+          "no_returned_event_verified_absence": 7
+        },
+        "period": {
+          "no_returned_event_positive_FN": 3,
+          "no_returned_event_known_field": 7,
+          "no_returned_event_verified_absence": 4
+        },
+        "product": {
+          "no_returned_event_positive_FN": 6,
+          "no_returned_event_known_field": 6,
+          "no_returned_event_verified_absence": 0
+        },
+        "quantity": {
+          "no_returned_event_positive_FN": 0,
+          "no_returned_event_known_field": 7,
+          "no_returned_event_verified_absence": 7
+        },
+        "ready_time": {
+          "no_returned_event_positive_FN": 3,
+          "no_returned_event_known_field": 7,
+          "no_returned_event_verified_absence": 4
+        },
+        "region": {
+          "no_returned_event_positive_FN": 3,
+          "no_returned_event_known_field": 7,
+          "no_returned_event_verified_absence": 4
+        },
+        "relief": {
+          "no_returned_event_positive_FN": 0,
+          "no_returned_event_known_field": 7,
+          "no_returned_event_verified_absence": 7
+        },
+        "role": {
+          "no_returned_event_positive_FN": 5,
+          "no_returned_event_known_field": 6,
+          "no_returned_event_verified_absence": 1
+        },
+        "specification": {
+          "no_returned_event_positive_FN": 4,
+          "no_returned_event_known_field": 7,
+          "no_returned_event_verified_absence": 3
+        },
+        "supply_pool": {
+          "no_returned_event_positive_FN": 2,
+          "no_returned_event_known_field": 7,
+          "no_returned_event_verified_absence": 5
+        },
+        "unit": {
+          "no_returned_event_positive_FN": 3,
+          "no_returned_event_known_field": 7,
+          "no_returned_event_verified_absence": 4
+        }
+      },
+      "frozen_UNKNOWN_is_true_negative": false
+    },
+    "measurement": "SOURCE_VALIDATION_AND_ADOPTION_PIPELINE_LITERAL_ALIAS_RECALL",
+    "adopted_zero_is_not_raw_semantic_zero": true
+  },
+  "groq_raw_semantic": {
+    "scored_documents": 4,
+    "metrics": {
+      "TP": 1,
+      "FP": 7,
+      "FN": 30,
+      "unmatched_predictions": 4,
+      "UNKNOWN": 68,
+      "known_truth_missed": 28,
+      "truth_absent_unknown": 40,
+      "truth_unverified_claims": 0,
+      "truth_unverified_fields": 3,
+      "precision_denominator": 8,
+      "recall_denominator": 31,
+      "precision": 0.125,
+      "recall": 0.03225806451612903,
+      "f1": 0.05128205128205128
+    },
+    "by_field": {
+      "product": {
+        "TP": 0,
+        "FP": 1,
+        "FN": 5,
+        "UNKNOWN": 4,
+        "known_truth_missed": 4,
+        "precision_denominator": 1,
+        "recall_denominator": 5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "role": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 4,
+        "UNKNOWN": 5,
+        "known_truth_missed": 4,
+        "truth_absent_unknown": 1,
+        "precision_denominator": 0,
+        "recall_denominator": 4,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "actuality": {
+        "unmatched_predictions": 2,
+        "FP": 3,
+        "TP": 0,
+        "FN": 4,
+        "UNKNOWN": 4,
+        "known_truth_missed": 3,
+        "truth_absent_unknown": 1,
+        "precision_denominator": 3,
+        "recall_denominator": 4,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "quantity": {
+        "unmatched_predictions": 1,
+        "FP": 1,
+        "TP": 0,
+        "FN": 0,
+        "UNKNOWN": 5,
+        "truth_absent_unknown": 5,
+        "precision_denominator": 1,
+        "recall_denominator": 0,
+        "precision": 0.0,
+        "recall": null,
+        "f1": 0.0
+      },
+      "unit": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 3,
+        "UNKNOWN": 5,
+        "truth_absent_unknown": 2,
+        "known_truth_missed": 3,
+        "precision_denominator": 0,
+        "recall_denominator": 3,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "period": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 3,
+        "UNKNOWN": 5,
+        "truth_absent_unknown": 2,
+        "known_truth_missed": 3,
+        "precision_denominator": 0,
+        "recall_denominator": 3,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "customer_group": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 1,
+        "UNKNOWN": 2,
+        "known_truth_missed": 1,
+        "truth_unverified_claims": 0,
+        "truth_unverified_fields": 3,
+        "truth_absent_unknown": 1,
+        "precision_denominator": 0,
+        "recall_denominator": 1,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "supply_pool": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 1,
+        "UNKNOWN": 5,
+        "known_truth_missed": 1,
+        "truth_absent_unknown": 4,
+        "precision_denominator": 0,
+        "recall_denominator": 1,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "specification": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 4,
+        "UNKNOWN": 5,
+        "truth_absent_unknown": 1,
+        "known_truth_missed": 4,
+        "precision_denominator": 0,
+        "recall_denominator": 4,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "region": {
+        "unmatched_predictions": 1,
+        "FP": 1,
+        "TP": 1,
+        "FN": 2,
+        "UNKNOWN": 4,
+        "truth_absent_unknown": 2,
+        "known_truth_missed": 2,
+        "precision_denominator": 2,
+        "recall_denominator": 3,
+        "precision": 0.5,
+        "recall": 0.3333333333333333,
+        "f1": 0.4
+      },
+      "need_time": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "UNKNOWN": 5,
+        "truth_absent_unknown": 5,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "ready_time": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 3,
+        "UNKNOWN": 5,
+        "truth_absent_unknown": 2,
+        "known_truth_missed": 3,
+        "precision_denominator": 0,
+        "recall_denominator": 3,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "lead_time": {
+        "TP": 0,
+        "FP": 1,
+        "FN": 0,
+        "UNKNOWN": 4,
+        "truth_absent_unknown": 4,
+        "precision_denominator": 1,
+        "recall_denominator": 0,
+        "precision": 0.0,
+        "recall": null,
+        "f1": 0.0
+      },
+      "relief": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "UNKNOWN": 5,
+        "truth_absent_unknown": 5,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "alternative": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "UNKNOWN": 5,
+        "truth_absent_unknown": 5,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      }
+    },
+    "unmatched_reason_counts": {
+      "NO_REVIEWED_TARGET_EVENT": 3,
+      "AMBIGUOUS_EVENT": 0
+    },
+    "unmatched_reason_unit": "RETURNED_ITEMS",
+    "duplicate_predictions": 0,
+    "unknown_accounting": {
+      "counts": {
+        "returned_items_no_gold_event": 3,
+        "gold_events_with_returned_item": 1,
+        "gold_events_without_returned_item": 4,
+        "no_returned_event_positive_FN": 23,
+        "no_returned_event_known_field": 58,
+        "no_returned_event_verified_absence": 35,
+        "returned_event_field_without_claim": 10,
+        "returned_event_missing_positive_FN": 5,
+        "returned_event_positive_FN_total": 7,
+        "returned_event_wrong_value_FN": 2,
+        "returned_event_verified_absence_without_claim": 5,
+        "engine_explicit_UNKNOWN": 1,
+        "engine_explicit_null": 0,
+        "returned_event_field_omitted_or_not_product_claim": 9
+      },
+      "by_field": {
+        "actuality": {
+          "no_returned_event_positive_FN": 3,
+          "no_returned_event_known_field": 4,
+          "no_returned_event_verified_absence": 1,
+          "returned_event_positive_FN_total": 1,
+          "returned_event_wrong_value_FN": 1
+        },
+        "alternative": {
+          "no_returned_event_positive_FN": 0,
+          "no_returned_event_known_field": 4,
+          "no_returned_event_verified_absence": 4,
+          "returned_event_positive_FN_total": 0,
+          "returned_event_wrong_value_FN": 0,
+          "returned_event_field_without_claim": 1,
+          "returned_event_missing_positive_FN": 0,
+          "returned_event_verified_absence_without_claim": 1,
+          "returned_event_field_omitted_or_not_product_claim": 1
+        },
+        "customer_group": {
+          "no_returned_event_positive_FN": 1,
+          "no_returned_event_known_field": 2,
+          "no_returned_event_verified_absence": 1
+        },
+        "lead_time": {
+          "no_returned_event_positive_FN": 0,
+          "no_returned_event_known_field": 4,
+          "no_returned_event_verified_absence": 4,
+          "returned_event_positive_FN_total": 0,
+          "returned_event_wrong_value_FN": 0
+        },
+        "need_time": {
+          "no_returned_event_positive_FN": 0,
+          "no_returned_event_known_field": 4,
+          "no_returned_event_verified_absence": 4,
+          "returned_event_positive_FN_total": 0,
+          "returned_event_wrong_value_FN": 0,
+          "returned_event_field_without_claim": 1,
+          "returned_event_missing_positive_FN": 0,
+          "returned_event_verified_absence_without_claim": 1,
+          "returned_event_field_omitted_or_not_product_claim": 1
+        },
+        "period": {
+          "no_returned_event_positive_FN": 2,
+          "no_returned_event_known_field": 4,
+          "no_returned_event_verified_absence": 2,
+          "returned_event_positive_FN_total": 1,
+          "returned_event_wrong_value_FN": 0,
+          "returned_event_field_without_claim": 1,
+          "returned_event_missing_positive_FN": 1,
+          "returned_event_verified_absence_without_claim": 0,
+          "returned_event_field_omitted_or_not_product_claim": 1
+        },
+        "product": {
+          "no_returned_event_positive_FN": 4,
+          "no_returned_event_known_field": 4,
+          "no_returned_event_verified_absence": 0,
+          "returned_event_positive_FN_total": 1,
+          "returned_event_wrong_value_FN": 1
+        },
+        "quantity": {
+          "no_returned_event_positive_FN": 0,
+          "no_returned_event_known_field": 4,
+          "no_returned_event_verified_absence": 4,
+          "returned_event_positive_FN_total": 0,
+          "returned_event_wrong_value_FN": 0,
+          "returned_event_field_without_claim": 1,
+          "returned_event_missing_positive_FN": 0,
+          "returned_event_verified_absence_without_claim": 1,
+          "returned_event_field_omitted_or_not_product_claim": 1
+        },
+        "ready_time": {
+          "no_returned_event_positive_FN": 2,
+          "no_returned_event_known_field": 4,
+          "no_returned_event_verified_absence": 2,
+          "returned_event_positive_FN_total": 1,
+          "returned_event_wrong_value_FN": 0,
+          "returned_event_field_without_claim": 1,
+          "returned_event_missing_positive_FN": 1,
+          "returned_event_verified_absence_without_claim": 0,
+          "returned_event_field_omitted_or_not_product_claim": 1
+        },
+        "region": {
+          "no_returned_event_positive_FN": 2,
+          "no_returned_event_known_field": 4,
+          "no_returned_event_verified_absence": 2,
+          "returned_event_positive_FN_total": 0,
+          "returned_event_wrong_value_FN": 0
+        },
+        "relief": {
+          "no_returned_event_positive_FN": 0,
+          "no_returned_event_known_field": 4,
+          "no_returned_event_verified_absence": 4,
+          "returned_event_positive_FN_total": 0,
+          "returned_event_wrong_value_FN": 0,
+          "returned_event_field_without_claim": 1,
+          "returned_event_missing_positive_FN": 0,
+          "returned_event_verified_absence_without_claim": 1,
+          "returned_event_field_omitted_or_not_product_claim": 1
+        },
+        "role": {
+          "no_returned_event_positive_FN": 3,
+          "no_returned_event_known_field": 4,
+          "no_returned_event_verified_absence": 1,
+          "returned_event_positive_FN_total": 1,
+          "returned_event_wrong_value_FN": 0,
+          "returned_event_field_without_claim": 1,
+          "returned_event_missing_positive_FN": 1,
+          "returned_event_verified_absence_without_claim": 0,
+          "engine_explicit_UNKNOWN": 1
+        },
+        "specification": {
+          "no_returned_event_positive_FN": 3,
+          "no_returned_event_known_field": 4,
+          "no_returned_event_verified_absence": 1,
+          "returned_event_positive_FN_total": 1,
+          "returned_event_wrong_value_FN": 0,
+          "returned_event_field_without_claim": 1,
+          "returned_event_missing_positive_FN": 1,
+          "returned_event_verified_absence_without_claim": 0,
+          "returned_event_field_omitted_or_not_product_claim": 1
+        },
+        "supply_pool": {
+          "no_returned_event_positive_FN": 1,
+          "no_returned_event_known_field": 4,
+          "no_returned_event_verified_absence": 3,
+          "returned_event_positive_FN_total": 0,
+          "returned_event_wrong_value_FN": 0,
+          "returned_event_field_without_claim": 1,
+          "returned_event_missing_positive_FN": 0,
+          "returned_event_verified_absence_without_claim": 1,
+          "returned_event_field_omitted_or_not_product_claim": 1
+        },
+        "unit": {
+          "no_returned_event_positive_FN": 2,
+          "no_returned_event_known_field": 4,
+          "no_returned_event_verified_absence": 2,
+          "returned_event_positive_FN_total": 1,
+          "returned_event_wrong_value_FN": 0,
+          "returned_event_field_without_claim": 1,
+          "returned_event_missing_positive_FN": 1,
+          "returned_event_verified_absence_without_claim": 0,
+          "returned_event_field_omitted_or_not_product_claim": 1
+        }
+      },
+      "frozen_UNKNOWN_is_true_negative": false
+    },
+    "unscored_context_documents": 2,
+    "measurement": "RAW_CONTEXT_GROUNDED_FROZEN_LITERAL_ALIAS_CRITERIA_NOT_GENERAL_SEMANTIC_ACCURACY",
+    "context_policy": "WHOLE_DOCUMENT_RAW_SEMANTICS_UNSCORED_IF_ANY_ITEM_CONTEXT_CANNOT_BIND",
+    "context_only_semantic_TP_is_not_full_item_source_PASS": true
+  },
+  "common_product_entity_comparison": {
+    "field": "product",
+    "unit": "ONE_REVIEWED_PRODUCT_TARGET_EVENT",
+    "common_documents": 6,
+    "surface_equivalence": "FROZEN_GOLD_ENTITY_AND_ALIASES_ONLY",
+    "source_spans_required": true,
+    "cpu_role_actuality_or_generic_relation_NER_scored": false,
+    "cpu": {
+      "no_frozen_alias_event_match": 7,
+      "FP": 7,
+      "TP": 2,
+      "FN": 4,
+      "truth_unverified_events_excluded": 1,
+      "unscored_ambiguous_event": 1,
+      "precision_denominator": 9,
+      "recall_denominator": 6,
+      "precision": 0.2222222222222222,
+      "recall": 0.3333333333333333,
+      "f1": 0.26666666666666666
+    },
+    "groq_adopted": {
+      "FN": 6,
+      "truth_unverified_events_excluded": 1,
+      "TP": 0,
+      "FP": 0,
+      "precision_denominator": 0,
+      "recall_denominator": 6,
+      "precision": null,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "groq_raw_context_entity_grounded": {
+      "FN": 6,
+      "truth_unverified_events_excluded": 1,
+      "TP": 0,
+      "FP": 0,
+      "precision_denominator": 0,
+      "recall_denominator": 6,
+      "precision": null,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "groq_raw_context_entity_grounding_is_not_full_item_source_PASS": true,
+    "documents": [
+      {
+        "document_id": "stage4doc-43bbc73c34d36affaac68018c51886b2897bbc0126d9df12b814ead65738046c",
+        "field": "product",
+        "cpu_product_spans_count": 0,
+        "cpu_non_product_spans_excluded_count": 11,
+        "groq_raw_source_grounded_product_entities_count": 0,
+        "groq_raw_product_grounding_rejection_counts": {},
+        "cpu": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "groq_adopted": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "groq_raw_context_entity_grounded": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        }
+      },
+      {
+        "document_id": "stage4doc-3fd9a480cb21be25a3d28465399232ce56a35c896627813ed1c8925dc86c6e4d",
+        "field": "product",
+        "cpu_product_spans_count": 3,
+        "cpu_non_product_spans_excluded_count": 5,
+        "groq_raw_source_grounded_product_entities_count": 0,
+        "groq_raw_product_grounding_rejection_counts": {},
+        "cpu": {
+          "no_frozen_alias_event_match": 3,
+          "FP": 3,
+          "TP": 0,
+          "FN": 0,
+          "precision_denominator": 3,
+          "recall_denominator": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "groq_adopted": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "groq_raw_context_entity_grounded": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        }
+      },
+      {
+        "document_id": "stage4doc-7a75ee8cf8b87edb671b75f519f36b1ff8f50c69dcc9b1c8dfd0a6795bd708d3",
+        "field": "product",
+        "cpu_product_spans_count": 0,
+        "cpu_non_product_spans_excluded_count": 7,
+        "groq_raw_source_grounded_product_entities_count": 0,
+        "groq_raw_product_grounding_rejection_counts": {},
+        "cpu": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "groq_adopted": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "groq_raw_context_entity_grounded": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        }
+      },
+      {
+        "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+        "field": "product",
+        "cpu_product_spans_count": 5,
+        "cpu_non_product_spans_excluded_count": 6,
+        "groq_raw_source_grounded_product_entities_count": 0,
+        "groq_raw_product_grounding_rejection_counts": {
+          "AMBIGUOUS_QUOTE": 1
+        },
+        "cpu": {
+          "no_frozen_alias_event_match": 3,
+          "FP": 3,
+          "TP": 2,
+          "FN": 3,
+          "precision_denominator": 5,
+          "recall_denominator": 5,
+          "precision": 0.4,
+          "recall": 0.4,
+          "f1": 0.4
+        },
+        "groq_adopted": {
+          "TP": 0,
+          "FN": 5,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 5,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "groq_raw_context_entity_grounded": {
+          "TP": 0,
+          "FN": 5,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 5,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      {
+        "document_id": "stage4doc-8863919aedd5421d4f6122236527b82424465e4cf90fabeec7dcc6b2e13b93d3",
+        "field": "product",
+        "cpu_product_spans_count": 0,
+        "cpu_non_product_spans_excluded_count": 10,
+        "groq_raw_source_grounded_product_entities_count": 0,
+        "groq_raw_product_grounding_rejection_counts": {},
+        "cpu": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "groq_adopted": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "groq_raw_context_entity_grounded": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        }
+      },
+      {
+        "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+        "field": "product",
+        "cpu_product_spans_count": 2,
+        "cpu_non_product_spans_excluded_count": 4,
+        "groq_raw_source_grounded_product_entities_count": 0,
+        "groq_raw_product_grounding_rejection_counts": {
+          "QUOTE_NOT_IN_SOURCE": 1
+        },
+        "cpu": {
+          "truth_unverified_events_excluded": 1,
+          "unscored_ambiguous_event": 1,
+          "no_frozen_alias_event_match": 1,
+          "FP": 1,
+          "TP": 0,
+          "FN": 1,
+          "precision_denominator": 1,
+          "recall_denominator": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "groq_adopted": {
+          "truth_unverified_events_excluded": 1,
+          "TP": 0,
+          "FN": 1,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 1,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "groq_raw_context_entity_grounded": {
+          "truth_unverified_events_excluded": 1,
+          "TP": 0,
+          "FN": 1,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 1,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      }
+    ]
+  },
+  "documents": [
+    {
+      "document_id": "stage4doc-43bbc73c34d36affaac68018c51886b2897bbc0126d9df12b814ead65738046c",
+      "body_sha256": "e76b0c7df67f16d7df375fc38b182fef98586ab95f05e118ed9c38e795a36ee6",
+      "transfer_status": "ELIGIBLE",
+      "truth_status": "REVIEWED_FROZEN_WINDOWS",
+      "body_characters": 2450,
+      "selected_characters": 532,
+      "output_status": "REVIEW_REQUIRED",
+      "execution_status": "RECEIVED_MODEL_RESPONSE",
+      "http": {
+        "exact_status_recorded": false,
+        "transport_status": "PASS_TRANSPORT"
+      },
+      "received_event_seq": 28,
+      "source_validation": {
+        "status": "REVIEW_REQUIRED",
+        "raw_items_count": 1,
+        "individually_validated_items_count": 0,
+        "adopted_items_count": 0,
+        "rejected_items": [
+          {
+            "input_item_index": 0,
+            "reason": "AMBIGUOUS_QUOTE"
+          }
+        ],
+        "replay_matches_stored": true
+      },
+      "raw_context_binding": {
+        "bound_items_count": 1,
+        "unscored_items": [],
+        "all_contexts_bound": true,
+        "full_item_source_validation_PASS": false
+      },
+      "adopted_assessment": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "reviewed_events": 0,
+        "duplicate_predictions": 0,
+        "unmatched_reason_counts": {},
+        "unknown_accounting": {
+          "counts": {
+            "gold_events_with_returned_item": 0,
+            "gold_events_without_returned_item": 0,
+            "no_returned_event_positive_FN": 0,
+            "no_returned_event_known_field": 0,
+            "no_returned_event_verified_absence": 0,
+            "returned_event_field_without_claim": 0,
+            "returned_event_missing_positive_FN": 0,
+            "returned_event_positive_FN_total": 0,
+            "returned_event_wrong_value_FN": 0,
+            "returned_event_verified_absence_without_claim": 0,
+            "engine_explicit_UNKNOWN": 0,
+            "engine_explicit_null": 0,
+            "returned_event_field_omitted_or_not_product_claim": 0
+          },
+          "by_field": {},
+          "frozen_UNKNOWN_is_true_negative": false
+        }
+      },
+      "raw_semantic_assessment": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "reviewed_events": 0,
+        "duplicate_predictions": 0,
+        "unmatched_reason_counts": {
+          "NO_REVIEWED_TARGET_EVENT": 1
+        },
+        "unknown_accounting": {
+          "counts": {
+            "returned_items_no_gold_event": 1,
+            "gold_events_with_returned_item": 0,
+            "gold_events_without_returned_item": 0,
+            "no_returned_event_positive_FN": 0,
+            "no_returned_event_known_field": 0,
+            "no_returned_event_verified_absence": 0,
+            "returned_event_field_without_claim": 0,
+            "returned_event_missing_positive_FN": 0,
+            "returned_event_positive_FN_total": 0,
+            "returned_event_wrong_value_FN": 0,
+            "returned_event_verified_absence_without_claim": 0,
+            "engine_explicit_UNKNOWN": 0,
+            "engine_explicit_null": 0,
+            "returned_event_field_omitted_or_not_product_claim": 0
+          },
+          "by_field": {},
+          "frozen_UNKNOWN_is_true_negative": false
+        }
+      },
+      "semantic_scoring_status": "MEASURED_FROZEN_WINDOWS_ONLY"
+    },
+    {
+      "document_id": "stage4doc-3fd9a480cb21be25a3d28465399232ce56a35c896627813ed1c8925dc86c6e4d",
+      "body_sha256": "d3d8b6364995f9b1727903a8075aaf4c7f00d53ad855b292edca9c7bfdd1250c",
+      "transfer_status": "ELIGIBLE",
+      "truth_status": "REVIEWED_FROZEN_WINDOWS",
+      "body_characters": 4468,
+      "selected_characters": 411,
+      "output_status": "REVIEW_REQUIRED",
+      "execution_status": "RECEIVED_MODEL_RESPONSE",
+      "http": {
+        "exact_status_recorded": false,
+        "transport_status": "PASS_TRANSPORT"
+      },
+      "received_event_seq": 36,
+      "source_validation": {
+        "status": "REVIEW_REQUIRED",
+        "raw_items_count": 1,
+        "individually_validated_items_count": 0,
+        "adopted_items_count": 0,
+        "rejected_items": [
+          {
+            "input_item_index": 0,
+            "reason": "NULL_WITH_EVIDENCE"
+          }
+        ],
+        "replay_matches_stored": true
+      },
+      "raw_context_binding": {
+        "bound_items_count": 1,
+        "unscored_items": [],
+        "all_contexts_bound": true,
+        "full_item_source_validation_PASS": false
+      },
+      "adopted_assessment": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "reviewed_events": 0,
+        "duplicate_predictions": 0,
+        "unmatched_reason_counts": {},
+        "unknown_accounting": {
+          "counts": {
+            "gold_events_with_returned_item": 0,
+            "gold_events_without_returned_item": 0,
+            "no_returned_event_positive_FN": 0,
+            "no_returned_event_known_field": 0,
+            "no_returned_event_verified_absence": 0,
+            "returned_event_field_without_claim": 0,
+            "returned_event_missing_positive_FN": 0,
+            "returned_event_positive_FN_total": 0,
+            "returned_event_wrong_value_FN": 0,
+            "returned_event_verified_absence_without_claim": 0,
+            "engine_explicit_UNKNOWN": 0,
+            "engine_explicit_null": 0,
+            "returned_event_field_omitted_or_not_product_claim": 0
+          },
+          "by_field": {},
+          "frozen_UNKNOWN_is_true_negative": false
+        }
+      },
+      "raw_semantic_assessment": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "unmatched_predictions": 1,
+          "FP": 1,
+          "TP": 0,
+          "FN": 0,
+          "precision_denominator": 1,
+          "recall_denominator": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "by_field": {
+          "actuality": {
+            "unmatched_predictions": 1,
+            "FP": 1,
+            "TP": 0,
+            "FN": 0,
+            "precision_denominator": 1,
+            "recall_denominator": 0,
+            "precision": 0.0,
+            "recall": null,
+            "f1": 0.0
+          }
+        },
+        "reviewed_events": 0,
+        "duplicate_predictions": 0,
+        "unmatched_reason_counts": {
+          "NO_REVIEWED_TARGET_EVENT": 1
+        },
+        "unknown_accounting": {
+          "counts": {
+            "returned_items_no_gold_event": 1,
+            "gold_events_with_returned_item": 0,
+            "gold_events_without_returned_item": 0,
+            "no_returned_event_positive_FN": 0,
+            "no_returned_event_known_field": 0,
+            "no_returned_event_verified_absence": 0,
+            "returned_event_field_without_claim": 0,
+            "returned_event_missing_positive_FN": 0,
+            "returned_event_positive_FN_total": 0,
+            "returned_event_wrong_value_FN": 0,
+            "returned_event_verified_absence_without_claim": 0,
+            "engine_explicit_UNKNOWN": 0,
+            "engine_explicit_null": 0,
+            "returned_event_field_omitted_or_not_product_claim": 0
+          },
+          "by_field": {},
+          "frozen_UNKNOWN_is_true_negative": false
+        }
+      },
+      "semantic_scoring_status": "MEASURED_FROZEN_WINDOWS_ONLY"
+    },
+    {
+      "document_id": "stage4doc-7a75ee8cf8b87edb671b75f519f36b1ff8f50c69dcc9b1c8dfd0a6795bd708d3",
+      "body_sha256": "bfc6a077e3c4931fbacde1730853626c7f27993bf36b77843b9ee3d0ed01ddf0",
+      "transfer_status": "ELIGIBLE",
+      "truth_status": "REVIEWED_FROZEN_WINDOWS",
+      "body_characters": 4152,
+      "selected_characters": 476,
+      "output_status": "REVIEW_REQUIRED",
+      "execution_status": "RECEIVED_MODEL_RESPONSE",
+      "http": {
+        "exact_status_recorded": false,
+        "transport_status": "PASS_TRANSPORT"
+      },
+      "received_event_seq": 43,
+      "source_validation": {
+        "status": "REVIEW_REQUIRED",
+        "raw_items_count": 1,
+        "individually_validated_items_count": 0,
+        "adopted_items_count": 0,
+        "rejected_items": [
+          {
+            "input_item_index": 0,
+            "reason": "AMBIGUOUS_QUOTE"
+          }
+        ],
+        "replay_matches_stored": true
+      },
+      "raw_context_binding": {
+        "bound_items_count": 1,
+        "unscored_items": [],
+        "all_contexts_bound": true,
+        "full_item_source_validation_PASS": false
+      },
+      "adopted_assessment": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "reviewed_events": 0,
+        "duplicate_predictions": 0,
+        "unmatched_reason_counts": {},
+        "unknown_accounting": {
+          "counts": {
+            "gold_events_with_returned_item": 0,
+            "gold_events_without_returned_item": 0,
+            "no_returned_event_positive_FN": 0,
+            "no_returned_event_known_field": 0,
+            "no_returned_event_verified_absence": 0,
+            "returned_event_field_without_claim": 0,
+            "returned_event_missing_positive_FN": 0,
+            "returned_event_positive_FN_total": 0,
+            "returned_event_wrong_value_FN": 0,
+            "returned_event_verified_absence_without_claim": 0,
+            "engine_explicit_UNKNOWN": 0,
+            "engine_explicit_null": 0,
+            "returned_event_field_omitted_or_not_product_claim": 0
+          },
+          "by_field": {},
+          "frozen_UNKNOWN_is_true_negative": false
+        }
+      },
+      "raw_semantic_assessment": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "unmatched_predictions": 3,
+          "FP": 3,
+          "TP": 0,
+          "FN": 0,
+          "precision_denominator": 3,
+          "recall_denominator": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "by_field": {
+          "actuality": {
+            "unmatched_predictions": 1,
+            "FP": 1,
+            "TP": 0,
+            "FN": 0,
+            "precision_denominator": 1,
+            "recall_denominator": 0,
+            "precision": 0.0,
+            "recall": null,
+            "f1": 0.0
+          },
+          "region": {
+            "unmatched_predictions": 1,
+            "FP": 1,
+            "TP": 0,
+            "FN": 0,
+            "precision_denominator": 1,
+            "recall_denominator": 0,
+            "precision": 0.0,
+            "recall": null,
+            "f1": 0.0
+          },
+          "quantity": {
+            "unmatched_predictions": 1,
+            "FP": 1,
+            "TP": 0,
+            "FN": 0,
+            "precision_denominator": 1,
+            "recall_denominator": 0,
+            "precision": 0.0,
+            "recall": null,
+            "f1": 0.0
+          }
+        },
+        "reviewed_events": 0,
+        "duplicate_predictions": 0,
+        "unmatched_reason_counts": {
+          "NO_REVIEWED_TARGET_EVENT": 1
+        },
+        "unknown_accounting": {
+          "counts": {
+            "returned_items_no_gold_event": 1,
+            "gold_events_with_returned_item": 0,
+            "gold_events_without_returned_item": 0,
+            "no_returned_event_positive_FN": 0,
+            "no_returned_event_known_field": 0,
+            "no_returned_event_verified_absence": 0,
+            "returned_event_field_without_claim": 0,
+            "returned_event_missing_positive_FN": 0,
+            "returned_event_positive_FN_total": 0,
+            "returned_event_wrong_value_FN": 0,
+            "returned_event_verified_absence_without_claim": 0,
+            "engine_explicit_UNKNOWN": 0,
+            "engine_explicit_null": 0,
+            "returned_event_field_omitted_or_not_product_claim": 0
+          },
+          "by_field": {},
+          "frozen_UNKNOWN_is_true_negative": false
+        }
+      },
+      "semantic_scoring_status": "MEASURED_FROZEN_WINDOWS_ONLY"
+    },
+    {
+      "document_id": "stage4doc-bd5e28cdcc32f2dab1907d42ed6015ab3fa3ff62a4b8ab4632cd6fc4bd8b5f49",
+      "body_sha256": "5a9aa1d06b68b3ff0b362bc66c7121110522f33d484c38553894725e242695aa",
+      "transfer_status": "HELD_CONTEXT",
+      "truth_status": "UNREVIEWED_OR_EMPTY_SCOPE",
+      "body_characters": 5740,
+      "selected_characters": 0,
+      "execution_status": "NOT_RUN_TRANSFER_INELIGIBLE"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "transfer_status": "ELIGIBLE",
+      "truth_status": "REVIEWED_FROZEN_WINDOWS",
+      "body_characters": 9258,
+      "selected_characters": 515,
+      "output_status": "REVIEW_REQUIRED",
+      "execution_status": "RECEIVED_MODEL_RESPONSE",
+      "http": {
+        "exact_status_recorded": false,
+        "transport_status": "PASS_TRANSPORT"
+      },
+      "received_event_seq": 50,
+      "source_validation": {
+        "status": "REVIEW_REQUIRED",
+        "raw_items_count": 1,
+        "individually_validated_items_count": 0,
+        "adopted_items_count": 0,
+        "rejected_items": [
+          {
+            "input_item_index": 0,
+            "reason": "AMBIGUOUS_QUOTE"
+          }
+        ],
+        "replay_matches_stored": true
+      },
+      "raw_context_binding": {
+        "bound_items_count": 1,
+        "unscored_items": [],
+        "all_contexts_bound": true,
+        "full_item_source_validation_PASS": false
+      },
+      "adopted_assessment": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 31,
+          "UNKNOWN": 72,
+          "known_truth_missed": 31,
+          "truth_absent_unknown": 41,
+          "truth_unverified_claims": 0,
+          "truth_unverified_fields": 3,
+          "precision_denominator": 0,
+          "recall_denominator": 31,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "by_field": {
+          "actuality": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 4,
+            "UNKNOWN": 5,
+            "known_truth_missed": 4,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 4,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "ready_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 3,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 2,
+            "known_truth_missed": 3,
+            "precision_denominator": 0,
+            "recall_denominator": 3,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "specification": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 4,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 1,
+            "known_truth_missed": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 4,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "supply_pool": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 5,
+            "known_truth_missed": 1,
+            "truth_absent_unknown": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "period": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 3,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 2,
+            "known_truth_missed": 3,
+            "precision_denominator": 0,
+            "recall_denominator": 3,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "product": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 5,
+            "UNKNOWN": 5,
+            "known_truth_missed": 5,
+            "precision_denominator": 0,
+            "recall_denominator": 5,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "unit": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 3,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 2,
+            "known_truth_missed": 3,
+            "precision_denominator": 0,
+            "recall_denominator": 3,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "lead_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 5,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "role": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 4,
+            "UNKNOWN": 5,
+            "known_truth_missed": 4,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 4,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "customer_group": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 2,
+            "known_truth_missed": 1,
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 3,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "quantity": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 5,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "need_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 5,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "region": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 3,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 2,
+            "known_truth_missed": 3,
+            "precision_denominator": 0,
+            "recall_denominator": 3,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "relief": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 5,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "alternative": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 5,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          }
+        },
+        "reviewed_events": 5,
+        "duplicate_predictions": 0,
+        "unmatched_reason_counts": {},
+        "unknown_accounting": {
+          "counts": {
+            "gold_events_without_returned_item": 5,
+            "no_returned_event_positive_FN": 31,
+            "no_returned_event_known_field": 72,
+            "no_returned_event_verified_absence": 41,
+            "gold_events_with_returned_item": 0,
+            "returned_event_field_without_claim": 0,
+            "returned_event_missing_positive_FN": 0,
+            "returned_event_positive_FN_total": 0,
+            "returned_event_wrong_value_FN": 0,
+            "returned_event_verified_absence_without_claim": 0,
+            "engine_explicit_UNKNOWN": 0,
+            "engine_explicit_null": 0,
+            "returned_event_field_omitted_or_not_product_claim": 0
+          },
+          "by_field": {
+            "actuality": {
+              "no_returned_event_positive_FN": 4,
+              "no_returned_event_known_field": 5,
+              "no_returned_event_verified_absence": 1
+            },
+            "alternative": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 5,
+              "no_returned_event_verified_absence": 5
+            },
+            "customer_group": {
+              "no_returned_event_positive_FN": 1,
+              "no_returned_event_known_field": 2,
+              "no_returned_event_verified_absence": 1
+            },
+            "lead_time": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 5,
+              "no_returned_event_verified_absence": 5
+            },
+            "need_time": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 5,
+              "no_returned_event_verified_absence": 5
+            },
+            "period": {
+              "no_returned_event_positive_FN": 3,
+              "no_returned_event_known_field": 5,
+              "no_returned_event_verified_absence": 2
+            },
+            "product": {
+              "no_returned_event_positive_FN": 5,
+              "no_returned_event_known_field": 5,
+              "no_returned_event_verified_absence": 0
+            },
+            "quantity": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 5,
+              "no_returned_event_verified_absence": 5
+            },
+            "ready_time": {
+              "no_returned_event_positive_FN": 3,
+              "no_returned_event_known_field": 5,
+              "no_returned_event_verified_absence": 2
+            },
+            "region": {
+              "no_returned_event_positive_FN": 3,
+              "no_returned_event_known_field": 5,
+              "no_returned_event_verified_absence": 2
+            },
+            "relief": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 5,
+              "no_returned_event_verified_absence": 5
+            },
+            "role": {
+              "no_returned_event_positive_FN": 4,
+              "no_returned_event_known_field": 5,
+              "no_returned_event_verified_absence": 1
+            },
+            "specification": {
+              "no_returned_event_positive_FN": 4,
+              "no_returned_event_known_field": 5,
+              "no_returned_event_verified_absence": 1
+            },
+            "supply_pool": {
+              "no_returned_event_positive_FN": 1,
+              "no_returned_event_known_field": 5,
+              "no_returned_event_verified_absence": 4
+            },
+            "unit": {
+              "no_returned_event_positive_FN": 3,
+              "no_returned_event_known_field": 5,
+              "no_returned_event_verified_absence": 2
+            }
+          },
+          "frozen_UNKNOWN_is_true_negative": false
+        }
+      },
+      "raw_semantic_assessment": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 1,
+          "FP": 3,
+          "FN": 30,
+          "UNKNOWN": 68,
+          "known_truth_missed": 28,
+          "truth_absent_unknown": 40,
+          "truth_unverified_claims": 0,
+          "truth_unverified_fields": 3,
+          "precision_denominator": 4,
+          "recall_denominator": 31,
+          "precision": 0.25,
+          "recall": 0.03225806451612903,
+          "f1": 0.05714285714285714
+        },
+        "by_field": {
+          "actuality": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 4,
+            "UNKNOWN": 4,
+            "known_truth_missed": 3,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 1,
+            "recall_denominator": 4,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "ready_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 3,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 2,
+            "known_truth_missed": 3,
+            "precision_denominator": 0,
+            "recall_denominator": 3,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "specification": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 4,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 1,
+            "known_truth_missed": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 4,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "supply_pool": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 5,
+            "known_truth_missed": 1,
+            "truth_absent_unknown": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "period": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 3,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 2,
+            "known_truth_missed": 3,
+            "precision_denominator": 0,
+            "recall_denominator": 3,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "product": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 5,
+            "UNKNOWN": 4,
+            "known_truth_missed": 4,
+            "precision_denominator": 1,
+            "recall_denominator": 5,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "unit": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 3,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 2,
+            "known_truth_missed": 3,
+            "precision_denominator": 0,
+            "recall_denominator": 3,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "lead_time": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 0,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 4,
+            "precision_denominator": 1,
+            "recall_denominator": 0,
+            "precision": 0.0,
+            "recall": null,
+            "f1": 0.0
+          },
+          "role": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 4,
+            "UNKNOWN": 5,
+            "known_truth_missed": 4,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 4,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "customer_group": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 2,
+            "known_truth_missed": 1,
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 3,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "quantity": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 5,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "need_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 5,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "region": {
+            "TP": 1,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 1,
+            "recall_denominator": 3,
+            "precision": 1.0,
+            "recall": 0.3333333333333333,
+            "f1": 0.5
+          },
+          "relief": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 5,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "alternative": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 5,
+            "truth_absent_unknown": 5,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          }
+        },
+        "reviewed_events": 5,
+        "duplicate_predictions": 0,
+        "unmatched_reason_counts": {},
+        "unknown_accounting": {
+          "counts": {
+            "gold_events_without_returned_item": 4,
+            "no_returned_event_positive_FN": 23,
+            "no_returned_event_known_field": 58,
+            "no_returned_event_verified_absence": 35,
+            "gold_events_with_returned_item": 1,
+            "returned_event_positive_FN_total": 7,
+            "returned_event_wrong_value_FN": 2,
+            "returned_event_field_without_claim": 10,
+            "returned_event_missing_positive_FN": 5,
+            "returned_event_verified_absence_without_claim": 5,
+            "returned_event_field_omitted_or_not_product_claim": 9,
+            "engine_explicit_UNKNOWN": 1,
+            "engine_explicit_null": 0
+          },
+          "by_field": {
+            "actuality": {
+              "no_returned_event_positive_FN": 3,
+              "no_returned_event_known_field": 4,
+              "no_returned_event_verified_absence": 1,
+              "returned_event_positive_FN_total": 1,
+              "returned_event_wrong_value_FN": 1
+            },
+            "alternative": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 4,
+              "no_returned_event_verified_absence": 4,
+              "returned_event_positive_FN_total": 0,
+              "returned_event_wrong_value_FN": 0,
+              "returned_event_field_without_claim": 1,
+              "returned_event_missing_positive_FN": 0,
+              "returned_event_verified_absence_without_claim": 1,
+              "returned_event_field_omitted_or_not_product_claim": 1
+            },
+            "customer_group": {
+              "no_returned_event_positive_FN": 1,
+              "no_returned_event_known_field": 2,
+              "no_returned_event_verified_absence": 1
+            },
+            "lead_time": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 4,
+              "no_returned_event_verified_absence": 4,
+              "returned_event_positive_FN_total": 0,
+              "returned_event_wrong_value_FN": 0
+            },
+            "need_time": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 4,
+              "no_returned_event_verified_absence": 4,
+              "returned_event_positive_FN_total": 0,
+              "returned_event_wrong_value_FN": 0,
+              "returned_event_field_without_claim": 1,
+              "returned_event_missing_positive_FN": 0,
+              "returned_event_verified_absence_without_claim": 1,
+              "returned_event_field_omitted_or_not_product_claim": 1
+            },
+            "period": {
+              "no_returned_event_positive_FN": 2,
+              "no_returned_event_known_field": 4,
+              "no_returned_event_verified_absence": 2,
+              "returned_event_positive_FN_total": 1,
+              "returned_event_wrong_value_FN": 0,
+              "returned_event_field_without_claim": 1,
+              "returned_event_missing_positive_FN": 1,
+              "returned_event_verified_absence_without_claim": 0,
+              "returned_event_field_omitted_or_not_product_claim": 1
+            },
+            "product": {
+              "no_returned_event_positive_FN": 4,
+              "no_returned_event_known_field": 4,
+              "no_returned_event_verified_absence": 0,
+              "returned_event_positive_FN_total": 1,
+              "returned_event_wrong_value_FN": 1
+            },
+            "quantity": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 4,
+              "no_returned_event_verified_absence": 4,
+              "returned_event_positive_FN_total": 0,
+              "returned_event_wrong_value_FN": 0,
+              "returned_event_field_without_claim": 1,
+              "returned_event_missing_positive_FN": 0,
+              "returned_event_verified_absence_without_claim": 1,
+              "returned_event_field_omitted_or_not_product_claim": 1
+            },
+            "ready_time": {
+              "no_returned_event_positive_FN": 2,
+              "no_returned_event_known_field": 4,
+              "no_returned_event_verified_absence": 2,
+              "returned_event_positive_FN_total": 1,
+              "returned_event_wrong_value_FN": 0,
+              "returned_event_field_without_claim": 1,
+              "returned_event_missing_positive_FN": 1,
+              "returned_event_verified_absence_without_claim": 0,
+              "returned_event_field_omitted_or_not_product_claim": 1
+            },
+            "region": {
+              "no_returned_event_positive_FN": 2,
+              "no_returned_event_known_field": 4,
+              "no_returned_event_verified_absence": 2,
+              "returned_event_positive_FN_total": 0,
+              "returned_event_wrong_value_FN": 0
+            },
+            "relief": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 4,
+              "no_returned_event_verified_absence": 4,
+              "returned_event_positive_FN_total": 0,
+              "returned_event_wrong_value_FN": 0,
+              "returned_event_field_without_claim": 1,
+              "returned_event_missing_positive_FN": 0,
+              "returned_event_verified_absence_without_claim": 1,
+              "returned_event_field_omitted_or_not_product_claim": 1
+            },
+            "role": {
+              "no_returned_event_positive_FN": 3,
+              "no_returned_event_known_field": 4,
+              "no_returned_event_verified_absence": 1,
+              "returned_event_positive_FN_total": 1,
+              "returned_event_wrong_value_FN": 0,
+              "returned_event_field_without_claim": 1,
+              "returned_event_missing_positive_FN": 1,
+              "returned_event_verified_absence_without_claim": 0,
+              "engine_explicit_UNKNOWN": 1
+            },
+            "specification": {
+              "no_returned_event_positive_FN": 3,
+              "no_returned_event_known_field": 4,
+              "no_returned_event_verified_absence": 1,
+              "returned_event_positive_FN_total": 1,
+              "returned_event_wrong_value_FN": 0,
+              "returned_event_field_without_claim": 1,
+              "returned_event_missing_positive_FN": 1,
+              "returned_event_verified_absence_without_claim": 0,
+              "returned_event_field_omitted_or_not_product_claim": 1
+            },
+            "supply_pool": {
+              "no_returned_event_positive_FN": 1,
+              "no_returned_event_known_field": 4,
+              "no_returned_event_verified_absence": 3,
+              "returned_event_positive_FN_total": 0,
+              "returned_event_wrong_value_FN": 0,
+              "returned_event_field_without_claim": 1,
+              "returned_event_missing_positive_FN": 0,
+              "returned_event_verified_absence_without_claim": 1,
+              "returned_event_field_omitted_or_not_product_claim": 1
+            },
+            "unit": {
+              "no_returned_event_positive_FN": 2,
+              "no_returned_event_known_field": 4,
+              "no_returned_event_verified_absence": 2,
+              "returned_event_positive_FN_total": 1,
+              "returned_event_wrong_value_FN": 0,
+              "returned_event_field_without_claim": 1,
+              "returned_event_missing_positive_FN": 1,
+              "returned_event_verified_absence_without_claim": 0,
+              "returned_event_field_omitted_or_not_product_claim": 1
+            }
+          },
+          "frozen_UNKNOWN_is_true_negative": false
+        }
+      },
+      "semantic_scoring_status": "MEASURED_FROZEN_WINDOWS_ONLY"
+    },
+    {
+      "document_id": "stage4doc-025c928ba5520cbac8b09ce54c385c604a5e735c371c7c5df1c9f9b721753f7f",
+      "body_sha256": "8dcdca05daee6bbaa48ece1a39bea1fc0f22fe722ea34d302a3595a7c17edaef",
+      "transfer_status": "HELD_CONTEXT",
+      "truth_status": "UNREVIEWED_OR_EMPTY_SCOPE",
+      "body_characters": 4484,
+      "selected_characters": 0,
+      "execution_status": "NOT_RUN_TRANSFER_INELIGIBLE"
+    },
+    {
+      "document_id": "stage4doc-bdbfa4da2717014b69fc68106232e8fbd8a1bc6df83a7195dcfd6b0fabaa5fe2",
+      "body_sha256": "26fc6dedb1b1aa9ef17d35086c2f6d4c0d78dd0d2d4483ea4f0381e61b2c9dd6",
+      "transfer_status": "BLOCKED",
+      "truth_status": "UNREVIEWED_OR_EMPTY_SCOPE",
+      "body_characters": 4729,
+      "selected_characters": 0,
+      "execution_status": "NOT_RUN_TRANSFER_INELIGIBLE"
+    },
+    {
+      "document_id": "stage4doc-ff0e43f4ed27883f76a922c663ca90721ec4ab4cb134e8cc4bb4ed351dfa36f8",
+      "body_sha256": "fcd60873d8964ac12cb43abb77ed7259015810685edfdf76d25ce9c833fe5bf5",
+      "transfer_status": "BLOCKED",
+      "truth_status": "UNREVIEWED_OR_EMPTY_SCOPE",
+      "body_characters": 5647,
+      "selected_characters": 0,
+      "execution_status": "NOT_RUN_TRANSFER_INELIGIBLE"
+    },
+    {
+      "document_id": "stage4doc-21cb171fc279fbe3b131ee719c68fd51dd7a5e8d4115cf2ca866acdb99cc877a",
+      "body_sha256": "84bd980477f6ecc5c07717d97e3c3ac0704d635784987adb1c7bef61c4bf0a23",
+      "transfer_status": "BLOCKED",
+      "truth_status": "UNREVIEWED_OR_EMPTY_SCOPE",
+      "body_characters": 4701,
+      "selected_characters": 0,
+      "execution_status": "NOT_RUN_TRANSFER_INELIGIBLE"
+    },
+    {
+      "document_id": "stage4doc-2c8e2b9c3deb65cf70ed60c46622863c6e65e013b34bbe36c7083a538b24c365",
+      "body_sha256": "bd707a46bdfd2ece9c19b8322a3ee6585e30c6fc95f860566d369e361b2329c0",
+      "transfer_status": "BLOCKED",
+      "truth_status": "UNREVIEWED_OR_EMPTY_SCOPE",
+      "body_characters": 4655,
+      "selected_characters": 0,
+      "execution_status": "NOT_RUN_TRANSFER_INELIGIBLE"
+    },
+    {
+      "document_id": "stage4doc-8863919aedd5421d4f6122236527b82424465e4cf90fabeec7dcc6b2e13b93d3",
+      "body_sha256": "76f06aa61c368647fe4ff62bdcd9ce9fca6ead1e983bd5806fe5bef7a990fdf4",
+      "transfer_status": "ELIGIBLE",
+      "truth_status": "REVIEWED_FROZEN_WINDOWS",
+      "body_characters": 16174,
+      "selected_characters": 598,
+      "output_status": "REVIEW_REQUIRED",
+      "execution_status": "RECEIVED_MODEL_RESPONSE",
+      "http": {
+        "exact_status_recorded": false,
+        "transport_status": "PASS_TRANSPORT"
+      },
+      "received_event_seq": 57,
+      "source_validation": {
+        "status": "REVIEW_REQUIRED",
+        "raw_items_count": 2,
+        "individually_validated_items_count": 0,
+        "adopted_items_count": 0,
+        "rejected_items": [
+          {
+            "input_item_index": 0,
+            "reason": "SOURCE"
+          },
+          {
+            "input_item_index": 1,
+            "reason": "QUOTE_NOT_IN_SOURCE"
+          }
+        ],
+        "replay_matches_stored": true
+      },
+      "raw_context_binding": {
+        "bound_items_count": 1,
+        "unscored_items": [
+          {
+            "input_item_index": 1,
+            "reason": "QUOTE_NOT_IN_SOURCE"
+          }
+        ],
+        "all_contexts_bound": false,
+        "full_item_source_validation_PASS": false
+      },
+      "adopted_assessment": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "reviewed_events": 0,
+        "duplicate_predictions": 0,
+        "unmatched_reason_counts": {},
+        "unknown_accounting": {
+          "counts": {
+            "gold_events_with_returned_item": 0,
+            "gold_events_without_returned_item": 0,
+            "no_returned_event_positive_FN": 0,
+            "no_returned_event_known_field": 0,
+            "no_returned_event_verified_absence": 0,
+            "returned_event_field_without_claim": 0,
+            "returned_event_missing_positive_FN": 0,
+            "returned_event_positive_FN_total": 0,
+            "returned_event_wrong_value_FN": 0,
+            "returned_event_verified_absence_without_claim": 0,
+            "engine_explicit_UNKNOWN": 0,
+            "engine_explicit_null": 0,
+            "returned_event_field_omitted_or_not_product_claim": 0
+          },
+          "by_field": {},
+          "frozen_UNKNOWN_is_true_negative": false
+        }
+      },
+      "raw_semantic_assessment": {
+        "status": "UNSCORED_CONTEXT_NOT_UNIQUELY_BOUND",
+        "metrics": null
+      },
+      "semantic_scoring_status": "MEASURED_FROZEN_WINDOWS_ONLY"
+    },
+    {
+      "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+      "body_sha256": "54811824263eeaeb5cee2ce87ae993f689785572ce1c03f730d2a87265e4e2f5",
+      "transfer_status": "ELIGIBLE",
+      "truth_status": "REVIEWED_FROZEN_WINDOWS",
+      "body_characters": 7882,
+      "selected_characters": 527,
+      "output_status": "REVIEW_REQUIRED",
+      "execution_status": "RECEIVED_MODEL_RESPONSE",
+      "http": {
+        "exact_status_recorded": false,
+        "transport_status": "PASS_TRANSPORT"
+      },
+      "received_event_seq": 64,
+      "source_validation": {
+        "status": "REVIEW_REQUIRED",
+        "raw_items_count": 1,
+        "individually_validated_items_count": 0,
+        "adopted_items_count": 0,
+        "rejected_items": [
+          {
+            "input_item_index": 0,
+            "reason": "QUOTE_NOT_IN_SOURCE"
+          }
+        ],
+        "replay_matches_stored": true
+      },
+      "raw_context_binding": {
+        "bound_items_count": 0,
+        "unscored_items": [
+          {
+            "input_item_index": 0,
+            "reason": "QUOTE_NOT_IN_SOURCE"
+          }
+        ],
+        "all_contexts_bound": false,
+        "full_item_source_validation_PASS": false
+      },
+      "adopted_assessment": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 7,
+          "UNKNOWN": 28,
+          "known_truth_missed": 7,
+          "truth_absent_unknown": 21,
+          "truth_unverified_claims": 0,
+          "truth_unverified_fields": 2,
+          "precision_denominator": 0,
+          "recall_denominator": 7,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "by_field": {
+          "actuality": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "ready_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 2,
+            "truth_absent_unknown": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "specification": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 2,
+            "truth_absent_unknown": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "supply_pool": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 2,
+            "known_truth_missed": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "period": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 2,
+            "truth_absent_unknown": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "product": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "unit": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 2,
+            "truth_absent_unknown": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "lead_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 2,
+            "truth_absent_unknown": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "role": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "customer_group": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "quantity": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 2,
+            "truth_absent_unknown": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "need_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 2,
+            "truth_absent_unknown": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "region": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 2,
+            "truth_absent_unknown": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "relief": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 2,
+            "truth_absent_unknown": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "alternative": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 2,
+            "truth_absent_unknown": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          }
+        },
+        "reviewed_events": 2,
+        "duplicate_predictions": 0,
+        "unmatched_reason_counts": {},
+        "unknown_accounting": {
+          "counts": {
+            "gold_events_without_returned_item": 2,
+            "no_returned_event_positive_FN": 7,
+            "no_returned_event_known_field": 28,
+            "no_returned_event_verified_absence": 21,
+            "gold_events_with_returned_item": 0,
+            "returned_event_field_without_claim": 0,
+            "returned_event_missing_positive_FN": 0,
+            "returned_event_positive_FN_total": 0,
+            "returned_event_wrong_value_FN": 0,
+            "returned_event_verified_absence_without_claim": 0,
+            "engine_explicit_UNKNOWN": 0,
+            "engine_explicit_null": 0,
+            "returned_event_field_omitted_or_not_product_claim": 0
+          },
+          "by_field": {
+            "actuality": {
+              "no_returned_event_positive_FN": 2,
+              "no_returned_event_known_field": 2,
+              "no_returned_event_verified_absence": 0
+            },
+            "alternative": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 2,
+              "no_returned_event_verified_absence": 2
+            },
+            "customer_group": {
+              "no_returned_event_positive_FN": 2,
+              "no_returned_event_known_field": 2,
+              "no_returned_event_verified_absence": 0
+            },
+            "lead_time": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 2,
+              "no_returned_event_verified_absence": 2
+            },
+            "need_time": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 2,
+              "no_returned_event_verified_absence": 2
+            },
+            "period": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 2,
+              "no_returned_event_verified_absence": 2
+            },
+            "product": {
+              "no_returned_event_positive_FN": 1,
+              "no_returned_event_known_field": 1,
+              "no_returned_event_verified_absence": 0
+            },
+            "quantity": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 2,
+              "no_returned_event_verified_absence": 2
+            },
+            "ready_time": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 2,
+              "no_returned_event_verified_absence": 2
+            },
+            "region": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 2,
+              "no_returned_event_verified_absence": 2
+            },
+            "relief": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 2,
+              "no_returned_event_verified_absence": 2
+            },
+            "role": {
+              "no_returned_event_positive_FN": 1,
+              "no_returned_event_known_field": 1,
+              "no_returned_event_verified_absence": 0
+            },
+            "specification": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 2,
+              "no_returned_event_verified_absence": 2
+            },
+            "supply_pool": {
+              "no_returned_event_positive_FN": 1,
+              "no_returned_event_known_field": 2,
+              "no_returned_event_verified_absence": 1
+            },
+            "unit": {
+              "no_returned_event_positive_FN": 0,
+              "no_returned_event_known_field": 2,
+              "no_returned_event_verified_absence": 2
+            }
+          },
+          "frozen_UNKNOWN_is_true_negative": false
+        }
+      },
+      "raw_semantic_assessment": {
+        "status": "UNSCORED_CONTEXT_NOT_UNIQUELY_BOUND",
+        "metrics": null
+      },
+      "semantic_scoring_status": "MEASURED_FROZEN_WINDOWS_ONLY"
+    },
+    {
+      "document_id": "stage4doc-fe6fe733066583784bc6a77dddc1cf0f9b6f6e705e72fed6cacedcca479e8c99",
+      "body_sha256": "6c053a3e0213e8fa2ef7432e0ca223aff82236ac58401a02ba902141e2d71b36",
+      "transfer_status": "ELIGIBLE",
+      "truth_status": "REVIEWED_FROZEN_WINDOWS",
+      "body_characters": 9423,
+      "selected_characters": 510,
+      "output_status": "INPUT_ERROR",
+      "execution_status": "ATTEMPTED_HTTP_NO_MODEL_RESPONSE",
+      "semantic_scoring_status": "UNSCORED_NO_MODEL_RESPONSE",
+      "errors": [
+        {
+          "kind": "INPUT_INVALID",
+          "error_code": "invalid_request_error",
+          "flags": [],
+          "http_status": 400
+        }
+      ]
+    },
+    {
+      "document_id": "stage4doc-7f359b839cff11a0d54cc0392a66f5c2a87a8ec43b50546364cad89ac3e51480",
+      "body_sha256": "46b6823716c760d1df6838e6eacae0bcc2faea4e6114ca38f65932773cd2cabb",
+      "transfer_status": "HELD_CONTEXT",
+      "truth_status": "UNREVIEWED_OR_EMPTY_SCOPE",
+      "body_characters": 4247,
+      "selected_characters": 0,
+      "execution_status": "NOT_RUN_TRANSFER_INELIGIBLE"
+    },
+    {
+      "document_id": "stage4doc-5e51382e173d815ad84313ca01dfe0b70dd12dcad97b8e198e65b05b638a40ca",
+      "body_sha256": "2abf513b2da9a57eff3f1d4b3ce51ab83f1158d07ecf2645f784674ba2bdea22",
+      "transfer_status": "BLOCKED",
+      "truth_status": "UNREVIEWED_OR_EMPTY_SCOPE",
+      "body_characters": 4780,
+      "selected_characters": 0,
+      "execution_status": "NOT_RUN_TRANSFER_INELIGIBLE"
+    },
+    {
+      "document_id": "stage4doc-26e241d88935e5b3a0295f446ceb42035c398fffd3061b47a6ba3e2e25f7cd8d",
+      "body_sha256": "96616a8e7b014c79e0e7254ea667e4ad99753cff020895cdd46c080610357f86",
+      "transfer_status": "BLOCKED",
+      "truth_status": "UNREVIEWED_OR_EMPTY_SCOPE",
+      "body_characters": 3747,
+      "selected_characters": 0,
+      "execution_status": "NOT_RUN_TRANSFER_INELIGIBLE"
+    },
+    {
+      "document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+      "body_sha256": "998694829c8f0304a535ea0b9402b61e89edacae3076507dc07c1e5954b00de1",
+      "transfer_status": "ELIGIBLE",
+      "truth_status": "REVIEWED_FROZEN_WINDOWS",
+      "body_characters": 9108,
+      "selected_characters": 565,
+      "execution_status": "NOT_RUN_AFTER_REQUEST_CONTRACT_BLOCK"
+    },
+    {
+      "document_id": "stage4doc-e7c1a142526966fc44dbd37052f7326be0194de62cc8133a3661da8aa1f438ef",
+      "body_sha256": "03dde1042dd3dfcf2a67dacec6b2b255612c9159d31b70abd9933cbac2d8c645",
+      "transfer_status": "ELIGIBLE",
+      "truth_status": "REVIEWED_FROZEN_WINDOWS",
+      "body_characters": 16107,
+      "selected_characters": 508,
+      "execution_status": "NOT_RUN_AFTER_REQUEST_CONTRACT_BLOCK"
+    },
+    {
+      "document_id": "stage4doc-6f529c986d52ad4d65cdc2ede17eb8630af37512ff71a797b90d71e090543216",
+      "body_sha256": "e97a84cbd76c415b0e863dc659c1ad439b8812edbe2f959760eb8ba1995e7db7",
+      "transfer_status": "HELD_CONTEXT",
+      "truth_status": "UNREVIEWED_OR_EMPTY_SCOPE",
+      "body_characters": 4196,
+      "selected_characters": 0,
+      "execution_status": "NOT_RUN_TRANSFER_INELIGIBLE"
+    },
+    {
+      "document_id": "stage4doc-e136b06558ff587cd833e3ceef3115908e8772e2cc772c0bbae7789bb685403e",
+      "body_sha256": "61135820fbaf9e55c0da0a927ddf3c6f4f755057213f61c1f1bdb06d21fe9626",
+      "transfer_status": "BLOCKED",
+      "truth_status": "UNREVIEWED_OR_EMPTY_SCOPE",
+      "body_characters": 4589,
+      "selected_characters": 0,
+      "execution_status": "NOT_RUN_TRANSFER_INELIGIBLE"
+    }
+  ],
+  "limitations": [
+    "Only actual model responses with completed nonempty frozen-window truth enter semantic denominators.",
+    "HTTP no-response, eligible unrun, and transfer-ineligible documents are excluded rather than model false negatives.",
+    "UNVERIFIED and AMBIGUOUS event fields are excluded; frozen evaluator UNKNOWN is not correct absence or a true negative.",
+    "Frozen literal/alias matching can leave a source-stated short or long product expression unmapped; unmatched counts are not proof of semantic falsity.",
+    "Adopted recall measures the source-validation/adoption pipeline and is separate from raw-response semantic recall.",
+    "Raw semantic scores bind context only and do not override failed entity/fact source validation or adopt rejected responses.",
+    "CPU comparison covers product entity extraction only on common response-and-review inputs; role and actuality are unsupported.",
+    "No full-document, fifty-document, human-validated, or leading-performance claim is supported.",
+    "Gold sessions report out-of-scope session-status metadata exposure; no evaluated extraction values or other gold answers are reported exposed, but strict source-only procedural isolation is not pristine."
+  ],
+  "publication_content_check": {
+    "raw_source_quotes_or_prediction_values_in_scores": false,
+    "credential_email_identity_patterns": "NONE_IN_SCORE_ARTIFACT",
+    "public_git_publication_performed": false,
+    "evaluation_source_pattern_counts": {
+      "credential_like": 0,
+      "email_like": 56,
+      "resident_identifier_like": 0,
+      "korean_mobile_like": 0
+    },
+    "final_gold_pattern_counts": {
+      "credential_like": 0,
+      "email_like": 0,
+      "resident_identifier_like": 0,
+      "korean_mobile_like": 0
+    },
+    "received_response_pattern_counts": {
+      "credential_like": 0,
+      "email_like": 0,
+      "resident_identifier_like": 0,
+      "korean_mobile_like": 0
+    },
+    "pattern_scan_is_not_manual_sensitive_content_review": true
+  }
+}

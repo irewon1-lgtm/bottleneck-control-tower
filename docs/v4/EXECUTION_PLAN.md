@@ -39,7 +39,7 @@
 
 대상 저장소: `irewon1-lgtm/bottleneck-control-tower`
 기존 개발 브랜치: `codex/bct-v4-integration`
-이번 인계 기준 SHA: `9c7f6796cc27a804ddcc1bfcfdf614ba398d51da`
+이번 수정 작업의 인계 기준 SHA: `ca013abdb28f235c1d53dfad770d2e367497eaa6`
 
 이 SHA는 과거 인계 기준이다. 실제 작업 시작 시 현재 원격 HEAD를 한 번 확인하고 이후 작업을 보존한다. 과거 SHA로 강제 초기화하지 않는다.
 
@@ -160,7 +160,7 @@ AI의 첫 임무는 병목을 선언하는 것이 아니라 원문에 실제로 
 
 현재 게시 환경은 spec7·network enforced이며 공식 DOE/NIST/ESA/EIA와 GitHub Actions 실제 GET 200을 확인했다. 이전 도메인 차단은 해소됐다. GitHub 원문 캐시·기존 V4에서 77건을 재사용하고 현재 공식 원문 41건을 추가 확인했다. 확보된 고유 원문 118건 중 50건을 `docs/v4/stage4-corpus/manifest.json`으로 개발30/평가20 동결했다. 네이티브 HTML이 없는 복구 텍스트는 PARTIAL을 유지한다. 공개일·출처·해시 확인은 제품·사건 의미 정답의 검증과 별도다.
 
-동결군의 의미 정답은 `independent-gold-template.json`에서 UNVERIFIED로 보존한다. 이는 원문에 정보가 없다는 UNKNOWN 판정이나 엔진의 올바른 보류를 뜻하지 않는다. 모델 답을 정답으로 사용하지 않는다. 새로운 원문의 기존 공개 전송 게이트도 완화하지 않았으므로 독립 정답과 전송 조건이 준비되기 전 생성 요청을 하지 않는다. 기존 DOE의 검토·입력·연결 PASS는 그대로 재사용한다. 과거 GLiNER2 보고서의 1,666자 입력을 현재 문서 해시·전송 창과 연결할 수 없어 동일 입력 CPU 비교는 BLOCKED다.
+수정 전 자료 준비 기록: 동결군의 `independent-gold-template.json`은 UNVERIFIED 템플릿이며 정보 부재 UNKNOWN이나 엔진의 올바른 보류가 아니다. 과거 GLiNER2 보고서의 1,666자 입력은 현재 문서 해시·전송 창과 연결할 수 없어 역사적 동일 입력 결과로 복원하지 않았다. 이번 승인에 따라 별도 사건별 원문 검토와 신규 고정 CPU baseline을 준비했으며, 현재의 부분 평가·전송 가능 범위·실패·검토 한계는 PROGRESS.json과 STAGE4_RESULTS.json에 기록한다. 템플릿이나 과거 준비 결과를 현재 정확도 결과로 사용하지 않는다.
 
 필요한 Groq 요청만 기존 실행별 1회 및 무료 예약 한도 안에서 나누고, 한도에 걸리면 기존 SQLite에 WAIT_API와 진행 위치를 보존한다. 자료 무결성 PASS는 50건 의미 정확도 PASS가 아니다. 5단계·7일 Shadow는 승인 범위 밖이다.
 
