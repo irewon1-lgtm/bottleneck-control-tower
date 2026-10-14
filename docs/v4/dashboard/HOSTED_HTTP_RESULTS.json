@@ -1,0 +1,144 @@
+{
+  "origin": "https://bct-v4-dashboard.ire-won1.chatgpt.site",
+  "data_at": "2026-10-14T13:46:34.942618+00:00",
+  "generated_at": "2026-10-14T15:27:49.525892+00:00",
+  "counts": {
+    "evidence": 549,
+    "reviewed": 23,
+    "structured": 211,
+    "discovery": 315,
+    "discovered_urls": 403,
+    "source_attempts": 128,
+    "source_success": 118,
+    "source_errors": 10,
+    "article_attempts": 48,
+    "captured": 46,
+    "body_status": {
+      "FULL": 31,
+      "UNAVAILABLE": 6,
+      "PARTIAL": 9
+    },
+    "body_nonempty": 40,
+    "article_errors": 2,
+    "pending": 295,
+    "quarantined": 6,
+    "s1_signals": 14,
+    "future_candidates": {
+      "S1": 0,
+      "S2": 0,
+      "S3": 0
+    }
+  },
+  "tests": [
+    {
+      "test": "authenticated dashboard actual counts",
+      "status": "PASS",
+      "http": 200
+    },
+    {
+      "test": "authenticated detail reviewed",
+      "status": "PASS",
+      "http": 200
+    },
+    {
+      "test": "authenticated detail structured",
+      "status": "PASS",
+      "http": 200
+    },
+    {
+      "test": "authenticated detail discovery",
+      "status": "PASS",
+      "http": 200
+    },
+    {
+      "test": "authenticated /",
+      "status": "PASS",
+      "http": 200
+    },
+    {
+      "test": "authenticated /app.js",
+      "status": "PASS",
+      "http": 200
+    },
+    {
+      "test": "authenticated /style.css",
+      "status": "PASS",
+      "http": 200
+    },
+    {
+      "test": "authenticated /api/health",
+      "status": "PASS",
+      "http": 200
+    },
+    {
+      "test": "authenticated /api/export",
+      "status": "PASS",
+      "http": 200
+    },
+    {
+      "test": "anonymous denied /",
+      "status": "PASS",
+      "http": 403,
+      "sign_in_wall": false
+    },
+    {
+      "test": "anonymous denied /app.js",
+      "status": "PASS",
+      "http": 403,
+      "sign_in_wall": false
+    },
+    {
+      "test": "anonymous denied /api/dashboard",
+      "status": "PASS",
+      "http": 403,
+      "sign_in_wall": false
+    },
+    {
+      "test": "anonymous denied /api/export",
+      "status": "PASS",
+      "http": 403,
+      "sign_in_wall": false
+    },
+    {
+      "test": "anonymous denied /api/evidence/931ad34bdf20b30118ea19277edad659d6919f206b8f1c858fbe449bb0263224",
+      "status": "PASS",
+      "http": 403,
+      "sign_in_wall": false
+    },
+    {
+      "test": "source file excluded /var/v4/cross-industry/ledger/v4.sqlite3",
+      "status": "PASS",
+      "http": 404
+    },
+    {
+      "test": "source file excluded /.env",
+      "status": "PASS",
+      "http": 404
+    },
+    {
+      "test": "source file excluded /worker/index.js",
+      "status": "PASS",
+      "http": 404
+    },
+    {
+      "test": "source file excluded /snapshot-manifest.json",
+      "status": "PASS",
+      "http": 404
+    },
+    {
+      "test": "write rejected",
+      "status": "PASS",
+      "http": 405
+    },
+    {
+      "test": "HTTPS fresh reconnect exact saved data",
+      "status": "PASS",
+      "http": 200
+    }
+  ],
+  "browser_authenticated": "PASS",
+  "mobile_device": "NOT_RUN",
+  "session_end_observation": "NOT_RUN",
+  "mobile_simulation": "NOT_RUN",
+  "mobile_simulation_reason": "Cloud Browser exposes no viewport/device-emulation operation; no installed local Chromium. Prior local mobile evidence is separate."
+}
