@@ -230,7 +230,7 @@ class CPUExtractor:
                 "coverage": "BOUNDED_SIGNAL_WINDOWS_NOT_FULL_DOCUMENT",
                 "policy": "Source-located advisory entities; no automatic scope/qualification/S upgrade"}
 
-    def extract_windows(self, doc, windows):
+    def extract_windows(self, doc, windows, *, diagnostic=False):
         """New research baseline on exactly the frozen API input, not old output."""
         if hashlib.sha256(doc["body"].encode()).hexdigest() != doc["body_sha256"]:
             raise ValueError("BODY_HASH_MISMATCH")
@@ -242,15 +242,32 @@ class CPUExtractor:
             self.load()
         labels = ["product", "specification", "industry", "subindustry", "location", "customer", "supplier", "quantity", "date"]
         started, cpu = time.monotonic(), time.process_time()
-        spans = []
+        spans, raw_windows, rejected = [], [], []
         for window in windows:
             output = self.model.extract_entities(window["text"], labels, include_confidence=True, include_spans=True)
-            spans.extend(validate_spans(doc, output, offset=window["start"]))
-        return {"status": "PASS" if windows else "NOT_RUN", "baseline_kind": "NEW_SAME_INPUT_NOT_HISTORICAL_RESTORATION",
+            if not diagnostic:
+                spans.extend(validate_spans(doc, output, offset=window["start"]))
+                continue
+            # Research queue only: retain the untouched model response before
+            # isolating invalid mentions. No offset repair or fuzzy alignment.
+            raw_windows.append({"window": window, "output": output})
+            for label, items in output.get("entities", {}).items():
+                for index, item in enumerate(items):
+                    try:
+                        a, b = item.get("start"), item.get("end")
+                        if type(a) is not int or type(b) is not int or not 0 <= a < b <= len(window["text"]):
+                            raise ValueError("MODEL_SPAN_OUTSIDE_INPUT")
+                        spans.extend(validate_spans(doc, {"entities": {label: [item]}}, offset=window["start"]))
+                    except (ValueError, KeyError, TypeError) as error:
+                        rejected.append({"label": label, "index": index, "window_start": window["start"],
+                                         "original_proposal": item, "reason": str(error)})
+        result = {"status": "PARTIAL_REVIEW" if rejected else "PASS" if windows else "NOT_RUN", "baseline_kind": "NEW_SAME_INPUT_NOT_HISTORICAL_RESTORATION",
                 "model": MODEL, "revision": self.revision, "device": "cpu", "threads": 4,
                 "spans": spans, "input_sha256": sha(windows), "selected_windows": windows,
                 "cpu_seconds": time.process_time()-cpu, "wall_seconds": time.monotonic()-started,
                 "event_meaning_supported": False, "semantic_accuracy": "UNKNOWN"}
+        if diagnostic: result.update(raw_windows=raw_windows, rejected_spans=rejected)
+        return result
 
 
 def validate_spans(doc, output, offset=0):
