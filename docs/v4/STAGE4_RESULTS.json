@@ -2616,7 +2616,14 @@
     "current_GLiNER2_installed": false,
     "weights_found": 0,
     "same_frozen_body_hash_and_input_windows_verified": false,
-    "model_install_or_other_engine_execution": false
+    "model_install_or_other_engine_execution": false,
+    "historical_native_source_hint": {
+      "url": "https://www.eia.gov/coal/production/quarterly/",
+      "html_sha256": "11e1afcc0178b36103040ab40c4844fd86ce794f539fd37a9b959e4fad688544",
+      "bytes": 113819,
+      "documents": 1
+    },
+    "historical_exact_model_input_hash": "NOT_RECORDED_OR_PAIRED_WITH_FROZEN_CORPUS"
   },
   "verification": {
     "corpus_files_and_freeze": {
@@ -2717,5 +2724,13 @@
     "stage4": "BLOCKED_NOT_PASS",
     "stage5_and_Shadow": "NOT_RUN"
   },
-  "next_start": "Keep the frozen30/20 source versions and unchanged algorithm; independently adjudicate target facts without model answers. Resolve documented public-input/source review gates before any new Groq request. Recover exact matching GLiNER2 input evidence if available; otherwise keep CPU comparison BLOCKED. Do not retune on evaluation or start stage5/Shadow."
+  "next_start": "Keep the frozen30/20 source versions and unchanged algorithm; independently adjudicate target facts without model answers. Resolve documented public-input/source review gates before any new Groq request. Recover exact matching GLiNER2 input evidence if available; otherwise keep CPU comparison BLOCKED. Do not retune on evaluation or start stage5/Shadow.",
+  "delivery": {
+    "implementation_commit": "f318285836abd1b00f9cdedc96168e4f16630124",
+    "branch": "codex/bct-v4-integration",
+    "remote_ref_verified": true,
+    "verified_at": "2026-10-14T02:18:08.621073+00:00",
+    "main_ref_unchanged": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+    "receipt_note": "Records the verified source-corpus push; the final receipt commit is separately verified and reported at delivery."
+  }
 }
