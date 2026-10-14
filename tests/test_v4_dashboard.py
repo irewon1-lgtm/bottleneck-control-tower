@@ -4,6 +4,7 @@ Mutation/absence cases are isolated test doubles. They never change the corpus.
 """
 import copy
 import hashlib
+import gzip
 import json
 from pathlib import Path
 import sqlite3
@@ -23,7 +24,11 @@ REPO = Path(__file__).resolve().parents[1]
 def reader(tmp_path_factory):
     root = tmp_path_factory.mktemp("dashboard-research-only")
     (root / "docs").symlink_to(REPO / "docs", target_is_directory=True)
-    return ResearchReader(root)  # Clean-checkout path restores verified backup.
+    # These tests retain the original frozen549-row fixture, not a mutable new
+    # research corpus. Latest-backup restoration is separately tested post-UI.
+    database = root / "original-research.sqlite3"
+    database.write_bytes(gzip.decompress((REPO / "docs/v4/cross-industry/research-snapshot.sqlite3.gz").read_bytes()))
+    return ResearchReader(root, database)
 
 
 @pytest.fixture
@@ -44,7 +49,7 @@ def get(url):
 
 def test_actual_sqlite_records_revision_and_counts(reader):
     x = reader.dashboard()
-    assert reader.snapshot is True
+    assert reader.snapshot is False  # Explicit original fixture.
     assert x["source"]["read_only"] is True
     assert x["counts"]["evidence"] == 549
     assert x["counts"]["reviewed"] == 23

@@ -110,9 +110,18 @@ class ResearchReader:
 
     def _restore(self):
         archive = self.reports / "research-snapshot.sqlite3.gz"
+        verification = self.reports / "verification.json"
+        progress_path = self.repo / "docs/v4/PROGRESS.json"
+        if progress_path.exists():
+            task = read_json(progress_path).get("post_ui", {})
+            if task.get("snapshot"):
+                archive = (self.repo / task["snapshot"]).resolve()
+                verification = (self.repo / task["verification"]).resolve()
+                if not archive.is_relative_to(self.repo) or not verification.is_relative_to(self.repo):
+                    raise DataUnavailable("연구 백업 경로가 저장소 밖을 가리킵니다.")
         try:
             packed = archive.read_bytes()
-            if digest(packed) != read_json(self.reports / "verification.json")["snapshot_file_sha256"]:
+            if digest(packed) != read_json(verification)["snapshot_file_sha256"]:
                 raise DataUnavailable("연구 백업 파일의 해시가 검증 기록과 다릅니다.")
             raw = gzip.decompress(packed)
         except (OSError, KeyError, json.JSONDecodeError) as exc:
@@ -146,13 +155,26 @@ class ResearchReader:
 
     def _state(self, db):
         records, events, reviews = {}, [], {}
+        product_reviews, event_reviews = {}, {}
         for seq, at, kind, payload in db.execute("SELECT seq,at,kind,payload FROM events ORDER BY seq"):
             item = json.loads(payload)
             if kind in ("CROSS_COMMON_EVIDENCE", "CROSS_COMMON_EVIDENCE_REVISION"):
                 records[item["event_id"]] = item
             elif kind == "CROSS_DEEP_REVIEW":
                 reviews[item["source_event_id"]] = item
+            elif kind == "POST_UI_PRODUCT_REVIEW":
+                for ref in item["references"]:
+                    product_reviews[(ref["document_id"], ref["surface"].casefold())] = item
+            elif kind == "POST_UI_EVENT_REVIEW":
+                event_reviews[item["source_event_id"]] = item
             events.append((at, kind, item))
+        for r in records.values():
+            product = (r["source_surface_target"].get("product") or "").casefold()
+            review = next((product_reviews.get((s.get("document_id"), product)) for s in r["sources"] if product_reviews.get((s.get("document_id"), product))), None)
+            if review:
+                r["post_ui_product_review"] = review
+            if r["event_id"] in event_reviews:
+                r["post_ui_event_review"] = event_reviews[r["event_id"]]
         return records, events, reviews
 
     def _industry_maps(self):
@@ -173,8 +195,11 @@ class ResearchReader:
         ready = fields.get("ready_time") or fields.get("supply_ready_time")
         def surface(value):
             return value.get("surface") if isinstance(value, dict) else value
+        review = r.get("post_ui_product_review") or r.get("post_ui_event_review")
+        if review:
+            status = "Codex AI 보조 원문 검토 · 사람 검증 아님"
         return {"id": r["event_id"], "category": category, "product": r["source_surface_target"].get("product") or "제품명 확인 필요",
-                "industry": SECTORS.get(hint, "산업 확인 필요"), "industry_basis": "저장된 출처 분류이며 제품의 산업 확정은 아닙니다.",
+                "industry": SECTORS.get(hint, "산업 확인 필요"), "industry_basis": review["reason_ko"] if review else "저장된 출처 분류이며 제품의 산업 확정은 아닙니다.",
                 "role": r["role"], "role_label": ROLES.get(r["role"], "역할 확인 필요"),
                 "stage": r["s_stage"], "status": status, "actuality": actuality,
                 "target": r["source_surface_target"], "need_time": surface(need), "ready_time": surface(ready), "evidence_period": surface(fields.get("period")),
@@ -186,17 +211,26 @@ class ResearchReader:
         with self.connection() as db:
             records, events, reviews = self._state(db)
             report, doc_industries, originals = self._industry_maps()
-            rows = [self._row(r, doc_industries, originals) for r in records.values()]
+            rows = [self._row(r, doc_industries, originals) for r in records.values()
+                    if r.get("post_ui_product_review", {}).get("active_product_exploration", True)]
             rows.sort(key=lambda r: ({"reviewed": 0, "discovery": 1, "structured": 2}[r["category"]], r["product"].casefold(), r["id"]))
             source_results = [x for _, k, x in events if k == "CROSS_SOURCE_RESULT"]
             article_results = [x for _, k, x in events if k == "CROSS_ARTICLE_RESULT"]
             latest_articles = {x["url"]: x for x in article_results}
+            held = {x["document_id"] for _, k, x in events if k == "POST_UI_ACCESS_HOLD"}
+            for _, kind, item in events:
+                if kind == "POST_UI_BODY_REVIEW" and item["status"] == "DERIVED_PARTIAL" and item["document_id"] not in held:
+                    previous = latest_articles.get(item["url"])
+                    if previous:
+                        latest_articles[item["url"]] = {**previous, "body_status": "PARTIAL", "body_characters": item["body_characters"], "document_id": item["document_id"]}
             source_latest = {x["source"]["url"]: x for x in source_results}
             discovered = {x["url"] for _, k, x in events if k == "CROSS_DISCOVERED"}
             captures = [x for x in latest_articles.values() if x["status"] == "CAPTURED"]
             run_rows = [(at, json.loads(t)) for at, t in db.execute("SELECT at,payload FROM runs ORDER BY at")]
             collections = [(at, r) for at, r in run_rows if r.get("version") == "bct-cross-industry-1"]
             last = collections[-1] if collections else (None, {})
+            additional = {x["id"]: x for _, k, x in events if k == "POST_UI_ADDITIONAL_QUEUE"}
+            extra_pending = sum(x["status"] == "METADATA_ONLY_UNATTEMPTED_BODY" for x in additional.values())
             categories = Counter(r["category"] for r in rows)
             # The saved analysis reports a frozen scope, not all subsequent rows.
             coverage = {"at": report["at"], "documents": report["reading_documents"],
@@ -220,7 +254,7 @@ class ResearchReader:
                     err = r.get("error") or {}
                     reason = "접근이 거부되었습니다. 사이트와 중간 연결 중 어느 쪽의 제한인지는 미확인입니다." if err.get("http_status") == 403 else "수집 자료의 형식 또는 날짜를 읽지 못했습니다." if err.get("category") == "C_EXTRACTION_OR_VALIDATION" else "통신 또는 자료 처리 오류가 기록되었습니다."
                     errors.append({"at": r["at"], "url": public_link(r.get("url") or r["source"]["url"]), "step": "출처 목록" if "source" in r else "본문 확보", "message": reason, "http_status": err.get("http_status"), "action": "자동 재시도 없이 분리 보관"})
-            quarantined = [x for _, k, x in events if k == "CROSS_BODY_VIEW_QUARANTINED"]
+            quarantined = [x for _, k, x in events if k in ("CROSS_BODY_VIEW_QUARANTINED", "POST_UI_ACCESS_HOLD") or (k == "POST_UI_BODY_REVIEW" and x["status"] == "ACCESS_RESTRICTED")]
             progress = read_json(self.repo / "docs/v4/PROGRESS.json")
             current = progress.get("cross_industry", {})
             auth = progress.get("authentication_resume", {})
@@ -255,7 +289,7 @@ class ResearchReader:
                                "body_status": dict(Counter(r["body_status"] for r in captures)),
                                "body_nonempty": sum(r.get("body_characters", 0) > 0 for r in captures),
                                "article_errors": sum(r["status"] != "CAPTURED" for r in article_results),
-                               "pending": last[1].get("pending_unattempted"), "quarantined": len(quarantined),
+                               "pending": last[1].get("pending_unattempted", 0) + extra_pending, "quarantined": len(quarantined),
                                "s1_signals": sum(r["stage"] == "S1" for r in rows),
                                "future_candidates": report["future_12_36_month_candidates"]},
                     "coverage": coverage, "sectors": list(sectors.values()), "records": rows,
@@ -299,11 +333,14 @@ class ResearchReader:
                                    "context_after": doc["body"][b:b+180] if valid else None,
                                    "document_characters": len(doc["body"]) if doc else None})
             missing = reviews.get(event_id, {}).get("missing", [])
+            manual = r.get("post_ui_product_review") or r.get("post_ui_event_review")
             result.update(references=references, fields=r.get("fields", {}),
                           missing=[MISSING.get(k, "추가 근거 확인") for k in missing] or ["필요 시기, 적격 공급량과 독립적인 반대편 근거를 확인해야 합니다."],
                           all_references_verified=bool(references) and all(x["verified"] for x in references),
                           semantic_note="인용 일치는 의미 정확도나 미래 병목의 증명이 아닙니다.",
                           counterpart_note="같은 제품·규격·지역·기간·공급 자격을 충족한 독립적인 수요·공급 근거쌍은 확인되지 않았습니다.")
+            if manual:
+                result["missing"].insert(0, manual["reason_ko"])
             return result
 
     def _structured_ref(self, ref):

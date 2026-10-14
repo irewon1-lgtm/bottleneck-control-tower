@@ -69,7 +69,7 @@ def prior_attempts(ledger,phase):
     return {json.loads(p)['url']for p, in ledger.db.execute("SELECT payload FROM events WHERE kind=?",('CROSS_'+phase+'_ATTEMPT',))}
 
 
-def collect(root,sources,*,article_limit=24,workers=6,feed_limit=4,client=None,feed_transport=None,known_urls=()):
+def collect(root,sources,*,article_limit=24,workers=6,feed_limit=4,client=None,feed_transport=None,known_urls=(),allowed_urls=None,refresh_existing=True):
     if not 1<=workers<=8 or not 1<=article_limit<=100:raise ValueError('BOUNDED_RESEARCH_BATCH')
     ledger=Ledger(root);client=client or SourceClient();feed_transport=feed_transport or RSSTransport(timeout_seconds=10)
     rid='cross-'+uuid.uuid4().hex;receipts=[];captured=[]
@@ -122,13 +122,13 @@ def collect(root,sources,*,article_limit=24,workers=6,feed_limit=4,client=None,f
             prior.update(x[0]for x in ledger.db.execute('SELECT url FROM documents'))
             for text, in ledger.db.execute("SELECT payload FROM events WHERE kind='CROSS_DISCOVERED' ORDER BY seq"):
                 x=json.loads(text)
-                if x['url']not in prior:all_leads.setdefault(x['url'],x)
+                if x['url']not in prior and (allowed_urls is None or x['url']in allowed_urls):all_leads.setdefault(x['url'],x)
             # One stale managed source gets a refresh slot; pending new URLs
             # retain the rest. Failed URLs never refresh automatically.
             last_articles={json.loads(t)['url']:json.loads(t)for t, in ledger.db.execute("SELECT payload FROM events WHERE kind='CROSS_ARTICLE_RESULT' ORDER BY seq")}
             article_attempts={json.loads(t)['url']:json.loads(t)for t, in ledger.db.execute("SELECT payload FROM events WHERE kind='CROSS_ARTICLE_ATTEMPT' ORDER BY seq")}
             stale=[x for x in last_articles.values()if x['status']=='CAPTURED'and article_attempts[x['url']]['at']<=x['at']and(datetime.fromisoformat(now())-datetime.fromisoformat(x['at'])).total_seconds()>=86400]
-            refresh=min(stale,key=lambda x:x['at'])if stale else None
+            refresh=min(stale,key=lambda x:x['at'])if stale and refresh_existing else None
             batch=fair_select(list(all_leads.values()),article_limit-int(bool(refresh)))
             if refresh:batch.append({**refresh,'refresh':True})
             def article(x):
