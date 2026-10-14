@@ -120,6 +120,12 @@ def source_input(doc, config, env):
     body = doc.get("body")
     if not isinstance(body, str) or not body or hashlib.sha256(body.encode()).hexdigest() != doc.get("body_sha256"):
         raise APIError("INPUT_INVALID")
+    if "api_safe_input_review" in doc:
+        from .public_input import selected_input
+        try:
+            return selected_input(doc, config, doc["api_safe_input_review"], env)
+        except ValueError:
+            raise APIError("POLICY") from None
     # A source URL alone is not proof of public status; provenance must pass.
     try:
         public_url(doc["origin_url"])
@@ -479,6 +485,12 @@ class Router:
         return sha([self.env.get(KEYS[provider]), self.config["accounts"].get(provider)])
 
     def reviewed_document(self, doc):
+        safe = [x for x in self.events("API_SAFE_INPUT_REVIEW")
+                if x["document_id"] == doc["document_id"]
+                and x["body_sha256"] == doc["body_sha256"]
+                and x["raw_sha256"] == doc.get("raw_sha256")]
+        if safe:
+            return {**doc, "api_safe_input_review": safe[-1]}
         reviews = [x for x in self.events("API_PUBLIC_EXCERPT_REVIEW")
                    if x["document_id"] == doc["document_id"]
                    and x["body_sha256"] == doc["body_sha256"]

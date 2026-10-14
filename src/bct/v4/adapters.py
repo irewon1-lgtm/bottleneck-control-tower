@@ -2,6 +2,7 @@
 from datetime import datetime, timezone
 from io import BytesIO
 import json
+import hashlib
 import os
 from pathlib import Path
 import re
@@ -228,6 +229,28 @@ class CPUExtractor:
                 "unread_signal_windows": max(0, len(chunks)-len(selected)),
                 "coverage": "BOUNDED_SIGNAL_WINDOWS_NOT_FULL_DOCUMENT",
                 "policy": "Source-located advisory entities; no automatic scope/qualification/S upgrade"}
+
+    def extract_windows(self, doc, windows):
+        """New research baseline on exactly the frozen API input, not old output."""
+        if hashlib.sha256(doc["body"].encode()).hexdigest() != doc["body_sha256"]:
+            raise ValueError("BODY_HASH_MISMATCH")
+        for window in windows:
+            if (not 0 <= window["start"] < window["end"] <= len(doc["body"])
+                    or doc["body"][window["start"]:window["end"]] != window["text"]):
+                raise ValueError("CPU_FROZEN_WINDOW_MISMATCH")
+        if self.model is None:
+            self.load()
+        labels = ["product", "specification", "industry", "subindustry", "location", "customer", "supplier", "quantity", "date"]
+        started, cpu = time.monotonic(), time.process_time()
+        spans = []
+        for window in windows:
+            output = self.model.extract_entities(window["text"], labels, include_confidence=True, include_spans=True)
+            spans.extend(validate_spans(doc, output, offset=window["start"]))
+        return {"status": "PASS" if windows else "NOT_RUN", "baseline_kind": "NEW_SAME_INPUT_NOT_HISTORICAL_RESTORATION",
+                "model": MODEL, "revision": self.revision, "device": "cpu", "threads": 4,
+                "spans": spans, "input_sha256": sha(windows), "selected_windows": windows,
+                "cpu_seconds": time.process_time()-cpu, "wall_seconds": time.monotonic()-started,
+                "event_meaning_supported": False, "semantic_accuracy": "UNKNOWN"}
 
 
 def validate_spans(doc, output, offset=0):

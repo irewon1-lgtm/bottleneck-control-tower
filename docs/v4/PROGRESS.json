@@ -6,7 +6,7 @@
   "handoff_sha": "9c7f6796cc27a804ddcc1bfcfdf614ba398d51da",
   "base_remote_sha": "9c7f6796cc27a804ddcc1bfcfdf614ba398d51da",
   "last_completed": "Published access PASS; reused77 issuer originals and acquired41 current native documents (118 unique: FULL37/PARTIAL81). Exported/froze50 (development30/evaluation20; FULL30/PARTIAL20), checked hashes/publication evidence and reopened separate50-document SQLite; new Groq0; no algorithm changes.",
-  "next_action": "Develop safe source-bound input on development30, event-level review packets and research-only typed adapter; freeze before evaluation20.",
+  "next_action": "Frozen code: separate-source holdout gold review, bounded Groq run-one calls with one shared rolling budget; do not tune on evaluation results.",
   "blockers": [
     {
       "code": "INDEPENDENT_TARGET_FACT_GOLD_UNVERIFIED",
@@ -131,7 +131,7 @@
     }
   ],
   "scope": "SOURCE_REUSE_AND_FROZEN50_PREPARATION; no accuracy algorithm changes",
-  "updated_at": "2026-10-14T04:09:47.838316+00:00",
+  "updated_at": "2026-10-14T04:30:35.755490+00:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
@@ -360,6 +360,70 @@
       "model_dependencies_in_default_tests": false
     },
     "evaluation20_outputs_exposed_to_developer": false,
-    "operational_adapter_enabled": false
+    "operational_adapter_enabled": false,
+    "code_development_status": "PASS_SCOPED_FUNCTIONAL_TESTS",
+    "affected_tests": {
+      "passed": 220,
+      "failed": 0,
+      "log": "var/v4/repair/affected-final.log"
+    },
+    "development_input_counts": {
+      "ELIGIBLE": 20,
+      "HELD_CONTEXT": 9,
+      "BLOCKED": 1
+    },
+    "evaluation_freeze": {
+      "at": "2026-10-14T04:30:35.700420+00:00",
+      "models": {
+        "groq": "openai/gpt-oss-20b",
+        "cpu": "fastino/gliner2-base-v1",
+        "cpu_revision": "f9634218e53580c56edf0de97ca1a7d3f1c2354e"
+      },
+      "system_sha256": "eed74abe05fe17e4a8e9fae5fe027a94189b80d13aa4b94cdd949f9ff8590e91",
+      "quote_schema_sha256": "0f72f7ee739558cef5ed87741d93a16a6b897664263bf9cd7e30f2f540d65709",
+      "file_sha256": {
+        "pyproject.toml": "e1dbc68ef6c8d9cc3fc0cd5f3dabb37256d5b396b738a1afc7555032970d0d5f",
+        "scripts/v4/repair_trial.py": "cedd210f9ed3a33afcb2b6a88e1054baaf4d69bb23d7bc64b176c06814f88fda",
+        "scripts/v4/requirements.lock": "99aa48b5c7381c3c451769f8fbb8b21ef4f745a8e7b7c5dbdb15deb0312a8bb9",
+        "docs/v4/EVENT_REVIEW_POLICY.md": "64b3fbb7e443e5eddd05d2c358fcf2fd00e3f4b02cd667aeebd64893b1704ef1",
+        "src/bct/v4/free_ai.py": "74b87586d41581b17a061961dc01d826f1dbe8b6c6d1692c2ecd5cca05719028",
+        "src/bct/v4/public_input.py": "cd3e95170fe540ceb7d6a80646b314eb840e2f4b35419729f052fc978f9e4972",
+        "src/bct/v4/semantics.py": "da5b26e67667119d3ec300ba6d3a9cfe036a9ebcab3950643e90e08d2b2c7fca",
+        "src/bct/v4/research_adapter.py": "56ae22bed7a4ed5d52d9ae15294dc4b7a0114848d78b09c3d2f0c89b953c1792",
+        "src/bct/v4/event_evaluation.py": "5ba69c16b238bfe54e1778df5cf347f5fcb884ed97f3ad4ab42cb48db7b3a5c0",
+        "src/bct/v4/adapters.py": "51a3890df71bfa7cb8808e69fdc980f55c5e0f63babc44df97023b621c246f10",
+        "src/bct/v4/store.py": "254371cdca79249a8e0b106a5d98391cc7bf879dea336457d435295f191e6af7",
+        "src/bct/v4/pipeline.py": "faf05811d68c745024b07b6966abfc8313cbcb6363a25994a57a16e80a4f6b4c",
+        "src/bct/precursor_evidence_graph.py": "9d844d4c2fb424f0a336c44ba5461ca887babf1d5f569b3fe511ccbf7b1a78fe",
+        "src/bct/precursor_temporal.py": "818402b442f1d16e6f848de6a44ccdd003b5b719534bcfe80a0d9f54f083e73b",
+        "src/bct/precursor_scope_reader.py": "4c2b45e5c33d851c49d2eb9945e021b0ea7d2949a36f62d4731a6576369369fa",
+        "src/bct/precursor_collection.py": "18f4285a43f4ecc18a199adfb44951f52b9320c2cd44bccd4726cfd969f18ac9"
+      },
+      "trial_config_sha256": "9144dbc7a4ce615750858f54d01deecc1e55054e04abf7c0c491825e663c18d8",
+      "evaluation_inputs_sha256": "295ff09219a51a3ea29999945d539da7bd8d8e481895f340bc3ecfed7cf6eddf",
+      "evaluation_inputs_file_sha256": "bc9ba12a5ec7e5d5e54fef5bba9d563d882a3be7a674c106f4f8d10891287c4a",
+      "evaluation_review_packet_sha256": "8fdeed9bcd9647ef610c8c1d7f69d60bf6393b63a39d5c3b7118639e1bfcf8e1",
+      "source_freeze_sha256": "6f288a8165158a28cb05a46c3fa4d264b709e752eea052f0191276f356da6d07",
+      "policy": "No tuning after holdout results. Partial input accuracy only; no human validation or early-performance claim."
+    },
+    "cpu_preparation": {
+      "status": "PASS_NEW_MODEL_PREPARATION_AND_INFERENCE",
+      "historical_restoration": false,
+      "model": "fastino/gliner2-base-v1",
+      "revision": "f9634218e53580c56edf0de97ca1a7d3f1c2354e",
+      "scope": "20 newly computed development same-input documents; model not installed in general test environment"
+    },
+    "actual_development_call": {
+      "calls": 1,
+      "input_tokens": 907,
+      "output_tokens": 371,
+      "total_tokens": 1278,
+      "api_cost_usd": 0,
+      "free_plan": true,
+      "source_status": "PASS",
+      "engine_AI_events": 1,
+      "demand_signals": 1,
+      "operational_promotions": 0
+    }
   }
 }
