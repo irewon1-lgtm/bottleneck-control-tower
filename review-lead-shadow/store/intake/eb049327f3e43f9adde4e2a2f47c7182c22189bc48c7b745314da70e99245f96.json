@@ -1,0 +1,485 @@
+{
+  "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+  "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+  "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+  "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+  "applies_from": "2026-10-05T15:24:06.650413+00:00",
+  "document_id": "06f82048-e3b3-4ae1-aa69-4b679a45a187",
+  "body_sha256": "47ba755c8f55efa59a01b39267d0261798f5b5a6d494cc3ddbac99e33f8e5f5f",
+  "origin_id": "https://www.servethehome.com/inside-the-secretive-aws-networking-lab/#article",
+  "origin_url": "https://www.servethehome.com/inside-the-secretive-aws-networking-lab/",
+  "provenance_verified": true,
+  "automatic_extraction": {
+    "version": "BCT_PRECURSOR_V2_SHADOW_2",
+    "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+    "events": [
+      {
+        "event_id": "db0124c17751a0f01354d71e11a82fef9df8df157dfbc163d793d0ba15172bd7",
+        "document_id": "06f82048-e3b3-4ae1-aa69-4b679a45a187",
+        "role": "SUPPLY",
+        "kind": "READINESS_OR_QUANTITY",
+        "reference": {
+          "document_id": "06f82048-e3b3-4ae1-aa69-4b679a45a187",
+          "body_sha256": "47ba755c8f55efa59a01b39267d0261798f5b5a6d494cc3ddbac99e33f8e5f5f",
+          "locator": {
+            "start": 4261,
+            "end": 4364
+          },
+          "quote": "Production units are expected in a whitish color, completing a palette of blue, green, peach and white."
+        },
+        "fields": {},
+        "context_references": [
+          {
+            "document_id": "06f82048-e3b3-4ae1-aa69-4b679a45a187",
+            "body_sha256": "47ba755c8f55efa59a01b39267d0261798f5b5a6d494cc3ddbac99e33f8e5f5f",
+            "locator": {
+              "start": 4261,
+              "end": 4364
+            },
+            "quote": "Production units are expected in a whitish color, completing a palette of blue, green, peach and white."
+          }
+        ],
+        "direct_origin": true,
+        "facts": {},
+        "period": null
+      }
+    ],
+    "facts_verified_semantically": false
+  },
+  "semantic_review": {
+    "status": "PENDING",
+    "annotation_method": null,
+    "annotator": null
+  },
+  "final_status": "HOLD",
+  "reason": "SEMANTIC_REVIEW_REQUIRED",
+  "formal_TARGET_id": null,
+  "EARLY_success": false,
+  "review_id": null,
+  "intake_version": "BCT_REVIEW_INTAKE_1",
+  "annotation_sha256": null,
+  "mode": "PROSPECTIVE_REVIEW",
+  "recorded_at": "2026-10-14T18:19:46.809030+00:00",
+  "source_document": {
+    "document_id": "06f82048-e3b3-4ae1-aa69-4b679a45a187",
+    "origin_url": "https://www.servethehome.com/inside-the-secretive-aws-networking-lab/",
+    "collected_at": "2026-10-14T18:15:13.322849+00:00",
+    "origin_id": "https://www.servethehome.com/inside-the-secretive-aws-networking-lab/#article",
+    "canonical_url": "https://www.servethehome.com/inside-the-secretive-aws-networking-lab/",
+    "origin_publisher": "ServeTheHome",
+    "published_at": "2026-10-14T17:15:44+00:00",
+    "published_at_raw": "2026-10-14T17:15:44+00:00",
+    "publication_precision": "TIMESTAMP",
+    "acquired_at": "2026-10-14T18:17:36.096974+00:00",
+    "available_at": "2026-10-14T18:17:36.096974+00:00",
+    "body": "AI\nNetworking\nSTH AWS Networking Lab Tour - Hollow core fiber model with air center channel\nAWS invited us to tour the networking lab where it develops its own switches, timing appliances, optical modules, and fiber connectors. We flew out to an unmarked building a few weeks ago, where Sam and I got out of the car wondering if we had the correct address. The tour covered switch generations from 3.2Tbps to 102.4Tbps, hardware encryption at line rate, a private time distribution network accurate to 20 microseconds, DWDM modules that put 64 wavelengths on one fiber strand, hollow-core fiber with roughly 33 percent better latency, connectors that install 64 fibers in about one second, and even a molded cover for ganged fibers that acts as a dust cover and loopback.\nSince Sam and I had to fly to the lab and AWS covered our travel expenses, we have to say this is sponsored. Also, since it was a lab tour, we were asked not to film many things, and there are others covered in the background. I asked AWS to review the footage to ensure we were not disclosing anything unintended. Since some items the reviewers did not know AWS planned to disclose, we will use only frames from the approved video footage for this release. Make no mistake, there is a lot of new stuff in the video that you will not have seen elsewhere, and if you are into networking, timing, and hyperscale, it is probably the most interesting video of 2026. Certainly share it with your colleagues.\nAWS Switching to 102.4Tbps\nThe first bench holds the AWS in-house switch family, spanning several generations. Some of what we will show you are silver, unpainted lab chassis. I asked about the coloring, and apparently it seems to align with the Pantone color of the year. The blue chassis is a 3.2 Tbps switch with 32 QSFP28 ports at 100GbE each. It is already an older design at this point, and you can see that from inside.\nSTH AWS Networking Lab Tour – Blue 3.2 Tbps AWS switch with cover removed\nThe green box next to it is the current volume deployment, a 12.8 Tbps switch where every port has moved from 100G QSFP28 to 400G QSFP-DD. This is also the generation that moved signaling from NRZ to PAM4.\nSTH AWS Networking Lab Tour – Inside the green 12.8 Tbps AWS switch\nOpening the chassis makes the power increase obvious. The ASIC gets a larger heatsink, and the QSFP56 cages get their own larger heatsinks as well. Inside there is an Annapurna Labs management processor and an SSD for logging.\nA small board with a big job\nAWS pointed out one small internal board as a key part of reliability in the newer switches and optical modules. The board communicates with every pluggable optics module over I2C and collects telemetry, so operators can identify a failing module before it affects its neighbors.\nSTH AWS Networking Lab Tour – I2C telemetry board inside the AWS switch\nWe were told this board may look like an ordinary PCB, but inside AWS it counts as a major innovation because of the telemetry information it provides and how it accomplishes that.\nAWS 51.2Tbps with 800G OSFP ports\nAWS is deploying the 51.2 Tbps generation heavily at the time of filming. The front panel carries OSFP ports running PAM4-112 SerDes, which gives 800GbE per port. For STH readers, Octal for eight, then 112G for roughly 100Gbps per lane.\nSTH AWS Networking Lab Tour – OSFP 800G ports on the 51.2 Tbps AWS switch\nThe heatsink grows again because two copies of the I2C telemetry board sit under it alongside the switch ASIC. The rear holds the management processor, power distribution and fan control. Chassis colors track generations in this lab. Blue covers the 3.2T, green covers the 12.8T, and we were told this one is officially peach.\n102.4 Tbps with 1.6T ports\nThe next step up runs at 102.4 Tbps and is not in volume deployment yet. AWS says it will roll out over the coming quarters and years. Each OSFP port uses PAM4-224 SerDes for a raw 1.6 Tbps. That is sixteen times the per-port bandwidth of the blue switch, on twice as many ports, so cooling grows accordingly.\nSTH AWS Networking Lab Tour – OSFP 1.6T ports on the 102.4 Tbps AWS switch\nAt these speeds, the optical modules include their own built-in cooling, which we have seen on other platforms at this performance level. Production units are expected in a whitish color, completing a palette of blue, green, peach and white.\nSTH AWS Networking Lab Tour – Inside the 102.4 Tbps AWS switch\nYou can also see the management, I2C, and SSD logging in here, with the power delivery becoming more robust.\nEncryption at line rate\nThe last switch on the bench handles a different problem. Every port on this 12.8 Tbps unit encrypts traffic, on the reasoning that data leaving a data center should be encrypted by default. The same chassis also serves as long-haul equipment because its ports accept high-power 400ZR optics, so coherent modules can plug straight in and drive fiber over metro distances.\nSTH AWS Networking Lab Tour – Encrypted 12.8 Tbps Maxx switch front panel\nSixteen FPGAs handle encryption at line rate, which explains the two-rack-unit chassis. More silicon means more power and more cooling.\nSTH AWS Networking Lab Tour – Inside the encrypted 12.8 Tbps switch\nA neat one here is that the Annapurna Labs management processor is mounted flipped relative to the other designs on the bench. You can also see the I2C board and the logging SSD here.\nThe management network\nAWS also builds its own 1GbE management switch. A 1GbE switch is not exotic, but AWS told us that the management plane is what makes a large network operable at their scale.\nSTH AWS Networking Lab Tour – AWS custom 1GbE management switch front panel\nThe board carries PHYs, transformers, a switch chip, a management processor and a logging SSD. It is the same architecture as the high-speed boxes at far lower bandwidth.\nSTH AWS Networking Lab Tour – Inside the AWS 1GbE management switch with PHYs and SSD\nAlongside it sits an AWS-built serial console server. Yes, AWS even designed its own console server.\nSTH AWS Networking Lab Tour – AWS serial console server with cover removed\nWhatever else changes in the network, out-of-band access still runs on 1970s-era serial technology.\nA separate timing network\nThe appliance on the next stand keeps time across fleets of hundreds of thousands of servers. Satellites provide reference clocks, and AWS distributes a pulse-per-second signal downstream over a dedicated timing network that is independent of its data and management networks.\nSTH AWS Networking Lab Tour – AWS timing appliance front panel with antenna inputs\nThe front panel resembles a 48-port SFP switch, but these ports do not run Ethernet. The time distribution protocol is proprietary to AWS. Multiple antenna inputs provide redundancy. Four ports face upstream, and the rest face downstream so the network can be built as a tree that reaches every device. AWS then needs a map of the tree, plus the cable lengths and speeds of each link, to calibrate timing for each device.\nAccurate time matters for ordering. Distributed databases need write timestamps to guarantee that reads return current data, and log analysis is only as reliable as its clock sources. Standard NTP delivers roughly 500 microseconds of accuracy. AWS claims its timing infrastructure guarantees time to within 20 microseconds, and we were told that figure is conservative.\nSTH AWS Networking Lab Tour – Inside the AWS timing appliance\nInside the appliance, two FPGAs monitor the pluggables over I2C, and a third runs the proprietary timing logic. An SSD, an Annapurna Labs processor, power distribution, and a fan control board fill out the rest.\nNext, let us get to optics, connectors, and a special part.",
+    "body_sha256": "47ba755c8f55efa59a01b39267d0261798f5b5a6d494cc3ddbac99e33f8e5f5f",
+    "version": "47ba755c8f55efa59a01b39267d0261798f5b5a6d494cc3ddbac99e33f8e5f5f",
+    "raw_sha256": "de9c4d08d45c0eab3c527f7b30435fdb0ba9b15081c0374db849fdf0bef79e25",
+    "checks": {
+      "http_success": true,
+      "original_identity": true,
+      "publisher_observed": true,
+      "attribution_consistent": true,
+      "original_publication": true,
+      "available_at_recorded": true,
+      "full_accessible_body": true,
+      "not_republication": true,
+      "body_hash_matches": true,
+      "publication_before_acquisition": true
+    },
+    "provenance": "PASS",
+    "provenance_verified": true,
+    "provenance_blockers": [],
+    "body_status": "FULL",
+    "raw_path": "var/new-precursors/raw/de9c4d08d45c0eab3c527f7b30435fdb0ba9b15081c0374db849fdf0bef79e25.html",
+    "status": "CAPTURED",
+    "scope_reader_version": "source-scope-reader-4",
+    "scope_read_mode": "LIVE_FRESH",
+    "excluded_page_regions": [
+      {
+        "document_id": "06f82048-e3b3-4ae1-aa69-4b679a45a187",
+        "body_sha256": "47ba755c8f55efa59a01b39267d0261798f5b5a6d494cc3ddbac99e33f8e5f5f",
+        "origin_id": "https://www.servethehome.com/inside-the-secretive-aws-networking-lab/#article",
+        "locator": {
+          "start": 0,
+          "end": 2
+        },
+        "source_quote": "AI",
+        "origin_url": "https://www.servethehome.com/inside-the-secretive-aws-networking-lab/",
+        "origin_publisher": "ServeTheHome",
+        "published_at": "2026-10-14T17:15:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-14T18:17:36.096974+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "06f82048-e3b3-4ae1-aa69-4b679a45a187",
+        "body_sha256": "47ba755c8f55efa59a01b39267d0261798f5b5a6d494cc3ddbac99e33f8e5f5f",
+        "origin_id": "https://www.servethehome.com/inside-the-secretive-aws-networking-lab/#article",
+        "locator": {
+          "start": 3,
+          "end": 13
+        },
+        "source_quote": "Networking",
+        "origin_url": "https://www.servethehome.com/inside-the-secretive-aws-networking-lab/",
+        "origin_publisher": "ServeTheHome",
+        "published_at": "2026-10-14T17:15:44+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-14T18:17:36.096974+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      }
+    ],
+    "retained_collection_events": [
+      {
+        "event_id": "c02ad27eae84d1b76443fe0c7ebe6c3eec3180decf0ef3350e5c3f1e992f8b17",
+        "document_id": "06f82048-e3b3-4ae1-aa69-4b679a45a187",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 1976,
+          "end": 2114
+        },
+        "source_quote": "The green box next to it is the current volume deployment, a 12.8 Tbps switch where every port has moved from 100G QSFP28 to 400G QSFP-DD.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "6d1f37d8877004e18669e872da77f6482ab34c2bb8f15e2d332888914b0d62fc",
+        "document_id": "06f82048-e3b3-4ae1-aa69-4b679a45a187",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 3073,
+          "end": 3146
+        },
+        "source_quote": "AWS is deploying the 51.2 Tbps generation heavily at the time of filming.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "6147ef98ad0cd798d59a71bf508690eb9c7f943fedeca2dcd06e1b754c52b2c8",
+        "document_id": "06f82048-e3b3-4ae1-aa69-4b679a45a187",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 3738,
+          "end": 3810
+        },
+        "source_quote": "The next step up runs at 102.4 Tbps and is not in volume deployment yet.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "precursor_events": [
+      {
+        "event_id": "c02ad27eae84d1b76443fe0c7ebe6c3eec3180decf0ef3350e5c3f1e992f8b17",
+        "document_id": "06f82048-e3b3-4ae1-aa69-4b679a45a187",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 1976,
+          "end": 2114
+        },
+        "source_quote": "The green box next to it is the current volume deployment, a 12.8 Tbps switch where every port has moved from 100G QSFP28 to 400G QSFP-DD.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "6d1f37d8877004e18669e872da77f6482ab34c2bb8f15e2d332888914b0d62fc",
+        "document_id": "06f82048-e3b3-4ae1-aa69-4b679a45a187",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 3073,
+          "end": 3146
+        },
+        "source_quote": "AWS is deploying the 51.2 Tbps generation heavily at the time of filming.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "6147ef98ad0cd798d59a71bf508690eb9c7f943fedeca2dcd06e1b754c52b2c8",
+        "document_id": "06f82048-e3b3-4ae1-aa69-4b679a45a187",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 3738,
+          "end": 3810
+        },
+        "source_quote": "The next step up runs at 102.4 Tbps and is not in volume deployment yet.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "objective_version": "bct-objective-1",
+    "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  },
+  "T": "UNKNOWN",
+  "T_scope": "UNKNOWN",
+  "strict_candidate_first_met_at": "UNKNOWN",
+  "leading_detection_success": false,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "record_sha256": "d49e7c0f5a7373f59e89518b380356b3ac32a1263d8c044315cd526bd27fa998"
+}
