@@ -1,0 +1,556 @@
+{
+  "at": "2026-10-14T12:00:26.414789+00:00",
+  "version": "bct-path-failure-audit-1",
+  "counts_are": "Diagnostic entries/located cases, not unique independent failure events",
+  "unique_independent_failure_events": "NOT_ESTABLISHED_CROSS_DOCUMENT_EVENT_DEDUP_UNKNOWN",
+  "oracle_cases": 24,
+  "oracle_location_held": 1,
+  "old13_source_refusals": {
+    "documents": 13,
+    "empty_responses": 6,
+    "empty_with_known_input_product_documents": 2,
+    "empty_known_input_product_events": 2,
+    "empty_without_known_input_product_documents": 4,
+    "returned_items": 10,
+    "source_rejected_items": 8,
+    "source_rejection_first_reasons": {
+      "AMBIGUOUS_QUOTE": 4,
+      "VALUE_NOT_LITERAL": 4
+    },
+    "secondary_quote_issues": {
+      "AMBIGUOUS_QUOTE": 6,
+      "VALUE_NOT_LITERAL": 7
+    },
+    "nonliteral_quantity_items": 3,
+    "nonliteral_entity_items": 2,
+    "role_FP_in_uniquely_matched_reviewed_events": 1,
+    "confirmed_input_window_gap_documents": 1
+  },
+  "entries": [
+    {
+      "category": "A",
+      "reason": "No new paywall/login/captcha confirmed from current source requests. Earlier HTTP failures alone cannot identify access restriction.",
+      "evidence": "docs/v4/STAGE4_RESULTS.json/network",
+      "confirmed": false,
+      "scope": "Past source-access causes remain unknown unless explicit denial evidence exists.",
+      "next_action": "Do not automatically retry denied sources; use official alternative only."
+    },
+    {
+      "category": "B",
+      "reason": "Past401 recovered without key changes; precise transient credential cause UNKNOWN. Current transport worked via same proxy.",
+      "evidence": "docs/v4/stage4-corpus/round2/auth-resume/auth-evidence.json",
+      "confirmed": false,
+      "scope": "Authentication history, not product model accuracy.",
+      "next_action": "Keep key/settings and old401 request; no retry."
+    },
+    {
+      "category": "C",
+      "reason": "77 originals restored as extracted text, native HTML absent; structural completeness/ordering and some publication relationships cannot be reverified.",
+      "evidence": "var/v4/stage4-recovery/recovered-source-records.json",
+      "confirmed": true,
+      "scope": "77 text-only documents; not77 failed independent events.",
+      "next_action": "Reuse texts for qualified research; do not promote native/FULL or use already developed caches as new holdout. Docling not selected: no evidence PDF/tables drive the main failure."
+    },
+    {
+      "category": "D",
+      "reason": "Flyone actual order opening was outside transmitted windows. Input preparation ready20→29 and8553→13887chars is not new model reading.",
+      "evidence": "docs/v4/stage4-corpus/round3/old13-diagnosis.json",
+      "confirmed": true,
+      "scope": 1,
+      "next_action": "Keep unread ranges; opening/context choice separate from model test."
+    },
+    {
+      "category": "E",
+      "reason": "Six historical empty replies; two with known transmitted product facts. Four first nonliteral source rejections are correct safety refusals, not verified source facts.",
+      "evidence": "docs/v4/stage4-corpus/round3/old13-diagnosis.json",
+      "confirmed": true,
+      "scope": {
+        "documents": 13,
+        "empty_responses": 6,
+        "empty_with_known_input_product_documents": 2,
+        "empty_known_input_product_events": 2,
+        "empty_without_known_input_product_documents": 4,
+        "returned_items": 10,
+        "source_rejected_items": 8,
+        "source_rejection_first_reasons": {
+          "AMBIGUOUS_QUOTE": 4,
+          "VALUE_NOT_LITERAL": 4
+        },
+        "secondary_quote_issues": {
+          "AMBIGUOUS_QUOTE": 6,
+          "VALUE_NOT_LITERAL": 7
+        },
+        "nonliteral_quantity_items": 3,
+        "nonliteral_entity_items": 2,
+        "role_FP_in_uniquely_matched_reviewed_events": 1,
+        "confirmed_input_window_gap_documents": 1
+      },
+      "next_action": "Reuse raw, distinguish absence from model omissions; no old response repair."
+    },
+    {
+      "category": "E",
+      "reason": "Actual one-call LangExtract/Groq output included example sentence absent from source; decoder rejected it.",
+      "evidence": "docs/v4/path-comparison/langextract-compat.json",
+      "confirmed": true,
+      "scope": {
+        "example_contamination_items": 1
+      },
+      "next_action": "Use same saved response; no further LangExtract/live tuning, exact source checks remain."
+    },
+    {
+      "category": "E_OR_PROTOCOL_UNKNOWN",
+      "reason": "HTTP400 SCHEMA_GENERATION with8 same-contract successes does not establish universally invalid schema; violating output unavailable.",
+      "evidence": "docs/v4/stage4-corpus/round3/http400-diagnosis.json",
+      "confirmed": false,
+      "scope": {
+        "failed_requests": 1,
+        "old_retry": 0
+      },
+      "next_action": "Preserve blocked strict contract. New JSON mode is a material wire/protocol change, not same failed input renamed."
+    },
+    {
+      "category": "F",
+      "reason": "MEANING_OR_COMMITMENT:UNPROVEN_DEMAND_OBJECT",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "stage4doc-8b4570d75e922fc5ad5de347a02b4af9079bbc7e8710c8a8c645bf907c2e4ac4",
+        "event_id": "d22-fox-xp-order",
+        "reference": {
+          "start": 316,
+          "end": 859,
+          "quote": "Fremont, CA (March 1, 2021) – Aehr Test Systems (NASDAQ: AEHR), a worldwide supplier of semiconductor test and reliability qualification equipment, today announced it has received an order totaling over $1.4 million from an existing customer for a FOX-XP TM multi-wafer test and burn-in system and multiple WaferPak™ Contactors to perform volume production qualification of the customers’ high performance silicon photonics devices. The total FOX solution is expected to ship prior to the end of Aehr’s current fiscal year ending May 31, 2021."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "MEANING_OR_COMMITMENT:UNPROVEN_DEMAND_OBJECT",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "stage4doc-8b4570d75e922fc5ad5de347a02b4af9079bbc7e8710c8a8c645bf907c2e4ac4",
+        "event_id": "d22-waferpak-order",
+        "reference": {
+          "start": 316,
+          "end": 859,
+          "quote": "Fremont, CA (March 1, 2021) – Aehr Test Systems (NASDAQ: AEHR), a worldwide supplier of semiconductor test and reliability qualification equipment, today announced it has received an order totaling over $1.4 million from an existing customer for a FOX-XP TM multi-wafer test and burn-in system and multiple WaferPak™ Contactors to perform volume production qualification of the customers’ high performance silicon photonics devices. The total FOX solution is expected to ship prior to the end of Aehr’s current fiscal year ending May 31, 2021."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "MEANING_OR_COMMITMENT_NOT_ESTABLISHED",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "stage4doc-709d77ffa3ace57bd3b0344485539f2d5a00d1f902bf6e4ac4cb048390893655",
+        "event_id": "d25-fox-cell-follow-on-order",
+        "reference": {
+          "start": 1552,
+          "end": 2090,
+          "quote": "“We are excited to receive this follow-on order for a full production FOX WLBI test cell, which reflects the urgency of the production ramp now underway to support the massive buildout of hyperscale AI and cloud data centers,” said Gayn Erickson, President and Chief Executive Officer of Aehr Test Systems. “This customer is a leading supplier of networking products and solutions for the data center market, and we are pleased to support its capacity expansion plans as it prepares for next-generation hyperscale data center deployments."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "EXISTING_PHYSICAL_TARGET_GRAMMAR_UNSUPPORTED",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "stage4doc-7b0adb76aad1d07c72aa37250c3e8e9cee0226d81ee3c5dd5df4ec989b3e3ed9",
+        "event_id": "d26-fox-xp-additional-order",
+        "reference": {
+          "start": 315,
+          "end": 900,
+          "quote": "Fremont, CA (July 9, 2026) – Aehr Test Systems (NASDAQ: AEHR), a leading provider of test and burn-in solutions for semiconductor devices used in artificial intelligence (AI), silicon photonics, data center, automotive, and industrial applications, today announced it has received an additional follow-on production order from its lead silicon photonics customer for a fully automated FOX-XP ® wafer-level burn-in (WLBI) system. The system will support high-volume production burn-in of silicon photonics devices used in AI optical interconnect and hyperscale data center applications."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "NO_UNIQUE_EXISTING_EVENT_CONTRACT",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "stage4doc-d456a257dc33e825135d29f127f8b78a234019d1373c0cde3e78f35ee142ba5c",
+        "event_id": "d30-gasoline-global-tightness",
+        "reference": {
+          "start": 1727,
+          "end": 1884,
+          "quote": "Tighter global supplies and higher prices have both increased the cost of imported gasoline and increased demand for gasoline exports from the United States."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "NO_UNIQUE_EXISTING_EVENT_CONTRACT",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "stage4doc-d456a257dc33e825135d29f127f8b78a234019d1373c0cde3e78f35ee142ba5c",
+        "event_id": "d30-distillate-refining-disruption",
+        "reference": {
+          "start": 2241,
+          "end": 2438,
+          "quote": "Crack spreads are even higher for distillate fuel oil and jet fuel because the disrupted refining activities tended to supply larger volumes of these fuels to global markets than they did gasoline."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "NO_UNIQUE_EXISTING_EVENT_CONTRACT",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "stage4doc-d456a257dc33e825135d29f127f8b78a234019d1373c0cde3e78f35ee142ba5c",
+        "event_id": "d30-jet-fuel-refining-disruption",
+        "reference": {
+          "start": 2241,
+          "end": 2438,
+          "quote": "Crack spreads are even higher for distillate fuel oil and jet fuel because the disrupted refining activities tended to supply larger volumes of these fuels to global markets than they did gasoline."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "AMBIGUOUS_QUOTE",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "v4doc-cb92a261f70e3dc808c4fc754f2a3c1b560bf6fdf5a1e3aa1420c0d2b5f2c889",
+        "event_id": "crude-oil-production-shut-in",
+        "reference": {
+          "start": 887,
+          "end": 1296,
+          "quote": "Hurricane Isaias’s forecasted path toward the Gulf Coast has already impacted crude oil and natural gas production in the region. The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "MEANING_OR_COMMITMENT_NOT_ESTABLISHED",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "stage4doc-4a61038c45673f9f6629c28ddcd2ae7feb704c7c784f7222105bd2282773ac6e",
+        "event_id": "d01-nuclear-fuel-strengthening",
+        "reference": {
+          "start": 1220,
+          "end": 1480,
+          "quote": "Under President Trump’s leadership, next-generation advanced reactors are moving toward deployment at a rapid pace, licensing has been streamlined, supply chains for nuclear fuel are being strengthened, and retired nuclear plants are being brought back online."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "NO_UNIQUE_EXISTING_EVENT_CONTRACT",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "stage4doc-d456a257dc33e825135d29f127f8b78a234019d1373c0cde3e78f35ee142ba5c",
+        "event_id": "d30-distillate-yield-shift-relief",
+        "reference": {
+          "start": 2241,
+          "end": 2560,
+          "quote": "Crack spreads are even higher for distillate fuel oil and jet fuel because the disrupted refining activities tended to supply larger volumes of these fuels to global markets than they did gasoline. U.S. refiners have shifted product yields to maximize production of distillate and jet fuel because of the higher cracks."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "NO_UNIQUE_EXISTING_EVENT_CONTRACT",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "stage4doc-d456a257dc33e825135d29f127f8b78a234019d1373c0cde3e78f35ee142ba5c",
+        "event_id": "d30-jet-fuel-yield-shift-relief",
+        "reference": {
+          "start": 2241,
+          "end": 2560,
+          "quote": "Crack spreads are even higher for distillate fuel oil and jet fuel because the disrupted refining activities tended to supply larger volumes of these fuels to global markets than they did gasoline. U.S. refiners have shifted product yields to maximize production of distillate and jet fuel because of the higher cracks."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "Oracle quote still locally ambiguous; no first match chosen.",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "event_id": "natural-gas-transport-bottleneck-relief",
+        "reference": {
+          "start": 1414,
+          "end": 1795,
+          "quote": "New natural gas pipeline infrastructure is easing long-standing gas transport bottlenecks in Texas. One of these projects, the Hugh Brinson Pipeline , began interstate pipeline flows ahead of schedule this summer . New pipelines increase the takeaway capacity out of the Permian Basin to liquefied natural gas (LNG) export terminals on the Gulf Coast, supporting production growth."
+        }
+      },
+      "next_action": "Leave this oracle unlocated, not a model omission."
+    },
+    {
+      "category": "F",
+      "reason": "MEANING_OR_COMMITMENT_NOT_ESTABLISHED",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "stage4doc-4a61038c45673f9f6629c28ddcd2ae7feb704c7c784f7222105bd2282773ac6e",
+        "event_id": "d01-reactors-deployment",
+        "reference": {
+          "start": 1220,
+          "end": 1480,
+          "quote": "Under President Trump’s leadership, next-generation advanced reactors are moving toward deployment at a rapid pace, licensing has been streamlined, supply chains for nuclear fuel are being strengthened, and retired nuclear plants are being brought back online."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "MEANING_OR_COMMITMENT_NOT_ESTABLISHED",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "stage4doc-940490f1114e70420b1fcfe9118370b459dd1cec0cfc3cd701f7e85c17f1184b",
+        "event_id": "d27-pic-manufacturing-transition",
+        "reference": {
+          "start": 2314,
+          "end": 2786,
+          "quote": "“This production order is another indication that silicon photonics is moving from technology adoption into manufacturing scale-up, and we believe that transition represents a significant long-term growth opportunity for Aehr. The order reflects our lead silicon photonics customer’s continued expansion of manufacturing capacity and represents another important milestone in the industry’s transition toward high-volume production of silicon photonic integrated circuits."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "AMBIGUOUS_QUOTE",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "stage4doc-6b74ca28972a5d4d1744b591184d1ddc77b6e0b3ab2f5de764c74be189528b01",
+        "event_id": "d28-lng-export-growth",
+        "reference": {
+          "start": 199,
+          "end": 277,
+          "quote": "U.S. LNG exports rose 23% in the first half of 2026 because of higher capacity"
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "AMBIGUOUS_QUOTE",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "v4doc-c9afdc2235d38afc3eb1e21b6f13bb1085095c6113e3afe29e15f785fd2f3ee9",
+        "event_id": "h160-linfox-delivery-and-entry-service",
+        "reference": {
+          "start": 247,
+          "end": 567,
+          "quote": "With this delivery, Linfox became the first operator in Australia to bring the twin-engine Airbus H160 into service. The state-of-the-art helicopter will support the business and corporate aviation requirements of the Linfox Group, operating across Australia’s diverse geography from urban hubs to regional destinations."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "NO_UNIQUE_EXISTING_EVENT_CONTRACT",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "stage4doc-79742cfba6ebd8cdd1f05713848c912e519d5c15a5581c1f3809c0448dce9c3b",
+        "event_id": "d29-electricity-high-demand",
+        "reference": {
+          "start": 444,
+          "end": 644,
+          "quote": "Sustained high temperatures have contributed to persistently high electricity demand in the Electric Reliability Council of Texas (ERCOT), the regional transmission organization for most of the state:"
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "NO_UNIQUE_EXISTING_EVENT_CONTRACT",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "stage4doc-d456a257dc33e825135d29f127f8b78a234019d1373c0cde3e78f35ee142ba5c",
+        "event_id": "d30-gasoline-export-demand",
+        "reference": {
+          "start": 1727,
+          "end": 1884,
+          "quote": "Tighter global supplies and higher prices have both increased the cost of imported gasoline and increased demand for gasoline exports from the United States."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "AMBIGUOUS_QUOTE",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "v4doc-c82f20acec88ed5980272b399272fed98d3b7dace46bfdc0e6143f9a1b6f2caf",
+        "event_id": "h225m-replacement-plan",
+        "reference": {
+          "start": 1489,
+          "end": 1721,
+          "quote": "The Romanian Air Force currently operates the IAR-330 Puma, a locally produced version of the Puma under an Aerospatiale license. The 12 H225Ms will initiate the replacement of the Puma fleet for conventional and special operations."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "NO_UNIQUE_EXISTING_EVENT_CONTRACT",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "v4doc-c82f20acec88ed5980272b399272fed98d3b7dace46bfdc0e6143f9a1b6f2caf",
+        "event_id": "h215m-prior-order",
+        "reference": {
+          "start": 1722,
+          "end": 1792,
+          "quote": "Romania has also previously ordered two H215Ms in naval configuration."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "NO_UNIQUE_EXISTING_EVENT_CONTRACT",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "v4doc-c82f20acec88ed5980272b399272fed98d3b7dace46bfdc0e6143f9a1b6f2caf",
+        "event_id": "h160-recent-order",
+        "reference": {
+          "start": 1793,
+          "end": 1979,
+          "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "NO_UNIQUE_EXISTING_EVENT_CONTRACT",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "v4doc-c82f20acec88ed5980272b399272fed98d3b7dace46bfdc0e6143f9a1b6f2caf",
+        "event_id": "h145-recent-order",
+        "reference": {
+          "start": 1793,
+          "end": 1979,
+          "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "AMBIGUOUS_QUOTE",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "v4doc-e4dbafd178d94c5f2f913f2cb9a6a12b108f39663fbe6e6022c451a0a9c03fa3",
+        "event_id": "a320-family-direct-order",
+        "reference": {
+          "start": 1308,
+          "end": 1763,
+          "quote": "“This first direct order from FLYONE Armenia underscores the airline's commitment for operational excellence and enhanced passenger comfort as it continues to expand its A320 Family fleet,” said Benoît de Saint-Exupéry, Airbus EVP Sales of the Commercial Aircraft business. “We are very happy to welcome FLYONE as a new member of the Airbus family and we look forward to a deep and fruitful collaboration together to support their strategic growth plans.”"
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "NO_UNIQUE_EXISTING_EVENT_CONTRACT",
+      "evidence": "docs/v4/path-comparison/oracle-results.json",
+      "confirmed": true,
+      "scope": {
+        "document_id": "v4doc-c3ce56c9861165f5d811a5897473c74755883b871135a747a0f470dca020c396",
+        "event_id": "cca-combat-ready-delivery-plan",
+        "reference": {
+          "start": 216,
+          "end": 446,
+          "quote": "This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces."
+        },
+        "alternative_events": 1
+      },
+      "next_action": "Replace prerequisite-only research connector; keep original path intact."
+    },
+    {
+      "category": "F",
+      "reason": "Old adapter globally empties candidates when any forwarded relief exists. Scope-independent batch effects are visible in implementation; no new actual unrelated candidate suppression was measured.",
+      "evidence": "src/bct/v4/research_adapter.py:analyze",
+      "confirmed": true,
+      "scope": "Code dependency; actual counterexample measured in dedicated synthetic tests, not real performance.",
+      "next_action": "Alternative relief scoped by matching target; no global candidate reset."
+    },
+    {
+      "category": "G",
+      "reason": "No verified complete qualified supply/residual demand or customer need times in prior20;32 ambiguous truth fields and92466 unread chars are not solved by prompt.",
+      "evidence": "docs/v4/stage4-corpus/round3/source-adjudication.json",
+      "confirmed": true,
+      "scope": "Missing evidence vs model misses separate.",
+      "next_action": "Collect appropriate counterpart only later; no inferred quantity/pool/S3."
+    },
+    {
+      "category": "H",
+      "reason": "Discovery-only13 targets lack event denominators; supported A350F existence became unmatched FP in old fixed event scorer.",
+      "evidence": "docs/v4/stage4-corpus/round3/measurement-audit.json",
+      "confirmed": true,
+      "scope": {
+        "discovery_only_targets": 13
+      },
+      "next_action": "New diagnostic evaluation separates physical target discovery/events/processing; historical scores immutable, no new independent claim from rescoring."
+    },
+    {
+      "category": "C_SETUP",
+      "reason": "Initial metadata helper assumed document_id/native mapping for cached files; known used NIST sources and contact article excluded before final freeze.",
+      "evidence": "docs/v4/path-comparison/final/selection-preflight.json",
+      "confirmed": true,
+      "scope": "Local preparation error, not network/site failure.",
+      "next_action": "Metadata repair used exact existing originals; no refetch for cached Aehr, no exemption for contact or prior-development flags."
+    }
+  ],
+  "automatic_A_retries": 0,
+  "new_B_retries": 0,
+  "old400_401_retries": 0,
+  "network_current": "Existing proxy/CA preserved; official EIA/PyPI/Git access succeeded. No observed common DNS/TLS outage. Runtime secret readiness UNKNOWN; actual generation success is separate transport evidence."
+}

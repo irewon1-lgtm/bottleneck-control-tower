@@ -1,0 +1,67 @@
+{
+  "version": "bct-v4-free-ai-1",
+  "enabled": true,
+  "providers": [
+    "groq"
+  ],
+  "models": {
+    "gemini": "gemini-3.5-flash-lite",
+    "groq": "openai/gpt-oss-20b"
+  },
+  "timeout_seconds": 60,
+  "document_limit": 1,
+  "max_calls_per_run": 1,
+  "max_reserved_tokens_per_run": 6400,
+  "max_output_tokens": 2048,
+  "max_windows": 2,
+  "max_input_characters": 1100,
+  "quota_fraction": 0.8,
+  "accounts": {
+    "gemini": {
+      "verified_free": false,
+      "tier": "UNKNOWN",
+      "model": "gemini-3.5-flash-lite",
+      "checked_at": null,
+      "evidence": null,
+      "settings_revision": null,
+      "limits": {
+        "rpm": null,
+        "rpd": null,
+        "tpm": null,
+        "tpd": null
+      }
+    },
+    "groq": {
+      "verified_free": true,
+      "tier": "Free",
+      "model": "openai/gpt-oss-20b",
+      "checked_at": "2026-10-13T15:42:16.122730+00:00",
+      "evidence": "var/v4/groq-stage2/free-account-evidence.json",
+      "settings_revision": "groq-free-user-confirmed-20261014-transport-ua1",
+      "limits": {
+        "rpm": 30,
+        "rpd": 1000,
+        "tpm": 8000,
+        "tpd": 200000
+      }
+    }
+  },
+  "official_documentation": {
+    "checked_on": "2026-10-13",
+    "gemini_free_input_output": "https://ai.google.dev/gemini-api/docs/pricing",
+    "gemini_model": "https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite",
+    "gemini_json": "https://ai.google.dev/api/generate-content",
+    "gemini_limits": "https://ai.google.dev/gemini-api/docs/rate-limits",
+    "groq_json": "https://console.groq.com/docs/structured-outputs",
+    "groq_limits": "https://console.groq.com/docs/rate-limits",
+    "groq_published_free_limits": {
+      "rpm": 30,
+      "rpd": 1000,
+      "tpm": 8000,
+      "tpd": 200000
+    },
+    "account_limits_status": "BLOCKED until current Groq Free Plan and account limits are confirmed; published limits alone do not activate a provider"
+  },
+  "input_policy": "sentence-context-v3",
+  "response_protocol": "context-reference-v1"
+}

@@ -1,0 +1,2273 @@
+{
+  "version": "bct-event-gold-1",
+  "reviewer": {
+    "type": "AI_INDEPENDENT_SESSION",
+    "session": "UNKNOWN",
+    "model": "UNKNOWN",
+    "exposed_to_model_outputs": false,
+    "exposed_to_reference_drafts": true,
+    "human_verified": false,
+    "session_note": "Actual platform session/model identifiers were not exposed. This is a separate source-only AI adjudication of two frozen independent drafts, not human validation."
+  },
+  "source_inputs": {
+    "policy": {
+      "path": "docs/v4/EVENT_REVIEW_POLICY.md",
+      "sha256": "64b3fbb7e443e5eddd05d2c358fcf2fd00e3f4b02cd667aeebd64893b1704ef1"
+    },
+    "packet": {
+      "path": "docs/v4/path-comparison/final/review-packet.json",
+      "sha256": "e0c7153242a21cf28a52439371ed1cd8c0ece304cf25d282341f7f5e4d66d117"
+    },
+    "independent_drafts": {
+      "author": {
+        "path": "var/v4/path-comparison/final-source-author.json",
+        "sha256": "227342c008dbeda260cbbb9792bd914806dcceb57bb14956ff977a232c856045"
+      },
+      "reviewer": {
+        "path": "var/v4/path-comparison/final-source-reviewer.json",
+        "sha256": "a7e68df7f462195f2c39af94fa18aa02acb958c283b720b64cd353b7c55dae9d"
+      }
+    }
+  },
+  "scope_note": "All 12 complete given windows were semantically reviewed. Body paths were used for hash and exact coordinates only; outside-window text, model/CPU outputs, implementation sources and past gold were not inspected. Physical discovery does not require inventing an event. NON_PHYSICAL is excluded. Every non-null fact citation stays within its exact single-window event. Repeated headings, explicit totals and constituent relationships are retained in non-scored observations and never treated as extra independent evidence. No default 15-field padding was used. Listed VERIFIED_ABSENT facts are explicit checked absences; omitted fields are not claimed absent.",
+  "documents": [
+    {
+      "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+      "body_sha256": "46e75f874054d889f57961091c4add7f55f4da0831094cd498ae1115382f0557",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 146,
+          "end": 167
+        },
+        {
+          "start": 316,
+          "end": 1023
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "semiconductor-devices",
+          "entity": "semiconductor devices",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 433,
+            "end": 454,
+            "quote": "semiconductor devices"
+          },
+          "discovery_kind": "PRODUCT_FAMILY",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "source_observations": [
+            {
+              "reference": {
+                "start": 316,
+                "end": 832,
+                "quote": "Fremont, CA (March 3, 2026) – Aehr Test Systems (NASDAQ: AEHR), a leading provider of test and burn-in solutions for semiconductor devices used in artificial intelligence (AI), data center, automotive, and industrial applications, today announced it has received a follow-on purchase order from its lead silicon photonics customer for production wafer-level test and burn-in of silicon photonics integrated circuits used in data center optical interconnects and emerging optical I/O architectures for AI processors.\n"
+              },
+              "observation": "The company generally provides test and burn-in solutions for semiconductor devices. Provider capability and application sectors do not establish newly available physical output.",
+              "observation_kind": "SOURCE_CONTEXT",
+              "scoring_eligible": false,
+              "independent_evidence": false
+            }
+          ],
+          "no_relevant_event_reason": "Physical product family appears in a general capability description; no new supply event for that broader family is stated."
+        },
+        {
+          "target_id": "silicon-photonics-ics",
+          "entity": "silicon photonics integrated circuits",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 694,
+            "end": 731,
+            "quote": "silicon photonics integrated circuits"
+          },
+          "discovery_kind": "PRODUCT_FAMILY",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [
+            {
+              "event_id": "silicon-photonics-production-growth",
+              "reference": {
+                "start": 316,
+                "end": 1003,
+                "quote": "Fremont, CA (March 3, 2026) – Aehr Test Systems (NASDAQ: AEHR), a leading provider of test and burn-in solutions for semiconductor devices used in artificial intelligence (AI), data center, automotive, and industrial applications, today announced it has received a follow-on purchase order from its lead silicon photonics customer for production wafer-level test and burn-in of silicon photonics integrated circuits used in data center optical interconnects and emerging optical I/O architectures for AI processors.\nThe order reflects expanding production volumes as demand accelerates for optical connectivity solutions powering next-generation AI training and inference infrastructure."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "silicon photonics integrated circuits",
+                  "reference": {
+                    "start": 694,
+                    "end": 731,
+                    "quote": "silicon photonics integrated circuits"
+                  },
+                  "reason": "The physical ICs being production-tested are explicitly named."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "SUPPLY_INCREASE",
+                  "reference": {
+                    "start": 832,
+                    "end": 1003,
+                    "quote": "The order reflects expanding production volumes as demand accelerates for optical connectivity solutions powering next-generation AI training and inference infrastructure."
+                  },
+                  "reason": "The order reflects expanding production volumes in the preceding IC-production context. This is a qualitative manufacturing-output claim, not a new Aehr-system order or certified IC delivery."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 832,
+                    "end": 1003,
+                    "quote": "The order reflects expanding production volumes as demand accelerates for optical connectivity solutions powering next-generation AI training and inference infrastructure."
+                  },
+                  "reason": "Expanding production volumes is stated as current. Product readiness, qualified output and shipment completion are not thereby verified."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "All given windows were reviewed. No numerical IC production increment or physical IC quantity is stated."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "AMBIGUOUS",
+                  "value": "lead silicon photonics customer",
+                  "reference": {
+                    "start": 615,
+                    "end": 646,
+                    "quote": "lead silicon photonics customer"
+                  },
+                  "reason": "This is explicitly the purchaser of test/burn-in activity. Its IC manufacturing/vendor role and the complete qualified IC supply pool are not established."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "used in data center optical interconnects and emerging optical I/O architectures for AI processors",
+                  "reference": {
+                    "start": 732,
+                    "end": 830,
+                    "quote": "used in data center optical interconnects and emerging optical I/O architectures for AI processors"
+                  },
+                  "reason": "These are the directly stated IC applications, not separate equipment orders."
+                }
+              ],
+              "event_kind": "QUALITATIVE_MANUFACTURING_OUTPUT_GROWTH",
+              "source_evidence_group": "doc1-ic-production-and-testing-order-context",
+              "field_scope_note": "Only source-supported facts and explicitly checked absences are listed. Omitted fields are not automatic VERIFIED_ABSENT or filled defaults."
+            }
+          ]
+        },
+        {
+          "target_id": "data-center-optical-interconnects",
+          "entity": "data center optical interconnects",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 740,
+            "end": 773,
+            "quote": "data center optical interconnects"
+          },
+          "discovery_kind": "PRODUCT_FAMILY",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "source_observations": [
+            {
+              "reference": {
+                "start": 316,
+                "end": 832,
+                "quote": "Fremont, CA (March 3, 2026) – Aehr Test Systems (NASDAQ: AEHR), a leading provider of test and burn-in solutions for semiconductor devices used in artificial intelligence (AI), data center, automotive, and industrial applications, today announced it has received a follow-on purchase order from its lead silicon photonics customer for production wafer-level test and burn-in of silicon photonics integrated circuits used in data center optical interconnects and emerging optical I/O architectures for AI processors.\n"
+              },
+              "observation": "Named physical application/product family for the ICs. No separate order or output change for interconnects is specified.",
+              "observation_kind": "SOURCE_CONTEXT",
+              "scoring_eligible": false,
+              "independent_evidence": false
+            }
+          ],
+          "no_relevant_event_reason": "Application/product existence only."
+        },
+        {
+          "target_id": "ai-processors",
+          "entity": "AI processors",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 817,
+            "end": 830,
+            "quote": "AI processors"
+          },
+          "discovery_kind": "PRODUCT_FAMILY",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "no_relevant_event_reason": "The processors are an application of optical I/O; processor orders or manufacturing growth are not directly specified."
+        },
+        {
+          "target_id": "wafer-level-test-and-burn-in",
+          "entity": "production wafer-level test and burn-in",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 651,
+            "end": 690,
+            "quote": "production wafer-level test and burn-in"
+          },
+          "discovery_kind": "NON_PHYSICAL",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "excluded_from_physical_discovery": true,
+          "source_observations": [
+            {
+              "reference": {
+                "start": 316,
+                "end": 1023,
+                "quote": "Fremont, CA (March 3, 2026) – Aehr Test Systems (NASDAQ: AEHR), a leading provider of test and burn-in solutions for semiconductor devices used in artificial intelligence (AI), data center, automotive, and industrial applications, today announced it has received a follow-on purchase order from its lead silicon photonics customer for production wafer-level test and burn-in of silicon photonics integrated circuits used in data center optical interconnects and emerging optical I/O architectures for AI processors.\nThe order reflects expanding production volumes as demand accelerates for optical connectivity solutions powering next-generation AI training and inference infrastructure.\nThe order includes:"
+              },
+              "observation": "The follow-on purchase order is real, but the provided activity description is testing/burn-in. The physical ordered-item list after The order includes: is outside the given window. No equipment/model/quantity is inferred from the URL or omitted text.",
+              "observation_kind": "ACTUAL_NON_PHYSICAL_ORDER",
+              "scoring_eligible": false,
+              "independent_evidence": false
+            }
+          ],
+          "no_relevant_event_reason": "Testing activity is excluded from physical product events."
+        }
+      ],
+      "no_relevant_event_reason": null,
+      "coverage": {
+        "scope": "COMPLETE_PACKET_WINDOWS_ONLY",
+        "reviewed_windows": 2,
+        "body_characters": 8331,
+        "reviewed_characters": 728,
+        "reviewed_fraction": 0.08738446765094227,
+        "unreviewed_ranges": [
+          {
+            "start": 0,
+            "end": 146,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 167,
+            "end": 316,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 1023,
+            "end": 8331,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_status": "UNVERIFIED",
+        "full_document_review": false
+      },
+      "unresolved_discovery_candidates": [
+        {
+          "entity": "optical connectivity solutions",
+          "discovery_reference": {
+            "start": 906,
+            "end": 936,
+            "quote": "optical connectivity solutions"
+          },
+          "candidate_discovery_kind": "PRODUCT_FAMILY",
+          "status": "AMBIGUOUS",
+          "scoring_eligible": false,
+          "reason": "Demand accelerates is explicit, but solutions is a broad hardware/architecture umbrella and the physical product boundary is unresolved. It is preserved as a source candidate, without inventing a scored physical target/event."
+        }
+      ]
+    },
+    {
+      "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+      "body_sha256": "d8e72ad2ab877464236d72e31492b28ec44fce0152c2b734cb64d3f1443a09e9",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 164,
+          "end": 185
+        },
+        {
+          "start": 1489,
+          "end": 2487
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "sonoma-systems",
+          "entity": "Sonoma ultra-high-power systems",
+          "entity_aliases": [
+            "Aehr Sonoma burn-in systems"
+          ],
+          "discovery_reference": {
+            "start": 1663,
+            "end": 1694,
+            "quote": "Sonoma ultra-high-power systems"
+          },
+          "discovery_kind": "EQUIPMENT",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "source_observations": [
+            {
+              "reference": {
+                "start": 1489,
+                "end": 2487,
+                "quote": "“This is a key early production win for a next-generation AI processor with this world leading hyperscaler,” said Gayn Erickson, President and CEO of Aehr Test Systems. “Our Sonoma ultra-high-power systems are uniquely well suited for these new devices, which require very high power and current levels and incorporate multiple thermal zones with independent thermal control per zone on each device during burn-in.\n“Prior disclosures in Aehr’s press releases and earnings call transcripts described this customer’s plans to introduce substantially higher-power AI processors, and that Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems. This order announcement is important, as until now, Aehr had not officially been awarded the production burn-in business for this new device, so we are very excited about this new win."
+              },
+              "observation": "The physical Sonoma equipment is suitable for these devices and has an existing installed base. The early production win / This order announcement / new win are restatements of the same production burn-in business award. The given window does not identify newly ordered Sonoma units or the equipment-versus-service purchase scope.",
+              "observation_kind": "SAME_ORDER_RESTATEMENT_WITHOUT_PHYSICAL_ORDER_SCOPE",
+              "scoring_eligible": false,
+              "independent_evidence": false,
+              "status": "AMBIGUOUS"
+            }
+          ],
+          "no_relevant_event_reason": "Physical equipment discovery is retained; the source does not establish a new Sonoma equipment order/supply event."
+        },
+        {
+          "target_id": "higher-power-ai-processors",
+          "entity": "substantially higher-power AI processors",
+          "entity_aliases": [
+            "AI processors",
+            "next-generation AI processor"
+          ],
+          "discovery_reference": {
+            "start": 2023,
+            "end": 2063,
+            "quote": "substantially higher-power AI processors"
+          },
+          "discovery_kind": "PRODUCT_FAMILY",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [
+            {
+              "event_id": "higher-power-ai-processors-introduction-plan",
+              "reference": {
+                "start": 1489,
+                "end": 2487,
+                "quote": "“This is a key early production win for a next-generation AI processor with this world leading hyperscaler,” said Gayn Erickson, President and CEO of Aehr Test Systems. “Our Sonoma ultra-high-power systems are uniquely well suited for these new devices, which require very high power and current levels and incorporate multiple thermal zones with independent thermal control per zone on each device during burn-in.\n“Prior disclosures in Aehr’s press releases and earnings call transcripts described this customer’s plans to introduce substantially higher-power AI processors, and that Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems. This order announcement is important, as until now, Aehr had not officially been awarded the production burn-in business for this new device, so we are very excited about this new win."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "substantially higher-power AI processors",
+                  "reference": {
+                    "start": 2023,
+                    "end": 2063,
+                    "quote": "substantially higher-power AI processors"
+                  },
+                  "reason": "The intended new processor family is directly named in prior-disclosure plans."
+                },
+                {
+                  "field": "role",
+                  "status": "AMBIGUOUS",
+                  "value": "SUPPLY_INCREASE",
+                  "reference": {
+                    "start": 1905,
+                    "end": 2302,
+                    "quote": "Prior disclosures in Aehr’s press releases and earnings call transcripts described this customer’s plans to introduce substantially higher-power AI processors, and that Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems."
+                  },
+                  "reason": "Plans to introduce may describe device/design adoption rather than manufacturing or qualified output expansion. The physical supply-increase mapping remains unresolved."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "PLAN",
+                  "reference": {
+                    "start": 1905,
+                    "end": 2302,
+                    "quote": "Prior disclosures in Aehr’s press releases and earnings call transcripts described this customer’s plans to introduce substantially higher-power AI processors, and that Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems."
+                  },
+                  "reason": "The source explicitly calls these customer plans, not current physical deliveries."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "The complete windows give no numerical processor production, order or supply increment."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "AMBIGUOUS",
+                  "value": "world leading hyperscaler",
+                  "reference": {
+                    "start": 1570,
+                    "end": 1595,
+                    "quote": "world leading hyperscaler"
+                  },
+                  "reason": "The hyperscaler is the new production-test-business customer and the device-introduction context. Its precise role as processor purchaser/end-user rather than designer/introducer is not explicit."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "AMBIGUOUS",
+                  "value": "this customer",
+                  "reference": {
+                    "start": 1988,
+                    "end": 2001,
+                    "quote": "this customer"
+                  },
+                  "reason": "The introduction-planning actor is not directly identified as a processor manufacturer or qualified physical supplier."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "substantially higher-power",
+                  "reference": {
+                    "start": 2023,
+                    "end": 2049,
+                    "quote": "substantially higher-power"
+                  },
+                  "reason": "A literal relative power requirement of the planned processor family."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "very high power and current levels",
+                  "reference": {
+                    "start": 1757,
+                    "end": 1791,
+                    "quote": "very high power and current levels"
+                  },
+                  "reason": "Requirements are attached to these new devices, not proof that all existing Sonoma equipment is qualified for them."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "multiple thermal zones with independent thermal control per zone on each device during burn-in",
+                  "reference": {
+                    "start": 1808,
+                    "end": 1902,
+                    "quote": "multiple thermal zones with independent thermal control per zone on each device during burn-in"
+                  },
+                  "reason": "The new device burn-in requirements are explicit."
+                }
+              ],
+              "event_kind": "DEVICE_INTRODUCTION_PLAN_WITH_UNRESOLVED_SUPPLY_ROLE",
+              "source_evidence_group": "doc2-hyperscaler-device-and-qualification-plans",
+              "field_scope_note": "Only source-supported facts and explicitly checked absences are listed. Omitted fields are not automatic VERIFIED_ABSENT or filled defaults."
+            }
+          ]
+        },
+        {
+          "target_id": "htol-modules",
+          "entity": "high-temperature operating life (HTOL) qualification burn-in modules",
+          "entity_aliases": [
+            "qualification burn-in modules"
+          ],
+          "discovery_reference": {
+            "start": 2102,
+            "end": 2170,
+            "quote": "high-temperature operating life (HTOL) qualification burn-in modules"
+          },
+          "discovery_kind": "EQUIPMENT",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [
+            {
+              "event_id": "htol-module-development-and-deployment-plan",
+              "reference": {
+                "start": 1489,
+                "end": 2487,
+                "quote": "“This is a key early production win for a next-generation AI processor with this world leading hyperscaler,” said Gayn Erickson, President and CEO of Aehr Test Systems. “Our Sonoma ultra-high-power systems are uniquely well suited for these new devices, which require very high power and current levels and incorporate multiple thermal zones with independent thermal control per zone on each device during burn-in.\n“Prior disclosures in Aehr’s press releases and earnings call transcripts described this customer’s plans to introduce substantially higher-power AI processors, and that Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems. This order announcement is important, as until now, Aehr had not officially been awarded the production burn-in business for this new device, so we are very excited about this new win."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "high-temperature operating life (HTOL) qualification burn-in modules",
+                  "reference": {
+                    "start": 2102,
+                    "end": 2170,
+                    "quote": "high-temperature operating life (HTOL) qualification burn-in modules"
+                  },
+                  "reason": "Specific qualification modules are physically identified in the development statement."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "SUPPLY_INCREASE",
+                  "reference": {
+                    "start": 1905,
+                    "end": 2302,
+                    "quote": "Prior disclosures in Aehr’s press releases and earnings call transcripts described this customer’s plans to introduce substantially higher-power AI processors, and that Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems."
+                  },
+                  "reason": "Aehr is developing modules for future deployment/use at the stated test house. This is planned provision of modules, not completed manufacture or qualified production supply."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "PLAN",
+                  "reference": {
+                    "start": 1905,
+                    "end": 2302,
+                    "quote": "Prior disclosures in Aehr’s press releases and earnings call transcripts described this customer’s plans to introduce substantially higher-power AI processors, and that Aehr was already developing high-temperature operating life (HTOL) qualification burn-in modules for these devices to be deployed at a premier Silicon Valley test house with a large installed base of Aehr Sonoma burn-in systems."
+                  },
+                  "reason": "Development has been underway, but physical provision/deployment remains a future plan."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "No module quantity or increment is stated in the complete windows. The large installed base refers to Sonoma systems, not new HTOL modules."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "premier Silicon Valley test house",
+                  "reference": {
+                    "start": 2209,
+                    "end": 2242,
+                    "quote": "premier Silicon Valley test house"
+                  },
+                  "reason": "This is the stated intended test/use facility in the module/device qualification-deployment context, not a confirmed purchase quantity or named buyer."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Aehr",
+                  "reference": {
+                    "start": 2074,
+                    "end": 2101,
+                    "quote": "Aehr was already developing"
+                  },
+                  "reason": "Aehr is expressly developing these modules. It is a planned development/provision actor, not evidence of ready qualified stock."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "high-temperature operating life (HTOL) qualification burn-in",
+                  "reference": {
+                    "start": 2102,
+                    "end": 2162,
+                    "quote": "high-temperature operating life (HTOL) qualification burn-in"
+                  },
+                  "reason": "Literal module qualification/testing purpose."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Silicon Valley",
+                  "reference": {
+                    "start": 2217,
+                    "end": 2231,
+                    "quote": "Silicon Valley"
+                  },
+                  "reason": "Literal intended test-house area."
+                }
+              ],
+              "event_kind": "MODULE_DEVELOPMENT_AND_DEPLOYMENT_PLAN",
+              "source_evidence_group": "doc2-hyperscaler-device-and-qualification-plans",
+              "field_scope_note": "Only source-supported facts and explicitly checked absences are listed. Omitted fields are not automatic VERIFIED_ABSENT or filled defaults."
+            }
+          ]
+        },
+        {
+          "target_id": "production-burn-in-business",
+          "entity": "production burn-in business",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 2396,
+            "end": 2423,
+            "quote": "production burn-in business"
+          },
+          "discovery_kind": "NON_PHYSICAL",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "excluded_from_physical_discovery": true,
+          "source_observations": [
+            {
+              "reference": {
+                "start": 2303,
+                "end": 2487,
+                "quote": "This order announcement is important, as until now, Aehr had not officially been awarded the production burn-in business for this new device, so we are very excited about this new win."
+              },
+              "observation": "The new production burn-in business award is real. Until now ... had not officially been awarded describes the previous state; it is not a current negated award. The physical equipment order scope remains unspecified.",
+              "observation_kind": "ACTUAL_NON_PHYSICAL_BUSINESS_WIN",
+              "scoring_eligible": false,
+              "independent_evidence": false
+            }
+          ],
+          "no_relevant_event_reason": "A service/business scope is excluded from physical events."
+        }
+      ],
+      "no_relevant_event_reason": null,
+      "coverage": {
+        "scope": "COMPLETE_PACKET_WINDOWS_ONLY",
+        "reviewed_windows": 2,
+        "body_characters": 8052,
+        "reviewed_characters": 1019,
+        "reviewed_fraction": 0.1265524093392946,
+        "unreviewed_ranges": [
+          {
+            "start": 0,
+            "end": 164,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 185,
+            "end": 1489,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 2487,
+            "end": 8052,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_status": "UNVERIFIED",
+        "full_document_review": false
+      }
+    },
+    {
+      "document_id": "v4doc-81fa48b05fa7c273b7e2d9d26e453a98a07ff4389ec1a6b6bac740db8921ec01",
+      "body_sha256": "05946d92f83028fa0c7418fa787de34bb933043da36e2cd352aaa0620e85604d",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 0,
+          "end": 91
+        },
+        {
+          "start": 1126,
+          "end": 1834
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "refinery-capacity",
+          "entity": "operable U.S. refinery capacity",
+          "entity_aliases": [
+            "refinery capacity",
+            "refining capacity"
+          ],
+          "discovery_reference": {
+            "start": 1781,
+            "end": 1812,
+            "quote": "operable U.S. refinery capacity"
+          },
+          "discovery_kind": "EQUIPMENT",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [
+            {
+              "event_id": "lyondellbasell-houston-closure",
+              "reference": {
+                "start": 1520,
+                "end": 1834,
+                "quote": "LyondellBasell ended refining operations at its 263,776-b/cd refinery in Houston in March 2025, and Phillips 66 ceased operations at its 138,700-b/cd refinery in Los Angeles in October 2025. Combined, the closure of the two facilities represents a reduction in operable U.S. refinery capacity of about 400,000 b/d."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "refinery capacity",
+                  "reference": {
+                    "start": 1795,
+                    "end": 1812,
+                    "quote": "refinery capacity"
+                  },
+                  "reason": "The explicit combined-loss sentence identifies the operating capacity lost through these two named closures."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "SUPPLY_DECREASE",
+                  "reference": {
+                    "start": 1520,
+                    "end": 1614,
+                    "quote": "LyondellBasell ended refining operations at its 263,776-b/cd refinery in Houston in March 2025"
+                  },
+                  "reason": "The particular facility ended/ceased refining operations, removing its operative refining capability. This is not a decrease in manufactured refinery sales or a quantified crude-oil commodity production loss."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 1520,
+                    "end": 1614,
+                    "quote": "LyondellBasell ended refining operations at its 263,776-b/cd refinery in Houston in March 2025"
+                  },
+                  "reason": "The stated 2025-month operation termination occurred, rather than merely being planned."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "263,776",
+                  "reference": {
+                    "start": 1568,
+                    "end": 1580,
+                    "quote": "263,776-b/cd"
+                  },
+                  "reason": "Capacity of this closed facility, not facility count, actual fuel flow or the combined total.",
+                  "scope": "CLOSED_FACILITY_CALENDAR_DAY_CAPACITY"
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "b/cd",
+                  "reference": {
+                    "start": 1568,
+                    "end": 1580,
+                    "quote": "263,776-b/cd"
+                  },
+                  "reason": "The source calendar-day capacity unit is preserved literally without conversion."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "March 2025",
+                  "reference": {
+                    "start": 1604,
+                    "end": 1614,
+                    "quote": "March 2025"
+                  },
+                  "reason": "Directly stated closure month."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "LyondellBasell",
+                  "reference": {
+                    "start": 1520,
+                    "end": 1534,
+                    "quote": "LyondellBasell"
+                  },
+                  "reason": "Operator of the withdrawn capacity, not the surviving qualified supplier pool."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Houston",
+                  "reference": {
+                    "start": 1593,
+                    "end": 1600,
+                    "quote": "Houston"
+                  },
+                  "reason": "Direct location of this particular closed facility."
+                }
+              ],
+              "event_kind": "ACTUAL_FACILITY_OPERATING_CAPACITY_CLOSURE",
+              "source_evidence_group": "doc3-two-named-refinery-closures",
+              "field_scope_note": "Only source-supported facts and explicitly checked absences are listed. Omitted fields are not automatic VERIFIED_ABSENT or filled defaults."
+            },
+            {
+              "event_id": "phillips66-los-angeles-closure",
+              "reference": {
+                "start": 1520,
+                "end": 1834,
+                "quote": "LyondellBasell ended refining operations at its 263,776-b/cd refinery in Houston in March 2025, and Phillips 66 ceased operations at its 138,700-b/cd refinery in Los Angeles in October 2025. Combined, the closure of the two facilities represents a reduction in operable U.S. refinery capacity of about 400,000 b/d."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "refinery capacity",
+                  "reference": {
+                    "start": 1795,
+                    "end": 1812,
+                    "quote": "refinery capacity"
+                  },
+                  "reason": "The explicit combined-loss sentence identifies the operating capacity lost through these two named closures."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "SUPPLY_DECREASE",
+                  "reference": {
+                    "start": 1620,
+                    "end": 1709,
+                    "quote": "Phillips 66 ceased operations at its 138,700-b/cd refinery in Los Angeles in October 2025"
+                  },
+                  "reason": "The particular facility ended/ceased refining operations, removing its operative refining capability. This is not a decrease in manufactured refinery sales or a quantified crude-oil commodity production loss."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 1620,
+                    "end": 1709,
+                    "quote": "Phillips 66 ceased operations at its 138,700-b/cd refinery in Los Angeles in October 2025"
+                  },
+                  "reason": "The stated 2025-month operation termination occurred, rather than merely being planned."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "138,700",
+                  "reference": {
+                    "start": 1657,
+                    "end": 1669,
+                    "quote": "138,700-b/cd"
+                  },
+                  "reason": "Capacity of this closed facility, not facility count, actual fuel flow or the combined total.",
+                  "scope": "CLOSED_FACILITY_CALENDAR_DAY_CAPACITY"
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "b/cd",
+                  "reference": {
+                    "start": 1657,
+                    "end": 1669,
+                    "quote": "138,700-b/cd"
+                  },
+                  "reason": "The source calendar-day capacity unit is preserved literally without conversion."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "October 2025",
+                  "reference": {
+                    "start": 1697,
+                    "end": 1709,
+                    "quote": "October 2025"
+                  },
+                  "reason": "Directly stated closure month."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Phillips 66",
+                  "reference": {
+                    "start": 1620,
+                    "end": 1631,
+                    "quote": "Phillips 66"
+                  },
+                  "reason": "Operator of the withdrawn capacity, not the surviving qualified supplier pool."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Los Angeles",
+                  "reference": {
+                    "start": 1682,
+                    "end": 1693,
+                    "quote": "Los Angeles"
+                  },
+                  "reason": "Direct location of this particular closed facility."
+                }
+              ],
+              "event_kind": "ACTUAL_FACILITY_OPERATING_CAPACITY_CLOSURE",
+              "source_evidence_group": "doc3-two-named-refinery-closures",
+              "field_scope_note": "Only source-supported facts and explicitly checked absences are listed. Omitted fields are not automatic VERIFIED_ABSENT or filled defaults."
+            }
+          ],
+          "source_observations": [
+            {
+              "reference": {
+                "start": 0,
+                "end": 91,
+                "quote": "U.S. refining capacity decreased during 2025 - U.S. Energy Information Administration (EIA)"
+              },
+              "observation": "The 2025 annual refining-capacity headline is an overview. It is not separately counted as another physical closure. The given title does not quantify the national net annual loss; the about 400,000 b/d statement below is specifically the combined two-closure loss.",
+              "observation_kind": "ANNUAL_HEADLINE_OVERVIEW",
+              "scoring_eligible": false,
+              "independent_evidence": false,
+              "related_event_ids": [
+                "lyondellbasell-houston-closure",
+                "phillips66-los-angeles-closure"
+              ]
+            },
+            {
+              "reference": {
+                "start": 1711,
+                "end": 1834,
+                "quote": "Combined, the closure of the two facilities represents a reduction in operable U.S. refinery capacity of about 400,000 b/d."
+              },
+              "observation": "Combined, the closure of the two facilities ... about 400,000 b/d is the explicit approximate closure total. It is retained verbatim as a non-scored aggregate; it is not a third closure and is not added to the two component capacities. No arithmetic replacement or b/cd-to-b/d conversion is made.",
+              "observation_kind": "EXPLICIT_AGGREGATE_OF_COMPONENT_EVENTS",
+              "scoring_eligible": false,
+              "independent_evidence": false,
+              "related_event_ids": [
+                "lyondellbasell-houston-closure",
+                "phillips66-los-angeles-closure"
+              ]
+            }
+          ]
+        },
+        {
+          "target_id": "refinery-equipment",
+          "entity": "refineries",
+          "entity_aliases": [
+            "refinery"
+          ],
+          "discovery_reference": {
+            "start": 1484,
+            "end": 1494,
+            "quote": "refineries"
+          },
+          "discovery_kind": "EQUIPMENT",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "source_observations": [
+            {
+              "reference": {
+                "start": 1418,
+                "end": 1834,
+                "quote": "acity.\nThis year’s Refinery Capacity Report includes 130 operable refineries, two fewer than in 2025. LyondellBasell ended refining operations at its 263,776-b/cd refinery in Houston in March 2025, and Phillips 66 ceased operations at its 138,700-b/cd refinery in Los Angeles in October 2025. Combined, the closure of the two facilities represents a reduction in operable U.S. refinery capacity of about 400,000 b/d."
+              },
+              "observation": "130 operable refineries is the current report inclusion/count; two fewer than in 2025 relates the population comparison. The individual closures are represented once as measured capacity losses, not again as duplicate equipment events. 130 does not establish total residual throughput or a complete qualified commodity supply amount.",
+              "observation_kind": "CURRENT_FACILITY_POPULATION_AND_RELATED_CAPACITY_EVENTS",
+              "scoring_eligible": false,
+              "independent_evidence": false,
+              "related_event_ids": [
+                "lyondellbasell-houston-closure",
+                "phillips66-los-angeles-closure"
+              ]
+            }
+          ],
+          "no_relevant_event_reason": "Equipment discovery is retained; the same closure facts are scored only under measured refinery capacity."
+        },
+        {
+          "target_id": "distillation-facility",
+          "entity": "distillation facility",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1180,
+            "end": 1201,
+            "quote": "distillation facility"
+          },
+          "discovery_kind": "EQUIPMENT",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "source_observations": [
+            {
+              "reference": {
+                "start": 1126,
+                "end": 1417,
+                "quote": "Stream day capacity reflects the maximum input that a distillation facility can process within a 24-hour period when running at full capacity with an optimal crude oil and product slate and with no allowance for downtime. Stream day capacity is typically about 6% higher than calendar day ca"
+              },
+              "observation": "Stream-day capacity is a maximum 24-hour processing-rating definition, approximately 6% above calendar-day capacity. This definition/ratio is not a new physical supply increase or actual utilization.",
+              "observation_kind": "SOURCE_CONTEXT",
+              "scoring_eligible": false,
+              "independent_evidence": false
+            }
+          ],
+          "no_relevant_event_reason": "A physical process facility appears only in a capacity-definition explanation."
+        },
+        {
+          "target_id": "crude-oil",
+          "entity": "crude oil",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1284,
+            "end": 1293,
+            "quote": "crude oil"
+          },
+          "discovery_kind": "MATERIAL",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "no_relevant_event_reason": "Crude oil is the input slate in a capacity definition; refinery closure does not directly prove a crude-oil commodity supply decline."
+        }
+      ],
+      "no_relevant_event_reason": null,
+      "coverage": {
+        "scope": "COMPLETE_PACKET_WINDOWS_ONLY",
+        "reviewed_windows": 2,
+        "body_characters": 7868,
+        "reviewed_characters": 799,
+        "reviewed_fraction": 0.10155058464667005,
+        "unreviewed_ranges": [
+          {
+            "start": 91,
+            "end": 1126,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 1834,
+            "end": 7868,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_status": "UNVERIFIED",
+        "full_document_review": false
+      }
+    },
+    {
+      "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+      "body_sha256": "40b131105ff3c052ad95eeabcb50fc2737ae184b9dcbbe927a28f0309e6e5d75",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 0,
+          "end": 112
+        },
+        {
+          "start": 1661,
+          "end": 2033
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "crude-oil",
+          "entity": "crude oil",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 11,
+            "end": 20,
+            "quote": "crude oil"
+          },
+          "discovery_kind": "MATERIAL",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [
+            {
+              "event_id": "commercial-crude-oil-inventory-increase",
+              "reference": {
+                "start": 0,
+                "end": 112,
+                "quote": "Commercial crude oil inventories increased by 2.0 million barrels - U.S. Energy Information Administration (EIA)"
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "crude oil",
+                  "reference": {
+                    "start": 11,
+                    "end": 20,
+                    "quote": "crude oil"
+                  },
+                  "reason": "The commercial inventory commodity is directly named."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "SUPPLY_INCREASE",
+                  "reference": {
+                    "start": 0,
+                    "end": 112,
+                    "quote": "Commercial crude oil inventories increased by 2.0 million barrels - U.S. Energy Information Administration (EIA)"
+                  },
+                  "reason": "Commercial stock increased. This is inventory availability, not newly produced flow, a purchase order or certified available supply to a customer."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 0,
+                    "end": 112,
+                    "quote": "Commercial crude oil inventories increased by 2.0 million barrels - U.S. Energy Information Administration (EIA)"
+                  },
+                  "reason": "Inventories increased is an observed stock change."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "2.0 million",
+                  "reference": {
+                    "start": 46,
+                    "end": 65,
+                    "quote": "2.0 million barrels"
+                  },
+                  "reason": "The stock increment, not the total commercial inventory.",
+                  "scope": "COMMERCIAL_INVENTORY_INCREMENT"
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "barrels",
+                  "reference": {
+                    "start": 46,
+                    "end": 65,
+                    "quote": "2.0 million barrels"
+                  },
+                  "reason": "Stock quantity unit, not barrels per day."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "The inventory headline gives no observation date/period. The separate fuel-demand window does not supply the inventory observation period."
+                },
+                {
+                  "field": "region",
+                  "status": "AMBIGUOUS",
+                  "value": "U.S.",
+                  "reference": {
+                    "start": 68,
+                    "end": 106,
+                    "quote": "U.S. Energy Information Administration"
+                  },
+                  "reason": "U.S. is part of the source agency name. It does not directly identify the inventory observation geography, so that relation is not approved."
+                }
+              ],
+              "event_kind": "COMMERCIAL_INVENTORY_STOCK_INCREASE",
+              "source_evidence_group": "doc4-inventory-headline",
+              "field_scope_note": "Only source-supported facts and explicitly checked absences are listed. Omitted fields are not automatic VERIFIED_ABSENT or filled defaults."
+            }
+          ]
+        },
+        {
+          "target_id": "gasoline",
+          "entity": "Gasoline",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1759,
+            "end": 1767,
+            "quote": "Gasoline"
+          },
+          "discovery_kind": "MATERIAL",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [
+            {
+              "event_id": "gasoline-demand-increase",
+              "reference": {
+                "start": 1661,
+                "end": 2033,
+                "quote": "Over the past four weeks, total product demand averaged 20.4 million b/d, down 1% year over year. Gasoline demand increased 1% to 8.9 million b/d, while distillate demand increased 2% to 3.7 million b/d. Jet fuel demand increased 9% year over year. The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Gasoline",
+                  "reference": {
+                    "start": 1759,
+                    "end": 1767,
+                    "quote": "Gasoline"
+                  },
+                  "reason": "The named physical fuel has a directly stated demand increase."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "DEMAND_INCREASE",
+                  "reference": {
+                    "start": 1759,
+                    "end": 1806,
+                    "quote": "Gasoline demand increased 1% to 8.9 million b/d"
+                  },
+                  "reason": "Demand increased is explicit for this product. It is not a new purchase contract or evidence of a bottleneck."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 1759,
+                    "end": 1806,
+                    "quote": "Gasoline demand increased 1% to 8.9 million b/d"
+                  },
+                  "reason": "An observed demand trend in the paragraph, not a future production plan."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "1%",
+                  "reference": {
+                    "start": 1785,
+                    "end": 1787,
+                    "quote": "1%"
+                  },
+                  "reason": "Product-specific relative demand change, not absolute volume or the all-product decline.",
+                  "scope": "RELATIVE_DEMAND_INCREASE"
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "8.9 million",
+                  "reference": {
+                    "start": 1791,
+                    "end": 1806,
+                    "quote": "8.9 million b/d"
+                  },
+                  "reason": "The reached average demand-flow level, not the increase amount.",
+                  "scope": "OBSERVED_AVERAGE_DEMAND_FLOW_LEVEL"
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "%",
+                  "reference": {
+                    "start": 1785,
+                    "end": 1787,
+                    "quote": "1%"
+                  },
+                  "reason": "Relative-change unit."
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "b/d",
+                  "reference": {
+                    "start": 1791,
+                    "end": 1806,
+                    "quote": "8.9 million b/d"
+                  },
+                  "reason": "Demand-flow unit, separate from the relative-change percentage."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Over the past four weeks",
+                  "reference": {
+                    "start": 1661,
+                    "end": 1685,
+                    "quote": "Over the past four weeks"
+                  },
+                  "reason": "The paragraph-wide observation window applies to these fuel-demand observations.",
+                  "scope": "OBSERVATION_WINDOW"
+                }
+              ],
+              "event_kind": "ACTUAL_NAMED_FUEL_DEMAND_INCREASE",
+              "source_evidence_group": "doc4-four-week-fuel-demand-observations",
+              "field_scope_note": "Only source-supported facts and explicitly checked absences are listed. Omitted fields are not automatic VERIFIED_ABSENT or filled defaults."
+            }
+          ]
+        },
+        {
+          "target_id": "distillate",
+          "entity": "distillate",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1814,
+            "end": 1824,
+            "quote": "distillate"
+          },
+          "discovery_kind": "MATERIAL",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [
+            {
+              "event_id": "distillate-demand-increase",
+              "reference": {
+                "start": 1661,
+                "end": 2033,
+                "quote": "Over the past four weeks, total product demand averaged 20.4 million b/d, down 1% year over year. Gasoline demand increased 1% to 8.9 million b/d, while distillate demand increased 2% to 3.7 million b/d. Jet fuel demand increased 9% year over year. The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "distillate",
+                  "reference": {
+                    "start": 1814,
+                    "end": 1824,
+                    "quote": "distillate"
+                  },
+                  "reason": "The named physical fuel has a directly stated demand increase."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "DEMAND_INCREASE",
+                  "reference": {
+                    "start": 1814,
+                    "end": 1864,
+                    "quote": "distillate demand increased 2% to 3.7 million b/d."
+                  },
+                  "reason": "Demand increased is explicit for this product. It is not a new purchase contract or evidence of a bottleneck."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 1814,
+                    "end": 1864,
+                    "quote": "distillate demand increased 2% to 3.7 million b/d."
+                  },
+                  "reason": "An observed demand trend in the paragraph, not a future production plan."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "2%",
+                  "reference": {
+                    "start": 1842,
+                    "end": 1844,
+                    "quote": "2%"
+                  },
+                  "reason": "Product-specific relative demand change, not absolute volume or the all-product decline.",
+                  "scope": "RELATIVE_DEMAND_INCREASE"
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "3.7 million",
+                  "reference": {
+                    "start": 1848,
+                    "end": 1863,
+                    "quote": "3.7 million b/d"
+                  },
+                  "reason": "The reached average demand-flow level, not the increase amount.",
+                  "scope": "OBSERVED_AVERAGE_DEMAND_FLOW_LEVEL"
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "%",
+                  "reference": {
+                    "start": 1842,
+                    "end": 1844,
+                    "quote": "2%"
+                  },
+                  "reason": "Relative-change unit."
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "b/d",
+                  "reference": {
+                    "start": 1848,
+                    "end": 1863,
+                    "quote": "3.7 million b/d"
+                  },
+                  "reason": "Demand-flow unit, separate from the relative-change percentage."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Over the past four weeks",
+                  "reference": {
+                    "start": 1661,
+                    "end": 1685,
+                    "quote": "Over the past four weeks"
+                  },
+                  "reason": "The paragraph-wide observation window applies to these fuel-demand observations.",
+                  "scope": "OBSERVATION_WINDOW"
+                }
+              ],
+              "event_kind": "ACTUAL_NAMED_FUEL_DEMAND_INCREASE",
+              "source_evidence_group": "doc4-four-week-fuel-demand-observations",
+              "field_scope_note": "Only source-supported facts and explicitly checked absences are listed. Omitted fields are not automatic VERIFIED_ABSENT or filled defaults."
+            }
+          ]
+        },
+        {
+          "target_id": "jet-fuel",
+          "entity": "Jet fuel",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1865,
+            "end": 1873,
+            "quote": "Jet fuel"
+          },
+          "discovery_kind": "MATERIAL",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [
+            {
+              "event_id": "jet-fuel-demand-increase",
+              "reference": {
+                "start": 1661,
+                "end": 2033,
+                "quote": "Over the past four weeks, total product demand averaged 20.4 million b/d, down 1% year over year. Gasoline demand increased 1% to 8.9 million b/d, while distillate demand increased 2% to 3.7 million b/d. Jet fuel demand increased 9% year over year. The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Jet fuel",
+                  "reference": {
+                    "start": 1865,
+                    "end": 1873,
+                    "quote": "Jet fuel"
+                  },
+                  "reason": "The named physical fuel has a directly stated demand increase."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "DEMAND_INCREASE",
+                  "reference": {
+                    "start": 1865,
+                    "end": 1909,
+                    "quote": "Jet fuel demand increased 9% year over year."
+                  },
+                  "reason": "Demand increased is explicit for this product. It is not a new purchase contract or evidence of a bottleneck."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 1865,
+                    "end": 1909,
+                    "quote": "Jet fuel demand increased 9% year over year."
+                  },
+                  "reason": "An observed demand trend in the paragraph, not a future production plan."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "9%",
+                  "reference": {
+                    "start": 1891,
+                    "end": 1893,
+                    "quote": "9%"
+                  },
+                  "reason": "Product-specific relative demand change, not absolute volume or the all-product decline.",
+                  "scope": "RELATIVE_DEMAND_INCREASE"
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "%",
+                  "reference": {
+                    "start": 1891,
+                    "end": 1893,
+                    "quote": "9%"
+                  },
+                  "reason": "Relative-change unit."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Over the past four weeks",
+                  "reference": {
+                    "start": 1661,
+                    "end": 1685,
+                    "quote": "Over the past four weeks"
+                  },
+                  "reason": "The paragraph-wide observation window applies to these fuel-demand observations.",
+                  "scope": "OBSERVATION_WINDOW"
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "year over year",
+                  "reference": {
+                    "start": 1894,
+                    "end": 1908,
+                    "quote": "year over year"
+                  },
+                  "reason": "The source attaches this comparison directly to Jet fuel 9%.",
+                  "scope": "COMPARISON_BASIS"
+                }
+              ],
+              "event_kind": "ACTUAL_NAMED_FUEL_DEMAND_INCREASE",
+              "source_evidence_group": "doc4-four-week-fuel-demand-observations",
+              "field_scope_note": "Only source-supported facts and explicitly checked absences are listed. Omitted fields are not automatic VERIFIED_ABSENT or filled defaults."
+            }
+          ]
+        },
+        {
+          "target_id": "transportation-fuels",
+          "entity": "transportation fuels",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1934,
+            "end": 1954,
+            "quote": "transportation fuels"
+          },
+          "discovery_kind": "PRODUCT_FAMILY",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "source_observations": [
+            {
+              "reference": {
+                "start": 1910,
+                "end": 2033,
+                "quote": "The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+              },
+              "observation": "The family increase is a source summary related to the preceding named fuel-demand increases, offset by declines in other fuels. It is not a fourth independent fuel-demand case or another contract. The exact composition/aggregation weights are not asserted.",
+              "observation_kind": "PRODUCT_FAMILY_SUMMARY_OF_RELATED_OBSERVATIONS",
+              "scoring_eligible": false,
+              "independent_evidence": false,
+              "related_event_ids": [
+                "gasoline-demand-increase",
+                "distillate-demand-increase",
+                "jet-fuel-demand-increase"
+              ]
+            }
+          ],
+          "no_relevant_event_reason": "Physical family discovery and its stated trend are retained as a non-scored related summary, without duplicating the named-product observations."
+        },
+        {
+          "target_id": "residual-fuel-oil",
+          "entity": "residual fuel oil",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1990,
+            "end": 2007,
+            "quote": "residual fuel oil"
+          },
+          "discovery_kind": "MATERIAL",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [
+            {
+              "event_id": "residual-fuel-oil-demand-decrease-unmapped",
+              "reference": {
+                "start": 1661,
+                "end": 2033,
+                "quote": "Over the past four weeks, total product demand averaged 20.4 million b/d, down 1% year over year. Gasoline demand increased 1% to 8.9 million b/d, while distillate demand increased 2% to 3.7 million b/d. Jet fuel demand increased 9% year over year. The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "residual fuel oil",
+                  "reference": {
+                    "start": 1990,
+                    "end": 2007,
+                    "quote": "residual fuel oil"
+                  },
+                  "reason": "The physical fuel/fuel family is explicitly listed under decreasing demand."
+                },
+                {
+                  "field": "role",
+                  "status": "AMBIGUOUS",
+                  "value": null,
+                  "reference": {
+                    "start": 1910,
+                    "end": 2033,
+                    "quote": "The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+                  },
+                  "reason": "The source demand decrease is clear, but the fixed role enum has no DEMAND_DECREASE. Its taxonomy mapping is AMBIGUOUS; it is not relabeled SUPPLY_DECREASE, SUPPLY_DELAY or DEMAND_INCREASE."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 1910,
+                    "end": 2033,
+                    "quote": "The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+                  },
+                  "reason": "The source says these observed declines offset the transportation-fuel demand increase."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "No product-specific decline volume or percentage is provided. The all-product down 1% and 20.4 million b/d cannot be allocated to this named fuel."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Over the past four weeks",
+                  "reference": {
+                    "start": 1661,
+                    "end": 1685,
+                    "quote": "Over the past four weeks"
+                  },
+                  "reason": "Same paragraph-wide demand observation window."
+                }
+              ],
+              "event_kind": "ACTUAL_DEMAND_DECREASE_WITH_UNMAPPED_POLICY_ROLE",
+              "source_evidence_group": "doc4-four-week-fuel-demand-observations",
+              "field_scope_note": "Only source-supported facts and explicitly checked absences are listed. Omitted fields are not automatic VERIFIED_ABSENT or filled defaults."
+            }
+          ]
+        },
+        {
+          "target_id": "propane",
+          "entity": "propane",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 2009,
+            "end": 2016,
+            "quote": "propane"
+          },
+          "discovery_kind": "MATERIAL",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [
+            {
+              "event_id": "propane-demand-decrease-unmapped",
+              "reference": {
+                "start": 1661,
+                "end": 2033,
+                "quote": "Over the past four weeks, total product demand averaged 20.4 million b/d, down 1% year over year. Gasoline demand increased 1% to 8.9 million b/d, while distillate demand increased 2% to 3.7 million b/d. Jet fuel demand increased 9% year over year. The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "propane",
+                  "reference": {
+                    "start": 2009,
+                    "end": 2016,
+                    "quote": "propane"
+                  },
+                  "reason": "The physical fuel/fuel family is explicitly listed under decreasing demand."
+                },
+                {
+                  "field": "role",
+                  "status": "AMBIGUOUS",
+                  "value": null,
+                  "reference": {
+                    "start": 1910,
+                    "end": 2033,
+                    "quote": "The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+                  },
+                  "reason": "The source demand decrease is clear, but the fixed role enum has no DEMAND_DECREASE. Its taxonomy mapping is AMBIGUOUS; it is not relabeled SUPPLY_DECREASE, SUPPLY_DELAY or DEMAND_INCREASE."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 1910,
+                    "end": 2033,
+                    "quote": "The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+                  },
+                  "reason": "The source says these observed declines offset the transportation-fuel demand increase."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "No product-specific decline volume or percentage is provided. The all-product down 1% and 20.4 million b/d cannot be allocated to this named fuel."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Over the past four weeks",
+                  "reference": {
+                    "start": 1661,
+                    "end": 1685,
+                    "quote": "Over the past four weeks"
+                  },
+                  "reason": "Same paragraph-wide demand observation window."
+                }
+              ],
+              "event_kind": "ACTUAL_DEMAND_DECREASE_WITH_UNMAPPED_POLICY_ROLE",
+              "source_evidence_group": "doc4-four-week-fuel-demand-observations",
+              "field_scope_note": "Only source-supported facts and explicitly checked absences are listed. Omitted fields are not automatic VERIFIED_ABSENT or filled defaults."
+            }
+          ]
+        },
+        {
+          "target_id": "other-oils",
+          "entity": "other oils",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 2022,
+            "end": 2032,
+            "quote": "other oils"
+          },
+          "discovery_kind": "PRODUCT_FAMILY",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [
+            {
+              "event_id": "other-oils-demand-decrease-unmapped",
+              "reference": {
+                "start": 1661,
+                "end": 2033,
+                "quote": "Over the past four weeks, total product demand averaged 20.4 million b/d, down 1% year over year. Gasoline demand increased 1% to 8.9 million b/d, while distillate demand increased 2% to 3.7 million b/d. Jet fuel demand increased 9% year over year. The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "other oils",
+                  "reference": {
+                    "start": 2022,
+                    "end": 2032,
+                    "quote": "other oils"
+                  },
+                  "reason": "The physical fuel/fuel family is explicitly listed under decreasing demand."
+                },
+                {
+                  "field": "role",
+                  "status": "AMBIGUOUS",
+                  "value": null,
+                  "reference": {
+                    "start": 1910,
+                    "end": 2033,
+                    "quote": "The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+                  },
+                  "reason": "The source demand decrease is clear, but the fixed role enum has no DEMAND_DECREASE. Its taxonomy mapping is AMBIGUOUS; it is not relabeled SUPPLY_DECREASE, SUPPLY_DELAY or DEMAND_INCREASE."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 1910,
+                    "end": 2033,
+                    "quote": "The increase demand for transportation fuels was offset by decreasing demand in residual fuel oil, propane, and other oils."
+                  },
+                  "reason": "The source says these observed declines offset the transportation-fuel demand increase."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "No product-specific decline volume or percentage is provided. The all-product down 1% and 20.4 million b/d cannot be allocated to this named fuel."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Over the past four weeks",
+                  "reference": {
+                    "start": 1661,
+                    "end": 1685,
+                    "quote": "Over the past four weeks"
+                  },
+                  "reason": "Same paragraph-wide demand observation window."
+                }
+              ],
+              "event_kind": "ACTUAL_DEMAND_DECREASE_WITH_UNMAPPED_POLICY_ROLE",
+              "source_evidence_group": "doc4-four-week-fuel-demand-observations",
+              "field_scope_note": "Only source-supported facts and explicitly checked absences are listed. Omitted fields are not automatic VERIFIED_ABSENT or filled defaults."
+            }
+          ]
+        }
+      ],
+      "no_relevant_event_reason": null,
+      "coverage": {
+        "scope": "COMPLETE_PACKET_WINDOWS_ONLY",
+        "reviewed_windows": 2,
+        "body_characters": 5712,
+        "reviewed_characters": 484,
+        "reviewed_fraction": 0.08473389355742297,
+        "unreviewed_ranges": [
+          {
+            "start": 112,
+            "end": 1661,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 2033,
+            "end": 5712,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_status": "UNVERIFIED",
+        "full_document_review": false
+      },
+      "non_scored_aggregate_observations": [
+        {
+          "reference": {
+            "start": 1661,
+            "end": 1758,
+            "quote": "Over the past four weeks, total product demand averaged 20.4 million b/d, down 1% year over year."
+          },
+          "observation": "total product demand averaged 20.4 million b/d, down 1% year over year is an all-product aggregate. The generic total product phrase is not turned into a fabricated product name; neither number is assigned to a specific fuel or added to component levels.",
+          "observation_kind": "TOTAL_PRODUCT_DEMAND_AGGREGATE",
+          "scoring_eligible": false,
+          "independent_evidence": false
+        }
+      ]
+    },
+    {
+      "document_id": "v4doc-629ba59abcbbe5d3e30004699cd2bcee12275db4562fbb8c39317c5a120e88f4",
+      "body_sha256": "a58816f9a0d2af291529cd1ef955081beda40bbb00a7674a13f51325175bd700",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 0,
+          "end": 122
+        },
+        {
+          "start": 196,
+          "end": 779
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "electric-generating-capacity",
+          "entity": "electric generating capacity",
+          "entity_aliases": [
+            "U.S. electric generating capacity",
+            "utility-scale electric generating capacity"
+          ],
+          "discovery_reference": {
+            "start": 222,
+            "end": 250,
+            "quote": "electric generating capacity"
+          },
+          "discovery_kind": "EQUIPMENT",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [
+            {
+              "event_id": "us-generating-capacity-retirement-plan",
+              "reference": {
+                "start": 390,
+                "end": 779,
+                "quote": "U.S. power plant owners and operators plan to retire nearly 11 gigawatts (GW) of utility-scale electric generating capacity from the U.S. power grid this year, according to data reported to us in our latest Preliminary Monthly Electric Generator Inventory . Almost all the scheduled retirements are either coal-fired power plants (58%) or steam turbines and simple-cycle natural gas (42%)."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "utility-scale electric generating capacity",
+                  "reference": {
+                    "start": 471,
+                    "end": 513,
+                    "quote": "utility-scale electric generating capacity"
+                  },
+                  "reason": "The directly stated physical generation capacity scheduled to leave the grid."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "SUPPLY_DECREASE",
+                  "reference": {
+                    "start": 390,
+                    "end": 647,
+                    "quote": "U.S. power plant owners and operators plan to retire nearly 11 gigawatts (GW) of utility-scale electric generating capacity from the U.S. power grid this year, according to data reported to us in our latest Preliminary Monthly Electric Generator Inventory ."
+                  },
+                  "reason": "Owners/operators plan to retire this capacity. It is a planned capability withdrawal, not a completed loss."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "PLAN",
+                  "reference": {
+                    "start": 390,
+                    "end": 647,
+                    "quote": "U.S. power plant owners and operators plan to retire nearly 11 gigawatts (GW) of utility-scale electric generating capacity from the U.S. power grid this year, according to data reported to us in our latest Preliminary Monthly Electric Generator Inventory ."
+                  },
+                  "reason": "plan to retire and scheduled retirements are future plans."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "nearly 11",
+                  "reference": {
+                    "start": 443,
+                    "end": 467,
+                    "quote": "nearly 11 gigawatts (GW)"
+                  },
+                  "reason": "The approximate total scheduled retirement capacity, not actual retired/delayed capacity.",
+                  "scope": "TOTAL_PLANNED_RETIREMENT_CAPACITY"
+                },
+                {
+                  "field": "quantity",
+                  "status": "AMBIGUOUS",
+                  "value": "58%",
+                  "reference": {
+                    "start": 721,
+                    "end": 724,
+                    "quote": "58%"
+                  },
+                  "reason": "Raw coal-fired retirement composition percentage. Its capacity-versus-facility/count denominator is not explicit; no 11-GW allocation is calculated.",
+                  "scope": "UNRESOLVED_RETIREMENT_MIX_BASIS"
+                },
+                {
+                  "field": "quantity",
+                  "status": "AMBIGUOUS",
+                  "value": "42%",
+                  "reference": {
+                    "start": 774,
+                    "end": 777,
+                    "quote": "42%"
+                  },
+                  "reason": "Shared steam-turbine/simple-cycle-gas composition percentage with unresolved measurement basis and subtype split.",
+                  "scope": "UNRESOLVED_RETIREMENT_MIX_BASIS_AND_SHARED_SUBTYPES"
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "gigawatts (GW)",
+                  "reference": {
+                    "start": 453,
+                    "end": 467,
+                    "quote": "gigawatts (GW)"
+                  },
+                  "reason": "Capacity unit, not generation energy or device count."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "this year",
+                  "reference": {
+                    "start": 539,
+                    "end": 548,
+                    "quote": "this year"
+                  },
+                  "reason": "The literal planned retirement period; it is not the December 2025 data-source timestamp."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "U.S. power plant owners and operators",
+                  "reference": {
+                    "start": 390,
+                    "end": 427,
+                    "quote": "U.S. power plant owners and operators"
+                  },
+                  "reason": "The stated operators planning the withdrawal, not the entire remaining qualified capacity pool."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "utility-scale",
+                  "reference": {
+                    "start": 471,
+                    "end": 484,
+                    "quote": "utility-scale"
+                  },
+                  "reason": "The stated scale class of the retiring capacity."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "coal-fired power plants (58%) or steam turbines and simple-cycle natural gas (42%)",
+                  "reference": {
+                    "start": 696,
+                    "end": 778,
+                    "quote": "coal-fired power plants (58%) or steam turbines and simple-cycle natural gas (42%)"
+                  },
+                  "reason": "Verbatim scheduled-retirement type composition. This does not resolve whether percentages measure GW, facilities or retirement count, and is not converted to subtype GW."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "U.S.",
+                  "reference": {
+                    "start": 514,
+                    "end": 538,
+                    "quote": "from the U.S. power grid"
+                  },
+                  "reason": "The directly stated power-grid country."
+                }
+              ],
+              "event_kind": "AGGREGATE_PLANNED_CAPACITY_RETIREMENT",
+              "source_evidence_group": "doc5-single-overall-retirement-plan",
+              "field_scope_note": "Only source-supported facts and explicitly checked absences are listed. Omitted fields are not automatic VERIFIED_ABSENT or filled defaults."
+            },
+            {
+              "event_id": "generating-capacity-retirement-delay-outlook",
+              "reference": {
+                "start": 196,
+                "end": 271,
+                "quote": "Retirement delays of U.S. electric generating capacity may continue in 2026"
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "electric generating capacity",
+                  "reference": {
+                    "start": 222,
+                    "end": 250,
+                    "quote": "electric generating capacity"
+                  },
+                  "reason": "The existing generation capacity whose retirement may be delayed."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "RELIEF",
+                  "reference": {
+                    "start": 196,
+                    "end": 271,
+                    "quote": "Retirement delays of U.S. electric generating capacity may continue in 2026"
+                  },
+                  "reason": "Delaying withdrawal potentially preserves existing capability and relaxes that withdrawal direction. It is not delayed delivery of newly needed supply and is not labeled SUPPLY_DELAY. No realized retention amount or bottleneck removal is asserted."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "FORECAST",
+                  "reference": {
+                    "start": 196,
+                    "end": 271,
+                    "quote": "Retirement delays of U.S. electric generating capacity may continue in 2026"
+                  },
+                  "reason": "may continue in 2026 is a conditional outlook, not a completed or guaranteed delay."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "The outlook states no amount of actually/potentially delayed retirement. The separate nearly-11-GW retirement plan cannot be used as the delayed/retained quantity."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "2026",
+                  "reference": {
+                    "start": 267,
+                    "end": 271,
+                    "quote": "2026"
+                  },
+                  "reason": "The explicitly stated outlook year."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "U.S.",
+                  "reference": {
+                    "start": 217,
+                    "end": 221,
+                    "quote": "U.S."
+                  },
+                  "reason": "The directly stated outlook country."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Retirement delays",
+                  "reference": {
+                    "start": 196,
+                    "end": 213,
+                    "quote": "Retirement delays"
+                  },
+                  "reason": "The source mechanism is retirement delay; it is a conditional retention direction, not realized qualified extra supply."
+                }
+              ],
+              "event_kind": "CONDITIONAL_CAPACITY_WITHDRAWAL_DELAY_OUTLOOK",
+              "source_evidence_group": "doc5-single-delay-headline-repeated-in-body",
+              "field_scope_note": "Only source-supported facts and explicitly checked absences are listed. Omitted fields are not automatic VERIFIED_ABSENT or filled defaults."
+            }
+          ],
+          "source_observations": [
+            {
+              "reference": {
+                "start": 0,
+                "end": 122,
+                "quote": "Retirement delays of U.S. electric generating capacity may continue in 2026 - U.S. Energy Information Administration (EIA)"
+              },
+              "observation": "The first-window title and the repeated body title are the same delay outlook. The canonical outlook citation uses the body repetition once, without joining windows or creating another event.",
+              "observation_kind": "DUPLICATED_HEADLINE_AND_BODY_STATEMENT",
+              "scoring_eligible": false,
+              "independent_evidence": false,
+              "related_event_ids": [
+                "generating-capacity-retirement-delay-outlook"
+              ]
+            },
+            {
+              "reference": {
+                "start": 267,
+                "end": 389,
+                "quote": "2026\nData source: U.S. Energy Information Administration, Preliminary Monthly Electric Generator Inventory , December 2025"
+              },
+              "observation": "December 2025 is the data-source inventory timestamp. It is not the capacity withdrawal/need/ready date.",
+              "observation_kind": "SOURCE_DATA_TIMESTAMP",
+              "scoring_eligible": false,
+              "independent_evidence": false
+            },
+            {
+              "reference": {
+                "start": 648,
+                "end": 779,
+                "quote": "Almost all the scheduled retirements are either coal-fired power plants (58%) or steam turbines and simple-cycle natural gas (42%)."
+              },
+              "observation": "Coal-fired plants, steam turbines and simple-cycle natural-gas generation are constituent types in the single overall retirement plan. They are retained as physical discoveries and composition observations, not additional independent planned closures. The forecast does not say all nearly 11 GW will be delayed.",
+              "observation_kind": "COMPOSITION_NOT_ADDITIONAL_INDEPENDENT_PLANS",
+              "scoring_eligible": false,
+              "independent_evidence": false,
+              "related_event_ids": [
+                "us-generating-capacity-retirement-plan"
+              ]
+            }
+          ]
+        },
+        {
+          "target_id": "coal-fired-power-plants",
+          "entity": "coal-fired power plants",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 696,
+            "end": 719,
+            "quote": "coal-fired power plants"
+          },
+          "discovery_kind": "EQUIPMENT",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "no_relevant_event_reason": "A constituent equipment type of the overall retirement plan; no independent facility/order/withdrawal amount is added."
+        },
+        {
+          "target_id": "steam-turbines",
+          "entity": "steam turbines",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 729,
+            "end": 743,
+            "quote": "steam turbines"
+          },
+          "discovery_kind": "EQUIPMENT",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "no_relevant_event_reason": "Constituent retirement equipment. The common 42% is not a steam-turbine-only share or extra retirement case."
+        },
+        {
+          "target_id": "simple-cycle-gas-generation",
+          "entity": "simple-cycle natural gas",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 748,
+            "end": 772,
+            "quote": "simple-cycle natural gas"
+          },
+          "discovery_kind": "EQUIPMENT",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "source_observations": [
+            {
+              "reference": {
+                "start": 648,
+                "end": 779,
+                "quote": "Almost all the scheduled retirements are either coal-fired power plants (58%) or steam turbines and simple-cycle natural gas (42%)."
+              },
+              "observation": "In scheduled generation retirements this is the source ellipsis for a generation-equipment type. No missing plant/model word or separate subtype capacity is fabricated.",
+              "observation_kind": "SOURCE_CONTEXT",
+              "scoring_eligible": false,
+              "independent_evidence": false
+            }
+          ],
+          "no_relevant_event_reason": "Constituent generation-equipment class, not an independent gas-commodity supply decline."
+        },
+        {
+          "target_id": "coal",
+          "entity": "coal",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 696,
+            "end": 700,
+            "quote": "coal"
+          },
+          "discovery_kind": "MATERIAL",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "no_relevant_event_reason": "Fuel explicitly named by coal-fired equipment classification. Equipment retirement is not proof of commodity-coal supply decline."
+        },
+        {
+          "target_id": "natural-gas",
+          "entity": "natural gas",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 761,
+            "end": 772,
+            "quote": "natural gas"
+          },
+          "discovery_kind": "MATERIAL",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "no_relevant_event_reason": "Fuel/component of the generation-equipment description, not a separate commodity supply change."
+        }
+      ],
+      "no_relevant_event_reason": null,
+      "coverage": {
+        "scope": "COMPLETE_PACKET_WINDOWS_ONLY",
+        "reviewed_windows": 2,
+        "body_characters": 6987,
+        "reviewed_characters": 705,
+        "reviewed_fraction": 0.1009016745384285,
+        "unreviewed_ranges": [
+          {
+            "start": 122,
+            "end": 196,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 779,
+            "end": 6987,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_status": "UNVERIFIED",
+        "full_document_review": false
+      }
+    },
+    {
+      "document_id": "v4doc-9f3e742d8dc714214766ac470fe216fe36d2851e98c9a13b3b2b5ebe092b2cab",
+      "body_sha256": "fbb013af11dd98690dba67fabb718771d7989445565c82a18b4fd2bff54d2e42",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 0,
+          "end": 280
+        },
+        {
+          "start": 281,
+          "end": 482
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "share-financial-asset",
+          "entity": "share",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 109,
+            "end": 114,
+            "quote": "share"
+          },
+          "discovery_kind": "NON_PHYSICAL",
+          "discovery_status": "VERIFIED_PRESENT",
+          "events": [],
+          "excluded_from_physical_discovery": true,
+          "source_observations": [
+            {
+              "reference": {
+                "start": 0,
+                "end": 280,
+                "quote": "Amsterdam, the Netherlands, 28 September 2026 – Airbus SE (stock exchange symbol: AIR) reports the following share buyback transactions under Regulation (EU) No 596/2014 of the European Parliament and of the Council of 16 April 2014 on market abuse (“EU Market Abuse Regulation”)."
+              },
+              "observation": "Share buybacks and securities regulation are financial activity, not aircraft/product demand.",
+              "observation_kind": "SOURCE_CONTEXT",
+              "scoring_eligible": false,
+              "independent_evidence": false
+            },
+            {
+              "reference": {
+                "start": 281,
+                "end": 482,
+                "quote": "The transactions are part of a share buyback programme announced on 11 September 2026, for the purpose of supporting future employee share ownership plan activities and equity-based compensation plans."
+              },
+              "observation": "The programme supports employee share ownership and equity compensation. Programme/regulation dates are not product period, need_time or ready_time.",
+              "observation_kind": "SOURCE_CONTEXT",
+              "scoring_eligible": false,
+              "independent_evidence": false
+            }
+          ],
+          "no_relevant_event_reason": "A financial asset is excluded from physical discovery and supply/demand events."
+        }
+      ],
+      "no_relevant_event_reason": "All complete windows concern financial share buybacks, compensation and regulation; no physical product or product supply/demand event is stated.",
+      "coverage": {
+        "scope": "COMPLETE_PACKET_WINDOWS_ONLY",
+        "reviewed_windows": 2,
+        "body_characters": 2468,
+        "reviewed_characters": 481,
+        "reviewed_fraction": 0.19489465153970825,
+        "unreviewed_ranges": [
+          {
+            "start": 280,
+            "end": 281,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 482,
+            "end": 2468,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_status": "UNVERIFIED",
+        "full_document_review": false
+      }
+    }
+  ],
+  "review_summary": {
+    "provided_documents": 6,
+    "completed_documents": 6,
+    "reviewed_windows": 12,
+    "reviewed_characters": 4216,
+    "body_characters": 39418,
+    "targets": 28,
+    "verified_physical_discovery_targets": 25,
+    "excluded_non_physical_targets": 3,
+    "unresolved_discovery_candidates": 1,
+    "events": 14,
+    "role_present_event_counts": {
+      "DEMAND_INCREASE": 3,
+      "RELIEF": 1,
+      "SUPPLY_DECREASE": 3,
+      "SUPPLY_DELAY": 0,
+      "SUPPLY_INCREASE": 3
+    },
+    "role_ambiguous_event_count": 4,
+    "actuality_present_event_counts": {
+      "ACTUAL": 10,
+      "PLAN": 3,
+      "FORECAST": 1
+    },
+    "fact_status_counts": {
+      "VERIFIED_PRESENT": 85,
+      "VERIFIED_ABSENT": 8,
+      "AMBIGUOUS": 10
+    },
+    "human_verified": false,
+    "full_document_recall_supported": false,
+    "check_gold_pass_documents": 6,
+    "unreviewed_characters": 35202,
+    "reviewed_fraction": 0.10695621289766097
+  }
+}

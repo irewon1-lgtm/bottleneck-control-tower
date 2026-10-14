@@ -1,0 +1,1423 @@
+{
+  "at": "2026-10-14T12:33:24.849706+00:00",
+  "scope": "One final6 source-reviewed partial-input cohort; separate blind AI review, not human. No re-tuning after outputs. Same new JSON-mode model facts to two connectors; historical strict Groq generation NOT_RUN/BLOCKED, not represented by this comparison.",
+  "processing": {
+    "attempted": 6,
+    "received": 6,
+    "source_held_items": 2,
+    "packet_invalid": 1
+  },
+  "comparison_documents": 5,
+  "metrics": {
+    "CPU_product": {
+      "TP": 10,
+      "FP": 12,
+      "FN": 7,
+      "ambiguous": 0,
+      "precision_denominator": 22,
+      "recall_denominator": 17,
+      "precision": 0.45454545454545453,
+      "recall": 0.5882352941176471,
+      "f1": 0.5128205128205128
+    },
+    "old_connection_product": {
+      "TP": 2,
+      "FP": 2,
+      "FN": 15,
+      "ambiguous": 0,
+      "precision_denominator": 4,
+      "recall_denominator": 17,
+      "precision": 0.5,
+      "recall": 0.11764705882352941,
+      "f1": 0.19047619047619047
+    },
+    "alternative_product": {
+      "TP": 4,
+      "FP": 2,
+      "FN": 13,
+      "ambiguous": 0,
+      "precision_denominator": 6,
+      "recall_denominator": 17,
+      "precision": 0.6666666666666666,
+      "recall": 0.23529411764705882,
+      "f1": 0.34782608695652173
+    },
+    "old_connection_events": {
+      "TP": 0,
+      "FP": 0,
+      "FN": 6,
+      "ambiguous_event_predictions": 0,
+      "precision_denominator": 0,
+      "recall_denominator": 6,
+      "precision": null,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "alternative_events": {
+      "TP": 0,
+      "FP": 0,
+      "FN": 6,
+      "ambiguous_event_predictions": 0,
+      "precision_denominator": 0,
+      "recall_denominator": 6,
+      "precision": null,
+      "recall": 0.0,
+      "f1": 0.0
+    }
+  },
+  "actual_received_input_chars": 3732,
+  "all_selected_body_chars": 39418,
+  "unread_body_is_not_model_FN": true,
+  "adoption_gate": {
+    "metric_comparable": false,
+    "minimum_event_P_R_gate": false,
+    "precision_zero_denominator": "N/A_not0or100",
+    "serious_evidence_violations": "Source-unmatched facts held; semantic errors counted separately. No global S3 activation.",
+    "scope": "Research connector source-verified records only; broad auto-reader deployment NOT_AUTHORIZED"
+  },
+  "usage": {
+    "generation_POST_attempts": 6,
+    "reported_tokens": {
+      "input_tokens": 2665,
+      "output_tokens": 1769,
+      "total_tokens": 4434
+    },
+    "failed_tokens": 0,
+    "Free_API_cost_KRW": 0,
+    "platform_cost": "UNKNOWN_SEPARATE"
+  },
+  "S1_S2_S3": {
+    "new_research_item_counts": {
+      "S1": 0,
+      "S2": 0,
+      "S3": 0
+    },
+    "new_unique_target_counts_require_cross_doc_review": true,
+    "operating_changes": 0,
+    "independent_verified_demand_supply_pairs": 0,
+    "lead_performance": "NOT_RUN"
+  },
+  "documents": [
+    {
+      "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+      "CPU_status": "PASS",
+      "CPU_product": {
+        "TP": 4,
+        "FP": 3,
+        "FN": 0,
+        "ambiguous": 0,
+        "precision_denominator": 7,
+        "recall_denominator": 4,
+        "precision": 0.5714285714285714,
+        "recall": 1.0,
+        "f1": 0.7272727272727273
+      },
+      "old_connection_product": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 4,
+        "ambiguous": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 4,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "alternative_product": {
+        "TP": 1,
+        "FP": 0,
+        "FN": 3,
+        "ambiguous": 0,
+        "precision_denominator": 1,
+        "recall_denominator": 4,
+        "precision": 1.0,
+        "recall": 0.25,
+        "f1": 0.4
+      },
+      "old_connection_events": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 1,
+        "ambiguous_event_predictions": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 1,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "alternative_events": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 1,
+        "ambiguous_event_predictions": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 1,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "literal_field_diagnostic_not_semantic_adoption": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 1,
+          "FP": 0,
+          "FN": 3,
+          "UNKNOWN": 4,
+          "known_truth_missed": 3,
+          "truth_absent_unknown": 1,
+          "truth_unverified_claims": 0,
+          "truth_unverified_fields": 1,
+          "precision_denominator": 1,
+          "recall_denominator": 4,
+          "precision": 1.0,
+          "recall": 0.25,
+          "f1": 0.4
+        },
+        "by_field": {
+          "specification": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "quantity": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "product": {
+            "TP": 1,
+            "FP": 0,
+            "FN": 0,
+            "precision_denominator": 1,
+            "recall_denominator": 1,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "actuality": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "supply_pool": {
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 1,
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "role": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "events": [
+          {
+            "event_id": "silicon-photonics-production-growth",
+            "fields": {
+              "specification": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "product": {
+                "TP": 1,
+                "FP": 0,
+                "FN": 0
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "supply_pool": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              }
+            }
+          }
+        ],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 1,
+        "reviewed_characters": 728,
+        "body_characters": 8331,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "old_holds": [],
+      "alternative_holds": [],
+      "source_held": [],
+      "S1_targets": [],
+      "counts": {
+        "discoveries": 1,
+        "events": 0,
+        "S1": 0,
+        "S2": 0,
+        "S3": 0
+      }
+    },
+    {
+      "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+      "CPU_status": "PASS",
+      "CPU_product": {
+        "TP": 1,
+        "FP": 3,
+        "FN": 2,
+        "ambiguous": 0,
+        "precision_denominator": 4,
+        "recall_denominator": 3,
+        "precision": 0.25,
+        "recall": 0.3333333333333333,
+        "f1": 0.2857142857142857
+      },
+      "old_connection_product": {
+        "TP": 2,
+        "FP": 2,
+        "FN": 1,
+        "ambiguous": 0,
+        "precision_denominator": 4,
+        "recall_denominator": 3,
+        "precision": 0.5,
+        "recall": 0.6666666666666666,
+        "f1": 0.5714285714285714
+      },
+      "alternative_product": {
+        "TP": 2,
+        "FP": 2,
+        "FN": 1,
+        "ambiguous": 0,
+        "precision_denominator": 4,
+        "recall_denominator": 3,
+        "precision": 0.5,
+        "recall": 0.6666666666666666,
+        "f1": 0.5714285714285714
+      },
+      "old_connection_events": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 1,
+        "ambiguous_event_predictions": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 1,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "alternative_events": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 1,
+        "ambiguous_event_predictions": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 1,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "literal_field_diagnostic_not_semantic_adoption": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 1,
+          "FP": 3,
+          "FN": 11,
+          "UNKNOWN": 10,
+          "known_truth_missed": 8,
+          "truth_unverified_claims": 0,
+          "truth_unverified_fields": 3,
+          "truth_absent_unknown": 2,
+          "unmatched_predictions": 2,
+          "precision_denominator": 4,
+          "recall_denominator": 12,
+          "precision": 0.25,
+          "recall": 0.08333333333333333,
+          "f1": 0.125
+        },
+        "by_field": {
+          "specification": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 4,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 4,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "customer_group": {
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 1,
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "quantity": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 2,
+            "truth_absent_unknown": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "product": {
+            "TP": 1,
+            "FP": 3,
+            "FN": 1,
+            "unmatched_predictions": 2,
+            "precision_denominator": 4,
+            "recall_denominator": 2,
+            "precision": 0.25,
+            "recall": 0.5,
+            "f1": 0.3333333333333333
+          },
+          "actuality": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "supply_pool": {
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 1,
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "role": {
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 1,
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "region": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "events": [
+          {
+            "event_id": "higher-power-ai-processors-introduction-plan",
+            "fields": {
+              "specification": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 3,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "customer_group": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "product": {
+                "TP": 0,
+                "FP": 1,
+                "FN": 1
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "supply_pool": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "role": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              }
+            }
+          },
+          {
+            "event_id": "htol-module-development-and-deployment-plan",
+            "fields": {
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "product": {
+                "TP": 1,
+                "FP": 0,
+                "FN": 0
+              },
+              "region": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "specification": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "customer_group": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "supply_pool": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              }
+            }
+          }
+        ],
+        "duplicate_predictions": 0,
+        "unmatched": [
+          {
+            "reason": "NO_REVIEWED_TARGET_EVENT",
+            "claims": [
+              [
+                "product",
+                "substantially higher-power AI processor"
+              ]
+            ]
+          },
+          {
+            "reason": "NO_REVIEWED_TARGET_EVENT",
+            "claims": [
+              [
+                "product",
+                "production burn-in business for this new device"
+              ]
+            ]
+          }
+        ],
+        "reviewed_events": 2,
+        "reviewed_characters": 1019,
+        "body_characters": 8052,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "old_holds": [
+        {
+          "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+          "item": 0,
+          "reason": "NO_UNIQUE_EXISTING_EVENT_CONTRACT"
+        },
+        {
+          "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+          "item": 1,
+          "reason": "PRODUCT_TOKEN_BOUNDARY_OR_UNIQUE_LITERAL_REQUIRED"
+        },
+        {
+          "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+          "item": 2,
+          "source_event_id": "4f047f767f0756bc8588fc4416d78c98cadc30ddefbd37f0b0b99f3ef93b85da",
+          "reason": "MEANING_OR_COMMITMENT:ADJACENT_COUNTEREVIDENCE_REQUIRES_RELATION_REVIEW"
+        },
+        {
+          "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+          "item": 3,
+          "source_event_id": "773f4223d1c6a3603e4cacf526b8254e2be697935b00c8e117d0de339aa56e3f",
+          "reason": "MEANING_OR_COMMITMENT_NOT_ESTABLISHED"
+        }
+      ],
+      "alternative_holds": [],
+      "source_held": [],
+      "S1_targets": [],
+      "counts": {
+        "discoveries": 4,
+        "events": 0,
+        "S1": 0,
+        "S2": 0,
+        "S3": 0
+      }
+    },
+    {
+      "document_id": "v4doc-81fa48b05fa7c273b7e2d9d26e453a98a07ff4389ec1a6b6bac740db8921ec01",
+      "CPU_status": "PASS",
+      "CPU_product": {
+        "TP": 1,
+        "FP": 1,
+        "FN": 3,
+        "ambiguous": 0,
+        "precision_denominator": 2,
+        "recall_denominator": 4,
+        "precision": 0.5,
+        "recall": 0.25,
+        "f1": 0.3333333333333333
+      },
+      "old_connection_product": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 4,
+        "ambiguous": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 4,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "alternative_product": {
+        "TP": 1,
+        "FP": 0,
+        "FN": 3,
+        "ambiguous": 0,
+        "precision_denominator": 1,
+        "recall_denominator": 4,
+        "precision": 1.0,
+        "recall": 0.25,
+        "f1": 0.4
+      },
+      "old_connection_events": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 2,
+        "ambiguous_event_predictions": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 2,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "alternative_events": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 2,
+        "ambiguous_event_predictions": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 2,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "literal_field_diagnostic_not_semantic_adoption": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 16,
+          "UNKNOWN": 16,
+          "known_truth_missed": 16,
+          "unmatched_predictions": 1,
+          "unscored_ambiguous_event": 1,
+          "precision_denominator": 0,
+          "recall_denominator": 16,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "by_field": {
+          "quantity": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "product": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "unmatched_predictions": 1,
+            "unscored_ambiguous_event": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "unit": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "region": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "period": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "actuality": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "supply_pool": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "role": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "events": [
+          {
+            "event_id": "lyondellbasell-houston-closure",
+            "fields": {
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "product": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "unit": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "region": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "period": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "supply_pool": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              }
+            }
+          },
+          {
+            "event_id": "phillips66-los-angeles-closure",
+            "fields": {
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "product": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "unit": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "region": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "period": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "supply_pool": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              }
+            }
+          }
+        ],
+        "duplicate_predictions": 0,
+        "unmatched": [
+          {
+            "reason": "AMBIGUOUS_EVENT",
+            "claims": [
+              [
+                "product",
+                "refinery capacity"
+              ]
+            ]
+          }
+        ],
+        "reviewed_events": 2,
+        "reviewed_characters": 799,
+        "body_characters": 7868,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "old_holds": [],
+      "alternative_holds": [],
+      "source_held": [
+        {
+          "index": 0,
+          "reason": "PRODUCT_NOT_LITERAL_IN_EXTRACTION"
+        }
+      ],
+      "S1_targets": [],
+      "counts": {
+        "discoveries": 1,
+        "events": 0,
+        "S1": 0,
+        "S2": 0,
+        "S3": 0
+      }
+    },
+    {
+      "document_id": "v4doc-629ba59abcbbe5d3e30004699cd2bcee12275db4562fbb8c39317c5a120e88f4",
+      "CPU_status": "PASS",
+      "CPU_product": {
+        "TP": 4,
+        "FP": 1,
+        "FN": 2,
+        "ambiguous": 0,
+        "precision_denominator": 5,
+        "recall_denominator": 6,
+        "precision": 0.8,
+        "recall": 0.6666666666666666,
+        "f1": 0.7272727272727273
+      },
+      "old_connection_product": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 6,
+        "ambiguous": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 6,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "alternative_product": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 6,
+        "ambiguous": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 6,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "old_connection_events": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 2,
+        "ambiguous_event_predictions": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 2,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "alternative_events": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 2,
+        "ambiguous_event_predictions": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 2,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "literal_field_diagnostic_not_semantic_adoption": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "truth_unverified_claims": 0,
+          "truth_unverified_fields": 1,
+          "TP": 0,
+          "FP": 0,
+          "FN": 15,
+          "UNKNOWN": 15,
+          "known_truth_missed": 14,
+          "truth_absent_unknown": 1,
+          "precision_denominator": 0,
+          "recall_denominator": 15,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "by_field": {
+          "quantity": {
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 1,
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "product": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "unit": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "region": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "period": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "specification": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "actuality": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "supply_pool": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "role": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 2,
+            "known_truth_missed": 2,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "relief": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "events": [
+          {
+            "event_id": "us-generating-capacity-retirement-plan",
+            "fields": {
+              "quantity": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "product": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "unit": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "region": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "period": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "specification": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 2,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "supply_pool": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              }
+            }
+          },
+          {
+            "event_id": "generating-capacity-retirement-delay-outlook",
+            "fields": {
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "product": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "relief": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "region": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "period": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              }
+            }
+          }
+        ],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 2,
+        "reviewed_characters": 705,
+        "body_characters": 6987,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "old_holds": [],
+      "alternative_holds": [],
+      "source_held": [
+        {
+          "index": 0,
+          "reason": "EXTRACTION_LOCATION_AMBIGUOUS_OR_ABSENT"
+        }
+      ],
+      "S1_targets": [],
+      "counts": {
+        "discoveries": 0,
+        "events": 0,
+        "S1": 0,
+        "S2": 0,
+        "S3": 0
+      }
+    },
+    {
+      "document_id": "v4doc-9f3e742d8dc714214766ac470fe216fe36d2851e98c9a13b3b2b5ebe092b2cab",
+      "CPU_status": "PASS",
+      "CPU_product": {
+        "TP": 0,
+        "FP": 4,
+        "FN": 0,
+        "ambiguous": 0,
+        "precision_denominator": 4,
+        "recall_denominator": 0,
+        "precision": 0.0,
+        "recall": null,
+        "f1": 0.0
+      },
+      "old_connection_product": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "ambiguous": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "alternative_product": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "ambiguous": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "old_connection_events": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "ambiguous_event_predictions": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "alternative_events": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "ambiguous_event_predictions": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "literal_field_diagnostic_not_semantic_adoption": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "events": [],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 0,
+        "reviewed_characters": 481,
+        "body_characters": 2468,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "old_holds": [],
+      "alternative_holds": [],
+      "source_held": [],
+      "S1_targets": [],
+      "counts": {
+        "discoveries": 0,
+        "events": 0,
+        "S1": 0,
+        "S2": 0,
+        "S3": 0
+      }
+    }
+  ]
+}
