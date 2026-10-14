@@ -1,11 +1,11 @@
 {
-  "plan_version": "2.2",
-  "plan_sha256": "78d57157dda160ac601f92a5d29d8db28fdb30ec3245c578d5e4313337f911f3",
+  "plan_version": "2.3",
+  "plan_sha256": "b36ce761050d9fcefb183ba490e72a7d17b95709e198985c390fdff90ab77588",
   "stage": 4,
   "status": "CROSS_INDUSTRY_RESEARCH_NETWORK_CONNECTED_AI_AUTOREAD_DISABLED",
   "handoff_sha": "ef3321609210281757141d9b897e792333d9d5c7",
   "base_remote_sha": "ef3321609210281757141d9b897e792333d9d5c7",
-  "last_completed": "Simultaneous multi-industry research intake executed twice; CPU/source-reviewed/structured records share research storage. Failed/blocked sources isolated. Strict source/meaning/period limits retained; no new forecast candidate or operating change.",
+  "last_completed": "Korean V4 research dashboard implemented over read-only SQLite and preserved reports. Four pages and controls verified in Chromium on desktop/mobile; no operating writes or new AI calls.",
   "next_action": "Resume295 never-attempted URLs and existing source/meaning queues; source failures/access-marked views stay quarantined. Retain open industry/target intake. Validate official primary counterpart/time/qualified supply before promotion. No new20/AI/installation loop.",
   "blockers": [
     {
@@ -235,7 +235,7 @@
     }
   ],
   "scope": "Approved free non-operational4A–8 sequential research; real actions completed within evidence limits. No paid API/Gemini/new provider, main/operating DB/Actions/UI/alerts/protected configuration changes.",
-  "updated_at": "2026-10-14T09:55:44.301556+00:00",
+  "updated_at": "2026-10-14T14:53:22.478964+00:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
@@ -2602,5 +2602,69 @@
     "platform_cost": "UNKNOWN_SEPARATE",
     "lead_performance": "NOT_RUN",
     "CI": "PENDING_PUSH_EXACT_SHA_CHECK"
+  },
+  "research_dashboard": {
+    "start_sha": "f977119c6edddff201e421d360fe01e6aca2a1da",
+    "at": "2026-10-14T14:53:22.478964+00:00",
+    "status": "IMPLEMENTED_READONLY_BROWSER_VERIFIED_NOT_DEPLOYED",
+    "scope": "Korean research viewer only; existing operating UI and workflows untouched",
+    "evidence": "docs/v4/dashboard/RESULTS.md",
+    "browser_evidence": "docs/v4/dashboard/BROWSER_RESULTS.json",
+    "entrypoint": "python -m bct.v4.dashboard --repo . --port 8765",
+    "database": "var/v4/cross-industry/ledger/v4.sqlite3",
+    "fallback": "Hash-verified existing research snapshot restored to a separate local cache only when default DB is absent",
+    "source_data_at": "2026-10-14T13:46:34.942618+00:00",
+    "read_only": true,
+    "source_records": 549,
+    "reviewed_events": 23,
+    "CPU_discoveries": 315,
+    "structured_changes": 211,
+    "new_future_candidates": {
+      "S1": 0,
+      "S2": 0,
+      "S3": 0
+    },
+    "new_S_promotions": 0,
+    "tests": {
+      "related_python_passed": 38,
+      "existing_UI_JS_passed": 8,
+      "browser_scenarios_passed": 12,
+      "browser_errors": 0,
+      "viewports": [
+        [
+          1440,
+          1080
+        ],
+        [
+          390,
+          844
+        ],
+        [
+          320,
+          720
+        ]
+      ],
+      "final_dashboard_python_passed": 17,
+      "final_dashboard_tests_overlap_38": true
+    },
+    "browser_failure_injections": "503 only in browser test; no research data changed",
+    "operating_files_and_research_DB_hashes_unchanged": true,
+    "Groq_calls": 0,
+    "tokens": 0,
+    "API_cost_KRW": 0,
+    "platform_cost": "UNKNOWN_SEPARATE",
+    "AI_automation": "HOLD_UNCHANGED",
+    "scheduled_automation": "NOT_ACTIVATED_BY_DASHBOARD",
+    "production_deployment": "NOT_RUN",
+    "limitations": [
+      "Local-only server; no public deployed URL",
+      "Current process health is not monitored; saved execution records shown",
+      "Positive future-candidate detail cannot be tested with current zero candidates",
+      "Quote/row matching is not semantic or predictive performance"
+    ],
+    "CI": "PENDING_FINAL_PUSH_SHA_CHECK",
+    "next": "Use the read-only dashboard to inspect the existing295 pending URL and source/meaning queues; no collection or AI is triggered by UI.",
+    "verification": "docs/v4/dashboard/VERIFICATION.json",
+    "start_skill_draft": "SAVED_NOT_PUBLISHED"
   }
 }
