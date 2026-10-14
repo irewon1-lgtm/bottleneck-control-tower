@@ -275,63 +275,9 @@ def bind_quotes(item, doc, selected):
 
 
 def advisory_classification(item):
-    """Small explicit safety checks; never a general semantic-accuracy verdict."""
-    item = deepcopy(item)
-    model = {k: item[k] for k in ("kind", "role", "actuality")}
-    entity, quote = item["entity"]["value"] or "", item["context"]["quote"]
-    kind_rule = "UNKNOWN_MODEL_CLASSIFICATION"
-    if re.search(r"\b(?:projects?|programs?)$", entity, re.I):
-        item["kind"], kind_rule = "PROJECT", "EXPLICIT_PROJECT_HEAD"
-    elif re.search(r"\b(?:SMRs|small modular reactors|light-water reactors|nuclear reactors)$", entity, re.I):
-        item["kind"], kind_rule = "PRODUCT_FAMILY", "EXPLICIT_REACTOR_PRODUCT_HEAD"
-    physical = item["kind"] in KINDS[:4] and bool(entity)
-    funding = bool(re.search(r"\b(?:funding|grants?|financial aid)\b|\bawarded\s+\$", quote, re.I))
-    partnership = bool(re.search(r"\b(?:strategic partnership|memorandum of understanding|MOU)\b", quote, re.I))
-    selection = bool(re.search(r"\bselected\b.{0,80}\b(?:projects?|companies)\b", quote, re.I))
-    patterns = {
-        "DEMAND_INCREASE": r"\b(?:signed|placed|received|secured|awarded)\b.{0,70}\b(?:orders?|contracts?)\b|\borders?\b.{0,40}\b(?:increased|grew|rose)\b",
-        "SUPPLY_INCREASE": r"\b(?:production|capacity|output|supply)\b.{0,50}\b(?:increase\w*|expand\w*|doubled|rose)\b|\b(?:increase\w*|expand\w*)\b.{0,50}\b(?:production|capacity)\b|\b(?:started|began|commenced|resumed)\b.{0,50}\bproduction\b|\b(?:commissioned|became operational|began operating)\b",
-        "SUPPLY_DECREASE": r"\b(?:production|capacity|output|supply)\b.{0,50}\b(?:decrease\w*|declined|reduced|stopped)\b|\b(?:shut down|ceased production)\b",
-        "SUPPLY_DELAY": r"\b(?:production|delivery|deliveries|qualification)\b.{0,50}\b(?:delayed|postponed)\b",
-        "RELIEF": r"\b(?:surplus|available capacity|inventory increased|lead times shortened)\b"}
-    match = re.search(patterns.get(item["role"], r"(?!)"), quote, re.I) if physical else None
-    if re.search(r"\bexecutive orders?\b", quote, re.I):
-        match = None
-    # Money awarded directly is not a purchase contract or completed capacity.
-    nonphysical_event = (funding or partnership or selection) and not match
-    if funding and item["role"] in ("DEMAND_INCREASE", "SUPPLY_INCREASE"):
-        match, nonphysical_event = None, True
-    if not match:
-        item["role"] = "UNKNOWN"
-        if re.search(r"\b(?:not|never)\s+(?:sign\w*|place\w*|receive\w*|produce\w*|expand\w*|commission\w*)|\bno\s+(?:orders?|contracts?)\b", quote, re.I):
-            item["actuality"] = "NEGATED"
-        elif nonphysical_event and re.search(r"\b(?:awarded|selected|established|signed|approved)\b", quote, re.I):
-            item["actuality"] = "ACTUAL"
-        elif re.search(r"\b(?:expects?|forecast\w*|projected|anticipated)\b", quote, re.I):
-            item["actuality"] = "FORECAST"
-        elif re.search(r"\b(?:plans?|planned|intends?|proposed|scheduled|will|aims?|targets?)\b", quote, re.I):
-            item["actuality"] = "PLAN"
-        elif physical and re.search(r"\b(?:delivered|shipped|produced)\b", quote, re.I):
-            item["actuality"] = "ACTUAL"
-        else:
-            item["actuality"] = "UNKNOWN"
-    else:
-        prefix = quote[max(0, match.start() - 90):match.start()]
-        clause = re.split(r"[.;]\s+", prefix)[-1]
-        if re.search(r"\b(?:not|never|no)\b", clause, re.I):
-            item["role"], item["actuality"] = "UNKNOWN", "NEGATED"
-        elif re.search(r"\b(?:expects?|forecast\w*|projected|anticipated)\b", clause, re.I):
-            item["actuality"] = "FORECAST"
-        elif re.search(r"\b(?:plans?|planned|intends?|proposed|scheduled|will|aims?|targets?)\b", clause, re.I):
-            item["actuality"] = "PLAN"
-        else:
-            item["actuality"] = "ACTUAL"
-    item.update(model_classification=model, semantic_checks={"kind": kind_rule,
-        "physical_event_support": bool(match), "role_retained": item["role"] != "UNKNOWN",
-        "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"},
-        physical_exploration_lead=physical)
-    item["target"]["product"] = item["entity"] if physical else None
-    return item
+    """Apply meaning guards after the unchanged strict source validator."""
+    from .semantics import semantic_reading
+    return semantic_reading(item)
 
 
 def validate_reading(text, doc, selected):
@@ -364,7 +310,17 @@ def validate_reading(text, doc, selected):
                              "coordinate_origin": "PYTHON_EXACT_UNIQUE_QUOTE"})
         except APIError as error:
             rejected.append({"input_item_index": index, "reason": error.kind})
-    return {"items": accepted, "rejected_items": rejected, "coverage": selected,
+    # Report unprocessed source ranges without changing the API input/cache key.
+    unread, cursor = [], 0
+    for window in sorted(selected["windows"], key=lambda w: w["start"]):
+        if cursor < window["start"]:
+            unread.append({"start": cursor, "end": window["start"]})
+        cursor = max(cursor, window["end"])
+    if cursor < len(doc["body"]):
+        unread.append({"start": cursor, "end": len(doc["body"])})
+    coverage = {**selected, "unread_ranges": unread,
+                "unread_characters": sum(w["end"] - w["start"] for w in unread)}
+    return {"items": accepted, "rejected_items": rejected, "coverage": coverage,
             "source_status": "PASS" if not rejected else "PARTIAL_REVIEW" if accepted else "REVIEW_REQUIRED",
             "semantic_accuracy": "UNKNOWN", "forecast_performance": "BLOCKED"}
 

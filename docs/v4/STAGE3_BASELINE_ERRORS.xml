@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="4" time="0.181" timestamp="2026-10-13T23:30:10.760858+00:00" hostname="8ddf275d6dd7"><testcase classname="tests.test_v4_semantics" name="test_funding_is_neither_physical_quantity_nor_proven_customer[advanced light-water SMRs-$800 million-TVA and Holtec-The department awarded $800 million to TVA and Holtec to advance deployment of advanced light-water SMRs.]" time="0.003"><failure message="AssertionError: assert ('$800 million' is None)&#10; +  where '$800 million' = value({'actuality': 'ACTUAL', 'context': {'end': 105, 'quote': 'The department awarded $800 million to TVA and Holtec to adv...e8327ba22a832719a1870906190ab66d1a6fad36638bf48d1edaff4d784e7232', 'document_id': 'doc-1', ...}, 'start': 0, ...}, ...}, 'quantity')">entity = 'advanced light-water SMRs', money = '$800 million'
+recipient = 'TVA and Holtec'
+body = 'The department awarded $800 million to TVA and Holtec to advance deployment of advanced light-water SMRs.'
+
+    @pytest.mark.parametrize("entity,money,recipient,body", [
+        ("advanced light-water SMRs", "$800 million", "TVA and Holtec", "The department awarded $800 million to TVA and Holtec to advance deployment of advanced light-water SMRs."),
+        ("battery cells", "€60 million", "VoltWorks", "The ministry granted €60 million to VoltWorks for developing battery cells."),
+        ("optical transceivers", "USD 12 million", "Photon Labs", "Photon Labs received USD 12 million in subsidies for optical transceivers."),
+        ("industrial heat pumps", "250 million", "Thermo Labs", "Thermo Labs received £250 million in funding for industrial heat pumps."),
+    ])
+    def test_funding_is_neither_physical_quantity_nor_proven_customer(entity, money, recipient, body):
+        item = check(body, entity, (("quantity", money), ("customer_group", recipient)), role="SUPPLY_INCREASE")
+&gt;       assert value(item, "quantity") is None and value(item, "customer_group") is None
+E       AssertionError: assert ('$800 million' is None)
+E        +  where '$800 million' = value({'actuality': 'ACTUAL', 'context': {'end': 105, 'quote': 'The department awarded $800 million to TVA and Holtec to adv...e8327ba22a832719a1870906190ab66d1a6fad36638bf48d1edaff4d784e7232', 'document_id': 'doc-1', ...}, 'start': 0, ...}, ...}, 'quantity')
+
+tests/test_v4_semantics.py:42: AssertionError</failure></testcase><testcase classname="tests.test_v4_semantics" name="test_funding_is_neither_physical_quantity_nor_proven_customer[battery cells-\u20ac60 million-VoltWorks-The ministry granted \u20ac60 million to VoltWorks for developing battery cells.]" time="0.002"><failure message="AssertionError: assert ('€60 million' is None)&#10; +  where '€60 million' = value({'actuality': 'UNKNOWN', 'context': {'end': 75, 'quote': 'The ministry granted €60 million to VoltWorks for developing...db3f72d60075ebc11bf82ec866691a82bc1f657cbe1dc161daba6f42539bda3e', 'document_id': 'doc-1', ...}, 'start': 0, ...}, ...}, 'quantity')">entity = 'battery cells', money = '€60 million', recipient = 'VoltWorks'
+body = 'The ministry granted €60 million to VoltWorks for developing battery cells.'
+
+    @pytest.mark.parametrize("entity,money,recipient,body", [
+        ("advanced light-water SMRs", "$800 million", "TVA and Holtec", "The department awarded $800 million to TVA and Holtec to advance deployment of advanced light-water SMRs."),
+        ("battery cells", "€60 million", "VoltWorks", "The ministry granted €60 million to VoltWorks for developing battery cells."),
+        ("optical transceivers", "USD 12 million", "Photon Labs", "Photon Labs received USD 12 million in subsidies for optical transceivers."),
+        ("industrial heat pumps", "250 million", "Thermo Labs", "Thermo Labs received £250 million in funding for industrial heat pumps."),
+    ])
+    def test_funding_is_neither_physical_quantity_nor_proven_customer(entity, money, recipient, body):
+        item = check(body, entity, (("quantity", money), ("customer_group", recipient)), role="SUPPLY_INCREASE")
+&gt;       assert value(item, "quantity") is None and value(item, "customer_group") is None
+E       AssertionError: assert ('€60 million' is None)
+E        +  where '€60 million' = value({'actuality': 'UNKNOWN', 'context': {'end': 75, 'quote': 'The ministry granted €60 million to VoltWorks for developing...db3f72d60075ebc11bf82ec866691a82bc1f657cbe1dc161daba6f42539bda3e', 'document_id': 'doc-1', ...}, 'start': 0, ...}, ...}, 'quantity')
+
+tests/test_v4_semantics.py:42: AssertionError</failure></testcase><testcase classname="tests.test_v4_semantics" name="test_funding_is_neither_physical_quantity_nor_proven_customer[optical transceivers-USD 12 million-Photon Labs-Photon Labs received USD 12 million in subsidies for optical transceivers.]" time="0.001"><failure message="AssertionError: assert ('USD 12 million' is None)&#10; +  where 'USD 12 million' = value({'actuality': 'UNKNOWN', 'context': {'end': 74, 'quote': 'Photon Labs received USD 12 million in subsidies for optical...e2c20a89c7be1c225c598880c09743e451acba94602b7b8a3abeadd446a01a7f', 'document_id': 'doc-1', ...}, 'start': 0, ...}, ...}, 'quantity')">entity = 'optical transceivers', money = 'USD 12 million'
+recipient = 'Photon Labs'
+body = 'Photon Labs received USD 12 million in subsidies for optical transceivers.'
+
+    @pytest.mark.parametrize("entity,money,recipient,body", [
+        ("advanced light-water SMRs", "$800 million", "TVA and Holtec", "The department awarded $800 million to TVA and Holtec to advance deployment of advanced light-water SMRs."),
+        ("battery cells", "€60 million", "VoltWorks", "The ministry granted €60 million to VoltWorks for developing battery cells."),
+        ("optical transceivers", "USD 12 million", "Photon Labs", "Photon Labs received USD 12 million in subsidies for optical transceivers."),
+        ("industrial heat pumps", "250 million", "Thermo Labs", "Thermo Labs received £250 million in funding for industrial heat pumps."),
+    ])
+    def test_funding_is_neither_physical_quantity_nor_proven_customer(entity, money, recipient, body):
+        item = check(body, entity, (("quantity", money), ("customer_group", recipient)), role="SUPPLY_INCREASE")
+&gt;       assert value(item, "quantity") is None and value(item, "customer_group") is None
+E       AssertionError: assert ('USD 12 million' is None)
+E        +  where 'USD 12 million' = value({'actuality': 'UNKNOWN', 'context': {'end': 74, 'quote': 'Photon Labs received USD 12 million in subsidies for optical...e2c20a89c7be1c225c598880c09743e451acba94602b7b8a3abeadd446a01a7f', 'document_id': 'doc-1', ...}, 'start': 0, ...}, ...}, 'quantity')
+
+tests/test_v4_semantics.py:42: AssertionError</failure></testcase><testcase classname="tests.test_v4_semantics" name="test_funding_is_neither_physical_quantity_nor_proven_customer[industrial heat pumps-250 million-Thermo Labs-Thermo Labs received \xa3250 million in funding for industrial heat pumps.]" time="0.001"><failure message="AssertionError: assert ('250 million' is None)&#10; +  where '250 million' = value({'actuality': 'UNKNOWN', 'context': {'end': 71, 'quote': 'Thermo Labs received £250 million in funding for industrial ...5301d338ee0607225c11f9d9405aca300cbf3ef356b893c08b0d5643d91f9fc3', 'document_id': 'doc-1', ...}, 'start': 0, ...}, ...}, 'quantity')">entity = 'industrial heat pumps', money = '250 million'
+recipient = 'Thermo Labs'
+body = 'Thermo Labs received £250 million in funding for industrial heat pumps.'
+
+    @pytest.mark.parametrize("entity,money,recipient,body", [
+        ("advanced light-water SMRs", "$800 million", "TVA and Holtec", "The department awarded $800 million to TVA and Holtec to advance deployment of advanced light-water SMRs."),
+        ("battery cells", "€60 million", "VoltWorks", "The ministry granted €60 million to VoltWorks for developing battery cells."),
+        ("optical transceivers", "USD 12 million", "Photon Labs", "Photon Labs received USD 12 million in subsidies for optical transceivers."),
+        ("industrial heat pumps", "250 million", "Thermo Labs", "Thermo Labs received £250 million in funding for industrial heat pumps."),
+    ])
+    def test_funding_is_neither_physical_quantity_nor_proven_customer(entity, money, recipient, body):
+        item = check(body, entity, (("quantity", money), ("customer_group", recipient)), role="SUPPLY_INCREASE")
+&gt;       assert value(item, "quantity") is None and value(item, "customer_group") is None
+E       AssertionError: assert ('250 million' is None)
+E        +  where '250 million' = value({'actuality': 'UNKNOWN', 'context': {'end': 71, 'quote': 'Thermo Labs received £250 million in funding for industrial ...5301d338ee0607225c11f9d9405aca300cbf3ef356b893c08b0d5643d91f9fc3', 'document_id': 'doc-1', ...}, 'start': 0, ...}, ...}, 'quantity')
+
+tests/test_v4_semantics.py:42: AssertionError</failure></testcase></testsuite></testsuites>

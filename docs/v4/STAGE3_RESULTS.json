@@ -1,0 +1,1887 @@
+{
+  "at": "2026-10-14T08:56:01.050183+09:00",
+  "base_sha": "47df6e76badcbce189329a9d52329ecd9da8dbd3",
+  "stage": 3,
+  "status": "PASS_STAGE3_FUNCTIONAL_VERIFICATION",
+  "stage2": "PASS_FIXED_REUSED_NOT_REBUILT",
+  "scope": "Meaning guard functionality and one-official-source saved-response smoke, not general accuracy or stage 4",
+  "changes": {
+    "semantic_policy": "src/bct/v4/semantics.py",
+    "integration": "Only advisory meaning hook and output-only unread ranges changed in free_ai.py; request, schemas, source_input, exact binding/validator, Router/HTTPAdapter unchanged",
+    "rules": [
+      "Financial amounts require distinct physical count/capacity units",
+      "Actual product purchase/delivery relation for customer, not funding recipient or partnership",
+      "Actual product qualification for observed supply pool; no total eligible capacity inferred",
+      "Entity/event clauses and individual field modality; actual signed order survives later planned shipping",
+      "Physical quantity, unit, period, delivery/need/readiness/lead time relation; no event date as delivery date",
+      "Product family/equipment/slot/project/heading/general kinds; no model confidence/S-stage promotion",
+      "Negation, supply decrease/delay/relief; increasing lead time is delay, not relief",
+      "Corporate location is not product region; aggregate capacity is not an individual product specification",
+      "Unsupported values become null and retain their original fact/reference/reason in semantic_review"
+    ],
+    "API_wire_contract": "UNCHANGED_NO_EXTRA_REQUEST"
+  },
+  "functional_completion": {
+    "funding_vs_product_quantity": "PASS_IN_SPECIFIED_CASES",
+    "recipient_vs_proven_customer": "PASS_IN_SPECIFIED_CASES",
+    "actual_plan_forecast": "PASS_IN_SPECIFIED_CASES",
+    "product_project_general_equipment_slot": "PASS_IN_SPECIFIED_CASES",
+    "negation_and_relief": "PASS_IN_SPECIFIED_CASES",
+    "unknown_preservation": "PASS_IN_SPECIFIED_CASES",
+    "exact_source_and_SQLite_preserved": "PASS_IN_SPECIFIED_CASES",
+    "no_S1_S2_S3_automatic_promotion": "PASS_IN_SPECIFIED_CASES",
+    "quantity_unit_period_schedule": "PASS_IN_SPECIFIED_CASES",
+    "specification_region_qualified_supplier": "PASS_IN_SPECIFIED_CASES"
+  },
+  "test_plan": {
+    "base_sha": "47df6e76badcbce189329a9d52329ecd9da8dbd3",
+    "stage2": "FIXED_PASS_REUSED",
+    "api_baseline_attempts": 5,
+    "real_source": {
+      "url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+      "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+      "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+      "raw_sha256": "e5a5b7f82c86fbbc758def29824d412091223058dc5bf12fa198b47fb6a12f13",
+      "published_at": "2026-07-25T12:47:13-04:00",
+      "scope": "REVIEWED_PUBLIC_EXCERPT_NOT_FULL_DOCUMENT",
+      "body_status": "PARTIAL",
+      "provenance": "BLOCKED"
+    },
+    "real_response_sha256": "cb6957caa286f53ed053e647f9e62d16d05330a1034b85b31026e464fc2fd47f",
+    "plan": [
+      {
+        "step": "Freeze independent meaning answers",
+        "input": "Hash-identical DOE original and saved real response; cross-industry authored counterexamples",
+        "expected": "Currency is not physical quantity; recipients are not proven buyers; actual/plan/forecast/negation distinguished",
+        "pass": "Fixed gold before implementation; no model-generated ground truth"
+      },
+      {
+        "step": "Semantic safety functions",
+        "input": "Source-verified entity/context/facts",
+        "expected": "Unsupported values become null with audit; TARGET fields unchanged; no S promotion",
+        "pass": "Required funding/customer/kind/event/negation/relief/time/UNKNOWN counterexamples pass"
+      },
+      {
+        "step": "Official saved response and persistence",
+        "input": "Unchanged actual response, original and strict quote binder",
+        "expected": "Both actual known errors held; exact-source references retained; omissions/unread scope recorded",
+        "pass": "Hash-identical real reanalysis stored/reopened from isolated stage-3 SQLite; no additional API call"
+      },
+      {
+        "step": "Related regression and delivery",
+        "input": "Only affected API semantic/cache integration cases",
+        "expected": "No source-validator, CPU/core or provider/operating change",
+        "pass": "Affected tests pass; prior broad suites reused; push and remote verified"
+      }
+    ],
+    "general_accuracy": "UNKNOWN_NOT_50_DOCUMENTS",
+    "stage4_and_shadow": "NOT_RUN",
+    "additional_api_policy": "0 planned; reuse saved actual responses first; no rerun of connectivity"
+  },
+  "tests": {
+    "new_unique_passes": 85,
+    "selected_prior_unique_passes": 37,
+    "same_case_repeats_not_added_to_unique_total": true,
+    "runs": [
+      {
+        "command": ".venv/bin/python -m pytest -q tests/test_v4_semantics.py --junitxml=var/v4/stage3/semantic-final.xml",
+        "result": "74 PASS",
+        "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml",
+        "scope": "Prior run; unaffected cases reused, final target/service branch cases separately rerun"
+      },
+      {
+        "command": ".venv/bin/python -m pytest -q tests/test_v4_semantics.py::test_business_services_contract_is_not_a_product_order tests/test_v4_semantics.py::test_relief_alternative_and_target_attributes_do_not_borrow_business_facts tests/test_v4_semantics.py::test_time_specification_and_region_require_the_right_relation tests/test_v4_quote_binding.py::test_physical_event_counterexamples --junitxml=var/v4/stage3/target-event-final.xml",
+        "result": "42 PASS",
+        "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml",
+        "scope": "Final changed target/service/event paths"
+      },
+      {
+        "command": ".venv/bin/python -m pytest -q tests/test_v4_semantics.py tests/test_v4_quote_binding.py::test_literal_product_head_and_project_head_are_separate tests/test_v4_quote_binding.py::test_physical_event_counterexamples tests/test_v4_quote_binding.py::test_quote_only_router_cache_retains_machine_coordinates_on_restart tests/test_v4_quote_binding.py::test_partial_source_result_is_stored_as_review_without_a_repair_call --junitxml=var/v4/stage3/semantic-and-related-final.xml",
+        "result": "96 PASS at that revision",
+        "evidence": "docs/v4/STAGE3_RELATED_TESTS.xml",
+        "scope": "25 prior affected cases; other copied new cases overlap later runs"
+      },
+      {
+        "command": ".venv/bin/python -m pytest -q tests/test_v4_free_ai.py::test_normal_unknown_is_success_and_never_fallback tests/test_v4_free_ai.py::test_dedup_same_input_same_run_restart_and_alias tests/test_v4_free_ai.py::test_api_backup_restore_keeps_jobs_blocks_and_dedup tests/test_v4_free_ai.py::test_analyze_queue_advances_beyond_completed_documents tests/test_v4_free_ai.py::test_source_failure_records_transport_recovery_usage_and_near_quota tests/test_v4_integration.py::test_bad_promotion_is_blocked --junitxml=var/v4/stage3/integration-regression.xml",
+        "result": "12 PASS",
+        "evidence": "docs/v4/STAGE3_INTEGRATION_TESTS.xml",
+        "scope": "Affected cache/job/queue/source-hold paths and prohibited promotions"
+      },
+      {
+        "command": ".venv/bin/python scripts/v4/semantic_review.py",
+        "result": "PASS_3_SAVED_RESPONSE_ITEMS_NO_NETWORK",
+        "evidence": "var/v4/stage3/official-replay.json",
+        "scope": "Actual saved response on one hash-identical official source, persisted in separate SQLite"
+      }
+    ],
+    "conditions": {
+      "preserved_free_ai_functions_and_classes": [
+        "obj",
+        "_without_coordinates",
+        "APIError",
+        "instant",
+        "checked_config",
+        "source_input",
+        "shape",
+        "no_duplicate_keys",
+        "validate_output",
+        "exact_quote_range",
+        "bind_quotes",
+        "retry_after",
+        "NoRedirect",
+        "HTTPAdapter",
+        "Router",
+        "api_status",
+        "annotate"
+      ],
+      "unchanged_core_CPU_fixture_pin_files": 22,
+      "wire_schema_and_prompt": "UNCHANGED",
+      "stage2": "PASS_FIXED_REUSED",
+      "new_unique_passes": 85,
+      "related_unique_passes": 37,
+      "tests": [
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_funding_is_neither_physical_quantity_nor_proven_customer[advanced light-water SMRs-$800 million-TVA and Holtec-The department awarded $800 million to TVA and Holtec to advance deployment of advanced light-water SMRs.]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_funding_is_neither_physical_quantity_nor_proven_customer[battery cells-\\u20ac60 million-VoltWorks-The ministry granted \\u20ac60 million to VoltWorks for developing battery cells.]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_funding_is_neither_physical_quantity_nor_proven_customer[optical transceivers-USD 12 million-Photon Labs-Photon Labs received USD 12 million in subsidies for optical transceivers.]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_funding_is_neither_physical_quantity_nor_proven_customer[industrial heat pumps-250 million-Thermo Labs-Thermo Labs received \\xa3250 million in funding for industrial heat pumps.]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_customer_and_qualified_supplier_require_product_relations[Forge Motors placed an order for 24 industrial heat pumps.-industrial heat pumps-customer_group-Forge Motors-Forge Motors]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_customer_and_qualified_supplier_require_product_relations[VoltWorks delivered 40 battery cells to Grid Co.-battery cells-customer_group-Grid Co-Grid Co]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_customer_and_qualified_supplier_require_product_relations[Photon Labs secured a purchase contract from Cloud Co for optical transceivers.-optical transceivers-customer_group-Cloud Co-Cloud Co]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_customer_and_qualified_supplier_require_product_relations[Forge Motors plans to order industrial heat pumps.-industrial heat pumps-customer_group-Forge Motors-None]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_customer_and_qualified_supplier_require_product_relations[Forge Motors did not sign an order for industrial heat pumps.-industrial heat pumps-customer_group-Forge Motors-None]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_customer_and_qualified_supplier_require_product_relations[Photon Labs established a strategic partnership with Cloud Co for optical transceivers.-optical transceivers-customer_group-Cloud Co-None]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_customer_and_qualified_supplier_require_product_relations[Grid Co bought optical transceivers; VoltWorks received a grant for battery cells.-battery cells-customer_group-Grid Co-None]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_customer_and_qualified_supplier_require_product_relations[Alloy Co is a qualified supplier of battery cells.-battery cells-supply_pool-Alloy Co-Alloy Co]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_customer_and_qualified_supplier_require_product_relations[Alloy Co manufactures battery cells.-battery cells-supply_pool-Alloy Co-None]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_customer_and_qualified_supplier_require_product_relations[Alloy Co is not yet a qualified supplier of battery cells.-battery cells-supply_pool-Alloy Co-None]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_customer_and_qualified_supplier_require_product_relations[Alloy Co expects to become a qualified supplier of battery cells.-battery cells-supply_pool-Alloy Co-None]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_customer_and_qualified_supplier_require_product_relations[Alloy Co is a qualified supplier of optical transceivers; VoltWorks produces battery cells.-battery cells-supply_pool-Alloy Co-None]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_customer_and_qualified_supplier_require_product_relations[Forge Motors signed an order for battery cells that will be delivered in 2028.-battery cells-customer_group-Forge Motors-Forge Motors]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_customer_and_qualified_supplier_require_product_relations[Forge Motors signed an order for battery cells that are not yet customer-qualified.-battery cells-customer_group-Forge Motors-Forge Motors]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_quantities_need_physical_units_and_correct_scope[VoltWorks produced 40 battery cells.-battery cells-40-cells-40-cells]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_quantities_need_physical_units_and_correct_scope[Photon Labs shipped 2 million optical transceivers.-optical transceivers-2 million-transceivers-2 million-transceivers]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_quantities_need_physical_units_and_correct_scope[The production capacity for industrial heat pumps expanded to 2000 units per year.-industrial heat pumps-2000-units-2000-units]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_quantities_need_physical_units_and_correct_scope[The factory produced 40 units of battery cells.-battery cells-40-units-40-units]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_quantities_need_physical_units_and_correct_scope[Battery cells research employed 40 workers.-Battery cells-40-workers-None-None]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_quantities_need_physical_units_and_correct_scope[Photon Labs granted $2 million for optical transceivers.-optical transceivers-2 million-million-None-None]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_quantities_need_physical_units_and_correct_scope[VoltWorks invested $5 million and delivered 30 battery cells.-battery cells-30-cells-30-cells]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_quantities_need_physical_units_and_correct_scope[Optical transceivers cost $40 each.-Optical transceivers-$40-each-None-None]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_quantities_need_physical_units_and_correct_scope[Battery cells revenue grew by 20%.-Battery cells-20%-%-None-None]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[Forge Motors signed an order for industrial heat pumps.-industrial heat pumps-DEMAND_INCREASE-DEMAND_INCREASE-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[Forge Motors plans to order industrial heat pumps.-industrial heat pumps-DEMAND_INCREASE-UNKNOWN-PLAN]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[Forge Motors expects orders for industrial heat pumps to increase.-industrial heat pumps-DEMAND_INCREASE-DEMAND_INCREASE-FORECAST]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[Production of optical transceivers decreased by 20%.-optical transceivers-SUPPLY_DECREASE-SUPPLY_DECREASE-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[Production of battery cells was delayed by six months.-battery cells-SUPPLY_DELAY-SUPPLY_DELAY-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[The production capacity of battery cells expanded by 20%.-battery cells-SUPPLY_INCREASE-SUPPLY_INCREASE-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[The production capacity of battery cells did not expand.-battery cells-SUPPLY_INCREASE-UNKNOWN-NEGATED]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[The supplier has not delayed production of optical transceivers.-optical transceivers-SUPPLY_DELAY-UNKNOWN-NEGATED]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[Lead times for industrial heat pumps shortened from eight weeks to four weeks.-industrial heat pumps-RELIEF-RELIEF-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[Inventory of optical transceivers increased.-optical transceivers-RELIEF-RELIEF-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[Lead times for industrial heat pumps have not shortened.-industrial heat pumps-RELIEF-UNKNOWN-NEGATED]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[The company expects a surplus of battery cells.-battery cells-RELIEF-RELIEF-FORECAST]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[VoltWorks received funding to expand production of battery cells.-battery cells-SUPPLY_INCREASE-UNKNOWN-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[Photon Labs announced a strategic partnership for optical transceivers.-optical transceivers-DEMAND_INCREASE-UNKNOWN-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[Production of optical transceivers expanded; battery cells research received a grant.-battery cells-SUPPLY_INCREASE-UNKNOWN-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[The company announced plans to expand battery cells production.-battery cells-SUPPLY_INCREASE-SUPPLY_INCREASE-PLAN]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[Lead times for industrial heat pumps increased.-industrial heat pumps-RELIEF-SUPPLY_DELAY-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[Inventory of optical transceivers fell.-optical transceivers-RELIEF-UNKNOWN-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[Delivery of battery cells is no longer delayed.-battery cells-SUPPLY_DELAY-RELIEF-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[Delivery of battery cells is no longer delayed.-battery cells-RELIEF-RELIEF-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[VoltWorks received a grant and production capacity of battery cells expanded by 20%.-battery cells-SUPPLY_INCREASE-SUPPLY_INCREASE-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_events_are_product_scoped_and_distinguish_modality[Photon Labs signed a research contract for optical transceivers.-optical transceivers-DEMAND_INCREASE-UNKNOWN-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_time_specification_and_region_require_the_right_relation[Forge Motors ordered industrial heat pumps for delivery by March 2028.-industrial heat pumps-need_time-March 2028-March 2028]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_time_specification_and_region_require_the_right_relation[Production of battery cells will be ready by June 2028.-battery cells-ready_time-June 2028-June 2028]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_time_specification_and_region_require_the_right_relation[The lead time for optical transceivers is six months.-optical transceivers-lead_time-six months-six months]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_time_specification_and_region_require_the_right_relation[Production capacity for battery cells is 2000 units per year.-battery cells-period-per year-per year]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_time_specification_and_region_require_the_right_relation[The ministry awarded funding for battery cells on March 2028.-battery cells-need_time-March 2028-None]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_time_specification_and_region_require_the_right_relation[Photon Labs announced an investment for optical transceivers in June 2028.-optical transceivers-ready_time-June 2028-None]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_time_specification_and_region_require_the_right_relation[Delivery of battery cells was delayed by six months.-battery cells-lead_time-six months-None]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_time_specification_and_region_require_the_right_relation[The funding programme for industrial heat pumps was launched in 2025.-industrial heat pumps-period-2025-None]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_time_specification_and_region_require_the_right_relation[The customer ordered Class 8 trucks for deployment in Germany.-Class 8 trucks-specification-Class 8-Class 8]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_time_specification_and_region_require_the_right_relation[The customer ordered Class 8 trucks for deployment in Germany.-Class 8 trucks-region-Germany-Germany]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_time_specification_and_region_require_the_right_relation[Class 8 trucks are not intended for Germany.-Class 8 trucks-region-Germany-None]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_product_equipment_slot_project_and_heading_are_distinct[battery cells-PROJECT-PRODUCT_FAMILY]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_product_equipment_slot_project_and_heading_are_distinct[industrial heat pumps-PROJECT-PRODUCT_FAMILY]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_product_equipment_slot_project_and_heading_are_distinct[photolithography equipment-PROJECT-MANUFACTURING_EQUIPMENT]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_product_equipment_slot_project_and_heading_are_distinct[300mm wafer production slots-PROJECT-PRODUCTION_SLOT]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_product_equipment_slot_project_and_heading_are_distinct[Solar Factory Expansion Project-PHYSICAL_PRODUCT-PROJECT]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_product_equipment_slot_project_and_heading_are_distinct[Item 7.01.-UNKNOWN-DISCLOSURE_HEADING]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_product_equipment_slot_project_and_heading_are_distinct[company-UNKNOWN-GENERAL_EXPRESSION]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_absent_information_stays_unknown_and_does_not_become_supply",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_actual_order_quantity_is_not_relabelled_by_future_shipping_or_unqualified_supplier",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_saved_real_response_gold_known_errors_and_unread_scope",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_semantic_holds_persist_when_cached_real_shape_is_reopened",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_literal_product_head_and_project_head_are_separate[advanced light-water SMRs-PROJECT-PRODUCT_FAMILY]",
+          "evidence": "docs/v4/STAGE3_RELATED_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_literal_product_head_and_project_head_are_separate[small modular reactors-GENERAL_EXPRESSION-PRODUCT_FAMILY]",
+          "evidence": "docs/v4/STAGE3_RELATED_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_literal_product_head_and_project_head_are_separate[Advanced Nuclear Fuel Line Pilot Projects-PRODUCT_FAMILY-PROJECT]",
+          "evidence": "docs/v4/STAGE3_RELATED_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[The department awarded $800 million to advance NovaLT16 production.-SUPPLY_INCREASE-UNKNOWN-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[The department awarded $800 million in grants under a contract for NovaLT16 development.-DEMAND_INCREASE-UNKNOWN-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[The government established a strategic partnership to accelerate NovaLT16 development.-SUPPLY_INCREASE-UNKNOWN-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[The government established a strategic partnership for NovaLT16.-DEMAND_INCREASE-UNKNOWN-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[Buyer signed an order for NovaLT16.-DEMAND_INCREASE-DEMAND_INCREASE-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[Buyer plans to sign an order for NovaLT16.-DEMAND_INCREASE-UNKNOWN-PLAN]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[Buyer expects orders for NovaLT16 in 2028.-DEMAND_INCREASE-UNKNOWN-FORECAST]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[Buyer did not sign an order for NovaLT16.-DEMAND_INCREASE-UNKNOWN-NEGATED]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[Buyer has NOT signed an order for NovaLT16.-DEMAND_INCREASE-UNKNOWN-NEGATED]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[NovaLT16 production capacity expanded by 20%.-SUPPLY_INCREASE-SUPPLY_INCREASE-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[The company plans to expand NovaLT16 production capacity.-SUPPLY_INCREASE-SUPPLY_INCREASE-PLAN]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[The company forecasts NovaLT16 production capacity will increase.-SUPPLY_INCREASE-SUPPLY_INCREASE-FORECAST]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[The company commissioned a NovaLT16 production line.-SUPPLY_INCREASE-SUPPLY_INCREASE-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[The company will commission a NovaLT16 production line.-SUPPLY_INCREASE-UNKNOWN-PLAN]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[Supplier delivered 20 NovaLT16 turbines.-SUPPLY_INCREASE-UNKNOWN-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[NovaLT16 production was delayed by six months.-SUPPLY_DELAY-SUPPLY_DELAY-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[NovaLT16 annual revenue increased.-SUPPLY_INCREASE-UNKNOWN-UNKNOWN]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[The executive order mentions NovaLT16.-DEMAND_INCREASE-UNKNOWN-UNKNOWN]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[Buyer signed an order for NovaLT16; it plans to expand production capacity.-DEMAND_INCREASE-DEMAND_INCREASE-ACTUAL]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_physical_event_counterexamples[Buyer signed an order for NovaLT16; it plans to expand production capacity.-SUPPLY_INCREASE-SUPPLY_INCREASE-PLAN]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_quote_only_router_cache_retains_machine_coordinates_on_restart",
+          "evidence": "docs/v4/STAGE3_RELATED_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_quote_binding",
+          "name": "test_partial_source_result_is_stored_as_review_without_a_repair_call",
+          "evidence": "docs/v4/STAGE3_RELATED_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_free_ai",
+          "name": "test_normal_unknown_is_success_and_never_fallback",
+          "evidence": "docs/v4/STAGE3_INTEGRATION_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_free_ai",
+          "name": "test_dedup_same_input_same_run_restart_and_alias",
+          "evidence": "docs/v4/STAGE3_INTEGRATION_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_free_ai",
+          "name": "test_api_backup_restore_keeps_jobs_blocks_and_dedup",
+          "evidence": "docs/v4/STAGE3_INTEGRATION_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_free_ai",
+          "name": "test_analyze_queue_advances_beyond_completed_documents",
+          "evidence": "docs/v4/STAGE3_INTEGRATION_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_free_ai",
+          "name": "test_source_failure_records_transport_recovery_usage_and_near_quota",
+          "evidence": "docs/v4/STAGE3_INTEGRATION_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_integration",
+          "name": "test_bad_promotion_is_blocked[spec]",
+          "evidence": "docs/v4/STAGE3_INTEGRATION_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_integration",
+          "name": "test_bad_promotion_is_blocked[publisher]",
+          "evidence": "docs/v4/STAGE3_INTEGRATION_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_integration",
+          "name": "test_bad_promotion_is_blocked[date]",
+          "evidence": "docs/v4/STAGE3_INTEGRATION_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_integration",
+          "name": "test_bad_promotion_is_blocked[future]",
+          "evidence": "docs/v4/STAGE3_INTEGRATION_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_integration",
+          "name": "test_bad_promotion_is_blocked[quantity]",
+          "evidence": "docs/v4/STAGE3_INTEGRATION_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_integration",
+          "name": "test_bad_promotion_is_blocked[plan]",
+          "evidence": "docs/v4/STAGE3_INTEGRATION_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_integration",
+          "name": "test_bad_promotion_is_blocked[relief]",
+          "evidence": "docs/v4/STAGE3_INTEGRATION_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_quantities_need_physical_units_and_correct_scope[Supplier delivered 20 NovaLT16 turbines.-NovaLT16-20-turbines-20-turbines]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_quantities_need_physical_units_and_correct_scope[Supplier shipped 300 AX900 chips.-AX900-300-chips-300-chips]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_quantities_need_physical_units_and_correct_scope[Production of battery cells reached 2 GWh per year.-battery cells-2-GWh-2-GWh]",
+          "evidence": "docs/v4/STAGE3_SEMANTIC_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_relief_alternative_and_target_attributes_do_not_borrow_business_facts[Inventory of battery cells increased.-battery cells-relief-increased-increased]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_relief_alternative_and_target_attributes_do_not_borrow_business_facts[Funding for battery cells increased.-battery cells-relief-increased-None]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_relief_alternative_and_target_attributes_do_not_borrow_business_facts[Optical transceivers can be replaced by copper cables.-Optical transceivers-alternative-copper cables-copper cables]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_relief_alternative_and_target_attributes_do_not_borrow_business_facts[The report discusses optical transceivers and copper cables.-optical transceivers-alternative-copper cables-None]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_relief_alternative_and_target_attributes_do_not_borrow_business_facts[The company headquartered in Germany manufactures battery cells in France.-battery cells-region-Germany-None]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_relief_alternative_and_target_attributes_do_not_borrow_business_facts[The company headquartered in Germany manufactures battery cells in France.-battery cells-region-France-France]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_relief_alternative_and_target_attributes_do_not_borrow_business_facts[Production capacity for wind turbines is 15 MW per year.-wind turbines-specification-15 MW-None]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_relief_alternative_and_target_attributes_do_not_borrow_business_facts[The wind turbines have a rated power of 15 MW each.-wind turbines-specification-15 MW-15 MW]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_business_services_contract_is_not_a_product_order[Photon Labs signed a contract to research optical transceivers.-optical transceivers-UNKNOWN]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_business_services_contract_is_not_a_product_order[Thermo Labs signed a contract for feasibility studies for industrial heat pumps.-industrial heat pumps-UNKNOWN]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        },
+        {
+          "classname": "tests.test_v4_semantics",
+          "name": "test_business_services_contract_is_not_a_product_order[Photon Labs signed a supply contract to deliver 20 optical transceivers.-optical transceivers-DEMAND_INCREASE]",
+          "evidence": "docs/v4/STAGE3_TARGET_EVENT_TESTS.xml"
+        }
+      ],
+      "reuse_after_last_changes": "Only region/specification and service-contract branches changed after earlier PASS logs; affected cases rerun in target-event-final.xml. Other PASS cases have unchanged inputs and applicable rule paths."
+    },
+    "current_file_sha256": {
+      "src/bct/v4/free_ai.py": "4cb773f4134c9ca3514b58b15240c488990ddedcfb83a8e68446a85109eeadf5",
+      "src/bct/v4/semantics.py": "a0dd95074453b51cc495cf507d0d2bf85b65e5c050e9f0e0681ac0095ba4093a",
+      "scripts/v4/semantic_review.py": "2dd21eaa22b0130ad71c05aa1c7a2d5f14f547c00fd220b81084d028ddbce270",
+      "tests/test_v4_semantics.py": "b5d2df1ae3f8328f1be7336b3bb6a1ff2b50dcd115a394026ce6fcae514079a3",
+      "tests/fixtures/v4_stage3_gold.json": "59cf5dc3fad4955692c0b3dadd5af25c6fc1001b82227bedc59ee61f12837c28",
+      "tests/fixtures/v4_stage3_official_source.json": "ee2baf12c276a4517c68088ae094c23cefd5de932fc519d97d1c03c830e5c632"
+    },
+    "baseline_99": "HISTORICAL_REUSED_NOT_RERUN",
+    "core_261": "PRIOR_261_PASS_AND_ONE_SKIP_REUSED_22_UNCHANGED_CORE_CPU_FIXTURE_PIN_FILES"
+  },
+  "failure_history": [
+    {
+      "artifact": "var/v4/stage3/baseline-known-errors.xml",
+      "sha256": "938f8326a6cc6befa234e52fa799142bb78caab8d21d02017e2447b3aab10cdf",
+      "observed_failures": 4,
+      "failures": [
+        {
+          "case": "test_funding_is_neither_physical_quantity_nor_proven_customer[advanced light-water SMRs-$800 million-TVA and Holtec-The department awarded $800 million to TVA and Holtec to advance deployment of advanced light-water SMRs.]",
+          "message": "AssertionError: assert ('$800 million' is None)\n +  where '$800 million' = value({'actuality': 'ACTUAL', 'context': {'end': 105, 'quote': 'The department awarded $800 million to TVA and Holtec to adv...e8327ba22a832719a1870906190ab66d1a6fad36638bf48d1edaff4d784e7232', 'document_id': 'doc-1', ...}, 'start': 0, ...}, ...}, 'quantity')"
+        },
+        {
+          "case": "test_funding_is_neither_physical_quantity_nor_proven_customer[battery cells-\\u20ac60 million-VoltWorks-The ministry granted \\u20ac60 million to VoltWorks for developing battery cells.]",
+          "message": "AssertionError: assert ('€60 million' is None)\n +  where '€60 million' = value({'actuality': 'UNKNOWN', 'context': {'end': 75, 'quote': 'The ministry granted €60 million to VoltWorks for developing...db3f72d60075ebc11bf82ec866691a82bc1f657cbe1dc161daba6f42539bda3e', 'document_id': 'doc-1', ...}, 'start': 0, ...}, ...}, 'quantity')"
+        },
+        {
+          "case": "test_funding_is_neither_physical_quantity_nor_proven_customer[optical transceivers-USD 12 million-Photon Labs-Photon Labs received USD 12 million in subsidies for optical transceivers.]",
+          "message": "AssertionError: assert ('USD 12 million' is None)\n +  where 'USD 12 million' = value({'actuality': 'UNKNOWN', 'context': {'end': 74, 'quote': 'Photon Labs received USD 12 million in subsidies for optical...e2c20a89c7be1c225c598880c09743e451acba94602b7b8a3abeadd446a01a7f', 'document_id': 'doc-1', ...}, 'start': 0, ...}, ...}, 'quantity')"
+        },
+        {
+          "case": "test_funding_is_neither_physical_quantity_nor_proven_customer[industrial heat pumps-250 million-Thermo Labs-Thermo Labs received \\xa3250 million in funding for industrial heat pumps.]",
+          "message": "AssertionError: assert ('250 million' is None)\n +  where '250 million' = value({'actuality': 'UNKNOWN', 'context': {'end': 71, 'quote': 'Thermo Labs received £250 million in funding for industrial ...5301d338ee0607225c11f9d9405aca300cbf3ef356b893c08b0d5643d91f9fc3', 'document_id': 'doc-1', ...}, 'start': 0, ...}, ...}, 'quantity')"
+        }
+      ],
+      "resolution": "Minimal rule correction and affected case reexecution; final applicable cases PASS"
+    },
+    {
+      "artifact": "var/v4/stage3/related-initial.xml",
+      "sha256": "1cb02fdb49d7d7db01542da2ba471b67f332a80e77e5c30020357b0d41085731",
+      "observed_failures": 2,
+      "failures": [
+        {
+          "case": "test_physical_event_counterexamples[Buyer plans to sign an order for NovaLT16.-DEMAND_INCREASE-UNKNOWN-PLAN]",
+          "message": "AssertionError: assert ('DEMAND_INCREASE' == 'UNKNOWN'\n  \n  - UNKNOWN\n  + DEMAND_INCREASE)"
+        },
+        {
+          "case": "test_physical_event_counterexamples[Buyer signed an order for NovaLT16; it plans to expand production capacity.-SUPPLY_INCREASE-SUPPLY_INCREASE-PLAN]",
+          "message": "AssertionError: assert ('DEMAND_INCREASE' == 'SUPPLY_INCREASE'\n  \n  - SUPPLY_INCREASE\n  + DEMAND_INCREASE)"
+        }
+      ],
+      "resolution": "Minimal rule correction and affected case reexecution; final applicable cases PASS"
+    },
+    {
+      "artifact": "var/v4/stage3/semantic-and-related.xml",
+      "sha256": "9e24059c214c0ce9e62d7b07a073dea470044eefbe65eb056a27e1c4c27b74ed",
+      "observed_failures": 1,
+      "failures": [
+        {
+          "case": "test_physical_event_counterexamples[NovaLT16 annual revenue increased.-SUPPLY_INCREASE-UNKNOWN-UNKNOWN]",
+          "message": "AssertionError: assert ('UNKNOWN' == 'UNKNOWN'\n  \n    UNKNOWN and 'ACTUAL' == 'UNKNOWN'\n  \n  - UNKNOWN\n  + ACTUAL)"
+        }
+      ],
+      "resolution": "Minimal rule correction and affected case reexecution; final applicable cases PASS"
+    },
+    {
+      "artifact": "var/v4/stage3/attribute-initial.xml",
+      "sha256": "1d2625e0cd435048e9ae63f6f5e85a3c473f6ca51880f37d719e84aa208c907e",
+      "observed_failures": 2,
+      "failures": [
+        {
+          "case": "test_relief_alternative_and_target_attributes_do_not_borrow_business_facts[The company headquartered in Germany manufactures battery cells in France.-battery cells-region-Germany-None]",
+          "message": "AssertionError: assert 'Germany' == None\n +  where 'Germany' = value({'actuality': 'UNKNOWN', 'context': {'end': 74, 'quote': 'The company headquartered in Germany manufactures battery ce...a252bc4020cb04b5d9b908bc03fa62ab31be90b7c7ecd1480edb2f6641d3136a', 'document_id': 'doc-1', ...}, 'start': 0, ...}, ...}, 'region')"
+        },
+        {
+          "case": "test_relief_alternative_and_target_attributes_do_not_borrow_business_facts[Production capacity for wind turbines is 15 MW per year.-wind turbines-specification-15 MW-None]",
+          "message": "AssertionError: assert '15 MW' == None\n +  where '15 MW' = value({'actuality': 'UNKNOWN', 'context': {'end': 56, 'quote': 'Production capacity for wind turbines is 15 MW per year.', '...75096fe1476ceb18a745fa7bb7030f1c8aa1d8db1f758178fc868b3560ac1b65', 'document_id': 'doc-1', ...}, 'start': 0, ...}, ...}, 'specification')"
+        }
+      ],
+      "resolution": "Minimal rule correction and affected case reexecution; final applicable cases PASS"
+    }
+  ],
+  "authored_test_expected_value_revisions": [
+    {
+      "case": "plans to order, without signed order/growth fact",
+      "reason": "Plan describes intended action, not an established new order. New authored case corrected to UNKNOWN role with PLAN, consistent with prior fixed behavior."
+    },
+    {
+      "case": "no longer delayed, regardless of proposed delay/relief role",
+      "reason": "Explicit end of previous delay is relief; both proposals use the same independent source meaning, rather than desired model role."
+    }
+  ],
+  "official_source_review": {
+    "source_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+    "documents": 1,
+    "saved_actual_response_items": 3,
+    "selected_gold_fields": 23,
+    "additional_literal_mention_checks": 2,
+    "gold_authority": "Manual source review for stage 3 development; not generated by Groq and not a 50-document evaluation",
+    "gold_sha256": "59cf5dc3fad4955692c0b3dadd5af25c6fc1001b82227bedc59ee61f12837c28",
+    "source_body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+    "source_raw_sha256": "e5a5b7f82c86fbbc758def29824d412091223058dc5bf12fa198b47fb6a12f13",
+    "response_sha256": "cb6957caa286f53ed053e647f9e62d16d05330a1034b85b31026e464fc2fd47f",
+    "published_at": "2026-07-25T12:47:13-04:00",
+    "source_grounding": "PASS_REUSED_3_ITEMS_7_REFERENCES_PRESERVED",
+    "before_raw_groq": {
+      "definition": "UNKNOWN counts both null fields and UNKNOWN kind/role/actuality labels; known values/types/events count as correct adoptions",
+      "counts": {
+        "correct_adoptions": 7,
+        "incorrect_adoptions": 3,
+        "omissions": 2,
+        "unknown_preserved": 13
+      },
+      "assessed_gold_fields": 23,
+      "additional_mention_checks": 2,
+      "observations": {
+        "correct_adoptions": [
+          {
+            "item_index": 0,
+            "field": "entity",
+            "expected": "Advanced Nuclear Fuel Line Pilot Projects",
+            "actual": "Advanced Nuclear Fuel Line Pilot Projects"
+          },
+          {
+            "item_index": 0,
+            "field": "kind",
+            "expected": "PROJECT",
+            "actual": "PROJECT"
+          },
+          {
+            "item_index": 0,
+            "field": "actuality",
+            "expected": "ACTUAL",
+            "actual": "ACTUAL"
+          },
+          {
+            "item_index": 1,
+            "field": "kind",
+            "expected": "GENERAL_EXPRESSION",
+            "actual": "GENERAL_EXPRESSION"
+          },
+          {
+            "item_index": 1,
+            "field": "actuality",
+            "expected": "ACTUAL",
+            "actual": "ACTUAL"
+          },
+          {
+            "item_index": 2,
+            "field": "entity",
+            "expected": "advanced light-water SMRs",
+            "actual": "advanced light-water SMRs"
+          },
+          {
+            "item_index": 2,
+            "field": "actuality",
+            "expected": "ACTUAL",
+            "actual": "ACTUAL"
+          }
+        ],
+        "incorrect_adoptions": [
+          {
+            "item_index": 2,
+            "field": "kind",
+            "expected": "PRODUCT_FAMILY",
+            "actual": "PHYSICAL_PRODUCT"
+          },
+          {
+            "item_index": 2,
+            "field": "quantity",
+            "expected": null,
+            "actual": "$800 million"
+          },
+          {
+            "item_index": 2,
+            "field": "customer_group",
+            "expected": null,
+            "actual": "TVA and Holtec"
+          }
+        ],
+        "omissions": [
+          {
+            "item_index": 1,
+            "field": "entity_mention",
+            "value": "Westinghouse’s nuclear reactor technologies",
+            "physical_identity": "UNKNOWN_TECHNOLOGY_DESCRIPTION",
+            "reason": "Literal source mention omitted; no fact fabricated to fill it"
+          },
+          {
+            "item_index": 2,
+            "field": "region",
+            "value": "U.S.",
+            "reason": "Literal source mention omitted; no fact fabricated to fill it"
+          }
+        ],
+        "unknown_preserved": [
+          {
+            "item_index": 0,
+            "field": "role",
+            "expected": "UNKNOWN",
+            "actual": "UNKNOWN"
+          },
+          {
+            "item_index": 0,
+            "field": "quantity",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 0,
+            "field": "customer_group",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 0,
+            "field": "supply_pool",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 1,
+            "field": "role",
+            "expected": "UNKNOWN",
+            "actual": "UNKNOWN"
+          },
+          {
+            "item_index": 1,
+            "field": "quantity",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 1,
+            "field": "customer_group",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 1,
+            "field": "supply_pool",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 2,
+            "field": "role",
+            "expected": "UNKNOWN",
+            "actual": "UNKNOWN"
+          },
+          {
+            "item_index": 2,
+            "field": "unit",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 2,
+            "field": "supply_pool",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 2,
+            "field": "need_time",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 2,
+            "field": "ready_time",
+            "expected": null,
+            "actual": null
+          }
+        ]
+      }
+    },
+    "before_stage2_processed": {
+      "definition": "UNKNOWN counts both null fields and UNKNOWN kind/role/actuality labels; known values/types/events count as correct adoptions",
+      "counts": {
+        "correct_adoptions": 8,
+        "incorrect_adoptions": 2,
+        "omissions": 2,
+        "unknown_preserved": 13
+      },
+      "assessed_gold_fields": 23,
+      "additional_mention_checks": 2,
+      "observations": {
+        "correct_adoptions": [
+          {
+            "item_index": 0,
+            "field": "entity",
+            "expected": "Advanced Nuclear Fuel Line Pilot Projects",
+            "actual": "Advanced Nuclear Fuel Line Pilot Projects"
+          },
+          {
+            "item_index": 0,
+            "field": "kind",
+            "expected": "PROJECT",
+            "actual": "PROJECT"
+          },
+          {
+            "item_index": 0,
+            "field": "actuality",
+            "expected": "ACTUAL",
+            "actual": "ACTUAL"
+          },
+          {
+            "item_index": 1,
+            "field": "kind",
+            "expected": "GENERAL_EXPRESSION",
+            "actual": "GENERAL_EXPRESSION"
+          },
+          {
+            "item_index": 1,
+            "field": "actuality",
+            "expected": "ACTUAL",
+            "actual": "ACTUAL"
+          },
+          {
+            "item_index": 2,
+            "field": "entity",
+            "expected": "advanced light-water SMRs",
+            "actual": "advanced light-water SMRs"
+          },
+          {
+            "item_index": 2,
+            "field": "kind",
+            "expected": "PRODUCT_FAMILY",
+            "actual": "PRODUCT_FAMILY"
+          },
+          {
+            "item_index": 2,
+            "field": "actuality",
+            "expected": "ACTUAL",
+            "actual": "ACTUAL"
+          }
+        ],
+        "incorrect_adoptions": [
+          {
+            "item_index": 2,
+            "field": "quantity",
+            "expected": null,
+            "actual": "$800 million"
+          },
+          {
+            "item_index": 2,
+            "field": "customer_group",
+            "expected": null,
+            "actual": "TVA and Holtec"
+          }
+        ],
+        "omissions": [
+          {
+            "item_index": 1,
+            "field": "entity_mention",
+            "value": "Westinghouse’s nuclear reactor technologies",
+            "physical_identity": "UNKNOWN_TECHNOLOGY_DESCRIPTION",
+            "reason": "Literal source mention omitted; no fact fabricated to fill it"
+          },
+          {
+            "item_index": 2,
+            "field": "region",
+            "value": "U.S.",
+            "reason": "Literal source mention omitted; no fact fabricated to fill it"
+          }
+        ],
+        "unknown_preserved": [
+          {
+            "item_index": 0,
+            "field": "role",
+            "expected": "UNKNOWN",
+            "actual": "UNKNOWN"
+          },
+          {
+            "item_index": 0,
+            "field": "quantity",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 0,
+            "field": "customer_group",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 0,
+            "field": "supply_pool",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 1,
+            "field": "role",
+            "expected": "UNKNOWN",
+            "actual": "UNKNOWN"
+          },
+          {
+            "item_index": 1,
+            "field": "quantity",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 1,
+            "field": "customer_group",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 1,
+            "field": "supply_pool",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 2,
+            "field": "role",
+            "expected": "UNKNOWN",
+            "actual": "UNKNOWN"
+          },
+          {
+            "item_index": 2,
+            "field": "unit",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 2,
+            "field": "supply_pool",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 2,
+            "field": "need_time",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 2,
+            "field": "ready_time",
+            "expected": null,
+            "actual": null
+          }
+        ]
+      }
+    },
+    "after_stage3": {
+      "definition": "UNKNOWN counts both null fields and UNKNOWN kind/role/actuality labels; known values/types/events count as correct adoptions",
+      "counts": {
+        "correct_adoptions": 8,
+        "incorrect_adoptions": 0,
+        "omissions": 2,
+        "unknown_preserved": 15
+      },
+      "assessed_gold_fields": 23,
+      "additional_mention_checks": 2,
+      "observations": {
+        "correct_adoptions": [
+          {
+            "item_index": 0,
+            "field": "entity",
+            "expected": "Advanced Nuclear Fuel Line Pilot Projects",
+            "actual": "Advanced Nuclear Fuel Line Pilot Projects"
+          },
+          {
+            "item_index": 0,
+            "field": "kind",
+            "expected": "PROJECT",
+            "actual": "PROJECT"
+          },
+          {
+            "item_index": 0,
+            "field": "actuality",
+            "expected": "ACTUAL",
+            "actual": "ACTUAL"
+          },
+          {
+            "item_index": 1,
+            "field": "kind",
+            "expected": "GENERAL_EXPRESSION",
+            "actual": "GENERAL_EXPRESSION"
+          },
+          {
+            "item_index": 1,
+            "field": "actuality",
+            "expected": "ACTUAL",
+            "actual": "ACTUAL"
+          },
+          {
+            "item_index": 2,
+            "field": "entity",
+            "expected": "advanced light-water SMRs",
+            "actual": "advanced light-water SMRs"
+          },
+          {
+            "item_index": 2,
+            "field": "kind",
+            "expected": "PRODUCT_FAMILY",
+            "actual": "PRODUCT_FAMILY"
+          },
+          {
+            "item_index": 2,
+            "field": "actuality",
+            "expected": "ACTUAL",
+            "actual": "ACTUAL"
+          }
+        ],
+        "incorrect_adoptions": [],
+        "omissions": [
+          {
+            "item_index": 1,
+            "field": "entity_mention",
+            "value": "Westinghouse’s nuclear reactor technologies",
+            "physical_identity": "UNKNOWN_TECHNOLOGY_DESCRIPTION",
+            "reason": "Literal source mention omitted; no fact fabricated to fill it"
+          },
+          {
+            "item_index": 2,
+            "field": "region",
+            "value": "U.S.",
+            "reason": "Literal source mention omitted; no fact fabricated to fill it"
+          }
+        ],
+        "unknown_preserved": [
+          {
+            "item_index": 0,
+            "field": "role",
+            "expected": "UNKNOWN",
+            "actual": "UNKNOWN"
+          },
+          {
+            "item_index": 0,
+            "field": "quantity",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 0,
+            "field": "customer_group",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 0,
+            "field": "supply_pool",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 1,
+            "field": "role",
+            "expected": "UNKNOWN",
+            "actual": "UNKNOWN"
+          },
+          {
+            "item_index": 1,
+            "field": "quantity",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 1,
+            "field": "customer_group",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 1,
+            "field": "supply_pool",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 2,
+            "field": "role",
+            "expected": "UNKNOWN",
+            "actual": "UNKNOWN"
+          },
+          {
+            "item_index": 2,
+            "field": "quantity",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 2,
+            "field": "unit",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 2,
+            "field": "customer_group",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 2,
+            "field": "supply_pool",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 2,
+            "field": "need_time",
+            "expected": null,
+            "actual": null
+          },
+          {
+            "item_index": 2,
+            "field": "ready_time",
+            "expected": null,
+            "actual": null
+          }
+        ]
+      }
+    },
+    "coverage": {
+      "windows": [
+        {
+          "start": 5905,
+          "end": 6505,
+          "text": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel. October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad. December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs. January 5, 2026: The Energy Department announced a $2.7 billio"
+        }
+      ],
+      "publication": {
+        "published_at": "2026-07-25T12:47:13-04:00",
+        "precision": "TIMESTAMP"
+      },
+      "provenance_scope": "REVIEWED_PUBLIC_EXCERPT_NOT_FULL_DOCUMENT",
+      "selected_characters": 600,
+      "body_characters": 8053,
+      "coverage": "BOUNDED_WINDOWS_NOT_FULL_DOCUMENT",
+      "unread_ranges": [
+        {
+          "start": 0,
+          "end": 5905
+        },
+        {
+          "start": 6505,
+          "end": 8053
+        }
+      ],
+      "unread_characters": 7453
+    },
+    "postprocessed_result": {
+      "items": [
+        {
+          "actuality": "ACTUAL",
+          "context": {
+            "end": 6066,
+            "quote": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel.",
+            "start": 5905,
+            "reference": {
+              "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+              "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+              "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "locator": {
+                "start": 5905,
+                "end": 6066
+              },
+              "source_quote": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel.",
+              "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "origin_publisher": "Energy.gov",
+              "published_at": "2026-07-25T12:47:13-04:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "entity": {
+            "end": 6002,
+            "quote": "Advanced Nuclear Fuel Line Pilot Projects",
+            "start": 5961,
+            "value": "Advanced Nuclear Fuel Line Pilot Projects",
+            "reference": {
+              "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+              "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+              "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "locator": {
+                "start": 5961,
+                "end": 6002
+              },
+              "source_quote": "Advanced Nuclear Fuel Line Pilot Projects",
+              "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "origin_publisher": "Energy.gov",
+              "published_at": "2026-07-25T12:47:13-04:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "facts": [
+            {
+              "end": 0,
+              "field": "specification",
+              "quote": "",
+              "start": 0,
+              "value": null,
+              "reference": null
+            }
+          ],
+          "kind": "PROJECT",
+          "role": "UNKNOWN",
+          "target": {
+            "product": null,
+            "specification": null,
+            "region": null,
+            "customer_group": null,
+            "supply_pool": null
+          },
+          "source_verified": true,
+          "semantic_status": "UNKNOWN_REQUIRES_REVIEW",
+          "s_stage": "UNKNOWN",
+          "forecast_candidate": false,
+          "physical_exploration_lead": false,
+          "model_classification": {
+            "kind": "PROJECT",
+            "role": "UNKNOWN",
+            "actuality": "ACTUAL"
+          },
+          "semantic_policy_version": "bct-v4-semantics-1",
+          "semantic_review": [],
+          "semantic_checks": {
+            "kind": "EXPLICIT_PROJECT_HEAD",
+            "field_decisions": [
+              {
+                "field": "specification",
+                "status": "UNKNOWN",
+                "reason": "MISSING_SOURCE_FACT"
+              }
+            ],
+            "physical_event_support": false,
+            "role_retained": false,
+            "event_scope": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel.",
+            "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+          },
+          "input_item_index": 0,
+          "coordinate_origin": "PYTHON_EXACT_UNIQUE_QUOTE"
+        },
+        {
+          "actuality": "ACTUAL",
+          "context": {
+            "end": 6306,
+            "quote": "October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad.",
+            "start": 6067,
+            "reference": {
+              "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+              "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+              "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "locator": {
+                "start": 6067,
+                "end": 6306
+              },
+              "source_quote": "October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad.",
+              "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "origin_publisher": "Energy.gov",
+              "published_at": "2026-07-25T12:47:13-04:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "entity": {
+            "end": 0,
+            "quote": "",
+            "start": 0,
+            "value": null,
+            "reference": null
+          },
+          "facts": [
+            {
+              "end": 0,
+              "field": "relief",
+              "quote": "",
+              "start": 0,
+              "value": null,
+              "reference": null
+            }
+          ],
+          "kind": "GENERAL_EXPRESSION",
+          "role": "UNKNOWN",
+          "target": {
+            "product": null,
+            "specification": null,
+            "region": null,
+            "customer_group": null,
+            "supply_pool": null
+          },
+          "source_verified": true,
+          "semantic_status": "UNKNOWN_REQUIRES_REVIEW",
+          "s_stage": "UNKNOWN",
+          "forecast_candidate": false,
+          "physical_exploration_lead": false,
+          "model_classification": {
+            "kind": "GENERAL_EXPRESSION",
+            "role": "UNKNOWN",
+            "actuality": "ACTUAL"
+          },
+          "semantic_policy_version": "bct-v4-semantics-1",
+          "semantic_review": [],
+          "semantic_checks": {
+            "kind": "UNKNOWN_MODEL_CLASSIFICATION",
+            "field_decisions": [
+              {
+                "field": "relief",
+                "status": "UNKNOWN",
+                "reason": "MISSING_SOURCE_FACT"
+              }
+            ],
+            "physical_event_support": false,
+            "role_retained": false,
+            "event_scope": "October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad.",
+            "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+          },
+          "input_item_index": 1,
+          "coordinate_origin": "PYTHON_EXACT_UNIQUE_QUOTE"
+        },
+        {
+          "actuality": "ACTUAL",
+          "context": {
+            "end": 6442,
+            "quote": "December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs.",
+            "start": 6307,
+            "reference": {
+              "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+              "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+              "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "locator": {
+                "start": 6307,
+                "end": 6442
+              },
+              "source_quote": "December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs.",
+              "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "origin_publisher": "Energy.gov",
+              "published_at": "2026-07-25T12:47:13-04:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "entity": {
+            "end": 6441,
+            "quote": "advanced light-water SMRs",
+            "start": 6416,
+            "value": "advanced light-water SMRs",
+            "reference": {
+              "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+              "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+              "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "locator": {
+                "start": 6416,
+                "end": 6441
+              },
+              "source_quote": "advanced light-water SMRs",
+              "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+              "origin_publisher": "Energy.gov",
+              "published_at": "2026-07-25T12:47:13-04:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "facts": [
+            {
+              "end": 0,
+              "field": "quantity",
+              "quote": "",
+              "start": 0,
+              "value": null,
+              "reference": null
+            },
+            {
+              "end": 0,
+              "field": "customer_group",
+              "quote": "",
+              "start": 0,
+              "value": null,
+              "reference": null
+            }
+          ],
+          "kind": "PRODUCT_FAMILY",
+          "role": "UNKNOWN",
+          "target": {
+            "product": {
+              "end": 6441,
+              "quote": "advanced light-water SMRs",
+              "start": 6416,
+              "value": "advanced light-water SMRs",
+              "reference": {
+                "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+                "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+                "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "locator": {
+                  "start": 6416,
+                  "end": 6441
+                },
+                "source_quote": "advanced light-water SMRs",
+                "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                "origin_publisher": "Energy.gov",
+                "published_at": "2026-07-25T12:47:13-04:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            },
+            "specification": null,
+            "region": null,
+            "customer_group": null,
+            "supply_pool": null
+          },
+          "source_verified": true,
+          "semantic_status": "UNKNOWN_REQUIRES_REVIEW",
+          "s_stage": "UNKNOWN",
+          "forecast_candidate": false,
+          "physical_exploration_lead": true,
+          "model_classification": {
+            "kind": "PHYSICAL_PRODUCT",
+            "role": "UNKNOWN",
+            "actuality": "ACTUAL"
+          },
+          "semantic_policy_version": "bct-v4-semantics-1",
+          "semantic_review": [
+            {
+              "field": "quantity",
+              "reason": "FINANCIAL_AMOUNT_NOT_PHYSICAL_QUANTITY",
+              "source_fact": {
+                "end": 6367,
+                "field": "quantity",
+                "quote": "$800 million",
+                "start": 6355,
+                "value": "$800 million",
+                "reference": {
+                  "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+                  "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+                  "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                  "locator": {
+                    "start": 6355,
+                    "end": 6367
+                  },
+                  "source_quote": "$800 million",
+                  "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                  "origin_publisher": "Energy.gov",
+                  "published_at": "2026-07-25T12:47:13-04:00",
+                  "publication_precision": "TIMESTAMP",
+                  "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+                  "assertion": "DIRECT_SOURCE_FACT"
+                }
+              }
+            },
+            {
+              "field": "customer_group",
+              "reason": "ACTUAL_PRODUCT_BUYER_RELATION_REQUIRED",
+              "source_fact": {
+                "end": 6385,
+                "field": "customer_group",
+                "quote": "TVA and Holtec",
+                "start": 6371,
+                "value": "TVA and Holtec",
+                "reference": {
+                  "document_id": "v4doc-7ab06d6136156572a7fa55958372866925f8957b6f27002d13330a3a3afc3874",
+                  "body_sha256": "d903996bb936077f073b922598429ffb2731efa07c4de468de3be4843402970a",
+                  "origin_id": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                  "locator": {
+                    "start": 6371,
+                    "end": 6385
+                  },
+                  "source_quote": "TVA and Holtec",
+                  "origin_url": "https://www.energy.gov/articles/fact-sheet-golden-era-american-nuclear-energy-has-arrived",
+                  "origin_publisher": "Energy.gov",
+                  "published_at": "2026-07-25T12:47:13-04:00",
+                  "publication_precision": "TIMESTAMP",
+                  "acquired_at": "2026-10-13T15:32:47.991358+00:00",
+                  "assertion": "DIRECT_SOURCE_FACT"
+                }
+              }
+            }
+          ],
+          "semantic_checks": {
+            "kind": "EXPLICIT_PHYSICAL_FAMILY_HEAD",
+            "field_decisions": [
+              {
+                "field": "quantity",
+                "status": "UNKNOWN",
+                "reason": "FINANCIAL_AMOUNT_NOT_PHYSICAL_QUANTITY",
+                "actuality": "ACTUAL"
+              },
+              {
+                "field": "customer_group",
+                "status": "UNKNOWN",
+                "reason": "ACTUAL_PRODUCT_BUYER_RELATION_REQUIRED",
+                "actuality": "ACTUAL"
+              }
+            ],
+            "physical_event_support": false,
+            "role_retained": false,
+            "event_scope": "December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs.",
+            "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+          },
+          "input_item_index": 2,
+          "coordinate_origin": "PYTHON_EXACT_UNIQUE_QUOTE"
+        }
+      ],
+      "rejected_items": [],
+      "coverage": {
+        "windows": [
+          {
+            "start": 5905,
+            "end": 6505,
+            "text": "2025: The Energy Department selected four companies for Advanced Nuclear Fuel Line Pilot Projects in order to strengthen domestic supply chains for nuclear fuel. October 28, 2025: The U.S. Government established a strategic partnership with Cameco Corporation and Brookfield Asset Management to accelerate the development of Westinghouse’s nuclear reactor technologies in the United States and abroad. December 2, 2025: The Energy Department awarded $800 million to TVA and Holtec to advance U.S. deployment of advanced light-water SMRs. January 5, 2026: The Energy Department announced a $2.7 billio"
+          }
+        ],
+        "publication": {
+          "published_at": "2026-07-25T12:47:13-04:00",
+          "precision": "TIMESTAMP"
+        },
+        "provenance_scope": "REVIEWED_PUBLIC_EXCERPT_NOT_FULL_DOCUMENT",
+        "selected_characters": 600,
+        "body_characters": 8053,
+        "coverage": "BOUNDED_WINDOWS_NOT_FULL_DOCUMENT",
+        "unread_ranges": [
+          {
+            "start": 0,
+            "end": 5905
+          },
+          {
+            "start": 6505,
+            "end": 8053
+          }
+        ],
+        "unread_characters": 7453
+      },
+      "source_status": "PASS",
+      "semantic_accuracy": "UNKNOWN",
+      "forecast_performance": "BLOCKED"
+    },
+    "meaning_accuracy": "UNKNOWN_GENERAL; selected field answers only",
+    "remaining_incorrect_adoptions_in_selected_fields": 0,
+    "remaining_omissions": [
+      {
+        "item_index": 1,
+        "field": "entity_mention",
+        "value": "Westinghouse’s nuclear reactor technologies",
+        "physical_identity": "UNKNOWN_TECHNOLOGY_DESCRIPTION",
+        "reason": "Literal source mention omitted; no fact fabricated to fill it"
+      },
+      {
+        "item_index": 2,
+        "field": "region",
+        "value": "U.S.",
+        "reason": "Literal source mention omitted; no fact fabricated to fill it"
+      }
+    ],
+    "source_completeness": "PARTIAL/BLOCKED preserved; public reviewed excerpt only",
+    "other_saved_EIA_source": "Not AI-processed; provenance/publication blockers preserved, not part of this comparison",
+    "metric_definition": "UNKNOWN counts both null fields and UNKNOWN kind/role/actuality labels; known values/types/events count as correct adoptions"
+  },
+  "SQLite": {
+    "status": "PASS_NEW_SEMANTIC_RESULT_PERSISTED_REOPENED",
+    "source_item_count": 3,
+    "source_references_preserved": 7,
+    "held_semantic_fields": 2,
+    "attempts": 5,
+    "new_api_calls": 0,
+    "same_result_on_restart": true,
+    "semantic_code_sha256": "a0dd95074453b51cc495cf507d0d2bf85b65e5c050e9f0e0681ac0095ba4093a",
+    "semantic_policy_version": "bct-v4-semantics-1",
+    "source_ledger_opened_read_only": true,
+    "s_stage_promotions": 0,
+    "backup_integrity": "ok",
+    "backup_result_matches": true,
+    "source_ledger_sha256_unchanged": "0d08401f6b549493aae9ee07fc0327f6214aca899dc56f051e78dd343d7d8b0f"
+  },
+  "api_usage_current_task": {
+    "generation_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "total_tokens": 0,
+    "api_cost_usd": 0,
+    "reason": "Saved actual response reused; all current processing offline with a forbidden-network adapter",
+    "historical_usage_not_new": {
+      "input_tokens": 904,
+      "output_tokens": 701,
+      "total_tokens": 1605
+    }
+  },
+  "limitations": [
+    "One official development document and three actual response items are not a general accuracy evaluation",
+    "Westinghouse technology mention and U.S. deployment-region extraction omissions remain",
+    "Quantity/customer/qualified-supply/need/readiness facts absent in the actual excerpt remain UNKNOWN",
+    "Word/relationship rules may defer other wording; stage 4 must measure false adoptions and omissions on its separately frozen official sample",
+    "CPU comparison remains unavailable with missing prior same-source CPU output/weights; CPU engine unchanged"
+  ],
+  "preservation": {
+    "stage2_fixed_PASS": true,
+    "source_functions_AST_identical": [
+      "obj",
+      "_without_coordinates",
+      "APIError",
+      "instant",
+      "checked_config",
+      "source_input",
+      "shape",
+      "no_duplicate_keys",
+      "validate_output",
+      "exact_quote_range",
+      "bind_quotes",
+      "retry_after",
+      "NoRedirect",
+      "HTTPAdapter",
+      "Router",
+      "api_status",
+      "annotate"
+    ],
+    "CPU_core_fixture_pin_files_hash_identical": 22,
+    "main_operating_db_actions_alerts_unchanged": true,
+    "Gemini_live_calls": 0,
+    "third_provider": false,
+    "new_installs": 0,
+    "new_score_framework": false,
+    "S_stage_promotions": 0,
+    "stage4_started": false,
+    "shadow_started": false
+  },
+  "next_start": "Stage 4 official-source comparison only after separate authorization; neither stage 4 nor Shadow started in this task",
+  "delivery": {
+    "status": "LOCAL_COMPLETE_PENDING_PUSH",
+    "branch": "codex/bct-v4-integration"
+  }
+}

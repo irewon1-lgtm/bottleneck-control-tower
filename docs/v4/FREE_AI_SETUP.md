@@ -1,6 +1,14 @@
-# Stage 2 — GroqCloud only, Gemini disabled
+# GroqCloud only, Gemini disabled — stage 3 meaning guards
 
 Updated 2026-10-14 (Asia/Seoul). Read `EXECUTION_PLAN.md` and `PROGRESS.json` first. The fixed eight-stage goal and CPU GLiNER2 engine remain unchanged. Active AI: **GroqCloud Free Plan only**. Gemini code is retained, but routing/probes and key requirements are disabled. No third provider, paid fallback, upgrade or billing action.
+
+## Current stage 3 functional verification
+
+Stage 2 remains fixed PASS. The request schema, prompt, input/cache keys, exact quote validator and CPU engine were preserved. `semantics.py` reviews source-verified facts: money requires separate physical quantity evidence, customers require actual product purchase/delivery relations, and supplier pools require actual product qualification. Plans, forecasts, negation, relief, project/product/equipment/slot types and product-specific quantity/time/region/specification relations are checked. Rejected meanings stay null with the original source fact retained in the audit; no S-stage promotion occurs.
+
+**Stage 3 functional PASS:** 85 new authored/official-response cases and 37 selected existing cases passed; broad 99/261 suites were not repeated. A manually reviewed, hash-identical official source and its three saved actual response items were reused. Across 23 selected fields: 8 correct known adoptions, 0 incorrect adoptions, 15 UNKNOWN (including three role labels); two separate literal mention omissions remain (Westinghouse technology name and U.S. region). The prior processed response had two incorrect adoptions: funding quantity and recipient/customer. This is one-source development verification; general accuracy remains UNKNOWN.
+
+New generation calls **0**, new tokens **0**, cost **$0**. Separate stage-3 SQLite copy `var/v4/stage3/replay` stored the reprocessed job and review. Fresh-process/cache and backup checks preserved the two semantic holds and all seven source references. The stage-2 source ledger was opened read-only. The 50-document comparison and Shadow remain NOT_RUN. Details: `STAGE3_RESULTS.json`.
 
 ## Current stage 2 completion (2026-10-14)
 
@@ -50,7 +58,7 @@ Default urllib reproduced 403/1010 on a read-only request; the identifying BCT c
 
 The old adapter did not retain the second POST HTTP detail; its exact rejecting parameter is unknown. The next changed-contract request returned JSON. New errors retain only HTTP status and recognized safe diagnostic labels, never raw credential-bearing error text. Unchanged invalid contracts remain held; only a changed contract may reopen an INPUT_INVALID hold. Received usage and transport recovery are saved independently of source validation. A null unverified `checked_at` now returns WAIT_API safely.
 
-The quote/offset contract and real SQLite verification are complete. The next separately authorized development step is stage 3 semantic assessment, beginning with funding amounts/product quantities and funding recipients/product customers. General accuracy remains UNKNOWN. TARGET's five fields/S1/S2/S3 are unchanged. This task ends at stage 2; main, V3.3 operating DB, Actions and alerts were not changed.
+The quote/offset contract, real SQLite verification and stage-3 meaning guards are complete. The next separately authorized development step is stage 4's official-source comparison. General accuracy remains UNKNOWN. TARGET's five fields/S1/S2/S3 are unchanged. This task ends at stage 3; main, V3.3 operating DB, Actions and alerts were not changed.
 
 Local inspection without network:
 
