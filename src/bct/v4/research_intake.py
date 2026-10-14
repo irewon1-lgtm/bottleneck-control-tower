@@ -36,6 +36,8 @@ def check_config(config):
         raise ValueError("RESEARCH_TIMER_INTERVAL_600_TO_86400")
     if not 1 <= len(config.get("sources", [])) <= 3:
         raise ValueError("RESEARCH_OFFICIAL_INDEX_LIMIT_1_TO_3")
+    if config.get("refresh_existing_source_after_seconds", 86400) != 86400:
+        raise ValueError("EXISTING_SOURCE_REFRESH_IS_BOUNDED_TO_DAILY")
     for source in config["sources"]:
         p, prefix = urlsplit(source["index_url"]), urlsplit(source["article_prefix"])
         if (p.hostname not in PUBLISHERS or p.hostname != prefix.hostname
@@ -81,11 +83,40 @@ def fair_batch(pending, limit):
     return selected
 
 
+def refresh_candidate(ledger):
+    """One stale known URL, only after new work has spare batch capacity."""
+    last = dict(ledger.db.execute("SELECT url,MAX(at) FROM captures GROUP BY url"))
+    failed = set()
+    for payload, in ledger.db.execute("SELECT payload FROM events WHERE kind='INTAKE_REFRESH_RESULT' ORDER BY seq"):
+        row = json.loads(payload)
+        last[row["url"]] = row["at"]
+        if row["status"] == "FAILED":
+            failed.add(row["url"])
+    due = [d for d in ledger.latest_documents() if d["origin_url"] not in failed
+           and (datetime.fromisoformat(now())-datetime.fromisoformat(last[d["origin_url"]])).total_seconds() >= 86400]
+    return min(due, key=lambda d: last[d["origin_url"]]) if due else None
+
+
+def reading_queue(ledger):
+    versions, first_at = {}, {}
+    for at, payload in ledger.db.execute("SELECT at,payload FROM events WHERE kind='READ_QUEUE' ORDER BY seq"):
+        row = json.loads(payload)
+        did = row["document_id"]
+        first_at.setdefault(did, at)
+        versions[did] = row["state"]
+    states = {}
+    for state in versions.values():
+        states[state] = states.get(state, 0)+1
+    pending = [did for did, state in versions.items() if state != "COMPLETE"]
+    return {"unfinished_versions": len(pending), "states": states,
+            "oldest_unfinished_at": min((first_at[did] for did in pending), default=None)}
+
+
 def intake(root, config, *, client=None, trigger="manual"):
     check_config(config)
     client, ledger = client or SourceClient(), Ledger(root)
     run_id = "intake-" + uuid.uuid4().hex
-    captured, failures, inflow = [], [], 0
+    captured, failures, inflow, refreshes = [], [], 0, []
     try:
         with ledger.worker():
             with ledger.db:
@@ -116,7 +147,8 @@ def intake(root, config, *, client=None, trigger="manual"):
                     with ledger.db:
                         ledger.event("INTAKE_INDEX_FAILURE", failures[-1])
             pending, _ = queue(ledger)
-            for item in fair_batch(pending, config["document_limit"]):
+            batch = fair_batch(pending, config["document_limit"])
+            for item in batch:
                 at, url = now(), item["url"]
                 try:
                     doc, raw, views = client.document(url)
@@ -133,14 +165,43 @@ def intake(root, config, *, client=None, trigger="manual"):
                     failures.append(failure)
                     with ledger.db:
                         ledger.event("INTAKE_FETCH_RESULT", failure)
+            new_url_captures = len(captured)
+            if len(batch) < config["document_limit"]:
+                old = refresh_candidate(ledger)
+                if old:
+                    url = old["origin_url"]
+                    try:
+                        doc, raw, views = client.document(url)
+                        if doc["origin_url"] != url:
+                            raise ValueError("ARTICLE_IDENTITY_CHANGED")
+                        changed = doc["body_sha256"] != old["body_sha256"]
+                        if changed and doc["raw_sha256"] == old["raw_sha256"]:
+                            raise ValueError("BODY_CHANGED_WITHOUT_NATIVE_VERSION")
+                        if doc["raw_sha256"] != old["raw_sha256"]:
+                            added = ledger.capture(doc, raw, {"AI_status": "NOT_RUN_QUALITY_GATE_HOLD", "body_reused": not changed})
+                            if added:
+                                captured.append(doc["document_id"])
+                                if changed:
+                                    with ledger.db:
+                                        ledger.event("READ_QUEUE", {"document_id": doc["document_id"], "state": "PENDING", "source_version": doc["body_sha256"], "previous_document_id": old["document_id"], "AI_gate": "HOLD_PENDING_INDEPENDENT_QUALITY"})
+                        refreshes.append({"url": url, "at": now(), "status": "BODY_CHANGED" if changed else "UNCHANGED_BODY",
+                                          "previous_document_id": old["document_id"], "document_id": doc["document_id"], "body_sha256": doc["body_sha256"]})
+                    except Exception as exc:
+                        refreshes.append({"url": url, "at": now(), "status": "FAILED", "type": type(exc).__name__, "http_status": getattr(exc, "code", None)})
+                        failures.append({"phase": "REFRESH", **refreshes[-1]})
+                    with ledger.db:
+                        ledger.event("INTAKE_REFRESH_RESULT", refreshes[-1])
             pending, failed = queue(ledger)
             oldest = min((x["at"] for x in pending), default=None)
+            reads = reading_queue(ledger)
             result = stamp_export({"run_id": run_id, "scope": "RESEARCH_COLLECTION_ONLY_NOT_AI_SHADOW", "trigger": trigger,
                 "discovered_new_URLs": inflow, "live_captured": len(captured), "new_document_ids": captured,
                 "pending_source_fetch": len(pending), "isolated_failed_URLs": len(failed),
                 "oldest_pending_at": oldest, "failures": failures, "candidates": [],
-                "intake_backlog_change": inflow-len(captured)-sum(f.get("phase")=="DOCUMENT" for f in failures),
-                "read_queue": ledger.db.execute("SELECT count(*) FROM events WHERE kind='READ_QUEUE'").fetchone()[0],
+                "intake_backlog_change": inflow-new_url_captures-sum(f.get("phase")=="DOCUMENT" for f in failures),
+                "source_refreshes": refreshes,
+                "read_queue": reads["unfinished_versions"], "read_queue_states": reads["states"],
+                "oldest_unfinished_reading_at": reads["oldest_unfinished_at"],
                 "AI_requests": 0, "API_cost": 0, "S1": 0, "S2": 0, "S3": 0,
                 "forecast_performance": "NOT_RUN", "AI_analysis_automation": "HOLD"})
             return ledger.save_run(run_id, result, "LIVE")

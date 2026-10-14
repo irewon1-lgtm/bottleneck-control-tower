@@ -1,0 +1,3610 @@
+{
+  "version": "bct-event-gold-1",
+  "reviewer": {
+    "type": "AI_INDEPENDENT_SESSION",
+    "session": "UNKNOWN",
+    "model": "UNKNOWN",
+    "task_path": "/root/round2_source_author",
+    "session_note": "플랫폼 세션 ID와 실제 실행 모델 식별자는 노출되지 않아 UNKNOWN으로 기록했다.",
+    "exposed_to_model_outputs": false,
+    "human_verified": false
+  },
+  "scope_note": "원문 판단은 지정 정책, review-packet.json, 패킷 body_path의 windows만 사용했다. 본문 파일의 해시는 계산했지만 windows 밖은 판독·정답 검토하지 않았다. 이 산출물은 AI 독립 원문 정답 초안이며 인간 검증이 아니다.",
+  "documents": [
+    {
+      "document_id": "v4doc-3ffb5263451d57ee3c360fa31e5d70b9d49ee60a6700a5080c23929bcee4e4ed",
+      "body_sha256": "719398e0944ecc232e8ec9fe79de48a8d4587c2c2acb4e90df41ffd4901bcc94",
+      "review_complete": false,
+      "reviewed_ranges": [],
+      "targets": [],
+      "no_relevant_event_reason": "UNVERIFIED: 패킷 windows가 비어 있어 원문 판독과 정답 검토를 수행하지 않았다. 관련 사건 부재를 뜻하지 않는다.",
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 3473,
+        "reviewed_characters": 0,
+        "reviewed_fraction": 0.0,
+        "unreviewed_ranges": [
+          {
+            "start": 0,
+            "end": 3473,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      },
+      "review_status": "UNVERIFIED"
+    },
+    {
+      "document_id": "v4doc-b4b8955318af266eea0118ef171a76aca9c2bf4a9125d462ef8bcc567796785f",
+      "body_sha256": "ddf3f6f1eb4c1bbb4ea2a0bef8d5cbe44d877f973e3378467834db769ff261a0",
+      "review_complete": false,
+      "reviewed_ranges": [],
+      "targets": [],
+      "no_relevant_event_reason": "UNVERIFIED: 패킷 windows가 비어 있어 원문 판독과 정답 검토를 수행하지 않았다. 관련 사건 부재를 뜻하지 않는다.",
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 4679,
+        "reviewed_characters": 0,
+        "reviewed_fraction": 0.0,
+        "unreviewed_ranges": [
+          {
+            "start": 0,
+            "end": 4679,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      },
+      "review_status": "UNVERIFIED"
+    },
+    {
+      "document_id": "v4doc-c82f20acec88ed5980272b399272fed98d3b7dace46bfdc0e6143f9a1b6f2caf",
+      "body_sha256": "067bb06d07a1c9814f235d1d8da890b4838518e55cb5bc4309a45b626f94cdd1",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 1489,
+          "end": 1792
+        },
+        {
+          "start": 1793,
+          "end": 1979
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "iar330-puma",
+          "entity": "IAR-330 Puma",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1489,
+            "end": 1618,
+            "quote": "The Romanian Air Force currently operates the IAR-330 Puma, a locally produced version of the Puma under an Aerospatiale license."
+          },
+          "events": [],
+          "no_relevant_event_reason": "현재 운용과 과거 현지 생산·면허 배경만 명시된다. 이 모델의 새 주문·출하·공급 증감 사건은 없다."
+        },
+        {
+          "target_id": "puma-family",
+          "entity": "Puma",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1489,
+            "end": 1618,
+            "quote": "The Romanian Air Force currently operates the IAR-330 Puma, a locally produced version of the Puma under an Aerospatiale license."
+          },
+          "events": [],
+          "no_relevant_event_reason": "IAR-330의 원형 제품군과 교체되는 기단으로 언급된다. 기단 교체를 Puma 물리 공급 감소로 해석하지 않는다."
+        },
+        {
+          "target_id": "h225m",
+          "entity": "H225Ms",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1619,
+            "end": 1721,
+            "quote": "The 12 H225Ms will initiate the replacement of the Puma fleet for conventional and special operations."
+          },
+          "events": [
+            {
+              "event_id": "h225m-replacement-plan",
+              "reference": {
+                "start": 1619,
+                "end": 1721,
+                "quote": "The 12 H225Ms will initiate the replacement of the Puma fleet for conventional and special operations."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "H225Ms",
+                  "reference": {
+                    "start": 1619,
+                    "end": 1721,
+                    "quote": "The 12 H225Ms will initiate the replacement of the Puma fleet for conventional and special operations."
+                  },
+                  "reason": "12대의 향후 교체 투입 대상으로 이 모델이 직접 명시된다."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "DEMAND_INCREASE",
+                  "reference": {
+                    "start": 1619,
+                    "end": 1721,
+                    "quote": "The 12 H225Ms will initiate the replacement of the Puma fleet for conventional and special operations."
+                  },
+                  "reason": "기존 Puma 기단을 교체할 H225M 12대의 향후 획득·투입 수요가 명시된다. 실제 공급 증가로 판정하지 않는다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "PLAN",
+                  "reference": {
+                    "start": 1619,
+                    "end": 1721,
+                    "quote": "The 12 H225Ms will initiate the replacement of the Puma fleet for conventional and special operations."
+                  },
+                  "reason": "will initiate라는 미래 교체 계획이다. 이 window만으로 12대가 이미 인도됐다고 볼 수 없다."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "12",
+                  "reference": {
+                    "start": 1619,
+                    "end": 1721,
+                    "quote": "The 12 H225Ms will initiate the replacement of the Puma fleet for conventional and special operations."
+                  },
+                  "reason": "교체에 투입될 H225M 수량이다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Romanian Air Force",
+                  "reference": {
+                    "start": 1489,
+                    "end": 1721,
+                    "quote": "The Romanian Air Force currently operates the IAR-330 Puma, a locally produced version of the Puma under an Aerospatiale license. The 12 H225Ms will initiate the replacement of the Puma fleet for conventional and special operations."
+                  },
+                  "reason": "바로 앞 문장의 Romanian Air Force가 운용하는 Puma 기단을 후속 문장에서 교체한다."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "AMBIGUOUS",
+                  "value": "Airbus Helicopters",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "현재 계약의 Airbus 당사자는 명시되지만 제공 범위에는 그 계약의 대상을 H225M이라고 직접 연결하는 문장이 없다. H225M의 확정 적격 공급원으로 채택하지 않는다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "for conventional and special operations",
+                  "reference": {
+                    "start": 1619,
+                    "end": 1721,
+                    "quote": "The 12 H225Ms will initiate the replacement of the Puma fleet for conventional and special operations."
+                  },
+                  "reason": "해당 H225M의 임무 용도가 직접 명시된다."
+                },
+                {
+                  "field": "region",
+                  "status": "AMBIGUOUS",
+                  "value": "Romania",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "계약 주체 국가는 명시되지만 H225M 사건과 현재 계약의 직접 연결 및 실제 인도 지역은 제공 범위에서 확정할 수 없다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "AMBIGUOUS",
+                  "value": "Puma",
+                  "reference": {
+                    "start": 1619,
+                    "end": 1721,
+                    "quote": "The 12 H225Ms will initiate the replacement of the Puma fleet for conventional and special operations."
+                  },
+                  "reason": "Puma는 교체되는 기존 기종이다. H225M 수요를 충족할 사용 가능한 대체 공급품인지까지는 명시되지 않는다."
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows의 H225M 수량에는 별도의 항공기·헬리콥터 계수 단위가 명시되지 않는다. Airbus Helicopters는 회사명이다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 H225M 교체 계획의 날짜·기간이 명시되지 않는다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 고객 필요 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 공급 준비·인도 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건과 연결된 수급 제약 완화 사실이 명시되지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "target_id": "h215m",
+          "entity": "H215Ms",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1722,
+            "end": 1792,
+            "quote": "Romania has also previously ordered two H215Ms in naval configuration."
+          },
+          "events": [
+            {
+              "event_id": "h215m-prior-order",
+              "reference": {
+                "start": 1722,
+                "end": 1792,
+                "quote": "Romania has also previously ordered two H215Ms in naval configuration."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "H215Ms",
+                  "reference": {
+                    "start": 1722,
+                    "end": 1792,
+                    "quote": "Romania has also previously ordered two H215Ms in naval configuration."
+                  },
+                  "reason": "과거 주문 대상으로 직접 명시된다."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "DEMAND_INCREASE",
+                  "reference": {
+                    "start": 1722,
+                    "end": 1792,
+                    "quote": "Romania has also previously ordered two H215Ms in naval configuration."
+                  },
+                  "reason": "Romania가 두 대를 ordered한 별도 구매·발주 사건이다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 1722,
+                    "end": 1792,
+                    "quote": "Romania has also previously ordered two H215Ms in naval configuration."
+                  },
+                  "reason": "has also previously ordered는 이미 발생한 주문이다. 배송 완료를 뜻하지 않는다."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "two",
+                  "reference": {
+                    "start": 1722,
+                    "end": 1792,
+                    "quote": "Romania has also previously ordered two H215Ms in naval configuration."
+                  },
+                  "reason": "이 과거 H215M 주문의 명시 수량이다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "previously",
+                  "reference": {
+                    "start": 1722,
+                    "end": 1792,
+                    "quote": "Romania has also previously ordered two H215Ms in naval configuration."
+                  },
+                  "reason": "해당 주문이 현재 발표보다 앞선 과거 사건이라는 상대 시점만 명시된다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Romania",
+                  "reference": {
+                    "start": 1722,
+                    "end": 1792,
+                    "quote": "Romania has also previously ordered two H215Ms in naval configuration."
+                  },
+                  "reason": "주문 주체로 직접 명시된다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "naval configuration",
+                  "reference": {
+                    "start": 1722,
+                    "end": 1792,
+                    "quote": "Romania has also previously ordered two H215Ms in naval configuration."
+                  },
+                  "reason": "이 두 H215M의 구성이다."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Romania",
+                  "reference": {
+                    "start": 1722,
+                    "end": 1792,
+                    "quote": "Romania has also previously ordered two H215Ms in naval configuration."
+                  },
+                  "reason": "명시된 주문 주체의 국가다. 배송지나 운용 기지는 명시되지 않았다."
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "이 주문에는 모델명 외 별도의 계수 단위가 명시되지 않는다."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "과거 H215M 두 대 주문의 판매자·적격 공급 풀은 직접 명시되지 않는다. 다음 문장의 현재 계약 당사자를 과거 주문에 전이하지 않는다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 고객 필요 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 공급 준비·인도 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건과 연결된 수급 제약 완화 사실이 명시되지 않는다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건에 이용할 수 있는 대체 제품·공급원이 명시되지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "target_id": "h160",
+          "entity": "H160",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1793,
+            "end": 1979,
+            "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+          },
+          "events": [
+            {
+              "event_id": "h160-recent-order",
+              "reference": {
+                "start": 1793,
+                "end": 1979,
+                "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "H160",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "최근 발주 모델로 직접 명시된다."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "DEMAND_INCREASE",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "최근 ordered한 기종별 실제 발주 수요다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "recently ordered는 주문 발생 사실이며 향후 인도 완료를 뜻하지 않는다."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "seven",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "이 모델에 바로 연결된 발주 수량이다. 다른 기종 수량과 합치지 않는다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "recently",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "해당 H160·H145 주문의 상대 시점이다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Romania",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "Romania와 Airbus Helicopters의 계약 이력 안에서 설명된 최근 발주다."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Airbus Helicopters",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "명시된 헬리콥터 계약 상대방이다. 공급 가능한 총재고·총 적격 공급량은 아니다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "for public services missions",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "두 최근 발주 기종의 임무 용도가 직접 명시된다."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Romania",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "계약 당사자로 명시된 고객 국가다. 구체적 인도 장소는 없다."
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "최근 주문의 기종별 수량에 별도의 계수 단위가 없다. 회사명 Helicopters를 수량 단위로 쓰지 않는다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 고객 필요 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 공급 준비·인도 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건과 연결된 수급 제약 완화 사실이 명시되지 않는다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건에 이용할 수 있는 대체 제품·공급원이 명시되지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "target_id": "h145",
+          "entity": "H145",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1793,
+            "end": 1979,
+            "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+          },
+          "events": [
+            {
+              "event_id": "h145-recent-order",
+              "reference": {
+                "start": 1793,
+                "end": 1979,
+                "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "H145",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "최근 발주 모델로 직접 명시된다."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "DEMAND_INCREASE",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "최근 ordered한 기종별 실제 발주 수요다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "recently ordered는 주문 발생 사실이며 향후 인도 완료를 뜻하지 않는다."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "five",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "이 모델에 바로 연결된 발주 수량이다. 다른 기종 수량과 합치지 않는다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "recently",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "해당 H160·H145 주문의 상대 시점이다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Romania",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "Romania와 Airbus Helicopters의 계약 이력 안에서 설명된 최근 발주다."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Airbus Helicopters",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "명시된 헬리콥터 계약 상대방이다. 공급 가능한 총재고·총 적격 공급량은 아니다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "for public services missions",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "두 최근 발주 기종의 임무 용도가 직접 명시된다."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Romania",
+                  "reference": {
+                    "start": 1793,
+                    "end": 1979,
+                    "quote": "This contract is the second one signed by Romania and Airbus Helicopters in the frame of the SAFE initiative, with seven H160 and five H145 recently ordered for public services missions."
+                  },
+                  "reason": "계약 당사자로 명시된 고객 국가다. 구체적 인도 장소는 없다."
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "최근 주문의 기종별 수량에 별도의 계수 단위가 없다. 회사명 Helicopters를 수량 단위로 쓰지 않는다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 고객 필요 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 공급 준비·인도 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건과 연결된 수급 제약 완화 사실이 명시되지 않는다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건에 이용할 수 있는 대체 제품·공급원이 명시되지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "no_relevant_event_reason": null,
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 2594,
+        "reviewed_characters": 489,
+        "reviewed_fraction": 0.18851195065535853,
+        "unreviewed_ranges": [
+          {
+            "start": 0,
+            "end": 1489,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 1792,
+            "end": 1793,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 1979,
+            "end": 2594,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      }
+    },
+    {
+      "document_id": "v4doc-e4dbafd178d94c5f2f913f2cb9a6a12b108f39663fbe6e6022c451a0a9c03fa3",
+      "body_sha256": "fcbffb1b3d2726e021ba962994238614c54e9de9140a7717ef7ba797a90a9d97",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 1308,
+          "end": 1763
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "a320-family",
+          "entity": "A320 Family",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1308,
+            "end": 1763,
+            "quote": "“This first direct order from FLYONE Armenia underscores the airline's commitment for operational excellence and enhanced passenger comfort as it continues to expand its A320 Family fleet,” said Benoît de Saint-Exupéry, Airbus EVP Sales of the Commercial Aircraft business. “We are very happy to welcome FLYONE as a new member of the Airbus family and we look forward to a deep and fruitful collaboration together to support their strategic growth plans.”"
+          },
+          "events": [
+            {
+              "event_id": "a320-family-direct-order",
+              "reference": {
+                "start": 1308,
+                "end": 1763,
+                "quote": "“This first direct order from FLYONE Armenia underscores the airline's commitment for operational excellence and enhanced passenger comfort as it continues to expand its A320 Family fleet,” said Benoît de Saint-Exupéry, Airbus EVP Sales of the Commercial Aircraft business. “We are very happy to welcome FLYONE as a new member of the Airbus family and we look forward to a deep and fruitful collaboration together to support their strategic growth plans.”"
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "A320 Family",
+                  "reference": {
+                    "start": 1308,
+                    "end": 1763,
+                    "quote": "“This first direct order from FLYONE Armenia underscores the airline's commitment for operational excellence and enhanced passenger comfort as it continues to expand its A320 Family fleet,” said Benoît de Saint-Exupéry, Airbus EVP Sales of the Commercial Aircraft business. “We are very happy to welcome FLYONE as a new member of the Airbus family and we look forward to a deep and fruitful collaboration together to support their strategic growth plans.”"
+                  },
+                  "reason": "직접 주문과 고객의 기단 확장이 연결된 제품군이다. URL의 더 구체적인 기종은 사용하지 않는다."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "DEMAND_INCREASE",
+                  "reference": {
+                    "start": 1308,
+                    "end": 1763,
+                    "quote": "“This first direct order from FLYONE Armenia underscores the airline's commitment for operational excellence and enhanced passenger comfort as it continues to expand its A320 Family fleet,” said Benoît de Saint-Exupéry, Airbus EVP Sales of the Commercial Aircraft business. “We are very happy to welcome FLYONE as a new member of the Airbus family and we look forward to a deep and fruitful collaboration together to support their strategic growth plans.”"
+                  },
+                  "reason": "first direct order와 A320 Family 기단 확장이 명시되어 실제 주문 수요로 판정한다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 1308,
+                    "end": 1763,
+                    "quote": "“This first direct order from FLYONE Armenia underscores the airline's commitment for operational excellence and enhanced passenger comfort as it continues to expand its A320 Family fleet,” said Benoît de Saint-Exupéry, Airbus EVP Sales of the Commercial Aircraft business. “We are very happy to welcome FLYONE as a new member of the Airbus family and we look forward to a deep and fruitful collaboration together to support their strategic growth plans.”"
+                  },
+                  "reason": "이미 존재하는 first direct order와 continues to expand를 설명한다. 인도 완료는 확인하지 않는다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "FLYONE Armenia",
+                  "reference": {
+                    "start": 1308,
+                    "end": 1763,
+                    "quote": "“This first direct order from FLYONE Armenia underscores the airline's commitment for operational excellence and enhanced passenger comfort as it continues to expand its A320 Family fleet,” said Benoît de Saint-Exupéry, Airbus EVP Sales of the Commercial Aircraft business. “We are very happy to welcome FLYONE as a new member of the Airbus family and we look forward to a deep and fruitful collaboration together to support their strategic growth plans.”"
+                  },
+                  "reason": "직접 주문의 주체로 명시된다.",
+                  "value_aliases": [
+                    "FLYONE"
+                  ]
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "AMBIGUOUS",
+                  "value": "Airbus",
+                  "reference": {
+                    "start": 1308,
+                    "end": 1763,
+                    "quote": "“This first direct order from FLYONE Armenia underscores the airline's commitment for operational excellence and enhanced passenger comfort as it continues to expand its A320 Family fleet,” said Benoît de Saint-Exupéry, Airbus EVP Sales of the Commercial Aircraft business. “We are very happy to welcome FLYONE as a new member of the Airbus family and we look forward to a deep and fruitful collaboration together to support their strategic growth plans.”"
+                  },
+                  "reason": "Airbus의 영업 임원 인용과 회사의 환영 발언은 있지만 제공 인용에 주문의 계약 공급자를 직접 서술한 문장은 없다."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "first는 직접 주문의 순서를 뜻한다. 검토 windows에는 이 주문의 물리 항공기 수량이 없다."
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "기단을 언급하지만 발주 물량의 계수 단위는 별도로 명시하지 않는다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 주문일·주문 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "operational excellence와 passenger comfort는 목표 표현이며 제품의 구체적 사양이 아니다."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "Armenia는 고객의 정식 명칭 안에 있다. 이 주문의 인도·운용 지역은 별도로 명시되지 않는다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 고객 필요 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 공급 준비·인도 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건과 연결된 수급 제약 완화 사실이 명시되지 않는다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건에 이용할 수 있는 대체 제품·공급원이 명시되지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "no_relevant_event_reason": null,
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 2422,
+        "reviewed_characters": 455,
+        "reviewed_fraction": 0.18786127167630057,
+        "unreviewed_ranges": [
+          {
+            "start": 0,
+            "end": 1308,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 1763,
+            "end": 2422,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      }
+    },
+    {
+      "document_id": "v4doc-32aa00e650bd197d8c449c395be1cf12dda4768de3969018a52af00f02883885",
+      "body_sha256": "973fba70bf0dffde6bc8f8fab2bfc8eb992bbc7ac32be2fef58ede4ad6e832f9",
+      "review_complete": false,
+      "reviewed_ranges": [],
+      "targets": [],
+      "no_relevant_event_reason": "UNVERIFIED: 패킷 windows가 비어 있어 원문 판독과 정답 검토를 수행하지 않았다. 관련 사건 부재를 뜻하지 않는다.",
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 2878,
+        "reviewed_characters": 0,
+        "reviewed_fraction": 0.0,
+        "unreviewed_ranges": [
+          {
+            "start": 0,
+            "end": 2878,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      },
+      "review_status": "UNVERIFIED"
+    },
+    {
+      "document_id": "v4doc-c9afdc2235d38afc3eb1e21b6f13bb1085095c6113e3afe29e15f785fd2f3ee9",
+      "body_sha256": "d5d8e1ce503116f4bfe4b5cb8f7beb358b2cb7f760a2323420ad54648752f1cb",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 0,
+          "end": 246
+        },
+        {
+          "start": 247,
+          "end": 567
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "airbus-h160",
+          "entity": "Airbus H160",
+          "entity_aliases": [
+            "Airbus H160 helicopter",
+            "H160"
+          ],
+          "discovery_reference": {
+            "start": 0,
+            "end": 246,
+            "quote": "Melbourne, Australia, 15 September 2026 – Melbourne-based logistics and supply chain enterprise, Linfox Group, has taken delivery of Australia’s first Airbus H160 helicopter, marking a landmark moment for next-generation rotorcraft in the region."
+          },
+          "events": [
+            {
+              "event_id": "h160-linfox-delivery",
+              "reference": {
+                "start": 0,
+                "end": 246,
+                "quote": "Melbourne, Australia, 15 September 2026 – Melbourne-based logistics and supply chain enterprise, Linfox Group, has taken delivery of Australia’s first Airbus H160 helicopter, marking a landmark moment for next-generation rotorcraft in the region."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Airbus H160",
+                  "reference": {
+                    "start": 0,
+                    "end": 246,
+                    "quote": "Melbourne, Australia, 15 September 2026 – Melbourne-based logistics and supply chain enterprise, Linfox Group, has taken delivery of Australia’s first Airbus H160 helicopter, marking a landmark moment for next-generation rotorcraft in the region."
+                  },
+                  "reason": "실제 인도된 헬리콥터 모델이다.",
+                  "value_aliases": [
+                    "Airbus H160 helicopter",
+                    "H160"
+                  ]
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "SUPPLY_INCREASE",
+                  "reference": {
+                    "start": 0,
+                    "end": 246,
+                    "quote": "Melbourne, Australia, 15 September 2026 – Melbourne-based logistics and supply chain enterprise, Linfox Group, has taken delivery of Australia’s first Airbus H160 helicopter, marking a landmark moment for next-generation rotorcraft in the region."
+                  },
+                  "reason": "고객이 실제 인도를 받았고 다음 window에서 운용 투입을 확인한다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 247,
+                    "end": 567,
+                    "quote": "With this delivery, Linfox became the first operator in Australia to bring the twin-engine Airbus H160 into service. The state-of-the-art helicopter will support the business and corporate aviation requirements of the Linfox Group, operating across Australia’s diverse geography from urban hubs to regional destinations."
+                  },
+                  "reason": "became the first operator와 bring ... into service가 이미 발생한 인도·취역을 확인한다."
+                },
+                {
+                  "field": "quantity",
+                  "status": "AMBIGUOUS",
+                  "value": "first",
+                  "reference": {
+                    "start": 0,
+                    "end": 246,
+                    "quote": "Melbourne, Australia, 15 September 2026 – Melbourne-based logistics and supply chain enterprise, Linfox Group, has taken delivery of Australia’s first Airbus H160 helicopter, marking a landmark moment for next-generation rotorcraft in the region."
+                  },
+                  "reason": "호주 최초라는 서수 표지다. 전체 인도 로트의 명시적 기수량으로 변환하지 않는다."
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "helicopter",
+                  "reference": {
+                    "start": 0,
+                    "end": 246,
+                    "quote": "Melbourne, Australia, 15 September 2026 – Melbourne-based logistics and supply chain enterprise, Linfox Group, has taken delivery of Australia’s first Airbus H160 helicopter, marking a landmark moment for next-generation rotorcraft in the region."
+                  },
+                  "reason": "인도된 물리 제품의 계수 명사가 명시된다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Linfox Group",
+                  "reference": {
+                    "start": 0,
+                    "end": 246,
+                    "quote": "Melbourne, Australia, 15 September 2026 – Melbourne-based logistics and supply chain enterprise, Linfox Group, has taken delivery of Australia’s first Airbus H160 helicopter, marking a landmark moment for next-generation rotorcraft in the region."
+                  },
+                  "reason": "인도 수령자로 직접 명시된다.",
+                  "value_aliases": [
+                    "Linfox"
+                  ]
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "twin-engine",
+                  "reference": {
+                    "start": 247,
+                    "end": 567,
+                    "quote": "With this delivery, Linfox became the first operator in Australia to bring the twin-engine Airbus H160 into service. The state-of-the-art helicopter will support the business and corporate aviation requirements of the Linfox Group, operating across Australia’s diverse geography from urban hubs to regional destinations."
+                  },
+                  "reason": "취역한 Airbus H160의 엔진 구성이 명시된다."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Australia",
+                  "reference": {
+                    "start": 0,
+                    "end": 246,
+                    "quote": "Melbourne, Australia, 15 September 2026 – Melbourne-based logistics and supply chain enterprise, Linfox Group, has taken delivery of Australia’s first Airbus H160 helicopter, marking a landmark moment for next-generation rotorcraft in the region."
+                  },
+                  "reason": "호주 최초 인도라는 지리 관계가 직접 명시된다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "15 September 2026은 dateline이다. 검토 windows에는 인도 완료일이나 인도 기간을 별도로 특정하지 않는다."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "Airbus는 제품명에 포함되지만 이 인도의 판매자·인도 공급 풀은 직접 명시되지 않는다. 브랜드를 확정 계약 공급자로 전환하지 않는다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 고객 필요 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 공급 준비·인도 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건과 연결된 수급 제약 완화 사실이 명시되지 않는다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건에 이용할 수 있는 대체 제품·공급원이 명시되지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "no_relevant_event_reason": null,
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 3521,
+        "reviewed_characters": 566,
+        "reviewed_fraction": 0.16074978699233172,
+        "unreviewed_ranges": [
+          {
+            "start": 246,
+            "end": 247,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 567,
+            "end": 3521,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      }
+    },
+    {
+      "document_id": "v4doc-c3ce56c9861165f5d811a5897473c74755883b871135a747a0f470dca020c396",
+      "body_sha256": "e472564e0ed11b9ed84e99db8b0839afc390904724dcbe1d69e9ee935b36b46a",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 0,
+          "end": 446
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "u740-valkyrie",
+          "entity": "U740-Valkyrie",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 52,
+            "end": 215,
+            "quote": "Airbus, in partnership with Kratos Defense & Security Solutions, Inc. (NASDAQ: KTOS), has successfully completed the first flight of the “U740-Valkyrie” in Europe."
+          },
+          "events": [],
+          "no_relevant_event_reason": "완료된 첫 시험비행은 기술 이정표다. 이 명명 기체 자체의 신규 주문·실제 인도는 없다. 뒤의 일반 CCA 인도 계획과 정확히 동일한 납품 제품인지는 명시적으로 확정하지 않는다."
+        },
+        {
+          "target_id": "collaborative-combat-aircraft",
+          "entity": "uncrewed Collaborative Combat Aircraft (CCA)",
+          "entity_aliases": [
+            "Collaborative Combat Aircraft (CCA)",
+            "CCA"
+          ],
+          "discovery_reference": {
+            "start": 216,
+            "end": 446,
+            "quote": "This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces."
+          },
+          "events": [
+            {
+              "event_id": "cca-combat-ready-delivery-plan",
+              "reference": {
+                "start": 216,
+                "end": 446,
+                "quote": "This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "uncrewed Collaborative Combat Aircraft (CCA)",
+                  "reference": {
+                    "start": 216,
+                    "end": 446,
+                    "quote": "This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces."
+                  },
+                  "reason": "2029년까지 전투 준비 상태로 인도할 물리 항공기 제품군이다.",
+                  "value_aliases": [
+                    "Collaborative Combat Aircraft (CCA)",
+                    "CCA"
+                  ]
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "SUPPLY_INCREASE",
+                  "reference": {
+                    "start": 216,
+                    "end": 446,
+                    "quote": "This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces."
+                  },
+                  "reason": "전투 준비 항공기를 향후 인도한다는 계획이다. 시험비행을 현재 적격 공급으로 세지 않는다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "PLAN",
+                  "reference": {
+                    "start": 216,
+                    "end": 446,
+                    "quote": "This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces."
+                  },
+                  "reason": "on track to deliver ... by 2029는 향후 인도 목표다."
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Aircraft",
+                  "reference": {
+                    "start": 216,
+                    "end": 446,
+                    "quote": "This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces."
+                  },
+                  "reason": "제품군 명칭에 물리 항공기 단위가 명시된다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "German and other European Armed Forces",
+                  "reference": {
+                    "start": 216,
+                    "end": 446,
+                    "quote": "This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces."
+                  },
+                  "reason": "제품이 대응할 작전 요구의 주체가 직접 명시된다. 계약 고객이 확정됐다는 뜻은 아니다."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Airbus and Kratos",
+                  "reference": {
+                    "start": 216,
+                    "end": 446,
+                    "quote": "This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces."
+                  },
+                  "reason": "향후 인도의 수행 주체로 명시된다. 현재 준비된 공급량은 제시되지 않는다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "combat-ready uncrewed",
+                  "reference": {
+                    "start": 216,
+                    "end": 446,
+                    "quote": "This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces."
+                  },
+                  "reason": "향후 인도 목표의 전투 준비 상태와 무인 구성이 명시된다."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "German and other European",
+                  "reference": {
+                    "start": 216,
+                    "end": 446,
+                    "quote": "This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces."
+                  },
+                  "reason": "작전 요구가 명시된 수요군의 지역 표현이다. 실제 배송 장소를 확정하지 않는다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "by 2029",
+                  "reference": {
+                    "start": 216,
+                    "end": 446,
+                    "quote": "This key milestone confirms that Airbus and Kratos are on track to deliver a combat-ready uncrewed Collaborative Combat Aircraft (CCA) by 2029, addressing the operational requirements of the German and other European Armed Forces."
+                  },
+                  "reason": "향후 전투 준비 항공기의 인도 목표 기한이다.",
+                  "value_aliases": [
+                    "2029"
+                  ]
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "관사 a는 있지만 명시적 발주·인도 물량은 없다. 첫 시험비행의 first도 기체 수량이 아니다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "인도 목표 기한은 ready_time으로 기록했다. 별도의 생산·수요 기간이나 관측 기간은 없다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 고객 필요 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건과 연결된 수급 제약 완화 사실이 명시되지 않는다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건에 이용할 수 있는 대체 제품·공급원이 명시되지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "no_relevant_event_reason": null,
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 3480,
+        "reviewed_characters": 446,
+        "reviewed_fraction": 0.12816091954022987,
+        "unreviewed_ranges": [
+          {
+            "start": 446,
+            "end": 3480,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      }
+    },
+    {
+      "document_id": "v4doc-29e9cdfaafab4322815c12023b82ea2eefdeca65f659b2429b71a10518e15ac1",
+      "body_sha256": "8bf22ab57a11ed00f491c3e6e168b5b9451672566c20c8b5d859c022f89eab5d",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 1986,
+          "end": 2203
+        }
+      ],
+      "targets": [],
+      "no_relevant_event_reason": "검토 window는 이사회 위원장·선임 독립 이사 지명만 다룬다. 물리 제품·제품군·제조장비·생산 슬롯 또는 해당 수급 사건이 없다.",
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 3519,
+        "reviewed_characters": 217,
+        "reviewed_fraction": 0.061665245808468314,
+        "unreviewed_ranges": [
+          {
+            "start": 0,
+            "end": 1986,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 2203,
+            "end": 3519,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      }
+    },
+    {
+      "document_id": "v4doc-4a6456826c7c1d4eac0cbbe3789224d2d4128d427ca04633007cce5abd9ad378",
+      "body_sha256": "2aff199e0e2c1d33fa997016c3d01ae7acd07c0446b88493dd095e4893be1c5b",
+      "review_complete": false,
+      "reviewed_ranges": [],
+      "targets": [],
+      "no_relevant_event_reason": "UNVERIFIED: 패킷 windows가 비어 있어 원문 판독과 정답 검토를 수행하지 않았다. 관련 사건 부재를 뜻하지 않는다.",
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 2452,
+        "reviewed_characters": 0,
+        "reviewed_fraction": 0.0,
+        "unreviewed_ranges": [
+          {
+            "start": 0,
+            "end": 2452,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      },
+      "review_status": "UNVERIFIED"
+    },
+    {
+      "document_id": "v4doc-c3600e40facef7aa03dd04e61917d34c9dabf3fe8bce8544014a35984a2c6406",
+      "body_sha256": "7fd6744ef3ee6fb36eae79473abee484b3bed97b52bb3392eb90cf1463871234",
+      "review_complete": false,
+      "reviewed_ranges": [],
+      "targets": [],
+      "no_relevant_event_reason": "UNVERIFIED: 패킷 windows가 비어 있어 원문 판독과 정답 검토를 수행하지 않았다. 관련 사건 부재를 뜻하지 않는다.",
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 3669,
+        "reviewed_characters": 0,
+        "reviewed_fraction": 0.0,
+        "unreviewed_ranges": [
+          {
+            "start": 0,
+            "end": 3669,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      },
+      "review_status": "UNVERIFIED"
+    },
+    {
+      "document_id": "v4doc-5c7cac56e38f3a9aa2361091fc939e10a1450c96ee84c69a072abf049d07cd13",
+      "body_sha256": "032c2848c531a05cabac2209e90104c43d30dd7e8822b26ffec50533d34fa84c",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 0,
+          "end": 540
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "u050-capa-x",
+          "entity": "U050 Capa-X",
+          "entity_aliases": [
+            "U050 Capa-X system",
+            "U050 Capa-X Uncrewed Aerial Systems (UAS)"
+          ],
+          "discovery_reference": {
+            "start": 39,
+            "end": 246,
+            "quote": "The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025."
+          },
+          "events": [
+            {
+              "event_id": "capa-x-initial-acquisition",
+              "reference": {
+                "start": 39,
+                "end": 246,
+                "quote": "The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "U050 Capa-X",
+                  "reference": {
+                    "start": 39,
+                    "end": 246,
+                    "quote": "The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025."
+                  },
+                  "reason": "이미 취득·평가한 초기 시스템 모델이다.",
+                  "value_aliases": [
+                    "U050 Capa-X system"
+                  ]
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "DEMAND_INCREASE",
+                  "reference": {
+                    "start": 39,
+                    "end": 246,
+                    "quote": "The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025."
+                  },
+                  "reason": "추가 주문과 구별되는 기존 시스템의 과거 취득 사실이다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 39,
+                    "end": 246,
+                    "quote": "The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025."
+                  },
+                  "reason": "acquired와 successful evaluation은 기존 시스템의 취득·평가 완료를 명시한다."
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "system",
+                  "reference": {
+                    "start": 39,
+                    "end": 246,
+                    "quote": "The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025."
+                  },
+                  "reason": "초기 취득품은 시스템으로 명시된다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "at the end of 2025",
+                  "reference": {
+                    "start": 39,
+                    "end": 246,
+                    "quote": "The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025."
+                  },
+                  "reason": "초기 시스템의 취득 시점이다. 2026년 추가 주문 시점으로 전이하지 않는다.",
+                  "value_aliases": [
+                    "the end of 2025"
+                  ]
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "French Aeronautical Maintenance Directorate (DMAé)",
+                  "reference": {
+                    "start": 39,
+                    "end": 246,
+                    "quote": "The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025."
+                  },
+                  "reason": "DMAé의 추가 발주에 앞선 초기 시스템 취득·평가를 설명하는 동일 문장의 주체다.",
+                  "value_aliases": [
+                    "DMAé"
+                  ]
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "an initial은 초기의 단일 시스템이라는 서술이지만 수치로 명시된 발주·취득 물량은 없다. 추가 주문의 four를 과거 취득 수량으로 쓰지 않는다."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "현재 추가 주문의 상대방은 Airbus Helicopters지만 과거 초기 시스템 취득의 판매 상대방을 별도로 명시하지 않는다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "초기 시스템의 세부 구성은 없다. 뒤의 추가 발주 패키지 구성을 소급하지 않는다."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "France는 발표 dateline이고 French는 기관명이다. 초기 시스템 취득·운용 장소는 직접 명시되지 않는다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 고객 필요 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 공급 준비·인도 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건과 연결된 수급 제약 완화 사실이 명시되지 않는다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건에 이용할 수 있는 대체 제품·공급원이 명시되지 않는다."
+                }
+              ]
+            },
+            {
+              "event_id": "capa-x-additional-order",
+              "reference": {
+                "start": 247,
+                "end": 493,
+                "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "U050 Capa-X",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "추가 주문된 시스템과 각 시스템의 구성 UAS 모델이 명시된다.",
+                  "value_aliases": [
+                    "U050 Capa-X Uncrewed Aerial Systems (UAS)"
+                  ]
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "DEMAND_INCREASE",
+                  "reference": {
+                    "start": 39,
+                    "end": 246,
+                    "quote": "The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025."
+                  },
+                  "reason": "이미 접수된 추가 발주는 실제 수요다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 39,
+                    "end": 246,
+                    "quote": "The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025."
+                  },
+                  "reason": "has placed an additional order는 주문 발생 사실이다. 인도 완료와 다르다."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "four",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "추가 주문 전체의 시스템 수량이다.",
+                  "scope": "ORDER_TOTAL_SYSTEMS"
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "systems",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "추가 주문 총량 four의 계수 단위다.",
+                  "scope": "ORDER_TOTAL_SYSTEMS"
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "two",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "각 시스템마다 구성하는 UAS 수량이다. 총 시스템 수량과 합하거나 8이라는 원문 밖 값으로 바꾸지 않는다.",
+                  "scope": "UAS_PER_SYSTEM"
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Uncrewed Aerial Systems (UAS)",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "시스템당 two가 세는 구성 항공기의 원문 단위다.",
+                  "scope": "UAS_PER_SYSTEM"
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "two",
+                  "reference": {
+                    "start": 356,
+                    "end": 421,
+                    "quote": "with two intended for the French Navy and two for the French Army"
+                  },
+                  "reason": "French Navy에 배정할 시스템 수다. UAS 개수와 혼동하지 않는다.",
+                  "scope": "FRENCH_NAVY_SYSTEM_ALLOCATION"
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "systems",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "앞의 four systems를 둘씩 나눈 고객별 배정 단위다.",
+                  "scope": "FRENCH_NAVY_SYSTEM_ALLOCATION"
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "two",
+                  "reference": {
+                    "start": 398,
+                    "end": 421,
+                    "quote": "two for the French Army"
+                  },
+                  "reason": "French Army에 배정할 시스템 수다. UAS 개수와 혼동하지 않는다.",
+                  "scope": "FRENCH_ARMY_SYSTEM_ALLOCATION"
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "systems",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "앞의 four systems를 둘씩 나눈 고객별 배정 단위다.",
+                  "scope": "FRENCH_ARMY_SYSTEM_ALLOCATION"
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "French Aeronautical Maintenance Directorate (DMAé)",
+                  "reference": {
+                    "start": 39,
+                    "end": 246,
+                    "quote": "The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025."
+                  },
+                  "reason": "실제 추가 주문 주체다.",
+                  "value_aliases": [
+                    "DMAé"
+                  ]
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "French Navy",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "추가 발주 시스템 중 two의 명시된 최종 수요군이다.",
+                  "scope": "FRENCH_NAVY_SYSTEM_ALLOCATION"
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "French Army",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "추가 발주 시스템 중 two의 명시된 최종 수요군이다.",
+                  "scope": "FRENCH_ARMY_SYSTEM_ALLOCATION"
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Airbus Helicopters",
+                  "reference": {
+                    "start": 39,
+                    "end": 246,
+                    "quote": "The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025."
+                  },
+                  "reason": "추가 주문 상대방으로 직접 명시된다. 총 적격 공급량은 제시되지 않는다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS)",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "주문 시스템의 패키지 구성이다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "as part of the Light Tactical Drone System (SDTL) evaluation programme",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "추가 주문 시스템의 명시된 평가 용도다. SDTL은 별도 물리 제품으로 만들지 않는다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "2027",
+                  "reference": {
+                    "start": 494,
+                    "end": 540,
+                    "quote": "Delivery of the systems is scheduled for 2027."
+                  },
+                  "reason": "추가 주문 시스템의 예정 인도 연도다. 현재 주문의 실제 발생 여부와 미래 공급의 준비 여부를 구분한다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "추가 주문의 정확한 계약일·주문 기간은 없다. 발표 dateline과 과거 초기 취득 시점을 현재 주문 시점으로 사용하지 않는다."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "발표 dateline France와 수요 기관의 French 명칭만 있다. 해당 시스템의 직접적인 배송·배치 지역은 명시되지 않는다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 고객 필요 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건과 연결된 수급 제약 완화 사실이 명시되지 않는다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건에 이용할 수 있는 대체 제품·공급원이 명시되지 않는다."
+                }
+              ]
+            },
+            {
+              "event_id": "capa-x-2027-delivery-plan",
+              "reference": {
+                "start": 494,
+                "end": 540,
+                "quote": "Delivery of the systems is scheduled for 2027."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "U050 Capa-X",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "추가 주문된 시스템과 각 시스템의 구성 UAS 모델이 명시된다.",
+                  "value_aliases": [
+                    "U050 Capa-X Uncrewed Aerial Systems (UAS)"
+                  ]
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "SUPPLY_INCREASE",
+                  "reference": {
+                    "start": 494,
+                    "end": 540,
+                    "quote": "Delivery of the systems is scheduled for 2027."
+                  },
+                  "reason": "2027년으로 예정된 물리 시스템 인도는 향후 공급 계획이다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "PLAN",
+                  "reference": {
+                    "start": 494,
+                    "end": 540,
+                    "quote": "Delivery of the systems is scheduled for 2027."
+                  },
+                  "reason": "scheduled for 2027은 향후 인도 일정이며 실제 적격 공급 완료가 아니다."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "four",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "추가 주문 전체의 시스템 수량이다.",
+                  "scope": "ORDER_TOTAL_SYSTEMS"
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "systems",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "추가 주문 총량 four의 계수 단위다.",
+                  "scope": "ORDER_TOTAL_SYSTEMS"
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "two",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "각 시스템마다 구성하는 UAS 수량이다. 총 시스템 수량과 합하거나 8이라는 원문 밖 값으로 바꾸지 않는다.",
+                  "scope": "UAS_PER_SYSTEM"
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Uncrewed Aerial Systems (UAS)",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "시스템당 two가 세는 구성 항공기의 원문 단위다.",
+                  "scope": "UAS_PER_SYSTEM"
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "two",
+                  "reference": {
+                    "start": 356,
+                    "end": 421,
+                    "quote": "with two intended for the French Navy and two for the French Army"
+                  },
+                  "reason": "French Navy에 배정할 시스템 수다. UAS 개수와 혼동하지 않는다.",
+                  "scope": "FRENCH_NAVY_SYSTEM_ALLOCATION"
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "systems",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "앞의 four systems를 둘씩 나눈 고객별 배정 단위다.",
+                  "scope": "FRENCH_NAVY_SYSTEM_ALLOCATION"
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "two",
+                  "reference": {
+                    "start": 398,
+                    "end": 421,
+                    "quote": "two for the French Army"
+                  },
+                  "reason": "French Army에 배정할 시스템 수다. UAS 개수와 혼동하지 않는다.",
+                  "scope": "FRENCH_ARMY_SYSTEM_ALLOCATION"
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "systems",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "앞의 four systems를 둘씩 나눈 고객별 배정 단위다.",
+                  "scope": "FRENCH_ARMY_SYSTEM_ALLOCATION"
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "French Aeronautical Maintenance Directorate (DMAé)",
+                  "reference": {
+                    "start": 39,
+                    "end": 246,
+                    "quote": "The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025."
+                  },
+                  "reason": "실제 추가 주문 주체다.",
+                  "value_aliases": [
+                    "DMAé"
+                  ]
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "French Navy",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "추가 발주 시스템 중 two의 명시된 최종 수요군이다.",
+                  "scope": "FRENCH_NAVY_SYSTEM_ALLOCATION"
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "French Army",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "추가 발주 시스템 중 two의 명시된 최종 수요군이다.",
+                  "scope": "FRENCH_ARMY_SYSTEM_ALLOCATION"
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Airbus Helicopters",
+                  "reference": {
+                    "start": 39,
+                    "end": 246,
+                    "quote": "The French Aeronautical Maintenance Directorate (DMAé) has placed an additional order with Airbus Helicopters following the successful evaluation of an initial U050 Capa-X system acquired at the end of 2025."
+                  },
+                  "reason": "추가 주문 상대방으로 직접 명시된다. 총 적격 공급량은 제시되지 않는다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS)",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "주문 시스템의 패키지 구성이다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "as part of the Light Tactical Drone System (SDTL) evaluation programme",
+                  "reference": {
+                    "start": 247,
+                    "end": 493,
+                    "quote": "This order covers the supply of four systems, each comprising two U050 Capa-X Uncrewed Aerial Systems (UAS), with two intended for the French Navy and two for the French Army as part of the Light Tactical Drone System (SDTL) evaluation programme."
+                  },
+                  "reason": "추가 주문 시스템의 명시된 평가 용도다. SDTL은 별도 물리 제품으로 만들지 않는다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "2027",
+                  "reference": {
+                    "start": 494,
+                    "end": 540,
+                    "quote": "Delivery of the systems is scheduled for 2027."
+                  },
+                  "reason": "추가 주문 시스템의 예정 인도 연도다. 현재 주문의 실제 발생 여부와 미래 공급의 준비 여부를 구분한다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "추가 주문의 정확한 계약일·주문 기간은 없다. 발표 dateline과 과거 초기 취득 시점을 현재 주문 시점으로 사용하지 않는다."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "발표 dateline France와 수요 기관의 French 명칭만 있다. 해당 시스템의 직접적인 배송·배치 지역은 명시되지 않는다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 고객 필요 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건과 연결된 수급 제약 완화 사실이 명시되지 않는다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건에 이용할 수 있는 대체 제품·공급원이 명시되지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "no_relevant_event_reason": null,
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 2866,
+        "reviewed_characters": 540,
+        "reviewed_fraction": 0.1884159106769016,
+        "unreviewed_ranges": [
+          {
+            "start": 540,
+            "end": 2866,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      }
+    },
+    {
+      "document_id": "v4doc-6e6a99c7c153bd019eb22e9c86acb8a8424ea84e03bb85eaa23d2d7e392fb3c6",
+      "body_sha256": "2a64f968fb5652858750323876002e129f5b0a09b9342202e9c8ab1cddeb93f3",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 0,
+          "end": 503
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "consteel-eaf",
+          "entity": "Consteel ® Electric Arc Furnace (EAF)",
+          "entity_aliases": [
+            "Electric Arc Furnace (EAF)",
+            "EAF"
+          ],
+          "discovery_reference": {
+            "start": 0,
+            "end": 250,
+            "quote": "Tenova , a leading provider of sustainable solutions for the metals and mining industries, has been selected by Nippon Steel Corporation to supply a record-breaking Consteel ® Electric Arc Furnace (EAF) for Nippon Steel’s Yawata Area at Kyushu Works."
+          },
+          "events": [
+            {
+              "event_id": "eaf-selected-supplier-award",
+              "reference": {
+                "start": 0,
+                "end": 250,
+                "quote": "Tenova , a leading provider of sustainable solutions for the metals and mining industries, has been selected by Nippon Steel Corporation to supply a record-breaking Consteel ® Electric Arc Furnace (EAF) for Nippon Steel’s Yawata Area at Kyushu Works."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Consteel ® Electric Arc Furnace (EAF)",
+                  "reference": {
+                    "start": 0,
+                    "end": 250,
+                    "quote": "Tenova , a leading provider of sustainable solutions for the metals and mining industries, has been selected by Nippon Steel Corporation to supply a record-breaking Consteel ® Electric Arc Furnace (EAF) for Nippon Steel’s Yawata Area at Kyushu Works."
+                  },
+                  "reason": "선정된 공급자의 실제 공급 대상 제조장비가 명시된다.",
+                  "value_aliases": [
+                    "Electric Arc Furnace (EAF)",
+                    "EAF"
+                  ]
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "DEMAND_INCREASE",
+                  "reference": {
+                    "start": 0,
+                    "end": 250,
+                    "quote": "Tenova , a leading provider of sustainable solutions for the metals and mining industries, has been selected by Nippon Steel Corporation to supply a record-breaking Consteel ® Electric Arc Furnace (EAF) for Nippon Steel’s Yawata Area at Kyushu Works."
+                  },
+                  "reason": "Nippon Steel이 Tenova를 공급자로 이미 선정한 장비 조달 사건이다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 0,
+                    "end": 250,
+                    "quote": "Tenova , a leading provider of sustainable solutions for the metals and mining industries, has been selected by Nippon Steel Corporation to supply a record-breaking Consteel ® Electric Arc Furnace (EAF) for Nippon Steel’s Yawata Area at Kyushu Works."
+                  },
+                  "reason": "has been selected는 업체 선정 완료다. 해당 설비가 이미 인도·가동됐다는 뜻은 아니다."
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Electric Arc Furnace",
+                  "reference": {
+                    "start": 0,
+                    "end": 250,
+                    "quote": "Tenova , a leading provider of sustainable solutions for the metals and mining industries, has been selected by Nippon Steel Corporation to supply a record-breaking Consteel ® Electric Arc Furnace (EAF) for Nippon Steel’s Yawata Area at Kyushu Works."
+                  },
+                  "reason": "명시된 물리 장비 종류다. 단수 관사로 숫자 1을 만들지는 않는다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Nippon Steel Corporation",
+                  "reference": {
+                    "start": 0,
+                    "end": 250,
+                    "quote": "Tenova , a leading provider of sustainable solutions for the metals and mining industries, has been selected by Nippon Steel Corporation to supply a record-breaking Consteel ® Electric Arc Furnace (EAF) for Nippon Steel’s Yawata Area at Kyushu Works."
+                  },
+                  "reason": "공급자 선정 주체이자 설비를 받을 사업자다.",
+                  "value_aliases": [
+                    "Nippon Steel"
+                  ]
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Tenova",
+                  "reference": {
+                    "start": 0,
+                    "end": 250,
+                    "quote": "Tenova , a leading provider of sustainable solutions for the metals and mining industries, has been selected by Nippon Steel Corporation to supply a record-breaking Consteel ® Electric Arc Furnace (EAF) for Nippon Steel’s Yawata Area at Kyushu Works."
+                  },
+                  "reason": "해당 EAF 공급자로 직접 선정됐다. GE Vernova는 별도 전원 시스템 관계다."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Yawata Area at Kyushu Works",
+                  "reference": {
+                    "start": 0,
+                    "end": 250,
+                    "quote": "Tenova , a leading provider of sustainable solutions for the metals and mining industries, has been selected by Nippon Steel Corporation to supply a record-breaking Consteel ® Electric Arc Furnace (EAF) for Nippon Steel’s Yawata Area at Kyushu Works."
+                  },
+                  "reason": "EAF가 공급될 명시된 사업장 위치다."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "단수 관사 a는 있지만 물리 발주 수량이 수치로 명시되지 않는다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에는 계약·주문·공급 기간이 없다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "record-breaking은 비교 기준이나 수치가 없는 수식어다. EAF 용량·전력·규격은 명시되지 않는다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 고객 필요 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 공급 준비·인도 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건과 연결된 수급 제약 완화 사실이 명시되지 않는다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건에 이용할 수 있는 대체 제품·공급원이 명시되지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "target_id": "direct-feed-system",
+          "entity": "Direct Feed system",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 251,
+            "end": 334,
+            "quote": "Tenova has teamed up with GE Vernova , whose Direct Feed system will power the EAF."
+          },
+          "events": [],
+          "no_relevant_event_reason": "GE Vernova와의 협업 및 EAF에 전원을 공급할 기능을 명시한다. Direct Feed 자체의 별도 발주·계약·배송·물량 증감은 직접 명시되지 않는다."
+        }
+      ],
+      "no_relevant_event_reason": null,
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 742,
+        "reviewed_characters": 503,
+        "reviewed_fraction": 0.6778975741239892,
+        "unreviewed_ranges": [
+          {
+            "start": 503,
+            "end": 742,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      }
+    },
+    {
+      "document_id": "v4doc-b88d2b22062aaa75cf761dd43f48df376bc9756ab1803767077a37f0c0d17f57",
+      "body_sha256": "283e3288bc68dc35310c7bdca99123cc98c5bbbcc1c0d4ef2ee8b2b0429b5884",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 485,
+          "end": 1003
+        },
+        {
+          "start": 7231,
+          "end": 7298
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "ge-vernova-9f-gas-turbines",
+          "entity": "GE Vernova 9F gas turbines",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 485,
+            "end": 1003,
+            "quote": "CAIRO, EGYPT - (September 23, 2026) - GE Vernova Inc. (NYSE: GEV) announced today a services agreement to provide Rotor Life Extension (RLE) solutions for five GE Vernova 9F gas turbines at the Kureimat, Nubaria, and Cairo North power plants in Egypt. The agreement is with affiliates of the Egyptian Electricity Holding Company (EEHC) - Upper Egypt Electricity Production Company (UEEPC), Middle Delta Electricity Production Company (MDEPC), and Cairo Electricity Production Company (CEPC) - and was endorsed by EEHC."
+          },
+          "events": [],
+          "no_relevant_event_reason": "five는 Rotor Life Extension 서비스를 받을 가스터빈 수다. 새 가스터빈 구매·제조·출하 수량이나 적격 공급 증감을 뜻하지 않는다. Rotor Life Extension solutions는 이 windows에서 서비스 계약으로 설명되며 별도 물리 부품은 특정하지 않는다."
+        }
+      ],
+      "no_relevant_event_reason": "검토 windows는 기존 5개 터빈의 수명 연장 서비스 계약 및 그 서비스 주문의 Q2 of 2026 장부 반영을 다룬다. 새 물리 터빈·부품의 수급 사건이나 실제 공급 가능 용량 변화는 명시하지 않는다.",
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 7621,
+        "reviewed_characters": 585,
+        "reviewed_fraction": 0.07676157984516467,
+        "unreviewed_ranges": [
+          {
+            "start": 0,
+            "end": 485,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 1003,
+            "end": 7231,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 7298,
+            "end": 7621,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      }
+    },
+    {
+      "document_id": "v4doc-76909b719c3d750f95e832ac45e9308f4687c89c8d65f1735fbec2c9bf7df1c4",
+      "body_sha256": "28ab21bac7d53ec61c3fb9a98cb564443bf34b06e8a1357ea26b4b760f146269",
+      "review_complete": false,
+      "reviewed_ranges": [],
+      "targets": [],
+      "no_relevant_event_reason": "UNVERIFIED: 패킷 windows가 비어 있어 원문 판독과 정답 검토를 수행하지 않았다. 관련 사건 부재를 뜻하지 않는다.",
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 1308,
+        "reviewed_characters": 0,
+        "reviewed_fraction": 0.0,
+        "unreviewed_ranges": [
+          {
+            "start": 0,
+            "end": 1308,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      },
+      "review_status": "UNVERIFIED"
+    },
+    {
+      "document_id": "v4doc-71e34a605bda7624f3b3003b1b9a7da9fb16250441abec45b1e6fea01751a7eb",
+      "body_sha256": "7d49d19fea0f5d6a7a91873b5c6177ed052b081efe89e008a49b979516a1b587",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 2796,
+          "end": 3330
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "electricity",
+          "entity": "electricity",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 2988,
+            "end": 3210,
+            "quote": "To meet the massive growth in electricity demand driven by AI, data centers, and the industrial electrification surge, the study finds the industry will need one in every ten engineering graduates to join the power sector."
+          },
+          "events": [
+            {
+              "event_id": "electricity-demand-growth",
+              "reference": {
+                "start": 2988,
+                "end": 3210,
+                "quote": "To meet the massive growth in electricity demand driven by AI, data centers, and the industrial electrification surge, the study finds the industry will need one in every ten engineering graduates to join the power sector."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "electricity",
+                  "reference": {
+                    "start": 2988,
+                    "end": 3210,
+                    "quote": "To meet the massive growth in electricity demand driven by AI, data centers, and the industrial electrification surge, the study finds the industry will need one in every ten engineering graduates to join the power sector."
+                  },
+                  "reason": "증가하는 수요의 대상이 전력이라는 원문 명사로 명시된다."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "DEMAND_INCREASE",
+                  "reference": {
+                    "start": 2988,
+                    "end": 3210,
+                    "quote": "To meet the massive growth in electricity demand driven by AI, data centers, and the industrial electrification surge, the study finds the industry will need one in every ten engineering graduates to join the power sector."
+                  },
+                  "reason": "massive growth in electricity demand를 직접 서술한다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 2988,
+                    "end": 3210,
+                    "quote": "To meet the massive growth in electricity demand driven by AI, data centers, and the industrial electrification surge, the study finds the industry will need one in every ten engineering graduates to join the power sector."
+                  },
+                  "reason": "전력 수요 증가 자체는 현재의 성장 사실로 서술된다. could need ... by 2032는 노동력 예측에만 적용된다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "data centers",
+                  "reference": {
+                    "start": 2988,
+                    "end": 3210,
+                    "quote": "To meet the massive growth in electricity demand driven by AI, data centers, and the industrial electrification surge, the study finds the industry will need one in every ten engineering graduates to join the power sector."
+                  },
+                  "reason": "전력 수요 성장을 발생시키는 구체적 시설 수요군으로 직접 연결된다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "AMBIGUOUS",
+                  "value": "AI",
+                  "reference": {
+                    "start": 2988,
+                    "end": 3210,
+                    "quote": "To meet the massive growth in electricity demand driven by AI, data centers, and the industrial electrification surge, the study finds the industry will need one in every ten engineering graduates to join the power sector."
+                  },
+                  "reason": "전력 수요의 기술적 동인이지만 계약 고객·구매자 집단의 명칭인지는 불명확하다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "AMBIGUOUS",
+                  "value": "industrial electrification surge",
+                  "reference": {
+                    "start": 2988,
+                    "end": 3210,
+                    "quote": "To meet the massive growth in electricity demand driven by AI, data centers, and the industrial electrification surge, the study finds the industry will need one in every ten engineering graduates to join the power sector."
+                  },
+                  "reason": "전력 수요의 용도·동향을 가리키며 특정 고객 집단과의 동일성은 불명확하다."
+                },
+                {
+                  "field": "region",
+                  "status": "AMBIGUOUS",
+                  "value": "U.S.",
+                  "reference": {
+                    "start": 2796,
+                    "end": 3330,
+                    "quote": "Today's announcement reflects an urgent workforce reality outlined in GE Vernova's inaugural NextGen Workforce Study : the U.S. energy sector could need more than two million workers by 2032. To meet the massive growth in electricity demand driven by AI, data centers, and the industrial electrification surge, the study finds the industry will need one in every ten engineering graduates to join the power sector. GE Vernova's expanded MIT commitment is part of a broader effort to make those pathways visible and accessible earlier."
+                  },
+                  "reason": "U.S.는 연구의 에너지 노동시장 문장에서 명시된다. 뒤의 전력 수요 증가 문장 자체의 지역 범위까지 같은지 직접 확정하지 않는다."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "two million은 노동자 수이고 one in every ten은 공학 졸업생 비율이다. 검토 windows에는 전력 수요량이 없다."
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "workers와 engineering graduates는 인력 단위다. 전력의 물리 단위는 없다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "by 2032는 노동력 필요 시점이다. 전력 수요 증가의 별도 기간은 없다."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "전력 공급자나 전체 적격 공급 용량은 명시되지 않는다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "전력의 전압·품질·계통 조건 등 사양은 없다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "2032년은 노동자 필요 시점이며 해당 전력 수요의 필요 시점은 없다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 공급 준비·인도 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건과 연결된 수급 제약 완화 사실이 명시되지 않는다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건에 이용할 수 있는 대체 제품·공급원이 명시되지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "no_relevant_event_reason": null,
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 4597,
+        "reviewed_characters": 534,
+        "reviewed_fraction": 0.11616271481400914,
+        "unreviewed_ranges": [
+          {
+            "start": 0,
+            "end": 2796,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 3330,
+            "end": 4597,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      }
+    },
+    {
+      "document_id": "v4doc-66d7013e8fb0937c7b186be781af89758b0261f99c9904fb2253c7cbc75633c7",
+      "body_sha256": "bd971a9e0bfca2766a452469f1cf334178833b676520ffeaa88d5def8da70d28",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 0,
+          "end": 148
+        }
+      ],
+      "targets": [],
+      "no_relevant_event_reason": "검토 window는 악천후 관련 공급 차질과 emergency exchange 승인만 서술하고 교환되는 물리 제품을 명시하지 않는다. URL의 Petroleum Reserve 표현으로 누락된 제품·수량을 채우지 않는다.",
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 2096,
+        "reviewed_characters": 148,
+        "reviewed_fraction": 0.07061068702290077,
+        "unreviewed_ranges": [
+          {
+            "start": 148,
+            "end": 2096,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      }
+    },
+    {
+      "document_id": "v4doc-f813ffbf0008fee10d9eba731348d88c548d20252ea998f5b98eb143ce23a61e",
+      "body_sha256": "79ea88acc5e74eb79dee1dd9b879b0ef1fcab743f34c2b7dc9c4975175e991ea",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 0,
+          "end": 112
+        },
+        {
+          "start": 1803,
+          "end": 1915
+        }
+      ],
+      "targets": [],
+      "no_relevant_event_reason": "첫 window는 mid-Atlantic grid 안정화의 비상 명령이며 특정 물리 제품·장비·정량 용량을 명시하지 않는다. 둘째 window는 별도 석유비축 교환 기사 제목이며 현재 명령의 제품·물량 근거가 아니다. grid·프로그램명을 독립 제품으로 만들지 않는다.",
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 1981,
+        "reviewed_characters": 224,
+        "reviewed_fraction": 0.11307420494699646,
+        "unreviewed_ranges": [
+          {
+            "start": 112,
+            "end": 1803,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 1915,
+            "end": 1981,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      }
+    },
+    {
+      "document_id": "v4doc-729d7b6174e39343792f3494705f449313f1f8e3780b832c1b4147e25ee2198b",
+      "body_sha256": "55c94497aa66b24ffeb64c0ee092692ca5b4f0db7f03d073468e5889db7c4a56",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 0,
+          "end": 96
+        },
+        {
+          "start": 1802,
+          "end": 2189
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "grid-capacity",
+          "entity": "Grid Capacity",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 0,
+            "end": 96,
+            "quote": "The Energy Department Announces Intention to Support Adding 2.5 GW of Grid Capacity and 800 Jobs"
+          },
+          "events": [
+            {
+              "event_id": "grid-capacity-addition-intention",
+              "reference": {
+                "start": 0,
+                "end": 96,
+                "quote": "The Energy Department Announces Intention to Support Adding 2.5 GW of Grid Capacity and 800 Jobs"
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Grid Capacity",
+                  "reference": {
+                    "start": 0,
+                    "end": 96,
+                    "quote": "The Energy Department Announces Intention to Support Adding 2.5 GW of Grid Capacity and 800 Jobs"
+                  },
+                  "reason": "정량 GW로 제시한 물리 전력망 공급 용량이다. 일자리 수와 구분한다."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "SUPPLY_INCREASE",
+                  "reference": {
+                    "start": 0,
+                    "end": 96,
+                    "quote": "The Energy Department Announces Intention to Support Adding 2.5 GW of Grid Capacity and 800 Jobs"
+                  },
+                  "reason": "전력망 용량을 Adding한다고 명시한다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "PLAN",
+                  "reference": {
+                    "start": 0,
+                    "end": 96,
+                    "quote": "The Energy Department Announces Intention to Support Adding 2.5 GW of Grid Capacity and 800 Jobs"
+                  },
+                  "reason": "Announces Intention to Support는 지원·확장의 의향이며 실제 준비된 공급이 아니다."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "2.5",
+                  "reference": {
+                    "start": 0,
+                    "end": 96,
+                    "quote": "The Energy Department Announces Intention to Support Adding 2.5 GW of Grid Capacity and 800 Jobs"
+                  },
+                  "reason": "추가하려는 전력망 용량의 수치다. 800 Jobs는 물량이 아니다."
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "GW",
+                  "reference": {
+                    "start": 0,
+                    "end": 96,
+                    "quote": "The Energy Department Announces Intention to Support Adding 2.5 GW of Grid Capacity and 800 Jobs"
+                  },
+                  "reason": "2.5에 직접 연결된 전력 용량 단위다."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "TVA and local utilities",
+                  "reference": {
+                    "start": 1942,
+                    "end": 2065,
+                    "quote": "By bringing TVA and local utilities together, we're helping reduce costly outages and deliver more power where it's needed."
+                  },
+                  "reason": "전력 공급·계통 개선을 위해 함께하는 명시된 사업자 집단이다. 현재 준비된 전체 적격 용량을 뜻하지 않는다."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "America",
+                  "reference": {
+                    "start": 1803,
+                    "end": 1871,
+                    "quote": "America's electric grid cannot become a roadblock to economic growth"
+                  },
+                  "reason": "발언이 설명하는 전력망의 명시된 국가·지역 표현이다. URL의 주 개수를 사용하지 않는다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "AMBIGUOUS",
+                  "value": "families",
+                  "reference": {
+                    "start": 2066,
+                    "end": 2188,
+                    "quote": "That means fewer disruptions for families, more opportunities for businesses, and a stronger foundation for American jobs."
+                  },
+                  "reason": "정전 감소의 수혜자로 제시되지만 계획 용량의 특정 구매자·계약 수요군인지는 명시되지 않는다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "AMBIGUOUS",
+                  "value": "businesses",
+                  "reference": {
+                    "start": 2066,
+                    "end": 2188,
+                    "quote": "That means fewer disruptions for families, more opportunities for businesses, and a stronger foundation for American jobs."
+                  },
+                  "reason": "경제적 기회의 수혜자로 제시되지만 계획 용량의 특정 구매자·계약 수요군인지는 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "reduce costly outages",
+                  "reference": {
+                    "start": 1942,
+                    "end": 2065,
+                    "quote": "By bringing TVA and local utilities together, we're helping reduce costly outages and deliver more power where it's needed."
+                  },
+                  "reason": "예정된 계통 확장·협력의 정전 감소 목표다. 이미 달성한 완화로 판정하지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "fewer disruptions for families",
+                  "reference": {
+                    "start": 2066,
+                    "end": 2188,
+                    "quote": "That means fewer disruptions for families, more opportunities for businesses, and a stronger foundation for American jobs."
+                  },
+                  "reason": "계획으로 기대하는 공급 차질 감소의 원문 표현이다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "확장 계획의 시행 기간이나 용량 산정 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "용량 수치 외 망 구성·전압·적격 조건은 명시되지 않는다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 고객 필요 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 공급 준비·인도 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건에 이용할 수 있는 대체 제품·공급원이 명시되지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "target_id": "power",
+          "entity": "power",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1942,
+            "end": 2065,
+            "quote": "By bringing TVA and local utilities together, we're helping reduce costly outages and deliver more power where it's needed."
+          },
+          "events": [
+            {
+              "event_id": "more-power-delivery-plan",
+              "reference": {
+                "start": 1942,
+                "end": 2065,
+                "quote": "By bringing TVA and local utilities together, we're helping reduce costly outages and deliver more power where it's needed."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "power",
+                  "reference": {
+                    "start": 1942,
+                    "end": 2065,
+                    "quote": "By bringing TVA and local utilities together, we're helping reduce costly outages and deliver more power where it's needed."
+                  },
+                  "reason": "전력망 협력으로 더 공급하겠다는 물리 전력이다. infrastructure capacity와 실제 전력 인도량을 구분한다."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "SUPPLY_INCREASE",
+                  "reference": {
+                    "start": 1942,
+                    "end": 2065,
+                    "quote": "By bringing TVA and local utilities together, we're helping reduce costly outages and deliver more power where it's needed."
+                  },
+                  "reason": "deliver more power라는 향후 공급 확대 목표가 명시된다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "PLAN",
+                  "reference": {
+                    "start": 0,
+                    "end": 96,
+                    "quote": "The Energy Department Announces Intention to Support Adding 2.5 GW of Grid Capacity and 800 Jobs"
+                  },
+                  "reason": "상위 발표가 Intention to Support인 계획이며 인용의 기대 효과를 실제 인도 완료로 판정하지 않는다."
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "TVA and local utilities",
+                  "reference": {
+                    "start": 1942,
+                    "end": 2065,
+                    "quote": "By bringing TVA and local utilities together, we're helping reduce costly outages and deliver more power where it's needed."
+                  },
+                  "reason": "전력 공급·계통 개선을 위해 함께하는 명시된 사업자 집단이다. 현재 준비된 전체 적격 용량을 뜻하지 않는다."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "America",
+                  "reference": {
+                    "start": 1803,
+                    "end": 1871,
+                    "quote": "America's electric grid cannot become a roadblock to economic growth"
+                  },
+                  "reason": "발언이 설명하는 전력망의 명시된 국가·지역 표현이다. URL의 주 개수를 사용하지 않는다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "AMBIGUOUS",
+                  "value": "families",
+                  "reference": {
+                    "start": 2066,
+                    "end": 2188,
+                    "quote": "That means fewer disruptions for families, more opportunities for businesses, and a stronger foundation for American jobs."
+                  },
+                  "reason": "정전 감소의 수혜자로 제시되지만 계획 용량의 특정 구매자·계약 수요군인지는 명시되지 않는다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "AMBIGUOUS",
+                  "value": "businesses",
+                  "reference": {
+                    "start": 2066,
+                    "end": 2188,
+                    "quote": "That means fewer disruptions for families, more opportunities for businesses, and a stronger foundation for American jobs."
+                  },
+                  "reason": "경제적 기회의 수혜자로 제시되지만 계획 용량의 특정 구매자·계약 수요군인지는 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "reduce costly outages",
+                  "reference": {
+                    "start": 1942,
+                    "end": 2065,
+                    "quote": "By bringing TVA and local utilities together, we're helping reduce costly outages and deliver more power where it's needed."
+                  },
+                  "reason": "예정된 계통 확장·협력의 정전 감소 목표다. 이미 달성한 완화로 판정하지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "fewer disruptions for families",
+                  "reference": {
+                    "start": 2066,
+                    "end": 2188,
+                    "quote": "That means fewer disruptions for families, more opportunities for businesses, and a stronger foundation for American jobs."
+                  },
+                  "reason": "계획으로 기대하는 공급 차질 감소의 원문 표현이다."
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "2.5 GW는 계획된 Grid Capacity 수치다. 실제 인도할 power의 수량·증분을 별도로 명시하지 않는다. 800 Jobs도 전력량이 아니다."
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "power 인도량의 단위는 별도로 없다. GW는 Grid Capacity 수치에 연결된다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "추가 전력의 인도 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "전력의 전압·품질·계통 사양이 명시되지 않는다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 고객 필요 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 공급 준비·인도 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건에 이용할 수 있는 대체 제품·공급원이 명시되지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "no_relevant_event_reason": null,
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 3283,
+        "reviewed_characters": 483,
+        "reviewed_fraction": 0.14712153518123666,
+        "unreviewed_ranges": [
+          {
+            "start": 96,
+            "end": 1802,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 2189,
+            "end": 3283,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      }
+    },
+    {
+      "document_id": "v4doc-e532e0eaea00fe8625f74cf0fd2f137a7ffbd49d345e2ae9b5a02f560ab4dd27",
+      "body_sha256": "faacc39f54d3201a5781cbaa7aebd70489be71045e76c611ea836000512fbd5b",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 222,
+          "end": 758
+        }
+      ],
+      "targets": [],
+      "no_relevant_event_reason": "67명 연구자에게 $96 million 연구비를 지원하는 발표다. 지원 수혜자는 물리 제품 고객이 아니며 금액·인원은 물량이 아니다. Super Intelligence, fusion energy, quantum science는 여기서 연구 분야로만 열거되어 제품·제조장비의 수급 사건을 만들지 않는다.",
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 2882,
+        "reviewed_characters": 536,
+        "reviewed_fraction": 0.18598195697432338,
+        "unreviewed_ranges": [
+          {
+            "start": 0,
+            "end": 222,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 758,
+            "end": 2882,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      }
+    },
+    {
+      "document_id": "v4doc-cb92a261f70e3dc808c4fc754f2a3c1b560bf6fdf5a1e3aa1420c0d2b5f2c889",
+      "body_sha256": "a629e0c8106b394ca7ed22ca71ec2b8339c4f7aff629bf282a9084915775fdda",
+      "review_complete": true,
+      "reviewed_ranges": [
+        {
+          "start": 887,
+          "end": 1444
+        }
+      ],
+      "targets": [
+        {
+          "target_id": "crude-oil",
+          "entity": "crude oil",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1017,
+            "end": 1296,
+            "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+          },
+          "events": [
+            {
+              "event_id": "crude-oil-production-shut-in",
+              "reference": {
+                "start": 1017,
+                "end": 1296,
+                "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "crude oil",
+                  "reference": {
+                    "start": 1017,
+                    "end": 1296,
+                    "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+                  },
+                  "reason": "생산 중단 물량이 이 재화에 직접 연결된다."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "SUPPLY_DECREASE",
+                  "reference": {
+                    "start": 1017,
+                    "end": 1296,
+                    "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+                  },
+                  "reason": "resulting in production shut-ins라는 실제 생산 공급 감소다. 병목 확정을 뜻하지 않는다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 887,
+                    "end": 1296,
+                    "quote": "Hurricane Isaias’s forecasted path toward the Gulf Coast has already impacted crude oil and natural gas production in the region. The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+                  },
+                  "reason": "has already impacted와 10월 8일 현재 보고된 production shut-ins가 발생 사실을 확인한다. 허리케인 경로 예측과 정유시설의 향후 가능성과 구분한다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "as of Thursday, October 8",
+                  "reference": {
+                    "start": 1017,
+                    "end": 1296,
+                    "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+                  },
+                  "reason": "보고된 실제 가동 중단 상태의 기준 시점이다. 발표일이나 공급 회복일로 바꾸지 않는다.",
+                  "value_aliases": [
+                    "Thursday, October 8",
+                    "October 8"
+                  ]
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "AMBIGUOUS",
+                  "value": "130 production platforms and rigs",
+                  "reference": {
+                    "start": 1017,
+                    "end": 1296,
+                    "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+                  },
+                  "reason": "130은 대피·이동한 생산 설비의 합계다. 남아 있는 전체 적격 공급자·공급량으로 해석할 수 없고 이 재화만의 설비 수로도 분해되지 않는다."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Gulf Coast",
+                  "reference": {
+                    "start": 887,
+                    "end": 1016,
+                    "quote": "Hurricane Isaias’s forecasted path toward the Gulf Coast has already impacted crude oil and natural gas production in the region."
+                  },
+                  "reason": "원유·천연가스 생산 차질이 발생한 지역으로 직접 연결된다.",
+                  "value_aliases": [
+                    "U.S. Gulf Coast"
+                  ]
+                },
+                {
+                  "field": "quantity",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "about 1.3 million",
+                  "reference": {
+                    "start": 1017,
+                    "end": 1296,
+                    "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+                  },
+                  "reason": "원유의 일일 생산 중단량이며 근사값이다. 130은 생산 장비 수다.",
+                  "value_aliases": [
+                    "1.3 million"
+                  ]
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "barrels per day",
+                  "reference": {
+                    "start": 1017,
+                    "end": 1296,
+                    "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+                  },
+                  "reason": "원유 생산 중단량의 명시된 단위다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "생산 차질을 겪는 재화의 구매자·최종 수요군은 검토 windows에 없다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "원유 등급이나 천연가스 품질·규격은 명시되지 않는다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 고객 필요 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 공급 준비·인도 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건과 연결된 수급 제약 완화 사실이 명시되지 않는다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건에 이용할 수 있는 대체 제품·공급원이 명시되지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "target_id": "natural-gas",
+          "entity": "natural gas",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1017,
+            "end": 1296,
+            "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+          },
+          "events": [
+            {
+              "event_id": "natural-gas-production-shut-in",
+              "reference": {
+                "start": 1017,
+                "end": 1296,
+                "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+              },
+              "facts": [
+                {
+                  "field": "product",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "natural gas",
+                  "reference": {
+                    "start": 1017,
+                    "end": 1296,
+                    "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+                  },
+                  "reason": "생산 중단 물량이 이 재화에 직접 연결된다."
+                },
+                {
+                  "field": "role",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "SUPPLY_DECREASE",
+                  "reference": {
+                    "start": 1017,
+                    "end": 1296,
+                    "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+                  },
+                  "reason": "resulting in production shut-ins라는 실제 생산 공급 감소다. 병목 확정을 뜻하지 않는다."
+                },
+                {
+                  "field": "actuality",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "ACTUAL",
+                  "reference": {
+                    "start": 887,
+                    "end": 1296,
+                    "quote": "Hurricane Isaias’s forecasted path toward the Gulf Coast has already impacted crude oil and natural gas production in the region. The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+                  },
+                  "reason": "has already impacted와 10월 8일 현재 보고된 production shut-ins가 발생 사실을 확인한다. 허리케인 경로 예측과 정유시설의 향후 가능성과 구분한다."
+                },
+                {
+                  "field": "period",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "as of Thursday, October 8",
+                  "reference": {
+                    "start": 1017,
+                    "end": 1296,
+                    "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+                  },
+                  "reason": "보고된 실제 가동 중단 상태의 기준 시점이다. 발표일이나 공급 회복일로 바꾸지 않는다.",
+                  "value_aliases": [
+                    "Thursday, October 8",
+                    "October 8"
+                  ]
+                },
+                {
+                  "field": "supply_pool",
+                  "status": "AMBIGUOUS",
+                  "value": "130 production platforms and rigs",
+                  "reference": {
+                    "start": 1017,
+                    "end": 1296,
+                    "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+                  },
+                  "reason": "130은 대피·이동한 생산 설비의 합계다. 남아 있는 전체 적격 공급자·공급량으로 해석할 수 없고 이 재화만의 설비 수로도 분해되지 않는다."
+                },
+                {
+                  "field": "region",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "Gulf Coast",
+                  "reference": {
+                    "start": 887,
+                    "end": 1016,
+                    "quote": "Hurricane Isaias’s forecasted path toward the Gulf Coast has already impacted crude oil and natural gas production in the region."
+                  },
+                  "reason": "원유·천연가스 생산 차질이 발생한 지역으로 직접 연결된다.",
+                  "value_aliases": [
+                    "U.S. Gulf Coast"
+                  ]
+                },
+                {
+                  "field": "quantity",
+                  "status": "AMBIGUOUS",
+                  "value": "1.1 billion million",
+                  "reference": {
+                    "start": 1017,
+                    "end": 1296,
+                    "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+                  },
+                  "reason": "원문 승수가 billion million으로 중첩되어 물량 크기의 의미가 불명확하다. 1.1 billion으로 정정하거나 확정 수치로 채택하지 않는다."
+                },
+                {
+                  "field": "unit",
+                  "status": "VERIFIED_PRESENT",
+                  "value": "cubic feet per day",
+                  "reference": {
+                    "start": 1017,
+                    "end": 1296,
+                    "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+                  },
+                  "reason": "천연가스 생산 중단량의 체적·시간 단위는 명시된다. 불명확한 승수와 분리한다."
+                },
+                {
+                  "field": "customer_group",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "생산 차질을 겪는 재화의 구매자·최종 수요군은 검토 windows에 없다."
+                },
+                {
+                  "field": "specification",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "원유 등급이나 천연가스 품질·규격은 명시되지 않는다."
+                },
+                {
+                  "field": "need_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 고객 필요 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "ready_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건의 공급 준비·인도 시점이 명시되지 않는다."
+                },
+                {
+                  "field": "lead_time",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 발주부터 준비·인도까지의 기간이 명시되지 않는다."
+                },
+                {
+                  "field": "relief",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건과 연결된 수급 제약 완화 사실이 명시되지 않는다."
+                },
+                {
+                  "field": "alternative",
+                  "status": "VERIFIED_ABSENT",
+                  "value": null,
+                  "reference": null,
+                  "reason": "검토 windows에 이 사건에 이용할 수 있는 대체 제품·공급원이 명시되지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "target_id": "production-platforms-and-rigs",
+          "entity": "production platforms and rigs",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1017,
+            "end": 1296,
+            "quote": "The Marine Minerals Administration reports that as of Thursday, October 8, 130 production platforms and rigs have been evacuated or moved resulting in production shut-ins of about 1.3 million barrels per day of crude oil and 1.1 billion million cubic feet per day of natural gas."
+          },
+          "events": [],
+          "no_relevant_event_reason": "물리 생산 장비군이 명시되지만 130은 대피·이동 설비의 합계다. 플랫폼·리그 자체의 신규 주문·배송·판매 공급 증감은 아니다. 그 영향은 별도의 원유·가스 생산 중단 사건에 기록했다."
+        },
+        {
+          "target_id": "refining-fleet",
+          "entity": "U.S. refining fleet",
+          "entity_aliases": [],
+          "discovery_reference": {
+            "start": 1297,
+            "end": 1444,
+            "quote": "The U.S. Gulf Coast is home to a large portion of the U.S. refining fleet, and the impacts from Hurricane Isaias could affect refinery operations ."
+          },
+          "events": [],
+          "no_relevant_event_reason": "정유 설비군은 물리 제조장비 탐색 대상으로 남긴다. 현재의 지리적 분포와 향후 operations 영향 가능성만 있고, 정유 제품이나 설비 자체의 확정 공급 증감은 명시되지 않는다."
+        }
+      ],
+      "no_relevant_event_reason": null,
+      "coverage": {
+        "scope": "PACKET_WINDOWS_ONLY",
+        "full_document_review": false,
+        "body_characters": 5096,
+        "reviewed_characters": 557,
+        "reviewed_fraction": 0.10930141287284144,
+        "unreviewed_ranges": [
+          {
+            "start": 0,
+            "end": 887,
+            "status": "UNVERIFIED"
+          },
+          {
+            "start": 1444,
+            "end": 5096,
+            "status": "UNVERIFIED"
+          }
+        ],
+        "unreviewed_reason": "제공 windows 밖은 원문 판독·정답 검토를 수행하지 않았다. 첨부·영상·원래 웹 표 전체도 검증하지 않았다."
+      }
+    }
+  ],
+  "review_summary": {
+    "packet_documents": 20,
+    "reviewed_nonempty_documents": 14,
+    "empty_window_unverified_documents": 6,
+    "targets": 21,
+    "events": 16,
+    "fact_status_counts": {
+      "VERIFIED_PRESENT": 134,
+      "AMBIGUOUS": 15,
+      "VERIFIED_ABSENT": 115
+    },
+    "reviewed_characters": 6283,
+    "body_characters": 65159,
+    "reviewed_fraction": 0.09642566644669194,
+    "unreviewed_characters": 58876,
+    "unverified_scope": "6개 빈 windows 문서의 전체 범위와 14개 검토 문서에서 제공 windows 밖의 모든 범위. 문서별 coverage.unreviewed_ranges에 정확한 반개구간을 기록했다.",
+    "full_document_recall_supported": false,
+    "human_verified": false
+  }
+}

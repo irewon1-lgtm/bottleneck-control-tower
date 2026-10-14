@@ -150,3 +150,35 @@ def test_product_score_uses_frozen_aliases_and_counts_false_values_as_miss():
     b=scoring.product_assess([{'value':'NovaLT1','span':{'start':5,'end':12}}],gold)
     assert a['TP']==1 and a['FP']==a['FN']==0
     assert b['TP']==0 and b['FP']==b['FN']==1
+
+
+def test_daily_refresh_retains_both_native_versions_and_only_queues_changed_body(tmp_path,monkeypatch):
+    from bct.v4 import research_intake as intake
+    from datetime import datetime,timedelta,timezone
+    from pathlib import Path
+    c=json.loads(Path('config/v4-research-intake.json').read_text());c['sources']=c['sources'][:1]
+    url=c['sources'][0]['article_prefix']+'new-order';calls=[]
+    class Client:
+        body='Forge received an order for NovaLT16.'
+        def fetch(self,index):return ('<a href="'+url+'">official</a>').encode(),index,200,'text/html'
+        def document(self,u):
+            calls.append(u);d=document();raw=self.body.encode()
+            d.update(document_id=hashlib.sha256(raw).hexdigest(),origin_url=u,body=self.body,
+                     raw_sha256=hashlib.sha256(raw).hexdigest(),body_sha256=hashlib.sha256(raw).hexdigest())
+            return d,raw,{}
+    client=Client();first=intake.intake(tmp_path,c,client=client)
+    at=datetime.now(timezone.utc)+timedelta(days=2)
+    monkeypatch.setattr(intake,'now',lambda:at.isoformat())
+    client.body+=' Qualified capacity is delayed.'
+    second=intake.intake(tmp_path,c,client=client)
+    third=intake.intake(tmp_path,c,client=client)
+    assert second['source_refreshes'][0]['status']=='BODY_CHANGED'
+    assert second['read_queue']==2 and not third['live_captured'] and len(calls)==2
+    at+=timedelta(days=2)
+    fourth=intake.intake(tmp_path,c,client=client)
+    assert fourth['source_refreshes'][0]['status']=='UNCHANGED_BODY' and fourth['read_queue']==2
+    l=Ledger(tmp_path);assert l.db.execute('select count(*) from documents').fetchone()[0]==2
+    with l.db:l.event('READ_QUEUE',{'document_id':second['source_refreshes'][0]['document_id'],'state':'WAIT_API_AUTH'})
+    assert intake.reading_queue(l)['unfinished_versions']==2
+    assert intake.reading_queue(l)['states']['WAIT_API_AUTH']==1
+    l.close()

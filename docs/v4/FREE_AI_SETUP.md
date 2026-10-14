@@ -2,7 +2,25 @@
 
 Updated 2026-10-14 (Asia/Seoul). Read `EXECUTION_PLAN.md` and `PROGRESS.json` first. The fixed eight-stage goal and CPU GLiNER2 engine remain unchanged. Active AI: **GroqCloud Free Plan only**. Gemini code is retained, but routing/probes and key requirements are disabled. No third provider, paid fallback, upgrade or billing action.
 
-## Current offline quote/role follow-up (2026-10-14)
+## Current approved sequential research (2026-10-14)
+
+Plan v1.8 continues from the actual remote `ef3321609210281757141d9b897e792333d9d5c7`. Original118/frozen50, consumed evaluation20, seven rejected items and stages1–3 remain unchanged. The new source20 and exact bounded input/model/prompt/scoring closure were frozen before predictions at `stage4-corpus/round2/freeze.json`. CPU weights/environment were reused; no install or model preparation was repeated. Read `round2/scores.json` and `round2/sequential-evidence.json` for current results; earlier sections below are dated history.
+
+The changed development prompt retained the working wire schema and strict exact/unique quote binding. Four new POSTs produced three responses (one development, two evaluation), reporting **2,783 input + 1,293 output = 4,076 tokens**. The third evaluation request returned **HTTP401 `invalid_api_key`**, with unreported usage. The batch stopped with11 unattempted eligible documents and persisted WAIT_API/provider settings-change state. No retry, probe, new-key request, paid fallback or Gemini call followed. Historical HTTP400's cause remains UNKNOWN; its failed request was not repeated. Existing Free Plan limits/run caps/80% quotas remain enforced. Rolling budgets use reported actual tokens when present and retain conservative reservations when usage is unknown.
+
+All20 official native/date proofs are retained;14 bounded inputs are eligible,4 contact-context blocked,2 context-held. Two blind source-only AI drafts plus a separate source-only adjudication reviewed14 windows' document scopes; this is not human verification. Same-input common2 product precision/recall: CPU5TP/4FP/0FN, Groq source-adopted0TP/2FP/5FN under frozen literal aliases. Quantity-bearing entity strings and empty responses are not repaired after evaluation. AI adoption/Shadow remains **HOLD**, not an accuracy or forecasting PASS. The other12 eligible documents without generation are AUTH-wait/unattempted, not model false negatives. The source-valid advisory, original model role, downstream engine event and candidate counts stay separate.
+
+Collection-only research automation uses the existing `SourceClient`/SQLite ledger, isolated new/failed URL queues, exact source versions and a bounded daily refresh. Its child environment excludes AI keys. Three actual local timer executions stored9 additional native snapshots; these are outside the frozen20 and their independent publication/meaning reviews remain pending. It performs **zero AI calls**, has no operating UI/alert integration, and is not qualified seven-day AI Shadow. Local host lifetime/fresh-task restoration is unverified. The original seven-day stop time is preserved across research-process restarts. Start instructions were saved as a cloud configuration **draft only**; review/save/publish is required for future environment application. No network/credential/protected schedule setting was changed.
+
+Offline current-result replay (no requests or CPU inference):
+
+```bash
+.venv/bin/python tools/v4_round2_replay.py
+```
+
+Resume the unchanged evaluation only after external validation of the existing Secret binding/settings; never paste a key into Git/logs or repeat the invalid credential request. Changing inference rules after inspecting these results consumes this evaluation for that version; new independent performance evidence then needs other unused documents.
+
+## Historical offline quote/role follow-up (2026-10-14)
 
 Plan v1.7 starts at `594d233702de4234cd4e06f88dea26ac060d2fe1`. New Groq POSTs/tokens/API cost are **0/0/$0**. Existing installation, source corpus and CPU baseline are reused; no model preparation or inference is needed. Seven original rejected items remain rejected after exact read-only diagnosis. The research adapter now rejects model prefixes and unproven ordered-object relations, keeps actual equipment orders separate from future output capacity, and records raw-model/source-checked/engine roles separately. FOX-XP's existing demand correction is retained, not counted as a newly discovered fact.
 
