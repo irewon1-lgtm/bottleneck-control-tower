@@ -1,0 +1,29 @@
+name: V4 dashboard release gate
+on:
+  push:
+    branches: [deploy/bct-v4-dashboard]
+  pull_request:
+    branches: [deploy/bct-v4-dashboard]
+permissions:
+  contents: read
+concurrency:
+  group: v4-dashboard-gate-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify source, API, export and read-only boundaries
+        env:
+          COMMIT_REF: ${{ github.sha }}
+        run: bash scripts/v4_dashboard_ci_build.sh
+      # Netlify runs the same gate before atomic publication. No deployment
+      # token, research output artifact, collector, or write permission is used.

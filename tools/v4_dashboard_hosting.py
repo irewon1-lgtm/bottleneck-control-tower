@@ -7,6 +7,7 @@ import argparse
 from datetime import datetime, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
 
 from bct.v4.dashboard import ASSETS, ResearchReader
@@ -31,6 +32,8 @@ def build(repo, output):
     generated = datetime.now(timezone.utc).isoformat()
     dashboard["source"].update(snapshot=True, mode="검증된 연구 기록의 고정 스냅샷")
     dashboard["snapshot_generated_at"] = generated
+    dashboard["code_commit"] = os.environ.get("COMMIT_REF", "LOCAL_NOT_DEPLOYED")
+    dashboard["source_db_sha256"] = before
     details = {r["id"]: reader.evidence(r["id"]) for r in dashboard["records"]}
     assert len(details) == dashboard["counts"]["evidence"]
     assert before == hashlib.sha256(reader.path.read_bytes()).hexdigest(), "Source DB changed"
@@ -56,7 +59,8 @@ const headers = {
   "X-Content-Type-Options":"nosniff",
   "Referrer-Policy":"no-referrer",
   "Content-Security-Policy":"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
-  "X-Robots-Tag":"noindex, nofollow, noarchive"
+  "X-Robots-Tag":"noindex, nofollow, noarchive",
+  "X-BCT-Code-Commit":dashboard.code_commit
 };
 export default { async fetch(request) {
   const path = new URL(request.url).pathname;
@@ -67,7 +71,7 @@ export default { async fetch(request) {
   if (!["GET","HEAD"].includes(method)) return json({error:"읽기 전용 화면입니다."},405,{Allow:"GET, HEAD"});
   if (path === "/api/dashboard") return json(dashboard);
   if (path === "/api/export") return json(dashboard,200,{"Content-Disposition":'attachment; filename="bct-v4-research.json"'});
-  if (path === "/api/health") return json({status:"검증된 고정 연구 자료 연결됨",read_only:true,snapshot:true,data_at:dashboard.data_at});
+  if (path === "/api/health") return json({status:"검증된 고정 연구 자료 연결됨",read_only:true,snapshot:true,data_at:dashboard.data_at,code_commit:dashboard.code_commit,source_db_sha256:dashboard.source_db_sha256});
   if (/^\\/api\\/evidence\\/[a-f0-9]{64}$/.test(path)) {
     const id=path.split("/").pop();
     return Object.hasOwn(details,id) ? json(details[id]) : json({error:"이 근거 기록을 찾을 수 없습니다."},404);
