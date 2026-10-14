@@ -1,12 +1,12 @@
 {
-  "plan_version": "1.5",
-  "plan_sha256": "667f2d38a13b5a06004a00859538cf887106756598481d6a5a4f1f970c95c6fa",
+  "plan_version": "1.6",
+  "plan_sha256": "1d4e8acd2f60421e8127a8379c098be4f89cbcfb7f7dec9c1c3135242817c56a",
   "stage": 4,
-  "status": "BLOCKED_STAGE4_INDEPENDENT_GOLD_AND_SOURCE_INPUT_CPU_COMPARISON",
+  "status": "IN_PROGRESS_APPROVED_REPAIR",
   "handoff_sha": "9c7f6796cc27a804ddcc1bfcfdf614ba398d51da",
   "base_remote_sha": "9c7f6796cc27a804ddcc1bfcfdf614ba398d51da",
   "last_completed": "Published access PASS; reused77 issuer originals and acquired41 current native documents (118 unique: FULL37/PARTIAL81). Exported/froze50 (development30/evaluation20; FULL30/PARTIAL20), checked hashes/publication evidence and reopened separate50-document SQLite; new Groq0; no algorithm changes.",
-  "next_action": "Keep the frozen30/20 source versions and unchanged algorithm; independently adjudicate target facts without model answers. Resolve documented public-input/source review gates before any new Groq request. Recover exact matching GLiNER2 input evidence if available; otherwise keep CPU comparison BLOCKED. Do not retune on evaluation or start stage5/Shadow.",
+  "next_action": "Develop safe source-bound input on development30, event-level review packets and research-only typed adapter; freeze before evaluation20.",
   "blockers": [
     {
       "code": "INDEPENDENT_TARGET_FACT_GOLD_UNVERIFIED",
@@ -131,7 +131,7 @@
     }
   ],
   "scope": "SOURCE_REUSE_AND_FROZEN50_PREPARATION; no accuracy algorithm changes",
-  "updated_at": "2026-10-14T02:18:08.621073+00:00",
+  "updated_at": "2026-10-14T04:09:47.838316+00:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
@@ -329,5 +329,37 @@
     "f1": null,
     "grounding_success_rate": null,
     "reason": "No new model answers or verified semantic labels; unadjudicated truth is not counted as UNKNOWN correctness."
+  },
+  "repair": {
+    "start_sha": "ca013abdb28f235c1d53dfad770d2e367497eaa6",
+    "source_freeze_sha256": "6f288a8165158a28cb05a46c3fa4d264b709e752eea052f0191276f356da6d07",
+    "ci_dependency_repair": {
+      "remote_failure": {
+        "run": 38500317584,
+        "job": 115645455911,
+        "failed": 15,
+        "passed": 1169,
+        "skipped": 1,
+        "missing": [
+          "networkx",
+          "trafilatura",
+          "feedparser",
+          "dateparser",
+          "pypdf"
+        ]
+      },
+      "clean_before": {
+        "failed": 15,
+        "passed": 6
+      },
+      "clean_after": {
+        "passed": 21,
+        "failed": 0
+      },
+      "logs": "var/v4/repair",
+      "model_dependencies_in_default_tests": false
+    },
+    "evaluation20_outputs_exposed_to_developer": false,
+    "operational_adapter_enabled": false
   }
 }
