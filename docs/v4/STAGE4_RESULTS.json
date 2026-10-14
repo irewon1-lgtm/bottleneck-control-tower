@@ -1,9 +1,9 @@
 {
-  "at": "2026-10-14T05:08:27.253790+00:00",
-  "base_sha": "ca013abdb28f235c1d53dfad770d2e367497eaa6",
+  "at": "2026-10-14T05:40:17.654037+00:00",
+  "base_sha": "594d233702de4234cd4e06f88dea26ac060d2fe1",
   "stage": 4,
-  "status": "BLOCKED_STAGE4_ADOPTION_SOURCE_OUTPUT_AND_PARTIAL_ACCURACY",
-  "priority": "Approved minimal safe-input / AI-engine bridge / reproducible evaluation repair",
+  "status": "BLOCKED_STAGE4_INVALID_STORED_QUOTES_HTTP400_NO_NEW_INDEPENDENT_EVALUATION",
+  "priority": "Offline diagnosis of seven stored quote failures and development-only product/demand/supply role repair",
   "preserved_stages": {
     "1": "PASS_REUSED",
     "2": "PASS_FIXED_REUSED_NO_CONNECTION_RETEST",
@@ -2998,24 +2998,15 @@
     "historical_corpus_checks": "before_repair_state.verification; earlier zero-call/not-run fields are historical, not current"
   },
   "api_usage_current_task": {
-    "providers_called": [
-      "groq"
-    ],
-    "model": "openai/gpt-oss-20b",
-    "generation_POSTs": 8,
-    "same_input_retries": 0,
-    "reported_response_documents": 7,
-    "input_tokens": 6242,
-    "output_tokens": 2809,
-    "reported_total_tokens": 9051,
-    "unreported_failed_request_usage_calls": 1,
-    "api_cost_usd": 0,
-    "api_cost_basis": "Existing user-confirmed Groq Free Plan; no paid plan, billing action, provider/model fallback or invoice query. Failed-call tokens UNKNOWN, not zero.",
-    "prior_attempts_imported_for_same_account_budget_not_new": 5,
-    "historical_responses_imported_as_cache_without_regeneration_or_redundant_revalidation": true,
-    "quota": "Existing 30RPM/1000RPD/8000TPM/200000TPD; 80% rolling local accounting, same ledger, unchanged one POST/run,6400 reservation,2048 output,600 chars,2 windows,60s.",
-    "reservation_sum_new_attempts": 48891,
-    "paid_API_calls": 0
+    "new_generation_POSTs": 0,
+    "new_API_tokens": 0,
+    "new_API_cost_usd": 0,
+    "old_API_attempts_before_after": {
+      "before": 13,
+      "after": 13
+    },
+    "CPU_model_loads_or_installs": 0,
+    "platform_usage_or_fees": "UNKNOWN_NOT_EXPOSED"
   },
   "preservation": {
     "source_documents118_and_frozen50": "UNCHANGED; original FULL/PARTIAL and development/evaluation partition retained",
@@ -3038,49 +3029,30 @@
   ],
   "blockers": [
     {
-      "code": "FROZEN50_NOT_FULLY_READ_OR_HUMAN_VERIFIED",
-      "reason": "29 eligible,13 held,8 blocked. Only1 development and6 evaluation actual responses; event gold reviews20 development/9 evaluation bounded inputs. Remaining input/truth unreviewed is not source absence.",
-      "scope": "No whole-document/50-document accuracy or stage6 lead-performance claim."
-    },
-    {
-      "code": "STRICT_SOURCE_OUTPUT_REJECTED",
-      "documents": 6,
-      "items": 7,
-      "reasons": {
+      "code": "SEVEN_STORED_ITEMS_REMAIN_INVALID",
+      "counts": {
         "AMBIGUOUS_QUOTE": 3,
         "NULL_WITH_EVIDENCE": 1,
         "SOURCE": 1,
         "QUOTE_NOT_IN_SOURCE": 2
       },
-      "resume": "Use development30 plus stored raw responses to improve exact source-supported quotations; retain strict validator and consumed evaluation history, no same request retry."
+      "diagnosed": 7,
+      "recovered": 0,
+      "resume": "Do not choose ambiguous positions, rewrite quotes/aliases, remove null evidence or silently change frozen replies."
     },
     {
-      "code": "GROQ_HTTP400_REQUEST_CONTRACT_BLOCK",
-      "http_status": 400,
-      "error_code": "invalid_request_error",
-      "flags": [],
-      "provider_detail": "UNKNOWN; raw error text intentionally not retained. No repeat to recover it.",
-      "remaining_eligible_not_attempted": 2,
-      "resume_document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
-      "resume": "Preserve API_CONFIG_ERROR and SQLite. Validate any genuinely changed request contract locally first; do not rerun the same failed input/contract."
+      "code": "HTTP400_CAUSE_UNKNOWN_NO_RETRY",
+      "saved_diagnostics": {
+        "error_code": "invalid_request_error",
+        "flags": [],
+        "http_status": 400
+      },
+      "contract": "b29edff2710fa9df32d2d209085d6e58d6672334e7014b89d6f8804432ba5dca",
+      "cause": "UNKNOWN; same local contract had7 HTTP success responses and1 failure; generic saved code is insufficient."
     },
     {
-      "code": "CONTACT_FOOTER_OR_COMPLETE_CONTEXT_HELD",
-      "contact_footer_not_safely_identified": 7,
-      "complete_context_exceeds600": 6,
-      "no_signal_context": 7,
-      "resume": "Use development inputs only. Frozen evaluation gate outcomes must not be tuned and relabelled as unused."
-    },
-    {
-      "code": "ONE_NATIVE_VERSION_DIFFERS_FROZEN_TEXT",
-      "documents": 1,
-      "resume": "Old source remains PARTIAL; new native/body version is separate. Do not replace frozen text/ID/hash."
-    },
-    {
-      "code": "SEMANTIC_IDENTITY_MAPPING_AND_REVIEW_LIMITS",
-      "reason": "Fixed literal/alias mapping may leave valid short/long product forms unmapped. Raw counts are not general semantic truth. Gold is AI review, not human; original sessions disclosed status-metadata exposure, not evaluated answer values.",
-      "clean_source_audit": "docs/v4/stage4-corpus/source-only-audit-evaluation-v1.json",
-      "resume": "Read source-only review packets/adjudication and independent audit. Do not silently change aliases or claimed holdout status."
+      "code": "NO_NEW_INDEPENDENT_ACCURACY_OR_EARLY_TEST",
+      "reason": "Original20 and results preserved as consumed; changes tested only on development30/authored counterexamples. New independent performance corpus not prepared or evaluated."
     }
   ],
   "verdict": {
@@ -3092,18 +3064,11 @@
     "remote_implementation_delivery": "PASS_EXACT_CODE_SHA_CI",
     "leading_performance": "NOT_RUN"
   },
-  "next_start": "Run the committed offline evidence replay; inspect development source/quote and alias-mapping diagnostics, preserve original frozen50 and consumed holdout. No same failed API retry, stage6 or Shadow. Reuse pinned CPU runtime and stored raw responses, no additional keys/models/providers.",
+  "next_start": "Reuse stored development30 and new ordered-object diagnostics. Seven original invalid responses cannot be adopted without changing their evidence and stay held. HTTP400 needs genuinely new offline diagnostic evidence/contract cause before any separately authorized changed-request check; no same request retry. Future performance evaluation needs a separately frozen unused corpus, not these20. No new API calls under current scope.",
   "delivery": {
-    "implementation_sha": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
-    "remote_verified": true,
-    "CI": {
-      "id": 38512076649,
-      "head_sha": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
-      "status": "completed",
-      "conclusion": "success",
-      "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/38512076649"
-    },
-    "final_evidence_commit": "Contains this result; final branch HEAD/ref and its CI will be verified after push. Do not treat earlier code CI as this later commit CI."
+    "prior_verified_sha": "594d233702de4234cd4e06f88dea26ac060d2fe1",
+    "prior_verified_CI_run": 38515127753,
+    "current_commit": "This result commit; final remote SHA/ref and its CI are checked after push and reported separately."
   },
   "before_repair_state": {
     "at": "2026-10-14T02:09:22.179142+00:00",
@@ -3808,5 +3773,266 @@
       }
     ],
     "next_start": "Run the committed offline evidence replay; inspect development source/quote and alias-mapping diagnostics, preserve original frozen50 and consumed holdout. No same failed API retry, stage6 or Shadow. Reuse pinned CPU runtime and stored raw responses, no additional keys/models/providers."
+  },
+  "before_quote_role_followup": {
+    "at": "2026-10-14T05:08:27.253790+00:00",
+    "base_sha": "ca013abdb28f235c1d53dfad770d2e367497eaa6",
+    "status": "BLOCKED_STAGE4_ADOPTION_SOURCE_OUTPUT_AND_PARTIAL_ACCURACY",
+    "priority": "Approved minimal safe-input / AI-engine bridge / reproducible evaluation repair",
+    "api_usage_current_task": {
+      "providers_called": [
+        "groq"
+      ],
+      "model": "openai/gpt-oss-20b",
+      "generation_POSTs": 8,
+      "same_input_retries": 0,
+      "reported_response_documents": 7,
+      "input_tokens": 6242,
+      "output_tokens": 2809,
+      "reported_total_tokens": 9051,
+      "unreported_failed_request_usage_calls": 1,
+      "api_cost_usd": 0,
+      "api_cost_basis": "Existing user-confirmed Groq Free Plan; no paid plan, billing action, provider/model fallback or invoice query. Failed-call tokens UNKNOWN, not zero.",
+      "prior_attempts_imported_for_same_account_budget_not_new": 5,
+      "historical_responses_imported_as_cache_without_regeneration_or_redundant_revalidation": true,
+      "quota": "Existing 30RPM/1000RPD/8000TPM/200000TPD; 80% rolling local accounting, same ledger, unchanged one POST/run,6400 reservation,2048 output,600 chars,2 windows,60s.",
+      "reservation_sum_new_attempts": 48891,
+      "paid_API_calls": 0
+    },
+    "blockers": [
+      {
+        "code": "FROZEN50_NOT_FULLY_READ_OR_HUMAN_VERIFIED",
+        "reason": "29 eligible,13 held,8 blocked. Only1 development and6 evaluation actual responses; event gold reviews20 development/9 evaluation bounded inputs. Remaining input/truth unreviewed is not source absence.",
+        "scope": "No whole-document/50-document accuracy or stage6 lead-performance claim."
+      },
+      {
+        "code": "STRICT_SOURCE_OUTPUT_REJECTED",
+        "documents": 6,
+        "items": 7,
+        "reasons": {
+          "AMBIGUOUS_QUOTE": 3,
+          "NULL_WITH_EVIDENCE": 1,
+          "SOURCE": 1,
+          "QUOTE_NOT_IN_SOURCE": 2
+        },
+        "resume": "Use development30 plus stored raw responses to improve exact source-supported quotations; retain strict validator and consumed evaluation history, no same request retry."
+      },
+      {
+        "code": "GROQ_HTTP400_REQUEST_CONTRACT_BLOCK",
+        "http_status": 400,
+        "error_code": "invalid_request_error",
+        "flags": [],
+        "provider_detail": "UNKNOWN; raw error text intentionally not retained. No repeat to recover it.",
+        "remaining_eligible_not_attempted": 2,
+        "resume_document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
+        "resume": "Preserve API_CONFIG_ERROR and SQLite. Validate any genuinely changed request contract locally first; do not rerun the same failed input/contract."
+      },
+      {
+        "code": "CONTACT_FOOTER_OR_COMPLETE_CONTEXT_HELD",
+        "contact_footer_not_safely_identified": 7,
+        "complete_context_exceeds600": 6,
+        "no_signal_context": 7,
+        "resume": "Use development inputs only. Frozen evaluation gate outcomes must not be tuned and relabelled as unused."
+      },
+      {
+        "code": "ONE_NATIVE_VERSION_DIFFERS_FROZEN_TEXT",
+        "documents": 1,
+        "resume": "Old source remains PARTIAL; new native/body version is separate. Do not replace frozen text/ID/hash."
+      },
+      {
+        "code": "SEMANTIC_IDENTITY_MAPPING_AND_REVIEW_LIMITS",
+        "reason": "Fixed literal/alias mapping may leave valid short/long product forms unmapped. Raw counts are not general semantic truth. Gold is AI review, not human; original sessions disclosed status-metadata exposure, not evaluated answer values.",
+        "clean_source_audit": "docs/v4/stage4-corpus/source-only-audit-evaluation-v1.json",
+        "resume": "Read source-only review packets/adjudication and independent audit. Do not silently change aliases or claimed holdout status."
+      }
+    ],
+    "next_start": "Run the committed offline evidence replay; inspect development source/quote and alias-mapping diagnostics, preserve original frozen50 and consumed holdout. No same failed API retry, stage6 or Shadow. Reuse pinned CPU runtime and stored raw responses, no additional keys/models/providers.",
+    "delivery": {
+      "implementation_sha": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
+      "remote_verified": true,
+      "CI": {
+        "id": 38512076649,
+        "head_sha": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/38512076649"
+      },
+      "final_evidence_commit": "Contains this result; final branch HEAD/ref and its CI will be verified after push. Do not treat earlier code CI as this later commit CI."
+    }
+  },
+  "quote_role_followup": {
+    "start_sha": "594d233702de4234cd4e06f88dea26ac060d2fe1",
+    "source_snapshot_and_prior_metrics": "UNCHANGED_HISTORICAL_CONSUMED_EVALUATION",
+    "evidence": "docs/v4/stage4-corpus/quote-role-diagnostics-v1.json",
+    "evidence_sha256": "828144216248705552df355a52c1290d9acbf12f663bb138ed33325f7b1c4686",
+    "reproduction_command": ".venv/bin/python -m scripts.v4.quote_role_diagnostics",
+    "first_error_counts": {
+      "AMBIGUOUS_QUOTE": 3,
+      "NULL_WITH_EVIDENCE": 1,
+      "SOURCE": 1,
+      "QUOTE_NOT_IN_SOURCE": 2
+    },
+    "diagnosed_failed_items": 7,
+    "recovered_rejected_items": 0,
+    "fix_counts": {
+      "ambiguous_quote": {
+        "diagnosed": 3,
+        "recovered": 0
+      },
+      "quote_not_in_source": {
+        "diagnosed": 2,
+        "recovered": 0
+      },
+      "source_duplicate_field": {
+        "diagnosed": 1,
+        "recovered": 0
+      },
+      "null_with_evidence": {
+        "diagnosed": 1,
+        "recovered": 0
+      },
+      "model_prefix_false_product_rejections": 3,
+      "output_product_false_demand_before_after": {
+        "before": 2,
+        "after": 0
+      },
+      "actual_order_future_output_demand_before_after": {
+        "before": 0,
+        "after": 3
+      },
+      "wrong_S1_S2_S3_automatic_promotions_in_scope": 0,
+      "actual_FOX_XP_product_demand_supply_counts": {
+        "product": 1,
+        "demand": 1,
+        "supply_increase": 0,
+        "newly_added_actual_events": 0
+      },
+      "other_product_output_period_as_order_need": "BLOCKED_BY_SOURCE_ATTRIBUTION; actual explicit delivery period retained"
+    },
+    "actual_development": {
+      "documents_replayed": 30,
+      "saved_actual_responses": 1,
+      "before_counts": {
+        "product_exploration": 1,
+        "demand_signals": 1,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 1,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "adapter_off_counts": {
+        "bottleneck_research_candidates": 0,
+        "demand_signals": 0,
+        "engine_observations_with_AI_events": 0,
+        "linked_pairs": 0,
+        "product_exploration": 0,
+        "supply_signals": 0
+      },
+      "adapter_on_counts": {
+        "bottleneck_research_candidates": 0,
+        "demand_signals": 1,
+        "engine_observations_with_AI_events": 1,
+        "linked_pairs": 0,
+        "product_exploration": 1,
+        "supply_signals": 0
+      },
+      "role_correction_was_preexisting": "SUPPLY_INCREASE -> DEMAND_INCREASE already worked; explicit ordered-object verification and role provenance now added",
+      "new_actual_product_or_demand_events": 0,
+      "actual_adopted_products": 1,
+      "actual_adopted_demand_events": 1,
+      "actual_adopted_supply_increase_events": 0,
+      "wrong_automatic_promotions_in_this_replay": 0,
+      "storage": {
+        "restart_backup_restore": "PASS",
+        "idempotence": "PASS",
+        "current_code_recomputed_facts_match_saved_result": true,
+        "volatile_field_excluded_from_fact_comparison": "engine.protected_result.batch_id",
+        "excluded_batch_ids": {
+          "saved": "early-58428aa0743e4761aefb26511c11e87d",
+          "recomputed": "early-97a4ca690c6c4b8b9b95e24754fa08c5"
+        },
+        "new_ledger": "var/v4/quote-followup/adapter-ledger",
+        "status": {
+          "integrity": "ok",
+          "documents": 30,
+          "runs": 2,
+          "observed_live_days": [],
+          "shadow_7_days": "BLOCKED",
+          "reason": "7-day continuity and new-document/target/failure/recovery review still required",
+          "early_success_cases": 0,
+          "forecast_performance": "BLOCKED"
+        }
+      }
+    },
+    "HTTP400": {
+      "status": "BLOCKED_CAUSE_UNKNOWN_NO_RETRY",
+      "saved_safe_error": {
+        "at": "2026-10-14T04:39:57.437012+00:00",
+        "attempt_id": "3d9cd7b293974fbb9d9874f69697e8a9",
+        "diagnostics": {
+          "error_code": "invalid_request_error",
+          "flags": [],
+          "http_status": 400
+        },
+        "error_kind": "INPUT_INVALID",
+        "input_key": "fd7856fce615447036918743e99a852160e9d713186936ceaf95ea6463cfc0b1",
+        "provider": "groq",
+        "run_id": "api-6092926f537f45c5a8d1d39ed423da87"
+      },
+      "current_request_contract": "b29edff2710fa9df32d2d209085d6e58d6672334e7014b89d6f8804432ba5dca",
+      "same_contract_on_seven_HTTP_success_responses_and_one_HTTP_failure": true,
+      "limitation": "Reconstructed local schema/reservation checks do not establish remote rejection cause. Raw error details were not retained."
+    },
+    "checks": {
+      "new_test_cases": 32,
+      "affected_regression_passed": 343,
+      "failed": 0,
+      "skipped": 0,
+      "command": ".venv/bin/python -m pytest -q tests/test_v4_quote_followup.py tests/test_v4_free_ai.py tests/test_v4_quote_binding.py tests/test_v4_semantics.py tests/test_v4_integration.py tests/test_v4_stage4_accuracy.py tests/test_v4_repair.py tests/test_precursor_evidence_graph.py",
+      "log": "var/v4/quote-followup/final-impact.log",
+      "previous_whole_suite": "REUSED at594d233: Python1220 passed/1 existing skip, Node34 passed; final new SHA CI must be checked after push",
+      "initial_test_diagnostics": "Initial authored tests13 failed/7 passed. Three region/customer/Relief fixtures lacked explicit contrary target bindings and were corrected with source-scoped assertions. The existing protected grammar cannot adopt heat pumps; the positive example uses supported gas turbines and heat pumps have a separate required hold test. Final fixtures/criteria were not relaxed to accept these unsupported cases.",
+      "runner_setup_errors": "One nonexistent test filename caused NOT_RUN, then corrected to existing files; not counted as PASS.",
+      "reporting_replay_repairs": "Existing backup is reused only after a fresh-process integrity/status/exact run-payload-hash match; old adapter is loaded with explicit package context and verified original hash.",
+      "runner_exit_status": 0,
+      "final_local_log": "343 passed in3.53s; subprocess returncode0 verified after an inconsistent outer shell status",
+      "period_regression": "Other-product output year retained as unattributed evidence; explicit equipment delivery period retained as DEMAND_NEED. Both current-code cases PASS.",
+      "fresh_development_computation": "All facts/fields match saved result after excluding only existing EARLY random batch UUID; both UUIDs retained. Backup hashes compare full stored payloads without exclusions."
+    },
+    "freeze_scope": {
+      "original_evaluation_code_SHA": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
+      "original_source_response_gold_score_freeze_unchanged": true,
+      "only_previously_frozen_file_changed": "src/bct/v4/research_adapter.py; explicitly authorized post-evaluation development follow-up",
+      "old_holdout_not_relabelled_unused": true,
+      "new_independent_accuracy": "NOT_RUN",
+      "new_corpus_needed_for_future_performance": "Yes; none prepared or evaluated this task"
+    },
+    "preservation": {
+      "files_checked": 110,
+      "changed": [],
+      "original_evaluation_inputs_gold_responses_metrics_unchanged": true,
+      "original_freeze_not_rewritten": true,
+      "old_evaluation_remains_consumed": true,
+      "new_adapter_not_an_unused_holdout_evaluation": true
+    },
+    "usage": {
+      "new_generation_POSTs": 0,
+      "new_API_tokens": 0,
+      "new_API_cost_usd": 0,
+      "old_API_attempts_before_after": {
+        "before": 13,
+        "after": 13
+      },
+      "CPU_model_loads_or_installs": 0,
+      "platform_usage_or_fees": "UNKNOWN_NOT_EXPOSED"
+    },
+    "limitations": [
+      "All seven stored invalid items remain rejected; diagnosis is not recovery.",
+      "Actual FOX-XP role was already corrected before this follow-up; new source-object verification and provenance do not create another fact.",
+      "Nine paired authored examples demonstrate functional changes only. Among three output-product examples, two were formerly forwarded as demand and all three now have an explicit relation hold.",
+      "Existing heat-pump target grammar remains unsupported: exploration only. Actual FOX-XP quantity, region, need/ready period, qualification and unique customer identity remain UNKNOWN.",
+      "No new independent accuracy or early-discovery test was run. Old evaluation20 remains consumed, with prior AI source-review limitations preserved."
+    ],
+    "next_start": "Reuse stored development30 and new ordered-object diagnostics. Seven original invalid responses cannot be adopted without changing their evidence and stay held. HTTP400 needs genuinely new offline diagnostic evidence/contract cause before any separately authorized changed-request check; no same request retry. Future performance evaluation needs a separately frozen unused corpus, not these20. No new API calls under current scope."
   }
 }

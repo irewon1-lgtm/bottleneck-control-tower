@@ -1,0 +1,1479 @@
+{
+  "version": "bct-offline-quote-role-diagnosis-1",
+  "start_sha": "594d233702de4234cd4e06f88dea26ac060d2fe1",
+  "scope": "Consumed evaluation read-only failure diagnosis; only development30/synthetic data used for adapter changes",
+  "first_error_counts": {
+    "AMBIGUOUS_QUOTE": 3,
+    "NULL_WITH_EVIDENCE": 1,
+    "SOURCE": 1,
+    "QUOTE_NOT_IN_SOURCE": 2
+  },
+  "diagnosed_failed_items": 7,
+  "failed_items_newly_adopted": 0,
+  "rejected_items_rewritten": 0,
+  "failure_disposition": "All seven remain rejected; no ambiguous placement, punctuation repair, alias rewriting or null-evidence deletion",
+  "documents": [
+    {
+      "document_id": "stage4doc-43bbc73c34d36affaac68018c51886b2897bbc0126d9df12b814ead65738046c",
+      "split": "CONSUMED_EVALUATION_DIAGNOSIS_ONLY",
+      "response_sha256": "62e40b6c20a81f1b1c220cbdcafa7bc3c893d567219bb9b060d74aea939c158a",
+      "input_key_verified": true,
+      "input_sha256": "d94bf51b8119a58b804d1b652693b28e8cdad91d76ed1202a7ae2368cfb1979c",
+      "body_sha256": "e76b0c7df67f16d7df375fc38b182fef98586ab95f05e118ed9c38e795a36ee6",
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "AMBIGUOUS_QUOTE"
+        }
+      ],
+      "items": [
+        {
+          "input_item_index": 0,
+          "first_error": "AMBIGUOUS_QUOTE",
+          "source_status": "REJECTED",
+          "kind": "UNKNOWN",
+          "model_role": "UNKNOWN",
+          "duplicate_fields": [],
+          "conflicting_product_fact_values": [],
+          "exact_product_alias_substitution_allowed": false,
+          "quote_checks": [
+            {
+              "path": "context",
+              "quote": "\"As space activities expand beyond Earth orbit and new opportunities emerge in exploration, sustainability and advanced technologies, international cooperation remains essential. ESA and ISRO have built a trusted partnership spanning more than two decades, and this renewed agreement positions us to pursue even greater ambitions together while delivering tangible benefits for our citizens and economies. We look forward to continuing this successful collaboration in the years ahead,” stated ESA Director General Josef Aschbacher.",
+              "value": null,
+              "body_occurrences": [
+                {
+                  "start": 433,
+                  "end": 965
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 433,
+                  "end": 965
+                }
+              ],
+              "exact_context_occurrences": [
+                {
+                  "start": 433,
+                  "end": 965
+                }
+              ],
+              "issues": [],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "entity",
+              "quote": "ESA and ISRO",
+              "value": "ESA and ISRO",
+              "body_occurrences": [
+                {
+                  "start": 612,
+                  "end": 624
+                },
+                {
+                  "start": 1082,
+                  "end": 1094
+                },
+                {
+                  "start": 1137,
+                  "end": 1149
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 612,
+                  "end": 624
+                }
+              ],
+              "exact_context_occurrences": [
+                {
+                  "start": 612,
+                  "end": 624
+                }
+              ],
+              "issues": [
+                "AMBIGUOUS_QUOTE"
+              ],
+              "model_coordinates_used": false
+            }
+          ]
+        }
+      ],
+      "accepted_count": 0,
+      "first_error_counts": {
+        "AMBIGUOUS_QUOTE": 1
+      },
+      "policy": "READ_ONLY_DIAGNOSIS_NOT_FACT_RECOVERY_OR_NEW_HOLDOUT_EVALUATION"
+    },
+    {
+      "document_id": "stage4doc-3fd9a480cb21be25a3d28465399232ce56a35c896627813ed1c8925dc86c6e4d",
+      "split": "CONSUMED_EVALUATION_DIAGNOSIS_ONLY",
+      "response_sha256": "c66d9fd72989d45e9c5c62c70aeb69f0fcf9c22375115464690cb7cbc00a8d71",
+      "input_key_verified": true,
+      "input_sha256": "c57c79e883314f8c57ee45ac54ea9e0957e0214dc5659c7f366219d9cb86d388",
+      "body_sha256": "d3d8b6364995f9b1727903a8075aaf4c7f00d53ad855b292edca9c7bfdd1250c",
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "NULL_WITH_EVIDENCE"
+        }
+      ],
+      "items": [
+        {
+          "input_item_index": 0,
+          "first_error": "NULL_WITH_EVIDENCE",
+          "source_status": "REJECTED",
+          "kind": "UNKNOWN",
+          "model_role": "UNKNOWN",
+          "duplicate_fields": [],
+          "conflicting_product_fact_values": [],
+          "exact_product_alias_substitution_allowed": false,
+          "quote_checks": [
+            {
+              "path": "context",
+              "quote": "The first European Launcher Challenge contracts between the European Space Agency (ESA) and launch service providers have been signed. The European Launcher Challenge is ESA’s initiative to expand European launch service supply and ensure more robustness in Europe’s access to space.",
+              "value": null,
+              "body_occurrences": [
+                {
+                  "start": 510,
+                  "end": 793
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 510,
+                  "end": 793
+                }
+              ],
+              "exact_context_occurrences": [
+                {
+                  "start": 510,
+                  "end": 793
+                }
+              ],
+              "issues": [],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "entity",
+              "quote": "The first European Launcher Challenge contracts between the European Space Agency (ESA) and launch service providers have been signed. The European Launcher Challenge is ESA’s initiative to expand European launch service supply and ensure more robustness in Europe’s access to space.",
+              "value": null,
+              "body_occurrences": [
+                {
+                  "start": 510,
+                  "end": 793
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 510,
+                  "end": 793
+                }
+              ],
+              "exact_context_occurrences": [
+                {
+                  "start": 510,
+                  "end": 793
+                }
+              ],
+              "issues": [
+                "NULL_WITH_EVIDENCE"
+              ],
+              "model_coordinates_used": false
+            }
+          ]
+        }
+      ],
+      "accepted_count": 0,
+      "first_error_counts": {
+        "NULL_WITH_EVIDENCE": 1
+      },
+      "policy": "READ_ONLY_DIAGNOSIS_NOT_FACT_RECOVERY_OR_NEW_HOLDOUT_EVALUATION"
+    },
+    {
+      "document_id": "stage4doc-7a75ee8cf8b87edb671b75f519f36b1ff8f50c69dcc9b1c8dfd0a6795bd708d3",
+      "split": "CONSUMED_EVALUATION_DIAGNOSIS_ONLY",
+      "response_sha256": "a52fe963fdca57cd8fb2a27ab98f49882a842b8f9cc8dd13b868afb318d97a9f",
+      "input_key_verified": true,
+      "input_sha256": "05984848afc552258a4df69f56a2cf4736c49558c47ed5ef78da970562cb061d",
+      "body_sha256": "bfc6a077e3c4931fbacde1730853626c7f27993bf36b77843b9ee3d0ed01ddf0",
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "AMBIGUOUS_QUOTE"
+        }
+      ],
+      "items": [
+        {
+          "input_item_index": 0,
+          "first_error": "AMBIGUOUS_QUOTE",
+          "source_status": "REJECTED",
+          "kind": "PROJECT",
+          "model_role": "UNKNOWN",
+          "duplicate_fields": [],
+          "conflicting_product_fact_values": [],
+          "exact_product_alias_substitution_allowed": false,
+          "quote_checks": [
+            {
+              "path": "context",
+              "quote": "Paris, 18 September 2026 – Access to appropriate finance is becoming a strategic enabler of Europe’s space ambitions. At ESA Headquarters in Paris, investors, financial institutions, industry leaders, European institutions and policymakers, representing close to 200 participants, came together for the Investor Forum 2026 to explore how public demand and private capital can work together to strengthen Europe’s competitiveness, industrial capabilities and commercial growth.",
+              "value": null,
+              "body_occurrences": [
+                {
+                  "start": 35,
+                  "end": 511
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 35,
+                  "end": 511
+                }
+              ],
+              "exact_context_occurrences": [
+                {
+                  "start": 35,
+                  "end": 511
+                }
+              ],
+              "issues": [],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "entity",
+              "quote": "Investor Forum 2026",
+              "value": "Investor Forum 2026",
+              "body_occurrences": [
+                {
+                  "start": 338,
+                  "end": 357
+                },
+                {
+                  "start": 4012,
+                  "end": 4031
+                },
+                {
+                  "start": 4108,
+                  "end": 4127
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 338,
+                  "end": 357
+                }
+              ],
+              "exact_context_occurrences": [
+                {
+                  "start": 338,
+                  "end": 357
+                }
+              ],
+              "issues": [
+                "AMBIGUOUS_QUOTE"
+              ],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "facts[0].region",
+              "quote": "ESA Headquarters in Paris",
+              "value": "Paris",
+              "body_occurrences": [
+                {
+                  "start": 156,
+                  "end": 181
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 156,
+                  "end": 181
+                }
+              ],
+              "exact_context_occurrences": [
+                {
+                  "start": 156,
+                  "end": 181
+                }
+              ],
+              "issues": [],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "facts[1].quantity",
+              "quote": "close to 200 participants",
+              "value": "close to 200 participants",
+              "body_occurrences": [
+                {
+                  "start": 289,
+                  "end": 314
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 289,
+                  "end": 314
+                }
+              ],
+              "exact_context_occurrences": [
+                {
+                  "start": 289,
+                  "end": 314
+                }
+              ],
+              "issues": [],
+              "model_coordinates_used": false
+            }
+          ]
+        }
+      ],
+      "accepted_count": 0,
+      "first_error_counts": {
+        "AMBIGUOUS_QUOTE": 1
+      },
+      "policy": "READ_ONLY_DIAGNOSIS_NOT_FACT_RECOVERY_OR_NEW_HOLDOUT_EVALUATION"
+    },
+    {
+      "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+      "split": "CONSUMED_EVALUATION_DIAGNOSIS_ONLY",
+      "response_sha256": "e40bf557995aaaaf30a4f3a1a86153dccac89cef469b65be6aa87d968dacaa64",
+      "input_key_verified": true,
+      "input_sha256": "b891b3e2e504bcb8b32ae72104f9754645c1408bd2d80ac103321e0527083eb1",
+      "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "AMBIGUOUS_QUOTE"
+        }
+      ],
+      "items": [
+        {
+          "input_item_index": 0,
+          "first_error": "AMBIGUOUS_QUOTE",
+          "source_status": "REJECTED",
+          "kind": "PHYSICAL_PRODUCT",
+          "model_role": "UNKNOWN",
+          "duplicate_fields": [],
+          "conflicting_product_fact_values": [
+            "Sonoma™ high-power package-level test and burn-in systems"
+          ],
+          "exact_product_alias_substitution_allowed": false,
+          "quote_checks": [
+            {
+              "path": "context",
+              "quote": "The orders include additional Sonoma™ high-power package-level test and burn-in systems, fully turnkey burn-in modules (BIMs) and device-specific sockets, as well as production software enhancements.",
+              "value": null,
+              "body_occurrences": [
+                {
+                  "start": 870,
+                  "end": 1069
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 870,
+                  "end": 1069
+                }
+              ],
+              "exact_context_occurrences": [
+                {
+                  "start": 870,
+                  "end": 1069
+                }
+              ],
+              "issues": [],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "entity",
+              "quote": "Sonoma™",
+              "value": "Sonoma™",
+              "body_occurrences": [
+                {
+                  "start": 24,
+                  "end": 31
+                },
+                {
+                  "start": 188,
+                  "end": 195
+                },
+                {
+                  "start": 900,
+                  "end": 907
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 24,
+                  "end": 31
+                },
+                {
+                  "start": 900,
+                  "end": 907
+                }
+              ],
+              "exact_context_occurrences": [
+                {
+                  "start": 900,
+                  "end": 907
+                }
+              ],
+              "issues": [
+                "AMBIGUOUS_QUOTE"
+              ],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "facts[0].product",
+              "quote": "Sonoma™ high-power package-level test and burn-in systems",
+              "value": "Sonoma™ high-power package-level test and burn-in systems",
+              "body_occurrences": [
+                {
+                  "start": 900,
+                  "end": 957
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 900,
+                  "end": 957
+                }
+              ],
+              "exact_context_occurrences": [
+                {
+                  "start": 900,
+                  "end": 957
+                }
+              ],
+              "issues": [],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "facts[1].region",
+              "quote": "Taiwan",
+              "value": "Taiwan",
+              "body_occurrences": [
+                {
+                  "start": 1202,
+                  "end": 1208
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 1202,
+                  "end": 1208
+                }
+              ],
+              "exact_context_occurrences": [],
+              "issues": [
+                "FACT_OUTSIDE_EVENT_CONTEXT"
+              ],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "facts[2].lead_time",
+              "quote": "next six months",
+              "value": "next six months",
+              "body_occurrences": [
+                {
+                  "start": 1260,
+                  "end": 1275
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 1260,
+                  "end": 1275
+                }
+              ],
+              "exact_context_occurrences": [],
+              "issues": [
+                "FACT_OUTSIDE_EVENT_CONTEXT"
+              ],
+              "model_coordinates_used": false
+            }
+          ]
+        }
+      ],
+      "accepted_count": 0,
+      "first_error_counts": {
+        "AMBIGUOUS_QUOTE": 1
+      },
+      "policy": "READ_ONLY_DIAGNOSIS_NOT_FACT_RECOVERY_OR_NEW_HOLDOUT_EVALUATION"
+    },
+    {
+      "document_id": "stage4doc-8863919aedd5421d4f6122236527b82424465e4cf90fabeec7dcc6b2e13b93d3",
+      "split": "CONSUMED_EVALUATION_DIAGNOSIS_ONLY",
+      "response_sha256": "28e062b10c454e367941e1556da9deeb2a0028f6f38d0d0eb82c792e11cd1962",
+      "input_key_verified": true,
+      "input_sha256": "350819803710cf6aab143936ca5c088c611779b614498ad9faacf097d031ac0f",
+      "body_sha256": "76f06aa61c368647fe4ff62bdcd9ce9fca6ead1e983bd5806fe5bef7a990fdf4",
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "SOURCE"
+        },
+        {
+          "input_item_index": 1,
+          "reason": "QUOTE_NOT_IN_SOURCE"
+        }
+      ],
+      "items": [
+        {
+          "input_item_index": 0,
+          "first_error": "SOURCE",
+          "source_status": "REJECTED",
+          "kind": "GENERAL_EXPRESSION",
+          "model_role": "UNKNOWN",
+          "duplicate_fields": [
+            "quantity"
+          ],
+          "conflicting_product_fact_values": [],
+          "exact_product_alias_substitution_allowed": false,
+          "quote_checks": [
+            {
+              "path": "context",
+              "quote": "Backlog as of May 29, 2026 was $80.6 million. Effective backlog, including bookings since May 29, 2026, is $100.6 million.",
+              "value": null,
+              "body_occurrences": [
+                {
+                  "start": 1543,
+                  "end": 1665
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 1543,
+                  "end": 1665
+                }
+              ],
+              "exact_context_occurrences": [
+                {
+                  "start": 1543,
+                  "end": 1665
+                }
+              ],
+              "issues": [],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "entity",
+              "quote": "",
+              "value": null,
+              "body_occurrences": [],
+              "transmitted_occurrences": [],
+              "exact_context_occurrences": [],
+              "issues": [],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "facts[0].quantity",
+              "quote": "Backlog as of May 29, 2026 was $80.6 million",
+              "value": "$80.6 million",
+              "body_occurrences": [
+                {
+                  "start": 1543,
+                  "end": 1587
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 1543,
+                  "end": 1587
+                }
+              ],
+              "exact_context_occurrences": [
+                {
+                  "start": 1543,
+                  "end": 1587
+                }
+              ],
+              "issues": [],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "facts[1].quantity",
+              "quote": "Effective backlog, including bookings since May 29, 2026, is $100.6 million",
+              "value": "$100.6 million",
+              "body_occurrences": [
+                {
+                  "start": 1589,
+                  "end": 1664
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 1589,
+                  "end": 1664
+                }
+              ],
+              "exact_context_occurrences": [
+                {
+                  "start": 1589,
+                  "end": 1664
+                }
+              ],
+              "issues": [],
+              "model_coordinates_used": false
+            }
+          ]
+        },
+        {
+          "input_item_index": 1,
+          "first_error": "QUOTE_NOT_IN_SOURCE",
+          "source_status": "REJECTED",
+          "kind": "GENERAL_EXPRESSION",
+          "model_role": "UNKNOWN",
+          "duplicate_fields": [],
+          "conflicting_product_fact_values": [],
+          "exact_product_alias_substitution_allowed": false,
+          "quote_checks": [
+            {
+              "path": "context",
+              "quote": "\"With strong momentum and a record backlog of over $100 million heading into fiscal year 2027, we have substantial visibility into projected fiscal 2027 revenue of $130 million to $150 million, representing expected year-over-year growth of approximately 160% to 200%\"",
+              "value": null,
+              "body_occurrences": [],
+              "transmitted_occurrences": [],
+              "exact_context_occurrences": [],
+              "issues": [
+                "QUOTE_NOT_IN_SOURCE"
+              ],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "entity",
+              "quote": "",
+              "value": null,
+              "body_occurrences": [],
+              "transmitted_occurrences": [],
+              "exact_context_occurrences": [],
+              "issues": [],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "facts[0].quantity",
+              "quote": "projected fiscal 2027 revenue of $130 million to $150 million",
+              "value": "$130 million to $150 million",
+              "body_occurrences": [
+                {
+                  "start": 455,
+                  "end": 516
+                },
+                {
+                  "start": 3218,
+                  "end": 3279
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 3218,
+                  "end": 3279
+                }
+              ],
+              "exact_context_occurrences": [],
+              "issues": [
+                "AMBIGUOUS_QUOTE"
+              ],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "facts[1].relief",
+              "quote": "expected year-over-year growth of approximately 160% to 200%",
+              "value": "160% to 200%",
+              "body_occurrences": [
+                {
+                  "start": 3294,
+                  "end": 3354
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 3294,
+                  "end": 3354
+                }
+              ],
+              "exact_context_occurrences": [],
+              "issues": [],
+              "model_coordinates_used": false
+            }
+          ]
+        }
+      ],
+      "accepted_count": 0,
+      "first_error_counts": {
+        "SOURCE": 1,
+        "QUOTE_NOT_IN_SOURCE": 1
+      },
+      "policy": "READ_ONLY_DIAGNOSIS_NOT_FACT_RECOVERY_OR_NEW_HOLDOUT_EVALUATION"
+    },
+    {
+      "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+      "split": "CONSUMED_EVALUATION_DIAGNOSIS_ONLY",
+      "response_sha256": "eafc7965de12e570d03167c122cb852fb5f489204e14c05be2e8fdc5d68037b1",
+      "input_key_verified": true,
+      "input_sha256": "a2af47a161db9eb812c74c0e555e3ed8f1caa28038bae212d6bde0ab86fc7be2",
+      "body_sha256": "54811824263eeaeb5cee2ce87ae993f689785572ce1c03f730d2a87265e4e2f5",
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "QUOTE_NOT_IN_SOURCE"
+        }
+      ],
+      "items": [
+        {
+          "input_item_index": 0,
+          "first_error": "QUOTE_NOT_IN_SOURCE",
+          "source_status": "REJECTED",
+          "kind": "PRODUCT_FAMILY",
+          "model_role": "SUPPLY_INCREASE",
+          "duplicate_fields": [],
+          "conflicting_product_fact_values": [],
+          "exact_product_alias_substitution_allowed": false,
+          "quote_checks": [
+            {
+              "path": "context",
+              "quote": "\"This $22 million follow-on order represents another significant expansion of WLBI capacity by our lead AI processor customer and further validates the use of our FOX-XP platform in high-volume production,\" said Gayn Erickson, President and Chief Executive Officer of Aehr Test Systems.",
+              "value": null,
+              "body_occurrences": [],
+              "transmitted_occurrences": [],
+              "exact_context_occurrences": [],
+              "issues": [
+                "QUOTE_NOT_IN_SOURCE"
+              ],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "entity",
+              "quote": "WLBI capacity",
+              "value": "WLBI",
+              "body_occurrences": [
+                {
+                  "start": 1443,
+                  "end": 1456
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 1443,
+                  "end": 1456
+                }
+              ],
+              "exact_context_occurrences": [],
+              "issues": [],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "facts[0].product",
+              "quote": "WLBI capacity",
+              "value": "WLBI",
+              "body_occurrences": [
+                {
+                  "start": 1443,
+                  "end": 1456
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 1443,
+                  "end": 1456
+                }
+              ],
+              "exact_context_occurrences": [],
+              "issues": [],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "facts[1].quantity",
+              "quote": "$22 million follow-on order",
+              "value": "$22 million",
+              "body_occurrences": [
+                {
+                  "start": 1371,
+                  "end": 1398
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 1371,
+                  "end": 1398
+                }
+              ],
+              "exact_context_occurrences": [],
+              "issues": [],
+              "model_coordinates_used": false
+            },
+            {
+              "path": "facts[2].unit",
+              "quote": "$22 million",
+              "value": "dollars",
+              "body_occurrences": [
+                {
+                  "start": 664,
+                  "end": 675
+                },
+                {
+                  "start": 1371,
+                  "end": 1382
+                }
+              ],
+              "transmitted_occurrences": [
+                {
+                  "start": 1371,
+                  "end": 1382
+                }
+              ],
+              "exact_context_occurrences": [],
+              "issues": [
+                "AMBIGUOUS_QUOTE",
+                "VALUE_NOT_LITERAL"
+              ],
+              "model_coordinates_used": false
+            }
+          ]
+        }
+      ],
+      "accepted_count": 0,
+      "first_error_counts": {
+        "QUOTE_NOT_IN_SOURCE": 1
+      },
+      "policy": "READ_ONLY_DIAGNOSIS_NOT_FACT_RECOVERY_OR_NEW_HOLDOUT_EVALUATION"
+    }
+  ],
+  "HTTP400": {
+    "status": "BLOCKED_CAUSE_UNKNOWN_NO_RETRY",
+    "saved_safe_error": {
+      "at": "2026-10-14T04:39:57.437012+00:00",
+      "attempt_id": "3d9cd7b293974fbb9d9874f69697e8a9",
+      "diagnostics": {
+        "error_code": "invalid_request_error",
+        "flags": [],
+        "http_status": 400
+      },
+      "error_kind": "INPUT_INVALID",
+      "input_key": "fd7856fce615447036918743e99a852160e9d713186936ceaf95ea6463cfc0b1",
+      "provider": "groq",
+      "run_id": "api-6092926f537f45c5a8d1d39ed423da87"
+    },
+    "current_request_contract": "b29edff2710fa9df32d2d209085d6e58d6672334e7014b89d6f8804432ba5dca",
+    "same_contract_on_seven_HTTP_success_responses_and_one_HTTP_failure": true,
+    "preflight": [
+      {
+        "document_id": "stage4doc-7b0adb76aad1d07c72aa37250c3e8e9cee0226d81ee3c5dd5df4ec989b3e3ed9",
+        "reconstructed_reservation": 6156,
+        "schema_sha256": "a78e165e0d4054beccbbeab7139a277a6d69477522d8444a70bf4aa635cbfd5b",
+        "recorded_response": true
+      },
+      {
+        "document_id": "stage4doc-43bbc73c34d36affaac68018c51886b2897bbc0126d9df12b814ead65738046c",
+        "reconstructed_reservation": 6105,
+        "schema_sha256": "a78e165e0d4054beccbbeab7139a277a6d69477522d8444a70bf4aa635cbfd5b",
+        "recorded_response": true
+      },
+      {
+        "document_id": "stage4doc-3fd9a480cb21be25a3d28465399232ce56a35c896627813ed1c8925dc86c6e4d",
+        "reconstructed_reservation": 6035,
+        "schema_sha256": "a78e165e0d4054beccbbeab7139a277a6d69477522d8444a70bf4aa635cbfd5b",
+        "recorded_response": true
+      },
+      {
+        "document_id": "stage4doc-7a75ee8cf8b87edb671b75f519f36b1ff8f50c69dcc9b1c8dfd0a6795bd708d3",
+        "reconstructed_reservation": 6049,
+        "schema_sha256": "a78e165e0d4054beccbbeab7139a277a6d69477522d8444a70bf4aa635cbfd5b",
+        "recorded_response": true
+      },
+      {
+        "document_id": "stage4doc-c3ddd57ead3c24a7ceb57fafb3326c2f5dcf8bd8e34db60e548eac329f969b37",
+        "reconstructed_reservation": 6138,
+        "schema_sha256": "a78e165e0d4054beccbbeab7139a277a6d69477522d8444a70bf4aa635cbfd5b",
+        "recorded_response": true
+      },
+      {
+        "document_id": "stage4doc-8863919aedd5421d4f6122236527b82424465e4cf90fabeec7dcc6b2e13b93d3",
+        "reconstructed_reservation": 6221,
+        "schema_sha256": "a78e165e0d4054beccbbeab7139a277a6d69477522d8444a70bf4aa635cbfd5b",
+        "recorded_response": true
+      },
+      {
+        "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+        "reconstructed_reservation": 6105,
+        "schema_sha256": "a78e165e0d4054beccbbeab7139a277a6d69477522d8444a70bf4aa635cbfd5b",
+        "recorded_response": true
+      },
+      {
+        "document_id": "stage4doc-fe6fe733066583784bc6a77dddc1cf0f9b6f6e705e72fed6cacedcca479e8c99",
+        "reconstructed_reservation": 6082,
+        "schema_sha256": "a78e165e0d4054beccbbeab7139a277a6d69477522d8444a70bf4aa635cbfd5b",
+        "recorded_response": false
+      }
+    ],
+    "limitation": "Reconstructed local schema/reservation checks do not establish remote rejection cause. Raw error details were not retained."
+  },
+  "development": {
+    "documents_replayed": 30,
+    "saved_actual_responses": 1,
+    "before_counts": {
+      "product_exploration": 1,
+      "demand_signals": 1,
+      "supply_signals": 0,
+      "engine_observations_with_AI_events": 1,
+      "linked_pairs": 0,
+      "bottleneck_research_candidates": 0
+    },
+    "adapter_off_counts": {
+      "bottleneck_research_candidates": 0,
+      "demand_signals": 0,
+      "engine_observations_with_AI_events": 0,
+      "linked_pairs": 0,
+      "product_exploration": 0,
+      "supply_signals": 0
+    },
+    "adapter_on_counts": {
+      "bottleneck_research_candidates": 0,
+      "demand_signals": 1,
+      "engine_observations_with_AI_events": 1,
+      "linked_pairs": 0,
+      "product_exploration": 1,
+      "supply_signals": 0
+    },
+    "actual_events": [
+      {
+        "adapter_origin": "GROQ_EXACT_AND_MEANING_GUARDED",
+        "adapter_role_resolution": {
+          "commitment_preserved": "UNKNOWN",
+          "engine_role": "DEMAND",
+          "order_object_reference": {
+            "acquired_at": "2026-10-14T01:49:18.438454+00:00",
+            "assertion": "DIRECT_SOURCE_FACT",
+            "body_sha256": "850ee76ba3a99af6d7e0b9c989e8c205e158c091c27f8c7c442e663a4aa8ce8a",
+            "document_id": "stage4doc-7b0adb76aad1d07c72aa37250c3e8e9cee0226d81ee3c5dd5df4ec989b3e3ed9",
+            "locator": {
+              "end": 706,
+              "start": 700
+            },
+            "origin_id": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/#article",
+            "origin_publisher": "Aehr Test Systems",
+            "origin_url": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/",
+            "publication_precision": "DATE",
+            "published_at": "2026-07-09",
+            "source_quote": "FOX-XP"
+          },
+          "raw_model_role": "SUPPLY_INCREASE",
+          "rule": "EXACT_ORDERED_OBJECT_AND_EXISTING_MEANING_GUARDS",
+          "source_checked_role": "DEMAND_INCREASE",
+          "source_parser_role": "DEMAND"
+        },
+        "advisory_item": 0,
+        "advisory_role": "DEMAND_INCREASE",
+        "basis": "additional",
+        "coverage_complete": false,
+        "demand_status": "UNKNOWN",
+        "document_id": "stage4doc-7b0adb76aad1d07c72aa37250c3e8e9cee0226d81ee3c5dd5df4ec989b3e3ed9",
+        "event_id": "ai-0ccf0f0224250a36a2c00ec3b0dffa5a4620be9e8c491d1636dfb376297be969",
+        "event_types": [
+          "ORDER"
+        ],
+        "field_references": {
+          "basis": {
+            "document_id": "stage4doc-7b0adb76aad1d07c72aa37250c3e8e9cee0226d81ee3c5dd5df4ec989b3e3ed9",
+            "locator": {
+              "end": 743,
+              "start": 315
+            },
+            "source_quote": "Fremont, CA (July 9, 2026) – Aehr Test Systems (NASDAQ: AEHR), a leading provider of test and burn-in solutions for semiconductor devices used in artificial intelligence (AI), silicon photonics, data center, automotive, and industrial applications, today announced it has received an additional follow-on production order from its lead silicon photonics customer for a fully automated FOX-XP ® wafer-level burn-in (WLBI) system."
+          }
+        },
+        "future_period": {
+          "end": "UNKNOWN",
+          "start": "UNKNOWN"
+        },
+        "incremental": true,
+        "kind": "ORDER",
+        "locator": {
+          "end": 743,
+          "start": 315
+        },
+        "missing_scope": [
+          "specification",
+          "region",
+          "supply_pool"
+        ],
+        "pending": false,
+        "protected_window_blocker": "LITERAL_SOURCE_PRECISION_UNSUPPORTED_BY_PROTECTED_ENGINE",
+        "qualified": false,
+        "quantity": "UNKNOWN",
+        "raw_period_references": [],
+        "role": "DEMAND",
+        "scope": {
+          "customer_group": {
+            "customer_identity_status": "UNNAMED_CUSTOMER_NOT_UNIQUE_ACROSS_DOCUMENTS",
+            "locator": {
+              "end": 677,
+              "start": 642
+            },
+            "reference": {
+              "acquired_at": "2026-10-14T01:49:18.438454+00:00",
+              "assertion": "DIRECT_SOURCE_FACT",
+              "body_sha256": "850ee76ba3a99af6d7e0b9c989e8c205e158c091c27f8c7c442e663a4aa8ce8a",
+              "document_id": "stage4doc-7b0adb76aad1d07c72aa37250c3e8e9cee0226d81ee3c5dd5df4ec989b3e3ed9",
+              "locator": {
+                "end": 677,
+                "start": 642
+              },
+              "origin_id": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/#article",
+              "origin_publisher": "Aehr Test Systems",
+              "origin_url": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/",
+              "publication_precision": "DATE",
+              "published_at": "2026-07-09",
+              "source_quote": "its lead silicon photonics customer"
+            },
+            "support_references": [
+              {
+                "acquired_at": "2026-10-14T01:49:18.438454+00:00",
+                "assertion": "DIRECT_SOURCE_FACT",
+                "body_sha256": "850ee76ba3a99af6d7e0b9c989e8c205e158c091c27f8c7c442e663a4aa8ce8a",
+                "document_id": "stage4doc-7b0adb76aad1d07c72aa37250c3e8e9cee0226d81ee3c5dd5df4ec989b3e3ed9",
+                "locator": {
+                  "end": 743,
+                  "start": 315
+                },
+                "origin_id": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/#article",
+                "origin_publisher": "Aehr Test Systems",
+                "origin_url": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/",
+                "publication_precision": "DATE",
+                "published_at": "2026-07-09",
+                "source_quote": "Fremont, CA (July 9, 2026) – Aehr Test Systems (NASDAQ: AEHR), a leading provider of test and burn-in solutions for semiconductor devices used in artificial intelligence (AI), silicon photonics, data center, automotive, and industrial applications, today announced it has received an additional follow-on production order from its lead silicon photonics customer for a fully automated FOX-XP ® wafer-level burn-in (WLBI) system."
+              }
+            ],
+            "value": "its lead silicon photonics customer"
+          },
+          "product": {
+            "locator": {
+              "end": 706,
+              "start": 700
+            },
+            "reference": {
+              "acquired_at": "2026-10-14T01:49:18.438454+00:00",
+              "assertion": "DIRECT_SOURCE_FACT",
+              "body_sha256": "850ee76ba3a99af6d7e0b9c989e8c205e158c091c27f8c7c442e663a4aa8ce8a",
+              "document_id": "stage4doc-7b0adb76aad1d07c72aa37250c3e8e9cee0226d81ee3c5dd5df4ec989b3e3ed9",
+              "locator": {
+                "end": 706,
+                "start": 700
+              },
+              "origin_id": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/#article",
+              "origin_publisher": "Aehr Test Systems",
+              "origin_url": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/",
+              "publication_precision": "DATE",
+              "published_at": "2026-07-09",
+              "source_quote": "FOX-XP"
+            },
+            "support_references": [],
+            "value": "FOX-XP"
+          }
+        },
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "source_event_id": "4baf2c4ed6397c7510b8055ced75209461841ef41966fa2f0c858e7b51537080",
+        "source_quote": "Fremont, CA (July 9, 2026) – Aehr Test Systems (NASDAQ: AEHR), a leading provider of test and burn-in solutions for semiconductor devices used in artificial intelligence (AI), silicon photonics, data center, automotive, and industrial applications, today announced it has received an additional follow-on production order from its lead silicon photonics customer for a fully automated FOX-XP ® wafer-level burn-in (WLBI) system.",
+        "temporal_facts": {
+          "financial_amounts_not_output": [],
+          "periods": [
+            {
+              "end": "2026-07-09",
+              "fact_kind": "UNATTRIBUTED_PERIOD",
+              "precision": "DATE",
+              "reference": {
+                "acquired_at": "2026-10-14T01:49:18.438454+00:00",
+                "assertion": "DIRECT_SOURCE_FACT",
+                "body_sha256": "850ee76ba3a99af6d7e0b9c989e8c205e158c091c27f8c7c442e663a4aa8ce8a",
+                "document_id": "stage4doc-7b0adb76aad1d07c72aa37250c3e8e9cee0226d81ee3c5dd5df4ec989b3e3ed9",
+                "locator": {
+                  "end": 340,
+                  "start": 328
+                },
+                "origin_id": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/#article",
+                "origin_publisher": "Aehr Test Systems",
+                "origin_url": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/",
+                "publication_precision": "DATE",
+                "published_at": "2026-07-09",
+                "source_quote": "July 9, 2026"
+              },
+              "start": "2026-07-09",
+              "text": "July 9, 2026"
+            }
+          ],
+          "quantities": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY"
+          ],
+          "version": "source-temporal-reader-3"
+        },
+        "unit": "UNKNOWN",
+        "window": null
+      }
+    ],
+    "held": [],
+    "role_correction_was_preexisting": "SUPPLY_INCREASE -> DEMAND_INCREASE already worked; explicit ordered-object verification and role provenance now added",
+    "new_actual_product_or_demand_events": 0,
+    "actual_adopted_products": 1,
+    "actual_adopted_demand_events": 1,
+    "actual_adopted_supply_increase_events": 0,
+    "wrong_automatic_promotions_in_this_replay": 0,
+    "storage": {
+      "restart_backup_restore": "PASS",
+      "idempotence": "PASS",
+      "current_code_recomputed_facts_match_saved_result": true,
+      "volatile_field_excluded_from_fact_comparison": "engine.protected_result.batch_id",
+      "excluded_batch_ids": {
+        "saved": "early-58428aa0743e4761aefb26511c11e87d",
+        "recomputed": "early-97a4ca690c6c4b8b9b95e24754fa08c5"
+      },
+      "new_ledger": "var/v4/quote-followup/adapter-ledger",
+      "status": {
+        "integrity": "ok",
+        "documents": 30,
+        "runs": 2,
+        "observed_live_days": [],
+        "shadow_7_days": "BLOCKED",
+        "reason": "7-day continuity and new-document/target/failure/recovery review still required",
+        "early_success_cases": 0,
+        "forecast_performance": "BLOCKED"
+      }
+    }
+  },
+  "synthetic_paired_replays": [
+    {
+      "kind": "MODEL_PREFIX",
+      "source_type": "SYNTHETIC_NOT_OFFICIAL_CORPUS",
+      "body": "Forge received new orders for NovaLT160 machines.",
+      "proposed_entity": "NovaLT16",
+      "before_counts": {
+        "product_exploration": 1,
+        "demand_signals": 1,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 1,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_counts": {
+        "product_exploration": 0,
+        "demand_signals": 0,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 0,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_held": [
+        {
+          "document_id": "synthetic-quote-role-0",
+          "item": 0,
+          "reason": "PRODUCT_TOKEN_BOUNDARY_OR_UNIQUE_LITERAL_REQUIRED"
+        }
+      ]
+    },
+    {
+      "kind": "MODEL_PREFIX",
+      "source_type": "SYNTHETIC_NOT_OFFICIAL_CORPUS",
+      "body": "Forge received new orders for Helios240 machines.",
+      "proposed_entity": "Helios24",
+      "before_counts": {
+        "product_exploration": 1,
+        "demand_signals": 1,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 1,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_counts": {
+        "product_exploration": 0,
+        "demand_signals": 0,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 0,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_held": [
+        {
+          "document_id": "synthetic-quote-role-1",
+          "item": 0,
+          "reason": "PRODUCT_TOKEN_BOUNDARY_OR_UNIQUE_LITERAL_REQUIRED"
+        }
+      ]
+    },
+    {
+      "kind": "MODEL_PREFIX",
+      "source_type": "SYNTHETIC_NOT_OFFICIAL_CORPUS",
+      "body": "Forge received new orders for RX-ZZ0 machines.",
+      "proposed_entity": "RX-ZZ",
+      "before_counts": {
+        "product_exploration": 1,
+        "demand_signals": 1,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 1,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_counts": {
+        "product_exploration": 0,
+        "demand_signals": 0,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 0,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_held": [
+        {
+          "document_id": "synthetic-quote-role-2",
+          "item": 0,
+          "reason": "PRODUCT_TOKEN_BOUNDARY_OR_UNIQUE_LITERAL_REQUIRED"
+        }
+      ]
+    },
+    {
+      "kind": "ORDERED_MACHINE_VS_OUTPUT",
+      "source_type": "SYNTHETIC_NOT_OFFICIAL_CORPUS",
+      "body": "Forge received new orders for machines used to manufacture NovaLT16.",
+      "proposed_entity": "NovaLT16",
+      "before_counts": {
+        "product_exploration": 1,
+        "demand_signals": 1,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 1,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_counts": {
+        "product_exploration": 1,
+        "demand_signals": 0,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 0,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_held": [
+        {
+          "document_id": "synthetic-quote-role-3",
+          "item": 0,
+          "source_event_id": "2f5aad472c160e19525725832bb0ba8db2147a8a8dcb9288323c03d36130342c",
+          "reason": "MEANING_OR_COMMITMENT:UNPROVEN_DEMAND_OBJECT"
+        }
+      ]
+    },
+    {
+      "kind": "ORDERED_MACHINE_VS_OUTPUT",
+      "source_type": "SYNTHETIC_NOT_OFFICIAL_CORPUS",
+      "body": "Forge received new orders for machines used to manufacture optical transceivers.",
+      "proposed_entity": "optical transceivers",
+      "before_counts": {
+        "product_exploration": 1,
+        "demand_signals": 0,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 0,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_counts": {
+        "product_exploration": 1,
+        "demand_signals": 0,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 0,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_held": [
+        {
+          "document_id": "synthetic-quote-role-4",
+          "item": 0,
+          "source_event_id": "d2eb8f9d3394a6a8e46f6b1ffc6731b410f8ca85fce76286189a595f0f60b376",
+          "reason": "MEANING_OR_COMMITMENT:UNPROVEN_DEMAND_OBJECT"
+        }
+      ]
+    },
+    {
+      "kind": "ORDERED_MACHINE_VS_OUTPUT",
+      "source_type": "SYNTHETIC_NOT_OFFICIAL_CORPUS",
+      "body": "Forge received new orders for machines used to manufacture battery cells.",
+      "proposed_entity": "battery cells",
+      "before_counts": {
+        "product_exploration": 1,
+        "demand_signals": 1,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 1,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_counts": {
+        "product_exploration": 1,
+        "demand_signals": 0,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 0,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_held": [
+        {
+          "document_id": "synthetic-quote-role-5",
+          "item": 0,
+          "source_event_id": "4e7f7ba04d2160010c8a74310e7d4c42d78b6332d4918c7de8cdc65da0f507ce",
+          "reason": "MEANING_OR_COMMITMENT:UNPROVEN_DEMAND_OBJECT"
+        }
+      ]
+    },
+    {
+      "kind": "ACTUAL_ORDER_VS_FUTURE_OUTPUT",
+      "source_type": "SYNTHETIC_NOT_OFFICIAL_CORPUS",
+      "body": "Forge received new orders for NovaLT16 equipment, which will expand production capacity for laser chips.",
+      "proposed_entity": "NovaLT16",
+      "before_counts": {
+        "product_exploration": 1,
+        "demand_signals": 0,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 0,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_counts": {
+        "product_exploration": 1,
+        "demand_signals": 1,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 1,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_held": []
+    },
+    {
+      "kind": "ACTUAL_ORDER_VS_FUTURE_OUTPUT",
+      "source_type": "SYNTHETIC_NOT_OFFICIAL_CORPUS",
+      "body": "Forge received new orders for gas turbines equipment, which will expand production capacity for laser chips.",
+      "proposed_entity": "gas turbines",
+      "before_counts": {
+        "product_exploration": 1,
+        "demand_signals": 0,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 0,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_counts": {
+        "product_exploration": 1,
+        "demand_signals": 1,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 1,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_held": []
+    },
+    {
+      "kind": "ACTUAL_ORDER_VS_FUTURE_OUTPUT",
+      "source_type": "SYNTHETIC_NOT_OFFICIAL_CORPUS",
+      "body": "Forge received new orders for battery cells equipment, which will expand production capacity for laser chips.",
+      "proposed_entity": "battery cells",
+      "before_counts": {
+        "product_exploration": 1,
+        "demand_signals": 0,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 0,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_counts": {
+        "product_exploration": 1,
+        "demand_signals": 1,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 1,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "after_held": []
+    }
+  ],
+  "preservation": {
+    "files_checked": 110,
+    "changed": [],
+    "original_evaluation_inputs_gold_responses_metrics_unchanged": true,
+    "original_freeze_not_rewritten": true,
+    "old_evaluation_remains_consumed": true,
+    "new_adapter_not_an_unused_holdout_evaluation": true
+  },
+  "usage": {
+    "new_generation_POSTs": 0,
+    "new_API_tokens": 0,
+    "new_API_cost_usd": 0,
+    "old_API_attempts_before_after": {
+      "before": 13,
+      "after": 13
+    },
+    "CPU_model_loads_or_installs": 0,
+    "platform_usage_or_fees": "UNKNOWN_NOT_EXPOSED"
+  },
+  "accuracy": "NOT_RUN_NO_NEW_INDEPENDENT_EVALUATION",
+  "lead_performance": "NOT_RUN",
+  "operational_integration_enabled": false,
+  "checks": {
+    "new_test_cases": 32,
+    "affected_regression_passed": 343,
+    "failed": 0,
+    "skipped": 0,
+    "command": ".venv/bin/python -m pytest -q tests/test_v4_quote_followup.py tests/test_v4_free_ai.py tests/test_v4_quote_binding.py tests/test_v4_semantics.py tests/test_v4_integration.py tests/test_v4_stage4_accuracy.py tests/test_v4_repair.py tests/test_precursor_evidence_graph.py",
+    "log": "var/v4/quote-followup/final-impact.log",
+    "previous_whole_suite": "REUSED at594d233: Python1220 passed/1 existing skip, Node34 passed; final new SHA CI must be checked after push",
+    "initial_test_diagnostics": "Initial authored tests13 failed/7 passed. Three region/customer/Relief fixtures lacked explicit contrary target bindings and were corrected with source-scoped assertions. The existing protected grammar cannot adopt heat pumps; the positive example uses supported gas turbines and heat pumps have a separate required hold test. Final fixtures/criteria were not relaxed to accept these unsupported cases.",
+    "runner_setup_errors": "One nonexistent test filename caused NOT_RUN, then corrected to existing files; not counted as PASS.",
+    "reporting_replay_repairs": "Existing backup is reused only after a fresh-process integrity/status/exact run-payload-hash match; old adapter is loaded with explicit package context and verified original hash.",
+    "runner_exit_status": 0,
+    "final_local_log": "343 passed in3.53s; subprocess returncode0 verified after an inconsistent outer shell status",
+    "period_regression": "Other-product output year retained as unattributed evidence; explicit equipment delivery period retained as DEMAND_NEED. Both current-code cases PASS.",
+    "fresh_development_computation": "All facts/fields match saved result after excluding only existing EARLY random batch UUID; both UUIDs retained. Backup hashes compare full stored payloads without exclusions."
+  },
+  "fix_counts": {
+    "ambiguous_quote": {
+      "diagnosed": 3,
+      "recovered": 0
+    },
+    "quote_not_in_source": {
+      "diagnosed": 2,
+      "recovered": 0
+    },
+    "source_duplicate_field": {
+      "diagnosed": 1,
+      "recovered": 0
+    },
+    "null_with_evidence": {
+      "diagnosed": 1,
+      "recovered": 0
+    },
+    "model_prefix_false_product_rejections": 3,
+    "output_product_false_demand_before_after": {
+      "before": 2,
+      "after": 0
+    },
+    "actual_order_future_output_demand_before_after": {
+      "before": 0,
+      "after": 3
+    },
+    "wrong_S1_S2_S3_automatic_promotions_in_scope": 0,
+    "actual_FOX_XP_product_demand_supply_counts": {
+      "product": 1,
+      "demand": 1,
+      "supply_increase": 0,
+      "newly_added_actual_events": 0
+    },
+    "other_product_output_period_as_order_need": "BLOCKED_BY_SOURCE_ATTRIBUTION; actual explicit delivery period retained"
+  },
+  "freeze_scope": {
+    "original_evaluation_code_SHA": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
+    "original_source_response_gold_score_freeze_unchanged": true,
+    "only_previously_frozen_file_changed": "src/bct/v4/research_adapter.py; explicitly authorized post-evaluation development follow-up",
+    "old_holdout_not_relabelled_unused": true,
+    "new_independent_accuracy": "NOT_RUN",
+    "new_corpus_needed_for_future_performance": "Yes; none prepared or evaluated this task"
+  }
+}

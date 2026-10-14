@@ -2,7 +2,13 @@
 
 Updated 2026-10-14 (Asia/Seoul). Read `EXECUTION_PLAN.md` and `PROGRESS.json` first. The fixed eight-stage goal and CPU GLiNER2 engine remain unchanged. Active AI: **GroqCloud Free Plan only**. Gemini code is retained, but routing/probes and key requirements are disabled. No third provider, paid fallback, upgrade or billing action.
 
-## Current repair (2026-10-14)
+## Current offline quote/role follow-up (2026-10-14)
+
+Plan v1.7 starts at `594d233702de4234cd4e06f88dea26ac060d2fe1`. New Groq POSTs/tokens/API cost are **0/0/$0**. Existing installation, source corpus and CPU baseline are reused; no model preparation or inference is needed. Seven original rejected items remain rejected after exact read-only diagnosis. The research adapter now rejects model prefixes and unproven ordered-object relations, keeps actual equipment orders separate from future output capacity, and records raw-model/source-checked/engine roles separately. FOX-XP's existing demand correction is retained, not counted as a newly discovered fact.
+
+Current-instance offline command: `.venv/bin/python -m scripts.v4.quote_role_diagnostics`. It needs the retained `var/v4/repair` evidence and `var/v4/quote-followup` preservation/before receipts; it uses no API calls. The original response/score artifacts and frozen20 remain unchanged and consumed. The earlier `replay_repair_evidence` freeze guard intentionally rejects a changed adapter; its successful replay at the original SHA is historical evidence, not evaluation of the current adapter. The follow-up uses a hash-verified in-memory copy of the old adapter only for paired synthetic comparisons, without resetting the checkout. HTTP400's exact cause remains UNKNOWN/BLOCKED; do not retry it.
+
+## Historical repair/evaluation at 594d233 (2026-10-14)
 
 The approved scope is plan v1.6. Stages 1–3 remain PASS. The original 118 documents and frozen50/source hashes/split are unchanged. Native recovery obtained 13 new HTML captures whose parsed bodies exactly match the frozen text; one changed version was retained separately. This is not recovery of historical HTML. FULL30/PARTIAL20 remains the original corpus classification.
 

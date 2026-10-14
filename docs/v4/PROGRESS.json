@@ -1,114 +1,70 @@
 {
-  "plan_version": "1.6",
-  "plan_sha256": "af1e1d0405046991e7ce17743049cb980bc0442208b5f5630635aaba89fc7cc0",
+  "plan_version": "1.7",
+  "plan_sha256": "23fae03e436b1b8b133f4e5b3402493aa5dd55606f068f61f2578f718256a2fa",
   "stage": 4,
-  "status": "BLOCKED_STAGE4_ADOPTION_SOURCE_OUTPUT_AND_PARTIAL_ACCURACY",
-  "handoff_sha": "ca013abdb28f235c1d53dfad770d2e367497eaa6",
-  "base_remote_sha": "ca013abdb28f235c1d53dfad770d2e367497eaa6",
-  "last_completed": "Repaired clean test install; safe input derivation; typed research bridge positive/negative cases; pinned new CPU baseline; frozen partial evaluation; final regression, restart/backup/restore and offline replay; implementation push and exact-SHA CI. No overall accuracy PASS.",
-  "next_action": "Run the committed offline evidence replay; inspect development source/quote and alias-mapping diagnostics, preserve original frozen50 and consumed holdout. No same failed API retry, stage6 or Shadow. Reuse pinned CPU runtime and stored raw responses, no additional keys/models/providers.",
+  "status": "BLOCKED_STAGE4_INVALID_STORED_QUOTES_HTTP400_NO_NEW_INDEPENDENT_EVALUATION",
+  "handoff_sha": "594d233702de4234cd4e06f88dea26ac060d2fe1",
+  "base_remote_sha": "594d233702de4234cd4e06f88dea26ac060d2fe1",
+  "last_completed": "Diagnosed all7 exact source rejections without adopting any; fixed model-prefix/ordered-output role errors and actual-order/future-output separation on development/synthetic inputs;343 related regression PASS; real FOX-XP product1/demand1/supply0 retained; new research ledger idempotence/restart/backup exact payload replay PASS.",
+  "next_action": "Reuse stored development30 and new ordered-object diagnostics. Seven original invalid responses cannot be adopted without changing their evidence and stay held. HTTP400 needs genuinely new offline diagnostic evidence/contract cause before any separately authorized changed-request check; no same request retry. Future performance evaluation needs a separately frozen unused corpus, not these20. No new API calls under current scope.",
   "blockers": [
     {
-      "code": "FROZEN50_NOT_FULLY_READ_OR_HUMAN_VERIFIED",
-      "reason": "29 eligible,13 held,8 blocked. Only1 development and6 evaluation actual responses; event gold reviews20 development/9 evaluation bounded inputs. Remaining input/truth unreviewed is not source absence.",
-      "scope": "No whole-document/50-document accuracy or stage6 lead-performance claim."
-    },
-    {
-      "code": "STRICT_SOURCE_OUTPUT_REJECTED",
-      "documents": 6,
-      "items": 7,
-      "reasons": {
+      "code": "SEVEN_STORED_ITEMS_REMAIN_INVALID",
+      "counts": {
         "AMBIGUOUS_QUOTE": 3,
         "NULL_WITH_EVIDENCE": 1,
         "SOURCE": 1,
         "QUOTE_NOT_IN_SOURCE": 2
       },
-      "resume": "Use development30 plus stored raw responses to improve exact source-supported quotations; retain strict validator and consumed evaluation history, no same request retry."
+      "diagnosed": 7,
+      "recovered": 0,
+      "resume": "Do not choose ambiguous positions, rewrite quotes/aliases, remove null evidence or silently change frozen replies."
     },
     {
-      "code": "GROQ_HTTP400_REQUEST_CONTRACT_BLOCK",
-      "http_status": 400,
-      "error_code": "invalid_request_error",
-      "flags": [],
-      "provider_detail": "UNKNOWN; raw error text intentionally not retained. No repeat to recover it.",
-      "remaining_eligible_not_attempted": 2,
-      "resume_document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
-      "resume": "Preserve API_CONFIG_ERROR and SQLite. Validate any genuinely changed request contract locally first; do not rerun the same failed input/contract."
+      "code": "HTTP400_CAUSE_UNKNOWN_NO_RETRY",
+      "saved_diagnostics": {
+        "error_code": "invalid_request_error",
+        "flags": [],
+        "http_status": 400
+      },
+      "contract": "b29edff2710fa9df32d2d209085d6e58d6672334e7014b89d6f8804432ba5dca",
+      "cause": "UNKNOWN; same local contract had7 HTTP success responses and1 failure; generic saved code is insufficient."
     },
     {
-      "code": "CONTACT_FOOTER_OR_COMPLETE_CONTEXT_HELD",
-      "contact_footer_not_safely_identified": 7,
-      "complete_context_exceeds600": 6,
-      "no_signal_context": 7,
-      "resume": "Use development inputs only. Frozen evaluation gate outcomes must not be tuned and relabelled as unused."
-    },
-    {
-      "code": "ONE_NATIVE_VERSION_DIFFERS_FROZEN_TEXT",
-      "documents": 1,
-      "resume": "Old source remains PARTIAL; new native/body version is separate. Do not replace frozen text/ID/hash."
-    },
-    {
-      "code": "SEMANTIC_IDENTITY_MAPPING_AND_REVIEW_LIMITS",
-      "reason": "Fixed literal/alias mapping may leave valid short/long product forms unmapped. Raw counts are not general semantic truth. Gold is AI review, not human; original sessions disclosed status-metadata exposure, not evaluated answer values.",
-      "clean_source_audit": "docs/v4/stage4-corpus/source-only-audit-evaluation-v1.json",
-      "resume": "Read source-only review packets/adjudication and independent audit. Do not silently change aliases or claimed holdout status."
+      "code": "NO_NEW_INDEPENDENT_ACCURACY_OR_EARLY_TEST",
+      "reason": "Original20 and results preserved as consumed; changes tested only on development30/authored counterexamples. New independent performance corpus not prepared or evaluated."
     }
   ],
   "tests": {
-    "stages1_3": "PASS_PRESERVED; functional completion is not general accuracy",
-    "historical99_261": "Retained in before_repair_metadata.tests as historical results; current final full regression is separately measured",
-    "initial_CI_dependency_failure": "REPRODUCED15_FAILED6_PASSED; FIXED21_PASSED after minimal lightweight test extras",
-    "impact_passed": 220,
-    "repair_new_cases_passed": 36,
-    "final_python": {
-      "passed": 1220,
-      "failed": 0,
-      "existing_skipped": 1,
-      "seconds": 35.0,
-      "log": "var/v4/repair/final-code-pytest.log"
-    },
-    "node": {
-      "passed": 34,
+    "current_followup": {
+      "new_test_cases": 32,
+      "affected_regression_passed": 343,
       "failed": 0,
       "skipped": 0,
-      "reused_same_unchanged_Node_code": true,
-      "log": "var/v4/repair/final-node.log"
+      "command": ".venv/bin/python -m pytest -q tests/test_v4_quote_followup.py tests/test_v4_free_ai.py tests/test_v4_quote_binding.py tests/test_v4_semantics.py tests/test_v4_integration.py tests/test_v4_stage4_accuracy.py tests/test_v4_repair.py tests/test_precursor_evidence_graph.py",
+      "log": "var/v4/quote-followup/final-impact.log",
+      "previous_whole_suite": "REUSED at594d233: Python1220 passed/1 existing skip, Node34 passed; final new SHA CI must be checked after push",
+      "initial_test_diagnostics": "Initial authored tests13 failed/7 passed. Three region/customer/Relief fixtures lacked explicit contrary target bindings and were corrected with source-scoped assertions. The existing protected grammar cannot adopt heat pumps; the positive example uses supported gas turbines and heat pumps have a separate required hold test. Final fixtures/criteria were not relaxed to accept these unsupported cases.",
+      "runner_setup_errors": "One nonexistent test filename caused NOT_RUN, then corrected to existing files; not counted as PASS.",
+      "reporting_replay_repairs": "Existing backup is reused only after a fresh-process integrity/status/exact run-payload-hash match; old adapter is loaded with explicit package context and verified original hash.",
+      "runner_exit_status": 0,
+      "final_local_log": "343 passed in3.53s; subprocess returncode0 verified after an inconsistent outer shell status",
+      "period_regression": "Other-product output year retained as unattributed evidence; explicit equipment delivery period retained as DEMAND_NEED. Both current-code cases PASS.",
+      "fresh_development_computation": "All facts/fields match saved result after excluding only existing EARLY random batch UUID; both UUIDs retained. Backup hashes compare full stored payloads without exclusions."
     },
-    "remote_implementation_CI": {
-      "id": 38512076649,
-      "head_sha": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
-      "status": "completed",
-      "conclusion": "success",
-      "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/38512076649"
+    "historical_stages1_3": "PASS_PRESERVED; not retested or rebuilt",
+    "historical_whole_CI_594d233": {
+      "status": "PASS_REUSED_PREVIOUS_CODE",
+      "run_id": 38515127753,
+      "python_passed": 1220,
+      "existing_skipped": 1,
+      "Node_passed": 34
     },
-    "final_evidence_commit_CI": "MUST_VERIFY_EXACT_HEAD_AFTER_PUSH; do not substitute implementation CI",
-    "source_grounding_current_evaluation": {
-      "raw_response_items": 7,
-      "individually_validated_items": 0,
-      "source_rejected_items": 7,
-      "adopted_items": 0,
-      "rejection_reason_counts": {
-        "AMBIGUOUS_QUOTE": 3,
-        "NULL_WITH_EVIDENCE": 1,
-        "SOURCE": 1,
-        "QUOTE_NOT_IN_SOURCE": 2
-      },
-      "raw_context_unscored_reason_counts": {
-        "QUOTE_NOT_IN_SOURCE": 2
-      },
-      "source_rejection_is_not_transport_failure_or_unread_input": true,
-      "cpu": {
-        "source_verified_spans": 86,
-        "non_product_spans_not_compared": 68,
-        "product_spans": 18
-      }
-    },
-    "storage_restart_backup_restore": "PASS_RESEARCH_ADAPTER_AND_API_ERROR_STATE; zero new POSTs on replay",
-    "portable_evidence_replay": "PASS_ZERO_API_CALLS; frozen inference/rubric hashes and same-input source spans checked",
-    "whole50_accuracy": "BLOCKED_PARTIAL_SCOPE; no whole-document or lead-performance claim",
-    "CPU_comparison": "NEW_SAME_INPUT_PRODUCT_ONLY_BASELINE; improvement not demonstrated",
-    "shadow_7_days": "NOT_RUN",
-    "Gemini": "DISABLED_NOT_RUN"
+    "current_final_SHA_CI": "Verify remote check on containing commit after push; preceding CI is not current SHA CI",
+    "storage_restart_restore": "PASS_CURRENT_SEPARATE_RESEARCH_LEDGER; exact run-payload hashes/status/integrity checked in fresh process",
+    "new_independent_accuracy": "NOT_RUN",
+    "lead_performance": "NOT_RUN",
+    "shadow7": "NOT_RUN"
   },
   "commits": [
     {
@@ -178,10 +134,14 @@
     {
       "sha": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
       "role": "Pushed repair implementation; exact-SHA CI run38512076649 PASS"
+    },
+    {
+      "sha": "594d233702de4234cd4e06f88dea26ac060d2fe1",
+      "role": "Verified current follow-up start and prior exact-SHA CI PASS"
     }
   ],
-  "scope": "Approved v1.6 repair: test dependencies, exact safe public spans, event-level AI source review, research-only engine adapter, frozen partial evaluation and new pinned CPU baseline; operational integration OFF.",
-  "updated_at": "2026-10-14T05:08:27.253790+00:00",
+  "scope": "Offline saved-response diagnosis; development-only research adapter3 relation fixes. New API calls0; existing source/evaluation/results/CPU engine preserved; operational integration OFF.",
+  "updated_at": "2026-10-14T05:40:17.654037+00:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
@@ -217,21 +177,24 @@
     "docs/v4/stage4-corpus/native-recovery-repair-v1.json",
     "docs/v4/stage4-corpus/safe-inputs-v1.json",
     "docs/v4/stage4-corpus/source-only-audit-evaluation-v1.json",
-    "docs/v4/stage4-corpus/source-only-blind-evaluation-v1.json"
+    "docs/v4/stage4-corpus/source-only-blind-evaluation-v1.json",
+    "docs/v4/stage4-corpus/quote-role-diagnostics-v1.json",
+    "src/bct/v4/quote_diagnostics.py",
+    "scripts/v4/quote_role_diagnostics.py"
   ],
   "storage": {
     "branch": "codex/bct-v4-integration",
     "implementation_push": "PASS_VERIFIED_SOURCE_CORPUS_PUSH",
-    "latest_remote_verified": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
+    "latest_remote_verified": "594d233702de4234cd4e06f88dea26ac060d2fe1",
     "verified_preserved_upstream_blobs": 466,
     "main_verified": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
     "receipt_commit_note": "Implementation commit SHA is recorded after verified push; the final receipt commit may advance HEAD. Read the current remote branch ref for final delivery SHA.",
-    "current_delivery": "Implementation3ff3801 pushed and its CI PASS; final evidence commit ref/CI must be checked after push",
+    "current_delivery": "Offline follow-up evidence is in this commit; verify containing commit ref and CI after push",
     "local_new_trial_root": "var/v4/groq-stage2 (ignored; not restored historical V4 DB)",
     "implementation_remote_sha": "5447c30a9f00ad2e6f67255e0e8f552d5cedb195",
-    "current_handoff_verified": "ca013abdb28f235c1d53dfad770d2e367497eaa6",
+    "current_handoff_verified": "594d233702de4234cd4e06f88dea26ac060d2fe1",
     "quote_repair_implementation_sha": "48cac90a8601e3227c4c31fe96b41b2c33afcaef",
-    "current_runtime_evidence": "var/v4/repair",
+    "current_runtime_evidence": "var/v4/quote-followup",
     "stage2_result_commit_sha": "96abceb903d9d88b4cf8ca8f95be45059a7dd486",
     "stage3_SQLite": "var/v4/stage3/replay (separate copy; stage2 source read-only)",
     "stage3_result_commit_sha": "e182b54737a063036b07f74ebc8d49397f7110df",
@@ -240,7 +203,8 @@
     "stage4_corpus_commit_sha": "f318285836abd1b00f9cdedc96168e4f16630124",
     "research_adapter_SQLite": "var/v4/repair/adapter-ledger/v4.sqlite3",
     "repair_API_SQLite": "var/v4/repair/api-ledger/v4.sqlite3",
-    "old_stage4_SQLite_preserved_readonly": true
+    "old_stage4_SQLite_preserved_readonly": true,
+    "quote_role_research_SQLite": "var/v4/quote-followup/adapter-ledger/v4.sqlite3"
   },
   "user_setup": [],
   "pr": {
@@ -270,70 +234,42 @@
     "third_provider": false
   },
   "api_usage_current_task": {
-    "providers_called": [
-      "groq"
-    ],
-    "model": "openai/gpt-oss-20b",
-    "generation_POSTs": 8,
-    "same_input_retries": 0,
-    "reported_response_documents": 7,
-    "input_tokens": 6242,
-    "output_tokens": 2809,
-    "reported_total_tokens": 9051,
-    "unreported_failed_request_usage_calls": 1,
-    "api_cost_usd": 0,
-    "api_cost_basis": "Existing user-confirmed Groq Free Plan; no paid plan, billing action, provider/model fallback or invoice query. Failed-call tokens UNKNOWN, not zero.",
-    "prior_attempts_imported_for_same_account_budget_not_new": 5,
-    "historical_responses_imported_as_cache_without_regeneration_or_redundant_revalidation": true,
-    "quota": "Existing 30RPM/1000RPD/8000TPM/200000TPD; 80% rolling local accounting, same ledger, unchanged one POST/run,6400 reservation,2048 output,600 chars,2 windows,60s.",
-    "reservation_sum_new_attempts": 48891,
-    "paid_API_calls": 0
+    "new_generation_POSTs": 0,
+    "new_API_tokens": 0,
+    "new_API_cost_usd": 0,
+    "old_API_attempts_before_after": {
+      "before": 13,
+      "after": 13
+    },
+    "CPU_model_loads_or_installs": 0,
+    "platform_usage_or_fees": "UNKNOWN_NOT_EXPOSED"
   },
   "remaining_issues": [
     {
-      "code": "FROZEN50_NOT_FULLY_READ_OR_HUMAN_VERIFIED",
-      "reason": "29 eligible,13 held,8 blocked. Only1 development and6 evaluation actual responses; event gold reviews20 development/9 evaluation bounded inputs. Remaining input/truth unreviewed is not source absence.",
-      "scope": "No whole-document/50-document accuracy or stage6 lead-performance claim."
-    },
-    {
-      "code": "STRICT_SOURCE_OUTPUT_REJECTED",
-      "documents": 6,
-      "items": 7,
-      "reasons": {
+      "code": "SEVEN_STORED_ITEMS_REMAIN_INVALID",
+      "counts": {
         "AMBIGUOUS_QUOTE": 3,
         "NULL_WITH_EVIDENCE": 1,
         "SOURCE": 1,
         "QUOTE_NOT_IN_SOURCE": 2
       },
-      "resume": "Use development30 plus stored raw responses to improve exact source-supported quotations; retain strict validator and consumed evaluation history, no same request retry."
+      "diagnosed": 7,
+      "recovered": 0,
+      "resume": "Do not choose ambiguous positions, rewrite quotes/aliases, remove null evidence or silently change frozen replies."
     },
     {
-      "code": "GROQ_HTTP400_REQUEST_CONTRACT_BLOCK",
-      "http_status": 400,
-      "error_code": "invalid_request_error",
-      "flags": [],
-      "provider_detail": "UNKNOWN; raw error text intentionally not retained. No repeat to recover it.",
-      "remaining_eligible_not_attempted": 2,
-      "resume_document_id": "stage4doc-8cb0f28cea9ecc8bff1acc9b6b87d8287a0334a53cc20e5df6c2e7518431dc8a",
-      "resume": "Preserve API_CONFIG_ERROR and SQLite. Validate any genuinely changed request contract locally first; do not rerun the same failed input/contract."
+      "code": "HTTP400_CAUSE_UNKNOWN_NO_RETRY",
+      "saved_diagnostics": {
+        "error_code": "invalid_request_error",
+        "flags": [],
+        "http_status": 400
+      },
+      "contract": "b29edff2710fa9df32d2d209085d6e58d6672334e7014b89d6f8804432ba5dca",
+      "cause": "UNKNOWN; same local contract had7 HTTP success responses and1 failure; generic saved code is insufficient."
     },
     {
-      "code": "CONTACT_FOOTER_OR_COMPLETE_CONTEXT_HELD",
-      "contact_footer_not_safely_identified": 7,
-      "complete_context_exceeds600": 6,
-      "no_signal_context": 7,
-      "resume": "Use development inputs only. Frozen evaluation gate outcomes must not be tuned and relabelled as unused."
-    },
-    {
-      "code": "ONE_NATIVE_VERSION_DIFFERS_FROZEN_TEXT",
-      "documents": 1,
-      "resume": "Old source remains PARTIAL; new native/body version is separate. Do not replace frozen text/ID/hash."
-    },
-    {
-      "code": "SEMANTIC_IDENTITY_MAPPING_AND_REVIEW_LIMITS",
-      "reason": "Fixed literal/alias mapping may leave valid short/long product forms unmapped. Raw counts are not general semantic truth. Gold is AI review, not human; original sessions disclosed status-metadata exposure, not evaluated answer values.",
-      "clean_source_audit": "docs/v4/stage4-corpus/source-only-audit-evaluation-v1.json",
-      "resume": "Read source-only review packets/adjudication and independent audit. Do not silently change aliases or claimed holdout status."
+      "code": "NO_NEW_INDEPENDENT_ACCURACY_OR_EARLY_TEST",
+      "reason": "Original20 and results preserved as consumed; changes tested only on development30/authored counterexamples. New independent performance corpus not prepared or evaluated."
     }
   ],
   "api_usage_previous_trials": {
@@ -363,6 +299,26 @@
       "total_tokens": 1605,
       "api_cost_usd": 0,
       "basis": "Previously user-confirmed Groq Free Plan; existing key reused, no retry"
+    },
+    "repair_at_594d233": {
+      "providers_called": [
+        "groq"
+      ],
+      "model": "openai/gpt-oss-20b",
+      "generation_POSTs": 8,
+      "same_input_retries": 0,
+      "reported_response_documents": 7,
+      "input_tokens": 6242,
+      "output_tokens": 2809,
+      "reported_total_tokens": 9051,
+      "unreported_failed_request_usage_calls": 1,
+      "api_cost_usd": 0,
+      "api_cost_basis": "Existing user-confirmed Groq Free Plan; no paid plan, billing action, provider/model fallback or invoice query. Failed-call tokens UNKNOWN, not zero.",
+      "prior_attempts_imported_for_same_account_budget_not_new": 5,
+      "historical_responses_imported_as_cache_without_regeneration_or_redundant_revalidation": true,
+      "quota": "Existing 30RPM/1000RPD/8000TPM/200000TPD; 80% rolling local accounting, same ledger, unchanged one POST/run,6400 reservation,2048 output,600 chars,2 windows,60s.",
+      "reservation_sum_new_attempts": 48891,
+      "paid_API_calls": 0
     }
   },
   "stage2_fixed": {
@@ -1169,5 +1125,290 @@
       "basis": "Previously user-confirmed Groq Free Plan; no paid path or billing changes",
       "scope": "Historical V4 trial totals before this repair only; current repair usage is api_usage_current_task."
     }
+  },
+  "before_quote_role_followup": {
+    "plan_version": "1.6",
+    "plan_sha256": "af1e1d0405046991e7ce17743049cb980bc0442208b5f5630635aaba89fc7cc0",
+    "handoff_sha": "ca013abdb28f235c1d53dfad770d2e367497eaa6",
+    "base_remote_sha": "ca013abdb28f235c1d53dfad770d2e367497eaa6",
+    "last_completed": "Repaired clean test install; safe input derivation; typed research bridge positive/negative cases; pinned new CPU baseline; frozen partial evaluation; final regression, restart/backup/restore and offline replay; implementation push and exact-SHA CI. No overall accuracy PASS.",
+    "next_action": "Run the committed offline evidence replay; inspect development source/quote and alias-mapping diagnostics, preserve original frozen50 and consumed holdout. No same failed API retry, stage6 or Shadow. Reuse pinned CPU runtime and stored raw responses, no additional keys/models/providers.",
+    "status": "BLOCKED_STAGE4_ADOPTION_SOURCE_OUTPUT_AND_PARTIAL_ACCURACY",
+    "scope": "Approved v1.6 repair: test dependencies, exact safe public spans, event-level AI source review, research-only engine adapter, frozen partial evaluation and new pinned CPU baseline; operational integration OFF.",
+    "tests": {
+      "stages1_3": "PASS_PRESERVED; functional completion is not general accuracy",
+      "historical99_261": "Retained in before_repair_metadata.tests as historical results; current final full regression is separately measured",
+      "initial_CI_dependency_failure": "REPRODUCED15_FAILED6_PASSED; FIXED21_PASSED after minimal lightweight test extras",
+      "impact_passed": 220,
+      "repair_new_cases_passed": 36,
+      "final_python": {
+        "passed": 1220,
+        "failed": 0,
+        "existing_skipped": 1,
+        "seconds": 35.0,
+        "log": "var/v4/repair/final-code-pytest.log"
+      },
+      "node": {
+        "passed": 34,
+        "failed": 0,
+        "skipped": 0,
+        "reused_same_unchanged_Node_code": true,
+        "log": "var/v4/repair/final-node.log"
+      },
+      "remote_implementation_CI": {
+        "id": 38512076649,
+        "head_sha": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/38512076649"
+      },
+      "final_evidence_commit_CI": "MUST_VERIFY_EXACT_HEAD_AFTER_PUSH; do not substitute implementation CI",
+      "source_grounding_current_evaluation": {
+        "raw_response_items": 7,
+        "individually_validated_items": 0,
+        "source_rejected_items": 7,
+        "adopted_items": 0,
+        "rejection_reason_counts": {
+          "AMBIGUOUS_QUOTE": 3,
+          "NULL_WITH_EVIDENCE": 1,
+          "SOURCE": 1,
+          "QUOTE_NOT_IN_SOURCE": 2
+        },
+        "raw_context_unscored_reason_counts": {
+          "QUOTE_NOT_IN_SOURCE": 2
+        },
+        "source_rejection_is_not_transport_failure_or_unread_input": true,
+        "cpu": {
+          "source_verified_spans": 86,
+          "non_product_spans_not_compared": 68,
+          "product_spans": 18
+        }
+      },
+      "storage_restart_backup_restore": "PASS_RESEARCH_ADAPTER_AND_API_ERROR_STATE; zero new POSTs on replay",
+      "portable_evidence_replay": "PASS_ZERO_API_CALLS; frozen inference/rubric hashes and same-input source spans checked",
+      "whole50_accuracy": "BLOCKED_PARTIAL_SCOPE; no whole-document or lead-performance claim",
+      "CPU_comparison": "NEW_SAME_INPUT_PRODUCT_ONLY_BASELINE; improvement not demonstrated",
+      "shadow_7_days": "NOT_RUN",
+      "Gemini": "DISABLED_NOT_RUN"
+    },
+    "api_usage_current_task": {
+      "providers_called": [
+        "groq"
+      ],
+      "model": "openai/gpt-oss-20b",
+      "generation_POSTs": 8,
+      "same_input_retries": 0,
+      "reported_response_documents": 7,
+      "input_tokens": 6242,
+      "output_tokens": 2809,
+      "reported_total_tokens": 9051,
+      "unreported_failed_request_usage_calls": 1,
+      "api_cost_usd": 0,
+      "api_cost_basis": "Existing user-confirmed Groq Free Plan; no paid plan, billing action, provider/model fallback or invoice query. Failed-call tokens UNKNOWN, not zero.",
+      "prior_attempts_imported_for_same_account_budget_not_new": 5,
+      "historical_responses_imported_as_cache_without_regeneration_or_redundant_revalidation": true,
+      "quota": "Existing 30RPM/1000RPD/8000TPM/200000TPD; 80% rolling local accounting, same ledger, unchanged one POST/run,6400 reservation,2048 output,600 chars,2 windows,60s.",
+      "reservation_sum_new_attempts": 48891,
+      "paid_API_calls": 0
+    },
+    "storage": {
+      "branch": "codex/bct-v4-integration",
+      "implementation_push": "PASS_VERIFIED_SOURCE_CORPUS_PUSH",
+      "latest_remote_verified": "594d233702de4234cd4e06f88dea26ac060d2fe1",
+      "verified_preserved_upstream_blobs": 466,
+      "main_verified": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+      "receipt_commit_note": "Implementation commit SHA is recorded after verified push; the final receipt commit may advance HEAD. Read the current remote branch ref for final delivery SHA.",
+      "current_delivery": "Offline follow-up evidence is in this commit; verify containing commit ref and CI after push",
+      "local_new_trial_root": "var/v4/groq-stage2 (ignored; not restored historical V4 DB)",
+      "implementation_remote_sha": "5447c30a9f00ad2e6f67255e0e8f552d5cedb195",
+      "current_handoff_verified": "594d233702de4234cd4e06f88dea26ac060d2fe1",
+      "quote_repair_implementation_sha": "48cac90a8601e3227c4c31fe96b41b2c33afcaef",
+      "current_runtime_evidence": "var/v4/quote-followup",
+      "stage2_result_commit_sha": "96abceb903d9d88b4cf8ca8f95be45059a7dd486",
+      "stage3_SQLite": "var/v4/stage3/replay (separate copy; stage2 source read-only)",
+      "stage3_result_commit_sha": "e182b54737a063036b07f74ebc8d49397f7110df",
+      "stage4_SQLite": "var/v4/stage4-recovery/corpus-ledger/v4.sqlite3",
+      "stage4_result_commit_sha": "160d7b383b3ea8d24889b97107da827a41864760",
+      "stage4_corpus_commit_sha": "f318285836abd1b00f9cdedc96168e4f16630124",
+      "research_adapter_SQLite": "var/v4/repair/adapter-ledger/v4.sqlite3",
+      "repair_API_SQLite": "var/v4/repair/api-ledger/v4.sqlite3",
+      "old_stage4_SQLite_preserved_readonly": true,
+      "quote_role_research_SQLite": "var/v4/quote-followup/adapter-ledger/v4.sqlite3"
+    }
+  },
+  "quote_role_followup": {
+    "start_sha": "594d233702de4234cd4e06f88dea26ac060d2fe1",
+    "source_snapshot_and_prior_metrics": "UNCHANGED_HISTORICAL_CONSUMED_EVALUATION",
+    "evidence": "docs/v4/stage4-corpus/quote-role-diagnostics-v1.json",
+    "evidence_sha256": "828144216248705552df355a52c1290d9acbf12f663bb138ed33325f7b1c4686",
+    "reproduction_command": ".venv/bin/python -m scripts.v4.quote_role_diagnostics",
+    "first_error_counts": {
+      "AMBIGUOUS_QUOTE": 3,
+      "NULL_WITH_EVIDENCE": 1,
+      "SOURCE": 1,
+      "QUOTE_NOT_IN_SOURCE": 2
+    },
+    "diagnosed_failed_items": 7,
+    "recovered_rejected_items": 0,
+    "fix_counts": {
+      "ambiguous_quote": {
+        "diagnosed": 3,
+        "recovered": 0
+      },
+      "quote_not_in_source": {
+        "diagnosed": 2,
+        "recovered": 0
+      },
+      "source_duplicate_field": {
+        "diagnosed": 1,
+        "recovered": 0
+      },
+      "null_with_evidence": {
+        "diagnosed": 1,
+        "recovered": 0
+      },
+      "model_prefix_false_product_rejections": 3,
+      "output_product_false_demand_before_after": {
+        "before": 2,
+        "after": 0
+      },
+      "actual_order_future_output_demand_before_after": {
+        "before": 0,
+        "after": 3
+      },
+      "wrong_S1_S2_S3_automatic_promotions_in_scope": 0,
+      "actual_FOX_XP_product_demand_supply_counts": {
+        "product": 1,
+        "demand": 1,
+        "supply_increase": 0,
+        "newly_added_actual_events": 0
+      },
+      "other_product_output_period_as_order_need": "BLOCKED_BY_SOURCE_ATTRIBUTION; actual explicit delivery period retained"
+    },
+    "actual_development": {
+      "documents_replayed": 30,
+      "saved_actual_responses": 1,
+      "before_counts": {
+        "product_exploration": 1,
+        "demand_signals": 1,
+        "supply_signals": 0,
+        "engine_observations_with_AI_events": 1,
+        "linked_pairs": 0,
+        "bottleneck_research_candidates": 0
+      },
+      "adapter_off_counts": {
+        "bottleneck_research_candidates": 0,
+        "demand_signals": 0,
+        "engine_observations_with_AI_events": 0,
+        "linked_pairs": 0,
+        "product_exploration": 0,
+        "supply_signals": 0
+      },
+      "adapter_on_counts": {
+        "bottleneck_research_candidates": 0,
+        "demand_signals": 1,
+        "engine_observations_with_AI_events": 1,
+        "linked_pairs": 0,
+        "product_exploration": 1,
+        "supply_signals": 0
+      },
+      "role_correction_was_preexisting": "SUPPLY_INCREASE -> DEMAND_INCREASE already worked; explicit ordered-object verification and role provenance now added",
+      "new_actual_product_or_demand_events": 0,
+      "actual_adopted_products": 1,
+      "actual_adopted_demand_events": 1,
+      "actual_adopted_supply_increase_events": 0,
+      "wrong_automatic_promotions_in_this_replay": 0,
+      "storage": {
+        "restart_backup_restore": "PASS",
+        "idempotence": "PASS",
+        "current_code_recomputed_facts_match_saved_result": true,
+        "volatile_field_excluded_from_fact_comparison": "engine.protected_result.batch_id",
+        "excluded_batch_ids": {
+          "saved": "early-58428aa0743e4761aefb26511c11e87d",
+          "recomputed": "early-97a4ca690c6c4b8b9b95e24754fa08c5"
+        },
+        "new_ledger": "var/v4/quote-followup/adapter-ledger",
+        "status": {
+          "integrity": "ok",
+          "documents": 30,
+          "runs": 2,
+          "observed_live_days": [],
+          "shadow_7_days": "BLOCKED",
+          "reason": "7-day continuity and new-document/target/failure/recovery review still required",
+          "early_success_cases": 0,
+          "forecast_performance": "BLOCKED"
+        }
+      }
+    },
+    "HTTP400": {
+      "status": "BLOCKED_CAUSE_UNKNOWN_NO_RETRY",
+      "saved_safe_error": {
+        "at": "2026-10-14T04:39:57.437012+00:00",
+        "attempt_id": "3d9cd7b293974fbb9d9874f69697e8a9",
+        "diagnostics": {
+          "error_code": "invalid_request_error",
+          "flags": [],
+          "http_status": 400
+        },
+        "error_kind": "INPUT_INVALID",
+        "input_key": "fd7856fce615447036918743e99a852160e9d713186936ceaf95ea6463cfc0b1",
+        "provider": "groq",
+        "run_id": "api-6092926f537f45c5a8d1d39ed423da87"
+      },
+      "current_request_contract": "b29edff2710fa9df32d2d209085d6e58d6672334e7014b89d6f8804432ba5dca",
+      "same_contract_on_seven_HTTP_success_responses_and_one_HTTP_failure": true,
+      "limitation": "Reconstructed local schema/reservation checks do not establish remote rejection cause. Raw error details were not retained."
+    },
+    "checks": {
+      "new_test_cases": 32,
+      "affected_regression_passed": 343,
+      "failed": 0,
+      "skipped": 0,
+      "command": ".venv/bin/python -m pytest -q tests/test_v4_quote_followup.py tests/test_v4_free_ai.py tests/test_v4_quote_binding.py tests/test_v4_semantics.py tests/test_v4_integration.py tests/test_v4_stage4_accuracy.py tests/test_v4_repair.py tests/test_precursor_evidence_graph.py",
+      "log": "var/v4/quote-followup/final-impact.log",
+      "previous_whole_suite": "REUSED at594d233: Python1220 passed/1 existing skip, Node34 passed; final new SHA CI must be checked after push",
+      "initial_test_diagnostics": "Initial authored tests13 failed/7 passed. Three region/customer/Relief fixtures lacked explicit contrary target bindings and were corrected with source-scoped assertions. The existing protected grammar cannot adopt heat pumps; the positive example uses supported gas turbines and heat pumps have a separate required hold test. Final fixtures/criteria were not relaxed to accept these unsupported cases.",
+      "runner_setup_errors": "One nonexistent test filename caused NOT_RUN, then corrected to existing files; not counted as PASS.",
+      "reporting_replay_repairs": "Existing backup is reused only after a fresh-process integrity/status/exact run-payload-hash match; old adapter is loaded with explicit package context and verified original hash.",
+      "runner_exit_status": 0,
+      "final_local_log": "343 passed in3.53s; subprocess returncode0 verified after an inconsistent outer shell status",
+      "period_regression": "Other-product output year retained as unattributed evidence; explicit equipment delivery period retained as DEMAND_NEED. Both current-code cases PASS.",
+      "fresh_development_computation": "All facts/fields match saved result after excluding only existing EARLY random batch UUID; both UUIDs retained. Backup hashes compare full stored payloads without exclusions."
+    },
+    "freeze_scope": {
+      "original_evaluation_code_SHA": "3ff3801a92cf851e9533e5fefae38f6e936679eb",
+      "original_source_response_gold_score_freeze_unchanged": true,
+      "only_previously_frozen_file_changed": "src/bct/v4/research_adapter.py; explicitly authorized post-evaluation development follow-up",
+      "old_holdout_not_relabelled_unused": true,
+      "new_independent_accuracy": "NOT_RUN",
+      "new_corpus_needed_for_future_performance": "Yes; none prepared or evaluated this task"
+    },
+    "preservation": {
+      "files_checked": 110,
+      "changed": [],
+      "original_evaluation_inputs_gold_responses_metrics_unchanged": true,
+      "original_freeze_not_rewritten": true,
+      "old_evaluation_remains_consumed": true,
+      "new_adapter_not_an_unused_holdout_evaluation": true
+    },
+    "usage": {
+      "new_generation_POSTs": 0,
+      "new_API_tokens": 0,
+      "new_API_cost_usd": 0,
+      "old_API_attempts_before_after": {
+        "before": 13,
+        "after": 13
+      },
+      "CPU_model_loads_or_installs": 0,
+      "platform_usage_or_fees": "UNKNOWN_NOT_EXPOSED"
+    },
+    "limitations": [
+      "All seven stored invalid items remain rejected; diagnosis is not recovery.",
+      "Actual FOX-XP role was already corrected before this follow-up; new source-object verification and provenance do not create another fact.",
+      "Nine paired authored examples demonstrate functional changes only. Among three output-product examples, two were formerly forwarded as demand and all three now have an explicit relation hold.",
+      "Existing heat-pump target grammar remains unsupported: exploration only. Actual FOX-XP quantity, region, need/ready period, qualification and unique customer identity remain UNKNOWN.",
+      "No new independent accuracy or early-discovery test was run. Old evaluation20 remains consumed, with prior AI source-review limitations preserved."
+    ],
+    "next_start": "Reuse stored development30 and new ordered-object diagnostics. Seven original invalid responses cannot be adopted without changing their evidence and stay held. HTTP400 needs genuinely new offline diagnostic evidence/contract cause before any separately authorized changed-request check; no same request retry. Future performance evaluation needs a separately frozen unused corpus, not these20. No new API calls under current scope."
   }
 }
