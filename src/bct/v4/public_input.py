@@ -172,7 +172,10 @@ def selected_input(doc, config, review, env):
     for paragraph in paragraphs:
         if any(paragraph.start() < x["end"] and paragraph.end() > x["start"] for x in excluded):
             continue
-        if current and (LINK.search(paragraph[0].strip()) or COUNTER.search(paragraph[0])):
+        continuation = (config.get("input_policy") == "sentence-context-v3" and re.match(
+            r"^(?:this|these|it|its|they|their|the (?:order|contract|agreement|system|facility))\b",
+            paragraph[0].strip(), re.I))
+        if current and (LINK.search(paragraph[0].strip()) or COUNTER.search(paragraph[0]) or continuation):
             current.append(paragraph)
         else:
             if current:
@@ -180,7 +183,7 @@ def selected_input(doc, config, review, env):
             current = [paragraph]
     if current:
         groups.append(current)
-    if config.get("input_policy") == "sentence-context-v2":
+    if config.get("input_policy") in ("sentence-context-v2", "sentence-context-v3"):
         return _context_page(doc, config, review, env, groups)
     ranked = sorted(groups, key=lambda g: (-len(SIGNAL.findall(body[g[0].start():g[-1].end()])), g[0].start()))
     windows, held = [], []
@@ -234,7 +237,7 @@ def _context_page(doc, config, review, env, groups):
             spans = [(a, b)]
         for a, b in spans:
             text = body[a:b]
-            if not SIGNAL.search(text):
+            if not SIGNAL.search(text) and config.get("input_policy") != "sentence-context-v3":
                 continue
             if b-a > config["max_input_characters"]:
                 held.append({"start": a, "end": b, "reason": "COMPLETE_CONTEXT_EXCEEDS_FIXED_BUDGET"})
@@ -242,7 +245,12 @@ def _context_page(doc, config, review, env, groups):
                 held.append({"start": a, "end": b, "reason": "DUPLICATE_FULL_CONTEXT"})
             else:
                 chunks.append({"start": a, "end": b, "text": text})
-    chunks.sort(key=lambda w: (-len(SIGNAL.findall(w["text"])), w["start"]))
+    if config.get("input_policy") == "sentence-context-v3":
+        # The opening event must not lose to a keyword-dense marketing paragraph.
+        first = min((w["start"] for w in chunks), default=0)
+        chunks.sort(key=lambda w: (w["start"] != first, -len(SIGNAL.findall(w["text"])), w["start"]))
+    else:
+        chunks.sort(key=lambda w: (-len(SIGNAL.findall(w["text"])), w["start"]))
     pages = []
     while chunks and len(pages) < 16:
         selected, remaining = [], config["max_input_characters"]
@@ -257,7 +265,7 @@ def _context_page(doc, config, review, env, groups):
                 "precision": doc.get("publication_precision", "UNKNOWN")}, "provenance_scope": review["scope"],
                 "selected_characters": sum(w["end"]-w["start"] for w in pages[page]),
                 "body_characters": len(body), "coverage": "BOUNDED_COMPLETE_CONTEXT_PAGE_NOT_FULL_DOCUMENT",
-                "input_policy_version": "bct-v4-context-pages-2", "page_index": page,
+                "input_policy_version": "bct-v4-context-pages-3" if config.get("input_policy") == "sentence-context-v3" else "bct-v4-context-pages-2", "page_index": page,
                 "available_pages": len(pages), "withheld_context_count": len(held),
                 "unplanned_contexts_at_page_cap": len(chunks)}
     if CONTACT.search(encode(selected)) or SECRET.search(encode(selected)):

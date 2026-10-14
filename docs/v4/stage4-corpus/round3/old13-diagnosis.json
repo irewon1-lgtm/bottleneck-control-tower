@@ -1,0 +1,709 @@
+{
+  "at": "2026-10-14T09:44:46.428696+00:00",
+  "scope": "READ_ONLY_DIAGNOSIS_OF_EXISTING13_NOT_NEW_MODEL_RUN_NOT_RESCORED_AFTER_FIX",
+  "historical_product_metrics": {
+    "documents": 13,
+    "unit": "REVIEWED_PRODUCT_TARGET_EVENT",
+    "CPU": {
+      "FP": 15,
+      "duplicate_predictions": 2,
+      "TP": 8,
+      "FN": 7,
+      "unscored_ambiguous_event": 2,
+      "precision_denominator": 23,
+      "recall_denominator": 15,
+      "precision": 0.34782608695652173,
+      "recall": 0.5333333333333333,
+      "f1": 0.42105263157894735
+    },
+    "Groq_source_adopted": {
+      "FP": 2,
+      "TP": 0,
+      "FN": 15,
+      "precision_denominator": 2,
+      "recall_denominator": 15,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "Groq_context_entity_only": {
+      "FP": 5,
+      "TP": 1,
+      "FN": 14,
+      "unscored_ambiguous_event": 1,
+      "duplicate_predictions": 0,
+      "precision_denominator": 6,
+      "recall_denominator": 15,
+      "precision": 0.16666666666666666,
+      "recall": 0.06666666666666667,
+      "f1": 0.09523809523809523
+    },
+    "CPU_role_quantity_period": "UNSUPPORTED_NOT_DIRECTLY_COMPARED"
+  },
+  "counts": {
+    "documents": 13,
+    "empty_responses": 6,
+    "empty_with_known_input_product_documents": 2,
+    "empty_known_input_product_events": 2,
+    "empty_without_known_input_product_documents": 4,
+    "returned_items": 10,
+    "source_rejected_items": 8,
+    "source_rejection_first_reasons": {
+      "AMBIGUOUS_QUOTE": 4,
+      "VALUE_NOT_LITERAL": 4
+    },
+    "secondary_quote_issues": {
+      "AMBIGUOUS_QUOTE": 6,
+      "VALUE_NOT_LITERAL": 7
+    },
+    "nonliteral_quantity_items": 3,
+    "nonliteral_entity_items": 2,
+    "role_FP_in_uniquely_matched_reviewed_events": 1,
+    "confirmed_input_window_gap_documents": 1
+  },
+  "not_disjoint_cause_counts": true,
+  "model_miss_inside_input_is_not_input_unread": true,
+  "outside_windows": "Unreviewed body is not a model omission denominator. Old20 whole body65159chars, actually received windows5717chars; contextual cause outside input is not general truth.",
+  "resolved_old_invalid_items": 0,
+  "past_responses_and_scores_unchanged": true,
+  "future_mechanisms_development_tested": [
+    "Context-ID refs avoid copying ambiguous short quotes; global full-context uniqueness remains mandatory",
+    "Literal numbers remain words when written as words; no conversion/alias repair",
+    "Explicit entity boundary and count-as-identity refusals",
+    "Actual literal purchase preferred to planned output only for new opt-in reference readings",
+    "Opening event plus dependent/counterevidence context and bounded wider input; unrelated inputs included"
+  ],
+  "remaining_not_claimed_solved": [
+    "Missing/empty response quality until new independent trial",
+    "Fact/role/quantity/target relation accuracy beyond narrow rules",
+    "Whole-document/table coverage and all qualified supply/12-36month gap",
+    "Uncovered order wording such as finalised may still be held by narrow existing event grammar; no post-freeze rule tuning was made."
+  ],
+  "empty_with_input_truth": [
+    {
+      "document_id": "v4doc-e4dbafd178d94c5f2f913f2cb9a6a12b108f39663fbe6e6022c451a0a9c03fa3",
+      "missed_known_product_events": 1
+    },
+    {
+      "document_id": "v4doc-71e34a605bda7624f3b3003b1b9a7da9fb16250441abec45b1e6fea01751a7eb",
+      "missed_known_product_events": 1
+    }
+  ],
+  "documents": [
+    {
+      "document_id": "v4doc-c82f20acec88ed5980272b399272fed98d3b7dace46bfdc0e6143f9a1b6f2caf",
+      "read_ranges": [
+        {
+          "start": 1489,
+          "end": 1792
+        },
+        {
+          "start": 1793,
+          "end": 1979
+        }
+      ],
+      "read_characters": 489,
+      "body_characters": 2594,
+      "raw_items": 4,
+      "source_accepted_items": 2,
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "AMBIGUOUS_QUOTE"
+        },
+        {
+          "input_item_index": 2,
+          "reason": "VALUE_NOT_LITERAL"
+        }
+      ],
+      "known_product_events_inside_input": 4,
+      "empty_response_with_known_input_product": false,
+      "raw_role_claims": [
+        "SUPPLY_INCREASE",
+        "SUPPLY_INCREASE",
+        "SUPPLY_INCREASE",
+        "SUPPLY_INCREASE"
+      ],
+      "product_identity_matching": {
+        "FP": 4,
+        "TP": 0,
+        "FN": 4,
+        "precision_denominator": 4,
+        "recall_denominator": 4,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "raw_context_metrics": {
+        "TP": 0,
+        "FP": 20,
+        "FN": 36,
+        "UNKNOWN": 57,
+        "truth_absent_unknown": 21,
+        "known_truth_missed": 36,
+        "truth_unverified_claims": 0,
+        "truth_unverified_fields": 3,
+        "unmatched_predictions": 20,
+        "precision_denominator": 20,
+        "recall_denominator": 36,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    {
+      "document_id": "v4doc-e4dbafd178d94c5f2f913f2cb9a6a12b108f39663fbe6e6022c451a0a9c03fa3",
+      "read_ranges": [
+        {
+          "start": 1308,
+          "end": 1763
+        }
+      ],
+      "read_characters": 455,
+      "body_characters": 2422,
+      "raw_items": 0,
+      "source_accepted_items": 0,
+      "rejected_items": [],
+      "known_product_events_inside_input": 1,
+      "empty_response_with_known_input_product": true,
+      "raw_role_claims": [],
+      "product_identity_matching": {
+        "TP": 0,
+        "FN": 1,
+        "FP": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 1,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "raw_context_metrics": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 4,
+        "UNKNOWN": 14,
+        "truth_absent_unknown": 10,
+        "known_truth_missed": 4,
+        "truth_unverified_claims": 0,
+        "truth_unverified_fields": 1,
+        "precision_denominator": 0,
+        "recall_denominator": 4,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    {
+      "document_id": "v4doc-29e9cdfaafab4322815c12023b82ea2eefdeca65f659b2429b71a10518e15ac1",
+      "read_ranges": [
+        {
+          "start": 1986,
+          "end": 2203
+        }
+      ],
+      "read_characters": 217,
+      "body_characters": 3519,
+      "raw_items": 0,
+      "source_accepted_items": 0,
+      "rejected_items": [],
+      "known_product_events_inside_input": 0,
+      "empty_response_with_known_input_product": false,
+      "raw_role_claims": [],
+      "product_identity_matching": {
+        "TP": 0,
+        "FN": 0,
+        "FP": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "raw_context_metrics": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      }
+    },
+    {
+      "document_id": "v4doc-5c7cac56e38f3a9aa2361091fc939e10a1450c96ee84c69a072abf049d07cd13",
+      "read_ranges": [
+        {
+          "start": 0,
+          "end": 540
+        }
+      ],
+      "read_characters": 540,
+      "body_characters": 2866,
+      "raw_items": 1,
+      "source_accepted_items": 0,
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "VALUE_NOT_LITERAL"
+        }
+      ],
+      "known_product_events_inside_input": 3,
+      "empty_response_with_known_input_product": false,
+      "raw_role_claims": [
+        "SUPPLY_INCREASE"
+      ],
+      "product_identity_matching": {
+        "unscored_ambiguous_event": 1,
+        "TP": 0,
+        "FN": 3,
+        "FP": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 3,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "raw_context_metrics": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 36,
+        "UNKNOWN": 44,
+        "truth_absent_unknown": 18,
+        "known_truth_missed": 26,
+        "truth_unverified_claims": 0,
+        "truth_unverified_fields": 1,
+        "unmatched_predictions": 6,
+        "unscored_ambiguous_event": 6,
+        "precision_denominator": 0,
+        "recall_denominator": 36,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    {
+      "document_id": "v4doc-66d7013e8fb0937c7b186be781af89758b0261f99c9904fb2253c7cbc75633c7",
+      "read_ranges": [
+        {
+          "start": 0,
+          "end": 148
+        }
+      ],
+      "read_characters": 148,
+      "body_characters": 2096,
+      "raw_items": 0,
+      "source_accepted_items": 0,
+      "rejected_items": [],
+      "known_product_events_inside_input": 0,
+      "empty_response_with_known_input_product": false,
+      "raw_role_claims": [],
+      "product_identity_matching": {
+        "TP": 0,
+        "FN": 0,
+        "FP": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "raw_context_metrics": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      }
+    },
+    {
+      "document_id": "v4doc-6e6a99c7c153bd019eb22e9c86acb8a8424ea84e03bb85eaa23d2d7e392fb3c6",
+      "read_ranges": [
+        {
+          "start": 0,
+          "end": 503
+        }
+      ],
+      "read_characters": 503,
+      "body_characters": 742,
+      "raw_items": 1,
+      "source_accepted_items": 0,
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "AMBIGUOUS_QUOTE"
+        }
+      ],
+      "known_product_events_inside_input": 1,
+      "empty_response_with_known_input_product": false,
+      "raw_role_claims": [
+        "SUPPLY_INCREASE"
+      ],
+      "product_identity_matching": {
+        "duplicate_predictions": 0,
+        "TP": 1,
+        "FN": 0,
+        "FP": 0,
+        "precision_denominator": 1,
+        "recall_denominator": 1,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_context_metrics": {
+        "TP": 4,
+        "FP": 3,
+        "FN": 4,
+        "UNKNOWN": 7,
+        "truth_absent_unknown": 5,
+        "known_truth_missed": 2,
+        "truth_unverified_claims": 1,
+        "truth_unverified_fields": 1,
+        "precision_denominator": 7,
+        "recall_denominator": 8,
+        "precision": 0.5714285714285714,
+        "recall": 0.5,
+        "f1": 0.5333333333333333
+      }
+    },
+    {
+      "document_id": "v4doc-71e34a605bda7624f3b3003b1b9a7da9fb16250441abec45b1e6fea01751a7eb",
+      "read_ranges": [
+        {
+          "start": 2796,
+          "end": 3330
+        }
+      ],
+      "read_characters": 534,
+      "body_characters": 4597,
+      "raw_items": 0,
+      "source_accepted_items": 0,
+      "rejected_items": [],
+      "known_product_events_inside_input": 1,
+      "empty_response_with_known_input_product": true,
+      "raw_role_claims": [],
+      "product_identity_matching": {
+        "TP": 0,
+        "FN": 1,
+        "FP": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 1,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "raw_context_metrics": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 3,
+        "UNKNOWN": 13,
+        "truth_absent_unknown": 10,
+        "known_truth_missed": 3,
+        "truth_unverified_claims": 0,
+        "truth_unverified_fields": 2,
+        "precision_denominator": 0,
+        "recall_denominator": 3,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    {
+      "document_id": "v4doc-729d7b6174e39343792f3494705f449313f1f8e3780b832c1b4147e25ee2198b",
+      "read_ranges": [
+        {
+          "start": 0,
+          "end": 96
+        },
+        {
+          "start": 1802,
+          "end": 2189
+        }
+      ],
+      "read_characters": 483,
+      "body_characters": 3283,
+      "raw_items": 1,
+      "source_accepted_items": 0,
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "VALUE_NOT_LITERAL"
+        }
+      ],
+      "known_product_events_inside_input": 2,
+      "empty_response_with_known_input_product": false,
+      "raw_role_claims": [
+        "SUPPLY_INCREASE"
+      ],
+      "product_identity_matching": {
+        "TP": 0,
+        "FN": 2,
+        "FP": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 2,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "raw_context_metrics": {
+        "TP": 0,
+        "FP": 5,
+        "FN": 10,
+        "UNKNOWN": 23,
+        "truth_absent_unknown": 14,
+        "known_truth_missed": 9,
+        "truth_unverified_claims": 0,
+        "truth_unverified_fields": 7,
+        "unmatched_predictions": 5,
+        "precision_denominator": 5,
+        "recall_denominator": 10,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    {
+      "document_id": "v4doc-b88d2b22062aaa75cf761dd43f48df376bc9756ab1803767077a37f0c0d17f57",
+      "read_ranges": [
+        {
+          "start": 485,
+          "end": 1003
+        },
+        {
+          "start": 7231,
+          "end": 7298
+        }
+      ],
+      "read_characters": 585,
+      "body_characters": 7621,
+      "raw_items": 1,
+      "source_accepted_items": 0,
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "VALUE_NOT_LITERAL"
+        }
+      ],
+      "known_product_events_inside_input": 0,
+      "empty_response_with_known_input_product": false,
+      "raw_role_claims": [
+        "SUPPLY_INCREASE"
+      ],
+      "product_identity_matching": {
+        "TP": 0,
+        "FN": 0,
+        "FP": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "raw_context_metrics": {
+        "unmatched_predictions": 5,
+        "FP": 5,
+        "TP": 0,
+        "FN": 0,
+        "precision_denominator": 5,
+        "recall_denominator": 0,
+        "precision": 0.0,
+        "recall": null,
+        "f1": 0.0
+      }
+    },
+    {
+      "document_id": "v4doc-c3ce56c9861165f5d811a5897473c74755883b871135a747a0f470dca020c396",
+      "read_ranges": [
+        {
+          "start": 0,
+          "end": 446
+        }
+      ],
+      "read_characters": 446,
+      "body_characters": 3480,
+      "raw_items": 1,
+      "source_accepted_items": 0,
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "AMBIGUOUS_QUOTE"
+        }
+      ],
+      "known_product_events_inside_input": 1,
+      "empty_response_with_known_input_product": false,
+      "raw_role_claims": [
+        "UNKNOWN"
+      ],
+      "product_identity_matching": {
+        "FP": 1,
+        "TP": 0,
+        "FN": 1,
+        "precision_denominator": 1,
+        "recall_denominator": 1,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "raw_context_metrics": {
+        "TP": 0,
+        "FP": 5,
+        "FN": 11,
+        "UNKNOWN": 15,
+        "truth_absent_unknown": 5,
+        "known_truth_missed": 10,
+        "unmatched_predictions": 5,
+        "precision_denominator": 5,
+        "recall_denominator": 11,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    {
+      "document_id": "v4doc-cb92a261f70e3dc808c4fc754f2a3c1b560bf6fdf5a1e3aa1420c0d2b5f2c889",
+      "read_ranges": [
+        {
+          "start": 887,
+          "end": 1444
+        }
+      ],
+      "read_characters": 557,
+      "body_characters": 5096,
+      "raw_items": 1,
+      "source_accepted_items": 0,
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "AMBIGUOUS_QUOTE"
+        }
+      ],
+      "known_product_events_inside_input": 2,
+      "empty_response_with_known_input_product": false,
+      "raw_role_claims": [
+        "SUPPLY_DECREASE"
+      ],
+      "product_identity_matching": {
+        "TP": 0,
+        "FN": 2,
+        "FP": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 2,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "raw_context_metrics": {
+        "TP": 4,
+        "FP": 1,
+        "FN": 11,
+        "UNKNOWN": 24,
+        "truth_absent_unknown": 14,
+        "known_truth_missed": 10,
+        "truth_unverified_claims": 0,
+        "truth_unverified_fields": 1,
+        "precision_denominator": 5,
+        "recall_denominator": 15,
+        "precision": 0.8,
+        "recall": 0.26666666666666666,
+        "f1": 0.4
+      }
+    },
+    {
+      "document_id": "v4doc-e532e0eaea00fe8625f74cf0fd2f137a7ffbd49d345e2ae9b5a02f560ab4dd27",
+      "read_ranges": [
+        {
+          "start": 222,
+          "end": 758
+        }
+      ],
+      "read_characters": 536,
+      "body_characters": 2882,
+      "raw_items": 0,
+      "source_accepted_items": 0,
+      "rejected_items": [],
+      "known_product_events_inside_input": 0,
+      "empty_response_with_known_input_product": false,
+      "raw_role_claims": [],
+      "product_identity_matching": {
+        "TP": 0,
+        "FN": 0,
+        "FP": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "raw_context_metrics": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      }
+    },
+    {
+      "document_id": "v4doc-f813ffbf0008fee10d9eba731348d88c548d20252ea998f5b98eb143ce23a61e",
+      "read_ranges": [
+        {
+          "start": 0,
+          "end": 112
+        },
+        {
+          "start": 1803,
+          "end": 1915
+        }
+      ],
+      "read_characters": 224,
+      "body_characters": 1981,
+      "raw_items": 0,
+      "source_accepted_items": 0,
+      "rejected_items": [],
+      "known_product_events_inside_input": 0,
+      "empty_response_with_known_input_product": false,
+      "raw_role_claims": [],
+      "product_identity_matching": {
+        "TP": 0,
+        "FN": 0,
+        "FP": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "raw_context_metrics": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      }
+    }
+  ],
+  "confirmed_input_window_gaps": [
+    {
+      "document_id": "v4doc-e4dbafd178d94c5f2f913f2cb9a6a12b108f39663fbe6e6022c451a0a9c03fa3",
+      "source_start": 0,
+      "source_end": 320,
+      "quote": "Toulouse, France, 30 September 2026 – FLYONE Armenia, the country's largest carrier, has finalised an order with Airbus for the acquisition of two A321neo aircraft. The agreement was first announced as a Memorandum of Understanding during French President Emmanuel Macron’s official visit to Yerevan on the 5th May 2026.",
+      "old_read_windows": [
+        {
+          "start": 1308,
+          "end": 1763
+        }
+      ],
+      "finding": "Actual A321neo order in opening context was never transmitted; frozen input contained marketing/A320 Family context. Outside-input order is not a model FN in the old scoped score; the inside-input A320 Family empty miss is separate.",
+      "new_Groq_call": false
+    }
+  ]
+}

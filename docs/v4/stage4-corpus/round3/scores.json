@@ -1,0 +1,3248 @@
+{
+  "at": "2026-10-14T10:14:13.428795+00:00",
+  "status": "MEASURED_NEW_FROZEN_SOURCE_WINDOWS_NOT_LEAD_PERFORMANCE",
+  "freeze_sha256": "039984ce0cad3dd79d8d23b1f11afb0055b8f7162383fc07ef69e96f5956dfe1",
+  "scope": "New unused20 before target outputs, no post-output inference/criterion changes. Same chosen page only, not full-body accuracy.",
+  "gold_review": {
+    "at": "2026-10-14T10:08:19.760539+00:00",
+    "gold_sha256": "3c16f45b50180c9ef663d20874b462b55a4814d178dde6df77dfb1f160420d97",
+    "inference_freeze_sha256": "039984ce0cad3dd79d8d23b1f11afb0055b8f7162383fc07ef69e96f5956dfe1",
+    "method": "Separate source-only AI author, reviewer and adjudicator. None saw CPU or target-model outputs. Not human verification.",
+    "human_verified": false,
+    "source_checked_documents": 20,
+    "windows": 40,
+    "target_generations_at_gold_freeze": 0,
+    "draft_sha256": {
+      "source-author.json": "ed84e45db726f8af5b17571829509321aa479366aa999e1683d36636eb4cd462",
+      "source-reviewer.json": "f6f7253166f7c5dd88d068c7dd10737537526a3140d8f77a20e0bb5e0cfa0d96",
+      "source-adjudication.json": "58ac9d32c8371185cfd8dd61ec7bc71d33a7552364971fd47e7547fa2338a87e"
+    },
+    "execution_wrappers_sha256": {
+      "tools/v4_quality_trial.py": "40d9286c6f8d63327d7e59a189be76d8284a4dcb610070f2a547d05df48696f6",
+      "tools/v4_quality_report.py": "7419fed226d98fe03c41d289436bb1644c1b067674b92989c9e56cfb38a84828"
+    }
+  },
+  "processing": {
+    "selected_documents": 20,
+    "eligible": 20,
+    "execution_results": 9,
+    "attempted": 9,
+    "received": 8,
+    "unattempted": [
+      "v4doc-53928c366c3a1c1531e89fc4632b6768eb4ffd10a097efec76a8b8fe7ef68043",
+      "v4doc-42ed1940b43b666ad614b80444b70b15c5c0fe02f2c9feca3f88c8546447dc4f",
+      "v4doc-365c18c9d7e9b777b86797dd6fccf207ac3e76e2a43c8c9ff5bf45ca6699552f",
+      "v4doc-94d5955d8ce28aac17a62b7e044cad80b5257a4353e07adac9c1f2b8d7f4021b",
+      "v4doc-c6dea59e056ac02709d231e04849c8884faa8b9807e27802174804a0c03d5b62",
+      "v4doc-aaa52d13d2c9a3d27637a1ec366dd7bee7a76f093f11c9c447d203f88cb90609",
+      "v4doc-a9068dd5bc8bf0ea8f02bce1bd457e58689395a9e05529a858dc9e839f114e2e",
+      "v4doc-90c907c399c10ee8ff19e14fbda7066c97ab34481afe3f072b57811392b14096",
+      "v4doc-83fc8ae898864d9460b89fff2dc25bf45bffe2215f890c10e253d2165ffd2428",
+      "v4doc-ad9d8542777dbf3c5686e07d4bef672a73db02d7c61a5cc8292a2b2efd385bdb",
+      "v4doc-27a301d845a32cdcc59747a317fb7ae6ffbd0eab84841774ea2e476fa4d7e23c"
+    ],
+    "HTTP_or_transport_without_response": [
+      "v4doc-6203d34ea2a57f2b73fe21de00caebdd751a32da825e2ac14ef26b52abd8b7d5"
+    ],
+    "WAIT_before_attempt": [],
+    "CPU_valid_documents": 18,
+    "CPU_BLOCKED": [
+      {
+        "document_id": "v4doc-ad9d8542777dbf3c5686e07d4bef672a73db02d7c61a5cc8292a2b2efd385bdb",
+        "reason": "MODEL_SPAN_SOURCE_MISMATCH_ON_FIRST_ACTUAL_ATTEMPT"
+      },
+      {
+        "document_id": "v4doc-27a301d845a32cdcc59747a317fb7ae6ffbd0eab84841774ea2e476fa4d7e23c",
+        "reason": "MODEL_SPAN_SOURCE_MISMATCH"
+      }
+    ],
+    "raw_items": 3,
+    "source_advisory_items": 2,
+    "source_rejected_items": 1,
+    "source_rejection_causes": {
+      "VALUE_NOT_LITERAL": 1
+    },
+    "empty_responses": 5,
+    "whole_packet_format_failures": [],
+    "strict_source_PASS_documents_including_empty": 7
+  },
+  "coverage": {
+    "all20_body_characters": 107299,
+    "actual_received_input_characters": 7082,
+    "actual_CPU_valid_input_characters": 13812,
+    "whole_document_accuracy": "NOT_MEASURED",
+    "tables_attachments": "NOT_VERIFIED"
+  },
+  "same_input_product_comparison": {
+    "documents": 8,
+    "CPU": {
+      "FP": 22,
+      "TP": 2,
+      "FN": 3,
+      "duplicate_predictions": 0,
+      "precision_denominator": 24,
+      "recall_denominator": 5,
+      "precision": 0.08333333333333333,
+      "recall": 0.4,
+      "f1": 0.13793103448275862
+    },
+    "Groq_source_adopted": {
+      "TP": 1,
+      "FN": 4,
+      "FP": 1,
+      "duplicate_predictions": 0,
+      "precision_denominator": 2,
+      "recall_denominator": 5,
+      "precision": 0.5,
+      "recall": 0.2,
+      "f1": 0.2857142857142857
+    },
+    "Groq_context_entity_only": {
+      "TP": 1,
+      "FN": 4,
+      "FP": 1,
+      "duplicate_predictions": 0,
+      "precision_denominator": 2,
+      "recall_denominator": 5,
+      "precision": 0.5,
+      "recall": 0.2,
+      "f1": 0.2857142857142857
+    },
+    "CPU_other_meaning_fields": "UNSUPPORTED_NOT_COMPARABLE"
+  },
+  "Groq_all_received_product": {
+    "TP": 1,
+    "FN": 4,
+    "FP": 1,
+    "duplicate_predictions": 0,
+    "precision_denominator": 2,
+    "recall_denominator": 5,
+    "precision": 0.5,
+    "recall": 0.2,
+    "f1": 0.2857142857142857
+  },
+  "Groq_all_adopted_fields": {
+    "metrics": {
+      "TP": 2,
+      "FP": 2,
+      "FN": 25,
+      "UNKNOWN": 59,
+      "truth_absent_unknown": 37,
+      "known_truth_missed": 22,
+      "truth_unverified_claims": 0,
+      "truth_unverified_fields": 14,
+      "unmatched_predictions": 2,
+      "precision_denominator": 4,
+      "recall_denominator": 27,
+      "precision": 0.5,
+      "recall": 0.07407407407407407,
+      "f1": 0.12903225806451613
+    },
+    "by_field": {
+      "actuality": {
+        "TP": 1,
+        "FP": 1,
+        "FN": 4,
+        "UNKNOWN": 4,
+        "known_truth_missed": 4,
+        "unmatched_predictions": 1,
+        "precision_denominator": 2,
+        "recall_denominator": 5,
+        "precision": 0.5,
+        "recall": 0.2,
+        "f1": 0.2857142857142857
+      },
+      "alternative": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "UNKNOWN": 5,
+        "truth_absent_unknown": 5,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "customer_group": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 2,
+        "UNKNOWN": 1,
+        "known_truth_missed": 1,
+        "truth_unverified_claims": 0,
+        "truth_unverified_fields": 4,
+        "precision_denominator": 0,
+        "recall_denominator": 2,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "lead_time": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "UNKNOWN": 5,
+        "truth_absent_unknown": 5,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "need_time": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "UNKNOWN": 5,
+        "truth_absent_unknown": 5,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "period": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 1,
+        "UNKNOWN": 5,
+        "known_truth_missed": 1,
+        "truth_absent_unknown": 4,
+        "precision_denominator": 0,
+        "recall_denominator": 1,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "product": {
+        "TP": 1,
+        "FP": 1,
+        "FN": 4,
+        "UNKNOWN": 4,
+        "known_truth_missed": 4,
+        "unmatched_predictions": 1,
+        "precision_denominator": 2,
+        "recall_denominator": 5,
+        "precision": 0.5,
+        "recall": 0.2,
+        "f1": 0.2857142857142857
+      },
+      "quantity": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 1,
+        "UNKNOWN": 5,
+        "truth_absent_unknown": 4,
+        "known_truth_missed": 1,
+        "precision_denominator": 0,
+        "recall_denominator": 1,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "ready_time": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "UNKNOWN": 5,
+        "truth_absent_unknown": 5,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "region": {
+        "truth_unverified_claims": 0,
+        "truth_unverified_fields": 5,
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "relief": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "UNKNOWN": 5,
+        "truth_absent_unknown": 5,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "role": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 5,
+        "UNKNOWN": 5,
+        "known_truth_missed": 5,
+        "precision_denominator": 0,
+        "recall_denominator": 5,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "specification": {
+        "truth_unverified_claims": 0,
+        "truth_unverified_fields": 5,
+        "TP": 0,
+        "FP": 0,
+        "FN": 0,
+        "precision_denominator": 0,
+        "recall_denominator": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "supply_pool": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 7,
+        "UNKNOWN": 5,
+        "known_truth_missed": 5,
+        "precision_denominator": 0,
+        "recall_denominator": 7,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "unit": {
+        "TP": 0,
+        "FP": 0,
+        "FN": 1,
+        "UNKNOWN": 5,
+        "truth_absent_unknown": 4,
+        "known_truth_missed": 1,
+        "precision_denominator": 0,
+        "recall_denominator": 1,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    }
+  },
+  "Groq_raw_context_fields": {
+    "TP": 2,
+    "FP": 8,
+    "FN": 25,
+    "UNKNOWN": 53,
+    "truth_absent_unknown": 36,
+    "truth_unverified_claims": 3,
+    "truth_unverified_fields": 14,
+    "known_truth_missed": 17,
+    "unmatched_predictions": 2,
+    "precision_denominator": 10,
+    "recall_denominator": 27,
+    "precision": 0.2,
+    "recall": 0.07407407407407407,
+    "f1": 0.10810810810810811
+  },
+  "old13_reference_not_paired_before_after": {
+    "old_product": {
+      "documents": 13,
+      "unit": "REVIEWED_PRODUCT_TARGET_EVENT",
+      "CPU": {
+        "FP": 15,
+        "duplicate_predictions": 2,
+        "TP": 8,
+        "FN": 7,
+        "unscored_ambiguous_event": 2,
+        "precision_denominator": 23,
+        "recall_denominator": 15,
+        "precision": 0.34782608695652173,
+        "recall": 0.5333333333333333,
+        "f1": 0.42105263157894735
+      },
+      "Groq_source_adopted": {
+        "FP": 2,
+        "TP": 0,
+        "FN": 15,
+        "precision_denominator": 2,
+        "recall_denominator": 15,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "Groq_context_entity_only": {
+        "FP": 5,
+        "TP": 1,
+        "FN": 14,
+        "unscored_ambiguous_event": 1,
+        "duplicate_predictions": 0,
+        "precision_denominator": 6,
+        "recall_denominator": 15,
+        "precision": 0.16666666666666666,
+        "recall": 0.06666666666666667,
+        "f1": 0.09523809523809523
+      },
+      "CPU_role_quantity_period": "UNSUPPORTED_NOT_DIRECTLY_COMPARED"
+    },
+    "old_source_rejected": 8,
+    "old_empty": 6,
+    "old_actual_input_characters": 5717,
+    "old_responses_recalled": 0,
+    "different_corpus_cannot_prove_causal_gain_from_this_difference": true
+  },
+  "roles_after_source_and_meaning": {
+    "UNKNOWN": 2
+  },
+  "field_semantic_holds": {
+    "EXPLICIT_PRODUCT_SPECIFICATION": 1,
+    "PHYSICAL_UNIT_REQUIRED": 1
+  },
+  "adoption_gate": {
+    "product_FP_decreased": true,
+    "product_FN_not_increased": false,
+    "verified_wrong_adopted_claims": 2,
+    "all20_comparison_complete": false,
+    "AI_Shadow": "HOLD",
+    "operating_automation": "DISABLED",
+    "status": "HOLD_PENDING_FULL_SAFETY_AND_QUALITY_EVIDENCE"
+  },
+  "usage": {
+    "POST_attempts": 9,
+    "received_generations": 8,
+    "reported_tokens": {
+      "input_tokens": 6149,
+      "output_tokens": 703,
+      "total_tokens": 6852
+    },
+    "failed_usage": "UNKNOWN",
+    "Free_API_cost_KRW": 0,
+    "platform_cost": "UNKNOWN_SEPARATE",
+    "auth_GETs": 0,
+    "new_model_installations": 0
+  },
+  "S1_S2_S3": {
+    "previous_known_research": [
+      1,
+      0,
+      0
+    ],
+    "evaluation_auto_promotions": 0,
+    "research_connection": "Report separately if executed; advisory roles alone are not S1/S2/S3"
+  },
+  "lead_performance": "NOT_RUN",
+  "documents": [
+    {
+      "document_id": "v4doc-0137b20e289fd35b3912b9a3826315aa867760807256adfe2c17c653bb97a77e",
+      "CPU_comparable": true,
+      "status": "MEASURED_FROZEN_WINDOWS_AI_REVIEW_NOT_HUMAN",
+      "source_status": "PASS",
+      "rejected_items": [],
+      "accepted_items": 0,
+      "raw_items": 0,
+      "adopted": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "events": [],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 0,
+        "reviewed_characters": 1015,
+        "body_characters": 5455,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_only": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "events": [],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 0,
+        "reviewed_characters": 1015,
+        "body_characters": 5455,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_failures": [],
+      "common_product": {
+        "CPU": {
+          "FP": 3,
+          "TP": 0,
+          "FN": 0,
+          "precision_denominator": 3,
+          "recall_denominator": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "Groq_source_adopted": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "Groq_context_entity_only": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        }
+      },
+      "raw_entity_refusals": {},
+      "raw_context_or_entity_scores_do_not_adopt_rejected_items": true,
+      "source_and_meaning_advisory": []
+    },
+    {
+      "document_id": "v4doc-089666e00b6d72b51caba27ad02746bf6034a03e57d95e4377ec622e78d30fea",
+      "CPU_comparable": true,
+      "status": "MEASURED_FROZEN_WINDOWS_AI_REVIEW_NOT_HUMAN",
+      "source_status": "PASS",
+      "rejected_items": [],
+      "accepted_items": 0,
+      "raw_items": 0,
+      "adopted": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "events": [],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 0,
+        "reviewed_characters": 709,
+        "body_characters": 2405,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_only": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "events": [],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 0,
+        "reviewed_characters": 709,
+        "body_characters": 2405,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_failures": [],
+      "common_product": {
+        "CPU": {
+          "FP": 4,
+          "TP": 0,
+          "FN": 0,
+          "precision_denominator": 4,
+          "recall_denominator": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "Groq_source_adopted": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "Groq_context_entity_only": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        }
+      },
+      "raw_entity_refusals": {},
+      "raw_context_or_entity_scores_do_not_adopt_rejected_items": true,
+      "source_and_meaning_advisory": []
+    },
+    {
+      "document_id": "v4doc-16bdb0778ae47bc439faf9ab6bb7e89f75f2b30843462b0c1c9ca10d099e0145",
+      "CPU_comparable": true,
+      "status": "MEASURED_FROZEN_WINDOWS_AI_REVIEW_NOT_HUMAN",
+      "source_status": "REVIEW_REQUIRED",
+      "rejected_items": [
+        {
+          "input_item_index": 0,
+          "reason": "VALUE_NOT_LITERAL"
+        }
+      ],
+      "accepted_items": 0,
+      "raw_items": 1,
+      "adopted": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 8,
+          "UNKNOWN": 13,
+          "truth_absent_unknown": 7,
+          "known_truth_missed": 6,
+          "truth_unverified_claims": 0,
+          "truth_unverified_fields": 2,
+          "precision_denominator": 0,
+          "recall_denominator": 8,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "by_field": {
+          "lead_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "relief": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "role": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "unit": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "supply_pool": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "alternative": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "ready_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "period": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "region": {
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 1,
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "actuality": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "specification": {
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 1,
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "need_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "customer_group": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "quantity": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "product": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "events": [
+          {
+            "event_id": "paracom-gateway-contract-award",
+            "fields": {
+              "lead_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "relief": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "unit": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "supply_pool": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 2,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "alternative": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "ready_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "period": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "region": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "specification": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "need_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "customer_group": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 2,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "product": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              }
+            }
+          }
+        ],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 1,
+        "reviewed_characters": 928,
+        "body_characters": 2160,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_only": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 1,
+          "FP": 3,
+          "FN": 7,
+          "UNKNOWN": 9,
+          "truth_absent_unknown": 7,
+          "truth_unverified_claims": 2,
+          "truth_unverified_fields": 2,
+          "known_truth_missed": 2,
+          "precision_denominator": 4,
+          "recall_denominator": 8,
+          "precision": 0.25,
+          "recall": 0.125,
+          "f1": 0.16666666666666666
+        },
+        "by_field": {
+          "alternative": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "ready_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "region": {
+            "truth_unverified_claims": 1,
+            "truth_unverified_fields": 1,
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "customer_group": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "quantity": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "lead_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "relief": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "role": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 1,
+            "precision_denominator": 1,
+            "recall_denominator": 1,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "unit": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "supply_pool": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "UNKNOWN": 1,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 2,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "period": {
+            "TP": 1,
+            "FP": 0,
+            "FN": 0,
+            "precision_denominator": 1,
+            "recall_denominator": 1,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "actuality": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 1,
+            "precision_denominator": 1,
+            "recall_denominator": 1,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "specification": {
+            "truth_unverified_claims": 1,
+            "truth_unverified_fields": 1,
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "need_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 1,
+            "truth_absent_unknown": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "product": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 1,
+            "precision_denominator": 1,
+            "recall_denominator": 1,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "events": [
+          {
+            "event_id": "paracom-gateway-contract-award",
+            "fields": {
+              "alternative": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "ready_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "region": {
+                "truth_unverified_claims": 1,
+                "truth_unverified_fields": 1
+              },
+              "customer_group": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 2,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "lead_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "relief": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 1,
+                "FN": 1
+              },
+              "unit": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "supply_pool": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 2,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "period": {
+                "TP": 1,
+                "FP": 0,
+                "FN": 0
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 1,
+                "FN": 1
+              },
+              "specification": {
+                "truth_unverified_claims": 1,
+                "truth_unverified_fields": 1
+              },
+              "need_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "product": {
+                "TP": 0,
+                "FP": 1,
+                "FN": 1
+              }
+            }
+          }
+        ],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 1,
+        "reviewed_characters": 928,
+        "body_characters": 2160,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_failures": [],
+      "common_product": {
+        "CPU": {
+          "FP": 3,
+          "TP": 0,
+          "FN": 1,
+          "precision_denominator": 3,
+          "recall_denominator": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "Groq_source_adopted": {
+          "TP": 0,
+          "FN": 1,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 1,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "Groq_context_entity_only": {
+          "TP": 0,
+          "FN": 1,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 1,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "raw_entity_refusals": {
+        "VALUE_NOT_LITERAL_OR_OUTSIDE_CONTEXT": 1
+      },
+      "raw_context_or_entity_scores_do_not_adopt_rejected_items": true,
+      "source_and_meaning_advisory": []
+    },
+    {
+      "document_id": "v4doc-39ae7c8b96050d1bcd70d0c48a8ac4ea9a49bb2e6239fa59e4bda6daeb5da98c",
+      "CPU_comparable": true,
+      "status": "MEASURED_FROZEN_WINDOWS_AI_REVIEW_NOT_HUMAN",
+      "source_status": "PASS",
+      "rejected_items": [],
+      "accepted_items": 1,
+      "raw_items": 1,
+      "adopted": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "unmatched_predictions": 2,
+          "FP": 2,
+          "TP": 0,
+          "FN": 0,
+          "precision_denominator": 2,
+          "recall_denominator": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "by_field": {
+          "product": {
+            "unmatched_predictions": 1,
+            "FP": 1,
+            "TP": 0,
+            "FN": 0,
+            "precision_denominator": 1,
+            "recall_denominator": 0,
+            "precision": 0.0,
+            "recall": null,
+            "f1": 0.0
+          },
+          "actuality": {
+            "unmatched_predictions": 1,
+            "FP": 1,
+            "TP": 0,
+            "FN": 0,
+            "precision_denominator": 1,
+            "recall_denominator": 0,
+            "precision": 0.0,
+            "recall": null,
+            "f1": 0.0
+          }
+        },
+        "events": [],
+        "duplicate_predictions": 0,
+        "unmatched": [
+          {
+            "reason": "NO_REVIEWED_TARGET_EVENT",
+            "claims": [
+              [
+                "product",
+                "A350F freighter"
+              ],
+              [
+                "actuality",
+                "ACTUAL"
+              ]
+            ]
+          }
+        ],
+        "reviewed_events": 0,
+        "reviewed_characters": 759,
+        "body_characters": 2852,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_only": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "unmatched_predictions": 2,
+          "FP": 2,
+          "TP": 0,
+          "FN": 0,
+          "precision_denominator": 2,
+          "recall_denominator": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "by_field": {
+          "product": {
+            "unmatched_predictions": 1,
+            "FP": 1,
+            "TP": 0,
+            "FN": 0,
+            "precision_denominator": 1,
+            "recall_denominator": 0,
+            "precision": 0.0,
+            "recall": null,
+            "f1": 0.0
+          },
+          "actuality": {
+            "unmatched_predictions": 1,
+            "FP": 1,
+            "TP": 0,
+            "FN": 0,
+            "precision_denominator": 1,
+            "recall_denominator": 0,
+            "precision": 0.0,
+            "recall": null,
+            "f1": 0.0
+          }
+        },
+        "events": [],
+        "duplicate_predictions": 0,
+        "unmatched": [
+          {
+            "reason": "NO_REVIEWED_TARGET_EVENT",
+            "claims": [
+              [
+                "product",
+                "A350F freighter"
+              ],
+              [
+                "actuality",
+                "ACTUAL"
+              ]
+            ]
+          }
+        ],
+        "reviewed_events": 0,
+        "reviewed_characters": 759,
+        "body_characters": 2852,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_failures": [],
+      "common_product": {
+        "CPU": {
+          "FP": 4,
+          "TP": 0,
+          "FN": 0,
+          "precision_denominator": 4,
+          "recall_denominator": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "Groq_source_adopted": {
+          "FP": 1,
+          "TP": 0,
+          "FN": 0,
+          "precision_denominator": 1,
+          "recall_denominator": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "Groq_context_entity_only": {
+          "FP": 1,
+          "TP": 0,
+          "FN": 0,
+          "precision_denominator": 1,
+          "recall_denominator": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        }
+      },
+      "raw_entity_refusals": {},
+      "raw_context_or_entity_scores_do_not_adopt_rejected_items": true,
+      "source_and_meaning_advisory": [
+        {
+          "actuality": "ACTUAL",
+          "context": {
+            "end": 323,
+            "quote": "Toulouse, France, 29 September 2026 – The A350F freighter (MSN 700), the first of two test aircraft, has completed its first flight. The aircraft, fitted with special flight test instrumentation, flew for 4 hours 10 minutes reaching an altitude of 25,000 feet. The aircraft was flown by a dedicated Airbus Flight Test crew.",
+            "start": 0,
+            "reference": {
+              "document_id": "v4doc-39ae7c8b96050d1bcd70d0c48a8ac4ea9a49bb2e6239fa59e4bda6daeb5da98c",
+              "body_sha256": "bd17166d1f30954885bd9e7e64a03d8e68500c0f052056ec92e2350af4a83cc6",
+              "origin_id": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-a350f-freighter-successfully-performs-its-maiden-flight",
+              "locator": {
+                "start": 0,
+                "end": 323
+              },
+              "source_quote": "Toulouse, France, 29 September 2026 – The A350F freighter (MSN 700), the first of two test aircraft, has completed its first flight. The aircraft, fitted with special flight test instrumentation, flew for 4 hours 10 minutes reaching an altitude of 25,000 feet. The aircraft was flown by a dedicated Airbus Flight Test crew.",
+              "origin_url": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-a350f-freighter-successfully-performs-its-maiden-flight",
+              "origin_publisher": "Airbus",
+              "published_at": "2026-09-29",
+              "publication_precision": "DATE",
+              "acquired_at": "2026-10-14T07:03:30.226617+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "entity": {
+            "end": 323,
+            "quote": "Toulouse, France, 29 September 2026 – The A350F freighter (MSN 700), the first of two test aircraft, has completed its first flight. The aircraft, fitted with special flight test instrumentation, flew for 4 hours 10 minutes reaching an altitude of 25,000 feet. The aircraft was flown by a dedicated Airbus Flight Test crew.",
+            "start": 0,
+            "value": "A350F freighter",
+            "reference": {
+              "document_id": "v4doc-39ae7c8b96050d1bcd70d0c48a8ac4ea9a49bb2e6239fa59e4bda6daeb5da98c",
+              "body_sha256": "bd17166d1f30954885bd9e7e64a03d8e68500c0f052056ec92e2350af4a83cc6",
+              "origin_id": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-a350f-freighter-successfully-performs-its-maiden-flight",
+              "locator": {
+                "start": 0,
+                "end": 323
+              },
+              "source_quote": "Toulouse, France, 29 September 2026 – The A350F freighter (MSN 700), the first of two test aircraft, has completed its first flight. The aircraft, fitted with special flight test instrumentation, flew for 4 hours 10 minutes reaching an altitude of 25,000 feet. The aircraft was flown by a dedicated Airbus Flight Test crew.",
+              "origin_url": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-a350f-freighter-successfully-performs-its-maiden-flight",
+              "origin_publisher": "Airbus",
+              "published_at": "2026-09-29",
+              "publication_precision": "DATE",
+              "acquired_at": "2026-10-14T07:03:30.226617+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "facts": [],
+          "kind": "PHYSICAL_PRODUCT",
+          "role": "UNKNOWN",
+          "target": {
+            "product": {
+              "end": 323,
+              "quote": "Toulouse, France, 29 September 2026 – The A350F freighter (MSN 700), the first of two test aircraft, has completed its first flight. The aircraft, fitted with special flight test instrumentation, flew for 4 hours 10 minutes reaching an altitude of 25,000 feet. The aircraft was flown by a dedicated Airbus Flight Test crew.",
+              "start": 0,
+              "value": "A350F freighter",
+              "reference": {
+                "document_id": "v4doc-39ae7c8b96050d1bcd70d0c48a8ac4ea9a49bb2e6239fa59e4bda6daeb5da98c",
+                "body_sha256": "bd17166d1f30954885bd9e7e64a03d8e68500c0f052056ec92e2350af4a83cc6",
+                "origin_id": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-a350f-freighter-successfully-performs-its-maiden-flight",
+                "locator": {
+                  "start": 0,
+                  "end": 323
+                },
+                "source_quote": "Toulouse, France, 29 September 2026 – The A350F freighter (MSN 700), the first of two test aircraft, has completed its first flight. The aircraft, fitted with special flight test instrumentation, flew for 4 hours 10 minutes reaching an altitude of 25,000 feet. The aircraft was flown by a dedicated Airbus Flight Test crew.",
+                "origin_url": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-a350f-freighter-successfully-performs-its-maiden-flight",
+                "origin_publisher": "Airbus",
+                "published_at": "2026-09-29",
+                "publication_precision": "DATE",
+                "acquired_at": "2026-10-14T07:03:30.226617+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            },
+            "specification": null,
+            "region": null,
+            "customer_group": null,
+            "supply_pool": null
+          },
+          "source_verified": true,
+          "semantic_status": "UNKNOWN_REQUIRES_REVIEW",
+          "s_stage": "UNKNOWN",
+          "forecast_candidate": false,
+          "physical_exploration_lead": true,
+          "source_reference_protocol": true,
+          "model_classification": {
+            "kind": "PHYSICAL_PRODUCT",
+            "role": "UNKNOWN",
+            "actuality": "ACTUAL"
+          },
+          "semantic_policy_version": "bct-v4-semantics-2",
+          "semantic_review": [],
+          "semantic_checks": {
+            "kind": "UNKNOWN_MODEL_CLASSIFICATION",
+            "field_decisions": [],
+            "physical_event_support": false,
+            "role_retained": false,
+            "event_scope": "Toulouse, France, 29 September 2026 – The A350F freighter (MSN 700), the first of two test aircraft, has completed its first flight",
+            "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+          },
+          "input_item_index": 0,
+          "coordinate_origin": "PYTHON_EXACT_UNIQUE_QUOTE",
+          "source_literal_additions": [],
+          "evidence_origin": "MODEL_CONTEXT_ID_RESOLVED_TO_EXACT_INPUT_WINDOW"
+        }
+      ]
+    },
+    {
+      "document_id": "v4doc-5a8b99bf7fc5f3e71a3bfe27d271ac384f37b46c8fbe699bf9c45605e2e6758a",
+      "CPU_comparable": true,
+      "status": "MEASURED_FROZEN_WINDOWS_AI_REVIEW_NOT_HUMAN",
+      "source_status": "PASS",
+      "rejected_items": [],
+      "accepted_items": 0,
+      "raw_items": 0,
+      "adopted": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "events": [],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 0,
+        "reviewed_characters": 1018,
+        "body_characters": 2447,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_only": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "events": [],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 0,
+        "reviewed_characters": 1018,
+        "body_characters": 2447,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_failures": [],
+      "common_product": {
+        "CPU": {
+          "FP": 3,
+          "TP": 0,
+          "FN": 0,
+          "precision_denominator": 3,
+          "recall_denominator": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "Groq_source_adopted": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "Groq_context_entity_only": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        }
+      },
+      "raw_entity_refusals": {},
+      "raw_context_or_entity_scores_do_not_adopt_rejected_items": true,
+      "source_and_meaning_advisory": []
+    },
+    {
+      "document_id": "v4doc-69459bb5b1f117f960e186e72893883d174a5b930a448edd737244f4dd9d5811",
+      "CPU_comparable": true,
+      "status": "MEASURED_FROZEN_WINDOWS_AI_REVIEW_NOT_HUMAN",
+      "source_status": "PASS",
+      "rejected_items": [],
+      "accepted_items": 1,
+      "raw_items": 1,
+      "adopted": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 2,
+          "FP": 0,
+          "FN": 17,
+          "UNKNOWN": 46,
+          "truth_absent_unknown": 30,
+          "known_truth_missed": 16,
+          "truth_unverified_claims": 0,
+          "truth_unverified_fields": 12,
+          "precision_denominator": 2,
+          "recall_denominator": 19,
+          "precision": 1.0,
+          "recall": 0.10526315789473684,
+          "f1": 0.19047619047619047
+        },
+        "by_field": {
+          "lead_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "relief": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "role": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 4,
+            "UNKNOWN": 4,
+            "known_truth_missed": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 4,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "unit": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 3,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "supply_pool": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 5,
+            "UNKNOWN": 4,
+            "known_truth_missed": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 5,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "alternative": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "ready_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "period": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "region": {
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 4,
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "actuality": {
+            "TP": 1,
+            "FP": 0,
+            "FN": 3,
+            "UNKNOWN": 3,
+            "known_truth_missed": 3,
+            "precision_denominator": 1,
+            "recall_denominator": 4,
+            "precision": 1.0,
+            "recall": 0.25,
+            "f1": 0.4
+          },
+          "specification": {
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 4,
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "need_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "customer_group": {
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 4,
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "quantity": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 3,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "product": {
+            "TP": 1,
+            "FP": 0,
+            "FN": 3,
+            "UNKNOWN": 3,
+            "known_truth_missed": 3,
+            "precision_denominator": 1,
+            "recall_denominator": 4,
+            "precision": 1.0,
+            "recall": 0.25,
+            "f1": 0.4
+          }
+        },
+        "events": [
+          {
+            "event_id": "ground-segment-contract-award",
+            "fields": {
+              "lead_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "relief": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "unit": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "supply_pool": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 2,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "alternative": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "ready_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "period": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "region": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "specification": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "need_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "customer_group": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "product": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              }
+            }
+          },
+          {
+            "event_id": "control-centre-contract-award",
+            "fields": {
+              "lead_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "relief": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "unit": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "supply_pool": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "alternative": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "ready_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "period": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "region": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "specification": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "need_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "customer_group": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "product": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              }
+            }
+          },
+          {
+            "event_id": "s250-platform-contract-award",
+            "fields": {
+              "lead_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "relief": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "unit": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "supply_pool": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "alternative": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "ready_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "period": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "region": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "actuality": {
+                "TP": 1,
+                "FP": 0,
+                "FN": 0
+              },
+              "specification": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "need_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "customer_group": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "product": {
+                "TP": 1,
+                "FP": 0,
+                "FN": 0
+              }
+            }
+          },
+          {
+            "event_id": "payload-contract-award",
+            "fields": {
+              "lead_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "relief": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "unit": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "supply_pool": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "alternative": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "ready_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "period": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "region": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "specification": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "need_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "customer_group": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "product": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              }
+            }
+          }
+        ],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 4,
+        "reviewed_characters": 827,
+        "body_characters": 3029,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_only": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 1,
+          "FP": 3,
+          "FN": 18,
+          "UNKNOWN": 44,
+          "truth_absent_unknown": 29,
+          "known_truth_missed": 15,
+          "truth_unverified_claims": 1,
+          "truth_unverified_fields": 12,
+          "precision_denominator": 4,
+          "recall_denominator": 19,
+          "precision": 0.25,
+          "recall": 0.05263157894736842,
+          "f1": 0.08695652173913043
+        },
+        "by_field": {
+          "lead_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "relief": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "role": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 4,
+            "UNKNOWN": 3,
+            "known_truth_missed": 3,
+            "precision_denominator": 1,
+            "recall_denominator": 4,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "unit": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 1,
+            "UNKNOWN": 3,
+            "truth_absent_unknown": 2,
+            "known_truth_missed": 1,
+            "precision_denominator": 1,
+            "recall_denominator": 1,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "supply_pool": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 5,
+            "UNKNOWN": 4,
+            "known_truth_missed": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 5,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "alternative": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "ready_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "period": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "region": {
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 4,
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "actuality": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 4,
+            "UNKNOWN": 3,
+            "known_truth_missed": 3,
+            "precision_denominator": 1,
+            "recall_denominator": 4,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "specification": {
+            "truth_unverified_claims": 1,
+            "truth_unverified_fields": 4,
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "need_time": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 4,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "customer_group": {
+            "truth_unverified_claims": 0,
+            "truth_unverified_fields": 4,
+            "TP": 0,
+            "FP": 0,
+            "FN": 0,
+            "precision_denominator": 0,
+            "recall_denominator": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null
+          },
+          "quantity": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "UNKNOWN": 4,
+            "truth_absent_unknown": 3,
+            "known_truth_missed": 1,
+            "precision_denominator": 0,
+            "recall_denominator": 1,
+            "precision": null,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "product": {
+            "TP": 1,
+            "FP": 0,
+            "FN": 3,
+            "UNKNOWN": 3,
+            "known_truth_missed": 3,
+            "precision_denominator": 1,
+            "recall_denominator": 4,
+            "precision": 1.0,
+            "recall": 0.25,
+            "f1": 0.4
+          }
+        },
+        "events": [
+          {
+            "event_id": "ground-segment-contract-award",
+            "fields": {
+              "lead_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "relief": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "unit": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "supply_pool": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 2,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "alternative": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "ready_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "period": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "region": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "specification": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "need_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "customer_group": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "product": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              }
+            }
+          },
+          {
+            "event_id": "control-centre-contract-award",
+            "fields": {
+              "lead_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "relief": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "unit": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "supply_pool": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "alternative": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "ready_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "period": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "region": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "specification": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "need_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "customer_group": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "product": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              }
+            }
+          },
+          {
+            "event_id": "s250-platform-contract-award",
+            "fields": {
+              "alternative": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "ready_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "region": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "customer_group": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "lead_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "relief": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 1,
+                "FN": 1
+              },
+              "unit": {
+                "TP": 0,
+                "FP": 1,
+                "FN": 0
+              },
+              "supply_pool": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "period": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 1,
+                "FN": 1
+              },
+              "specification": {
+                "truth_unverified_claims": 1,
+                "truth_unverified_fields": 1
+              },
+              "need_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "product": {
+                "TP": 1,
+                "FP": 0,
+                "FN": 0
+              }
+            }
+          },
+          {
+            "event_id": "payload-contract-award",
+            "fields": {
+              "lead_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "relief": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "role": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "unit": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "supply_pool": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "alternative": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "ready_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "period": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "region": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "actuality": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "specification": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "need_time": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "UNKNOWN": 1,
+                "truth_absent_unknown": 1
+              },
+              "customer_group": {
+                "truth_unverified_claims": 0,
+                "truth_unverified_fields": 1
+              },
+              "quantity": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              },
+              "product": {
+                "TP": 0,
+                "FP": 0,
+                "FN": 1,
+                "UNKNOWN": 1,
+                "known_truth_missed": 1
+              }
+            }
+          }
+        ],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 4,
+        "reviewed_characters": 827,
+        "body_characters": 3029,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_failures": [],
+      "common_product": {
+        "CPU": {
+          "FP": 2,
+          "duplicate_predictions": 0,
+          "TP": 2,
+          "FN": 2,
+          "precision_denominator": 4,
+          "recall_denominator": 4,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5
+        },
+        "Groq_source_adopted": {
+          "duplicate_predictions": 0,
+          "TP": 1,
+          "FN": 3,
+          "FP": 0,
+          "precision_denominator": 1,
+          "recall_denominator": 4,
+          "precision": 1.0,
+          "recall": 0.25,
+          "f1": 0.4
+        },
+        "Groq_context_entity_only": {
+          "duplicate_predictions": 0,
+          "TP": 1,
+          "FN": 3,
+          "FP": 0,
+          "precision_denominator": 1,
+          "recall_denominator": 4,
+          "precision": 1.0,
+          "recall": 0.25,
+          "f1": 0.4
+        }
+      },
+      "raw_entity_refusals": {},
+      "raw_context_or_entity_scores_do_not_adopt_rejected_items": true,
+      "source_and_meaning_advisory": [
+        {
+          "actuality": "PLAN",
+          "context": {
+            "end": 828,
+            "quote": "Airbus will act as the system integrator and provide the ground segment and control centre as well as a satellite solution based on its latest-generation S250 platform, which has been used most recently for the CO3D constellation. Unseenlabs will bring its expertise in mission planning, ground and on-board processing, will deliver the ground segment, and supply an innovative payload.",
+            "start": 442,
+            "reference": {
+              "document_id": "v4doc-69459bb5b1f117f960e186e72893883d174a5b930a448edd737244f4dd9d5811",
+              "body_sha256": "152933f285b7f025bf93a933c6a5068b93551c9157012ce2fb0bcef4ab12673e",
+              "origin_id": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-and-unseenlabs-to-build-frances-next-military-signal-intelligence-satellites",
+              "locator": {
+                "start": 442,
+                "end": 828
+              },
+              "source_quote": "Airbus will act as the system integrator and provide the ground segment and control centre as well as a satellite solution based on its latest-generation S250 platform, which has been used most recently for the CO3D constellation. Unseenlabs will bring its expertise in mission planning, ground and on-board processing, will deliver the ground segment, and supply an innovative payload.",
+              "origin_url": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-and-unseenlabs-to-build-frances-next-military-signal-intelligence-satellites",
+              "origin_publisher": "Airbus",
+              "published_at": "2026-09-10",
+              "publication_precision": "DATE",
+              "acquired_at": "2026-10-14T07:03:31.317751+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "entity": {
+            "end": 828,
+            "quote": "Airbus will act as the system integrator and provide the ground segment and control centre as well as a satellite solution based on its latest-generation S250 platform, which has been used most recently for the CO3D constellation. Unseenlabs will bring its expertise in mission planning, ground and on-board processing, will deliver the ground segment, and supply an innovative payload.",
+            "start": 442,
+            "value": "S250 platform",
+            "reference": {
+              "document_id": "v4doc-69459bb5b1f117f960e186e72893883d174a5b930a448edd737244f4dd9d5811",
+              "body_sha256": "152933f285b7f025bf93a933c6a5068b93551c9157012ce2fb0bcef4ab12673e",
+              "origin_id": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-and-unseenlabs-to-build-frances-next-military-signal-intelligence-satellites",
+              "locator": {
+                "start": 442,
+                "end": 828
+              },
+              "source_quote": "Airbus will act as the system integrator and provide the ground segment and control centre as well as a satellite solution based on its latest-generation S250 platform, which has been used most recently for the CO3D constellation. Unseenlabs will bring its expertise in mission planning, ground and on-board processing, will deliver the ground segment, and supply an innovative payload.",
+              "origin_url": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-and-unseenlabs-to-build-frances-next-military-signal-intelligence-satellites",
+              "origin_publisher": "Airbus",
+              "published_at": "2026-09-10",
+              "publication_precision": "DATE",
+              "acquired_at": "2026-10-14T07:03:31.317751+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            }
+          },
+          "facts": [
+            {
+              "end": 0,
+              "field": "specification",
+              "quote": "",
+              "start": 0,
+              "value": null,
+              "reference": null
+            },
+            {
+              "end": 0,
+              "field": "unit",
+              "quote": "",
+              "start": 0,
+              "value": null,
+              "reference": null
+            }
+          ],
+          "kind": "PRODUCT_FAMILY",
+          "role": "UNKNOWN",
+          "target": {
+            "product": {
+              "end": 828,
+              "quote": "Airbus will act as the system integrator and provide the ground segment and control centre as well as a satellite solution based on its latest-generation S250 platform, which has been used most recently for the CO3D constellation. Unseenlabs will bring its expertise in mission planning, ground and on-board processing, will deliver the ground segment, and supply an innovative payload.",
+              "start": 442,
+              "value": "S250 platform",
+              "reference": {
+                "document_id": "v4doc-69459bb5b1f117f960e186e72893883d174a5b930a448edd737244f4dd9d5811",
+                "body_sha256": "152933f285b7f025bf93a933c6a5068b93551c9157012ce2fb0bcef4ab12673e",
+                "origin_id": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-and-unseenlabs-to-build-frances-next-military-signal-intelligence-satellites",
+                "locator": {
+                  "start": 442,
+                  "end": 828
+                },
+                "source_quote": "Airbus will act as the system integrator and provide the ground segment and control centre as well as a satellite solution based on its latest-generation S250 platform, which has been used most recently for the CO3D constellation. Unseenlabs will bring its expertise in mission planning, ground and on-board processing, will deliver the ground segment, and supply an innovative payload.",
+                "origin_url": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-and-unseenlabs-to-build-frances-next-military-signal-intelligence-satellites",
+                "origin_publisher": "Airbus",
+                "published_at": "2026-09-10",
+                "publication_precision": "DATE",
+                "acquired_at": "2026-10-14T07:03:31.317751+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            },
+            "specification": null,
+            "region": null,
+            "customer_group": null,
+            "supply_pool": null
+          },
+          "source_verified": true,
+          "semantic_status": "UNKNOWN_REQUIRES_REVIEW",
+          "s_stage": "UNKNOWN",
+          "forecast_candidate": false,
+          "physical_exploration_lead": true,
+          "source_reference_protocol": true,
+          "model_classification": {
+            "kind": "PRODUCT_FAMILY",
+            "role": "DEMAND_INCREASE",
+            "actuality": "ACTUAL"
+          },
+          "semantic_policy_version": "bct-v4-semantics-2",
+          "semantic_review": [
+            {
+              "field": "specification",
+              "reason": "EXPLICIT_PRODUCT_SPECIFICATION",
+              "source_fact": {
+                "end": 828,
+                "field": "specification",
+                "quote": "Airbus will act as the system integrator and provide the ground segment and control centre as well as a satellite solution based on its latest-generation S250 platform, which has been used most recently for the CO3D constellation. Unseenlabs will bring its expertise in mission planning, ground and on-board processing, will deliver the ground segment, and supply an innovative payload.",
+                "start": 442,
+                "value": "latest-generation",
+                "reference": {
+                  "document_id": "v4doc-69459bb5b1f117f960e186e72893883d174a5b930a448edd737244f4dd9d5811",
+                  "body_sha256": "152933f285b7f025bf93a933c6a5068b93551c9157012ce2fb0bcef4ab12673e",
+                  "origin_id": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-and-unseenlabs-to-build-frances-next-military-signal-intelligence-satellites",
+                  "locator": {
+                    "start": 442,
+                    "end": 828
+                  },
+                  "source_quote": "Airbus will act as the system integrator and provide the ground segment and control centre as well as a satellite solution based on its latest-generation S250 platform, which has been used most recently for the CO3D constellation. Unseenlabs will bring its expertise in mission planning, ground and on-board processing, will deliver the ground segment, and supply an innovative payload.",
+                  "origin_url": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-and-unseenlabs-to-build-frances-next-military-signal-intelligence-satellites",
+                  "origin_publisher": "Airbus",
+                  "published_at": "2026-09-10",
+                  "publication_precision": "DATE",
+                  "acquired_at": "2026-10-14T07:03:31.317751+00:00",
+                  "assertion": "DIRECT_SOURCE_FACT"
+                }
+              }
+            },
+            {
+              "field": "unit",
+              "reason": "PHYSICAL_UNIT_REQUIRED",
+              "source_fact": {
+                "end": 828,
+                "field": "unit",
+                "quote": "Airbus will act as the system integrator and provide the ground segment and control centre as well as a satellite solution based on its latest-generation S250 platform, which has been used most recently for the CO3D constellation. Unseenlabs will bring its expertise in mission planning, ground and on-board processing, will deliver the ground segment, and supply an innovative payload.",
+                "start": 442,
+                "value": "platform",
+                "reference": {
+                  "document_id": "v4doc-69459bb5b1f117f960e186e72893883d174a5b930a448edd737244f4dd9d5811",
+                  "body_sha256": "152933f285b7f025bf93a933c6a5068b93551c9157012ce2fb0bcef4ab12673e",
+                  "origin_id": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-and-unseenlabs-to-build-frances-next-military-signal-intelligence-satellites",
+                  "locator": {
+                    "start": 442,
+                    "end": 828
+                  },
+                  "source_quote": "Airbus will act as the system integrator and provide the ground segment and control centre as well as a satellite solution based on its latest-generation S250 platform, which has been used most recently for the CO3D constellation. Unseenlabs will bring its expertise in mission planning, ground and on-board processing, will deliver the ground segment, and supply an innovative payload.",
+                  "origin_url": "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-and-unseenlabs-to-build-frances-next-military-signal-intelligence-satellites",
+                  "origin_publisher": "Airbus",
+                  "published_at": "2026-09-10",
+                  "publication_precision": "DATE",
+                  "acquired_at": "2026-10-14T07:03:31.317751+00:00",
+                  "assertion": "DIRECT_SOURCE_FACT"
+                }
+              }
+            }
+          ],
+          "semantic_checks": {
+            "kind": "UNKNOWN_MODEL_CLASSIFICATION",
+            "field_decisions": [
+              {
+                "field": "specification",
+                "status": "UNKNOWN",
+                "reason": "EXPLICIT_PRODUCT_SPECIFICATION",
+                "actuality": "PLAN"
+              },
+              {
+                "field": "unit",
+                "status": "UNKNOWN",
+                "reason": "PHYSICAL_UNIT_REQUIRED",
+                "actuality": "PLAN"
+              }
+            ],
+            "physical_event_support": false,
+            "role_retained": false,
+            "event_scope": "Airbus will act as the system integrator and provide the ground segment and control centre as well as a satellite solution based on its latest-generation S250 platform, which has been used most recently for the CO3D constellation",
+            "status": "LIMITED_RULE_CHECKS_NOT_GENERAL_SEMANTIC_VERIFICATION"
+          },
+          "input_item_index": 0,
+          "coordinate_origin": "PYTHON_EXACT_UNIQUE_QUOTE",
+          "source_literal_additions": [],
+          "evidence_origin": "MODEL_CONTEXT_ID_RESOLVED_TO_EXACT_INPUT_WINDOW"
+        }
+      ]
+    },
+    {
+      "document_id": "v4doc-b543ca2a6f11e5eeba8fe574d13747f9b6306e3316d5059adc3707c95c765e3b",
+      "CPU_comparable": true,
+      "status": "MEASURED_FROZEN_WINDOWS_AI_REVIEW_NOT_HUMAN",
+      "source_status": "PASS",
+      "rejected_items": [],
+      "accepted_items": 0,
+      "raw_items": 0,
+      "adopted": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "events": [],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 0,
+        "reviewed_characters": 1131,
+        "body_characters": 3372,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_only": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "events": [],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 0,
+        "reviewed_characters": 1131,
+        "body_characters": 3372,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_failures": [],
+      "common_product": {
+        "CPU": {
+          "FP": 1,
+          "TP": 0,
+          "FN": 0,
+          "precision_denominator": 1,
+          "recall_denominator": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "Groq_source_adopted": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "Groq_context_entity_only": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        }
+      },
+      "raw_entity_refusals": {},
+      "raw_context_or_entity_scores_do_not_adopt_rejected_items": true,
+      "source_and_meaning_advisory": []
+    },
+    {
+      "document_id": "v4doc-cd61aa9f0d22991101c8bb7a2a870d46477e4bb0292aa75967a03fe83a73c4d0",
+      "CPU_comparable": true,
+      "status": "MEASURED_FROZEN_WINDOWS_AI_REVIEW_NOT_HUMAN",
+      "source_status": "PASS",
+      "rejected_items": [],
+      "accepted_items": 0,
+      "raw_items": 0,
+      "adopted": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "events": [],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 0,
+        "reviewed_characters": 695,
+        "body_characters": 6734,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_only": {
+        "status": "MEASURED_SCOPED_AI_REVIEW_ONLY",
+        "metrics": {
+          "TP": 0,
+          "FP": 0,
+          "FN": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "by_field": {},
+        "events": [],
+        "duplicate_predictions": 0,
+        "unmatched": [],
+        "reviewed_events": 0,
+        "reviewed_characters": 695,
+        "body_characters": 6734,
+        "scope": "FROZEN_INPUT_WINDOWS_NOT_FULL_DOCUMENT"
+      },
+      "raw_context_failures": [],
+      "common_product": {
+        "CPU": {
+          "FP": 2,
+          "TP": 0,
+          "FN": 0,
+          "precision_denominator": 2,
+          "recall_denominator": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "Groq_source_adopted": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "Groq_context_entity_only": {
+          "TP": 0,
+          "FN": 0,
+          "FP": 0,
+          "precision_denominator": 0,
+          "recall_denominator": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        }
+      },
+      "raw_entity_refusals": {},
+      "raw_context_or_entity_scores_do_not_adopt_rejected_items": true,
+      "source_and_meaning_advisory": []
+    }
+  ]
+}

@@ -1,0 +1,185 @@
+{
+  "at": "2026-10-14T10:16:19.921858+00:00",
+  "status": "QUALITY_GATE_FAIL_FN_INCREASE_PARTIAL_INDEPENDENT_MEASUREMENT_BLOCKED",
+  "changes": [
+    "Opt-in context-reference-v1 resolves only transmitted exact full contexts; old quote protocol/old scores unchanged",
+    "Literal numbers and bounded entity token/count checks; opt-in actual ordered-object priority over planned output",
+    "Opt-in complete-context input1200chars/2windows, opening context priority and antecedent/counterevidence preservation"
+  ],
+  "old13_preserved": {
+    "documents": 13,
+    "unit": "REVIEWED_PRODUCT_TARGET_EVENT",
+    "CPU": {
+      "FP": 15,
+      "duplicate_predictions": 2,
+      "TP": 8,
+      "FN": 7,
+      "unscored_ambiguous_event": 2,
+      "precision_denominator": 23,
+      "recall_denominator": 15,
+      "precision": 0.34782608695652173,
+      "recall": 0.5333333333333333,
+      "f1": 0.42105263157894735
+    },
+    "Groq_source_adopted": {
+      "FP": 2,
+      "TP": 0,
+      "FN": 15,
+      "precision_denominator": 2,
+      "recall_denominator": 15,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "Groq_context_entity_only": {
+      "FP": 5,
+      "TP": 1,
+      "FN": 14,
+      "unscored_ambiguous_event": 1,
+      "duplicate_predictions": 0,
+      "precision_denominator": 6,
+      "recall_denominator": 15,
+      "precision": 0.16666666666666666,
+      "recall": 0.06666666666666667,
+      "f1": 0.09523809523809523
+    },
+    "CPU_role_quantity_period": "UNSUPPORTED_NOT_DIRECTLY_COMPARED"
+  },
+  "new8_frozen_mechanical_event_product": {
+    "documents": 8,
+    "CPU": {
+      "FP": 22,
+      "TP": 2,
+      "FN": 3,
+      "duplicate_predictions": 0,
+      "precision_denominator": 24,
+      "recall_denominator": 5,
+      "precision": 0.08333333333333333,
+      "recall": 0.4,
+      "f1": 0.13793103448275862
+    },
+    "Groq_source_adopted": {
+      "TP": 1,
+      "FN": 4,
+      "FP": 1,
+      "duplicate_predictions": 0,
+      "precision_denominator": 2,
+      "recall_denominator": 5,
+      "precision": 0.5,
+      "recall": 0.2,
+      "f1": 0.2857142857142857
+    },
+    "Groq_context_entity_only": {
+      "TP": 1,
+      "FN": 4,
+      "FP": 1,
+      "duplicate_predictions": 0,
+      "precision_denominator": 2,
+      "recall_denominator": 5,
+      "precision": 0.5,
+      "recall": 0.2,
+      "f1": 0.2857142857142857
+    },
+    "CPU_other_meaning_fields": "UNSUPPORTED_NOT_COMPARABLE"
+  },
+  "comparison_warning": "Old13 and new8 use different corpora; not causal before/after gain. New frozen event-only matcher marks A350F discovery as unmatched FP although source review confirms product. Product exploration denominator incomplete; mechanical FP is not verified fabrication.",
+  "new_evaluation": {
+    "frozen": 20,
+    "truth_source_only_AI_reviewed": 20,
+    "human_verified": false,
+    "CPU_valid": 18,
+    "CPU_BLOCKED": 2,
+    "attempted": 9,
+    "received": 8,
+    "HTTP400": 1,
+    "unattempted": 11,
+    "generation_input_characters_with_response": 7082,
+    "all20_body_characters": 107299,
+    "new_product_exploration_names_source_supported": [
+      "A350F freighter",
+      "S250 platform"
+    ],
+    "source_adopted_items": 2,
+    "source_rejected_items": 1,
+    "confirmed_wrong_target_or_S_promotion": 0
+  },
+  "cause_results": {
+    "old13_invalid_items_recovered": 0,
+    "old13_recalled": 0,
+    "old13_source_first_rejections": {
+      "AMBIGUOUS_QUOTE": 4,
+      "VALUE_NOT_LITERAL": 4
+    },
+    "development_authored_new_cases_passed": 21,
+    "new_response_AMBIGUOUS_QUOTE": 0,
+    "new_response_VALUE_NOT_LITERAL": 1,
+    "new_empty_responses": 5,
+    "new_missing_raw_named_product_events": 3,
+    "new_unsupported_semantic_fields_held": 2,
+    "literal_numeric_conversion_failures_new": 0,
+    "HTTP400_SCHEMA_GENERATION_unresolved": 1,
+    "consumed_evaluation_and_gold_unchanged": true
+  },
+  "adoption": "FAIL_NO_FN_WORSENING; incomplete20 and event/discovery scoring limitation also HOLD. AI Shadow/operating automation remain disabled.",
+  "S1_S2_S3": {
+    "previous_known_research": [
+      1,
+      0,
+      0
+    ],
+    "new": [
+      0,
+      0,
+      0
+    ],
+    "after": [
+      1,
+      0,
+      0
+    ],
+    "new_AI_products_to_domain_engine": "NOT_ENABLED_IN_THIS_QUALITY_EVALUATION",
+    "lead_performance": "NOT_RUN"
+  },
+  "usage": {
+    "POST_attempts": 9,
+    "received_generations": 8,
+    "reported_tokens": {
+      "input_tokens": 6149,
+      "output_tokens": 703,
+      "total_tokens": 6852
+    },
+    "failed_usage": "UNKNOWN",
+    "Free_API_cost_KRW": 0,
+    "platform_cost": "UNKNOWN_SEPARATE",
+    "auth_GETs": 0,
+    "new_model_installations": 0
+  },
+  "storage": {
+    "at": "2026-10-14T10:14:21.988822+00:00",
+    "status": "PASS_RESEARCH_STORAGE_AND_RECOVERY_GUARDS",
+    "prior_corpus_files_unchanged": 195,
+    "frozen_inference_files_unchanged": 71,
+    "old_SQLite_event_prefix_rows_unchanged": 177,
+    "old401_input_total_attempts": 1,
+    "new_attempts_and_received_outputs_requeried": 9,
+    "per_document_API_JOB_matches_exported_result": true,
+    "automatic_new_S1_S2_S3_promotions": 0,
+    "backup": "var/v4/quality/backup/v4.sqlite3",
+    "restored": "var/v4/quality/restored/v4.sqlite3",
+    "fresh_process_all_tables_and_raw_outputs_exact_match": {
+      "row_data_sha256": "e8f2a08ad73420b21491cde9c738076809eaf2014d72ff7b4c8bbff70fcdb1f7",
+      "counts": {
+        "metadata": 2,
+        "blobs": 9,
+        "documents": 24,
+        "captures": 24,
+        "readings": 0,
+        "runs": 0,
+        "firsts": 0,
+        "events": 238
+      }
+    },
+    "operating_DB_touched": false
+  },
+  "next": "Development/authored only: wrong context_id/role, missing ground segment/control centre/payload, structured generation400 contract counterexamples, discovery-vs-event evaluation contract tests. Preserve current freeze/raw/gold/scores; meaningful later inference/criteria changes need another unused independent cohort. Never retry failed400/401. Remaining11 are uncalled, not a post-tuning independent evaluation. No production/AI Shadow activation."
+}

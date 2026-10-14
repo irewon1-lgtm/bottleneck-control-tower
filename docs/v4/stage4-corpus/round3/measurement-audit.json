@@ -1,0 +1,106 @@
+{
+  "at": "2026-10-14T10:09:37.531933+00:00",
+  "status": "FROZEN_MECHANICAL_EVENT_SCORES_ONLY_ADOPTION_HOLD",
+  "discovery_only_targets_without_event_denominator": [
+    {
+      "document_id": "v4doc-39ae7c8b96050d1bcd70d0c48a8ac4ea9a49bb2e6239fa59e4bda6daeb5da98c",
+      "entity": "A350F"
+    },
+    {
+      "document_id": "v4doc-5a8b99bf7fc5f3e71a3bfe27d271ac384f37b46c8fbe699bf9c45605e2e6758a",
+      "entity": "QShield"
+    },
+    {
+      "document_id": "v4doc-0137b20e289fd35b3912b9a3826315aa867760807256adfe2c17c653bb97a77e",
+      "entity": "LNG"
+    },
+    {
+      "document_id": "v4doc-0137b20e289fd35b3912b9a3826315aa867760807256adfe2c17c653bb97a77e",
+      "entity": "electricity"
+    },
+    {
+      "document_id": "v4doc-b543ca2a6f11e5eeba8fe574d13747f9b6306e3316d5059adc3707c95c765e3b",
+      "entity": "electricity"
+    },
+    {
+      "document_id": "v4doc-53928c366c3a1c1531e89fc4632b6768eb4ffd10a097efec76a8b8fe7ef68043",
+      "entity": "liquefied natural gas (LNG)"
+    },
+    {
+      "document_id": "v4doc-42ed1940b43b666ad614b80444b70b15c5c0fe02f2c9feca3f88c8546447dc4f",
+      "entity": "crude oil"
+    },
+    {
+      "document_id": "v4doc-94d5955d8ce28aac17a62b7e044cad80b5257a4353e07adac9c1f2b8d7f4021b",
+      "entity": "electricity"
+    },
+    {
+      "document_id": "v4doc-94d5955d8ce28aac17a62b7e044cad80b5257a4353e07adac9c1f2b8d7f4021b",
+      "entity": "liquid fuels"
+    },
+    {
+      "document_id": "v4doc-94d5955d8ce28aac17a62b7e044cad80b5257a4353e07adac9c1f2b8d7f4021b",
+      "entity": "light-duty vehicles"
+    },
+    {
+      "document_id": "v4doc-c6dea59e056ac02709d231e04849c8884faa8b9807e27802174804a0c03d5b62",
+      "entity": "crude oil"
+    },
+    {
+      "document_id": "v4doc-c6dea59e056ac02709d231e04849c8884faa8b9807e27802174804a0c03d5b62",
+      "entity": "natural gas"
+    },
+    {
+      "document_id": "v4doc-90c907c399c10ee8ff19e14fbda7066c97ab34481afe3f072b57811392b14096",
+      "entity": "heating oil"
+    }
+  ],
+  "discovery_only_target_count": 13,
+  "limitation": "The frozen event scorer matches target/event pairs. Gold preserves13 discovery-only targets with zero events. Their predictions may become unmatched FP although product existence is supported. Mechanical FP is not independently confirmed fabricated product/claim count; FN denominator excludes these discoveries. Do not interpret the metric as complete physical-product identification precision/recall.",
+  "action": "Preserve gold/criteria/model outputs/scores. No post-output scoring or inference repair. Future development needs pretested discovery-vs-event denominator contract and separately unused frozen evaluation.",
+  "other_strata_and_truth_limits": [
+    {
+      "stratum": "SUPPLY_DELAY",
+      "count": 0,
+      "reason": "명시된 지연 사건이 없다. ahead of schedule는 실제 조기 운송 개시이며 지연의 부정 사례를 자동으로 NEGATED 사건으로 만들지 않는다."
+    },
+    {
+      "stratum": "NEGATED_SUPPLY_DEMAND_EVENT",
+      "count": 0,
+      "reason": "do not connect to the grid와 종료된 세액공제는 기술 분류·과거 지원 상태다. 제품 수급 변화 자체가 명시적으로 부정된 독립 사건이 없다."
+    },
+    {
+      "stratum": "EXPLICIT_CUSTOMER_NEED_TIME",
+      "count": 0,
+      "reason": "고객 필요 기한이 명시된 사건이 없다."
+    },
+    {
+      "stratum": "EXPLICIT_ORDER_TO_READY_LEAD_TIME",
+      "count": 0,
+      "reason": "25-year는 계약기간, 4 hours 10 minutes는 비행시간, 180+ hour는 교육시간이다. 명시 lead_time은 없다."
+    },
+    {
+      "stratum": "AVAILABLE_ALTERNATIVE_PRODUCT_OR_SUPPLIER",
+      "count": 0,
+      "reason": "준비·자격이 확인된 대체 제품·공급원을 명시한 사건이 없다."
+    },
+    {
+      "stratum": "COMPLETE_ELIGIBLE_SUPPLY_AND_RESIDUAL_DEMAND",
+      "count": 0,
+      "reason": "병목을 확정할 잔존 수요와 전체 적격 공급 집합이 함께 주어진 사건이 없다."
+    },
+    {
+      "stratum": "QUANTIFIED_PHYSICAL_DEMAND_ORDER",
+      "count": 0,
+      "reason": "계약 제품의 숫자 발주 수량이 있는 실제 주문은 없다. 계획 payload의 an, 상대 판매 비중·증감률, 시험기의 two를 실제 물리 발주 대수로 바꾸지 않는다."
+    },
+    {
+      "stratum": "QUANTIFIED_DELAY_OR_DECREASE_VOLUME",
+      "count": 0,
+      "reason": "distillate 감산은 실제이나 절대 감산량이 없다. 전기차 판매·시장점유율 하락은 물리 공급 감소량이 아니다."
+    }
+  ],
+  "human_verified": false,
+  "whole_body_accuracy": "NOT_MEASURED",
+  "lead_performance": "NOT_RUN"
+}

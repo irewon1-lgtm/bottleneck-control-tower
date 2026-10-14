@@ -27,7 +27,7 @@ EVENTS = {
     "SUPPLY_DELAY": r"\b(?:production|delivery|deliveries|qualification)\b.{0,60}\b(?:delayed|postponed)\b|\b(?:delayed|postponed)\b.{0,50}\b(?:production|delivery|deliveries)\b|\blead times?\b.{0,50}\b(?:lengthened|increased)\b",
     "RELIEF": r"\bsurplus\b|\bavailable capacity\b|\binventory\b.{0,65}\bincreased\b|\blead times?\b.{0,65}\b(?:shortened|fell|decreased)\b|\bshortage\b.{0,40}\b(?:eased|ended)\b|\bno longer delayed\b",
 }
-UNITS = r"(?:units?|pieces?|cells?|batteries|chips?|wafers?|turbines?|pumps?|reactors?|transceivers?|transformers?|engines?|vehicles?|trucks?|tonnes?|tons?|kg|kWh|MWh|GWh|MW|GW|litres?|liters?|slots?)"
+UNITS = r"(?:units?|systems?|aircraft|helicopters?|drones?|barrels?|pieces?|cells?|batteries|chips?|wafers?|turbines?|pumps?|reactors?|transceivers?|transformers?|engines?|vehicles?|trucks?|tonnes?|tons?|kg|kWh|MWh|GWh|MW|GW|litres?|liters?|slots?)"
 MODIFIER = r"(?:(?:new|advanced|commercial|large[- ]scale|industrial|optical|battery|lithium[- ]ion|high[- ]purity|nuclear|silicon|solar|gas|wind|heat)\s+)"
 AMOUNT = r"(?:\d[\d,.]*(?:\s+(?:million|billion|thousand))?|one|two|three|four|five|six|seven|eight|nine|ten)"
 QUANTITY = re.compile(r"\b(?P<amount>" + AMOUNT + r")\s+(?:" + MODIFIER + r")*(?P<unit>" + UNITS + r")\b", re.I)
@@ -154,6 +154,13 @@ def event_reading(item):
                 continue
             candidates.append((role, mode, text))
     chosen = next((x for x in candidates if x[0] == wanted), None)
+    # A literal signed purchase of this object is not replaced by a later
+    # planned output/operation clause merely because the model wanted supply.
+    direct_order = r"\b(?:orders?|purchase contracts?)\s+(?:for|of)\s+(?:(?:" + AMOUNT + r"|a|an|the|new|additional)\s+)*" + re.escape(name) + r"(?![\w-])"
+    actual_order = next((x for x in candidates if x[0] == "DEMAND_INCREASE" and x[1] == "ACTUAL"
+                         and name and re.search(direct_order, x[2], re.I)), None)
+    if item.get("source_reference_protocol") and actual_order and (chosen is None or chosen[1] in ("PLAN", "FORECAST")):
+        chosen = actual_order
     if chosen and chosen[1] == "NEGATED":
         reversal = next((x for x in candidates if x[0] == "RELIEF" and x[1] != "NEGATED"
                          and re.search(r"\bno longer delayed\b", x[2], re.I)), None)

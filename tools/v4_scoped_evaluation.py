@@ -85,6 +85,9 @@ def score_document(row, gold, cpu, text):
             raise ValueError("CPU_SPAN_SOURCE_MISMATCH")
     checked = validate_reading(text, doc, source)
     raw = json.loads(text)["items"]
+    if source.get("response_protocol") == "context-reference-v1":
+        from bct.v4.source_references import expand
+        raw = expand({"items": raw}, source)["items"]
     bound, failed_contexts = [], []
     for i, item in enumerate(raw):
         try:

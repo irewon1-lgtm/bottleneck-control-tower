@@ -99,6 +99,8 @@ def instant(value):
 
 
 def checked_config(config):
+    if config.get("response_protocol") not in (None, "context-reference-v1"):
+        raise ValueError("UNSUPPORTED_RESPONSE_PROTOCOL")
     models = config.get("models", {})
     if (config.get("version") != VERSION or config.get("providers") != list(ACTIVE_PROVIDERS)
             or models.get("groq") != MODELS["groq"]
@@ -114,7 +116,7 @@ def checked_config(config):
     return deepcopy(config)
 
 
-def source_input(doc, config, env):
+def _source_input(doc, config, env):
     body = doc.get("body")
     if not isinstance(body, str) or not body or hashlib.sha256(body.encode()).hexdigest() != doc.get("body_sha256"):
         raise APIError("INPUT_INVALID")
@@ -166,6 +168,15 @@ def source_input(doc, config, env):
             "provenance_scope": "REVIEWED_PUBLIC_EXCERPT_NOT_FULL_DOCUMENT" if reviewed_excerpt else "VERIFIED_DOCUMENT",
             "selected_characters": sum(len(x["text"]) for x in selected), "body_characters": len(body),
             "coverage": "BOUNDED_WINDOWS_NOT_FULL_DOCUMENT"}
+
+
+def source_input(doc, config, env):
+    selected = _source_input(doc, config, env)
+    if config.get("response_protocol") == "context-reference-v1":
+        from .source_references import PROTOCOL, SYSTEM as REF_SYSTEM, schema
+        selected = {**selected, "response_protocol": PROTOCOL,
+                    "response_contract": sha([REF_SYSTEM, schema()])}
+    return selected
 
 
 def shape(value, schema):
@@ -295,6 +306,9 @@ def validate_reading(text, doc, selected):
                           parse_constant=lambda _: (_ for _ in ()).throw(APIError("FORMAT")))
     except (ValueError, TypeError):
         raise APIError("FORMAT") from None
+    if selected.get("response_protocol") == "context-reference-v1":
+        from .source_references import expand
+        data = expand(data, selected)
     try:
         shape(data, QUOTE_SCHEMA)
     except APIError:
@@ -309,6 +323,9 @@ def validate_reading(text, doc, selected):
     for index, item in enumerate(data["items"]):
         try:
             from .semantics import literal_region_fields
+            if selected.get("response_protocol") == "context-reference-v1":
+                from .source_references import check_entity
+                check_entity(item)
             bound = bind_quotes(item, doc, selected)
             verified = validate_output(encode({"items": [bound]}), doc, selected)["items"][0]
             # A derived candidate must not repair or hide invalid AI evidence.
@@ -317,9 +334,13 @@ def validate_reading(text, doc, selected):
             if supplemented != item:
                 bound = bind_quotes(supplemented, doc, selected)
                 verified = validate_output(encode({"items": [bound]}), doc, selected)["items"][0]
+            if selected.get("response_protocol") == "context-reference-v1":
+                verified["source_reference_protocol"] = True
             accepted.append({**advisory_classification(verified), "input_item_index": index,
                              "coordinate_origin": "PYTHON_EXACT_UNIQUE_QUOTE",
                              "source_literal_additions": ["region"] if supplemented != item else []})
+            if selected.get("response_protocol") == "context-reference-v1":
+                accepted[-1]["evidence_origin"] = "MODEL_CONTEXT_ID_RESOLVED_TO_EXACT_INPUT_WINDOW"
         except APIError as error:
             rejected.append({"input_item_index": index, "reason": error.kind})
     # Report unprocessed source ranges without changing the API input/cache key.
@@ -371,13 +392,19 @@ class HTTPAdapter:
                      "generationConfig": {"responseMimeType": "application/json", "responseJsonSchema": SCHEMA,
                                           "maxOutputTokens": max_output}})
         if provider == "groq":
+            system, schema = SYSTEM, GROQ_SCHEMA
+            if source.get("response_protocol") == "context-reference-v1":
+                from .source_references import SYSTEM as system, wire_schema
+                schema = wire_schema()
+                message = encode({"contexts": [{"context_id": "w" + str(i), "text": w["text"]}
+                    for i, w in enumerate(source["windows"])], "publication": source["publication"]})
             return ("https://api.groq.com/openai/v1/chat/completions",
                     {"Content-Type": "application/json", "User-Agent": HTTP_USER_AGENT,
                      "Authorization": "Bearer " + self.env.get(KEYS[provider], "")},
-                    {"model": MODELS[provider], "messages": [{"role": "system", "content": SYSTEM},
+                    {"model": MODELS[provider], "messages": [{"role": "system", "content": system},
                      {"role": "user", "content": message}], "max_completion_tokens": max_output,
                      "reasoning_effort": "low",
-                     "response_format": {"type": "json_schema", "json_schema": {"name": "bct_source_facts", "strict": True, "schema": GROQ_SCHEMA}}})
+                     "response_format": {"type": "json_schema", "json_schema": {"name": "bct_source_facts", "strict": True, "schema": schema}}})
         raise ValueError("NO_THIRD_PROVIDER")
 
     def call(self, provider, source, max_output):
@@ -465,9 +492,14 @@ class Router:
         self.calls, self.reserved = 0, 0
         # Input/unsupported-format errors require a changed request contract,
         # not another document or another provider with the same broken format.
-        self.request_contract = sha([VERSION, SCHEMA, SYSTEM, MODELS, HTTP_USER_AGENT,
+        contract_source, contract_schema, contract_system = {}, SCHEMA, SYSTEM
+        if config.get("response_protocol") == "context-reference-v1":
+            from .source_references import SYSTEM as contract_system, schema
+            contract_schema = schema()
+            contract_source = {"response_protocol": "context-reference-v1", "windows": [], "publication": {}}
+        self.request_contract = sha([VERSION, contract_schema, contract_system, MODELS, HTTP_USER_AGENT,
             config["max_output_tokens"], config["max_input_characters"], config["max_windows"],
-            [HTTPAdapter({}).request(p, {}, config["max_output_tokens"])[::2] for p in self.config["providers"]]])
+            [HTTPAdapter({}).request(p, contract_source, config["max_output_tokens"])[::2] for p in self.config["providers"]]])
 
     def events(self, kind):
         return [json.loads(x[0]) for x in self.ledger.db.execute("SELECT payload FROM events WHERE kind=? ORDER BY seq", (kind,))]

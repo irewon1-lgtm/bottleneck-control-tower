@@ -2,6 +2,18 @@
 
 Updated 2026-10-14 (Asia/Seoul). Read `EXECUTION_PLAN.md` and `PROGRESS.json` first. The fixed eight-stage goal and CPU GLiNER2 engine remain unchanged. Active AI: **GroqCloud Free Plan only**. Gemini code is retained, but routing/probes and key requirements are disabled. No third provider, paid fallback, upgrade or billing action.
 
+## Current development quality trial (round3, 2026-10-14 UTC)
+
+Existing key, Free account, model and account caps stay unchanged. New opt-in `context-reference-v1` sends exact bounded contexts identified by IDs; Python resolves only that ID then runs the original strict unique source and meaning checks. Literal values are not repaired. Legacy requests/cache scopes/quote rejection stay unchanged. New input policy `sentence-context-v3` prepares complete contexts up to1200characters/2windows; actual byte reservations still must fit6400 and the shared80% quota. This setting is for the frozen research trial, not operating adoption.
+
+New20 actual sources (10 native-cache reuse/10 new source requests;FULL5/PARTIAL15) and71 inference/input files were frozen before predictions. Separate source-only AI author/reviewer/adjudicator reviewed40 windows and froze truth before target generation; this is not human verification. New CPU baseline18 valid/2 strict span failures, existing pinned installation reused. Selected scope14833/107299characters; actual8 received input windows7082characters. The remaining body, tables and attachments are not claimed analysed.
+
+**9 new POSTs/8 responses,6149 input+703 output=6852 reported tokens, Free API cost0.** Failed400 usage is UNKNOWN and its5602 reservation is retained; platform usage/cost is separate and UNKNOWN. One `SCHEMA_GENERATION` HTTP400 stopped the contract;11 remain uncalled. No retry, auth GET, model/key/account change or alternative provider. Same contract had8 received outputs, so precise failure cause remains UNKNOWN.
+
+Fixed event scorer on the common8: CPU TP2/FP22/FN3(P8.33%,R40%); Groq TP1/FP1/FN4(P50%,R20%). FN worsened. Moreover13 discovery-only gold targets have no event denominator: the scorer marks the source-supported A350F discovery as unmatched FP. Keep mechanical scores; they do not establish complete product-identification accuracy or verified fabrication. Old13 P/R0%/0% remains immutable and is a different corpus, not a paired before/after comparison. New source items2 accepted/1 rejected for a wrong transmitted context ID;5 empty replies. AI Shadow and operating automation HOLD. Known research S1/S2/S3 stays1/0/0, new0; lead performance NOT_RUN.
+
+Evidence: `stage4-corpus/round3/outcome.json`, `scores.json`, `measurement-audit.json`, `http400-diagnosis.json`, `storage-preservation.json`. Trial/report tools are bounded and append-only; do not rerun to improve consumed scores. Future changes use development/authored cases and require another unused frozen evaluation. The shared API ledger preserves historical401/400 attempts, previous raw responses and the request-contract block.
+
 ## Authentication recovery and unchanged evaluation resume (2026-10-14 UTC)
 
 Existing `GROQ_API_KEY`, Free account, proxy/CA and settings revision were preserved. The preceding read-only models GET at08:51:34 returned200. Its receipt is retained in `stage4-corpus/round2/auth-resume/auth-evidence.json`; readiness metadata still saysunknown, and the past401 cause is not established. Explicit one-shot recovery uses fresh evidence (at most1hour old), consumes authorization before HTTP, forbids attempted inputs and retains the original AUTH block until the unchanged router receives a real generation. No key/setting changes or additional authentication GETs occurred.
