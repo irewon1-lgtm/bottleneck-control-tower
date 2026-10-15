@@ -10,7 +10,7 @@ on:
     inputs:
       purpose:
         type: choice
-        options: [seed, recovery-check]
+        options: [seed, recovery-check, bridge-recover]
         default: seed
 permissions:
   contents: read
@@ -148,8 +148,35 @@ jobs:
               print('BCT_EXPECTED_STORAGE_FAILURE_JSON='+json.dumps({'status':'PASS_EXPECTED_CAS_STALE_PARENT_REFUSAL','remote_overwrite':False,'new_CPU_windows':0}))
           else:raise AssertionError('STALE_PARENT_MUST_NOT_WRITE')
           PYCODE
+      - name: Recover latest durable private state after incomplete forwarding
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'bridge-recover' }}
+        env:
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+        run: |
+          timeout 120 python - <<'PYCODE'
+          import os,json,pathlib,subprocess,base64
+          from bct.v4 import private_state as p,cpu_operations as o,cpu_resume as r
+          repo=pathlib.Path('var/v4/cpu-private/git');repo.mkdir(parents=True,exist_ok=False)
+          auth=base64.b64encode(('x-access-token:'+os.environ['BCT_V4_PRIVATE_STATE_TOKEN']).encode()).decode()
+          env={**os.environ,'GIT_CONFIG_COUNT':'2','GIT_CONFIG_KEY_0':'http.https://github.com/.extraheader',
+              'GIT_CONFIG_VALUE_0':'AUTHORIZATION: basic '+auth,'GIT_CONFIG_KEY_1':'credential.helper',
+              'GIT_CONFIG_VALUE_1':'','GIT_TERMINAL_PROMPT':'0'}
+          def git(*args):
+              process=subprocess.run(['git','-C',str(repo),*args],env=env,capture_output=True,timeout=25)
+              if process.returncode:raise ValueError('PRIVATE_RECOVERY_GIT_FAILED')
+              return process.stdout
+          git('init');git('remote','add','origin',p.PRIVATE_URL)
+          git('fetch','--no-tags','origin',o.STATE_REF)
+          commit=git('rev-parse','FETCH_HEAD').decode().strip()
+          checkpoint=pathlib.Path('var/v4/cpu-private/checkpoint');checkpoint.mkdir(parents=True,exist_ok=False)
+          for name in ('checkpoint.json','checkpoint.sqlite3.gz'):(checkpoint/name).write_bytes(git('show',commit+':'+name))
+          restored=o.restore(checkpoint,pathlib.Path('var/v4/cpu-private/recovered-durable'))
+          ledger=r.Ledger('var/v4/cpu-private/recovered-durable');r.audit(ledger);ledger.close()
+          (checkpoint/'parent.json').write_text(json.dumps({'expected_parent':commit}))
+          print('BCT_DURABLE_BRIDGE_RECOVERY_JSON='+json.dumps({'status':'PASS_RECOVERED_FROM_PRIVATE_NOT_OLD_CACHE','parent':commit,'restored':restored,'model_loads':0,'originals_modified':False}))
+          PYCODE
       - name: Private CAS publish and fresh remote hash/table restore
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' }}
         env:
           BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
         run: |
@@ -162,7 +189,7 @@ jobs:
         env:
           CONFIGURED_CPU_CODE_SHA: ${{ vars.BCT_V4_CPU_CODE_SHA }}
           CONFIGURED_CPU_ENABLED: ${{ vars.BCT_V4_CPU_RESEARCH_ENABLED }}
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' }}
         run: |
           timeout 120 python - <<'PYCODE'
           import json,pathlib,subprocess,tempfile,sqlite3
@@ -202,11 +229,14 @@ jobs:
               'seven_day_start':result['persistence_receipt']['seven_day_start'],
               'original_DB_fully_restored':False}))
           PYCODE
+      - name: Preserve prior recovery input before producing a fresh bridge
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'recovery-check' }}
+        run: mv var/v4/cpu-private/bridge var/v4/cpu-private/recovery-input-preserved
       - name: Seal acknowledged private state for next read-only CPU job
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' }}
         run: timeout 120 python tools/v4_cpu_private.py seal --packet var/v4/cpu-private/bridge/state.gpg --parent-file var/v4/cpu-private/published.json
       - uses: actions/cache/save@v4
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' }}
         with:
           key: v4-cpu-private-bridge-${{ github.run_id }}-${{ github.run_attempt }}
           path: var/v4/cpu-private/bridge
