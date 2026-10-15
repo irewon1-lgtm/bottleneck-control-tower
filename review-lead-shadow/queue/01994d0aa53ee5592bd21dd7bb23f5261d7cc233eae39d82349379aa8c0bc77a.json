@@ -1,0 +1,400 @@
+{
+  "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+  "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+  "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+  "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+  "applies_from": "2026-10-05T15:24:06.650413+00:00",
+  "document_id": "39b8cc47-1453-4bed-9827-a8b0a627cd4e",
+  "body_sha256": "99b70b0229ce9298f28686a5c11cfb11153828d1758e65ebe495414dfd4ed14e",
+  "published_at": "2026-10-15T16:39:08+00:00",
+  "acquired_at": "2026-10-15T17:58:39.551962+00:00",
+  "available_at": "2026-10-15T17:58:39.551962+00:00",
+  "intake_started_at": "2026-10-15T18:01:23.731618+00:00",
+  "intake_recorded_at": "2026-10-15T18:01:23.907952+00:00",
+  "first_review_recorded_at": "UNKNOWN",
+  "mode": "PROSPECTIVE_REVIEW",
+  "status": "HOLD",
+  "automatic_extraction": {
+    "version": "BCT_PRECURSOR_V2_SHADOW_2",
+    "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+    "events": [
+      {
+        "event_id": "6335d88a8904dc8d7ece0c8fef8724fb8521d641c2436fea426b97da7dc5e3f8",
+        "document_id": "39b8cc47-1453-4bed-9827-a8b0a627cd4e",
+        "role": "DEMAND",
+        "kind": "REQUIREMENT",
+        "reference": {
+          "document_id": "39b8cc47-1453-4bed-9827-a8b0a627cd4e",
+          "body_sha256": "99b70b0229ce9298f28686a5c11cfb11153828d1758e65ebe495414dfd4ed14e",
+          "locator": {
+            "start": 339,
+            "end": 442
+          },
+          "quote": "Both crashes happened in August and landed in NHTSA’s September release of Standing General Order data."
+        },
+        "fields": {},
+        "context_references": [
+          {
+            "document_id": "39b8cc47-1453-4bed-9827-a8b0a627cd4e",
+            "body_sha256": "99b70b0229ce9298f28686a5c11cfb11153828d1758e65ebe495414dfd4ed14e",
+            "locator": {
+              "start": 339,
+              "end": 442
+            },
+            "quote": "Both crashes happened in August and landed in NHTSA’s September release of Standing General Order data."
+          }
+        ],
+        "direct_origin": true,
+        "facts": {},
+        "period": null
+      }
+    ],
+    "facts_verified_semantically": false
+  },
+  "candidate_TARGET": "UNKNOWN — deterministic scope suggestions only",
+  "candidate_scope_suggestions": [
+    {
+      "event_id": "6335d88a8904dc8d7ece0c8fef8724fb8521d641c2436fea426b97da7dc5e3f8",
+      "fields": {},
+      "reference": {
+        "document_id": "39b8cc47-1453-4bed-9827-a8b0a627cd4e",
+        "body_sha256": "99b70b0229ce9298f28686a5c11cfb11153828d1758e65ebe495414dfd4ed14e",
+        "locator": {
+          "start": 339,
+          "end": 442
+        },
+        "quote": "Both crashes happened in August and landed in NHTSA’s September release of Standing General Order data."
+      },
+      "verified_same_TARGET": false
+    }
+  ],
+  "review_reason": "SEMANTIC_REVIEW_REQUIRED",
+  "semantic_review_method": "PENDING_AI_OR_MANUAL",
+  "annotation_method": null,
+  "annotator": null,
+  "annotated_at": null,
+  "source_document": {
+    "document_id": "39b8cc47-1453-4bed-9827-a8b0a627cd4e",
+    "origin_url": "https://electrek.co/2026/10/15/tesla-remote-operators-crashing-robotaxis/",
+    "collected_at": "2026-10-15T17:57:36.535777+00:00",
+    "origin_id": "https://electrek.co/2026/10/15/tesla-remote-operators-crashing-robotaxis/",
+    "canonical_url": "https://electrek.co/2026/10/15/tesla-remote-operators-crashing-robotaxis/",
+    "origin_publisher": "Electrek",
+    "published_at": "2026-10-15T16:39:08+00:00",
+    "published_at_raw": "2026-10-15T16:39:08+00:00",
+    "publication_precision": "TIMESTAMP",
+    "acquired_at": "2026-10-15T17:58:39.551962+00:00",
+    "available_at": "2026-10-15T17:58:39.551962+00:00",
+    "body": "Tesla’s latest crash reports to federal regulators add two more “Robotaxi” crashes where a remote operator, not the car’s autonomous system, was driving when it hit something.\nThat brings it to five in the data now. And every remote takeover that has shown up in a Tesla crash report has ended in a collision.\nWhat the two new filings say\nBoth crashes happened in August and landed in NHTSA’s September release of Standing General Order data. Tesla now has 36 unique “Robotaxi” incident reports on file, up from 22 when we last looked at this in July .\nIn Dallas (report 13781-16678), a Model Y was stopped on a residential street, wedged between a concrete mixer truck on the right and a parked SUV on the left. “The remote support operator remotely took control and while moving forward, the vehicle made contact with the SUV at approximately 0.40MPH,” Tesla wrote. No passengers were aboard.\nAdvertisement - scroll for more content\nIn Austin (report 13781-16679), a remote operator “was in control” of a Model Y going straight through an alley, with a utility pole on one side and a dumpster on the other. It hit the dumpster at about 1 mph. Again, no passengers.\nBoth are property-damage-only, both are at walking speed, and both carry Tesla’s structured code for Driver/Operator Type: “Remote (Commercial / Test).” That’s the same field Tesla first used on the Houston tree-stump crash in May. Three of the five are now formally coded as remote operation.\nFive crashes, same script\nThe other two show up only because Tesla unredacted its crash narratives in May . In July 2025 in Austin, a safety monitor couldn’t get the car to proceed, a teleoperator took over, accelerated, turned left, and drove it up a curb into a metal fence at 8 mph. In January 2026, again in Austin, a teleoperator took over for navigation help and drove into a construction barricade at 9 mph.\nLine them up and it’s one script. The autonomous system gets stuck or needs help, a human takes the car over remotely, and the human crashes it.\nHere’s the problem. Tesla doesn’t disclose how often remote operators intervene, so there’s no way to calculate a rate. But five remote takeovers have surfaced in the crash data, and all five ended in contact. Five for five.\nWaymo draws the line somewhere else\nTesla’s main robotaxi competitor handles this differently, and it said so on the record. In a February 2026 letter to Senator Ed Markey, Waymo wrote that it “has not used remote driving or ‘tele-operations’ where a human performs the Dynamic Driving Task.” Its remote staff give the Waymo Driver guidance it can accept or reject. They don’t steer.\nWaymo has one narrow exception, and it describes almost exactly these Tesla scenarios: a trained agent can nudge a stuck vehicle forward at 2 mph at fixed steering angles to clear a lane. Waymo says that tool has never been used outside of training.\nSo both companies built a way to rescue a stuck car. Waymo capped its version at a crawl with fixed steering and, by its own account, has never deployed it on a public road.\nElectrek’s Take\nWe flagged this pattern in July with the Houston crash, and the data has added two more since. The severity still isn’t the story. Tesla’s robotaxis are already limited to surface streets at lower speeds, and it looks like speed is even more limited when remote operators take over.\nNobody’s been hurt, and we’re talking about bumpers, a dumpster, and a tree stump at walking speed.\nWhat it shows is how often these cars still need a person to bail them out, and how badly that goes when one does. Teleoperation is the quiet part of the autonomy stack that nobody wants to talk about. Driving a car over a cellular or satellite link means latency, a limited view, and no physical feel for the vehicle.\nIf you own an EV, or a robotaxi ends up in your driveway someday, powering it with home solar is one of the cheapest ways to cut your charging costs to almost nothing. With electricity rates up almost 10% last year and expected to keep climbing, going solar is one of the best ways to protect yourself against rising costs. And with lease and PPA options, you can do it with zero upfront cost and start saving immediately. If you want to find the best deal, check out EnergySage . It’s a free service with hundreds of pre-vetted installers competing for your business, so you save 20 to 30% compared to going it alone. No sales calls until you pick an installer. Get your free quotes here .\nFTC: We use income earning auto affiliate links. More.\nStay up to date with the latest content by subscribing to Electrek on Google News . You’re reading Electrek— experts who break news about Tesla , electric vehicles, and green energy , day after day. Be sure to check out our homepage for all the latest news, and follow Electrek on Twitter , Facebook , and LinkedIn to stay in the loop. Don’t know where to start? Check out our YouTube channel for the latest reviews.",
+    "body_sha256": "99b70b0229ce9298f28686a5c11cfb11153828d1758e65ebe495414dfd4ed14e",
+    "version": "99b70b0229ce9298f28686a5c11cfb11153828d1758e65ebe495414dfd4ed14e",
+    "raw_sha256": "12b509006988468cbac83fb5e05ac7923ed843eae6acb07d2d50680a05c9385e",
+    "checks": {
+      "http_success": true,
+      "original_identity": true,
+      "publisher_observed": true,
+      "attribution_consistent": true,
+      "original_publication": true,
+      "available_at_recorded": true,
+      "full_accessible_body": true,
+      "not_republication": true,
+      "body_hash_matches": true,
+      "publication_before_acquisition": true
+    },
+    "provenance": "PASS",
+    "provenance_verified": true,
+    "provenance_blockers": [],
+    "body_status": "FULL",
+    "raw_path": "var/new-precursors/raw/12b509006988468cbac83fb5e05ac7923ed843eae6acb07d2d50680a05c9385e.html",
+    "status": "CAPTURED",
+    "scope_reader_version": "source-scope-reader-4",
+    "scope_read_mode": "LIVE_FRESH",
+    "excluded_page_regions": [
+      {
+        "document_id": "39b8cc47-1453-4bed-9827-a8b0a627cd4e",
+        "body_sha256": "99b70b0229ce9298f28686a5c11cfb11153828d1758e65ebe495414dfd4ed14e",
+        "origin_id": "https://electrek.co/2026/10/15/tesla-remote-operators-crashing-robotaxis/",
+        "locator": {
+          "start": 895,
+          "end": 934
+        },
+        "source_quote": "Advertisement - scroll for more content",
+        "origin_url": "https://electrek.co/2026/10/15/tesla-remote-operators-crashing-robotaxis/",
+        "origin_publisher": "Electrek",
+        "published_at": "2026-10-15T16:39:08+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-15T17:58:39.551962+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "PAGE_CHROME_OR_TAXONOMY"
+      },
+      {
+        "document_id": "39b8cc47-1453-4bed-9827-a8b0a627cd4e",
+        "body_sha256": "99b70b0229ce9298f28686a5c11cfb11153828d1758e65ebe495414dfd4ed14e",
+        "origin_id": "https://electrek.co/2026/10/15/tesla-remote-operators-crashing-robotaxis/",
+        "locator": {
+          "start": 4463,
+          "end": 4517
+        },
+        "source_quote": "FTC: We use income earning auto affiliate links. More.",
+        "origin_url": "https://electrek.co/2026/10/15/tesla-remote-operators-crashing-robotaxis/",
+        "origin_publisher": "Electrek",
+        "published_at": "2026-10-15T16:39:08+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-15T17:58:39.551962+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "39b8cc47-1453-4bed-9827-a8b0a627cd4e",
+        "body_sha256": "99b70b0229ce9298f28686a5c11cfb11153828d1758e65ebe495414dfd4ed14e",
+        "origin_id": "https://electrek.co/2026/10/15/tesla-remote-operators-crashing-robotaxis/",
+        "locator": {
+          "start": 4518,
+          "end": 4934
+        },
+        "source_quote": "Stay up to date with the latest content by subscribing to Electrek on Google News . You’re reading Electrek— experts who break news about Tesla , electric vehicles, and green energy , day after day. Be sure to check out our homepage for all the latest news, and follow Electrek on Twitter , Facebook , and LinkedIn to stay in the loop. Don’t know where to start? Check out our YouTube channel for the latest reviews.",
+        "origin_url": "https://electrek.co/2026/10/15/tesla-remote-operators-crashing-robotaxis/",
+        "origin_publisher": "Electrek",
+        "published_at": "2026-10-15T16:39:08+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-10-15T17:58:39.551962+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      }
+    ],
+    "retained_collection_events": [
+      {
+        "event_id": "63df21441d7e96bb22f65f6323fab43deccea606e63b74b50ff45b4adf104986",
+        "document_id": "39b8cc47-1453-4bed-9827-a8b0a627cd4e",
+        "kind": "ORDER",
+        "event_types": [
+          "ORDER"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 339,
+          "end": 442
+        },
+        "source_quote": "Both crashes happened in August and landed in NHTSA’s September release of Standing General Order data.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "ff59e67db41726c01c4c0ac30b0e73d9bc5c10de5a30f0d72ffa541283ea2443",
+        "document_id": "39b8cc47-1453-4bed-9827-a8b0a627cd4e",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 2933,
+          "end": 3053
+        },
+        "source_quote": "Waymo capped its version at a crawl with fixed steering and, by its own account, has never deployed it on a public road.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "precursor_events": [
+      {
+        "event_id": "63df21441d7e96bb22f65f6323fab43deccea606e63b74b50ff45b4adf104986",
+        "document_id": "39b8cc47-1453-4bed-9827-a8b0a627cd4e",
+        "kind": "ORDER",
+        "event_types": [
+          "ORDER"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 339,
+          "end": 442
+        },
+        "source_quote": "Both crashes happened in August and landed in NHTSA’s September release of Standing General Order data.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "ff59e67db41726c01c4c0ac30b0e73d9bc5c10de5a30f0d72ffa541283ea2443",
+        "document_id": "39b8cc47-1453-4bed-9827-a8b0a627cd4e",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 2933,
+          "end": 3053
+        },
+        "source_quote": "Waymo capped its version at a crawl with fixed steering and, by its own account, has never deployed it on a public road.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "objective_version": "bct-objective-1",
+    "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  },
+  "EARLY_success": false,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "record_sha256": "db34ce46b2d17d5559e257436fd9c291b8021bad7da3b9f7ddc9e802a0f32205"
+}
