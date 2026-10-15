@@ -124,19 +124,23 @@ def census(ledger,fetch):
    if item['direction']!=('export'if direction=='exports'else'import'):continue
    year=item['year'];start=max(months[0],year+'-01');end=min(months[1],year+'-12')
    if start>end:continue
-   code=item['code'];task='census-'+direction+'-'+year+'-'+code
+   code=item['code'];task='census-country-detail-v2-'+direction+'-'+year+'-'+code
    if q.cursor(ledger,task)['next']is None:continue
    fields='E_COMMODITY,E_COMMODITY_LDESC,ALL_VAL_MO,QTY_1_MO,QTY_2_MO,UNIT_QY1,UNIT_QY2'if direction=='exports'else'I_COMMODITY,I_COMMODITY_LDESC,GEN_QY1_MO,CON_QY1_MO,GEN_VAL_MO,CON_VAL_MO,UNIT_QY1'
-   params={'get':fields,'time':'from '+start+' to '+end,('E_COMMODITY'if direction=='exports'else'I_COMMODITY'):code,'CTY_CODE':'0000'}
+   # CTY_CODE is optional/default displayed in the official schema.
+   # The old guessed world code 0000 produced 188 empty responses. Query
+   # explicit country detail instead; preserve every returned geography.
+   params={'get':fields+',CTY_NAME','time':'from '+start+' to '+end,('E_COMMODITY'if direction=='exports'else'I_COMMODITY'):code}
    url='https://api.census.gov/data/timeseries/intltrade/'+direction+'/hs?'+urlencode(params)
    try:
     raw,meta=fetch.get(url,'census_trade');rows=parse_trade(raw,meta,direction,'VERIFIED_ANNUAL_CODE_UNIT')
     for row in rows:
      if row['measurement_type']=='PHYSICAL'and row['unit_original'].lower().replace(' ','')!=item['unit_original'].lower().replace(' ',''):
       row.update(quality_state='HELD_CODE_UNIT_CHANGED',unknown_reason='API unit differs from same-year official primary unit; secondary quantities not treated as primary')
+    for row in rows:q.verify_locator(row,raw)
     q.commit_page(ledger,task,meta,rows)
    except SourceFailure as e:
-    if e.status in (202,401,403,429)or e.reason=='CENSUS_KEY_REJECTED_OR_UNACTIVATED'or e.reason.startswith('CENSUS_RESPONSE_'):return
+    if e.status in (202,204,401,403,429)or e.reason=='CENSUS_KEY_REJECTED_OR_UNACTIVATED'or e.reason.startswith('CENSUS_RESPONSE_'):return
 
 
 def process():
@@ -155,11 +159,24 @@ def finish():
  for source in ['sec','census_trade']:
   rows=[r['record']for r in active if r['record']['source_id']==source];by[source]={'numeric':sum(r['value_decimal_or_null']is not None for r in rows),'physical':sum(r['value_decimal_or_null']is not None and r['measurement_type']=='PHYSICAL'for r in rows),'held':sum(r['quality_state'].startswith('HELD')for r in rows)}
  docs=[json.loads(p)for p, in ledger.db.execute("select payload from events where kind='QUANTITATIVE_DOCUMENT'")];failures=[json.loads(p)for p, in ledger.db.execute("select payload from events where kind='QUANTITATIVE_SOURCE_FAILURE'")]
- native=[json.loads(p.read_text())for p in (R/'native').glob('*.json')];report={'by_source':by,'SEC_filings_seen':len({d['accession']for d in docs}),'SEC_bodies_extracted':sum(d['status'].startswith('EXACT')for d in docs),'failures':failures,'requests_including_reused_probe_receipts':len(native),'response_diagnostics':[m for m in native if m['status']!=200],'bindings':{'SEC_present':bool(os.environ.get('BCT_SEC_USER_AGENT')),'Census_present':bool(os.environ.get('CENSUS_API_KEY')),'Census_40hex_format':bool(re.fullmatch('[0-9a-fA-F]{40}',os.environ.get('CENSUS_API_KEY','')))},'firsts':ledger.db.execute('select count(*)from firsts').fetchone()[0],'AI_calls':0,'CPU_windows':0}
+ native=[json.loads(p.read_text())for p in (R/'native').glob('*.json')];report={'by_source':by,'SEC_documents':docs,'SEC_filings_seen':len({d['accession']for d in docs}),'SEC_bodies_extracted':sum(d['status'].startswith('EXACT')for d in docs),'failures':failures,'requests_including_reused_probe_receipts':len(native),'response_diagnostics':[m for m in native if m['status']!=200],'bindings':{'SEC_present':bool(os.environ.get('BCT_SEC_USER_AGENT')),'Census_present':bool(os.environ.get('CENSUS_API_KEY')),'Census_40hex_format':bool(re.fullmatch('[0-9a-fA-F]{40}',os.environ.get('CENSUS_API_KEY','')))},'Q2_report':json.loads((R/'q2-report.json').read_text())if(R/'q2-report.json').exists()else None,'firsts':ledger.db.execute('select count(*)from firsts').fetchone()[0],'AI_calls':0,'CPU_windows':0}
+ report['total_numeric']=sum(x['record']['value_decimal_or_null']is not None for x in active)
+ report['Census_periods']=sorted({x['record']['period_start'][:7]for x in active if x['record']['source_id']=='census_trade'})
+ report['source_scope']='SEC fixed30days/two configured issuers; Census fixed36months/annual mapped codes; country rows never summed as independent sources'
+ report['source_task_counts']={prefix:ledger.db.execute("select count(*)from events where kind='QUANTITATIVE_PAGE_COMMITTED'and json_extract(payload,'$.task')like ?",(prefix+'%',)).fetchone()[0]for prefix in ['sec-filing-','census-country-detail-v2-']}
  with ledger.worker():private.checkpoint(ledger,R/'checkpoint')
  ledger.close();parent=json.loads((R/'parent.json').read_text())['parent']
  private.seal(R/'checkpoint',BRIDGE/'result/state.gpg',os.environ['BCT_V4_STATE_PASSPHRASE'],parent,report=report)
  print('BCT_Q1_SOURCES_REPORT_JSON='+json.dumps(report))
+
+
+def targets():
+ initialize();ledger=Ledger(R/'ledger')
+ from bct.v4.quantitative_targets import save
+ legacy=json.loads(Path('docs/v4/supply-linkage/next-step-inputs.json').read_text())['records']
+ with ledger.worker():result=save(ledger,legacy,as_of='2026-10-15')
+ (R/'q2-report.json').write_text(json.dumps(result))
+ ledger.close();finish()
 
 
 def publish():
@@ -169,6 +186,6 @@ def publish():
  print('BCT_Q1_SOURCES_PUBLISH_JSON='+json.dumps({'report':result['report'],'receipt':receipt,'code_SHA':os.environ['GITHUB_SHA']}))
 
 if __name__=='__main__':
- parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish']);a=parser.parse_args()
+ parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets']);a=parser.parse_args()
  if a.action=='process':raise SystemExit(process())
  else:globals()[a.action]()

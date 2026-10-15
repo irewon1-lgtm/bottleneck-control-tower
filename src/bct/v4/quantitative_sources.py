@@ -35,7 +35,7 @@ def parse_trade(raw,meta,direction,codebook_state):
             if ident in seen:raise ValueError('CENSUS_DUPLICATE_OBSERVATION')
             seen.add(ident)
             r=observation(meta,code+'/'+country+'/'+df,code,metric,row[metric],unit,kind,month,
-               {'format':'JSON','path':[i,head.index(metric)]},geography='US/world'if country=='0000'else'US/partner-code-'+country,
+               {'format':'JSON','path':[i,head.index(metric)]},geography='US/partner-code-'+country,
                stock_or_flow='MONTHLY_TRADE_FLOW_NOT_CUSTOMER_ORDER',lineage='US_CENSUS_INTLTRADE',
                attributes={'trade_direction':direction,'commodity_code_year':month[:4],'codebook_state':codebook_state,
                            'definition':row.get(codecol+'_LDESC','UNKNOWN'),'quantity_flag_original':row.get(metric+'_FLAG','UNKNOWN'),

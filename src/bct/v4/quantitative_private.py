@@ -25,7 +25,7 @@ HOSTS={'www.census.gov','api.census.gov','www.federalreserve.gov','api.usaspendi
        'www.eia.gov','api.eia.gov','www.usgs.gov','pubs.usgs.gov','d9-wret.s3.us-west-2.amazonaws.com',
        'api.ted.europa.eu','ted.europa.eu','data.sec.gov','www.sec.gov'}
 KINDS={'QUANTITATIVE_OBSERVATION','QUANTITATIVE_PAGE_COMMITTED','QUANTITATIVE_VALIDATION',
-       'QUANTITATIVE_NOTICE_HELD','QUANTITATIVE_SOURCE_FAILURE','QUANTITATIVE_DOCUMENT'}
+       'QUANTITATIVE_NOTICE_HELD','QUANTITATIVE_SOURCE_FAILURE','QUANTITATIVE_DOCUMENT','QUANTITATIVE_TARGET_REVIEW'}
 ATTRS={'award_id','award_type','PSC','agency','contract_start_not_observation_period','contract_end_not_delivery',
        'last_modified','physical_quantity','modification_number','action_type','contract_type','notice_type',
        'is_actual_order','is_framework_or_option','lot_relationship','Status','Technology','Operating Month',
@@ -42,7 +42,8 @@ EVENT_FIELDS={
  'QUANTITATIVE_VALIDATION':set('reason originals_modified quality_state policy record_ids'.split()),
  'QUANTITATIVE_NOTICE_HELD':set('page total held notices task'.split()),
  'QUANTITATIVE_SOURCE_FAILURE':set('task page error retry at'.split()),
- 'QUANTITATIVE_DOCUMENT':set('source_id document_id url published_at filing_date accession form cik detail status'.split())}
+ 'QUANTITATIVE_DOCUMENT':set('source_id document_id url published_at filing_date accession form cik detail status'.split()),
+ 'QUANTITATIVE_TARGET_REVIEW':set('id kind product scope observation_ids observations target missing review_state as_of actual_order_quantity qualified_supply_quantity s_stage research_only reported_nameplate_MW_sum reported_status planned_reported_dates_not_supply_guarantees legacy_record_id legacy_s_stage role quantity_literal publication_date'.split())}
 
 
 def audit(db):
@@ -57,6 +58,7 @@ def audit(db):
         if set(event)-EVENT_FIELDS[kind]:raise ValueError('Q1_UNREVIEWED_EVENT_FIELD')
         if re.search(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|gh[pousr]_[A-Za-z0-9]{20,}|Bearer\s+\S+',payload):
             raise ValueError('Q1_CONTACT_OR_CREDENTIAL_NOT_ARCHIVABLE')
+        if kind=='QUANTITATIVE_TARGET_REVIEW'and(event.get('s_stage')!='UNKNOWN'or event.get('research_only')is not True):raise ValueError('Q2_AUTOMATIC_STAGE_FORBIDDEN')
         if kind=='QUANTITATIVE_OBSERVATION':
             r=event['record'];sources.add(r['source_id']);count+=1
             if set(r)!=RECORD_FIELDS:raise ValueError('Q1_UNREVIEWED_RECORD_FIELD')
