@@ -1,0 +1,41 @@
+검증된 연결 명령안 — 실행/활성화하지 않음
+
+운영 RSS 6회 예약·precursor-acquisition은 변경하지 않는다. 같은 RSS를 다시
+수집하는 V4 예약을 만들지 않는다. 기존 성공한 precursor-acquisition의
+해당 RSS 델타와 precursor-private-cache를 읽기 전용으로 받아 CPU 큐 소비만
+실행하는 후속 연구 작업을 검토한다. 실패·본문 미확보는 자동 재수집하지 않는다.
+
+필수 보호:
+- 개발 브랜치의 검증된 코드를 SHA로 고정, 별도 연구 SQLite/아티팩트만 사용.
+- contents:read/actions:read, 운영 data/live-state/main 쓰기·Secret 전달 없음.
+- CPU 모델은 기존 검증 캐시를 복원할 수 있는 환경에서만 오프라인 로드.
+  일반 테스트 또는 매 회차 모델 재설치/다운로드 금지. 현재 GitHub hosted
+  runner의 CPU 모델 캐시 복원은 NOT_RUN이며 먼저 무과금/보존 가능성 확인 필요.
+- 하나의 연구 concurrency group, 기존 Ledger.worker flock, 단일 CPU worker,
+  torch 4 threads, 회차 24창/45초(한 창 최대1800자, 경계에서만 중단), 전체명령120초.
+- RUN별 ID만 바꾸어 기존 버전·창의 중복 키를 우회하지 않음.
+- 정기 실행 주기/백로그 SLA는 실제 유입/처리량으로 결정. 이 자료의 3문서가
+  전 산업 평균 처리량이나 7일 운영 증거가 아님.
+- 모델이 없는 빈 큐/완료 큐는 모델을 로드하지 않음.
+- 결과는 연구 discovery/REVIEW_PENDING이고 검토 전 이벤트·S단계·LIVE 등록 없음.
+- 최초 scheduler 성공 전 NOT_RUN, 실제7일 경과 전 관측 완료로 표시하지 않음.
+
+기존 환경에서 실제 검증한 명령(저장소 루트):
+PYTHONPATH=src:var/v4/repair/cpu/runtime:.venv/lib/python3.12/site-packages \
+  var/v4/repair/cpu/env/bin/python tools/v4_cpu_automation.py \
+  --root var/v4/cpu-automation/ledger \
+  --manifest <기존RSS작업/new-document-manifest.json> \
+  --cache <기존precursor-private-cache압축해제경로> \
+  --upstream-run-id <원래RSS실행ID> --execute-cpu --max-windows 24 --seconds 45
+
+최초 한 번 완료 캐시 등록(실측 모델 재실행 없음):
+.venv/bin/python tools/v4_cpu_automation.py \
+  --seed-completed var/v4/cpu-recovery/ledger/v4.sqlite3
+
+같은 명령의 다음 수동 실행은 저장 창을 건너뛰어 이어간다. 영속 큐 SQLite와
+그 백업을 매 회차 복구해야 한다. 복구본 없는 새 빈DB로 반복실행하지 않는다.
+CPU 실패는 격리하여 재시도하지 않음. 강제 종료 중 미저장 CPU창만 다음 회차
+재실행 가능. 원문 보류는 upstream 증거가 바뀐 뒤 명시적인 새 검토 필요.
+
+main에서 workflow_run/schedule을 활성화해야 실제 GitHub 정기가 실행된다.
+별도 운영 승인 전 해당 적용만 BLOCKED. 이번에는 Actions 파일 수정0/활성화0.

@@ -1,0 +1,479 @@
+[
+  {
+    "case": "synthetic_positive",
+    "result": {
+      "version": "bct-reviewed-stage-bridge-1",
+      "as_of": "2026-10-15",
+      "record_stages": [
+        {
+          "record_id": "bb9e0a34207f10d1298a61e3baa11db956844515b5c617bfcdd7c528cbbaab91",
+          "stage": "S1",
+          "role": "DEMAND_INCREASE",
+          "target": [
+            "zirconium optical sleeves",
+            "grade a",
+            "us",
+            "hospitals",
+            "us qualified pool"
+          ],
+          "origin": "UNCHANGED_EXISTING_ACCEPT_RETURN",
+          "promoted": false
+        },
+        {
+          "record_id": "e056481926e4716b532c79969f1ea537b318b067ff54b047465e5a541111694b",
+          "stage": "S1",
+          "role": "SUPPLY_DECREASE",
+          "target": [
+            "zirconium optical sleeves",
+            "grade a",
+            "us",
+            "hospitals",
+            "us qualified pool"
+          ],
+          "origin": "UNCHANGED_EXISTING_ACCEPT_RETURN",
+          "promoted": false
+        }
+      ],
+      "gap_probes": [
+        {
+          "id": "7a2b6721d4f11518039200a455c7e29472134e72bb4841330435883091f69abf",
+          "stage": "S3",
+          "engine_result": {
+            "stage": "S3",
+            "gates": {
+              "change": "TRUE",
+              "remaining_demand": "TRUE",
+              "matched_scope": "TRUE",
+              "future_period": "TRUE",
+              "qualified_supply": "TRUE",
+              "relief_reviewed": "TRUE",
+              "supply_gap": "TRUE"
+            },
+            "reason": "동일 범위의 수요와 적격 공급이 불일치"
+          },
+          "engine": "bct.future_hypothesis.compare_gap",
+          "facts": [
+            {
+              "specification": "Grade A",
+              "region": "US",
+              "supply_pool": "US qualified pool",
+              "period": {
+                "start": "2028-01-01",
+                "end": "2028-12-31",
+                "precision": "DAY"
+              },
+              "basis": "total",
+              "target": "zirconium optical sleeves",
+              "role": "DEMAND",
+              "locator": {
+                "start": 0,
+                "end": 188
+              },
+              "actual_statement": true,
+              "scope_ambiguous": false,
+              "change_confirmed": true,
+              "quantity": 120.0,
+              "unit": "units",
+              "need_date": null,
+              "available_date": null,
+              "coverage_complete": false,
+              "explicit_public_constraint": false,
+              "transaction_id": null,
+              "document_id": "synthetic-0",
+              "body_sha256": "c62a1dc0a175bfba2e85b47e14c0302e9ff6bcdb85dd8b2fef2380b3822c0f81",
+              "record_id": "bb9e0a34207f10d1298a61e3baa11db956844515b5c617bfcdd7c528cbbaab91",
+              "customer_group": "hospitals"
+            },
+            {
+              "specification": "Grade A",
+              "region": "US",
+              "supply_pool": "US qualified pool",
+              "period": {
+                "start": "2028-01-01",
+                "end": "2028-12-31",
+                "precision": "DAY"
+              },
+              "basis": "total",
+              "target": "zirconium optical sleeves",
+              "role": "SUPPLY",
+              "locator": {
+                "start": 0,
+                "end": 276
+              },
+              "actual_statement": true,
+              "scope_ambiguous": false,
+              "change_confirmed": false,
+              "quantity": 100.0,
+              "unit": "units",
+              "need_date": null,
+              "available_date": null,
+              "coverage_complete": true,
+              "explicit_public_constraint": false,
+              "transaction_id": null,
+              "document_id": "synthetic-1",
+              "body_sha256": "b126fa1c85634bc0b2e05663507a8c6f084d40cede95a71f9bd6eda6a0d15a6c",
+              "record_id": "e056481926e4716b532c79969f1ea537b318b067ff54b047465e5a541111694b",
+              "customer_group": "hospitals"
+            }
+          ],
+          "synthetic": true,
+          "candidate_registration": false,
+          "forecast_success": false
+        }
+      ],
+      "held": [],
+      "record_stage_counts": {
+        "S1": 2
+      },
+      "gap_stage_counts": {
+        "S3": 1
+      },
+      "synthetic": true,
+      "candidates": [],
+      "LIVE_registration": false,
+      "automatic_promotion": false,
+      "AI_adoption": "FAIL_UNCHANGED",
+      "historical_performance": "BLOCKED_UNCHANGED",
+      "objective_version": "bct-objective-1",
+      "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+    }
+  },
+  {
+    "case": "synthetic_negative_supply_relief",
+    "result": {
+      "version": "bct-reviewed-stage-bridge-1",
+      "as_of": "2026-10-15",
+      "record_stages": [
+        {
+          "record_id": "bb9e0a34207f10d1298a61e3baa11db956844515b5c617bfcdd7c528cbbaab91",
+          "stage": "S1",
+          "role": "DEMAND_INCREASE",
+          "target": [
+            "zirconium optical sleeves",
+            "grade a",
+            "us",
+            "hospitals",
+            "us qualified pool"
+          ],
+          "origin": "UNCHANGED_EXISTING_ACCEPT_RETURN",
+          "promoted": false
+        },
+        {
+          "record_id": "754fff72afe73fd6fa2a09695dc72b76e8e78d18a2757066008cd1beea5db298",
+          "stage": "S1",
+          "role": "SUPPLY_DECREASE",
+          "target": [
+            "zirconium optical sleeves",
+            "grade a",
+            "us",
+            "hospitals",
+            "us qualified pool"
+          ],
+          "origin": "UNCHANGED_EXISTING_ACCEPT_RETURN",
+          "promoted": false
+        }
+      ],
+      "gap_probes": [
+        {
+          "id": "acc2879ee21bccadf6d868a74f58a1ed71543b326f70f23da86332e894d52f85",
+          "stage": "S2",
+          "engine_result": {
+            "stage": "S2",
+            "gates": {
+              "change": "TRUE",
+              "remaining_demand": "TRUE",
+              "matched_scope": "TRUE",
+              "future_period": "TRUE",
+              "qualified_supply": "TRUE",
+              "relief_reviewed": "TRUE",
+              "supply_gap": "FALSE"
+            },
+            "reason": "공급 충족 근거"
+          },
+          "engine": "bct.future_hypothesis.compare_gap",
+          "facts": [
+            {
+              "specification": "Grade A",
+              "region": "US",
+              "supply_pool": "US qualified pool",
+              "period": {
+                "start": "2028-01-01",
+                "end": "2028-12-31",
+                "precision": "DAY"
+              },
+              "basis": "total",
+              "target": "zirconium optical sleeves",
+              "role": "DEMAND",
+              "locator": {
+                "start": 0,
+                "end": 188
+              },
+              "actual_statement": true,
+              "scope_ambiguous": false,
+              "change_confirmed": true,
+              "quantity": 120.0,
+              "unit": "units",
+              "need_date": null,
+              "available_date": null,
+              "coverage_complete": false,
+              "explicit_public_constraint": false,
+              "transaction_id": null,
+              "document_id": "synthetic-0",
+              "body_sha256": "c62a1dc0a175bfba2e85b47e14c0302e9ff6bcdb85dd8b2fef2380b3822c0f81",
+              "record_id": "bb9e0a34207f10d1298a61e3baa11db956844515b5c617bfcdd7c528cbbaab91",
+              "customer_group": "hospitals"
+            },
+            {
+              "specification": "Grade A",
+              "region": "US",
+              "supply_pool": "US qualified pool",
+              "period": {
+                "start": "2028-01-01",
+                "end": "2028-12-31",
+                "precision": "DAY"
+              },
+              "basis": "total",
+              "target": "zirconium optical sleeves",
+              "role": "SUPPLY",
+              "locator": {
+                "start": 0,
+                "end": 276
+              },
+              "actual_statement": true,
+              "scope_ambiguous": false,
+              "change_confirmed": false,
+              "quantity": 150.0,
+              "unit": "units",
+              "need_date": null,
+              "available_date": null,
+              "coverage_complete": true,
+              "explicit_public_constraint": false,
+              "transaction_id": null,
+              "document_id": "synthetic-1",
+              "body_sha256": "3c8ef1665c99b9ee63107dff787af12542b96cb985f7a0065c9404755b1b8294",
+              "record_id": "754fff72afe73fd6fa2a09695dc72b76e8e78d18a2757066008cd1beea5db298",
+              "customer_group": "hospitals"
+            }
+          ],
+          "synthetic": true,
+          "candidate_registration": false,
+          "forecast_success": false
+        }
+      ],
+      "held": [],
+      "record_stage_counts": {
+        "S1": 2
+      },
+      "gap_stage_counts": {
+        "S2": 1
+      },
+      "synthetic": true,
+      "candidates": [],
+      "LIVE_registration": false,
+      "automatic_promotion": false,
+      "AI_adoption": "FAIL_UNCHANGED",
+      "historical_performance": "BLOCKED_UNCHANGED",
+      "objective_version": "bct-objective-1",
+      "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+    }
+  },
+  {
+    "case": "synthetic_incomplete_supply",
+    "result": {
+      "version": "bct-reviewed-stage-bridge-1",
+      "as_of": "2026-10-15",
+      "record_stages": [
+        {
+          "record_id": "bb9e0a34207f10d1298a61e3baa11db956844515b5c617bfcdd7c528cbbaab91",
+          "stage": "S1",
+          "role": "DEMAND_INCREASE",
+          "target": [
+            "zirconium optical sleeves",
+            "grade a",
+            "us",
+            "hospitals",
+            "us qualified pool"
+          ],
+          "origin": "UNCHANGED_EXISTING_ACCEPT_RETURN",
+          "promoted": false
+        },
+        {
+          "record_id": "837a66cbdc6f330c0913fe7ebc759aa72cf99af7f14dec9cc09606d883b9fc36",
+          "stage": "S1",
+          "role": "SUPPLY_DECREASE",
+          "target": [
+            "zirconium optical sleeves",
+            "grade a",
+            "us",
+            "hospitals",
+            "us qualified pool"
+          ],
+          "origin": "UNCHANGED_EXISTING_ACCEPT_RETURN",
+          "promoted": false
+        }
+      ],
+      "gap_probes": [
+        {
+          "id": "db193050dd98d37f46175253ed82bf627e8fa510424c8c9f7ebbb67b18b39746",
+          "stage": "S2",
+          "engine_result": {
+            "stage": "S2",
+            "gates": {
+              "change": "TRUE",
+              "remaining_demand": "TRUE",
+              "matched_scope": "TRUE",
+              "future_period": "TRUE",
+              "qualified_supply": "UNKNOWN",
+              "relief_reviewed": "UNKNOWN",
+              "supply_gap": "UNKNOWN"
+            },
+            "reason": "비교 범위·대체 공급 또는 시점 미확인"
+          },
+          "engine": "bct.future_hypothesis.compare_gap",
+          "facts": [
+            {
+              "specification": "Grade A",
+              "region": "US",
+              "supply_pool": "US qualified pool",
+              "period": {
+                "start": "2028-01-01",
+                "end": "2028-12-31",
+                "precision": "DAY"
+              },
+              "basis": "total",
+              "target": "zirconium optical sleeves",
+              "role": "DEMAND",
+              "locator": {
+                "start": 0,
+                "end": 188
+              },
+              "actual_statement": true,
+              "scope_ambiguous": false,
+              "change_confirmed": true,
+              "quantity": 120.0,
+              "unit": "units",
+              "need_date": null,
+              "available_date": null,
+              "coverage_complete": false,
+              "explicit_public_constraint": false,
+              "transaction_id": null,
+              "document_id": "synthetic-0",
+              "body_sha256": "c62a1dc0a175bfba2e85b47e14c0302e9ff6bcdb85dd8b2fef2380b3822c0f81",
+              "record_id": "bb9e0a34207f10d1298a61e3baa11db956844515b5c617bfcdd7c528cbbaab91",
+              "customer_group": "hospitals"
+            },
+            {
+              "specification": "Grade A",
+              "region": "US",
+              "supply_pool": "US qualified pool",
+              "period": {
+                "start": "2028-01-01",
+                "end": "2028-12-31",
+                "precision": "DAY"
+              },
+              "basis": "total",
+              "target": "zirconium optical sleeves",
+              "role": "SUPPLY",
+              "locator": {
+                "start": 0,
+                "end": 198
+              },
+              "actual_statement": true,
+              "scope_ambiguous": false,
+              "change_confirmed": false,
+              "quantity": 100.0,
+              "unit": "units",
+              "need_date": null,
+              "available_date": null,
+              "coverage_complete": false,
+              "explicit_public_constraint": false,
+              "transaction_id": null,
+              "document_id": "synthetic-1",
+              "body_sha256": "d413e6e9f08a3400857715ea7eb4a4284f1e14e6610a8226e713ca489fb7f669",
+              "record_id": "837a66cbdc6f330c0913fe7ebc759aa72cf99af7f14dec9cc09606d883b9fc36",
+              "customer_group": "hospitals"
+            }
+          ],
+          "synthetic": true,
+          "candidate_registration": false,
+          "forecast_success": false
+        }
+      ],
+      "held": [],
+      "record_stage_counts": {
+        "S1": 2
+      },
+      "gap_stage_counts": {
+        "S2": 1
+      },
+      "synthetic": true,
+      "candidates": [],
+      "LIVE_registration": false,
+      "automatic_promotion": false,
+      "AI_adoption": "FAIL_UNCHANGED",
+      "historical_performance": "BLOCKED_UNCHANGED",
+      "objective_version": "bct-objective-1",
+      "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+    }
+  },
+  {
+    "case": "synthetic_outside_horizon",
+    "result": {
+      "version": "bct-reviewed-stage-bridge-1",
+      "as_of": "2026-10-15",
+      "record_stages": [
+        {
+          "record_id": "6470c6d5013ffa6e7733e2d5fdd4e4b9e0954a9340a4446cb065a4256e737637",
+          "stage": "S1",
+          "role": "DEMAND_INCREASE",
+          "target": [
+            "zirconium optical sleeves",
+            "grade a",
+            "us",
+            "hospitals",
+            "us qualified pool"
+          ],
+          "origin": "UNCHANGED_EXISTING_ACCEPT_RETURN",
+          "promoted": false
+        },
+        {
+          "record_id": "9afe1a38dd1516af2e339aac60f00fd72e6c3d703692ad0314e1b8ed591c62f4",
+          "stage": "S1",
+          "role": "SUPPLY_DECREASE",
+          "target": [
+            "zirconium optical sleeves",
+            "grade a",
+            "us",
+            "hospitals",
+            "us qualified pool"
+          ],
+          "origin": "UNCHANGED_EXISTING_ACCEPT_RETURN",
+          "promoted": false
+        }
+      ],
+      "gap_probes": [],
+      "held": [
+        {
+          "record_id": "6470c6d5013ffa6e7733e2d5fdd4e4b9e0954a9340a4446cb065a4256e737637",
+          "reason": "OUTSIDE_12_TO_36_MONTHS"
+        },
+        {
+          "record_id": "9afe1a38dd1516af2e339aac60f00fd72e6c3d703692ad0314e1b8ed591c62f4",
+          "reason": "OUTSIDE_12_TO_36_MONTHS"
+        }
+      ],
+      "record_stage_counts": {
+        "S1": 2
+      },
+      "gap_stage_counts": {},
+      "synthetic": true,
+      "candidates": [],
+      "LIVE_registration": false,
+      "automatic_promotion": false,
+      "AI_adoption": "FAIL_UNCHANGED",
+      "historical_performance": "BLOCKED_UNCHANGED",
+      "objective_version": "bct-objective-1",
+      "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+    }
+  }
+]

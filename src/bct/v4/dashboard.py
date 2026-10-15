@@ -306,8 +306,18 @@ class ResearchReader:
                                    "api_calls": current.get("Groq_new_calls"), "api_tokens": current.get("Groq_new_tokens"),
                                    "api_cost_krw": current.get("API_cost_KRW"), "platform_cost": None,
                                    "ai_history": ai_history,
+                                   **self._cpu_queue_status(db),
                                    "reviews": len(reviews), "errors": sorted(errors, key=lambda e: e["at"], reverse=True),
                                    "runs": [{"at": at, "source_attempts": r["sources_executed"], "article_attempts": r["article_attempts"], "captured": len(r["captured"]), "pending": r["pending_unattempted"]} for at, r in reversed(collections)]}}
+
+    def _cpu_queue_status(self, db):
+        """Add actual isolated CPU queue state; never infer a running timer."""
+        marker = db.execute("SELECT value FROM metadata WHERE key='cpu_queue_format'").fetchone()
+        if marker != ('bct-cpu-research-queue-1',):
+            return {}
+        from types import SimpleNamespace
+        from .cpu_automation import state
+        return {"cpu_research": state(SimpleNamespace(db=db))}
 
     def evidence(self, event_id):
         from .dashboard_research import load_recovery
