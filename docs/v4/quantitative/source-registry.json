@@ -1,0 +1,497 @@
+{
+  "plan_id": "BCT-V4-Q-1.0",
+  "step": "Q1",
+  "frozen_at": "2026-10-15T12:20:23.279797+00:00",
+  "verified_remote_head": "3c6174d4db53f65c6084ca8f544d0d638b404caf",
+  "local_start_head": "155063676782ebb10a590d489899c281b922da8f",
+  "scope_rule": "No truncation into COMPLETE. Caps create explicit PARTIAL/cursor. Dates fixed before parsing. New classifications outside scope saved for next batch, not expanded silently.",
+  "limits": {
+    "checkpoint_bytes": 16777216,
+    "private_git_bytes": 67108864,
+    "cache_bytes": 8589934592,
+    "worker_command_seconds": 120,
+    "network_timeout": 25,
+    "concurrency": 3,
+    "host_concurrency": 1,
+    "retries_after_initial_failure": 0,
+    "source_file_bytes": 20000000
+  },
+  "sources": {
+    "sec": {
+      "url": "https://data.sec.gov/submissions/",
+      "method": "SECTransport",
+      "scope": {
+        "forms": [
+          "10-K",
+          "10-Q",
+          "8-K",
+          "20-F",
+          "6-K",
+          "amendments"
+        ],
+        "start": "2026-09-15",
+        "end": "2026-10-14",
+        "discovery": "existing issuer listings then new issuer queue"
+      },
+      "auth": "BCT_SEC_USER_AGENT",
+      "initial_status": "SETUP_REQUIRED_IDENTITY_MISSING",
+      "source_id": "sec",
+      "source_lineage_id": "SEC",
+      "refresh": "monthly or stated release cycle; manual Q1 only",
+      "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
+      "status": "SETUP_REQUIRED_IDENTITY_MISSING",
+      "next_cursor": "first unprocessed manifest task",
+      "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB"
+    },
+    "m3": {
+      "url": "https://www.census.gov/manufacturing/m3/historical/timeseries.html",
+      "method": "official XLSX",
+      "scope": {
+        "months": [
+          "2023-09",
+          "2026-08"
+        ],
+        "metrics": [
+          "orders",
+          "shipments",
+          "unfilled",
+          "inventory"
+        ],
+        "series_prefixes": [
+          "AMTM",
+          "ADAP",
+          "ANAP"
+        ],
+        "adjustment": "SA only",
+        "months_count": 36
+      },
+      "auth": "none for official files; Census API unavailable",
+      "source_id": "m3",
+      "source_lineage_id": "M3",
+      "refresh": "monthly or stated release cycle; manual Q1 only",
+      "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
+      "status": "PENDING",
+      "next_cursor": "first unprocessed manifest task",
+      "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB"
+    },
+    "g17": {
+      "url": "https://www.federalreserve.gov/releases/g17/download.htm",
+      "method": "official fixed-width text",
+      "scope": {
+        "months": [
+          "2023-09",
+          "2026-08"
+        ],
+        "months_count": 36,
+        "series": [
+          "B50001",
+          "GMF",
+          "GMFD",
+          "GMFN",
+          "G21",
+          "G22",
+          "G334",
+          "G335"
+        ],
+        "files": [
+          "ip",
+          "cap",
+          "utl",
+          "auto"
+        ],
+        "auto_series": [
+          "TOTASS",
+          "AUTOAS",
+          "TRUCKS",
+          "LTTRCK",
+          "HMTRCK",
+          "AUTLTT"
+        ]
+      },
+      "units": [
+        "2017=100",
+        "percent",
+        "million vehicles/year SAAR"
+      ],
+      "source_id": "g17",
+      "source_lineage_id": "FED_G17",
+      "refresh": "monthly or stated release cycle; manual Q1 only",
+      "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
+      "status": "PENDING",
+      "next_cursor": "first unprocessed manifest task",
+      "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB"
+    },
+    "usaspending": {
+      "url": "https://api.usaspending.gov/api/v2/search/spending_by_award/",
+      "method": "existing USAspendingTransport POST",
+      "scope": {
+        "start": "2026-09-15",
+        "end": "2026-10-14",
+        "award_type_codes": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "keywords": [
+          "transformer",
+          "semiconductor",
+          "satellite",
+          "lithium"
+        ],
+        "page_size": 100,
+        "max_pages_per_query": 20,
+        "transactions": "all pages of each returned award, max10 pages/award",
+        "revision_coverage": "30-day action-date queries, current response hash compare; historical mutation completeness UNKNOWN"
+      },
+      "units": [
+        "USD"
+      ],
+      "auth": "none",
+      "source_id": "usaspending",
+      "source_lineage_id": "USASPENDING",
+      "refresh": "monthly or stated release cycle; manual Q1 only",
+      "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
+      "status": "PENDING",
+      "next_cursor": "first unprocessed manifest task",
+      "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB"
+    },
+    "census_trade": {
+      "url": "https://api.census.gov/data/timeseries/intltrade/imports/hs",
+      "method": "Census HS API; official download fallback checked",
+      "scope": {
+        "months": [
+          "2023-09",
+          "2026-08"
+        ],
+        "commodities": [
+          "tungsten",
+          "lithium",
+          "graphite",
+          "rare earths"
+        ],
+        "codes": "NOT_FROZEN_UNTIL_OFFICIAL_HS_CODE_UNIT_MAP_VERIFIED",
+        "geography": "world aggregate only, no country double-count"
+      },
+      "auth": "CENSUS_API_KEY",
+      "initial_status": "SETUP_REQUIRED_KEY_AND_OFFICIAL_CODE_MAP; official headline files not equivalent quantity fallback",
+      "source_id": "census_trade",
+      "source_lineage_id": "US_CENSUS_INTLTRADE",
+      "refresh": "monthly or stated release cycle; manual Q1 only",
+      "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
+      "status": "SETUP_REQUIRED_KEY_AND_OFFICIAL_CODE_MAP; official headline files not equivalent quantity fallback",
+      "next_cursor": "first unprocessed manifest task",
+      "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB"
+    },
+    "eia": {
+      "url": "https://www.eia.gov/electricity/data/eia860m/index.php",
+      "method": "existing structured_changes.snapshot/compare XLSX",
+      "scope": {
+        "editions": [
+          "2026-07",
+          "2026-08"
+        ],
+        "states": [
+          "CA",
+          "TX",
+          "VA"
+        ],
+        "sheets": [
+          "Operating",
+          "Planned",
+          "Retired",
+          "Canceled or Postponed"
+        ],
+        "metric": "Nameplate Capacity (MW)",
+        "optional_federal_API": "NOT_RUN_KEY_MISSING"
+      },
+      "auth": "none for XLSX",
+      "source_id": "eia",
+      "source_lineage_id": "EIA",
+      "refresh": "monthly or stated release cycle; manual Q1 only",
+      "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
+      "status": "PENDING",
+      "next_cursor": "first unprocessed manifest task",
+      "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB"
+    },
+    "usgs": {
+      "url": "https://www.usgs.gov/centers/national-minerals-information-center/commodity-statistics-and-information",
+      "method": "official linked XLSX; PDF only held unless rendered table validated",
+      "scope": {
+        "commodities": [
+          "tungsten",
+          "lithium",
+          "graphite",
+          "rare-earths"
+        ],
+        "annual_editions": [
+          2024,
+          2025,
+          2026
+        ],
+        "monthly_periods": [
+          "2023-09",
+          "2026-08"
+        ],
+        "monthly_only_where_published": true,
+        "monthly_metrics": "published physical import/export/consumption rows; exact table unit required"
+      },
+      "initial_gaps": "MCS2026 catalog DOI and pubs paths403; other official commodity downloads continue",
+      "source_id": "usgs",
+      "source_lineage_id": "USGS_WITH_ATTRIBUTED_CENSUS_SUBSERIES",
+      "refresh": "monthly or stated release cycle; manual Q1 only",
+      "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
+      "status": "PENDING",
+      "next_cursor": "first unprocessed manifest task",
+      "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB"
+    },
+    "ted": {
+      "url": "https://api.ted.europa.eu/v3/notices/search",
+      "method": "official Swagger POST/XML",
+      "scope": {
+        "start": "2026-09-15",
+        "end": "2026-10-14",
+        "CPV": [
+          "31170000",
+          "33600000",
+          "34700000",
+          "32400000"
+        ],
+        "page_size": 100,
+        "notice_types": "all matched, separate status/lot/amendments; no planned->actual",
+        "max_pages_per_batch": 20
+      },
+      "auth": "none",
+      "source_id": "ted",
+      "source_lineage_id": "TED",
+      "refresh": "monthly or stated release cycle; manual Q1 only",
+      "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
+      "status": "PENDING",
+      "next_cursor": "first unprocessed manifest task",
+      "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB"
+    }
+  },
+  "manifest_maintenance_notes": [
+    {
+      "reason": "max_pages20 is a per-batch resource cap, not truncation of the frozen30-day query; preserve query4766-notice range and continue batches21-40 then41-48. No scope/date/CPV change.",
+      "kind": "CLARIFY_CURSOR_BUDGET"
+    }
+  ],
+  "parser_dependencies": {
+    "openpyxl": {
+      "version": "3.1.5",
+      "license": "MIT",
+      "already_present_runtime": true,
+      "purpose": "Official XLSX value-only parsing; never run workbook macros/embedded scripts"
+    },
+    "base": "stdlib + existing Ledger, structured_changes and USAspendingTransport/SourceClient"
+  },
+  "file_tasks": [
+    {
+      "key": "eia-august",
+      "source_id": "eia",
+      "url": "https://www.eia.gov/electricity/data/eia860m/xls/august_generator2026.xlsx",
+      "sha256": "b4b70abb4c217e8e2658c3bde7608a3d530e86a81279ccc572ced82a200e9f1c",
+      "bytes": 13955142
+    },
+    {
+      "key": "eia-july",
+      "source_id": "eia",
+      "url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2026.xlsx",
+      "sha256": "9f348be6d6609b7e0c49a8c3cf872354a3bd2370051d0d4720246dc81bbe540d",
+      "bytes": 13932124
+    },
+    {
+      "key": "g17-auto",
+      "source_id": "g17",
+      "url": "https://www.federalreserve.gov/releases/g17/Current/ipdisk/auto_sa.txt",
+      "sha256": "e00ec88f9c1ba9da113c0aba7dc5bbd3a90220880c9ffaeb90e8b0bfaffe0db7",
+      "bytes": 47540
+    },
+    {
+      "key": "g17-cap",
+      "source_id": "g17",
+      "url": "https://www.federalreserve.gov/releases/g17/Current/ipdisk/cap_sa.txt",
+      "sha256": "411064d9d3428b7d9ffa8df0c3e8875cf8502da86a5589a96e6a439a70f515cd",
+      "bytes": 508508
+    },
+    {
+      "key": "g17-ip",
+      "source_id": "g17",
+      "url": "https://www.federalreserve.gov/releases/g17/Current/ipdisk/ip_sa.txt",
+      "sha256": "637cb682c1ffc0de6a9dd9e51f3dc5ee8320741d2235cfba9e04bc473756167d",
+      "bytes": 2749546
+    },
+    {
+      "key": "g17-utl",
+      "source_id": "g17",
+      "url": "https://www.federalreserve.gov/releases/g17/Current/ipdisk/utl_sa.txt",
+      "sha256": "388cc0379bbd1f2d7af01ee0a61d693737cb132743c89d810f3ab1082c299a90",
+      "bytes": 508508
+    },
+    {
+      "key": "m3-inventory",
+      "source_id": "m3",
+      "url": "https://www.census.gov/manufacturing/m3/prel/historical_data/histshts/naics/naicsinvp.xlsx",
+      "sha256": "471f5cb128cc34841e2848c967b6a4f00161f013694ea21f0210ac16dff268db",
+      "bytes": 972975
+    },
+    {
+      "key": "m3-orders",
+      "source_id": "m3",
+      "url": "https://www.census.gov/manufacturing/m3/prel/historical_data/histshts/naics/naicsnop.xlsx",
+      "sha256": "24e77f0edb4bb5980da90c99ee7a860d7ea0e5ba2b6d9a1cec9d904ce46483f8",
+      "bytes": 340861
+    },
+    {
+      "key": "m3-shipments",
+      "source_id": "m3",
+      "url": "https://www.census.gov/manufacturing/m3/prel/historical_data/histshts/naics/naicsvsp.xlsx",
+      "sha256": "b0a3472969678ba700cea9aa6e8d0c498edd0d2bb4572a1ae664b8195f950861",
+      "bytes": 549790
+    },
+    {
+      "key": "m3-unfilled",
+      "source_id": "m3",
+      "url": "https://www.census.gov/manufacturing/m3/prel/historical_data/histshts/naics/naicsuop.xlsx",
+      "sha256": "ba727db24522b9a33aab7da11a92df5fd2c0d3c1ee78a194e800cbdc32971f61",
+      "bytes": 328200
+    },
+    {
+      "key": "usgs-tungs-202501",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202501-tungs.xlsx",
+      "sha256": "15afe9a734e606e876c1738edaeabacdca1d7a9e9f87a6ce413dc286947a4851",
+      "bytes": 189140
+    },
+    {
+      "key": "usgs-tungs-202502",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202502-tungs.xlsx",
+      "sha256": "649e38be6aa8577184b521bd502b33a28cab58206445c28c4cb5402677f2c846",
+      "bytes": 189357
+    },
+    {
+      "key": "usgs-tungs-202503",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202503-tungs.xlsx",
+      "sha256": "fcfb2f36344ffaeb8b234dc4bb29d17b0839b5947e174af7221712f832cec9b3",
+      "bytes": 189931
+    },
+    {
+      "key": "usgs-tungs-202504",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202504-tungs.xlsx",
+      "sha256": "83fe0400d5cca019116076344eb326b641e34276e3a57766c7fa1f7d2aad4781",
+      "bytes": 190713
+    },
+    {
+      "key": "usgs-tungs-202505",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202505-tungs.xlsx",
+      "sha256": "51258c413ae05e1a1790a36b9e3d8191ac5c809229c9af55ce52b6c505ecf4d0",
+      "bytes": 191065
+    },
+    {
+      "key": "usgs-tungs-202506",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202506-tungs.xlsx",
+      "sha256": "4cd434b7c6ced97fd5549d2cfc66226478f9a2c22a3b7aa68ab8de89ea4c13c4",
+      "bytes": 187884
+    },
+    {
+      "key": "usgs-tungs-202507",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202507-tungs.xlsx",
+      "sha256": "3d46484fc9c93699a51677798e5afaa145eb427d3abbf549bbc8e039d5e124e3",
+      "bytes": 202525
+    },
+    {
+      "key": "usgs-tungs-202508",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202508-tungs.xlsx",
+      "sha256": "91d2c4990a856b60ffbca02962fcd0fe2c534fc97fcc893458e9b9ba2e1cda50",
+      "bytes": 198754
+    },
+    {
+      "key": "usgs-tungs-202509",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202509-tungs.xlsx",
+      "sha256": "1122c3cd61035dad18360bb16578aea3cd1ee9795f1f801f46340022af69ff53",
+      "bytes": 193284
+    },
+    {
+      "key": "usgs-tungs-202510",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202510-tungs.xlsx",
+      "sha256": "2f98b9e3f224cee903e9a029d864319cd5455874260922d35eb967248af81151",
+      "bytes": 194451
+    },
+    {
+      "key": "usgs-tungs-202511",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202511-tungs.xlsx",
+      "sha256": "fff3f558afa853c81af723e9cada822dee19387c14834ce4fe6e83294ed65ecc",
+      "bytes": 194193
+    },
+    {
+      "key": "usgs-tungs-202512",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202512-tungs.xlsx",
+      "sha256": "06a2deabedd4dd0d7e0a2d445853915c830707b593a27c8fd755ae5c7c199bc8",
+      "bytes": 189165
+    },
+    {
+      "key": "usgs-tungs-202601",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202601-tungs.xlsx",
+      "sha256": "d4525e28068324a52541364067c5dfcd222c5360be06325e717dde00c36008aa",
+      "bytes": 28205
+    },
+    {
+      "key": "usgs-tungs-202602",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202602-tungs.xlsx",
+      "sha256": "e513cf9ccfca763f9820e8cf728a6397985740360d2549237242f4f4e9ad420c",
+      "bytes": 29448
+    },
+    {
+      "key": "usgs-tungs-202603",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202603-tungs_0.xlsx",
+      "sha256": "b919a2fea6984b47a1f7eb4c9635eb3174d11f2b2d72b7e2d00258406c679221",
+      "bytes": 31806
+    },
+    {
+      "key": "usgs-tungs-202604",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202604-tungs.xlsx",
+      "sha256": "2933d8bbd757f25e01615ee7e9e8c45f55b94e8a815132e0b4f23665106444cd",
+      "bytes": 31947
+    },
+    {
+      "key": "usgs-tungs-202605",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202605-tungs.xlsx",
+      "sha256": "2176cdecbb9e99ec529bb5c83783df4240aab6567b95b56d7d36c5dbb184e9e2",
+      "bytes": 32251
+    },
+    {
+      "key": "usgs-tungs-202606",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202606-tungs.xlsx",
+      "sha256": "c94a42e6301d659fd7922147d2ad8236f5acf3f9cc6f666936408cabb2759a83",
+      "bytes": 32404
+    },
+    {
+      "key": "usgs-tungs-202607",
+      "source_id": "usgs",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/mis-202607-tungs.xlsx",
+      "sha256": "ec44a261257e1006db019a546b905a57296e6d7d5632d20b6450a98b903192c7",
+      "bytes": 30646
+    }
+  ],
+  "source_version_policy": "Captured frozen files are immutable; same URL with different hash is a new held version, not restoration of this input.",
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+}

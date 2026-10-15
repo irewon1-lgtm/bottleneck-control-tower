@@ -9,8 +9,10 @@ requires-python = ">=3.10"
 dependencies = ["SQLAlchemy>=2.0,<2.1", "alembic>=1.13,<2", "PyYAML>=6,<7"]
 
 [project.optional-dependencies]
+quantitative = ["openpyxl==3.1.5"]
 test = [
     "pytest>=8,<9",
+    "openpyxl==3.1.5",  # Q1 official XLSX parser regressions; no CPU/model dependency.
     # V4 parser/graph tests: versions already validated in requirements.lock.
     # CPU inference and model weights remain an explicit, separate install.
     "networkx==3.5",

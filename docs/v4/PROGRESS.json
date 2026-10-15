@@ -4107,5 +4107,271 @@
       "seed_UBUNTU_billable_ms": 0,
       "seed_full_job_peak_RSS": "NOT_MEASURED; file hash process footprint is not job maximum"
     }
+  },
+  "quantitative_plan": {
+    "plan_id": "BCT-V4-Q-1.0",
+    "current_step": "Q1",
+    "status": "Q1_PARTIAL_BLOCKED_NOT_COMPLETE",
+    "started_at": "2026-10-15T12:20:23.279797+00:00",
+    "source_status": {
+      "sec": {
+        "status": "SETUP_REQUIRED",
+        "coverage": "미수집. 승인된 BCT_SEC_USER_AGENT 연락처가 실행환경에 없음. 기존 수집기 우회 호출0.",
+        "next_cursor": "공식 연락처가 정상 전달되면 고정30일 제출/정정 범위부터 재개",
+        "counts": {
+          "versioned_records": 0,
+          "distinct_observation_keys": 0,
+          "numeric_observations": 0,
+          "physical_quantity_observations": 0,
+          "by_measurement_type": {},
+          "with_period": 0,
+          "with_publication_date": 0,
+          "period_review_held": 0,
+          "source_suppression_or_unknown": 0,
+          "with_usable_period": 0
+        }
+      },
+      "m3": {
+        "status": "PARTIAL",
+        "coverage": "AMTM/ADAP/ANAP 접두 코드, 주문·출하·미이행·재고의36개월 범위540개 확보. API 키 없이 공식 XLSX 대안 사용. 코드 설명 PDF403 및 같은 관측월 과거 발표판 미확보.",
+        "next_cursor": "고정 범위 잔여 월 없음; 코드 정의/과거 발표판 및 비공개 저장 검증 대기",
+        "counts": {
+          "versioned_records": 540,
+          "distinct_observation_keys": 540,
+          "numeric_observations": 540,
+          "physical_quantity_observations": 0,
+          "by_measurement_type": {
+            "MONEY": 540
+          },
+          "with_period": 540,
+          "with_publication_date": 540,
+          "period_review_held": 0,
+          "source_suppression_or_unknown": 0,
+          "with_usable_period": 540
+        }
+      },
+      "g17": {
+        "status": "PARTIAL",
+        "coverage": "36개월972개. IP·능력지수504, 가동률252, 자동차 연간환산216. 지정G22 코드는 현재파일에 없으며 임의 다른 코드로 바꾸지 않음. 과거 발표판 미확보.",
+        "next_cursor": "공식 산업코드 대응 확인 후 G22 의도 범위 보강; 나머지36개월 처리 완료",
+        "counts": {
+          "versioned_records": 972,
+          "distinct_observation_keys": 972,
+          "numeric_observations": 972,
+          "physical_quantity_observations": 216,
+          "by_measurement_type": {
+            "INDEX": 504,
+            "RATIO": 252,
+            "PHYSICAL": 216
+          },
+          "with_period": 972,
+          "with_publication_date": 972,
+          "period_review_held": 0,
+          "source_suppression_or_unknown": 0,
+          "with_usable_period": 972
+        }
+      },
+      "usaspending": {
+        "status": "PARTIAL",
+        "coverage": "고정30일4검색 조건14페이지 회수. 계약1260개, 거래50페이지 처리; 미조회 거래 이력 계약1210개. 공개일 미확인. 계약 시작일을 관측기간으로 쓰던 초기 draft1261레코드(현재1260키)는 검토 이력/UNKNOWN 출력으로 분리.",
+        "next_cursor": "다음 award=CONT_AWD_1333ND23PNB680247_1341_-NONE-_-NONE-; var/v4/quantitative/q1/pending-award-ids.json 순서로 남은 배치 재개",
+        "counts": {
+          "versioned_records": 1571,
+          "distinct_observation_keys": 1570,
+          "numeric_observations": 1570,
+          "physical_quantity_observations": 0,
+          "by_measurement_type": {
+            "MONEY": 1570
+          },
+          "with_period": 1570,
+          "with_publication_date": 0,
+          "period_review_held": 1260,
+          "source_suppression_or_unknown": 0,
+          "with_usable_period": 310
+        }
+      },
+      "census_trade": {
+        "status": "SETUP_REQUIRED",
+        "coverage": "Census 키 없음. 공식 변수 목록과 HS 다운로드 대안을 확인했으나 품목별 물리 수량·단위와 동일한 대안을 확보하지 못함. 공식 HS 코드 매핑도 미완료.",
+        "next_cursor": "키가 정상 전달되고 공식HS-단위 매핑이 확인되면36개월 범위 재개; 임의코드/무인증 반복 호출 금지",
+        "counts": {
+          "versioned_records": 0,
+          "distinct_observation_keys": 0,
+          "numeric_observations": 0,
+          "physical_quantity_observations": 0,
+          "by_measurement_type": {},
+          "with_period": 0,
+          "with_publication_date": 0,
+          "period_review_held": 0,
+          "source_suppression_or_unknown": 0,
+          "with_usable_period": 0
+        }
+      },
+      "eia": {
+        "status": "PARTIAL",
+        "coverage": "7·8월 두 판의 CA/TX/VA 설비 명목MW18745개. 7월 원본 재사용. 8월 공개일9월24일 확인;7월 공개일 미확인. API발전·판매·연료·재고는 키 없음. 명목MW는 적격 확약량이 아님.",
+        "next_cursor": "고정 XLSX 두 판 행 처리 완료;7월 공개일·API 계열 및 비공개 저장 검증 대기",
+        "counts": {
+          "versioned_records": 18745,
+          "distinct_observation_keys": 18745,
+          "numeric_observations": 18745,
+          "physical_quantity_observations": 18745,
+          "by_measurement_type": {
+            "PHYSICAL": 18745
+          },
+          "with_period": 18745,
+          "with_publication_date": 9379,
+          "period_review_held": 0,
+          "source_suppression_or_unknown": 0,
+          "with_usable_period": 18745
+        }
+      },
+      "usgs": {
+        "status": "PARTIAL",
+        "coverage": "텅스텐 월보19판 처리. 최신 고유 수치372개·비공개/미확인185개, 실제 같은 기간 개정15건. 3개 다른 품목/MCS연간2024~26은 공식 DOI/pubs403. 월별2023-09..2023-12 및2026-08 등 범위 공백, 월보 공개일 미확인.",
+        "next_cursor": "권리 허용된 공식 연간/다른 광물 자료와 빠진 월보 확보. Census 계보의 무역값은 독립 근거 중복 금지",
+        "counts": {
+          "versioned_records": 1601,
+          "distinct_observation_keys": 557,
+          "numeric_observations": 372,
+          "physical_quantity_observations": 372,
+          "by_measurement_type": {
+            "PHYSICAL": 372
+          },
+          "with_period": 372,
+          "with_publication_date": 0,
+          "period_review_held": 0,
+          "source_suppression_or_unknown": 185,
+          "with_usable_period": 372
+        }
+      },
+      "ted": {
+        "status": "PARTIAL",
+        "coverage": "고정30일4766공고48페이지·고유번호4766으로 검색 범위 끝까지 회수. 공고 금액3645개. lot 수량/단위의 관계·상태는XML 미검증으로 물리량0.",
+        "next_cursor": "검색 잔여0; XML lot/변경/취소/확정 상태 검증 및 비공개 저장 대기",
+        "counts": {
+          "versioned_records": 6970,
+          "distinct_observation_keys": 3645,
+          "numeric_observations": 3645,
+          "physical_quantity_observations": 0,
+          "by_measurement_type": {
+            "MONEY": 3645
+          },
+          "with_period": 3645,
+          "with_publication_date": 3645,
+          "period_review_held": 0,
+          "source_suppression_or_unknown": 0,
+          "with_usable_period": 3645
+        }
+      }
+    },
+    "evidence_paths": [
+      "docs/v4/quantitative/source-registry.json",
+      "docs/v4/quantitative/quality-evidence.json",
+      "docs/v4/quantitative/Q1_RESULTS.md"
+    ],
+    "next_action": "Q1 only: restore Codex GitHub connection without changing research Secrets/model/CPU CODE_SHA, fetch latest and merge-preserve existing documentation commit, then push this saved Q1 change and check exact SHA CI. Resume source-specific pending cursors in fixed scope; do not rerun committed pages or mark Q1 complete. Q2/automation not started. Before private Q1 publication, prepare/review a Q1 namespace and format adapter reusing generic Ledger/checkpoint/CAS; do not run CPU seed or change CPU CODE_SHA.",
+    "blocked_dependencies": [
+      "SEC approved contact missing",
+      "Census key and verified HS/unit mapping missing",
+      "EIA API key missing; existing XLSX path executed",
+      "USGS official catalog/pubs403; annual/other mineral and publication-date gaps",
+      "Source-specific vintage/date/lot-relation and1210 award transaction-history tasks pending",
+      "Configured GitHub credential HTTP401; no scope/token/passphrase retest; push/private publish/CI blocked",
+      "Existing CPU private publisher/restore requires CPU queue format and its fixed research ref. Q1 must use a separate reviewed namespace/format adapter; do not add fake CPU-format metadata or overwrite CPU state. Remote Q1 publication not attempted."
+    ],
+    "cpu_code_sha_variable_unchanged": true,
+    "last_batch_observations": {
+      "eia": {
+        "versioned": 18745,
+        "numeric": 18745
+      },
+      "g17": {
+        "versioned": 972,
+        "numeric": 972
+      },
+      "m3": {
+        "versioned": 540,
+        "numeric": 540
+      },
+      "ted": {
+        "versioned": 3068,
+        "numeric": 3068
+      },
+      "usaspending": {
+        "versioned": 1571,
+        "numeric": 1571
+      },
+      "usgs": {
+        "versioned": 1601,
+        "numeric": 581
+      }
+    },
+    "updated_at": "2026-10-15T12:48:38.260169+00:00",
+    "numeric_observations": 25844,
+    "physical_quantity_observations": 19333,
+    "versioned_records": 30399,
+    "tests": {
+      "changed_scope_and_existing_UI_read": {
+        "passed": 30,
+        "seconds": 2.3,
+        "command": "PYTHONPATH=/tmp/bct-q1-deps:src python -m pytest -q tests/test_v4_quantitative.py tests/test_v4_dashboard.py::test_actual_sqlite_records_revision_and_counts"
+      },
+      "entire_previous_regression": "NOT_RUN_UNNECESSARY",
+      "230_original_source_QA": "NOT_RUN",
+      "GitHub_CI": "NOT_RUN_NO_PUSH_GITHUB_AUTH_HTTP401"
+    },
+    "usage": {
+      "official_POST_API_calls": 112,
+      "by_endpoint_family": {
+        "USAspending": 64,
+        "TED": 48
+      },
+      "discovery_download_receipts": 63,
+      "local_July_EIA_file_reuse_included_in_receipts": 1,
+      "additional_official_GET_attempts_not_in_receipt_count": [
+        "TED official api-v3.yaml200",
+        "Census linked aggseries.pdf403",
+        "Census linked naicshist.pdf403"
+      ],
+      "native_file_bytes_local": 63410775,
+      "Q1_SQLite_bytes": 127696896,
+      "checkpoint_gzip_bytes": 6319996,
+      "checkpoint_bound": 16777216,
+      "private_remote_bytes_written": 0,
+      "external_AI_calls": 0,
+      "CPU_windows": 0,
+      "new_models": 0,
+      "API_payment_KRW": 0,
+      "platform_bill_total": "NOT_EXPOSED_NO_PAID_RESOURCES_OR_PLANS_CHANGED",
+      "measured_POST_HTTP_seconds": 56.60797094707959,
+      "wall_scope": "Receipt acquisition from2026-10-15T12:16UTC; final evidence_at records end, includes development/validation. HTTP seconds cover POST transport only, not full CPU/wall time."
+    },
+    "storage": {
+      "existing_Ledger_format": true,
+      "local_new_process_restore": "PASS_8_TABLES_HASH",
+      "checkpoint_gzip_bytes": 6319996,
+      "private_remote_store_restore": "BLOCKED_GITHUB_HTTP401_NOT_RUN",
+      "CPU_originals_untouched": true
+    },
+    "local_start_head": "155063676782ebb10a590d489899c281b922da8f",
+    "verified_remote_head": "3c6174d4db53f65c6084ca8f544d0d638b404caf",
+    "scope_preserved": "BCT-V4-Q-1.0/Q1 only; existing top-level progress, CPU operations and Objective Lock unchanged",
+    "input_plan_integrity": {
+      "BCT_OBJECTIVE_LOCK.md": "ef5fda64843439694d61f8e73a1162c5e38b4276e6afb4233ac5e18aba821518",
+      "AGENTS.md": "b8a8a219afa9caf1ef4d8ad3e346b2d94621b174a065f67fe830edc74c0dec08",
+      "docs/v4/quantitative/FIXED_SEQUENCE.md": "848008d891bc3e29afa35d8ebc354f4b0f4e558f8d45f96d110e9c00a8f98f12",
+      "docs/v4/quantitative/STEP1_INSTRUCTIONS.md": "14945cd35de9087c59693d16087e0d99bc74c2ad896386e58248ee0f7211e8b1"
+    },
+    "publication_and_delivery": {
+      "local_base_sha": "155063676782ebb10a590d489899c281b922da8f",
+      "remote_latest_verified_sha": "3c6174d4db53f65c6084ca8f544d0d638b404caf",
+      "remote_current_Q1_code_SHA": null,
+      "local_delivery_SHA": "Containing local Q1 commit, shown by git rev-parse HEAD; no self-referential hash claim.",
+      "push": "BLOCKED_CONFIGURED_GITHUB_AUTH401; not retried with unchanged credential",
+      "CI": "NOT_RUN_NO_REMOTE_Q1_COMMIT",
+      "CPU_CODE_SHA_variable": "UNCHANGED; never set to documentation/Q1 commit"
+    },
+    "last_evidence_at": "2026-10-15T12:52:51.277594+00:00"
   }
 }
