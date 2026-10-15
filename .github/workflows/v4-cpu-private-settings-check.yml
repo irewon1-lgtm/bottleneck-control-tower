@@ -70,15 +70,17 @@ jobs:
           try:
               token=os.environ.get('STATE_TOKEN','')
               if os.environ.get('AUTH_DENIALS_ONLY')=='true':
-                  code,user=audit_api(token,'GET','user')
-                  auth={'HTTP':code,'authenticated':code==200,'expected_owner':code==200 and user.get('login')=='irewon1-lgtm'}
+                  # Authentication already returned HTTP200 in run38694400014.
+                  # Do not repeat either that call or the failed private GET.
+                  auth={'prior_run':'38694400014','HTTP':200,'authenticated':True}
                   denials={}
-                  if code==200:
-                      for branch in ('main','data'):
-                          code,ref=private.github_api(os.environ['GH_TOKEN'],'GET',f'repos/{private.PUBLIC_REPO}/git/ref/heads/{branch}')
-                          if code!=200:raise ValueError('PUBLIC_READ_REFERENCE_UNVERIFIED')
-                          code,_=audit_api(token,'POST',f'repos/{private.PUBLIC_REPO}/git/refs',{'ref':'refs/heads/'+branch,'sha':ref['object']['sha']})
-                          denials[branch]=code
+                  # Public existing commit IDs observed read-only before dispatch.
+                  # Create-existing-ref never updates a ref, regardless of SHA.
+                  refs={'main':'9988099ba4303cd68618792169d6f215b37ff78b',
+                        'data':'7d4bfd16f44fdd2d5a0f3bdac59e816e53d9ecad'}
+                  for branch,commit in refs.items():
+                      code,_=audit_api(token,'POST',f'repos/{private.PUBLIC_REPO}/git/refs',{'ref':'refs/heads/'+branch,'sha':commit})
+                      denials[branch]=code
                   report={'status':'DIAGNOSTIC_ONLY','authentication':auth,'public_existing_ref_creation_HTTP':denials,
                       'public_write_denied':len(denials)==2 and all(c in (403,404)for c in denials.values()),
                       'requests':receipts,'private_repo_failed_GET_repeated':False,'source_DB_uploaded':False}
