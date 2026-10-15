@@ -15,6 +15,8 @@ from .public_input import PUBLISHERS, valid_article_url
 
 VERSION = 'bct-q2-counterpart-1'
 KIND = 'QUANTITATIVE_COUNTERPART_REVIEW'
+RELATION_KIND = 'QUANTITATIVE_RELATION_TASK'
+RELATION_FIELDS = set('id task_id seed_id event_key entity_kind entity_literal product specification known_side facet party missing query source_identity scope urls cursor search_state checked_sources independence first_publication reason research_only s_stage'.split())
 FIELDS = set('id version seed_id product literal_search_terms seed_role requested_role missing_fields search_request selected_sources pending_sources rejected_sources official_link_queue state s_stage research_only'.split())
 REQUIRED = ('specification', 'region', 'customer', 'quantity', 'need_window',
             'supplier', 'qualified_supplier_pool', 'qualified_capacity', 'delivery')
@@ -300,3 +302,135 @@ def validate(row):
     # No source prose in retained state, only own queue state and positions.
     if re.search(r'"(?:body|quote|text|excerpt|response)"\s*:', json.dumps(row)):
         raise ValueError('COUNTERPART_SOURCE_TEXT_FORBIDDEN')
+
+
+def relation_tasks(seed_records):
+    """Public-fact relation requests. A facility is never silently a product.
+
+    Manufacturer-only facility queries intentionally do not require the product
+    name. Their results still need a separately evidenced product/facility edge.
+    """
+    tasks = []; seen = set()
+    hints = {'MANUFACTURER_FACILITY': 'manufacturing facilities plant location annual report',
+             'FACILITY_CAPACITY_READY': 'production capacity utilization expansion commissioning delivery slots',
+             'CUSTOMER_CONTRACT': 'purchase contract quantity delivery schedule procurement requirements',
+             'QUALIFICATION_RELIEF': 'approved supplier certification alternative supply cancellation'}
+    for seed in seed_records:
+        fields = seed['fields']; source = seed['source']; product = seed['product']
+        entity_kind = seed.get('entity_kind', 'PRODUCT')
+        if entity_kind == 'FACILITY':
+            product = None
+        # Event lineage + role, not every product mention/document version.
+        key = sha([seed.get('event_key', seed['id']), seed['role'], product])
+        for facet, hint in hints.items():
+            party = fields.get('customer') if facet == 'CUSTOMER_CONTRACT' else fields.get('supplier')
+            literals = [v for v in [party, product or seed['product']] if v and v != 'UNKNOWN']
+            if facet == 'MANUFACTURER_FACILITY' and party:
+                literals = [party]
+            task_id = sha(['q2-relation-1', key, facet])
+            if task_id in seen: continue
+            seen.add(task_id)
+            task = {'task_id': task_id, 'seed_id': seed['id'], 'event_key': key,
+                    'entity_kind': entity_kind, 'entity_literal': seed['product'], 'product': product,
+                    'specification': fields.get('specification'), 'known_side': seed['role'],
+                    'facet': facet, 'party': party,
+                    'missing': [k for k in REQUIRED if fields.get(k) in (None, '', 'UNKNOWN')],
+                    'query': ' '.join('"'+v.replace('"','')+'"' for v in literals)+' '+hint+' official',
+                    'source_identity': {k: source.get(k) for k in ['document_id','body_sha256','origin_url','published_at']},
+                    'scope': {'public_literal_only': True, 'external_query_authorized_by_user': True,
+                              'method': 'RELATION_DISCOVERY_NOT_TARGET_EQUIVALENCE'},
+                    'urls': [], 'cursor': 0, 'search_state': 'PENDING', 'checked_sources': [],
+                    'independence': 'UNKNOWN', 'first_publication': source.get('published_at') or 'UNKNOWN',
+                    'reason': 'COUNTERPART_NOT_YET_OBSERVED_NOT_ABSENT', 'research_only': True, 's_stage': 'UNKNOWN'}
+            task['id'] = sha(['q2-relation-state-1', task]); tasks.append(task)
+    # Rotate facets across events so one industry/party cannot consume a batch.
+    return sorted(tasks, key=lambda t: (list(hints).index(t['facet']), t['event_key']))
+
+
+def catalogue_identity(doc, raw, spellings):
+    """Manufacturer model proof, distinct from equal configuration or date proof."""
+    from bct.target_acquisition import Metadata
+    if sha(raw) != doc['raw_sha256'] or sha(doc['body'].encode()) != doc['body_sha256']:
+        raise ValueError('CATALOGUE_HASH')
+    parser=Metadata();parser.feed(raw.decode('utf-8',errors='replace'))
+    from bct.target_acquisition import norm
+    if norm(parser.canonical)!=norm(doc['origin_url']) or doc['body_status']!='FULL':
+        raise ValueError('CATALOGUE_IDENTITY_OR_FULLNESS')
+    host=urlsplit(doc['origin_url']).hostname
+    if host not in PUBLISHERS and doc.get('primary_source_verified') is not True:
+        raise ValueError('CATALOGUE_MANUFACTURER_UNVERIFIED')
+    rows=[]
+    for spelling in spellings:
+        # Cosmetic marks only. Model family does NOT establish same capacity,
+        # wafer/die configuration, regional eligibility or customer approval.
+        tokens=search_terms(spelling); model=next((v for v in tokens[1:] if re.search(r'\d|[-/]',v)), tokens[0])
+        hits=list(re.finditer(r'(?<!\w)'+re.escape(model)+r'(?!\w)',doc['body'],re.I))
+        if not hits: continue
+        rows.append({'surface':spelling,'manufacturer_model':model,'positions':[[m.start(),m.end()]for m in hits],
+                     'relation':'SAME_MANUFACTURER_MODEL_FAMILY_ONLY',
+                     'specification_equivalence':'UNKNOWN_NOT_MERGED','publication':'UNKNOWN_UNDATED_CATALOGUE_AS_ACQUIRED',
+                     'document_id':doc['document_id'],'url':doc['origin_url'],'body_sha256':doc['body_sha256'],'raw_sha256':doc['raw_sha256']})
+    return rows
+
+
+def relation_links(task, doc, raw):
+    """Cross-host citations are retained with their relationship still unproven."""
+    from bct.target_acquisition import Metadata
+    if sha(raw)!=doc['raw_sha256']:raise ValueError('RELATION_NATIVE_HASH')
+    parser=Metadata();parser.feed(raw.decode('utf-8',errors='replace'))
+    words={'MANUFACTURER_FACILITY':r'facilit|manufactur|annual.report|investor.relation|sec.filing',
+           'FACILITY_CAPACITY_READY':r'capacit|produc|expan|commission|annual.report|investor.relation',
+           'CUSTOMER_CONTRACT':r'contract|procure|purchase|defen[cs]e|ministry|supply.agreement',
+           'QUALIFICATION_RELIEF':r'qualif|certif|supplier|regulat|substitut|alternative'}
+    out=[];seen=set()
+    if not task.get('party') and task['facet'] in {'MANUFACTURER_FACILITY','FACILITY_CAPACITY_READY'}:
+        return []  # Unknown maker is not a reason to crawl a statistics site's global manufacturing menu.
+    for href,label in parser.links:
+        url=urljoin(doc['origin_url'],href).split('#')[0]
+        try:safe_url(url)
+        except ValueError:continue
+        if url==doc['origin_url']or url in seen:continue
+        # No product-name or same-host gate. This is a relation lead, NOT proof
+        # that an external institution or supplier is qualified/independent.
+        if not re.search(words[task['facet']],href+' '+label,re.I):continue
+        seen.add(url);out.append({'url':url,'via_document_id':doc['document_id'],
+                                  'status':'UNFETCHED_RELATION_LEAD','relation':'UNKNOWN_REVIEW_REQUIRED'})
+    return out
+
+
+RELATION_FACT_FIELDS=set('id subject_kind subject relation object quantity unit bound qualification source positions review s_stage research_only'.split())
+
+
+def validate_relation_fact(row):
+    if set(row)!=RELATION_FACT_FIELDS or row['s_stage']!='UNKNOWN'or row['research_only']is not True or row['qualification']!='UNKNOWN':
+        raise ValueError('RELATION_FACT_FIELDS_OR_PROMOTION')
+    if row['relation']not in {'MANUFACTURER_FACILITY_EXPANSION','REPORTED_PRODUCT_CAPACITY'}:raise ValueError('RELATION_FACT_TYPE')
+    if row['id']!=sha(['q2-relation-fact-1',{k:v for k,v in row.items()if k!='id'}]):raise ValueError('RELATION_FACT_HASH')
+    if set(row['source'])!={'url','raw_sha256','text_sha256','extraction','published_at','acquired_at'}:raise ValueError('RELATION_FACT_SOURCE')
+    safe_url(row['source']['url'])
+    for p in row['positions']:
+        if set(p)!={'start','end','page','context_sha256'}or not 0<=p['start']<p['end']or p['page']<1:raise ValueError('RELATION_FACT_POSITION')
+    if re.search(r'"(?:body|quote|text|excerpt|response)"\s*:',json.dumps(row)):raise ValueError('RELATION_FACT_PROSE')
+
+
+def validate_relation(row):
+    if set(row)!=RELATION_FIELDS or row['s_stage']!='UNKNOWN'or row['research_only']is not True:
+        raise ValueError('RELATION_FIELDS_OR_PROMOTION')
+    if row['entity_kind']=='FACILITY'and row['product']is not None:raise ValueError('FACILITY_NOT_PRODUCT')
+    if row['id']!=sha(['q2-relation-state-1',{k:v for k,v in row.items()if k!='id'}]):raise ValueError('RELATION_STATE_HASH')
+    if type(row['cursor'])is not int or not 0<=row['cursor']<=len(row['urls']):raise ValueError('RELATION_CURSOR')
+    for link in row['urls']:
+        if set(link)!={'url','via_document_id','status','relation'}:raise ValueError('RELATION_LINK_FIELDS')
+        safe_url(link['url'])
+    if row['independence']!='UNKNOWN':raise ValueError('RELATION_UNREVIEWED_INDEPENDENCE')
+    if re.search(r'"(?:body|quote|text|excerpt|response)"\s*:',json.dumps(row)):raise ValueError('RELATION_SOURCE_PROSE')
+
+
+def save_relations(ledger, packet_value):
+    require_objective(packet_value);added=0
+    with ledger.db:
+        for row in packet_value['tasks']:
+            validate_relation(row)
+            if ledger.db.execute("SELECT 1 FROM events WHERE kind=?AND json_extract(payload,'$.id')=?",(RELATION_KIND,row['id'])).fetchone():continue
+            ledger.event(RELATION_KIND,row);added+=1
+    return {'added':added,'task_states':len(packet_value['tasks']),'automatic_promotion':False}

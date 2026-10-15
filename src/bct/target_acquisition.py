@@ -238,14 +238,16 @@ def fetch(url):
     return raw, r.url, r.status, r.headers.get('Content-Type', '')
 
 
-def search(request, endpoint):
+def search(request, endpoint, *, limit=3):
+    if not 1 <= limit <= 50:
+        raise ValueError('bounded search result limit required')
     url = endpoint + ('&' if '?' in endpoint else '?') + urlencode({'q': request['query'], 'format': 'rss'})
     raw, final, status, content_type = fetch(url)
     if 'xml' in content_type or raw.lstrip().startswith(b'<?xml'):
         root = ET.fromstring(raw)
-        return [i.findtext('link') for i in root.findall('.//item') if i.findtext('link')][:3]
+        return [i.findtext('link') for i in root.findall('.//item') if i.findtext('link')][:limit]
     value = json.loads(raw)
-    return [r['url'] for r in value['results']][:3]
+    return [r['url'] for r in value['results']][:limit]
 
 
 def collect(plan_value, output, *, direct_urls=None, search_endpoint=None, workers=6):

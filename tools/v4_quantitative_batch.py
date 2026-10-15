@@ -319,6 +319,32 @@ def counterparts():
  finish()
 
 
+def relations():
+ initialize();ledger=Ledger(R/'ledger')
+ from bct.objective_lock import require_objective
+ from bct.v4.quantitative_counterpart import save_relations,validate_relation_fact
+ packet=json.loads(Path('docs/v4/quantitative/relation-tasks.json').read_text());require_objective(packet)
+ facts=json.loads(Path('docs/v4/quantitative/relation-facts.json').read_text());require_objective(facts)
+ with ledger.worker():
+  saved=save_relations(ledger,packet);added=0
+  with ledger.db:
+   for row in facts['records']:
+    validate_relation_fact(row)
+    if ledger.db.execute("SELECT 1 FROM events WHERE kind='QUANTITATIVE_RELATION_FACT'AND json_extract(payload,'$.id')=?",(row['id'],)).fetchone():continue
+    ledger.event('QUANTITATIVE_RELATION_FACT',row);added+=1
+  before=file_sha(ledger.path)
+ ledger.close()
+ import subprocess
+ code="import json;from bct.v4.store import Ledger;from bct.v4.quantitative_counterpart import save_relations;L=Ledger('var/v4/quantitative/q1-source-work/ledger');r=save_relations(L,json.load(open('docs/v4/quantitative/relation-tasks.json')));L.close();assert r['added']==0"
+ child=subprocess.run([sys.executable,'-c',code],capture_output=True,text=True,timeout=60)
+ if child.returncode or file_sha(R/'ledger/v4.sqlite3')!=before:raise ValueError('RELATION_RESTART_DEDUP')
+ observed_enabled=os.environ.get('OBSERVED_CPU_ENABLED','');observed_code=os.environ.get('OBSERVED_CPU_CODE_SHA','')
+ observation={'enabled':observed_enabled if observed_enabled in {'true','false'}else'MISSING_OR_INVALID','code_SHA':observed_code if re.fullmatch('[0-9a-f]{40}',observed_code)else'MISSING_OR_INVALID',
+              'expected_pin':'221fa92b1cbff8950716ec373eac793ca340c873','modified':False}
+ (R/'q2-report.json').write_text(json.dumps({'relation_states':saved,'new_relation_facts':added,'new_process_dedup':True,'CPU_current_observation':observation,'source_calls':0,'AI_calls':0,'CPU_windows':0,'qualified_capacity':0,'independent_pairs':0,'new_S2':0,'new_S3':0}))
+ finish()
+
+
 def publish():
  result=private.unseal(BRIDGE/'result/state.gpg',R/'publish-checkpoint',os.environ['BCT_V4_STATE_PASSPHRASE'])
  owner=json.loads(Path('docs/v4/cpu-automation/preflight/connection-results.json').read_text());scope=owner['actual_remote_evidence']['receipts']['BCT_PRIVATE_SCOPE_JSON']['scope']
@@ -336,7 +362,7 @@ def verify():
  print('BCT_Q1_SOURCES_PUBLISH_JSON='+json.dumps(packet),flush=True)
 
 if __name__=='__main__':
- parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality','verify','recover','counterparts']);a=parser.parse_args()
+ parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality','verify','recover','counterparts','relations']);a=parser.parse_args()
  if a.action=='quality':raise SystemExit(quality())
  if a.action in {'process','trade'}:raise SystemExit(process(only_trade=a.action=='trade'))
  else:globals()[a.action]()

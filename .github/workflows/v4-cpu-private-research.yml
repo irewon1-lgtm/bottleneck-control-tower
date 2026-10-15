@@ -11,7 +11,7 @@ on:
     inputs:
       purpose:
         type: choice
-        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart]
+        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart, q2-relations]
         default: seed
       q1_key_run:
         type: string
@@ -321,7 +321,7 @@ jobs:
           path: var/v4/quantitative/q1-source-probe
 
   q1-source-prior:
-    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && (inputs.purpose == 'q1-source-batch' || inputs.purpose == 'q1-trade-resume' || inputs.purpose == 'q2-review' || inputs.purpose == 'q1-storage-check' || inputs.purpose == 'q1-quality-Q2' || inputs.purpose == 'q1-recover-result' || inputs.purpose == 'q2-counterpart') }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && (inputs.purpose == 'q1-source-batch' || inputs.purpose == 'q1-trade-resume' || inputs.purpose == 'q2-review' || inputs.purpose == 'q1-storage-check' || inputs.purpose == 'q1-quality-Q2' || inputs.purpose == 'q1-recover-result' || inputs.purpose == 'q2-counterpart' || inputs.purpose == 'q2-relations') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
@@ -369,6 +369,9 @@ jobs:
           RECOVER_ONLY: ${{ inputs.purpose == 'q1-recover-result' }}
           QUALITY: ${{ inputs.purpose == 'q1-quality-Q2' }}
           STORAGE_ONLY: ${{ inputs.purpose == 'q1-storage-check' }}
+          RELATIONS_ONLY: ${{ inputs.purpose == 'q2-relations' }}
+          OBSERVED_CPU_ENABLED: ${{ vars.BCT_V4_CPU_RESEARCH_ENABLED }}
+          OBSERVED_CPU_CODE_SHA: ${{ vars.BCT_V4_CPU_CODE_SHA }}
           COUNTERPART_ONLY: ${{ inputs.purpose == 'q2-counterpart' }}
           Q2_ONLY: ${{ inputs.purpose == 'q2-review' }}
           TRADE_ONLY: ${{ inputs.purpose == 'q1-trade-resume' }}
@@ -382,6 +385,10 @@ jobs:
           fi
           if [ "$STORAGE_ONLY" = true ]; then
             timeout 120 python tools/v4_quantitative_batch.py storage
+            exit 0
+          fi
+          if [ "$RELATIONS_ONLY" = true ]; then
+            timeout 120 python tools/v4_quantitative_batch.py relations
             exit 0
           fi
           if [ "$COUNTERPART_ONLY" = true ]; then
@@ -429,3 +436,55 @@ jobs:
         run: |
           timeout 120 python -u tools/v4_quantitative_batch.py publish
           timeout 120 python -u tools/v4_quantitative_batch.py verify
+
+  readonly-release-revalidation:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'q2-relations' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: review-code
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 14c2de541ced1f995f3725d67a37e7fdb1b4898d
+          fetch-depth: 0
+          path: released-main
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install existing test requirements without a CPU model
+        working-directory: released-main
+        run: timeout 120 python -m pip install -e '.[test]'
+      - name: Verify exact main code and three read-only research additions
+        env:
+          PYTHONPATH: released-main/src
+        run: timeout 120 python review-code/tools/v4_release_revalidate.py --root released-main --output release-revalidation.json
+      - name: Revalidate current main Python tests
+        working-directory: released-main
+        env:
+          PYTHONPATH: src
+        run: timeout 120 python -m pytest -q
+      - name: Revalidate current main JavaScript tests
+        working-directory: released-main
+        run: timeout 120 node --test tests/*.js
+      - name: Restore fixed original corpus read-only
+        uses: actions/download-artifact@v4
+        with:
+          name: precursor-private-cache
+          run-id: 37790294699
+          github-token: ${{ github.token }}
+          path: released-main/var/release-fixed-230
+      - name: Revalidate fixed230 offline without network or LIVE writes
+        working-directory: released-main
+        env:
+          PYTHONPATH: src
+        run: timeout 120 python tools/precursor_operating_qa.py --cache var/release-fixed-230 --output var/release-qa/report.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: readonly-release-revalidation
+          path: release-revalidation.json
+          retention-days: 14
+          if-no-files-found: error
