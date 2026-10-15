@@ -24,20 +24,22 @@
     automation:["자동화 현황","자동화 설정과 실제 실행 기록을 구분해 보여줍니다."]
   };
   let data=null, currentPage="overview", loadBusy=false, detailRequest=0;
-  const state={candidates:{tab:"reviewed",query:"",industry:"",role:"",page:1},evidence:{category:"",query:"",industry:"",role:"",page:1}};
+  const state={candidates:{tab:"reviewed",query:"",industry:"",role:"",page:1},evidence:{source:"base",category:"",query:"",industry:"",role:"",page:1}};
   const content=$("content");
   function notify(text, tone=""){ $("notice").replaceChildren(text ? el("div",text,`notice ${tone}`) : document.createTextNode("")); }
   async function request(path){const r=await fetch(path,{cache:"no-store"});const body=await r.json();if(!r.ok)throw Error(body.error||"자료를 불러오지 못했습니다.");return body;}
   async function load(){
     if(loadBusy)return;loadBusy=true;$("refresh").disabled=true;
-    try{data=await request("/api/dashboard");render();notify(data.source.snapshot?"검증된 연구 백업을 보고 있습니다. 현재 수집기의 실시간 상태를 뜻하지 않습니다.":"");}
+    try{data=await request("/api/dashboard");data.loaded_at=new Date().toISOString();render();notify(data.publication?`검증된 고정 연구 자료 · 마지막 동기화 ${date(data.publication.last_sync_at)} · ${data.publication.status_label}. 새로 읽기는 수집·분석을 실행하지 않습니다.`:data.source.snapshot?"검증된 연구 백업을 보고 있습니다. 현재 수집기의 실시간 상태를 뜻하지 않습니다.":"");}
     catch(e){notify(`${e.message}${data?" 마지막으로 읽은 자료를 표시하고 있습니다.":""}`,"error");if(!data){content.replaceChildren(empty("연구 자료를 읽지 못했습니다","데이터 연결을 복구한 뒤 다시 읽을 수 있습니다.",btn("다시 읽기",load)));}}
     finally{loadBusy=false;$("refresh").disabled=false;}
   }
   function empty(title,text,action){return add(el("div",null,"empty"),el("div","◎","empty-icon"),el("h2",title),el("p",text),action);}
   function panel(title,caption,action){const n=el("section",null,"panel");if(title)n.append(add(el("div",null,"panel-head"),add(el("div"),el("h2",title),caption?el("p",caption):null),action));return n;}
   function stat(title,n,note,symbol,unit="건"){return add(el("div",null,"stat"),add(el("div",null,"stat-top"),el("span",title),el("span",symbol,"stat-symbol")),add(el("strong",number(n),"stat-value"),el("span",unit)),el("p",note,"stat-note"));}
-  function head(){const [title,desc]=panels[currentPage];return add(el("div",null,"page-head"),add(el("div"),el("span","전 산업 탐색 · 연구 기록","eyebrow"),el("h1",title),el("p",desc)),add(el("div",null,"head-meta"),el("span","저장된 연구 기록 · 한국 시간"),el("b",date(data.data_at)),el("span",`화면에서 읽은 시각 ${date(data.loaded_at)}`)));}
+  function head(){const [title,desc]=panels[currentPage];return add(el("div",null,"page-head"),add(el("div"),el("span","전 산업 탐색 · 연구 기록","eyebrow"),el("h1",title),el("p",desc)),add(el("div",null,"head-meta"),el("span","데이터 기준 · 한국 시간"),el("b",date(data.data_at)),el("span",`코드 버전 ${data.publication?.code_commit?.slice(0,12)||"로컬 미게시"}`),el("span",`화면에서 읽은 시각 ${date(data.loaded_at)}`)));}
+  function recordsFor(page){const source=state[page]?.source;return page==="evidence"&&source&&source!=="base"?(data.research_updates?.cpu_recovery?.records||[]).filter(r=>r.category===source):data.records;}
+  function recoverySummary(){const r=data.research_updates?.cpu_recovery;if(!r)return;const s=r.summary,p=panel("최신 CPU 연구 결과",`별도 판독 범위 · ${date(r.at)} · 기존 110문서와 합산하지 않습니다.`);p.append(add(el("div",null,"stats-grid"),stat("이번 판독 문서",s.documents_processed,`처음 판독 ${number(s.first_CPU_documents)} · 기존 부분 판독 확대 ${number(s.previous_partial_document_expanded)}`,"◫"),stat("CPU 제품 표기 제안",s.CPU_product_proposals_retained,"중복·오분류 가능성을 보존 · 고유 TARGET 수 아님","◎"),stat("새 보도 내용 검토",s.new_source_reported_actual_event_reviews,"공식 1차 확인 전 · 후보 승격 없음","▤"),stat("공식 1차 검증 사건",s.new_official_primary_verified_events,`기존 엔진 최종 채택 ${number(s.strict_downstream_event_adoptions)} · 신규 S1/S2/S3 ${s.S1_S2_S3_change.join("/")}`,"✓")),el("p",`실제 CPU 판독 ${number(s.actually_CPU_read_characters)} / ${number(s.body_characters)}자 (${(100*s.actually_CPU_read_characters/s.body_characters).toFixed(2)}%). 미판독 ${number(s.unread_characters)}자는 공백·줄바꿈이며 내용 문자 미판독 ${number(s.unread_nonwhitespace_characters)}자입니다.`,"section-note"),el("p",`AI 도입 품질 ${s.AI_quality.startsWith("FAIL")?"FAIL":s.AI_quality} · 독립 평가 ${s.independent20.startsWith("BLOCKED")?"BLOCKED":s.independent20}. 기사 보도 검토를 공식 사건이나 미래 병목으로 바꾸지 않았습니다.`,"notice"),link("최신 CPU 제안·새 보도 근거 보기 →","#evidence"));content.append(p);}
   function coverage(){const c=data.coverage;const pct=c.body_characters>0?100*c.read_characters/c.body_characters:null;return {c,pct};}
   function render(){
     const route=location.hash.slice(1);currentPage=Object.hasOwn(panels,route)?route:"overview";
@@ -52,7 +54,8 @@
     const hero=el("section",null,"hero");
     add(hero,add(el("div"),badge("근거를 모으는 단계","green"),el("h2",future?"저장된 후보와 근거를 함께 확인하세요":"아직 미래 병목 후보로 확정된 대상은 없습니다"),el("p","수요·공급 변화가 있다는 것만으로 병목을 판단하지 않습니다. 같은 제품과 기간의 독립적인 근거를 연결하고, 공급을 늘릴 대안까지 확인합니다."),link("검토 중인 변화 살펴보기  →","#candidates")),add(el("div",null,"hero-number"),el("label","향후 12~36개월 후보"),el("strong",number(future)),el("small","자료 부족은 ‘병목 없음’을 뜻하지 않습니다.")));
     hero.querySelector("strong").append(el("span","건"));content.append(hero);
-    content.append(add(el("div",null,"stats-grid"),stat("본문을 확보한 문서",c.body_nonempty,"이번 수집 · 본문이 비어 있지 않은 문서","▤"),stat("실제로 읽은 문서",data.coverage.documents,"기존 자료 포함 · 일부 구간 판독","◫"),stat("검토된 수요·공급 변화",c.reviewed,"과거 별도 AI 원문 검토 · 사람 검증 전","⌁"),stat("본문 확보 대기",c.pending,"최근 수집 완료 기록의 미시도 URL","◷")));
+    content.append(add(el("div",null,"stats-grid"),stat("본문을 확보한 문서",c.body_nonempty,"이번 수집 · 본문이 비어 있지 않은 문서","▤"),stat("기존 CPU 판독 범위",data.coverage.documents,"기존 동결 범위 · 최신 별도 연구는 아래 표시","◫"),stat("검토된 수요·공급 변화",c.reviewed,"과거 별도 AI 원문 검토 · 사람 검증 전","⌁"),stat("본문 확보 대기",c.pending,"최근 수집 완료 기록의 미시도 URL","◷")));
+    recoverySummary();
     const columns=el("div",null,"two-col");
     const signals=panel("근거가 있는 변화부터","과거 연구에서 검토된 사건 · 미래 병목 확정 아님",link("모두 보기 →","#candidates"));
     const choices=[];const seen=new Set();for(const r of data.records.filter(r=>r.category==="reviewed")){if(!seen.has(r.industry)){choices.push(r);seen.add(r.industry);}if(choices.length===4)break;}
@@ -70,9 +73,9 @@
     const s=state[page],box=el("div",null,"filters");
     const label=el("label",null,"filter search");label.append(el("span","제품·산업 찾기"));const input=el("input");input.type="search";input.placeholder="제품명이나 산업을 입력하세요";input.value=s.query;input.id=`${page}-search`;input.addEventListener("input",()=>{s.query=input.value;s.page=1;renderList(page);});label.append(input);box.append(label);
     function select(name,title,options){const lab=el("label",null,"filter");lab.append(el("span",title));const n=el("select");n.id=`${page}-${name}`;for(const [val,text]of options){const o=el("option",text);o.value=val;n.append(o);}n.value=s[name];n.addEventListener("change",()=>{s[name]=n.value;s.page=1;renderList(page);});lab.append(n);box.append(lab);}
-    select("industry","산업",[["","모든 산업"],...[...new Set(data.records.map(r=>r.industry))].sort().map(x=>[x,x])]);
+    select("industry","산업",[["","모든 산업"],...[...new Set(recordsFor(page).map(r=>r.industry))].sort().map(x=>[x,x])]);
     if(withCategory)select("category","검토 상태",[["","모든 상태"],["reviewed","별도 원문 검토"],["discovery","제품 탐색 · 검토 대기"],["structured","공식 표의 변화"]]);
-    select("role","수요·공급 역할",[["","모든 역할"],...[...new Map(data.records.map(r=>[r.role,r.role_label]))].sort((a,b)=>a[1].localeCompare(b[1],"ko"))]);
+    select("role","수요·공급 역할",[["","모든 역할"],...[...new Map(recordsFor(page).map(r=>[r.role,r.role_label]))].sort((a,b)=>a[1].localeCompare(b[1],"ko"))]);
     box.append(btn("초기화",()=>{Object.assign(s,{query:"",industry:"",role:"",page:1});if(withCategory)s.category="";render();},"button"));return box;
   }
   function candidates(){
@@ -84,13 +87,14 @@
     content.append(controls("candidates"),el("div",null,"list-container"));content.lastChild.id="candidates-list";renderList("candidates");
   }
   function evidence(){
+    const recovery=data.research_updates?.cpu_recovery;if(recovery){const tabs=el("div",null,"tabs");tabs.setAttribute("role","tablist");tabs.setAttribute("aria-label","근거 자료 범위");for(const [key,title,count]of[["base","전 산업 근거",data.counts.evidence],["cpu_product","최신 CPU 제안",recovery.summary.CPU_product_proposals_retained],["reported","새 보도 검토",recovery.summary.new_source_reported_actual_event_reviews]]){const b=btn(`${title} ${number(count)}`,()=>{Object.assign(state.evidence,{source:key,category:"",query:"",industry:"",role:"",page:1});render();},"tab");b.setAttribute("role","tab");b.setAttribute("aria-selected",String(state.evidence.source===key));tabs.append(b);}content.append(tabs,el("p","전 산업 근거·CPU 원문 표기 제안·공식 확인 전 보도 검토는 서로 다른 범위입니다. 합산해 후보나 고유 사건 수로 세지 않습니다.","section-note"));}
     content.append(add(el("div",null,"stats-grid"),stat("저장된 근거 기록",data.counts.evidence,"문서 수와 사건 수는 다릅니다","▤"),stat("별도 원문 검토",data.counts.reviewed,"AI 검토 기록 · 사람 검증 아님","✓"),stat("제품 탐색 결과",data.counts.discovery,"제품 정체와 사건 관계 확인 필요","◎"),stat("공식 표의 변화",data.counts.structured,"과거 보고 상태 · 공급 확정 아님","▦")));
-    content.append(controls("evidence",true),el("div"));content.lastChild.id="evidence-list";renderList("evidence");
+    content.append(controls("evidence",state.evidence.source==="base"),el("div"));content.lastChild.id="evidence-list";renderList("evidence");
     content.append(add(el("div",null,"download-row"),add(el("div"),el("h3","현재 화면의 연결 자료 보관"),el("p","전체 목록과 집계를 자료 파일로 내려받습니다. 필터와 무관한 전체 연구 조회 결과입니다.")),link("연구 자료 내려받기 ↓","/api/export","button")));
   }
   function renderList(page){
     const s=state[page],root=$(`${page}-list`);if(!root)return;
-    const q=s.query.trim().toLocaleLowerCase();const all=data.records.filter(r=>(page!=="candidates"||r.category==="reviewed")&&(!s.category||r.category===s.category)&&(!s.industry||r.industry===s.industry)&&(!s.role||r.role===s.role)&&(!q||`${r.product} ${r.industry}`.toLocaleLowerCase().includes(q)));
+    const q=s.query.trim().toLocaleLowerCase();const all=recordsFor(page).filter(r=>(page!=="candidates"||r.category==="reviewed")&&(!s.category||r.category===s.category)&&(!s.industry||r.industry===s.industry)&&(!s.role||r.role===s.role)&&(!q||`${r.product} ${r.industry}`.toLocaleLowerCase().includes(q)));
     const pages=Math.max(1,Math.ceil(all.length/12));s.page=Math.min(s.page,pages);const rows=all.slice((s.page-1)*12,s.page*12);
     root.replaceChildren(add(el("div",null,"list-summary"),add(el("span"),el("b",`${number(all.length)}건`),document.createTextNode("의 기록")),el("span",page==="candidates"?"예상 시기는 원문으로 확인된 경우만 표시":"인용 위치 검증과 의미 검증은 별개입니다")));
     if(!rows.length){root.append(empty("조건에 맞는 기록이 없습니다","검색어나 산업·역할 조건을 바꿔 보세요."));return;}
@@ -98,7 +102,7 @@
       const wrap=el("div",null,"panel table-panel"),table=el("table",null,"research-table");const tr=el("tr");["산업 · 제품","수요·공급 변화","예상 시기","검증 상태","근거"].forEach(t=>tr.append(el("th",t)));table.append(add(el("thead"),tr));const body=el("tbody");
       for(const r of rows){const tr=el("tr");const product=add(el("td",null,"product-cell"),el("span",r.product,"product-title"),el("span",r.industry,"product-meta"));const role=add(el("td"),el("span",r.role_label,"cell-main"),badge(r.actuality,r.actuality==="계획"?"amber":""));role.dataset.label="변화";const time=add(el("td"),el("span",r.period,"cell-main"),el("span",`공개 ${date(r.published_at)}`,"product-meta"));time.dataset.label="예상 시기";const status=add(el("td"),badge(displayStage(r.stage),r.stage==="S1"?"green":""),el("p","원문 AI 검토 · 사람 검증 전","product-meta"));status.dataset.label="검증 상태";tr.append(product,role,time,status,add(el("td"),detailButton(r)));body.append(tr);}table.append(body);wrap.append(table);root.append(wrap);
     }else{
-      const grid=el("div",null,"evidence-grid");for(const r of rows){const card=el("article",null,"evidence-card");add(card,add(el("div",null,"card-meta"),badge({reviewed:"별도 원문 검토",structured:"공식 표의 변화",discovery:"제품 탐색 · 검토 대기"}[r.category],r.category==="reviewed"?"green":r.category==="structured"?"blue":"amber"),el("span",r.industry)),el("h3",r.product),el("p",`${r.role_label} · ${r.actuality}`),add(el("div",null,"card-bottom"),el("span",known(r.published_at)?`공개 ${date(r.published_at)}`:"공개일 확인 필요"),detailButton(r,"원문 대조")));grid.append(card);}root.append(grid);
+      const grid=el("div",null,"evidence-grid");for(const r of rows){const card=el("article",null,"evidence-card");add(card,add(el("div",null,"card-meta"),badge({reviewed:"별도 원문 검토",structured:"공식 표의 변화",discovery:"제품 탐색 · 검토 대기",cpu_product:"CPU 제품 표기 · 의미 검증 전",reported:"보도 검토 · 공식 1차 확인 전"}[r.category],r.category==="reviewed"?"green":r.category==="structured"?"blue":"amber"),el("span",r.industry)),el("h3",r.product),el("p",`${r.role_label} · ${r.actuality}`),add(el("div",null,"card-bottom"),el("span",known(r.published_at)?`공개 ${date(r.published_at)}`:"공개일 확인 필요"),detailButton(r,"원문 대조")));grid.append(card);}root.append(grid);
     }
     if(pages>1){const p=el("div",null,"pagination");const prev=btn("← 이전",()=>{s.page--;renderList(page);});prev.disabled=s.page===1;const next=btn("다음 →",()=>{s.page++;renderList(page);});next.disabled=s.page===pages;p.append(prev,el("span",`${s.page} / ${pages} 페이지`),next);root.append(p);}
   }
@@ -120,14 +124,14 @@
     function renderErrors(){ebox.replaceChildren();for(const e of a.errors.slice(0,expanded?undefined:4)){let host="출처 미확인";try{host=new URL(e.url).hostname;}catch{}ebox.append(add(el("div",null,"error-row"),el("span","!","error-mark"),add(el("div"),el("strong",`${e.step} · ${host}${e.http_status?` · HTTP ${e.http_status}`:""}`),el("p",e.message),el("p",`${date(e.at)} · ${e.action}`,"caption"),external("해당 출처 열기 ↗",e.url))));}if(a.errors.length>4)ebox.append(btn(expanded?"오류 접기":`오류 ${a.errors.length}건 모두 보기`,()=>{expanded=!expanded;renderErrors();},"button small"));}renderErrors();cols.append(errors);
     const runs=panel("실제로 남은 실행 기록","수동 실행을 정기 자동화 성공으로 세지 않습니다.");for(const r of a.runs)runs.append(add(el("div",null,"run-row"),el("b",date(r.at)),el("p",`출처 ${number(r.source_attempts)}개 · 본문 시도 ${number(r.article_attempts)}건`),el("p",`원본 ${number(r.captured)}건 확보 · 남은 대기 ${number(r.pending)}건`)));
     const kv=el("dl",null,"kv");for(const [k,v]of[["자동 예약 실행","확인된 실행 없음"],["7일 연구 관측",a.shadow_mode==="NOT_ACTIVATED"?"시작하지 않음":"기록 확인 필요"],["현재 백그라운드 실행","별도 실시간 감시가 없어 확인 불가"],["연결 자료",data.source.mode],["설정 기록 시각",date(a.scope_at)]])add(kv,el("dt",k),el("dd",v));runs.append(kv);cols.append(runs);content.append(cols);
-    const gaps=panel("다음 확인이 필요한 자료","분야별 공백이 다른 산업의 탐색을 막지는 않습니다.");gaps.append(el("p","석유·가스·화학은 이번 수집에서 읽을 본문을 확보하지 못했습니다. 일부 공시·공식 데이터 경로는 아직 연구 큐에 연결되지 않았습니다. 제품별 필요 시기와 자격을 충족하는 공급량도 추가 확인이 필요합니다.","muted"));content.append(gaps);
+    const gaps=panel("다음 확인이 필요한 자료","분야별 공백이 다른 산업의 탐색을 막지는 않습니다.");gaps.append(el("p","산업마다 수집·판독 범위가 다릅니다. 최신 CPU 제안과 보도 검토도 공식 1차 원문, 제품별 필요 시기, 전체 적격 공급량과 독립 반대편 근거 확인이 필요합니다.","muted"));content.append(gaps);
   }
   function kv(rows){const n=el("dl",null,"kv");for(const [k,v]of rows)add(n,el("dt",k),el("dd",value(v)));return n;}
   async function openDetail(id){
     const token=++detailRequest;const dialog=$("detail"),body=$("detail-body");body.replaceChildren(el("h2","근거를 읽고 있습니다","loading"));if(!dialog.open)dialog.showModal();
     try{const r=await request(`/api/evidence/${id}`);if(token!==detailRequest||!dialog.open)return;body.replaceChildren();
       const title=el("h2",r.product);title.id="detail-title";body.append(title,add(el("div",null,"detail-status"),badge(r.status,r.category==="reviewed"?"green":"amber"),badge(displayStage(r.stage)),badge(r.actuality)));
-      if(r.category==="discovery")body.append(el("p","제품명과 역할은 CPU가 제안한 값입니다. 수요·공급 사실로 채택하지 않은 탐색 기록입니다.","notice"));
+      if(r.category==="discovery"||r.category==="cpu_product")body.append(el("p","제품명과 역할은 CPU가 제안한 값입니다. 수요·공급 사실로 채택하지 않은 탐색 기록입니다.","notice"));
       body.append(kv([["산업",r.industry],["제품",r.product],["제품 규격",r.target.specification],["지역",r.target.region],["고객",r.target.customer_group],["공급자 범위",r.target.supply_pool],["예상 병목 시기",r.period],["고객 필요 시기",r.need_time],["공급 준비 시기",r.ready_time],["근거의 대상 기간",r.evidence_period]]));
       body.append(el("p",`${r.industry_basis} 제품·규격·지역·고객·공급자 이름은 저장된 원문 표기를 유지합니다.`,"caption"));
       const judgement=el("section",null,"detail-section");judgement.append(el("h3","수요·공급 판단"),el("p",`이 기록의 분류: ${r.role_label} · ${r.actuality}`,"muted"),el("p",r.counterpart_note,"section-note"));

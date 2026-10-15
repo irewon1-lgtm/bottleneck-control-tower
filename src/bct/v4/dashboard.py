@@ -208,6 +208,8 @@ class ResearchReader:
                 "future_gap": r["future_gap"], "independence": r["independence"], "is_future_candidate": False}
 
     def dashboard(self):
+        from .dashboard_research import load_recovery
+        recovery = load_recovery(self.repo)
         with self.connection() as db:
             records, events, reviews = self._state(db)
             report, doc_industries, originals = self._industry_maps()
@@ -279,7 +281,8 @@ class ResearchReader:
                            "정확도와 누락 기준을 충족하지 못해 AI 자동 판독을 보류했습니다."]},
             ]
             return {"schema": "bct-v4-dashboard-1", "loaded_at": datetime.now(timezone.utc).isoformat(),
-                    "data_at": max([at for at, _, _ in events] + [at for at, _ in run_rows], default=None),
+                    "data_at": max([at for at, _, _ in events] + [at for at, _ in run_rows] + ([recovery["at"]] if recovery else []), default=None),
+                    "research_updates": {"cpu_recovery": {k: v for k, v in recovery.items() if k != "details"}} if recovery else {},
                     "source": {"mode": self.mode, "snapshot": self.snapshot, "read_only": True},
                     "counts": {"evidence": len(rows), **{k: categories[k] for k in ("reviewed", "structured", "discovery")},
                                "discovered_urls": len(discovered), "source_attempts": len(source_results),
@@ -295,7 +298,7 @@ class ResearchReader:
                     "coverage": coverage, "sectors": list(sectors.values()), "records": rows,
                     "candidate_scope": "저장된 전 산업 연구 평가 범위의 12~36개월 후보 집계입니다. 이 화면은 새 후보 판정을 하지 않습니다.",
                     "automation": {"scope_at": current.get("at"), "collection_runs": len(collections),
-                                   "last_collection_at": last[0], "last_cpu_at": max((at for at, r in run_rows if "CPU_reading" in r), default=None),
+                                   "last_collection_at": last[0], "last_cpu_at": max([at for at, r in run_rows if "CPU_reading" in r] + ([recovery["at"]] if recovery else []), default=None),
                                    "last_review_at": max((at for at, k, _ in events if k == "CROSS_DEEP_REVIEW"), default=None),
                                    "collection_mode": current.get("automation", {}).get("collection"),
                                    "ai_mode": current.get("automation", {}).get("AI_reader"),
@@ -307,6 +310,10 @@ class ResearchReader:
                                    "runs": [{"at": at, "source_attempts": r["sources_executed"], "article_attempts": r["article_attempts"], "captured": len(r["captured"]), "pending": r["pending_unattempted"]} for at, r in reversed(collections)]}}
 
     def evidence(self, event_id):
+        from .dashboard_research import load_recovery
+        recovery = load_recovery(self.repo)
+        if recovery and event_id in recovery["details"]:
+            return recovery["details"][event_id]
         with self.connection() as db:
             records, _, reviews = self._state(db)
             r = records.get(event_id)

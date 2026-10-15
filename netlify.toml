@@ -1,0 +1,14 @@
+[build]
+  command = "bash scripts/v4_dashboard_ci_build.sh"
+  publish = "var/v4/netlify/public"
+
+[build.environment]
+  NODE_VERSION = "24"
+  PYTHON_VERSION = "3.12"
+
+[functions]
+  directory = "var/v4/netlify/functions"
+  node_bundler = "esbuild"
+
+# Only the deployment branch is connected as production in the Netlify project.
+# No collector, AI call, operating DB, main deployment, or public research files.
