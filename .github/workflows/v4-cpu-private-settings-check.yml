@@ -2,6 +2,10 @@ name: V4 CPU private settings check
 on:
   workflow_dispatch:
     inputs:
+      remote_roundtrip:
+        type: boolean
+        default: false
+        description: Verify non-sensitive private remote storage; never seed production or enable CPU
       auth_denials_only:
         type: boolean
         default: false
@@ -23,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6
+          ref: 289c4e23bc78a6c45105076306f1f4b9577de06a
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
@@ -42,7 +46,7 @@ jobs:
           token=os.environ.get('STATE_TOKEN','');key=os.environ.get('STATE_PASSPHRASE','')
           code=os.environ.get('CPU_CODE_SHA','');enabled=os.environ.get('CPU_ENABLED','')
           report={'private_token_present':bool(token),'private_token_header_format_valid':bool(re.fullmatch(r'[A-Za-z0-9_\-]{20,512}',token)),
-            'handoff_secret_present':bool(key),'handoff_secret_format_valid':40<=len(key)<=256 and '\n'not in key and '\r'not in key,
+            'handoff_secret_present':bool(key),'handoff_secret_exactly_64':len(key)==64,'handoff_secret_format_valid':40<=len(key)<=256 and '\n'not in key and '\r'not in key,
             'code_SHA':code if re.fullmatch('[0-9a-f]{40}',code)else 'MISSING_OR_INVALID',
             'code_SHA_matches_tested_handoff':code=='da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6',
             'enabled_variable':enabled if enabled in ('true','false')else 'MISSING_OR_INVALID',
@@ -55,6 +59,8 @@ jobs:
       - name: Actual private-token writes and operating-ref denials, no source DB
         env:
           STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+          STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+          REMOTE_ROUNDTRIP: ${{ inputs.remote_roundtrip }}
           AUTH_DENIALS_ONLY: ${{ inputs.auth_denials_only }}
         run: |
           timeout 120 python - <<'PY'
@@ -69,7 +75,75 @@ jobs:
               return code,result
           try:
               token=os.environ.get('STATE_TOKEN','')
-              if os.environ.get('AUTH_DENIALS_ONLY')=='true':
+              if os.environ.get('REMOTE_ROUNDTRIP')=='true':
+                  # Non-production namespaces only. Never calls the scheduler or uploads originals.
+                  import base64,importlib.util,pathlib,subprocess,tempfile
+                  from bct.v4 import cpu_operations as op,cpu_automation as queue
+                  from bct.v4.store import file_sha,sha
+                  key=os.environ.get('STATE_PASSPHRASE','')
+                  assert len(key)==64 and '\n'not in key and '\r'not in key,'HANDOFF_SECRET_NOT_64_SAFE_CHARACTERS'
+                  code,repo=audit_api(token,'GET','repos/'+private.PRIVATE_REPO)
+                  assert code==200 and repo.get('private')is True and repo.get('full_name')==private.PRIVATE_REPO,'PRIVATE_IDENTITY_NOT_VERIFIED'
+                  code,_=audit_api(token,'GET','repos/'+private.PRIVATE_REPO+'/git/refs')
+                  initialized=False
+                  if code==409 and repo.get('size')==0:
+                      code,_=audit_api(token,'PUT','repos/'+private.PRIVATE_REPO+'/contents/connection-check/README.txt',
+                          {'message':'Initialize non-sensitive private connection check','content':base64.b64encode(b'BCT connection test only; no article or production state.\n').decode()})
+                      assert code==201,'EMPTY_PRIVATE_INITIALIZATION_NOT_VERIFIED'
+                      initialized=True
+                  elif code!=200:
+                      raise ValueError('PRIVATE_REFS_UNVERIFIED_NO_WRITE')
+                  scope=private.writer_scope(token,api=audit_api)
+                  results=[]
+                  with tempfile.TemporaryDirectory(prefix='bct-private-check-')as tmp:
+                      tmp=pathlib.Path(tmp)
+                      l=queue.open_queue(tmp/'synthetic')
+                      with l.db:l.event('CONNECTION_CHECK_NOT_PRODUCTION',{'constant':'non-sensitive test; not research inference'})
+                      op.checkpoint(l,tmp/'synthetic-checkpoint');l.close()
+                      # Restore the existing immutable backup LOCALLY, never upload its contents.
+                      src=tmp/'original';src.mkdir()
+                      baseline=pathlib.Path('docs/v4/cpu-automation/ledger.sqlite3.gz')
+                      proof=json.loads(pathlib.Path('docs/v4/cpu-automation/storage-proof.json').read_text())['ledger']
+                      assert file_sha(baseline)==proof['archive_sha256'],'FROZEN_BACKUP_HASH_MISMATCH'
+                      (src/'checkpoint.sqlite3.gz').write_bytes(baseline.read_bytes())
+                      (src/'checkpoint.json').write_text(json.dumps({**proof,'archive':'checkpoint.sqlite3.gz'}))
+                      op.restore(src,tmp/'original-db')
+                      spec=importlib.util.spec_from_file_location('metadata_check','docs/v4/cpu-automation/preflight/check_metadata_alternative.py')
+                      mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+                      metadata=mod.check(tmp/'original-db/v4.sqlite3',tmp/'metadata')
+                      for namespace,source in [('connection-check',tmp/'synthetic-checkpoint'),('metadata-receipts',tmp/'metadata/checkpoint')]:
+                          review=op.checkpoint_storage_audit(source,scope='private')
+                          assert review['status']=='PASS_PRIVATE_STORAGE_REVIEW'and review['documents']==[],'SOURCE_TEXT_MUST_NOT_BE_UPLOADED'
+                          packet=tmp/(namespace+'.gpg');private.seal(source,packet,key,'')
+                          files={name:(source/name).read_bytes()for name in ('checkpoint.json','checkpoint.sqlite3.gz')}
+                          files['state.gpg']=packet.read_bytes()
+                          assert sum(map(len,files.values()))<64*1024,'CONNECTION_PAYLOAD_TOO_LARGE'
+                          downloaded=tmp/(namespace+'-remote');downloaded.mkdir()
+                          stored=0
+                          for name,body in files.items():
+                              endpoint='repos/'+private.PRIVATE_REPO+'/contents/'+namespace+'/'+name
+                              code,existing=audit_api(token,'GET',endpoint)
+                              if code==404:
+                                  code,_=audit_api(token,'PUT',endpoint,{'message':'Preserve non-production '+namespace,'content':base64.b64encode(body).decode()})
+                                  assert code==201,'PRIVATE_CONTENT_WRITE_NOT_CONFIRMED'
+                              elif code==200:
+                                  assert base64.b64decode(existing['content'])==body,'REFUSE_REPLACE_EXISTING_TEST_VERSION'
+                              else:raise ValueError('PRIVATE_CONTENT_READ_NOT_VERIFIED')
+                              code,remote=audit_api(token,'GET',endpoint)
+                              assert code==200 and remote.get('encoding')=='base64','PRIVATE_CONTENT_REQUERY_FAILED'
+                              received=base64.b64decode(remote['content'])
+                              assert sha(received)==sha(body),'PRIVATE_REQUERY_HASH_MISMATCH'
+                              (downloaded/name).write_bytes(received);stored+=len(body)
+                          unsealed=tmp/(namespace+'-unsealed');private.unseal(downloaded/'state.gpg',unsealed,key)
+                          process=subprocess.run([sys.executable,'-c','import json,sys;from bct.v4 import cpu_operations as o;print(json.dumps(o.restore(sys.argv[1],sys.argv[2])))',str(unsealed),str(tmp/(namespace+'-restored'))],capture_output=True,text=True,timeout=25)
+                          assert process.returncode==0,'REMOTE_NEW_PROCESS_RESTORE_FAILED'
+                          restored=json.loads(process.stdout)
+                          assert restored['sqlite_sha256']==review['sqlite_sha256'],'REMOTE_SQLITE_HASH_MISMATCH'
+                          results.append({'namespace':namespace,'remote_requery_hashes_verified':True,'authenticated_encrypted_remote_restore':True,'new_process_restore':restored,'bytes_stored':stored,'article_text_copied':0,'production_seed':False})
+                  report={'status':'PASS_CONNECTION_AND_METADATA_ONLY_NOT_PRODUCTION_SEED','empty_private_repository_initialized':initialized,
+                      'scope':scope,'handoff_secret_exactly_64':True,'results':results,'metadata_receipts':metadata['completion_receipts_total'],
+                      'original_semantic_DB_restored_remotely':False,'original_articles_uploaded':0,'CPU_enabled':False,'seven_day_start':None,'requests':receipts}
+              elif os.environ.get('AUTH_DENIALS_ONLY')=='true':
                   # Authentication already returned HTTP200 in run38694400014.
                   # Do not repeat either that call or the failed private GET.
                   auth={'prior_run':'38694400014','HTTP':200,'authenticated':True}
@@ -87,10 +161,10 @@ jobs:
               else:
                   proof=private.writer_scope(token,api=audit_api)
                   report={'status':'PASS','proof':proof,'requests':receipts,'source_DB_uploaded':False}
-          except ValueError as exc:
+          except (ValueError,AssertionError) as exc:
               report={'status':'BLOCKED','reason':str(exc),'requests':receipts,'source_DB_uploaded':False}
           print('BCT_PRIVATE_SCOPE_JSON='+json.dumps(report))
-          sys.exit(0 if report['status']in ('PASS','DIAGNOSTIC_ONLY')else 1)
+          sys.exit(0 if report['status']in ('PASS','DIAGNOSTIC_ONLY','PASS_CONNECTION_AND_METADATA_ONLY_NOT_PRODUCTION_SEED')else 1)
           PY
 # Manual permission/settings verification only. No schedule, model/cache setup,
 # CPU inference, source archive publication, configuration writes or stage changes.
