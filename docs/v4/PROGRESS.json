@@ -4329,14 +4329,8 @@
       "docs/v4/quantitative/quality-evidence.json",
       "docs/v4/quantitative/Q1_RESULTS.md"
     ],
-    "next_action": "Q1 only: publish audited facts-only encrypted capsule with existing private-only writer; verify remote new-process restore and CAS refusal/recovery; record final exact-SHA CI. Remaining source setup/access/vintage gaps prevent Q1 PASS and Q2.",
+    "next_action": "Q1 remaining source gaps only: approved SEC identity, Census key/historical HTS mapping, M3/G17 old vintages/code scope, EIA July publication/API, USGS source/month coverage, TED XML body availability. Existing1260 award histories complete; do not refetch/reprocess. Q1 remains PARTIAL/BLOCKED; Q2 NOT_STARTED. Private Q1 state restored successfully; do not redo token/passphrase/CPU setup.",
     "blocked_dependencies": [
-      "현재 실행환경에 승인된 SEC 실제 연락처 없음. 제출이력·수치 미수집. Secret 목록 API403으로 Actions 설정 존재 여부는 미확인. 임의 연락처/무승인 호출 없음.",
-      "공식 USITC 수입HTS10·단위29개 검증. 수출Schedule B PDF3개는 별도 보존. Census 키는 실행환경에 없어 무역 수량0; 과거 코드 개정 미확인.",
-      "M3/G17 historical vintage and G22 exact-scope gaps",
-      "EIA July publication date and API key unavailable",
-      "USGS annual/other-mineral403, month/publication gaps",
-      "TED59 official XML attempts produced no valid body; relations unverified",
       "Q1 actual private publish/remote restore pending; prepared capsule is not yet remote proof"
     ],
     "cpu_code_sha_variable_unchanged": true,
@@ -4403,7 +4397,7 @@
       "Q1_SQLite_bytes": 157204480,
       "checkpoint_gzip_bytes": 8101382,
       "checkpoint_bound": 16777216,
-      "private_remote_bytes_written": 0,
+      "private_remote_bytes_written": 8101382,
       "external_AI_calls": 0,
       "CPU_windows": 0,
       "new_models": 0,
@@ -4428,18 +4422,54 @@
       "API_cost_KRW": 0,
       "platform_total_usage": "NOT_EXPOSED",
       "Q1_SQLite_sha256": "56139de56fc1821212d7f4b3ff6e693ed505ebba52011f6605c2c887eaa0fce8",
-      "encrypted_transport_bytes": 7955769
+      "encrypted_transport_bytes": 7955769,
+      "private_history_unique_object_bytes": 8882613,
+      "cache_bytes": 2121020182,
+      "public_ciphertext_transport_bytes": 7955769,
+      "public_plaintext_DB_or_source_bytes": 0
     },
     "storage": {
       "existing_Ledger_format": true,
       "local_new_process_restore": "PASS_CHECKPOINT_HASH_8_TABLES_AND_STRICT_FACTS_AUDIT",
       "checkpoint_gzip_bytes": 8101382,
-      "private_remote_store_restore": "PREPARED_NOT_RUN",
+      "private_remote_store_restore": "PASS_ACTUAL_REMOTE_NEW_PROCESS_8_TABLES_AND_HASH",
       "CPU_originals_untouched": true,
       "Q1_typed_format": "bct-q1-private-facts-1",
       "original_source_files_in_checkpoint": 0,
       "checkpoint_sqlite_sha256": "0c0bc75b7ca8e2034b11e6da038a9b231ac21c4f4443c216c53f07e102a7bf77",
-      "CPU_state_ref_unchanged": true
+      "CPU_state_ref_unchanged": true,
+      "private_remote_repository": "irewon1-lgtm/bct-v4-private-state",
+      "private_ref": "refs/heads/codex/bct-v4-quantitative-state",
+      "private_commit": "ca4584551b59cad14f8afb2ccd98cdca958f93c2",
+      "private_publish_code_SHA": "87ea84037821a3b2ff4f9a9d3274f16f78e5e90d",
+      "private_publish_run": 38744043840,
+      "private_history_unique_object_bytes": 8882613,
+      "Q1_checkpoint_versioned_observations": 37435,
+      "actual_restart_and_duplicate_prevention": {
+        "new_process_restored": true,
+        "completed_awards_after_restart": 1260,
+        "pending_awards": 0,
+        "actual_duplicate_page": {
+          "status": "UNCHANGED",
+          "added": 0,
+          "page": 1
+        },
+        "restored_DB_unchanged": true,
+        "wrong_hash_refused_and_correct_backup_recovered": true,
+        "local_backup": {
+          "status": "PASS_LOCAL_8_TABLE_RESTORE",
+          "observations": 37435,
+          "source_sha256": "0c0bc75b7ca8e2034b11e6da038a9b231ac21c4f4443c216c53f07e102a7bf77",
+          "backup_sha256": "0c0bc75b7ca8e2034b11e6da038a9b231ac21c4f4443c216c53f07e102a7bf77",
+          "not_remote_private_store": true
+        },
+        "HTTP_requests": 0,
+        "CPU_windows": 0,
+        "original_source_files_restored_from_DB": false
+      },
+      "original_source_recovery": false,
+      "CPU_state_written": false,
+      "private_ref_is_not_CPU_state_ref": true
     },
     "local_start_head": "155063676782ebb10a590d489899c281b922da8f",
     "verified_remote_head": "3c6174d4db53f65c6084ca8f544d0d638b404caf",
@@ -4453,7 +4483,7 @@
     "publication_and_delivery": {
       "local_base_sha": "155063676782ebb10a590d489899c281b922da8f",
       "remote_latest_verified_sha": "3c6174d4db53f65c6084ca8f544d0d638b404caf",
-      "remote_current_Q1_code_SHA": "0ed27c5f7f114b691afb900715795229c643013a",
+      "remote_current_Q1_code_SHA": "87ea84037821a3b2ff4f9a9d3274f16f78e5e90d",
       "local_delivery_SHA": "Containing local Q1 commit, shown by git rev-parse HEAD; no self-referential hash claim.",
       "push": "PASS_EXISTING_GITHUB_AUTH; changes pushed in preserved merge and resume commits",
       "CI": {
@@ -4467,7 +4497,11 @@
         }
       },
       "CPU_CODE_SHA_variable": "UNCHANGED; never set to documentation/Q1 commit",
-      "CI_scope": "Previous resume code SHA, not yet final code SHA"
+      "CI_scope": "Previous resume code SHA, not yet final code SHA",
+      "verified_predecessor_code_SHA": "87ea84037821a3b2ff4f9a9d3274f16f78e5e90d",
+      "final_result_commit": "The commit containing this record; exact SHA and CI verified externally after push. No self-referential SHA stored.",
+      "final_CI": "VERIFY_EXACT_HEAD_SHA_AFTER_THIS_COMMIT_PUSH; previous code run references retained",
+      "private_publish_run": 38744043840
     },
     "last_evidence_at": "2026-10-15T13:33:10.259933+00:00",
     "auth_resume": {
@@ -4492,7 +4526,7 @@
       "at": "2026-10-15T13:21:53.272235+00:00",
       "scope": "Q1 only",
       "transactions": "Continuing unprocessed award histories with fixed32-call/95s batches, completed cursors reused",
-      "storage": "Q1 facts-only typed checkpoint and isolated private ref implemented; actual remote proof NOT_RUN",
+      "storage": "PASS_ACTUAL_PRIVATE_Q1_REF_REMOTE_RESTORE; no CPU namespace or original-source copy",
       "changed_scope_tests": {
         "passed": 64,
         "seconds": 9.45
@@ -4501,7 +4535,8 @@
         "passed": 6,
         "seconds": 0.72
       },
-      "no_source_or_AI_reinstallation": true
+      "no_source_or_AI_reinstallation": true,
+      "finished_work_units": "All1260 award histories paged;108 G17 utility subset;29 officialHTS mappings;59 TED XML failures classified;12 new direct checks;83 impact tests; actual private CAS rejection/recovery and remote restore"
     },
     "current_batch_checkpoint": {
       "source": "usaspending",
@@ -4521,6 +4556,7 @@
       "new_errors": 0,
       "total_distinct_checked_records": 78,
       "scope": "Fixed samples only, not entire corpus semantic accuracy"
-    }
+    },
+    "Q2_status": "BLOCKED_Q1_NOT_COMPLETE"
   }
 }
