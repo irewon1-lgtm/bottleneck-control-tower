@@ -158,6 +158,7 @@ def export_state(source, destination, *, legacy=None):
                 preserved.append(('CPU_RESUME_REVIEW',{'original_kind':k,'original_sha256':sha(r),'historical_fields':info,
                     'source_validation':'SOURCE_VERIFICATION_PENDING','active_stage':'UNKNOWN'}))
     done={r['key']:r for r in results if r['status']in ('REVIEW_PENDING','PASS','PARTIAL_REVIEW')}
+    prior_window_keys={r['key']for k,r in preserved if k=='CPU_RESUME_WINDOW'}
     # Existing safe window receipts count as done after rehydration/restart.
     for kind,row in preserved:
         if kind=='CPU_RESUME_WINDOW':done.setdefault(row['key'],row)
@@ -184,6 +185,7 @@ def export_state(source, destination, *, legacy=None):
                         'receipt_sha256':sha([done[t['key']]for t in item['tasks']]),'source_state':'WITHHELD_NOT_RESTORED'})
                     completed_keys.add(record['body_key'])
             for row in results:
+                if row.get('restored_receipt_not_new_inference') and row['key']in prior_window_keys:continue
                 if row['key']in done:emit('CPU_RESUME_WINDOW',summarize_window(row,docs[row['document_id']]))
                 else:emit('CPU_RESUME_REVIEW',{'original_kind':'UNCOMPLETED_CPU_WINDOW','original_sha256':sha(row),
                     'historical_fields':{'key':row['key'],'status':row['status']},'source_validation':'SOURCE_VERIFICATION_PENDING'})
@@ -301,7 +303,19 @@ def hydrate(ledger, cache, policy):
         if not rawpath.is_relative_to(cache/'raw'):
             raise ValueError('RESUME_RAW_PATH_ESCAPE')
         try:
-            if d.get('raw_sha256')!=source['raw_sha256']:raise ValueError('RESUME_NATIVE_VERSION_CHANGED')
+            if d.get('raw_sha256')!=source['raw_sha256'] or key(d)!=bk:
+                raise ValueError('RESUME_NATIVE_VERSION_CHANGED')
+            # Validate EVERY prior receipt before materializing a runnable queue.
+            # A corrupt proof must not turn committed windows into pending work.
+            for task in source['tasks']:
+                r=old.get(task['key'])
+                if not r:continue
+                w=task['window'];text=d['body'][w['start']:w['end']]
+                if sha(text.encode())!=r['window']['input_sha256']:
+                    raise ValueError('RESUME_WINDOW_INPUT_CHANGED')
+                for s in r['CPU_spans']:
+                    if sha(d['body'][s['start']:s['end']].encode())!=s['surface_sha256']:
+                        raise ValueError('RESUME_SPAN_HASH_MISMATCH')
             q.enqueue(ledger,d,rawpath.read_bytes(),{'resume':'SOURCE_REHYDRATED_BY_EXACT_HASH'})
             item=next(v for v in q.events(ledger,'CPU_QUEUE_DOCUMENT')if v['body_key']==bk)
             present={v['key']for v in q.events(ledger,'CPU_QUEUE_WINDOW_RESULT')}
@@ -322,7 +336,7 @@ def hydrate(ledger, cache, policy):
                         'CPU':{'model':MODEL,'revision':REVISION,'spans':spans},
                         'restored_receipt_not_new_inference':True})
             result.append({'document_id':source['document_id'],'status':'SOURCE_REHYDRATED_NO_COMPLETED_WINDOW_RERUN'})
-        except (OSError,ValueError,KeyError):
+        except (OSError,ValueError,KeyError,q.APIError):
             result.append({'document_id':source['document_id'],'status':'HELD_SOURCE_REHYDRATION_FAILED'})
     return result
 

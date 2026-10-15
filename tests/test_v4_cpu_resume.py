@@ -53,6 +53,7 @@ def test_partial_resume_holds_missing_input_then_reads_only_uncommitted_window(t
     d,raw=make_source(tmp_path,partial=True)
     r.export_state(tmp_path/'original/v4.sqlite3',tmp_path/'separated')
     l=q.open_queue(tmp_path/'separated')
+    original_receipt=r.rows(l.db,'CPU_RESUME_WINDOW')[0]
     assert r.summary(l)['awaiting_source_windows']==1
     assert r.hydrate(l,tmp_path/'missing',{})[0]['status']=='HELD_SOURCE_MISSING_OR_AMBIGUOUS'
     fake=Extractor();assert q.work(l,extractor=fake)['new_windows']==0 and fake.calls==0
@@ -63,6 +64,8 @@ def test_partial_resume_holds_missing_input_then_reads_only_uncommitted_window(t
     l.close();r.export_state(tmp_path/'separated/v4.sqlite3',tmp_path/'final')
     l=q.open_queue(tmp_path/'final');s=r.summary(l)
     assert s['CPU_windows_preserved']==2 and s['completed_body_keys']==1 and s['partial_documents']==0
+    preserved={v['key']:v for v in r.rows(l.db,'CPU_RESUME_WINDOW')}
+    assert preserved[original_receipt['key']]['original_record_sha256']==original_receipt['original_record_sha256']
     assert r.audit(l)['status']=='PASS_SOURCE_SEPARATED_SCHEMA';l.close()
 
 
@@ -158,3 +161,15 @@ def test_historical_target_and_quantity_fields_survive_without_copying_context(t
     assert history['original_judgment']['role_in_original']=='DEMAND_INCREASE'
     assert 'quote'not in history['references'][0] and history['references'][0]['quote_sha256']==sha(d['body'][:5].encode())
     assert not l.db.execute('SELECT *FROM firsts').fetchall();l.close()
+
+
+def test_corrupt_old_receipt_isolated_before_creating_any_runnable_task(tmp_path):
+    d,raw=make_source(tmp_path,partial=True);r.export_state(tmp_path/'original/v4.sqlite3',tmp_path/'separated')
+    l=q.open_queue(tmp_path/'separated');bad=deepcopy(r.rows(l.db,'CPU_RESUME_WINDOW')[0])
+    bad['CPU_spans'][0]['surface_sha256']='0'*64
+    with l.db:l.event('CPU_RESUME_WINDOW',bad)
+    cache,policy=cache_source(tmp_path,d,raw)
+    assert r.hydrate(l,cache,policy)[0]['status']=='HELD_SOURCE_REHYDRATION_FAILED'
+    assert not q.events(l,'CPU_QUEUE_DOCUMENT')
+    fake=Extractor();assert q.work(l,extractor=fake)['new_windows']==0 and fake.calls==0
+    l.close()
