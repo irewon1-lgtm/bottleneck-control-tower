@@ -103,3 +103,52 @@ def test_no_schedule_or_operating_storage_or_secrets_in_preflight_workflow():
     assert all(j['runs-on']=='ubuntu-24.04' for j in w['jobs'].values())
     assert 'fail-on-cache-miss: true' in text and 'timeout 120' in text
     assert 'pip install' not in '\n'.join(s.get('run','')for s in w['jobs']['restore']['steps'])
+
+
+def schedule_context():
+    acq={'id':2,'name':'New precursor evidence acquisition','event':'workflow_run','head_branch':'main','conclusion':'success'}
+    rss={'id':1,'name':'RSS live environment check','event':'schedule','head_branch':'main','conclusion':'success','created_at':'2026-10-15T00:09:10Z'}
+    return {'event_name':'workflow_run','event':{'workflow_run':{'id':2}},'acquisition_run':acq,
+            'rss_run':rss,'acquisition_job_log':'    RSS_RUN_ID: 1\n'}
+
+
+def test_verified_schedule_chain_keeps_nominal_vs_actual_distinct():
+    result=op.verified_schedule(schedule_context())
+    assert result['verified'] and result['nominal_cron_slot'] is None
+    assert result['RSS_actual_created_at']=='2026-10-15T00:09:10Z'
+
+
+@pytest.mark.parametrize('mutation',['manual','wrong_log','wrong_parent','failed'])
+def test_manual_replay_or_unproven_parent_not_regular_operation(mutation):
+    c=schedule_context()
+    if mutation=='manual':c['rss_run']['event']='workflow_dispatch'
+    elif mutation=='wrong_log':c['acquisition_job_log']='RSS_RUN_ID: 9'
+    elif mutation=='wrong_parent':c['event']['workflow_run']['id']=9
+    else:c['acquisition_run']['conclusion']='failure'
+    with pytest.raises(ValueError,match='CHAIN'):op.verified_schedule(c)
+
+
+def test_web_projection_reports_actual_preflight_without_starting_shadow(tmp_path):
+    from bct.v4.dashboard import ResearchReader
+    restore_baseline(tmp_path/'queue');l=open_queue(tmp_path/'queue')
+    op.observe(l,trigger='DEVELOPMENT_PREFLIGHT',execute=True);p=l.path;l.close()
+    ui=ResearchReader(REPO,p).dashboard()
+    ops=ui['automation']['cpu_research']['operations']
+    assert ops['observations']==1 and ops['latest']['new_CPU_windows']==0
+    assert ops['latest']['peak_RSS_KiB']>0 and ops['seven_day_status']=='NOT_RUN'
+    assert ui['counts']['future_candidates']=={'S1':0,'S2':0,'S3':0}
+
+
+def test_preflight_cannot_request_real_schedule_receipt(monkeypatch):
+    monkeypatch.setenv('GITHUB_EVENT_NAME','push')
+    monkeypatch.setenv('GITHUB_REPOSITORY','irewon1-lgtm/bottleneck-control-tower')
+    monkeypatch.setattr(op.subprocess,'run',lambda *a,**k:(_ for _ in ()).throw(AssertionError('must not fetch')))
+    with pytest.raises(ValueError,match='WORKFLOW_TRIGGER'):op.github_schedule_context()
+
+
+def test_verified_regular_but_empty_cpu_queue_does_not_start7day(tmp_path):
+    l=open_queue(tmp_path)
+    r=op.observe(l,trigger='workflow_run',execute=True,schedule_context=schedule_context())
+    assert r['scheduled_execution_verified'] and r['new_CPU_windows']==0
+    assert r['seven_day_start'] is None
+    assert op.observation_summary(l.db)['first_verified_scheduled_CPU_success'] is None;l.close()

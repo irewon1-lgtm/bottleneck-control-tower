@@ -317,7 +317,8 @@ class ResearchReader:
             return {}
         from types import SimpleNamespace
         from .cpu_automation import state
-        return {"cpu_research": state(SimpleNamespace(db=db))}
+        from .cpu_operations import observation_summary
+        return {"cpu_research": {**state(SimpleNamespace(db=db)), "operations": observation_summary(db)}}
 
     def evidence(self, event_id):
         from .dashboard_research import load_recovery

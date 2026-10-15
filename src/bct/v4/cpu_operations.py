@@ -126,20 +126,22 @@ def restore(source,root):
     return {'restored':True,'tables':len(p['tables']),'sqlite_sha256':p['sqlite_sha256']}
 
 
-def observe(ledger,*,trigger,scheduled_for=None,upstream=None,execute=False,extractor=None):
+def observe(ledger,*,trigger,scheduled_for=None,upstream=None,execute=False,extractor=None,schedule_context=None):
     """One bounded 120-second-supervised command uses the existing queue.
 
     This preflight does not certify a scheduler. Only independently verified
     scheduled executions may open7day observation; this entrypoint cannot.
     """
     from .cpu_automation import state,work
+    scheduled=verified_schedule(schedule_context) if schedule_context is not None else {'verified':False}
     before=state(ledger);start=time.monotonic();cc=time.process_time();at=now()
     with ledger.worker():
         result=work(ledger,extractor=extractor,max_windows=24,seconds=45)if execute else None
         after=state(ledger)
         prior=[json.loads(p)for p, in ledger.db.execute("SELECT payload FROM events WHERE kind='CPU_OPERATION_OBSERVATION'")]
         payload={'version':'bct-cpu-operation-observation-1','started_at':at,'finished_at':now(),
-            'trigger':trigger,'scheduled_for':scheduled_for,'scheduled_execution_verified':False,
+            'trigger':trigger,'scheduled_for':scheduled_for,'scheduled_execution_verified':scheduled['verified'],
+            'schedule_proof':scheduled,
             'seven_day_start':None,'seven_day_status':'NOT_RUN_NO_VERIFIED_SCHEDULED_CPU_SUCCESS',
             'upstream':upstream or {},'new_URLs':0,'new_body_documents':0,
             'CPU_documents_processed':len({c['document_id']for c in after['coverage']if c['read_characters']>next((d['read_characters']for d in before['coverage']if d['document_id']==c['document_id']),0)}),
@@ -153,5 +155,65 @@ def observe(ledger,*,trigger,scheduled_for=None,upstream=None,execute=False,extr
             'queue':after,'model_loaded_by_queue':bool(result and result.get('model_loaded',result['new_windows']>0)),
             'prior_observations':len(prior),'API_calls':0,'API_tokens':0,'API_cost_KRW':0,
             'candidate_registration':False,'AI_adoption':'FAIL_UNCHANGED','lead_performance':'BLOCKED_UNCHANGED'}
+        if scheduled['verified'] and payload['actually_read_new_characters']>0:
+            previous=[r['finished_at']for r in prior if r.get('scheduled_execution_verified') and r.get('actually_read_new_characters',0)>0]
+            payload['seven_day_start']=min(previous)if previous else payload['finished_at']
+            payload['seven_day_status']='OBSERVING_NOT_COMPLETED_REQUIRES7REAL_DAYS_AND_CONTINUITY_REVIEW'
         with ledger.db:ledger.event('CPU_OPERATION_OBSERVATION',payload)
     return payload
+
+
+def verified_schedule(context):
+    """Require official run metadata plus upstream job-log binding, not a label.
+
+    This is a future activation boundary, not called by the push preflight CLI.
+    Raw job logs are not stored or displayed; only their hash and run IDs.
+    """
+    import re
+    event=context['event'];acq=context['acquisition_run'];rss=context['rss_run']
+    parent=event.get('workflow_run',{})
+    ids=set(re.findall(r'\bRSS_RUN_ID:\s*(\d+)\b',context['acquisition_job_log']))
+    if (context.get('event_name')!='workflow_run' or parent.get('id')!=acq.get('id')
+            or acq.get('name')!='New precursor evidence acquisition' or acq.get('event')!='workflow_run'
+            or acq.get('head_branch')!='main' or acq.get('conclusion')!='success'
+            or rss.get('name')!='RSS live environment check' or rss.get('event')!='schedule'
+            or rss.get('head_branch')!='main' or rss.get('conclusion')!='success'
+            or ids!={str(rss.get('id'))}):
+        raise ValueError('SCHEDULE_CHAIN_NOT_VERIFIED')
+    return {'verified':True,'RSS_run_id':rss['id'],'acquisition_run_id':acq['id'],
+            'RSS_actual_created_at':rss['created_at'],'nominal_cron_slot':None,
+            'configured_UTC_slots':['02:00','06:00','10:00','14:00','18:00','22:00'],
+            'acquisition_job_log_sha256':sha(context['acquisition_job_log'].encode()),
+            'nominal_slot_note':'Run metadata does not prove which nominal cron invocation fired'}
+
+
+def observation_summary(db):
+    rows=[json.loads(p)for p, in db.execute("SELECT payload FROM events WHERE kind='CPU_OPERATION_OBSERVATION' ORDER BY seq")]
+    starts=[r['finished_at']for r in rows if r.get('scheduled_execution_verified') and r.get('actually_read_new_characters',0)>0]
+    return {'observations':len(rows),'latest':rows[-1]if rows else None,
+        'first_verified_scheduled_CPU_success':min(starts)if starts else None,
+        'seven_day_status':'NOT_RUN'if not starts else'OBSERVING_REQUIRES_CONTINUITY_REVIEW',
+        'automatic_completion':False,'cache_is_permanent_storage':False}
+
+
+def github_schedule_context():
+    """Fetch chain evidence in an approved automatic job only, never preflight."""
+    import re
+    if os.environ.get('GITHUB_EVENT_NAME')!='workflow_run' or os.environ.get('GITHUB_REPOSITORY')!='irewon1-lgtm/bottleneck-control-tower':
+        raise ValueError('NOT_AN_APPROVED_UPSTREAM_WORKFLOW_TRIGGER')
+    event=json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text())
+    parent=event.get('workflow_run',{}).get('id')
+    if type(parent) is not int: raise ValueError('UPSTREAM_RUN_ID_MISSING')
+    repo=os.environ['GITHUB_REPOSITORY']
+    def command(args):
+        p=subprocess.run(args,capture_output=True,text=True,timeout=25)
+        if p.returncode: raise ValueError('SCHEDULE_EVIDENCE_ACCESS_BLOCKED')
+        return p.stdout
+    acq=json.loads(command(['gh','api',f'repos/{repo}/actions/runs/{parent}']))
+    log=command(['gh','run','view',str(parent),'--repo',repo,'--log'])
+    ids=set(re.findall(r'\bRSS_RUN_ID:\s*(\d+)\b',log))
+    if len(ids)!=1: raise ValueError('RSS_PARENT_LOG_BINDING_MISSING_OR_AMBIGUOUS')
+    rss_id=next(iter(ids));rss=json.loads(command(['gh','api',f'repos/{repo}/actions/runs/{rss_id}']))
+    context={'event_name':'workflow_run','event':event,'acquisition_run':acq,'rss_run':rss,'acquisition_job_log':log}
+    verified_schedule(context)
+    return context

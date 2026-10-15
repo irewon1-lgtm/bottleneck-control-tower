@@ -169,5 +169,11 @@ jobs:
           x=json.load(open('var/v4/cpu-operations/resumed.json'))
           assert x['prior_observations']==1 and x['new_CPU_windows']==0 and not x['model_loaded_by_queue']
           assert x['seven_day_start'] is None and not x['scheduled_execution_verified']
+          import sqlite3
+          from bct.v4.cpu_operations import observation_summary
+          with sqlite3.connect('var/v4/cpu-operations/ledger/v4.sqlite3') as db:
+              summary=observation_summary(db)
+          assert summary['observations']==2 and summary['seven_day_status']=='NOT_RUN'
+          print({'observations_restored_and_appended':summary['observations'],'seven_day_status':summary['seven_day_status']})
           print({'preflight':'PASS','actual_schedule':'NOT_RUN','new_CPU_inferences':0,'Groq_calls':0})
           PY

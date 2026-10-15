@@ -17,6 +17,7 @@ def main():
     p.add_argument('--output',type=Path)
     p.add_argument('--load-health-probe',action='store_true')
     p.add_argument('--execute-cpu',action='store_true')
+    p.add_argument('--record-scheduled-origin',action='store_true',help='Future approved workflow_run only; verifies original RSS schedule via GitHub API/log')
     a=p.parse_args()
     if a.action=='guard': result=op.github_guard()
     elif a.action=='bootstrap-model':
@@ -35,7 +36,7 @@ def main():
             if a.action=='checkpoint': result=op.checkpoint(l,a.checkpoint)
             else:
                 from bct.v4.adapters import CPUExtractor
-                result=op.observe(l,trigger='DEVELOPMENT_PREFLIGHT_NOT_SCHEDULED',execute=a.execute_cpu,extractor=CPUExtractor(a.runtime) if a.execute_cpu else None)
+                result=op.observe(l,trigger='DEVELOPMENT_PREFLIGHT_NOT_SCHEDULED',execute=a.execute_cpu,extractor=CPUExtractor(a.runtime) if a.execute_cpu else None,schedule_context=op.github_schedule_context() if a.record_scheduled_origin else None)
         finally:l.close()
     text=json.dumps(result,ensure_ascii=False,indent=2)+'\n'
     if a.output:
@@ -43,7 +44,9 @@ def main():
         with a.output.open('x')as f:f.write(text)
     else:print(text)
     # Compact, durable job-log evidence; no source text or credentials.
-    if a.output: print(json.dumps({'action':a.action,'output':str(a.output),'result':result},ensure_ascii=False))
+    if a.output:
+        logged={k:v for k,v in result.items() if k!='queue'}
+        print(json.dumps({'action':a.action,'output':str(a.output),'result':logged},ensure_ascii=False))
 
 
 if __name__=='__main__':main()
