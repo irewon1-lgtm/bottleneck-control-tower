@@ -1,0 +1,173 @@
+name: V4 CPU environment preflight
+on:
+  push:
+    branches: [codex/bct-v4-integration]
+    paths:
+      - '.github/workflows/v4-cpu-preflight.yml'
+  # No schedule, workflow_run, repository_dispatch or operational writes.
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: v4-cpu-preflight-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      runtime_key: ${{ steps.key.outputs.runtime_key }}
+      state_key: ${{ steps.key.outputs.state_key }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        id: python
+        with:
+          python-version: '3.12'
+      - name: Verify free public standard runner and bounded cache
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONPATH: src
+        run: timeout 120 python tools/v4_cpu_preflight.py guard --output var/v4/cpu-operations/free-guard.json
+      - name: Set exact cache identities
+        id: key
+        env:
+          PYTHON_VERSION: ${{ steps.python.outputs.python-version }}
+          LOCK_SHA: ${{ hashFiles('scripts/v4/requirements.lock','docs/v4/cpu-automation/preflight/model-manifest.json') }}
+        run: |
+          echo "runtime_key=v4-cpu-runtime-${RUNNER_OS}-${RUNNER_ARCH}-${PYTHON_VERSION}-${LOCK_SHA}" >> "$GITHUB_OUTPUT"
+          echo "state_key=v4-cpu-preflight-state-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
+      - name: Prepare a separate research DB checkpoint before optional model setup
+        env:
+          PYTHONPATH: src
+        run: |
+          timeout 120 python - <<'PY'
+          import gzip,json
+          from pathlib import Path
+          from bct.v4.store import Ledger,file_sha
+          from bct.v4.cpu_operations import checkpoint
+          src=Path('docs/v4/cpu-automation/ledger.sqlite3.gz')
+          proof=json.load(open('docs/v4/cpu-automation/storage-proof.json'))['ledger']
+          assert file_sha(src)==proof['archive_sha256']
+          dest=Path('var/v4/cpu-operations/ledger');dest.mkdir(parents=True)
+          (dest/'v4.sqlite3').write_bytes(gzip.decompress(src.read_bytes()))
+          assert file_sha(dest/'v4.sqlite3')==proof['sqlite_sha256']
+          ledger=Ledger(dest)
+          with ledger.db:ledger.event('CPU_OPERATION_SNAPSHOT_PROBE',{'trigger':'DEVELOPMENT_NOT_SCHEDULED','prior_completed_windows':67})
+          checkpoint(ledger,Path('var/v4/cpu-operations/checkpoint-seed'));ledger.close()
+          print({'seed_checkpoint':'PASS','operating_DB_changed':False,'new_CPU_inferences':0})
+          PY
+      - uses: actions/cache/save@v4
+        with:
+          key: ${{ steps.key.outputs.state_key }}-seed
+          path: var/v4/cpu-operations/checkpoint-seed
+      - uses: actions/cache/restore@v4
+        id: runtime
+        with:
+          key: ${{ steps.key.outputs.runtime_key }}
+          path: |
+            .v4-cpu-env
+            .v4-cpu-runtime
+          lookup-only: false
+      - name: One-time same-model CPU environment seed on cache miss
+        if: steps.runtime.outputs.cache-hit != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONPATH: src
+          PIP_NO_CACHE_DIR: '1'
+        run: |
+          python -m venv .v4-cpu-env
+          timeout 120 .v4-cpu-env/bin/python -m pip install --extra-index-url https://download.pytorch.org/whl/cpu -r scripts/v4/requirements.lock
+          timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_preflight.py bootstrap-model --output var/v4/cpu-operations/model-seed.json
+      - name: Verify payload bound before cache save
+        env:
+          PYTHONPATH: src
+        run: |
+          timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_preflight.py probe-model --output var/v4/cpu-operations/model-verified.json
+          python - <<'PY'
+          from pathlib import Path
+          total=sum(p.stat().st_size for root in ('.v4-cpu-env','.v4-cpu-runtime') for p in Path(root).rglob('*') if p.is_file())
+          assert total < 3*1024**3, 'Cache payload exceeds reserved free bound'
+          print({'runtime_payload_bytes':total,'new_artifact_uploads':0})
+          PY
+      - uses: actions/cache/save@v4
+        if: steps.runtime.outputs.cache-hit != 'true'
+        with:
+          key: ${{ steps.key.outputs.runtime_key }}
+          path: |
+            .v4-cpu-env
+            .v4-cpu-runtime
+      - name: Restore existing completed research input, observe empty queue and checkpoint
+        env:
+          PYTHONPATH: src
+        run: |
+          timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_automation.py --root var/v4/cpu-operations/ledger --execute-cpu --output var/v4/cpu-operations/noop.json
+          timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_preflight.py observe --execute-cpu --output var/v4/cpu-operations/observation.json
+          timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_preflight.py checkpoint --output var/v4/cpu-operations/checkpoint-result.json
+      - uses: actions/cache/save@v4
+        with:
+          key: ${{ steps.key.outputs.state_key }}-final
+          path: var/v4/cpu-operations/checkpoint
+  restore:
+    if: ${{ always() && needs.prepare.outputs.state_key != '' }}
+    needs: prepare
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify free conditions again on the second runner
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONPATH: src
+        run: timeout 120 python tools/v4_cpu_preflight.py guard --output var/v4/cpu-operations/free-guard.json
+      - uses: actions/cache/restore@v4
+        if: needs.prepare.result == 'success'
+        with:
+          key: ${{ needs.prepare.outputs.state_key }}-final
+          fail-on-cache-miss: true
+          path: var/v4/cpu-operations/checkpoint
+      - uses: actions/cache/restore@v4
+        if: needs.prepare.result != 'success'
+        with:
+          key: ${{ needs.prepare.outputs.state_key }}-seed
+          fail-on-cache-miss: true
+          path: var/v4/cpu-operations/checkpoint-seed
+      - name: Verify cross-runner DB restore even if the independent model path failed
+        env:
+          PYTHONPATH: src
+          PREPARE_RESULT: ${{ needs.prepare.result }}
+        run: |
+          if [[ "$PREPARE_RESULT" == success ]]; then
+            timeout 120 python tools/v4_cpu_preflight.py restore --output var/v4/cpu-operations/restored.json
+          else
+            timeout 120 python tools/v4_cpu_preflight.py restore --checkpoint var/v4/cpu-operations/checkpoint-seed --output var/v4/cpu-operations/restored.json
+          fi
+      - uses: actions/cache/restore@v4
+        id: runtime
+        with:
+          key: ${{ needs.prepare.outputs.runtime_key }}
+          fail-on-cache-miss: true
+          path: |
+            .v4-cpu-env
+            .v4-cpu-runtime
+      - name: Offline restored-model health and actual CPU memory footprint
+        env:
+          PYTHONPATH: src
+          HF_HUB_OFFLINE: '1'
+          TRANSFORMERS_OFFLINE: '1'
+        run: timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_preflight.py probe-model --load-health-probe --output var/v4/cpu-operations/model-health.json
+      - name: Restore previous runner DB exactly and resume without model load
+        env:
+          PYTHONPATH: src
+        run: |
+          timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_preflight.py observe --execute-cpu --output var/v4/cpu-operations/resumed.json
+          python - <<'PY'
+          import json
+          x=json.load(open('var/v4/cpu-operations/resumed.json'))
+          assert x['prior_observations']==1 and x['new_CPU_windows']==0 and not x['model_loaded_by_queue']
+          assert x['seven_day_start'] is None and not x['scheduled_execution_verified']
+          print({'preflight':'PASS','actual_schedule':'NOT_RUN','new_CPU_inferences':0,'Groq_calls':0})
+          PY
