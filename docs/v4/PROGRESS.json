@@ -4490,7 +4490,7 @@
     },
     "local_start_head": "155063676782ebb10a590d489899c281b922da8f",
     "verified_remote_head": "3c6174d4db53f65c6084ca8f544d0d638b404caf",
-    "scope_preserved": "BCT-V4-Q-1.0/Q1 only; existing top-level progress, CPU operations and Objective Lock unchanged",
+    "scope_preserved": "Q1 source resume + authorized prepared-source Q2 only; existing CPU operations and Objective Lock unchanged",
     "input_plan_integrity": {
       "BCT_OBJECTIVE_LOCK.md": "ef5fda64843439694d61f8e73a1162c5e38b4276e6afb4233ac5e18aba821518",
       "AGENTS.md": "b8a8a219afa9caf1ef4d8ad3e346b2d94621b174a065f67fe830edc74c0dec08",
@@ -4515,12 +4515,12 @@
       },
       "CPU_CODE_SHA_variable": "UNCHANGED; never set to documentation/Q1 commit",
       "CI_scope": "Previous resume code SHA, not yet final code SHA",
-      "verified_predecessor_code_SHA": "87ea84037821a3b2ff4f9a9d3274f16f78e5e90d",
+      "verified_predecessor_code_SHA": "e557f776cb36de604839d46d925aaf1b2a25e268",
       "final_result_commit": "The commit containing this record; exact SHA and CI verified externally after push. No self-referential SHA stored.",
-      "final_CI": "VERIFY_EXACT_HEAD_SHA_AFTER_THIS_COMMIT_PUSH; previous code run references retained",
+      "final_CI": "Exact final commit CI checked after final evidence push; final SHA reported externally without self-reference",
       "private_publish_run": 38744043840
     },
-    "last_evidence_at": "2026-10-15T13:33:10.259933+00:00",
+    "last_evidence_at": "2026-10-15T15:00:00Z",
     "auth_resume": {
       "native_git_read_push": "PASS_EXISTING_PLATFORM_AUTH_WITHOUT_CONFIG_CHANGE",
       "preserved_local_sha": "31e6d5ad8ab95321d2a5147b3274ab8d170d9b15",
@@ -4574,10 +4574,10 @@
       "total_distinct_checked_records": 78,
       "scope": "Fixed samples only, not entire corpus semantic accuracy"
     },
-    "Q2_status": "PREPARING_FROM_VERIFIED_SOURCE_SUBSET_NOT_Q1_PASS",
+    "Q2_status": "PARTIAL_PREPARED_SOURCE_REVIEW; INDEPENDENT_PRODUCT_ORDER_QUALIFIED_SUPPLY_GAPS",
     "settings_resume": {
       "start_SHA": "6a4a88acf5d62d67a03581baf0e03fe55850c46f",
-      "status": "SOURCE_BATCH_RESTORED_ZERO_NEW_NUMERIC_COUNTRY_FILTER_DIAGNOSIS",
+      "status": "COMPLETED_THIS_RESUME_Q1_PARTIAL_Q2_PREPARED_SUBSET_ONLY",
       "existing_values_changed": false,
       "Q1_scope_preserved": true,
       "Q2_policy": "STEP1 section7 explicitly permits prepared-source Q2 work while Q1 remains PARTIAL; latest user authorizes Q2. No all-source gate invented.",
@@ -4638,7 +4638,513 @@
       "SEC_new_filings": 1,
       "SEC_selected_inline_facts": 0,
       "additional_scope": "Optional default-displayed CTY_CODE: removing guessed 0000 predicate, preserving returned country IDs; stop on first further204; no identical request retry",
-      "Q2": "Implementing prepared-source TARGET/facility review without S promotion"
-    }
+      "Q2": "Implementing prepared-source TARGET/facility review without S promotion",
+      "current_run": 38753764138,
+      "local_impact_tests": {
+        "source_ledger_private_SEC_workflow": {
+          "passed": 53,
+          "seconds": 4.6
+        },
+        "UI_read_compatibility": {
+          "passed": 22,
+          "seconds": 27.29
+        },
+        "scope": "Changed-code tests; no old CPU/model/source rerun"
+      },
+      "first_numeric_run": 38753764138,
+      "Census_new_numeric": 5166,
+      "Census_new_physical": 2583,
+      "Census_successful_code_year_queries": 186,
+      "Census_expected_code_year_queries": 188,
+      "Census_months": 36,
+      "known_unknowns": [
+        "Census release dates",
+        "Census geographic identifier not returned/preserved in first numeric scope",
+        "intra-year HS revisions",
+        "actual product orders/qualified supply/delivery unavailable from trade totals"
+      ],
+      "final_trade_run": 38755144609,
+      "Census_new_money": 2583,
+      "Census_held_records": 444,
+      "Census_empty_code_year_queries": 2,
+      "Census_unvisited_code_year_queries": 0,
+      "total_numeric_preserving_prior": 38046,
+      "total_physical": 21916,
+      "SEC_new_numeric": 0,
+      "SEC_new_physical": 0,
+      "external_AI_calls": 0,
+      "paid_API_cost": 0,
+      "final_numeric_private_receipt": {
+        "research_ref": "refs/heads/codex/bct-v4-quantitative-state",
+        "parent": "ed47420341cd538498456d24a656d08d6e57d9e3",
+        "commit": "9b4fc83a9f0fadbb20ba88b9a17ae150d309250f",
+        "archive_sha256": "1baa8dd12cfc643b81255b61cea115a8d35edc49844dbd281481e2e1a07f3379",
+        "operating_branches_written": false,
+        "artifact_uploads": 0,
+        "history_unique_object_bytes": 52882791,
+        "history_limit_bytes": 67108864,
+        "remote_new_process_restore": {
+          "restored": true,
+          "tables": 8,
+          "sqlite_sha256": "9e3ce4fccaae90de6e44c94d03934f273b96b3115795af3629ad86f52347c1da",
+          "review": {
+            "format": "bct-q1-private-facts-1",
+            "observation_versions": 42601,
+            "sources": [
+              "census_trade",
+              "eia",
+              "g17",
+              "m3",
+              "ted",
+              "usaspending",
+              "usgs"
+            ],
+            "article_bodies": 0,
+            "native_source_files": 0,
+            "original_evidence_recovery": false,
+            "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+            "CPU_queue_restored": false,
+            "automatic_promotion": false
+          }
+        },
+        "repository": "irewon1-lgtm/bct-v4-private-state",
+        "visibility": "private",
+        "private_writer_scope_reused": true,
+        "remote_restore_verified": true,
+        "CPU_state_written": false,
+        "seven_day_observation_started": false
+      },
+      "latest_test_summary": {
+        "source_ledger_SEC_private_workflow": {
+          "passed": 54,
+          "seconds": 3.58
+        },
+        "latest_trade_route_impact": {
+          "passed": 9,
+          "seconds": 0.34
+        },
+        "UI_compatibility": {
+          "passed": 22,
+          "seconds": 27.29
+        },
+        "tests_are_functional_not_semantic_or_forecast_accuracy": true
+      },
+      "next_action": "Census publication/geographic scope/intra-year revision review and SEC physical facts/attachments; Q2 exact product/customer-qualified pool/need-time evidence. Do not rerun completed188 scope visits/CPU windows or reset credentials.",
+      "final_Q2_private_receipt": {
+        "research_ref": "refs/heads/codex/bct-v4-quantitative-state",
+        "parent": "9b4fc83a9f0fadbb20ba88b9a17ae150d309250f",
+        "commit": "fc004fa0bc29636f39f6a818114bb9fb1b65d4bc",
+        "archive_sha256": "a9e9b3e5def07b94311c9077051a1e12eb1fc794bf03887f76bc307297309336",
+        "operating_branches_written": false,
+        "artifact_uploads": 0,
+        "history_unique_object_bytes": 62518675,
+        "history_limit_bytes": 67108864,
+        "remote_new_process_restore": {
+          "restored": true,
+          "tables": 8,
+          "sqlite_sha256": "604dda8b3efbc4ef87282afd16df866a525f84a7e3d1eac253c59df21e1a6764",
+          "review": {
+            "format": "bct-q1-private-facts-1",
+            "observation_versions": 42601,
+            "sources": [
+              "census_trade",
+              "eia",
+              "g17",
+              "m3",
+              "ted",
+              "usaspending",
+              "usgs"
+            ],
+            "article_bodies": 0,
+            "native_source_files": 0,
+            "original_evidence_recovery": false,
+            "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+            "CPU_queue_restored": false,
+            "automatic_promotion": false
+          }
+        },
+        "repository": "irewon1-lgtm/bct-v4-private-state",
+        "visibility": "private",
+        "private_writer_scope_reused": true,
+        "remote_restore_verified": true,
+        "CPU_state_written": false,
+        "seven_day_observation_started": false
+      }
+    },
+    "Q2_prepared_source_execution": {
+      "run": 38753610740,
+      "code_SHA": "16177d02f8c3fbda8ede3eb40cff760385851d90",
+      "report": {
+        "counts": {
+          "FACILITY_CLASS": 159,
+          "EXISTING_EVENT_REVIEW": 10
+        },
+        "latest_facility_observations": 9381,
+        "eligible_independent_pairs": 0,
+        "actual_comparison_reasons": {
+          "TARGET_FIELDS_UNKNOWN": 15
+        },
+        "preserved_relief_events": 2,
+        "new_S1": 0,
+        "new_S2": 0,
+        "new_S3": 0,
+        "LIVE": 0,
+        "source_body_verification_repeated": false,
+        "meaning": "Evidence queue/gap review only. Existing8 S1 remain historical research signals; no demand/supply/shortage inferred from trade or nameplate.",
+        "added_review_records": 169,
+        "total_review_records": 169,
+        "sample_reviews": [
+          {
+            "product": "All Other",
+            "kind": "FACILITY_CLASS",
+            "missing": [
+              "customer_need_window",
+              "actual_product_order_quantity",
+              "customer_qualified_supplier_pool",
+              "qualified_available_supply",
+              "specification_equivalence",
+              "nameplate_is_not_qualified_committed_output"
+            ],
+            "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+          },
+          {
+            "product": "All Other",
+            "kind": "FACILITY_CLASS",
+            "missing": [
+              "customer_need_window",
+              "actual_product_order_quantity",
+              "customer_qualified_supplier_pool",
+              "qualified_available_supply",
+              "specification_equivalence",
+              "nameplate_is_not_qualified_committed_output"
+            ],
+            "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+          },
+          {
+            "product": "All Other",
+            "kind": "FACILITY_CLASS",
+            "missing": [
+              "customer_need_window",
+              "actual_product_order_quantity",
+              "customer_qualified_supplier_pool",
+              "qualified_available_supply",
+              "specification_equivalence",
+              "nameplate_is_not_qualified_committed_output"
+            ],
+            "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+          },
+          {
+            "product": "All Other",
+            "kind": "FACILITY_CLASS",
+            "missing": [
+              "customer_need_window",
+              "actual_product_order_quantity",
+              "customer_qualified_supplier_pool",
+              "qualified_available_supply",
+              "specification_equivalence",
+              "nameplate_is_not_qualified_committed_output"
+            ],
+            "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+          },
+          {
+            "product": "All Other",
+            "kind": "FACILITY_CLASS",
+            "missing": [
+              "customer_need_window",
+              "actual_product_order_quantity",
+              "customer_qualified_supplier_pool",
+              "qualified_available_supply",
+              "specification_equivalence",
+              "nameplate_is_not_qualified_committed_output"
+            ],
+            "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+          },
+          {
+            "product": "All Other",
+            "kind": "FACILITY_CLASS",
+            "missing": [
+              "customer_need_window",
+              "actual_product_order_quantity",
+              "customer_qualified_supplier_pool",
+              "qualified_available_supply",
+              "specification_equivalence",
+              "nameplate_is_not_qualified_committed_output"
+            ],
+            "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+          }
+        ],
+        "at": "2026-10-15T14:42:29.442605+00:00",
+        "actual_fresh_process_noop": {
+          "added": 0,
+          "database_hash_unchanged": true,
+          "new_HTTP_requests": 0
+        }
+      },
+      "private_commit": "e8c9f9de2dbe8a8879c995d808db61946d4d65cc",
+      "remote_8_table_restore": true,
+      "not_actual_demand_supply_balance": true,
+      "trade_append_report": {
+        "counts": {
+          "FACILITY_CLASS": 159,
+          "TRADE_SERIES": 76,
+          "EXISTING_EVENT_REVIEW": 10
+        },
+        "latest_facility_observations": 9381,
+        "eligible_independent_pairs": 0,
+        "actual_comparison_reasons": {
+          "TARGET_FIELDS_UNKNOWN": 15
+        },
+        "preserved_relief_events": 2,
+        "new_S1": 0,
+        "new_S2": 0,
+        "new_S3": 0,
+        "LIVE": 0,
+        "source_body_verification_repeated": false,
+        "meaning": "Evidence queue/gap review only. Existing8 S1 remain historical research signals; no demand/supply/shortage inferred from trade or nameplate.",
+        "added_review_records": 76,
+        "total_review_records": 245,
+        "sample_reviews": [
+          {
+            "product": "All Other",
+            "kind": "FACILITY_CLASS",
+            "missing": [
+              "customer_need_window",
+              "actual_product_order_quantity",
+              "customer_qualified_supplier_pool",
+              "qualified_available_supply",
+              "specification_equivalence",
+              "nameplate_is_not_qualified_committed_output"
+            ],
+            "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+          },
+          {
+            "product": "All Other",
+            "kind": "FACILITY_CLASS",
+            "missing": [
+              "customer_need_window",
+              "actual_product_order_quantity",
+              "customer_qualified_supplier_pool",
+              "qualified_available_supply",
+              "specification_equivalence",
+              "nameplate_is_not_qualified_committed_output"
+            ],
+            "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+          },
+          {
+            "product": "All Other",
+            "kind": "FACILITY_CLASS",
+            "missing": [
+              "customer_need_window",
+              "actual_product_order_quantity",
+              "customer_qualified_supplier_pool",
+              "qualified_available_supply",
+              "specification_equivalence",
+              "nameplate_is_not_qualified_committed_output"
+            ],
+            "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+          },
+          {
+            "product": "All Other",
+            "kind": "FACILITY_CLASS",
+            "missing": [
+              "customer_need_window",
+              "actual_product_order_quantity",
+              "customer_qualified_supplier_pool",
+              "qualified_available_supply",
+              "specification_equivalence",
+              "nameplate_is_not_qualified_committed_output"
+            ],
+            "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+          },
+          {
+            "product": "All Other",
+            "kind": "FACILITY_CLASS",
+            "missing": [
+              "customer_need_window",
+              "actual_product_order_quantity",
+              "customer_qualified_supplier_pool",
+              "qualified_available_supply",
+              "specification_equivalence",
+              "nameplate_is_not_qualified_committed_output"
+            ],
+            "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+          },
+          {
+            "product": "All Other",
+            "kind": "FACILITY_CLASS",
+            "missing": [
+              "customer_need_window",
+              "actual_product_order_quantity",
+              "customer_qualified_supplier_pool",
+              "qualified_available_supply",
+              "specification_equivalence",
+              "nameplate_is_not_qualified_committed_output"
+            ],
+            "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+          }
+        ],
+        "at": "2026-10-15T14:51:09.196359+00:00",
+        "actual_fresh_process_noop": {
+          "added": 0,
+          "database_hash_unchanged": true,
+          "new_HTTP_requests": 0
+        }
+      },
+      "final_all_available_trade_review": {
+        "run": 38756025811,
+        "code_SHA": "e557f776cb36de604839d46d925aaf1b2a25e268",
+        "report": {
+          "counts": {
+            "FACILITY_CLASS": 159,
+            "TRADE_SERIES": 76,
+            "EXISTING_EVENT_REVIEW": 10
+          },
+          "latest_facility_observations": 9381,
+          "eligible_independent_pairs": 0,
+          "actual_comparison_reasons": {
+            "TARGET_FIELDS_UNKNOWN": 15
+          },
+          "preserved_relief_events": 2,
+          "new_S1": 0,
+          "new_S2": 0,
+          "new_S3": 0,
+          "LIVE": 0,
+          "source_body_verification_repeated": false,
+          "meaning": "Evidence queue/gap review only. Existing8 S1 remain historical research signals; no demand/supply/shortage inferred from trade or nameplate.",
+          "added_review_records": 58,
+          "total_review_records": 245,
+          "sample_reviews": [
+            {
+              "product": "All Other",
+              "kind": "FACILITY_CLASS",
+              "missing": [
+                "customer_need_window",
+                "actual_product_order_quantity",
+                "customer_qualified_supplier_pool",
+                "qualified_available_supply",
+                "specification_equivalence",
+                "nameplate_is_not_qualified_committed_output"
+              ],
+              "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+            },
+            {
+              "product": "All Other",
+              "kind": "FACILITY_CLASS",
+              "missing": [
+                "customer_need_window",
+                "actual_product_order_quantity",
+                "customer_qualified_supplier_pool",
+                "qualified_available_supply",
+                "specification_equivalence",
+                "nameplate_is_not_qualified_committed_output"
+              ],
+              "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+            },
+            {
+              "product": "All Other",
+              "kind": "FACILITY_CLASS",
+              "missing": [
+                "customer_need_window",
+                "actual_product_order_quantity",
+                "customer_qualified_supplier_pool",
+                "qualified_available_supply",
+                "specification_equivalence",
+                "nameplate_is_not_qualified_committed_output"
+              ],
+              "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+            },
+            {
+              "product": "All Other",
+              "kind": "FACILITY_CLASS",
+              "missing": [
+                "customer_need_window",
+                "actual_product_order_quantity",
+                "customer_qualified_supplier_pool",
+                "qualified_available_supply",
+                "specification_equivalence",
+                "nameplate_is_not_qualified_committed_output"
+              ],
+              "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+            },
+            {
+              "product": "All Other",
+              "kind": "FACILITY_CLASS",
+              "missing": [
+                "customer_need_window",
+                "actual_product_order_quantity",
+                "customer_qualified_supplier_pool",
+                "qualified_available_supply",
+                "specification_equivalence",
+                "nameplate_is_not_qualified_committed_output"
+              ],
+              "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+            },
+            {
+              "product": "All Other",
+              "kind": "FACILITY_CLASS",
+              "missing": [
+                "customer_need_window",
+                "actual_product_order_quantity",
+                "customer_qualified_supplier_pool",
+                "qualified_available_supply",
+                "specification_equivalence",
+                "nameplate_is_not_qualified_committed_output"
+              ],
+              "review_state": "QUANTITATIVE_CONTEXT_ONLY"
+            }
+          ],
+          "at": "2026-10-15T14:58:33.568827+00:00",
+          "actual_fresh_process_noop": {
+            "added": 0,
+            "database_hash_unchanged": true,
+            "new_HTTP_requests": 0
+          }
+        },
+        "source_new_network_calls": 0,
+        "private_receipt": {
+          "research_ref": "refs/heads/codex/bct-v4-quantitative-state",
+          "parent": "9b4fc83a9f0fadbb20ba88b9a17ae150d309250f",
+          "commit": "fc004fa0bc29636f39f6a818114bb9fb1b65d4bc",
+          "archive_sha256": "a9e9b3e5def07b94311c9077051a1e12eb1fc794bf03887f76bc307297309336",
+          "operating_branches_written": false,
+          "artifact_uploads": 0,
+          "history_unique_object_bytes": 62518675,
+          "history_limit_bytes": 67108864,
+          "remote_new_process_restore": {
+            "restored": true,
+            "tables": 8,
+            "sqlite_sha256": "604dda8b3efbc4ef87282afd16df866a525f84a7e3d1eac253c59df21e1a6764",
+            "review": {
+              "format": "bct-q1-private-facts-1",
+              "observation_versions": 42601,
+              "sources": [
+                "census_trade",
+                "eia",
+                "g17",
+                "m3",
+                "ted",
+                "usaspending",
+                "usgs"
+              ],
+              "article_bodies": 0,
+              "native_source_files": 0,
+              "original_evidence_recovery": false,
+              "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+              "CPU_queue_restored": false,
+              "automatic_promotion": false
+            }
+          },
+          "repository": "irewon1-lgtm/bct-v4-private-state",
+          "visibility": "private",
+          "private_writer_scope_reused": true,
+          "remote_restore_verified": true,
+          "CPU_state_written": false,
+          "seven_day_observation_started": false
+        }
+      }
+    },
+    "numeric_total": 38046,
+    "physical_total": 21916,
+    "overall": "PARTIAL"
   }
 }

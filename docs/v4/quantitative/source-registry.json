@@ -39,9 +39,18 @@
       "source_lineage_id": "SEC",
       "refresh": "monthly or stated release cycle; manual Q1 only",
       "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
-      "status": "SETUP_REQUIRED_IDENTITY_MISSING",
+      "status": "PARTIAL_ACTUAL_LISTING_AND_ONE_BODY_NO_SELECTED_QUANTITY",
       "next_cursor": "first unprocessed manifest task",
-      "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB"
+      "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB",
+      "settings_resume": {
+        "binding": "PRESENT_CONTACT_VALID_NO_VALUE_OUTPUT",
+        "run": 38749046126,
+        "source_run": 38751474615,
+        "old_SETUP_REQUIRED_resolved": true,
+        "numeric": 0,
+        "physical": 0,
+        "gap": "One fixed-range primary filing body has no selected exact inline production/order quantity; plain prose/attachments not yet extracted; issuer coverage limited to two existing configured CIKs"
+      }
     },
     "m3": {
       "url": "https://www.census.gov/manufacturing/m3/historical/timeseries.html",
@@ -70,7 +79,7 @@
       "source_lineage_id": "M3",
       "refresh": "monthly or stated release cycle; manual Q1 only",
       "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
-      "status": "PENDING",
+      "status": "PARTIAL_NO_HISTORICAL_VINTAGES",
       "next_cursor": "first unprocessed manifest task",
       "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB"
     },
@@ -117,7 +126,7 @@
       "source_lineage_id": "FED_G17",
       "refresh": "monthly or stated release cycle; manual Q1 only",
       "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
-      "status": "PENDING",
+      "status": "PARTIAL_NO_HISTORICAL_VINTAGES",
       "next_cursor": "first unprocessed manifest task",
       "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB",
       "official_utilities_subset_resolution": {
@@ -258,9 +267,15 @@
       "source_lineage_id": "USASPENDING",
       "refresh": "monthly or stated release cycle; manual Q1 only",
       "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
-      "status": "PENDING",
+      "status": "PARTIAL_ALL_FIXED_AWARD_HISTORIES_FETCHED_PHYSICAL_DELIVERY_UNKNOWN",
       "next_cursor": "first unprocessed manifest task",
-      "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB"
+      "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB",
+      "quantity_field_review": {
+        "cached_transaction_pages": 1269,
+        "structured_quantity_or_delivery_fields": 0,
+        "description_semantics": "NOT_EXHAUSTIVELY_REVIEWED; absence of structured fields does not prove no quantities in descriptions",
+        "HTTP_calls": 0
+      }
     },
     "census_trade": {
       "url": "https://api.census.gov/data/timeseries/intltrade/imports/hs",
@@ -276,7 +291,7 @@
           "graphite",
           "rare earths"
         ],
-        "codes": "NOT_FROZEN_UNTIL_OFFICIAL_HS_CODE_UNIT_MAP_VERIFIED",
+        "codes": "Annual-base official maps frozen2023-2026,29import/18export; intra-year revisions UNVERIFIED",
         "geography": "world aggregate only, no country double-count"
       },
       "auth": "CENSUS_API_KEY",
@@ -285,7 +300,7 @@
       "source_lineage_id": "US_CENSUS_INTLTRADE",
       "refresh": "monthly or stated release cycle; manual Q1 only",
       "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
-      "status": "SETUP_REQUIRED_KEY_AND_OFFICIAL_CODE_MAP; official headline files not equivalent quantity fallback",
+      "status": "PARTIAL_186_OF188_CODEYEAR_RESPONSES_2_EMPTY_RELEASE_AND_GEOGRAPHY_UNKNOWN",
       "next_cursor": "first unprocessed manifest task",
       "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB",
       "verified_import_mapping": {
@@ -4371,6 +4386,39 @@
           "2023 import chapter25:2504101000/2504105000,kg",
           "2026 export chapter28:2825200000,kg"
         ]
+      },
+      "settings_resume": {
+        "binding": "PRESENT_FORMAT40HEX_NO_VALUE_OUTPUT",
+        "initial_diagnostic_run": 38751474615,
+        "HTTP": 204,
+        "empty_responses": 188,
+        "numeric": 5166,
+        "physical": 2583,
+        "credential_rejection": "NOT_EVIDENCED",
+        "annual_mapping": "24official PDF chapters,2023-2026 base editions; same29import/18export codes and primary units, intra-year revisions unverified",
+        "final_trade_run": 38755144609,
+        "money": 2583,
+        "held_records": 444,
+        "successful_code_year_queries": 186,
+        "empty_code_year_queries": 2,
+        "unvisited_code_year_queries": 0,
+        "month_range": [
+          "2023-09",
+          "2026-08"
+        ],
+        "known_unknowns": [
+          "published_at",
+          "geography identifier not preserved in available current records",
+          "intra-year HS revisions",
+          "zero semantics in held rows",
+          "customer orders/qualified suppliers/delivery"
+        ]
+      },
+      "country_detail_diagnostic": {
+        "original_scope_preserved": "world aggregate only; guessed0000 returned204",
+        "diagnostic_input": "Country predicate omitted; returned country/group IDs preserved, not summed or silently treated as original global aggregate",
+        "original_geographic_scope_complete": false,
+        "no_reclassification_as_customer_order": true
       }
     },
     "eia": {
@@ -4400,7 +4448,7 @@
       "source_lineage_id": "EIA",
       "refresh": "monthly or stated release cycle; manual Q1 only",
       "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
-      "status": "PENDING",
+      "status": "PARTIAL_JULY_PUBLICATION_AND_QUALIFIED_SUPPLY_UNKNOWN",
       "next_cursor": "first unprocessed manifest task",
       "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB"
     },
@@ -4431,7 +4479,7 @@
       "source_lineage_id": "USGS_WITH_ATTRIBUTED_CENSUS_SUBSERIES",
       "refresh": "monthly or stated release cycle; manual Q1 only",
       "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
-      "status": "PENDING",
+      "status": "PARTIAL_UNAVAILABLE_MINERALS_AND_WITHHELD_VALUES",
       "next_cursor": "first unprocessed manifest task",
       "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB"
     },
@@ -4456,7 +4504,7 @@
       "source_lineage_id": "TED",
       "refresh": "monthly or stated release cycle; manual Q1 only",
       "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
-      "status": "PENDING",
+      "status": "PARTIAL_XML_QUANTITY_AND_LOT_RELATION_BLOCKED",
       "next_cursor": "first unprocessed manifest task",
       "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB"
     }
