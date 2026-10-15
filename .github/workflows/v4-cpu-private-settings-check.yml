@@ -78,7 +78,9 @@ jobs:
               if os.environ.get('REMOTE_ROUNDTRIP')=='true':
                   # Non-production namespaces only. Never calls the scheduler or uploads originals.
                   import base64,importlib.util,pathlib,subprocess,tempfile
-                  from bct.v4 import cpu_operations as op,cpu_automation as queue
+                  from bct.v4 import cpu_operations as op
+                  from bct.v4.store import Ledger
+                  import sqlite3
                   from bct.v4.store import file_sha,sha
                   key=os.environ.get('STATE_PASSPHRASE','')
                   assert len(key)==64 and '\n'not in key and '\r'not in key,'HANDOFF_SECRET_NOT_64_SAFE_CHARACTERS'
@@ -97,7 +99,8 @@ jobs:
                   results=[]
                   with tempfile.TemporaryDirectory(prefix='bct-private-check-')as tmp:
                       tmp=pathlib.Path(tmp)
-                      l=queue.open_queue(tmp/'synthetic')
+                      l=Ledger(tmp/'synthetic')
+                      with l.db:l.db.execute("INSERT INTO metadata VALUES('cpu_queue_format','bct-cpu-research-queue-1')")
                       with l.db:l.event('CONNECTION_CHECK_NOT_PRODUCTION',{'constant':'non-sensitive test; not research inference'})
                       op.checkpoint(l,tmp/'synthetic-checkpoint');l.close()
                       # Restore the existing immutable backup LOCALLY, never upload its contents.
@@ -108,10 +111,21 @@ jobs:
                       (src/'checkpoint.sqlite3.gz').write_bytes(baseline.read_bytes())
                       (src/'checkpoint.json').write_text(json.dumps({**proof,'archive':'checkpoint.sqlite3.gz'}))
                       op.restore(src,tmp/'original-db')
-                      spec=importlib.util.spec_from_file_location('metadata_check','docs/v4/cpu-automation/preflight/check_metadata_alternative.py')
-                      mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
-                      metadata=mod.check(tmp/'original-db/v4.sqlite3',tmp/'metadata')
-                      for namespace,source in [('connection-check',tmp/'synthetic-checkpoint'),('metadata-receipts',tmp/'metadata/checkpoint')]:
+                      # Reuse frozen receipt evidence; no CPU/reader imports.
+                      # Only explicit identifier/hash/count fields are exported.
+                      m=Ledger(tmp/'metadata-db');receipt_count=0
+                      with m.db:
+                          m.db.execute("INSERT INTO metadata VALUES('cpu_queue_format','bct-cpu-research-queue-1')")
+                          m.event('METADATA_ONLY_NOT_PRODUCTION_SEED',{'source_sqlite_sha256':proof['sqlite_sha256'],'original_results_recoverable_here':False})
+                          with sqlite3.connect((tmp/'original-db/v4.sqlite3').as_uri()+'?mode=ro',uri=True)as db:
+                              for kind,payload in db.execute("SELECT kind,payload FROM events WHERE kind IN ('CPU_QUEUE_LEGACY_COMPLETE','CPU_QUEUE_DOCUMENT')"):
+                                  row=json.loads(payload)
+                                  item={k:row[k]for k in ('document_id','body_key')}
+                                  item.update(receipt_sha256=sha(row),record_kind=kind)
+                                  m.event('PRIOR_COMPLETION_IDENTIFIER_ONLY',item);receipt_count+=1
+                      op.checkpoint(m,tmp/'metadata-checkpoint');m.close()
+                      metadata={'completion_receipts_total':receipt_count}
+                      for namespace,source in [('connection-check',tmp/'synthetic-checkpoint'),('metadata-receipts',tmp/'metadata-checkpoint')]:
                           review=op.checkpoint_storage_audit(source,scope='private')
                           assert review['status']=='PASS_PRIVATE_STORAGE_REVIEW'and review['documents']==[],'SOURCE_TEXT_MUST_NOT_BE_UPLOADED'
                           packet=tmp/(namespace+'.gpg');private.seal(source,packet,key,'')
