@@ -59,6 +59,21 @@ def field_ref(ref):
     return result
 
 
+def historical_fact(value):
+    """Keep structured judgments, not their narrative/quote serialization."""
+    if value is None or type(value)in(int,float,bool):return value
+    if isinstance(value,str):
+        return value if short(value)is not None else {'withheld_value_sha256':sha(value)}
+    if isinstance(value,dict):
+        if 'quote'in value:return field_ref(value)
+        allowed={'product','specification','region','customer_group','supply_pool','period','quantity','unit',
+                 'surface','value','normalized','reference','status','kind','precision','need_time','ready_time',
+                 'customer_need_period','physical_quantity','start','end'}
+        return {k:historical_fact(v)for k,v in value.items()if k in allowed}
+    if isinstance(value,list):return [historical_fact(v)for v in value]
+    raise ValueError('UNSUPPORTED_HISTORICAL_FACT_TYPE')
+
+
 def summarize_window(row, doc):
     w=row['window'];reference(doc,{**w,'quote':w['text']})
     cpu=row['CPU']
@@ -138,6 +153,8 @@ def export_state(source, destination, *, legacy=None):
                 refs=original.get('references',r.get('references',[]))
                 info['references']=[field_ref(ref)for ref in refs if isinstance(ref,dict)]
                 info['original_fields_sha256']=sha(original.get('fields_in_original',original.get('fields',{})))
+                info['historical_target']=historical_fact(original.get('target_in_original',{}))
+                info['historical_fields']=historical_fact(original.get('fields_in_original',original.get('fields',{})))
                 preserved.append(('CPU_RESUME_REVIEW',{'original_kind':k,'original_sha256':sha(r),'historical_fields':info,
                     'source_validation':'SOURCE_VERIFICATION_PENDING','active_stage':'UNKNOWN'}))
     done={r['key']:r for r in results if r['status']in ('REVIEW_PENDING','PASS','PARTIAL_REVIEW')}

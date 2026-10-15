@@ -135,3 +135,24 @@ def test_readonly_ui_retains_discoveries_but_never_claims_missing_source_verifie
     row=data['records'][0];detail=reader.evidence(row['id'])
     assert not row['is_future_candidate'] and not detail['all_references_verified']
     assert all(not x['verified'] and x['quote'] is None for x in detail['references'])
+
+
+def test_historical_target_and_quantity_fields_survive_without_copying_context(tmp_path):
+    d,raw=make_source(tmp_path)
+    old=Ledger(tmp_path/'legacy')
+    with old.db:
+        old.event('RECOVERY_EXISTING_REVIEWED_EVENT_PRESERVED',{'review_id':'synthetic-review','product':'Helios heat pumps','verdict':'PRESERVE',
+            'original_review':{'role_in_original':'DEMAND_INCREASE','actuality_in_original':'ACTUAL',
+                'target_in_original':{'product':'Helios heat pumps','specification':None,'region':None,'customer_group':None,'supply_pool':None},
+                'fields_in_original':{'quantity':{'surface':'UNKNOWN','status':'UNKNOWN'},'unit':None},
+                'references':[{'document_id':d['document_id'],'body_sha256':d['body_sha256'],'start':0,'end':5,'quote':d['body'][:5]}]}})
+    old.close()
+    r.export_state(tmp_path/'original/v4.sqlite3',tmp_path/'separated',legacy=tmp_path/'legacy/v4.sqlite3')
+    l=q.open_queue(tmp_path/'separated');r.audit(l)
+    history=r.rows(l.db,'CPU_RESUME_REVIEW')[0]['historical_fields']
+    assert set(history['historical_target'])=={'product','specification','region','customer_group','supply_pool'}
+    assert history['historical_target']['product']=='Helios heat pumps'
+    assert history['historical_fields']['quantity']=={'surface':'UNKNOWN','status':'UNKNOWN'}
+    assert history['original_judgment']['role_in_original']=='DEMAND_INCREASE'
+    assert 'quote'not in history['references'][0] and history['references'][0]['quote_sha256']==sha(d['body'][:5].encode())
+    assert not l.db.execute('SELECT *FROM firsts').fetchall();l.close()
