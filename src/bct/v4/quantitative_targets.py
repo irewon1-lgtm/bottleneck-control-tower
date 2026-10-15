@@ -86,7 +86,11 @@ def prepare(ledger,legacy,*,as_of):
     for demand in [r for r in enriched if r['role']=='DEMAND_INCREASE']:
         for supply in [r for r in enriched if r['role']in {'SUPPLY_DECREASE','SUPPLY_DELAY'}]:
             ok,reason=comparable(demand,supply);eligible+=ok;comparison_reasons[reason]+=1
-    return {'records':output,'counts':dict(counts),'latest_facility_observations':len(latest_eia),'eligible_independent_pairs':eligible,'actual_comparison_reasons':dict(comparison_reasons),'preserved_relief_events':sum(r.get('role')=='RELIEF'for r in legacy),
+    from .quantitative_counterpart import seeds,request_for
+    products=[json.loads(p)for p, in ledger.db.execute("SELECT payload FROM events WHERE kind='QUANTITATIVE_PRODUCT_FACT'")]
+    counterpart_requests=[request_for(s)for s in seeds(products,legacy)]
+    return {'records':output,'counterpart_requests':counterpart_requests,'counterpart_policy':'Shared opposite-side requests only; no automatic adoption or scheduled execution',
+            'counts':dict(counts),'latest_facility_observations':len(latest_eia),'eligible_independent_pairs':eligible,'actual_comparison_reasons':dict(comparison_reasons),'preserved_relief_events':sum(r.get('role')=='RELIEF'for r in legacy),
             'new_S1':0,'new_S2':0,'new_S3':0,'LIVE':0,'source_body_verification_repeated':False,
             'meaning':'Evidence queue/gap review only. Existing8 S1 remain historical research signals; no demand/supply/shortage inferred from trade or nameplate.'}
 

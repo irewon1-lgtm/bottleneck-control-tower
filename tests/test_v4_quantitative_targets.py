@@ -38,3 +38,18 @@ def test_latest_facility_nameplate_is_not_qualified_supply_noop_restore(tmp_path
  private.restore(tmp_path/'checkpoint',tmp_path/'restored');r=Ledger(tmp_path/'restored')
  assert targets.save(r,[],as_of='2026-10-15')['added_review_records']==0
  assert r.db.execute('select count(*)from firsts').fetchone()[0]==0;r.close()
+
+
+def test_new_reviewed_product_automatically_gets_opposite_side_request(tmp_path):
+ import json
+ from pathlib import Path
+ l=Ledger(tmp_path/'research')
+ original=json.loads(Path('docs/v4/quantitative/product-facts.json').read_text())['records'][0]
+ record=deepcopy(original);record.update(id='synthetic-new-industry',product='NovelZ-42 bioreactor')
+ with l.db:l.event('QUANTITATIVE_PRODUCT_FACT',record)
+ r=targets.prepare(l,[],as_of='2026-10-15')
+ assert len(r['counterpart_requests'])==1
+ request=r['counterpart_requests'][0]
+ assert request['target']=='NovelZ-42 bioreactor'and request['role']=='SUPPLY'
+ assert 'qualified_supplier_pool'in request['missing_fields']and r['new_S3']==0
+ l.close()

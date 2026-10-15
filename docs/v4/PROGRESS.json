@@ -4329,7 +4329,7 @@
       "docs/v4/quantitative/quality-evidence.json",
       "docs/v4/quantitative/Q1_RESULTS.md"
     ],
-    "next_action": "Run manual read-only SEC/Census batches from the existing private Q1 checkpoint. Source processing has no private writer credential; publisher uses existing dedicated token on Q1 ref only. Do not modify settings or duplicate completed requests.",
+    "next_action": "Publish tested development code; use existing manual separated private writer to store reviewed facts/queue under 64MiB guard; verify actual remote restore and exact-SHA CI.",
     "blocked_dependencies": [
       "Source-specific historical vintage/date/scope gaps retained; see source_status. Private Q1 store/restore already PASS, not a remaining blocker."
     ],
@@ -5380,6 +5380,20 @@
         "source_calls": 0,
         "new_commit": false
       }
+    },
+    "Q2_counterpart_strengthening": {
+      "plan_id": "BCT-V4-Q-1.0",
+      "start_SHA": "f60c1655e3eba951c7acb6a110b1d0d85cc5f978",
+      "status": "LOCAL_IMPLEMENTATION_AND_REPLAY_PASS_REMOTE_PUBLICATION_PENDING",
+      "scope": "Q2 common counterpart queue plus Q1 diagnostics; no Q3 gates/Q5 activation",
+      "numeric_preserved": 38046,
+      "physical_preserved": 21916,
+      "initial_examined_document_versions": 443,
+      "source_requests_new": 3,
+      "AI_calls": 0,
+      "new_S2": 0,
+      "new_S3": 0,
+      "next_action": "Publish tested development code; use existing manual separated private writer to store reviewed facts/queue under 64MiB guard; verify actual remote restore and exact-SHA CI."
     }
   }
 }

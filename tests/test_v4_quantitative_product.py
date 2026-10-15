@@ -29,3 +29,15 @@ def test_false_source_negation_money_and_output_order_are_rejected():
  with pytest.raises(ValueError,match='LITERAL'):review(d,s)
  d,s=case();s['unit']='USD'
  with pytest.raises(ValueError):review(d,s)
+
+
+def test_received_order_preserved_with_unknown_physical_quantity_and_planned_shipping():
+ text='Maker today announced a $22 million production order from Buyer.\nThe order includes multiple ModelZ equipment units. Maker expects to ship over the next six months.'
+ d={'document_id':'synthetic-unknown','body':text,'body_sha256':sha(text.encode()),'body_status':'FULL','provenance':'PASS','origin_url':'https://www.airbus.com/synthetic'}
+ s={'context':text,'kind':'ACTUAL_ORDER_QUANTITY_UNKNOWN','product':'ModelZ equipment','customer':'Buyer','planned_delivery':'over the next six months'}
+ r=review(d,s);assert r['quantity']is None and r['unit']is None and r['actuality']=='ACTUAL'and r['need_window']is None and r['qualified_capacity']is None
+ for replacement in ['expected production order','planned production order']:
+  t=text.replace('production order',replacement);d.update(body=t,body_sha256=sha(t.encode()));s['context']=t
+  with pytest.raises(ValueError,match='UNCONFIRMED'):review(d,s)
+ t=text.replace('multiple ModelZ equipment units','equipment to produce ModelZ equipment units');d.update(body=t,body_sha256=sha(t.encode()));s['context']=t
+ with pytest.raises(ValueError,match='OBJECT_UNKNOWN'):review(d,s)

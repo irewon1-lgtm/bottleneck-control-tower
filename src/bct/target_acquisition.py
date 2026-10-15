@@ -23,7 +23,7 @@ from .future_hypothesis import extract_facts
 UNKNOWN = 'UNKNOWN'
 ROLES = ('DEMAND', 'SUPPLY')
 WORDS = {
-    'DEMAND': r'\b(?:orders?|backlog|offtake|purchase|reservations?|customer.{0,20}capex|deliveries|delivery|procurement)\b',
+    'DEMAND': r'\b(?:order(?:s|ed|ing)?|backlog|offtake|purchas(?:e|es|ed|ing)|reservations?|customer.{0,20}capex|deliveries|delivery|procurement)\b',
     'SUPPLY': r'\b(?:capacity|commissioning|ramp|utilization|qualified|qualification|production|allocation|inventory|manufacturing)\b',
 }
 PERIOD = re.compile(r'\b(?:20\d{2}(?:-\d{2}-\d{2})?|Q[1-4]\s*20\d{2}|(?:first|second) half of 20\d{2}|next \d+ months|through 20\d{2})\b', re.I)

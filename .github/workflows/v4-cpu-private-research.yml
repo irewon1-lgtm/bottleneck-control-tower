@@ -11,7 +11,7 @@ on:
     inputs:
       purpose:
         type: choice
-        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review]
+        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart]
         default: seed
       q1_key_run:
         type: string
@@ -321,7 +321,7 @@ jobs:
           path: var/v4/quantitative/q1-source-probe
 
   q1-source-prior:
-    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && (inputs.purpose == 'q1-source-batch' || inputs.purpose == 'q1-trade-resume' || inputs.purpose == 'q2-review' || inputs.purpose == 'q1-storage-check' || inputs.purpose == 'q1-quality-Q2' || inputs.purpose == 'q1-recover-result') }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && (inputs.purpose == 'q1-source-batch' || inputs.purpose == 'q1-trade-resume' || inputs.purpose == 'q2-review' || inputs.purpose == 'q1-storage-check' || inputs.purpose == 'q1-quality-Q2' || inputs.purpose == 'q1-recover-result' || inputs.purpose == 'q2-counterpart') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
@@ -369,6 +369,7 @@ jobs:
           RECOVER_ONLY: ${{ inputs.purpose == 'q1-recover-result' }}
           QUALITY: ${{ inputs.purpose == 'q1-quality-Q2' }}
           STORAGE_ONLY: ${{ inputs.purpose == 'q1-storage-check' }}
+          COUNTERPART_ONLY: ${{ inputs.purpose == 'q2-counterpart' }}
           Q2_ONLY: ${{ inputs.purpose == 'q2-review' }}
           TRADE_ONLY: ${{ inputs.purpose == 'q1-trade-resume' }}
           BCT_SEC_USER_AGENT: ${{ secrets.BCT_SEC_USER_AGENT || vars.BCT_SEC_USER_AGENT }}
@@ -381,6 +382,10 @@ jobs:
           fi
           if [ "$STORAGE_ONLY" = true ]; then
             timeout 120 python tools/v4_quantitative_batch.py storage
+            exit 0
+          fi
+          if [ "$COUNTERPART_ONLY" = true ]; then
+            timeout 120 python tools/v4_quantitative_batch.py counterparts
             exit 0
           fi
           if [ "$Q2_ONLY" = true ]; then

@@ -98,3 +98,11 @@ def test_sec_full_index_and_attachment_locations_do_not_adopt_table_semantics(tm
  p=detail['physical_or_time_token_proposals'][0]
  assert raw.decode()[p['start']:p['end']]=='20'
  assert p['meaning']=='UNKNOWN_TABLE_OR_TEXT_RELATION_NOT_ADOPTED'
+
+
+def test_sec_index_http200_html_is_diagnosed_without_loosening_header_or_echoing_body():
+ raw=b'<html><title>Access denied</title><body>synthetic-contact@example.org</body></html>'
+ diagnostic=source.sec_index_diagnostic(raw)
+ assert diagnostic['HTML_response']and not diagnostic['canonical_header_present']
+ assert 'example.org'not in json.dumps(diagnostic)
+ with pytest.raises(ValueError,match='SEC_DAILY_INDEX_HEADER'):source.parse_sec_index(raw,'2026-10-14')

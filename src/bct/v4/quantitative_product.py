@@ -41,6 +41,21 @@ def review(doc,spec):
         if not re.search(relation,text,re.I):raise ValueError('PRODUCT_FACT_QUANTITY_OBJECT_NOT_LINKED')
         if re.search(r'\b(?:to produce|to manufacture|production of)\s+'+relation,text,re.I):raise ValueError('PRODUCT_FACT_OUTPUT_NOT_ORDERED_OBJECT')
         actuality='ACTUAL'
+    elif kind=='ACTUAL_ORDER_QUANTITY_UNKNOWN':
+        text=context['quote']
+        # A reviewed order is preserved without treating money/multiple as units.
+        # Require the order to explicitly include the source-literal equipment.
+        if re.search(r'\b(?:not|cancelled|canceled|non-binding|options?|would|may|could)\b',text,re.I):raise ValueError('PRODUCT_FACT_ORDER_UNCONFIRMED')
+        if not re.search(r'\b(?:announced|has received)\b[^\n]*\border\b',text,re.I):raise ValueError('PRODUCT_FACT_ORDER_RELATION_UNKNOWN')
+        claim=re.search(r'\b(?:announced|has received)\b[^\n]*?\border\b',text,re.I).group()
+        if re.search(r'\b(?:expected|planned|plans|forecast|interest|anticipated)\b',claim,re.I):raise ValueError('PRODUCT_FACT_ORDER_UNCONFIRMED')
+        object_relation=re.search(r'\border\b[^\n]*?\bincludes?\b[^\n]*?'+re.escape(product['value']),text,re.I)
+        if not object_relation or re.search(r'\b(?:to produce|to manufacture|production of)\b',object_relation.group(),re.I):raise ValueError('PRODUCT_FACT_ORDER_OBJECT_UNKNOWN')
+        if spec.get('quantity_literal')or spec.get('unit'):raise ValueError('PRODUCT_FACT_UNREVIEWED_QUANTITY')
+        if spec.get('planned_delivery'):
+            if not re.search(r'\bexpects? to ship\b',text,re.I):raise ValueError('PRODUCT_FACT_SHIP_RELATION_UNKNOWN')
+            refs['planned_delivery']=literal(doc,spec['planned_delivery'],context)
+        normalized=None;unit=None;actuality='ACTUAL'
     elif kind=='EXPECTED_DELIVERY':
         if not re.search(r'expected to ship',context['quote'],re.I):raise ValueError('PRODUCT_FACT_SHIP_RELATION_UNKNOWN')
         refs['planned_delivery']=literal(doc,spec['planned_delivery'],context)
@@ -65,4 +80,4 @@ def save(ledger,records):
             if set(r)!=FIELDS or r['s_stage']!='UNKNOWN'or r['qualified_capacity']is not None:raise ValueError('PRODUCT_FACT_UNREVIEWED_FIELD_OR_PROMOTION')
             if ledger.db.execute("select 1 from events where kind=?and json_extract(payload,'$.id')=?",(KIND,r['id'])).fetchone():continue
             ledger.event(KIND,r);added+=1
-    return {'added':added,'reviewed_orders':[{'product':r['product'],'quantity':r['quantity'],'unit':r['unit']}for r in records if r['kind']=='ACTUAL_ORDER'],'qualified_capacity':0,'independent_demand_supply_pairs':0,'new_S2':0,'new_S3':0}
+    return {'added':added,'reviewed_orders':[{'product':r['product'],'quantity':r['quantity'],'unit':r['unit']}for r in records if r['kind'].startswith('ACTUAL_ORDER')],'qualified_capacity':0,'independent_demand_supply_pairs':0,'new_S2':0,'new_S3':0}

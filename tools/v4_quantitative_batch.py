@@ -241,7 +241,12 @@ def quality():
        q.commit_page(ledger,task,meta,[],total=len(rows))
       except SourceFailure:pass
       except(ValueError,KeyError)as exc:
+       from bct.v4.quantitative_sources import sec_index_diagnostic
+       # Native response is cached before parsing. Keep structural diagnostics
+       # in the existing typed failure row, not source text or authentication.
+       diagnostic=sec_index_diagnostic(raw)
        with ledger.db:ledger.event('QUANTITATIVE_SOURCE_FAILURE',{'task':'source-'+sha(url),'page':1,'error':'LOCAL_SEC_INDEX_'+type(exc).__name__+':'+str(exc)[:80],'retry':False,'at':now()})
+       with ledger.db:ledger.event('QUANTITATIVE_VALIDATION',{'reason':'SEC index structural diagnostics '+sha(url),'originals_modified':False,'policy':diagnostic})
     day+=timedelta(days=1)
    docs=[json.loads(p)for p, in ledger.db.execute("select payload from events where kind='QUANTITATIVE_DOCUMENT'and json_extract(payload,'$.status')='DISCOVERED_NOT_READ'")]
    # Broad deterministic issuer diversity, no industry/product keyword gate.
@@ -294,6 +299,26 @@ def targets():
  (R/'q2-report.json').write_text(json.dumps(result));finish()
 
 
+def counterparts():
+ """Retain offline-reviewed queue/facts; no source requests or CPU/AI calls."""
+ initialize();ledger=Ledger(R/'ledger')
+ from bct.objective_lock import require_objective
+ from bct.v4.quantitative_counterpart import save as save_queue
+ from bct.v4.quantitative_product import save as save_products
+ products=json.loads(Path('docs/v4/quantitative/product-facts.json').read_text());require_objective(products)
+ packet=json.loads(Path('docs/v4/quantitative/counterpart-review.json').read_text());require_objective(packet)
+ with ledger.worker():
+  facts=save_products(ledger,products['records']);queue=save_queue(ledger,packet)
+  before=file_sha(ledger.path)
+ ledger.close()
+ import subprocess
+ code="import json;from bct.v4.store import Ledger;from bct.v4.quantitative_counterpart import save;L=Ledger('var/v4/quantitative/q1-source-work/ledger');r=save(L,json.load(open('docs/v4/quantitative/counterpart-review.json')));L.close();assert r['added']==0;print('dedup verified')"
+ child=subprocess.run([sys.executable,'-c',code],capture_output=True,text=True,timeout=60)
+ if child.returncode or file_sha(R/'ledger/v4.sqlite3')!=before:raise ValueError('Q2_COUNTERPART_RESTART_CHANGED_DB')
+ (R/'q2-report.json').write_text(json.dumps({'counterpart_queue':queue,'product_facts':facts,'new_process_dedup':True,'source_calls':0,'AI_calls':0,'CPU_windows':0,'independent_pairs':0,'new_S2':0,'new_S3':0}))
+ finish()
+
+
 def publish():
  result=private.unseal(BRIDGE/'result/state.gpg',R/'publish-checkpoint',os.environ['BCT_V4_STATE_PASSPHRASE'])
  owner=json.loads(Path('docs/v4/cpu-automation/preflight/connection-results.json').read_text());scope=owner['actual_remote_evidence']['receipts']['BCT_PRIVATE_SCOPE_JSON']['scope']
@@ -311,7 +336,7 @@ def verify():
  print('BCT_Q1_SOURCES_PUBLISH_JSON='+json.dumps(packet),flush=True)
 
 if __name__=='__main__':
- parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality','verify','recover']);a=parser.parse_args()
+ parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality','verify','recover','counterparts']);a=parser.parse_args()
  if a.action=='quality':raise SystemExit(quality())
  if a.action in {'process','trade'}:raise SystemExit(process(only_trade=a.action=='trade'))
  else:globals()[a.action]()

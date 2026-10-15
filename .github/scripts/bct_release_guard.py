@@ -59,7 +59,10 @@ def verify_release(request, release, local_root):
     expected_paths = {name for name in remote if code_path(name)
                       and '__pycache__' not in Path(name).parts and Path(name).suffix != '.pyc'}
     if not paths or {path.relative_to(local_root).as_posix() for path in paths} != expected_paths:
-        raise ValueError('validated code/test file set changed or missing')
+        actual_paths = {path.relative_to(local_root).as_posix() for path in paths}
+        raise ValueError('validated code/test file set changed or missing: '+json.dumps({
+            'added': sorted(actual_paths - expected_paths),
+            'missing': sorted(expected_paths - actual_paths)}))
     for path in paths:
         raw = path.read_bytes()
         sha = hashlib.sha1(f'blob {len(raw)}\0'.encode()+raw).hexdigest()

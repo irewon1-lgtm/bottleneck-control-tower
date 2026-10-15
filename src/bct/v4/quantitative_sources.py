@@ -144,6 +144,19 @@ def parse_sec_index(raw,day):
     return rows
 
 
+def sec_index_diagnostic(raw):
+    """Bounded structural evidence, no response text/company/contact disclosure."""
+    from .store import sha
+    text=raw.decode('utf-8',errors='replace');lines=text.splitlines()
+    return {'raw_sha256':sha(raw),'bytes':len(raw),'lines':len(lines),
+            'HTML_response':bool(re.search(r'<(?:!doctype\s+html|html|title)\b',text[:4096],re.I)),
+            'canonical_header_present':'CIK|Company Name|Form Type|Date Filed|Filename'in lines,
+            'five_column_lines':sum(line.count('|')==4 for line in lines),
+            'data_shaped_lines':sum(bool(re.match(r'^\d+\|',line))for line in lines),
+            'UTF8_BOM':raw.startswith(b'\xef\xbb\xbf'),
+            'diagnostic_only_no_schema_relaxation':True}
+
+
 def parse_sec_submission(raw,meta,cik,accession):
     """Exact inline facts across main/ex99 sections. Text/table units stay proposals."""
     text=raw.decode('utf-8');facts=[];sections=[];proposals=[]

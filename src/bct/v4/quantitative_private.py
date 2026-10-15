@@ -25,7 +25,7 @@ HOSTS={'www.census.gov','api.census.gov','www.federalreserve.gov','api.usaspendi
        'www.eia.gov','api.eia.gov','www.usgs.gov','pubs.usgs.gov','d9-wret.s3.us-west-2.amazonaws.com',
        'api.ted.europa.eu','ted.europa.eu','data.sec.gov','www.sec.gov'}
 KINDS={'QUANTITATIVE_OBSERVATION','QUANTITATIVE_PAGE_COMMITTED','QUANTITATIVE_VALIDATION',
-       'QUANTITATIVE_NOTICE_HELD','QUANTITATIVE_SOURCE_FAILURE','QUANTITATIVE_DOCUMENT','QUANTITATIVE_TARGET_REVIEW','QUANTITATIVE_PRODUCT_FACT'}
+       'QUANTITATIVE_NOTICE_HELD','QUANTITATIVE_SOURCE_FAILURE','QUANTITATIVE_DOCUMENT','QUANTITATIVE_TARGET_REVIEW','QUANTITATIVE_PRODUCT_FACT','QUANTITATIVE_COUNTERPART_REVIEW'}
 ATTRS={'award_id','award_type','PSC','agency','contract_start_not_observation_period','contract_end_not_delivery',
        'last_modified','physical_quantity','modification_number','action_type','contract_type','notice_type',
        'is_actual_order','is_framework_or_option','lot_relationship','Status','Technology','Operating Month',
@@ -37,8 +37,10 @@ ATTRS={'award_id','award_type','PSC','agency','contract_start_not_observation_pe
 
 RECORD_FIELDS=set("acquired_at adjustment attributes automatic_promotion backtest_state coverage_scope entity_or_facility_id geography measurement_type metric original_available_for_replay original_version parser_version period_end period_start product_or_classification published_at quality_state raw_or_safe_payload_hash revised_at rights_scope scale sector_hint semantic_validation source_document_id source_id source_lineage_id source_locator source_url stage status stock_or_flow unit_normalized unit_original unknown_reason value_decimal_or_null value_normalized_or_null value_original vintage".split())
 from .quantitative_product import FIELDS as PRODUCT_FIELDS
+from .quantitative_counterpart import FIELDS as COUNTERPART_FIELDS,validate as validate_counterpart
 
 EVENT_FIELDS={
+ 'QUANTITATIVE_COUNTERPART_REVIEW':COUNTERPART_FIELDS,
  'QUANTITATIVE_PRODUCT_FACT':PRODUCT_FIELDS,
  'QUANTITATIVE_OBSERVATION':set('key id task change previous_id record'.split()),
  'QUANTITATIVE_PAGE_COMMITTED':set('id task page has_next total raw_hash parser rows added committed_at'.split()),
@@ -61,6 +63,7 @@ def audit(db):
         if set(event)-EVENT_FIELDS[kind]:raise ValueError('Q1_UNREVIEWED_EVENT_FIELD')
         if re.search(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|gh[pousr]_[A-Za-z0-9]{20,}|Bearer\s+\S+',payload):
             raise ValueError('Q1_CONTACT_OR_CREDENTIAL_NOT_ARCHIVABLE')
+        if kind=='QUANTITATIVE_COUNTERPART_REVIEW':validate_counterpart(event)
         if kind=='QUANTITATIVE_PRODUCT_FACT'and(event.get('s_stage')!='UNKNOWN'or event.get('research_only')is not True or event.get('qualified_capacity')is not None):raise ValueError('Q2_PRODUCT_UNREVIEWED_PROMOTION')
         if kind=='QUANTITATIVE_TARGET_REVIEW'and(event.get('s_stage')!='UNKNOWN'or event.get('research_only')is not True):raise ValueError('Q2_AUTOMATIC_STAGE_FORBIDDEN')
         if kind=='QUANTITATIVE_OBSERVATION':

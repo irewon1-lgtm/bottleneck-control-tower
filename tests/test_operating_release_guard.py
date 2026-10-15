@@ -39,6 +39,14 @@ def test_main_automatic_release_requires_matching_actual_gates_and_preserved_cod
         module.verify_release(request, release, tmp_path)
 
 
+def test_new_research_workflow_is_reported_but_never_silently_exempted(tmp_path):
+    release, docs = resources(tmp_path)
+    path = tmp_path/'.github/workflows/research.yml'; path.parent.mkdir(parents=True)
+    path.write_text('permissions: read-all\n')
+    with pytest.raises(ValueError, match='research.yml'):
+        module.verify_release(lambda method, suffix: deepcopy(docs[suffix]), release, tmp_path)
+
+
 @pytest.mark.parametrize('broken', ['skip', 'artifact', 'revision', 'delete_test'])
 def test_skip_wrong_artifact_wrong_revision_or_deleted_test_cannot_enable_auto_release(tmp_path, broken):
     release, docs = resources(tmp_path)

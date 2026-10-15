@@ -30,6 +30,21 @@ def test_q1_format_is_not_cpu_queue_and_new_process_restores_dedup(tmp_path):
     assert file_sha(l.path)==before;l.close()
 
 
+def test_counterpart_positions_and_unknown_quantity_fact_survive_typed_capsule(tmp_path):
+    from bct.v4 import quantitative_counterpart as counterpart
+    from bct.v4.quantitative_product import save as save_products
+    l,m,row=facts(tmp_path)
+    products=json.loads(Path('docs/v4/quantitative/product-facts.json').read_text())
+    save_products(l,products['records'])
+    packet=json.loads(Path('docs/v4/quantitative/counterpart-review.json').read_text())
+    assert counterpart.save(l,packet)['added']==12
+    proof=private.checkpoint(l,tmp_path/'checkpoint');l.close()
+    private.restore(tmp_path/'checkpoint',tmp_path/'restored')
+    restored=Ledger(tmp_path/'restored');assert counterpart.save(restored,packet)['added']==0
+    assert restored.db.execute("SELECT count(*) FROM events WHERE kind='QUANTITATIVE_PRODUCT_FACT'").fetchone()[0]==4
+    assert restored.db.execute('SELECT count(*)FROM firsts').fetchone()[0]==0;restored.close()
+
+
 def test_unknown_raw_or_contact_and_live_data_cannot_publish(tmp_path):
     l,m,row=facts(tmp_path)
     with l.db:l.event('UNREVIEWED_BODY',{'text':'synthetic article'})
