@@ -1,0 +1,283 @@
+{
+  "at": "2026-10-15T06:56:02.522383+00:00",
+  "start_development_sha": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+  "status": "ACTIVATION_BLOCKED_PRIVATE_REPO_TOKEN_ACCESS_AND_HANDOFF_SECRET",
+  "repository_and_setting_API_checks": {
+    "at": "2026-10-15T06:36:41.187322+00:00",
+    "checks": [
+      {
+        "endpoint": "repos/irewon1-lgtm/bct-v4-private-state",
+        "exit_code": 0,
+        "result": {
+          "full_name": "irewon1-lgtm/bct-v4-private-state",
+          "private": true,
+          "visibility": "private",
+          "default_branch": "main",
+          "size": 0,
+          "message": null,
+          "status": null
+        },
+        "diagnostic": ""
+      },
+      {
+        "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/actions/secrets",
+        "exit_code": 1,
+        "result": {
+          "total_count": null,
+          "secrets": null,
+          "message": "Resource not accessible by integration",
+          "status": "403"
+        },
+        "diagnostic": "gh: Resource not accessible by integration (HTTP 403)\n"
+      },
+      {
+        "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/actions/variables",
+        "exit_code": 1,
+        "result": {
+          "variables": [],
+          "message": "Resource not accessible by integration",
+          "status": "403"
+        },
+        "diagnostic": "gh: Resource not accessible by integration (HTTP 403)\n"
+      }
+    ]
+  },
+  "settings_observed": {
+    "private_token_present": true,
+    "private_token_header_format_valid": true,
+    "handoff_secret_present": false,
+    "handoff_secret_format_valid": false,
+    "code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+    "code_SHA_matches_tested_handoff": true,
+    "enabled_variable": "false",
+    "CPU_reading_performed": false,
+    "settings_modified": false
+  },
+  "dedicated_token": {
+    "authentication_HTTP": 200,
+    "authentication_run": 38694400014,
+    "private_repository_GET_HTTP": 404,
+    "private_repository_GET_run": 38694115009,
+    "private_repository_exists_separate_read_identity": true,
+    "diagnosis": "Valid GitHub authentication but target private-repository access not granted/available to this secret; exact account/selection/policy cause not established.",
+    "private_blob_or_DB_writes": 0,
+    "private_remote_restore": "BLOCKED",
+    "operating_ref_denials": {
+      "run_id": 38694937765,
+      "head_sha": "9344547b5f645fc1eb74174b6e614371dafcc031",
+      "conclusion": "success",
+      "receipts": {
+        "BCT_SETTINGS_OBSERVED_JSON": {
+          "private_token_present": true,
+          "private_token_header_format_valid": true,
+          "handoff_secret_present": false,
+          "handoff_secret_format_valid": false,
+          "code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+          "code_SHA_matches_tested_handoff": true,
+          "enabled_variable": "false",
+          "CPU_reading_performed": false,
+          "settings_modified": false
+        },
+        "BCT_PRIVATE_SCOPE_JSON": {
+          "status": "DIAGNOSTIC_ONLY",
+          "authentication": {
+            "prior_run": "38694400014",
+            "HTTP": 200,
+            "authenticated": true
+          },
+          "public_existing_ref_creation_HTTP": {
+            "main": 403,
+            "data": 403
+          },
+          "public_write_denied": true,
+          "requests": [
+            {
+              "method": "POST",
+              "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/refs",
+              "HTTP": 403
+            },
+            {
+              "method": "POST",
+              "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/refs",
+              "HTTP": 403
+            }
+          ],
+          "private_repo_failed_GET_repeated": false,
+          "source_DB_uploaded": false
+        }
+      }
+    }
+  },
+  "diagnostic_history": [
+    {
+      "run": 38693878756,
+      "head_sha": "95f13e20a2803bd62bc5594e40f78fe87d189c53",
+      "conclusion": "failure",
+      "reason": "handoff secret empty; scope step skipped"
+    },
+    {
+      "run": 38694115009,
+      "head_sha": "545fa1f2e358c69b7dc92720e61fc6d8966de02c",
+      "conclusion": "failure",
+      "reason": "private repository GET404; no write attempted"
+    },
+    {
+      "run": 38694400014,
+      "head_sha": "9988099ba4303cd68618792169d6f215b37ff78b",
+      "conclusion": "failure",
+      "reason": "dedicated GET/user200, then diagnostic default-token header guard; no operating-ref requests occurred"
+    },
+    {
+      "run": 38694937765,
+      "head_sha": "9344547b5f645fc1eb74174b6e614371dafcc031",
+      "conclusion": "success",
+      "meaning": "Only isolated permission diagnostic finished; actual two operating-ref writes denied403/403. No private GET or auth GET repeated."
+    }
+  ],
+  "private_archival": {
+    "original_documents": 3,
+    "approved": 0,
+    "unresolved": 3,
+    "review_reused": "docs/v4/cpu-automation/preflight/private-state-results.json#private_archival_review",
+    "exact_originals_preserved": true,
+    "new_source_fetches": 0,
+    "raw_or_body_copies_to_GitHub": 0,
+    "metadata_only_alternative": {
+      "status": "PASS_OFFLINE_METADATA_ALTERNATIVE_ONLY",
+      "original_documents_checked": 3,
+      "cached_windows_verified_not_rerun": 67,
+      "older_completion_receipts_retained": 38,
+      "completion_receipts_total": 41,
+      "source_sqlite_sha256_unchanged": "5d231f79819e3794544b9027dc1cace0d42962abda323d6032e0360a92485500",
+      "originals_modified": false,
+      "article_text_blobs_quotes_copied": 0,
+      "model_loads": 0,
+      "derivative_archive_bytes": 10798,
+      "derivative_sqlite_sha256": "42c31635ef227fed06f7e5904d0e0a6df6a4190e37938d419cfd6926f93b421c",
+      "new_process_restore": {
+        "restored": true,
+        "tables": 8,
+        "sqlite_sha256": "42c31635ef227fed06f7e5904d0e0a6df6a4190e37938d419cfd6926f93b421c"
+      },
+      "private_audit": {
+        "status": "PASS_PRIVATE_STORAGE_REVIEW",
+        "scope": "private",
+        "sqlite_sha256": "42c31635ef227fed06f7e5904d0e0a6df6a4190e37938d419cfd6926f93b421c",
+        "documents": [],
+        "findings": [],
+        "scan_is_not_a_privacy_certificate": true,
+        "originals_modified": false
+      },
+      "remote_publication": "NOT_RUN_TOKEN_ACCESS_BLOCKED",
+      "production_seed": false,
+      "limitations": [
+        "Not an original DB restore; semantic results stay in the preserved original.",
+        "No new source archival permission granted; existing source gate remains.",
+        "Not wired to production queue or enabled automation."
+      ]
+    },
+    "reproduction": "PYTHONPATH=src timeout 120 .venv/bin/python docs/v4/cpu-automation/preflight/check_metadata_alternative.py --source var/v4/cpu-automation/ledger/v4.sqlite3 --output <new ignored directory>"
+  },
+  "preservation": {
+    "remote_refs_observed": {
+      "refs/heads/codex/bct-v4-integration": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+      "refs/heads/data": "7d4bfd16f44fdd2d5a0f3bdac59e816e53d9ecad",
+      "refs/heads/main": "9344547b5f645fc1eb74174b6e614371dafcc031"
+    },
+    "main_changes_since_start": [
+      ".github/workflows/v4-cpu-private-settings-check.yml"
+    ],
+    "data_ref_unchanged": true,
+    "RSS_precursor_UI_operating_code_unchanged": true,
+    "original_model_cache_reused_no_load_or_download": true
+  },
+  "automation": {
+    "CPU_enabled": false,
+    "scheduled_new_CPU_read": "NOT_RUN",
+    "remote_private_DB_persistence": "BLOCKED",
+    "seven_day_start": null,
+    "seven_day_status": "NOT_STARTED",
+    "external_AI": "DISABLED",
+    "automatic_S2_S3_LIVE": "DISABLED"
+  },
+  "existing_operation_and_resources": {
+    "RSS": [
+      {
+        "id": 38658360952,
+        "head_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+        "event": "schedule",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-10-15T00:09:10Z",
+        "updated_at": "2026-10-15T00:11:11Z"
+      }
+    ],
+    "precursor": [
+      {
+        "id": 38658562958,
+        "head_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+        "event": "workflow_run",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-10-15T00:11:14Z",
+        "updated_at": "2026-10-15T00:13:38Z"
+      }
+    ],
+    "cache_usage": {
+      "full_name": "irewon1-lgtm/bottleneck-control-tower",
+      "active_caches_size_in_bytes": 2119028814,
+      "active_caches_count": 6
+    },
+    "probe_timing": {
+      "billable": {
+        "UBUNTU": {
+          "total_ms": 0,
+          "jobs": 1,
+          "job_runs": [
+            {
+              "job_id": 116289199150,
+              "duration_ms": 0
+            }
+          ]
+        }
+      },
+      "run_duration_ms": 17000
+    }
+  },
+  "tests": {
+    "private_storage_impact": {
+      "passed": 15,
+      "seconds": 3.4
+    },
+    "manual_workflow_guard": {
+      "passed": 4,
+      "seconds": 0.11
+    },
+    "metadata_only_existing_receipts": "PASS_OFFLINE_3_DOCUMENTS_67_CACHED_WINDOWS_NO_INFERENCE_8_TABLE_RESTORE",
+    "final_development_CI": "Verify externally on final pushed SHA; manual main diagnostic success is not development CI."
+  },
+  "usage": {
+    "Groq_calls": 0,
+    "external_AI_calls": 0,
+    "API_tokens": 0,
+    "API_cost_KRW": 0,
+    "CPU_inference_windows": 0,
+    "model_downloads": 0,
+    "source_document_fetches": 0,
+    "private_DB_uploads": 0,
+    "private_Actions_compute_runs": 0,
+    "manual_public_standard_Ubuntu_diagnostics": 4,
+    "account_total_bill": "Not exposed; no paid resource or plan change. Last diagnostic reported Ubuntu billable_ms0; this is not an account bill."
+  },
+  "unchanged_verdicts": {
+    "AI_adoption": "FAIL",
+    "independent_AI_evaluation": "BLOCKED",
+    "historical_lead_performance": "BLOCKED",
+    "new_real_S3": 0
+  },
+  "owner_actions": [
+    "Confirm existing dedicated fine-grained token targets only irewon1-lgtm/bct-v4-private-state with Contents read/write; confirm same token stored in public repo Secret. Do not broaden to main/data or All repositories.",
+    "Make existing BCT_V4_STATE_PASSPHRASE available as Repository secret in bottleneck-control-tower (40..256 characters, no newline). Current workflow has no environment binding. Never send secret values in chat."
+  ],
+  "next_resume": "After meaningful owner-setting correction, verify private-only scope and write once, choose permitted checkpoint scope with originals retained, then actual private remote restore/hashes. Only then apply separated CPU workflow and enable; first real scheduled new read+validation+private durable ACK starts7days."
+}

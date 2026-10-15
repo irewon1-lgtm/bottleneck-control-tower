@@ -1,0 +1,96 @@
+name: V4 CPU private settings check
+on:
+  workflow_dispatch:
+    inputs:
+      auth_denials_only:
+        type: boolean
+        default: false
+        description: Diagnose authentication and public-ref denials without retrying private-repo access
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: v4-cpu-private-settings-check
+  cancel-in-progress: false
+jobs:
+  publisher_permission_check:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      PYTHONPATH: src
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Verify standard free runner; do not load the model
+        run: timeout 120 python tools/v4_cpu_preflight.py guard --output var/v4/cpu-private-settings/free.json
+      - name: Observe settings without printing secret values
+        env:
+          STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+          STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+          CPU_CODE_SHA: ${{ vars.BCT_V4_CPU_CODE_SHA }}
+          CPU_ENABLED: ${{ vars.BCT_V4_CPU_RESEARCH_ENABLED }}
+        run: |
+          timeout 120 python - <<'PY'
+          import json,os,re
+          token=os.environ.get('STATE_TOKEN','');key=os.environ.get('STATE_PASSPHRASE','')
+          code=os.environ.get('CPU_CODE_SHA','');enabled=os.environ.get('CPU_ENABLED','')
+          report={'private_token_present':bool(token),'private_token_header_format_valid':bool(re.fullmatch(r'[A-Za-z0-9_\-]{20,512}',token)),
+            'handoff_secret_present':bool(key),'handoff_secret_format_valid':40<=len(key)<=256 and '\n'not in key and '\r'not in key,
+            'code_SHA':code if re.fullmatch('[0-9a-f]{40}',code)else 'MISSING_OR_INVALID',
+            'code_SHA_matches_tested_handoff':code=='da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6',
+            'enabled_variable':enabled if enabled in ('true','false')else 'MISSING_OR_INVALID',
+            'CPU_reading_performed':False,'settings_modified':False}
+          print('BCT_SETTINGS_OBSERVED_JSON='+json.dumps(report))
+          assert report['private_token_present'] and report['private_token_header_format_valid'], 'PRIVATE_TOKEN_MISSING_OR_FORMAT_INVALID'
+          # Encryption-key absence blocks DB/CPU activation, not this independent
+          # source-free permission probe. Preserve that absence in the receipt.
+          PY
+      - name: Actual private-token writes and operating-ref denials, no source DB
+        env:
+          STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+          AUTH_DENIALS_ONLY: ${{ inputs.auth_denials_only }}
+        run: |
+          timeout 120 python - <<'PY'
+          import json,os,sys
+          from bct.v4 import private_state as private
+          receipts=[]
+          def audit_api(token,method,path,data=None):
+              code,result=private.github_api(token,method,path,data)
+              row={'method':method,'endpoint':path,'HTTP':code}
+              if path.startswith('user/repos?') and isinstance(result,list):row['visible_private_count']=len(result)
+              receipts.append(row)
+              return code,result
+          try:
+              token=os.environ.get('STATE_TOKEN','')
+              if os.environ.get('AUTH_DENIALS_ONLY')=='true':
+                  # Authentication already returned HTTP200 in run38694400014.
+                  # Do not repeat either that call or the failed private GET.
+                  auth={'prior_run':'38694400014','HTTP':200,'authenticated':True}
+                  denials={}
+                  # Public existing commit IDs observed read-only before dispatch.
+                  # Create-existing-ref never updates a ref, regardless of SHA.
+                  refs={'main':'9988099ba4303cd68618792169d6f215b37ff78b',
+                        'data':'7d4bfd16f44fdd2d5a0f3bdac59e816e53d9ecad'}
+                  for branch,commit in refs.items():
+                      code,_=audit_api(token,'POST',f'repos/{private.PUBLIC_REPO}/git/refs',{'ref':'refs/heads/'+branch,'sha':commit})
+                      denials[branch]=code
+                  report={'status':'DIAGNOSTIC_ONLY','authentication':auth,'public_existing_ref_creation_HTTP':denials,
+                      'public_write_denied':len(denials)==2 and all(c in (403,404)for c in denials.values()),
+                      'requests':receipts,'private_repo_failed_GET_repeated':False,'source_DB_uploaded':False}
+              else:
+                  proof=private.writer_scope(token,api=audit_api)
+                  report={'status':'PASS','proof':proof,'requests':receipts,'source_DB_uploaded':False}
+          except ValueError as exc:
+              report={'status':'BLOCKED','reason':str(exc),'requests':receipts,'source_DB_uploaded':False}
+          print('BCT_PRIVATE_SCOPE_JSON='+json.dumps(report))
+          sys.exit(0 if report['status']in ('PASS','DIAGNOSTIC_ONLY')else 1)
+          PY
+# Manual permission/settings verification only. No schedule, model/cache setup,
+# CPU inference, source archive publication, configuration writes or stage changes.

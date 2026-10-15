@@ -1,12 +1,12 @@
 {
   "plan_version": "3.1",
-  "plan_sha256": "a327fdf903d317f612cc16b2011d5db6be8635c72a7fb6a1717fe17bab6e6d25",
+  "plan_sha256": "d0d4bc2d925b966b218b958a2530f7d18761411c0d3d82a8e0fc1887a350a74d",
   "stage": 4,
-  "status": "PRIVATE_STORAGE_PATH_FUNCTIONALLY_TESTED_ACTIVATION_BLOCKED_OWNER_SETUP_AND_ARCHIVAL_REVIEW",
+  "status": "ACTIVATION_BLOCKED_PRIVATE_REPO_TOKEN_ACCESS_AND_HANDOFF_SECRET",
   "handoff_sha": "cc190d429e369580cda5ac5790a9b45b9168baf8",
   "base_remote_sha": "cc190d429e369580cda5ac5790a9b45b9168baf8",
-  "last_completed": "Implemented private-only writer on existing bounded CAS/storage, separate read-only CPU/publisher jobs, authenticated encrypted cache handoff, stale bridge/retry isolation and durable ACK before7day start.62 focused offline tests passed plus final credential-format/redaction case. Dedicated repo creation403 and Secret settings403; exact3 original private archival reviews remain BLOCKED. No actual private GitHub DB publication or schedule start.",
-  "next_action": "After OWNER_SETUP.md one-time configuration, apply the read-only two-job workflow and verify-scope only first. Resolve exact-version private archival review, seed existing DB without re-reading CPU or reinstalling cache, remotely restore/hash-check, then remove false gate and enable only if all checks pass. First real scheduled new validated and acknowledged private read starts7days. Never repeat old Groq/CPU/RSS trials.",
+  "last_completed": "Verified actual owner setup in Actions: private repo exists, dedicated auth200, main/data write403/403; private GET404 and encryption Secret empty. Validated separate metadata-only local receipt DB and new-process eight-table restore without any CPU reread or raw copy.",
+  "next_action": "After meaningful owner-setting correction, verify private-only scope and write once, choose permitted checkpoint scope with originals retained, then actual private remote restore/hashes. Only then apply separated CPU workflow and enable; first real scheduled new read+validation+private durable ACK starts7days.",
   "blockers": [
     {
       "code": "SEVEN_STORED_ITEMS_REMAIN_INVALID",
@@ -235,7 +235,7 @@
     }
   ],
   "scope": "Private-state storage/permission separation only, free CPU research. No public main/data runtime write token; no operating changes, new model/cache/RSS/oldCPU reprocessing, AI or automatic S2/S3/LIVE. Actual activation conditional on owner setup, verified exclusive permission and source archival rights.",
-  "updated_at": "2026-10-15T05:19:53.369624+00:00",
+  "updated_at": "2026-10-15T06:56:02.522383+00:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
@@ -346,15 +346,15 @@
   "api_usage_current_task": {
     "Groq_calls": 0,
     "external_AI_calls": 0,
-    "tokens": 0,
+    "API_tokens": 0,
     "API_cost_KRW": 0,
-    "new_model_installs": 0,
-    "new_model_downloads": 0,
-    "new_actual_CPU_windows": 0,
+    "CPU_inference_windows": 0,
+    "model_downloads": 0,
+    "source_document_fetches": 0,
+    "private_DB_uploads": 0,
     "private_Actions_compute_runs": 0,
-    "paid_resources_or_plan_changes": false,
-    "new_GitHub_artifact_uploads": 0,
-    "account_platform_bill": "Not exposed; public standard CI only, no private runner/paid activation."
+    "manual_public_standard_Ubuntu_diagnostics": 4,
+    "account_total_bill": "Not exposed; no paid resource or plan change. Last diagnostic reported Ubuntu billable_ms0; this is not an account bill."
   },
   "remaining_issues": [
     {
@@ -3940,6 +3940,29 @@
         }
       ],
       "next_resume": "After OWNER_SETUP.md one-time configuration, apply the read-only two-job workflow and verify-scope only first. Resolve exact-version private archival review, seed existing DB without re-reading CPU or reinstalling cache, remotely restore/hash-check, then remove false gate and enable only if all checks pass. First real scheduled new validated and acknowledged private read starts7days. Never repeat old Groq/CPU/RSS trials."
+    },
+    "owner_resume": {
+      "at": "2026-10-15T06:56:02.522383+00:00",
+      "start_sha": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+      "status": "ACTIVATION_BLOCKED_PRIVATE_REPO_TOKEN_ACCESS_AND_HANDOFF_SECRET",
+      "evidence": "docs/v4/cpu-automation/preflight/owner-resume-results.json",
+      "private_repo_exists": true,
+      "dedicated_authentication_HTTP": 200,
+      "dedicated_private_repo_HTTP": 404,
+      "main_data_actual_denials_HTTP": [
+        403,
+        403
+      ],
+      "handoff_secret_delivered": false,
+      "code_SHA_variable_matches_tested_code": true,
+      "CPU_enabled_variable": "false",
+      "private_archival_unknown": 3,
+      "metadata_only_alternative": "PASS_OFFLINE_ONLY_NOT_PRODUCTION_SEED",
+      "private_DB_remote_restore": "BLOCKED",
+      "actual_periodic_CPU": "NOT_RUN",
+      "seven_day_start": null,
+      "impact_tests_passed": 19,
+      "next_resume": "After meaningful owner-setting correction, verify private-only scope and write once, choose permitted checkpoint scope with originals retained, then actual private remote restore/hashes. Only then apply separated CPU workflow and enable; first real scheduled new read+validation+private durable ACK starts7days."
     }
   },
   "before_cpu_activation": {

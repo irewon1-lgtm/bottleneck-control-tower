@@ -1,6 +1,15 @@
 # 소유자 1회 설정 — 비공개 CPU 연구 저장
 
-현재 전용 저장소 조회는404, 생성은403(`Resource not accessible by integration`)이다. 현재 Codex 인증으로 저장소/Actions Secret 설정을 완료할 수 없다. 기존 Groq 키는 변경하지 않는다. 이 안내는 GitHub 소유자 계정에서 한 번 수행한다. **토큰이나 암호화 비밀값을 채팅·이슈·로그에 보내지 않는다.**
+2026-10-15 소유자 설정 후 실제 Actions 재확인: 비공개 저장소는 존재한다. 전용 토큰도 전달되며 인증 GET `/user`는200, 공개 main/data 기존 ref 생성은 각각403이다. 그러나 같은 토큰의 비공개 저장소 조회는404이고, `BCT_V4_STATE_PASSPHRASE`는 실행기에 전달되지 않았다. 변수 두 개는 정상 전달됐다(검증된 코드 `da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6`, enabled=`false`). **저장소를 다시 만들거나 모델·키를 재설치하지 않는다. 토큰이나 암호화 비밀값을 채팅·이슈·로그에 보내지 않는다.**
+
+## 지금 남은 소유자 조치 두 가지
+
+1. 프로필 → **Settings → Developer settings → Personal access tokens → Fine-grained tokens → 기존 전용 토큰**에서 Resource owner=`irewon1-lgtm`, **Only select repositories → `bct-v4-private-state` 하나**, Contents=**Read and write**, Metadata=Read를 확인한다. 현재 인증은 성공하므로 키 무효화로 단정하지 않는다. 선택 저장소/권한/승인 상태와 Actions에 저장한 토큰의 일치를 확인한다. 공개 `bottleneck-control-tower`를 선택하거나 All repositories로 넓히지 않는다. 필요한 경우 아래 공개 저장소 Secret의 해당 값만 안전한 설정 화면에서 수정한다.
+2. [공개 저장소 Actions Secrets](https://github.com/irewon1-lgtm/bottleneck-control-tower/settings/secrets/actions) → **Repository secrets**에서 이름이 정확히 **`BCT_V4_STATE_PASSPHRASE`**인지 확인한다. 40~256자, 줄바꿈 없는 기존 암호화 비밀값을 전달한다. 다른 저장소나 Environment Secret에만 등록하면 현재 `environment` 미지정 workflow에는 전달되지 않는다. 전역 미등록으로 단정한 것이 아니라 실제 실행에서 빈 값임을 확인했다. 이미 존재하는 정상 비밀값은 재생성하지 않는다.
+
+현재 enabled=`false`를 유지한다. 위 두 설정이 해결된 뒤 비공개 쓰기/원격 복원을 검증한다. 원문3건의 Git 보관 허가는 여전히 미확인이므로 그대로 업로드하지 않는다. 안전 대안으로 원문·인용 없는 **처리 완료 ID·해시 전용 파생 DB**의 로컬8개 테이블/새 프로세스 복원은 확인했다. 이것은 원본 연구 결과 복원이나 운영 seed가 아니며 자동 연결도 하지 않았다. 원본 DB와 frozen 백업은 보존한다. 이후 원격 보관 경로를 결정할 때 이 범위 차이를 명시한다.
+
+실제 증거: `owner-resume-results.json`. 이하 항목은 기존 설정 설명이며 완료한 설정을 반복하는 지시가 아니다.
 
 ## 1. 비공개 저장소
 
