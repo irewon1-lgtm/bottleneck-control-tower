@@ -151,11 +151,12 @@ def census(ledger,fetch):
     if e.status in (202,401,403,429)or e.reason=='CENSUS_KEY_REJECTED_OR_UNACTIVATED'or e.reason.startswith('CENSUS_RESPONSE_'):return
 
 
-def process():
+def process(only_trade=False):
  initialize();ledger=Ledger(R/'ledger');fetch=Fetch(ledger);done=False
  try:
   with ledger.worker():
-   sec(ledger,fetch);census(ledger,fetch);done=True
+   if not only_trade:sec(ledger,fetch)
+   census(ledger,fetch);done=True
  except StopBatch:pass
  finally:ledger.close()
  print('BCT_Q1_SOURCE_BATCH_JSON='+json.dumps({'HTTP_requests_this_batch':fetch.calls,'all_unblocked_tasks_visited':done,'AI_calls':0,'CPU_windows':0}))
@@ -206,6 +207,6 @@ def publish():
  print('BCT_Q1_SOURCES_PUBLISH_JSON='+json.dumps({'report':result['report'],'receipt':receipt,'code_SHA':os.environ['GITHUB_SHA']}))
 
 if __name__=='__main__':
- parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets']);a=parser.parse_args()
- if a.action=='process':raise SystemExit(process())
+ parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade']);a=parser.parse_args()
+ if a.action in {'process','trade'}:raise SystemExit(process(only_trade=a.action=='trade'))
  else:globals()[a.action]()
