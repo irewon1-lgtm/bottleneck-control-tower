@@ -71,3 +71,18 @@ def test_source_processor_never_has_private_writer_credential():
  assert 'BCT_V4_PRIVATE_STATE_TOKEN'not in json.dumps(process)
  assert 'BCT_SEC_USER_AGENT'in json.dumps(process)and'CENSUS_API_KEY'in json.dumps(process)
  assert w['permissions']['contents']=='read'
+
+
+def test_trade_country_identity_and_ambiguous_columns_are_not_merged(tmp_path):
+ raw=json.dumps([['E_COMMODITY','QTY_1_MO','ALL_VAL_MO','UNIT_QY1','CTY_CODE','time'],
+ ['2504100000','12','800','KG','1220','2024-01'],
+ ['2504100000','15','900','KG','2010','2024-01']]).encode()
+ rows=source.parse_trade(raw,meta(tmp_path,raw),'exports','VERIFIED_ANNUAL_CODE_UNIT')
+ quantities=[r for r in rows if r['measurement_type']=='PHYSICAL']
+ assert len({q.obs_key(r)for r in quantities})==2
+ assert {r['geography']for r in quantities}=={'US/partner-code-1220','US/partner-code-2010'}
+ assert {r['source_lineage_id']for r in quantities}=={'US_CENSUS_INTLTRADE'}
+ assert all(r['attributes']['physical_quantity_role']=='TRADE_NOT_ACTUAL_ORDER_OR_PRODUCTION'for r in quantities)
+ bad=json.dumps([['E_COMMODITY','E_COMMODITY'],['2504100000','8101940000']]).encode()
+ with pytest.raises(ValueError,match='CENSUS_DUPLICATE_COLUMNS'):
+  source.parse_trade(bad,meta(tmp_path,bad),'exports','VERIFIED_ANNUAL_CODE_UNIT')
