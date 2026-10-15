@@ -10,7 +10,7 @@ on:
     inputs:
       purpose:
         type: choice
-        options: [seed]
+        options: [seed, recovery-check]
         default: seed
 permissions:
   contents: read
@@ -120,8 +120,36 @@ jobs:
       - name: Authenticate CPU result, no model or upstream code execution
         if: ${{ github.event_name == 'workflow_run' }}
         run: timeout 120 python tools/v4_cpu_private.py unseal --packet var/v4/cpu-private/result/state.gpg --checkpoint var/v4/cpu-private/checkpoint
+      - uses: actions/cache/restore@v4
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'recovery-check' }}
+        with:
+          key: v4-cpu-private-bridge-recovery-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: v4-cpu-private-bridge-
+          fail-on-cache-miss: true
+          path: var/v4/cpu-private/bridge
+      - name: Restore actual private research state for CAS recovery test
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'recovery-check' }}
+        run: timeout 120 python tools/v4_cpu_private.py unseal --packet var/v4/cpu-private/bridge/state.gpg --checkpoint var/v4/cpu-private/checkpoint
+      - name: Prove stale-parent storage refusal without changing remote state
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'recovery-check' }}
+        env:
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+        run: |
+          timeout 120 python - <<'PYCODE'
+          import json,os,pathlib
+          from bct.v4 import private_state as p
+          proof=json.loads(pathlib.Path('docs/v4/cpu-automation/preflight/connection-results.json').read_text())
+          scope=proof['actual_remote_evidence']['receipts']['BCT_PRIVATE_SCOPE_JSON']['scope']
+          try:
+              p.publish('var/v4/cpu-private/git','var/v4/cpu-private/checkpoint','0'*40,
+                  os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],{},verified_scope=scope)
+          except ValueError as error:
+              assert str(error)=='RESEARCH_STATE_PARENT_CHANGED_NO_OVERWRITE'
+              print('BCT_EXPECTED_STORAGE_FAILURE_JSON='+json.dumps({'status':'PASS_EXPECTED_CAS_STALE_PARENT_REFUSAL','remote_overwrite':False,'new_CPU_windows':0}))
+          else:raise AssertionError('STALE_PARENT_MUST_NOT_WRITE')
+          PYCODE
       - name: Private CAS publish and fresh remote hash/table restore
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' }}
         env:
           BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
         run: |
@@ -131,7 +159,10 @@ jobs:
             timeout 120 python tools/v4_cpu_private.py publish --reuse-verified-scope --output var/v4/cpu-private/published.json
           fi
       - name: New-process remote research restore and dedup validation; no CPU load
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' }}
+        env:
+          CONFIGURED_CPU_CODE_SHA: ${{ vars.BCT_V4_CPU_CODE_SHA }}
+          CONFIGURED_CPU_ENABLED: ${{ vars.BCT_V4_CPU_RESEARCH_ENABLED }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' }}
         run: |
           timeout 120 python - <<'PYCODE'
           import json,pathlib,subprocess,tempfile,sqlite3
@@ -162,17 +193,20 @@ jobs:
               assert len(checked)==safe['completed_body_keys']==41
               ledger.close()
           print('BCT_RESEARCH_RESUME_JSON='+json.dumps({'status':'PASS_ACTUAL_PRIVATE_RESEARCH_RESTART',
-              'fixed_code_SHA':__import__('os').environ['CPU_CODE_SHA'],'remote_commit':commit,
+              'fixed_code_SHA':__import__('os').environ['CPU_CODE_SHA'],
+              'configured_code_SHA':__import__('os').environ['CONFIGURED_CPU_CODE_SHA'],
+              'configured_code_matches':__import__('os').environ['CONFIGURED_CPU_CODE_SHA']==__import__('os').environ['CPU_CODE_SHA'],
+              'configured_enabled':__import__('os').environ['CONFIGURED_CPU_ENABLED'],'remote_commit':commit,
               'remote_restore':restored,'state':safe,'deduplicated_historical_bodies':len(checked),
               'original_source_rows_copied':0,'model_loads':0,'new_CPU_windows':0,
               'seven_day_start':result['persistence_receipt']['seven_day_start'],
               'original_DB_fully_restored':False}))
           PYCODE
       - name: Seal acknowledged private state for next read-only CPU job
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' }}
         run: timeout 120 python tools/v4_cpu_private.py seal --packet var/v4/cpu-private/bridge/state.gpg --parent-file var/v4/cpu-private/published.json
       - uses: actions/cache/save@v4
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' }}
         with:
           key: v4-cpu-private-bridge-${{ github.run_id }}-${{ github.run_attempt }}
           path: var/v4/cpu-private/bridge
