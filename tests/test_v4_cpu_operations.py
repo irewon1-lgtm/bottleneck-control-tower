@@ -152,3 +152,57 @@ def test_verified_regular_but_empty_cpu_queue_does_not_start7day(tmp_path):
     assert r['scheduled_execution_verified'] and r['new_CPU_windows']==0
     assert r['seven_day_start'] is None
     assert op.observation_summary(l.db)['first_verified_scheduled_CPU_success'] is None;l.close()
+
+
+def test_separate_research_branch_CAS_keeps_old_checkpoints_and_operating_refs(tmp_path):
+    bare=tmp_path/'remote.git';repo=tmp_path/'repo'
+    def git(*a,cwd=None):return subprocess.check_output(['git',*a],cwd=cwd,stderr=subprocess.DEVNULL,text=True).strip()
+    git('init','--bare',str(bare));git('init',str(repo));git('config','user.email','test@example.org',cwd=repo);git('config','user.name','test',cwd=repo)
+    (repo/'preserved').write_text('original');git('add','preserved',cwd=repo);git('commit','-m','original',cwd=repo)
+    original=git('rev-parse','HEAD',cwd=repo);git('remote','add','origin',str(bare),cwd=repo)
+    git('push','origin','HEAD:refs/heads/main','HEAD:refs/heads/data',cwd=repo)
+    restore_baseline(tmp_path/'queue');l=open_queue(tmp_path/'queue');op.checkpoint(l,tmp_path/'checkpoint1')
+    first=op.publish_checkpoint(repo,tmp_path/'checkpoint1','')
+    op.observe(l,trigger='SYNTHETIC_TEST');op.checkpoint(l,tmp_path/'checkpoint2');l.close()
+    with pytest.raises(ValueError,match='PARENT_CHANGED'):op.publish_checkpoint(repo,tmp_path/'checkpoint2','')
+    second=op.publish_checkpoint(repo,tmp_path/'checkpoint2',first['commit'])
+    assert git('rev-parse','refs/heads/main',cwd=bare)==git('rev-parse','refs/heads/data',cwd=bare)==original
+    assert git('rev-parse',second['commit']+'^',cwd=bare)==first['commit']
+    assert 'preserved' not in git('ls-tree','--name-only',op.STATE_REF,cwd=bare)
+    assert git('show',first['commit']+':checkpoint.json',cwd=bare)!=git('show',second['commit']+':checkpoint.json',cwd=bare)
+
+
+def test_preflight_cli_cannot_publish_any_research_branch_without_activation(tmp_path):
+    result=subprocess.run([sys.executable,str(REPO/'tools/v4_cpu_preflight.py'),'publish-state'],cwd=REPO,capture_output=True)
+    assert result.returncode!=0 and b'REQUIRES_APPROVED_MAIN_ACTIVATION' in result.stderr
+
+
+def test_only_verified_scheduled_actual_read_opens_observation_never_completes_it(tmp_path):
+    from bct.v4.cpu_automation import enqueue
+    from bct.v4.adapters import MODEL,MODEL_REVISION
+    body='Atlas ordered novel pumps in this synthetic observer test.'
+    raw=('<article><p>'+body+'</p></article>').encode()
+    d={'document_id':'synthetic-observer','origin_url':'https://example.org/synthetic','body':body,
+       'body_sha256':sha(body.encode()),'raw_sha256':sha(raw),'published_at':'2026-10-01',
+       'acquired_at':'2026-10-02','provenance':'PASS','provenance_verified':True,'checks':{'http_success':True}}
+    class SyntheticOnly:
+        def extract_windows(self,doc,windows,**kwargs):
+            return {'status':'PASS','model':MODEL,'revision':MODEL_REVISION,'selected_windows':windows,'spans':[]}
+    l=open_queue(tmp_path)
+    with l.worker():enqueue(l,d,raw,{'synthetic':True})
+    r=op.observe(l,trigger='SYNTHETIC_SCHEDULE_PROOF_TEST',execute=True,extractor=SyntheticOnly(),schedule_context=schedule_context())
+    assert r['actually_read_new_characters']==len(body) and r['seven_day_start']
+    summary=op.observation_summary(l.db)
+    assert summary['first_verified_scheduled_CPU_success']==r['finished_at']
+    assert summary['seven_day_status']=='OBSERVING_REQUIRES_CONTINUITY_REVIEW' and not summary['automatic_completion']
+    assert l.db.execute('select count(*) from firsts').fetchone()==(0,);l.close()
+
+
+def test_proposed_activation_is_not_an_active_workflow_and_is_off_by_default():
+    path=REPO/'docs/v4/cpu-automation/preflight/activation-change.yml.proposed'
+    data=yaml.safe_load(path.read_text());triggers=data.get('on',data.get(True))
+    assert triggers['workflow_run']['workflows']==['New precursor evidence acquisition']
+    assert 'BCT_V4_CPU_RESEARCH_ENABLED' in data['jobs']['research']['if']
+    assert all('pip install' not in step.get('run','')for step in data['jobs']['research']['steps'])
+    assert 'fail-on-cache-miss: true' in path.read_text()
+    assert 'refs/heads/codex/bct-v4-cpu-research-state' in path.read_text()

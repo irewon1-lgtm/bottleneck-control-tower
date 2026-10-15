@@ -143,7 +143,7 @@ def observe(ledger,*,trigger,scheduled_for=None,upstream=None,execute=False,extr
             'trigger':trigger,'scheduled_for':scheduled_for,'scheduled_execution_verified':scheduled['verified'],
             'schedule_proof':scheduled,
             'seven_day_start':None,'seven_day_status':'NOT_RUN_NO_VERIFIED_SCHEDULED_CPU_SUCCESS',
-            'upstream':upstream or {},'new_URLs':0,'new_body_documents':0,
+            'upstream':upstream or {},'new_URLs':(upstream or {}).get('new_URLs',0),'new_body_documents':(upstream or {}).get('new_body_documents',0),
             'CPU_documents_processed':len({c['document_id']for c in after['coverage']if c['read_characters']>next((d['read_characters']for d in before['coverage']if d['document_id']==c['document_id']),0)}),
             'new_CPU_windows':0 if result is None else result['new_windows'],
             'actually_read_new_characters':after['actually_read_characters']-before['actually_read_characters'],
@@ -217,3 +217,48 @@ def github_schedule_context():
     context={'event_name':'workflow_run','event':event,'acquisition_run':acq,'rss_run':rss,'acquisition_job_log':log}
     verified_schedule(context)
     return context
+
+
+STATE_REF='refs/heads/codex/bct-v4-cpu-research-state'
+
+
+def publish_checkpoint(repo,source,expected_parent):
+    """Prepared CAS writer for a dedicated research ref, never main/data.
+
+    Not invoked by preflight. The historical commits retain every checkpoint.
+    Execution requires separately approved workflow contents:write permission.
+    """
+    import tempfile
+    repo,source=Path(repo),Path(source)
+    proof=json.loads((source/'checkpoint.json').read_text());archive=source/'checkpoint.sqlite3.gz'
+    if proof['archive']!=archive.name or file_sha(archive)!=proof['archive_sha256'] or archive.stat().st_size>16*1024**2:
+        raise ValueError('RESEARCH_CHECKPOINT_HASH_OR_SIZE')
+    with tempfile.TemporaryDirectory(prefix='bct-cpu-state-verify-')as temporary:
+        verified=Path(temporary)/'verified'
+        restore(source,verified)
+        with sqlite3.connect((verified/'v4.sqlite3').resolve().as_uri()+'?mode=ro',uri=True)as db:
+            if db.execute('SELECT count(*) FROM firsts').fetchone()[0]:
+                raise ValueError('RESEARCH_CHECKPOINT_MUST_NOT_REGISTER_LIVE_OR_CANDIDATE_FIRSTS')
+    def git(*args,env=None,input=None):
+        p=subprocess.run(['git','-C',str(repo),*args],input=input,capture_output=True,text=True,env=env,timeout=25)
+        if p.returncode: raise ValueError('RESEARCH_STATE_GIT_OPERATION_FAILED')
+        return p.stdout.strip()
+    current=git('ls-remote','origin',STATE_REF)
+    current=current.split()[0]if current else ''
+    if current!=expected_parent: raise ValueError('RESEARCH_STATE_PARENT_CHANGED_NO_OVERWRITE')
+    # The same fixed ref is used at both CAS check and push. No caller can
+    # redirect this writer to an operational branch.
+    if current:git('fetch','--no-tags','origin',STATE_REF)
+    with tempfile.TemporaryDirectory(prefix='bct-cpu-research-index-')as temp:
+        env={**os.environ,'GIT_INDEX_FILE':str(Path(temp)/'index')}
+        git('read-tree',current if current else '--empty',env=env)
+        for name in ('checkpoint.json','checkpoint.sqlite3.gz'):
+            blob=git('hash-object','-w',str((source/name).resolve()))
+            git('update-index','--add','--cacheinfo',f'100644,{blob},{name}',env=env)
+        tree=git('write-tree',env=env)
+        command=['-c','user.name=BCT CPU research','-c','user.email=bct-research@users.noreply.github.com','commit-tree',tree]
+        if current:command+=['-p',current]
+        commit=git(*command,input='Preserve isolated CPU research checkpoint\n')
+        git('push','origin',commit+':'+STATE_REF)
+    return {'research_ref':STATE_REF,'parent':current,'commit':commit,'archive_sha256':proof['archive_sha256'],
+            'operating_branches_written':False,'artifact_uploads':0}
