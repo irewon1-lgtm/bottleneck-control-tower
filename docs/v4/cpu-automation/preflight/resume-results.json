@@ -1,7 +1,7 @@
 {
-  "at": "2026-10-15T09:53:27.202856+00:00",
+  "at": "2026-10-15T10:29:54.825173+00:00",
   "start_sha": "8e2340dfd2fe6096ce46b5b80e9d0bc08d50cbef",
-  "status": "SOURCE_SEPARATED_LOCAL_RESTART_TESTED_REMOTE_PREPARATION",
+  "status": "PASS_SOURCE_SEPARATED_REMOTE_RESTART_ACTIVATION_BLOCKED_VARIABLE_PERMISSION",
   "original_queue": {
     "documents": 3,
     "raw_blobs": 3,
@@ -262,7 +262,8 @@
     "API_cost_KRW": 0,
     "automatic_stage_promotion": false,
     "not_a_scheduled_run": true,
-    "seven_day_started": false
+    "seven_day_started": false,
+    "operational_remote_baseline_updated": false
   },
   "public_backup_audit": {
     "at": "2026-10-15T09:38:00.045743+00:00",
@@ -511,13 +512,15 @@
       "matched_table": "blobs",
       "rowid": 67,
       "findings": "All five gsk_-prefix matches occur in GSK website image URLs/srcset image filenames, not authentication headers or API credentials. Candidate values not output. This is a limited pattern-context classification, not a complete secret/privacy certificate."
-    }
+    },
+    "synthetic_fixture_note": "The10 body-field backups include the explicitly synthetic-stage fixture; not10 confirmed real-source archives. Original queue backup has3 real native/body rows. Eligibility review remains unresolved; no deletion, force-push or visibility changes."
   },
   "original3": {
     "new_remote_article_copies": 0,
     "original_hashes_unchanged": true,
     "archival_permission": "UNKNOWN_UNCHANGED",
-    "remedy": "Source-separated checkpoint excludes raw/native/body/context/quote/raw-model windows; original immutable DBs are retained locally/in existing history. No full-source restoration claim."
+    "remedy": "Source-separated checkpoint excludes raw/native/body/context/quote/raw-model windows; original immutable DBs are retained locally/in existing history. No full-source restoration claim.",
+    "unchanged_original_queue_SHA256": "5d231f79819e3794544b9027dc1cace0d42962abda323d6032e0360a92485500"
   },
   "tests": {
     "impact": {
@@ -527,9 +530,188 @@
     },
     "new_real_CPU_windows": 18,
     "old1210_67_replayed": 0,
-    "local_CAS_failure_and_recovery": "PASS_SYNTHETIC_PRIVATE_BARE_GIT; not remote GitHub integration"
+    "local_CAS_failure_and_recovery": "PASS_SYNTHETIC_PRIVATE_BARE_GIT; not remote GitHub integration",
+    "last_changed_scope": {
+      "passed": 12,
+      "seconds": 2.51,
+      "command": ".venv/bin/python -m pytest -q tests/test_v4_cpu_resume.py tests/test_v4_cpu_research_workflow.py",
+      "scope": "Source-free restart, exact prior input proofs, missing source hold, restart dedup, committed failure isolation, deployment guards. Not AI accuracy or scheduled operation."
+    },
+    "workflow_guards": {
+      "passed": 3,
+      "seconds": 0.45
+    }
   },
-  "remote_state_restore": "NOT_RUN_YET_THIS_PHASE",
+  "remote_state_restore": {
+    "status": "PASS_ACTUAL_PRIVATE_DERIVED_RESEARCH_STATE_NOT_FULL_ORIGINAL_DB",
+    "seed": {
+      "run_id": 38717874102,
+      "head_sha": "2c204feed41d72ea0f349eaf8da1a937d65cfdf3",
+      "conclusion": "success",
+      "receipts": [
+        {
+          "status": "PASS_ACTUAL_PRIVATE_RESEARCH_RESTART",
+          "fixed_code_SHA": "b5bc01f1337466ad6d7f69fd537a6bb27cb58cec",
+          "remote_commit": "11c3a11f17b45c7f15be136d43219e0e32594b9b",
+          "remote_restore": {
+            "restored": true,
+            "tables": 8,
+            "sqlite_sha256": "dc2434510ec58e247c838353ad7c8d95f7f127161431ec55e4db1849f80fa7db"
+          },
+          "state": {
+            "status": "PASS_SOURCE_SEPARATED_SCHEMA",
+            "original_DB_fully_restored": false,
+            "format": "bct-source-separated-cpu-1",
+            "detached_sources": 41,
+            "completed_body_keys": 41,
+            "CPU_windows_preserved": 1277,
+            "CPU_spans_preserved": 4905,
+            "CPU_product_proposals_preserved": 1326,
+            "surfaces_withheld": 0,
+            "historical_reviews_preserved": 20,
+            "pending_source_replay": 1277,
+            "partial_documents": 0,
+            "awaiting_source_windows": 0,
+            "unread_nonwhitespace_characters": 0,
+            "raw_bodies_present": 0,
+            "automatic_stage_promotion": false
+          },
+          "deduplicated_historical_bodies": 41,
+          "original_source_rows_copied": 0,
+          "model_loads": 0,
+          "new_CPU_windows": 0,
+          "seven_day_start": null,
+          "original_DB_fully_restored": false
+        }
+      ],
+      "safe_errors": []
+    },
+    "recovery_attempt": {
+      "run_id": 38718444438,
+      "markers": {
+        "BCT_EXPECTED_STORAGE_FAILURE_JSON": {
+          "status": "PASS_EXPECTED_CAS_STALE_PARENT_REFUSAL",
+          "remote_overwrite": false,
+          "new_CPU_windows": 0
+        },
+        "BCT_RESEARCH_RESUME_JSON": {
+          "status": "PASS_ACTUAL_PRIVATE_RESEARCH_RESTART",
+          "fixed_code_SHA": "b5bc01f1337466ad6d7f69fd537a6bb27cb58cec",
+          "configured_code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+          "configured_code_matches": false,
+          "configured_enabled": "false",
+          "remote_commit": "fdfb9fb7f67cc05d441cd5fb8d36348c1a953f10",
+          "remote_restore": {
+            "restored": true,
+            "tables": 8,
+            "sqlite_sha256": "dc2434510ec58e247c838353ad7c8d95f7f127161431ec55e4db1849f80fa7db"
+          },
+          "state": {
+            "status": "PASS_SOURCE_SEPARATED_SCHEMA",
+            "original_DB_fully_restored": false,
+            "format": "bct-source-separated-cpu-1",
+            "detached_sources": 41,
+            "completed_body_keys": 41,
+            "CPU_windows_preserved": 1277,
+            "CPU_spans_preserved": 4905,
+            "CPU_product_proposals_preserved": 1326,
+            "surfaces_withheld": 0,
+            "historical_reviews_preserved": 20,
+            "pending_source_replay": 1277,
+            "partial_documents": 0,
+            "awaiting_source_windows": 0,
+            "unread_nonwhitespace_characters": 0,
+            "raw_bodies_present": 0,
+            "automatic_stage_promotion": false
+          },
+          "deduplicated_historical_bodies": 41,
+          "original_source_rows_copied": 0,
+          "model_loads": 0,
+          "new_CPU_windows": 0,
+          "seven_day_start": null,
+          "original_DB_fully_restored": false
+        }
+      },
+      "safe_errors": [
+        "publish\tSeal acknowledged private state for next read-only CPU job\t2026-10-15T10:11:32.4192403Z ##[error]Process completed with exit code 1."
+      ]
+    },
+    "recovered_from_durable_private_state": {
+      "run_id": 38718787598,
+      "head_sha": "d93b03a5346c3200b25146c30dbf73195704eb80",
+      "conclusion": "success",
+      "markers": {
+        "BCT_DURABLE_BRIDGE_RECOVERY_JSON": {
+          "status": "PASS_RECOVERED_FROM_PRIVATE_NOT_OLD_CACHE",
+          "parent": "fdfb9fb7f67cc05d441cd5fb8d36348c1a953f10",
+          "restored": {
+            "restored": true,
+            "tables": 8,
+            "sqlite_sha256": "dc2434510ec58e247c838353ad7c8d95f7f127161431ec55e4db1849f80fa7db"
+          },
+          "model_loads": 0,
+          "originals_modified": false
+        },
+        "BCT_RESEARCH_RESUME_JSON": {
+          "status": "PASS_ACTUAL_PRIVATE_RESEARCH_RESTART",
+          "fixed_code_SHA": "b5bc01f1337466ad6d7f69fd537a6bb27cb58cec",
+          "configured_code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+          "configured_code_matches": false,
+          "configured_enabled": "false",
+          "remote_commit": "1ea13ed1ff81b75f8c6216177c34bb04c0e088b5",
+          "remote_restore": {
+            "restored": true,
+            "tables": 8,
+            "sqlite_sha256": "dc2434510ec58e247c838353ad7c8d95f7f127161431ec55e4db1849f80fa7db"
+          },
+          "state": {
+            "status": "PASS_SOURCE_SEPARATED_SCHEMA",
+            "original_DB_fully_restored": false,
+            "format": "bct-source-separated-cpu-1",
+            "detached_sources": 41,
+            "completed_body_keys": 41,
+            "CPU_windows_preserved": 1277,
+            "CPU_spans_preserved": 4905,
+            "CPU_product_proposals_preserved": 1326,
+            "surfaces_withheld": 0,
+            "historical_reviews_preserved": 20,
+            "pending_source_replay": 1277,
+            "partial_documents": 0,
+            "awaiting_source_windows": 0,
+            "unread_nonwhitespace_characters": 0,
+            "raw_bodies_present": 0,
+            "automatic_stage_promotion": false
+          },
+          "deduplicated_historical_bodies": 41,
+          "original_source_rows_copied": 0,
+          "model_loads": 0,
+          "new_CPU_windows": 0,
+          "seven_day_start": null,
+          "original_DB_fully_restored": false
+        }
+      },
+      "safe_errors": []
+    },
+    "encrypted_bridge_cache": {
+      "total_count": 1,
+      "caches": [
+        {
+          "id": 8987788025,
+          "key": "v4-cpu-private-bridge-38718787598-1",
+          "ref": "refs/heads/main",
+          "size_in_bytes": 993857,
+          "created_at": "2026-10-15T10:14:24.774528Z"
+        }
+      ]
+    },
+    "whole_private_repository_size": {
+      "status": "PASS_WHOLE_PRIVATE_REPOSITORY_MEASUREMENT",
+      "reachable_unique_Git_object_bytes_all_branches": 779295,
+      "limit_bytes": 67108864,
+      "measurement_is_read_only": true
+    },
+    "limitation": "Remote integration ran pinned b5bc01f1337466ad6d7f69fd537a6bb27cb58cec. Final code adds tested isolation of restored failed windows; baseline contains zero such failures. No repeat connection/token/password tests."
+  },
   "CPU_automation": "OFF",
   "seven_day_start": null,
   "scope_reuse": "Prior actual private write/public403/authenticated64-char transfer proof reused; no credentials requested/reissued.",
@@ -541,6 +723,63 @@
     "model_downloads": 0,
     "new_CPU_windows": 18,
     "new_source_network_fetches": 0,
-    "paid_resources_changed": false
+    "paid_resources_changed": false,
+    "platform_usage": "Standard GitHub Ubuntu private-state jobs; no paid resource or plan changed. Account total billing not exposed. New local CPU18 windows19.46s, peak2162516KiB; not a hosted CPU-run benchmark."
+  },
+  "execution_code_SHA": "221fa92b1cbff8950716ec373eac793ca340c873",
+  "storage_failure_recovery": {
+    "expected_stale_parent": "PASS_REFUSED_WITHOUT_OVERWRITE",
+    "correct_parent_and_fresh_restore": "PASS",
+    "forward_cache_failure": "FileExistsError after successful durable private commit; no overwrite or lost durable state. Run38718444438 overall FAILED, not PASS.",
+    "minimum_fix": "Preserve restored input directory before sealing a new bridge; recover latest actual durable private commit instead of replaying stale cache.",
+    "actual_recovery_run": 38718787598,
+    "actual_recovery_result": "SUCCESS_PRIVATE_RESTORE_ACK_CACHE_SAVED"
+  },
+  "activation": {
+    "CPU_enabled": false,
+    "configured_enabled": "false",
+    "configured_code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+    "required_execution_code_SHA": "221fa92b1cbff8950716ec373eac793ca340c873",
+    "code_variable_patch": {
+      "action": "PATCH_EXISTING_CODE_SHA_VARIABLE",
+      "expected": "b5bc01f1337466ad6d7f69fd537a6bb27cb58cec",
+      "HTTP": 403,
+      "exit_code": 1,
+      "enabled_not_changed": true,
+      "reason": "Repository Actions variable write denied; no additional token requested."
+    },
+    "status": "BLOCKED_EXISTING_ACTIONS_VARIABLE_WRITE_HTTP403",
+    "new_Secret_or_token_required": false,
+    "first_scheduled_CPU_reading": "NOT_RUN",
+    "seven_day_start": null
+  },
+  "cache_usage": {
+    "full_name": "irewon1-lgtm/bottleneck-control-tower",
+    "active_caches_size_in_bytes": 2120022647,
+    "active_caches_count": 7
+  },
+  "next_action": "Owner updates existing Actions Variables CODE_SHA to the execution_code_SHA and ENABLED=true; do not change Secrets. If preceding disabled/skipped run makes bridge guard stale, use reviewed bridge-recover on main to rebuild encrypted cache from latest durable private state; do not reinitialize/reseed. First real scheduled new reading+validation+private persistence starts observation.",
+  "execution_code_CI": {
+    "headSha": "221fa92b1cbff8950716ec373eac793ca340c873",
+    "Stage_0": {
+      "run": 38720466527,
+      "conclusion": "success",
+      "real_source_QA": "SKIPPED_NOT_PASS"
+    },
+    "dashboard_gate": {
+      "run": 38720466717,
+      "conclusion": "success"
+    },
+    "final_delivery_CI": "Check exact containing delivery SHA after push; execution-source CI is not relabelled as final documentation CI."
+  },
+  "main_minimal_workflow": {
+    "parent": "e87d5dac16f94b8384e8eaa1bbb467e121bc0bc2",
+    "commit": "14c2de541ced1f995f3725d67a37e7fdb1b4898d",
+    "changed": [
+      ".github/workflows/v4-cpu-private-research.yml"
+    ],
+    "verified_remote": "14c2de541ced1f995f3725d67a37e7fdb1b4898d",
+    "execution_code": "221fa92b1cbff8950716ec373eac793ca340c873",
+    "enabled_changed": false
   }
 }
