@@ -9,7 +9,7 @@ from bct.v4 import cpu_operations as op
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('action',choices=['guard','bootstrap-model','probe-model','checkpoint','restore','observe','publish-state'])
+    p.add_argument('action',choices=['guard','bootstrap-model','probe-model','checkpoint','restore','observe','publish-state','audit-publication'])
     p.add_argument('--root',type=Path,default=Path('var/v4/cpu-operations/ledger'))
     p.add_argument('--runtime',type=Path,default=Path('.v4-cpu-runtime'))
     p.add_argument('--manifest',type=Path,default=Path('docs/v4/cpu-automation/preflight/model-manifest.json'))
@@ -25,7 +25,12 @@ def main():
         import os
         if os.environ.get('GITHUB_REF')!='refs/heads/main' or os.environ.get('BCT_V4_CPU_RESEARCH_ENABLED')!='true':
             raise ValueError('RESEARCH_STATE_PUBLICATION_REQUIRES_APPROVED_MAIN_ACTIVATION')
-        op.github_guard();result=op.publish_checkpoint(Path.cwd(),a.checkpoint,a.expected_state_parent)
+        op.github_guard()
+        policy=json.loads(Path('docs/v4/cpu-automation/preflight/publication-policy.json').read_text())
+        result=op.publish_checkpoint(Path.cwd(),a.checkpoint,a.expected_state_parent,publication_policy=policy)
+    elif a.action=='audit-publication':
+        policy=json.loads(Path('docs/v4/cpu-automation/preflight/publication-policy.json').read_text())
+        result=op.public_checkpoint_audit(a.checkpoint,policy)
     elif a.action=='guard': result=op.github_guard()
     elif a.action=='bootstrap-model':
         # The hosted job must prove free conditions before any cold setup.

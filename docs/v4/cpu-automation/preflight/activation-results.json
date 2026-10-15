@@ -1,0 +1,585 @@
+{
+  "at": "2026-10-15T04:44:37.361681+00:00",
+  "start_SHA": "6dea292a2ba712c1c4039f1d4ab3ab81c896a6b2",
+  "verdict": "MAIN_CACHE_SEED_PASS_CPU_ACTIVATION_BLOCKED_7DAY_NOT_STARTED",
+  "authorization": "User approved minimal free research-only activation, conditional on branch/write/publication protections. No further approval inferred for paid resources or operating changes.",
+  "remote_inspection": {
+    "checked_at": "2026-10-15T04:33:58.037368+00:00",
+    "checks": [
+      {
+        "endpoint": "branches/main",
+        "exit_code": 1,
+        "result": {
+          "name": null,
+          "protected": null,
+          "protection": null,
+          "protection_url": null,
+          "sha": null
+        },
+        "diagnostic": "Get \"https://api.github.com/repos/irewon1-lgtm/bottleneck-control-tower/branches/main\": net/http: TLS handshake timeout"
+      },
+      {
+        "endpoint": "branches/data",
+        "exit_code": 0,
+        "result": {
+          "name": "data",
+          "protected": false,
+          "protection": {
+            "enabled": false,
+            "required_status_checks": {
+              "enforcement_level": "off",
+              "contexts": [],
+              "checks": []
+            }
+          },
+          "protection_url": "https://api.github.com/repos/irewon1-lgtm/bottleneck-control-tower/branches/data/protection",
+          "sha": "7d4bfd16f44fdd2d5a0f3bdac59e816e53d9ecad"
+        },
+        "diagnostic": ""
+      },
+      {
+        "endpoint": "branches/main/protection",
+        "exit_code": 1,
+        "result": {
+          "message": "Resource not accessible by integration",
+          "documentation_url": "https://docs.github.com/rest/branches/branch-protection#get-branch-protection",
+          "status": "403"
+        },
+        "diagnostic": "gh: Resource not accessible by integration (HTTP 403)"
+      },
+      {
+        "endpoint": "branches/data/protection",
+        "exit_code": 1,
+        "result": {
+          "message": "Resource not accessible by integration",
+          "documentation_url": "https://docs.github.com/rest/branches/branch-protection#get-branch-protection",
+          "status": "403"
+        },
+        "diagnostic": "gh: Resource not accessible by integration (HTTP 403)"
+      },
+      {
+        "endpoint": "rulesets?includes_parents=true",
+        "exit_code": 0,
+        "result": [],
+        "diagnostic": ""
+      },
+      {
+        "endpoint": "actions/variables/BCT_V4_CPU_RESEARCH_ENABLED",
+        "exit_code": 1,
+        "result": {
+          "message": "Resource not accessible by integration",
+          "documentation_url": "https://docs.github.com/rest/actions/variables#get-a-repository-variable",
+          "status": "403"
+        },
+        "diagnostic": "gh: Resource not accessible by integration (HTTP 403)"
+      },
+      {
+        "endpoint": "actions/permissions",
+        "exit_code": 1,
+        "result": {
+          "message": "Resource not accessible by integration",
+          "documentation_url": "https://docs.github.com/rest/actions/permissions#get-github-actions-permissions-for-a-repository",
+          "status": "403"
+        },
+        "diagnostic": "gh: Resource not accessible by integration (HTTP 403)"
+      },
+      {
+        "endpoint": "actions/cache/usage",
+        "exit_code": 0,
+        "result": {
+          "full_name": "irewon1-lgtm/bottleneck-control-tower",
+          "active_caches_size_in_bytes": 1060189134,
+          "active_caches_count": 5
+        },
+        "diagnostic": ""
+      },
+      {
+        "endpoint": "actions/workflows/rss-live-check.yml/runs?per_page=2",
+        "exit_code": 0,
+        "result": {
+          "runs": [
+            {
+              "id": 38658360952,
+              "name": "RSS live environment check",
+              "head_branch": "main",
+              "head_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+              "event": "schedule",
+              "status": "completed",
+              "conclusion": "success",
+              "created_at": "2026-10-15T00:09:10Z",
+              "updated_at": "2026-10-15T00:11:11Z"
+            },
+            {
+              "id": 38639364984,
+              "name": "RSS live environment check",
+              "head_branch": "main",
+              "head_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+              "event": "schedule",
+              "status": "completed",
+              "conclusion": "success",
+              "created_at": "2026-10-14T21:19:31Z",
+              "updated_at": "2026-10-14T21:22:23Z"
+            }
+          ]
+        },
+        "diagnostic": ""
+      },
+      {
+        "endpoint": "actions/workflows/precursor-acquisition.yml/runs?per_page=2",
+        "exit_code": 0,
+        "result": {
+          "runs": [
+            {
+              "id": 38658562958,
+              "name": "New precursor evidence acquisition",
+              "head_branch": "main",
+              "head_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+              "event": "workflow_run",
+              "status": "completed",
+              "conclusion": "success",
+              "created_at": "2026-10-15T00:11:14Z",
+              "updated_at": "2026-10-15T00:13:38Z"
+            },
+            {
+              "id": 38639749456,
+              "name": "New precursor evidence acquisition",
+              "head_branch": "main",
+              "head_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+              "event": "workflow_run",
+              "status": "completed",
+              "conclusion": "success",
+              "created_at": "2026-10-14T21:22:25Z",
+              "updated_at": "2026-10-14T21:25:15Z"
+            }
+          ]
+        },
+        "diagnostic": ""
+      },
+      {
+        "endpoint": "branches/main (bounded retry after TLS timeout)",
+        "exit_code": 0,
+        "result": {
+          "name": "main",
+          "protected": false,
+          "sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797"
+        }
+      }
+    ]
+  },
+  "token_permission_reference": {
+    "url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication",
+    "sha256": "69f7cb0354262ec360199c8e97e55954b237aa75346cdf9696956de54f07cff0",
+    "excerpts": [
+      "ML name: Open new issue on: workflow_dispatch jobs: open-issue: runs-on: ubuntu-latest permissions: contents: read issues: write steps: - run: | gh issue --repo ${{ github.repository }} \\ create --title \"Issue title\" --body \"Issue body\" env: GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} name: Open new issue on: workflow_dispatch jobs: open-issue: runs-on: ubuntu-latest permissions: contents: read issues: write steps: - run: | gh issue --repo ${{ github.repositor",
+      "of GitHub Actions. Copy markdown In this article Using the GITHUB_TOKEN in a workflow Modifying the permissions for the GITHUB_TOKEN Granting additional permissions Next steps This tutorial leads you through how to use the GITHUB_TOKEN for authentication in GitHub Actions workflows, including examples for passing the token to actions, making API requests, and configuring permissions for secure automation. For reference information, see Workflow syntax for GitHub Actions . Using"
+    ],
+    "meaning": "GITHUB_TOKEN installation permissions apply to the repository, not a single ref. A fixed ref in Python is not a server-side permission restriction."
+  },
+  "main_seed": {
+    "base_main": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+    "prepared_main": "adf31d5d546ad05fc14d70063b15743109aec6cc",
+    "changed_files": [
+      ".github/workflows/v4-cpu-main-cache-seed.yml"
+    ],
+    "regular_CPU_activation": false,
+    "job_permissions": {
+      "contents": "read",
+      "actions": "read"
+    },
+    "push": "SUCCESS",
+    "dispatch": "SUCCESS_ONE_ACTUAL_POST_AFTER_WORKFLOW_REGISTERED",
+    "run_id": 38682772423,
+    "event": "workflow_dispatch",
+    "head_sha": "adf31d5d546ad05fc14d70063b15743109aec6cc",
+    "status": "completed",
+    "source_tools_SHA": "6dea292a2ba712c1c4039f1d4ab3ab81c896a6b2",
+    "main_CI": {
+      "run_id": 38682634719,
+      "head_sha": "adf31d5d546ad05fc14d70063b15743109aec6cc",
+      "conclusion": "success",
+      "fixed230_source_QA": "SKIPPED"
+    },
+    "conclusion": "success",
+    "actual_execution": {
+      "run": {
+        "conclusion": "success",
+        "headSha": "adf31d5d546ad05fc14d70063b15743109aec6cc",
+        "jobs": [
+          {
+            "completedAt": "2026-10-15T04:42:40Z",
+            "conclusion": "success",
+            "databaseId": 116250801128,
+            "name": "seed",
+            "startedAt": "2026-10-15T04:41:23Z",
+            "status": "completed",
+            "steps": [
+              {
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "status": "completed"
+              },
+              {
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "status": "completed"
+              },
+              {
+                "conclusion": "success",
+                "name": "Run actions/setup-python@v5",
+                "number": 3,
+                "status": "completed"
+              },
+              {
+                "conclusion": "success",
+                "name": "Verify free public standard runner and reserve within 8 GiB",
+                "number": 4,
+                "status": "completed"
+              },
+              {
+                "conclusion": "success",
+                "name": "Use the same tested cache identity",
+                "number": 5,
+                "status": "completed"
+              },
+              {
+                "conclusion": "success",
+                "name": "Run actions/cache/restore@v4",
+                "number": 6,
+                "status": "completed"
+              },
+              {
+                "conclusion": "success",
+                "name": "Explicit one-time main-scoped seed of the existing model only",
+                "number": 7,
+                "status": "completed"
+              },
+              {
+                "conclusion": "success",
+                "name": "Verify pinned files and bound payload without loading or reading",
+                "number": 8,
+                "status": "completed"
+              },
+              {
+                "conclusion": "success",
+                "name": "Run actions/cache/save@v4",
+                "number": 9,
+                "status": "completed"
+              },
+              {
+                "conclusion": "success",
+                "name": "Post Run actions/setup-python@v5",
+                "number": 17,
+                "status": "completed"
+              },
+              {
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 18,
+                "status": "completed"
+              },
+              {
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 19,
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/38682772423/job/116250801128"
+          }
+        ],
+        "status": "completed"
+      },
+      "safe_receipts": [
+        {
+          "action": "guard",
+          "output": "var/v4/cpu-main-seed/free.json",
+          "result": {
+            "status": "PASS_PUBLIC_STANDARD_LINUX_AND_CACHE_BELOW_FREE_BOUND",
+            "repository": "irewon1-lgtm/bottleneck-control-tower",
+            "runner": "ubuntu-24.04",
+            "active_cache_bytes": 1060189134,
+            "reserved_bytes": 3221225472,
+            "free_cache_allowance_bytes": 10737418240,
+            "safety_bound_bytes": 8589934592,
+            "additional_artifact_uploads": false,
+            "minutes_remaining": "N/A_PUBLIC_STANDARD_RUNNER_MINUTES_FREE",
+            "account_billing_permission": "NOT_REQUIRED_FOR_PUBLIC_STANDARD_COMPUTE; not proof of total account bill",
+            "basis": "https://docs.github.com/en/billing/concepts/product-billing/github-actions",
+            "checked_at": "2026-10-15T04:41:31.093062+00:00"
+          }
+        },
+        {
+          "action": "bootstrap-model",
+          "output": "var/v4/cpu-main-seed/model.json",
+          "result": {
+            "downloaded_files": 9,
+            "verified_bytes": 845068741,
+            "model": "fastino/gliner2-base-v1",
+            "revision": "f9634218e53580c56edf0de97ca1a7d3f1c2354e"
+          }
+        },
+        {
+          "action": "probe-model",
+          "output": "var/v4/cpu-main-seed/verified.json",
+          "result": {
+            "at": "2026-10-15T04:42:31.364535+00:00",
+            "model_bytes": 845068741,
+            "model_load_health_probe": false,
+            "new_CPU_inferences": 0,
+            "CPU_threads": null,
+            "wall_seconds": 0.6194153710000023,
+            "CPU_seconds": 0.6192793320000001,
+            "process_peak_RSS_KiB": 22848,
+            "host_memory_bytes": 16766414848,
+            "host_CPU_logical": 4,
+            "network_model_downloads": 0,
+            "meaning": "Health probe only; never a read of completed1210/67windows"
+          }
+        }
+      ],
+      "cache_save_lines": [
+        "Cache saved with key: v4-cpu-runtime-Linux-X64-3.12.15-fff880f684241e7320bcb1f19eecf3f5ad9a32f15f730cc2351aae63c13bda10"
+      ],
+      "token_permissions_header_seen": true
+    },
+    "remote_cache": {
+      "cache_inventory": {
+        "total_count": 6,
+        "caches": [
+          {
+            "id": 8975651992,
+            "ref": "refs/heads/main",
+            "key": "v4-cpu-runtime-Linux-X64-3.12.15-fff880f684241e7320bcb1f19eecf3f5ad9a32f15f730cc2351aae63c13bda10",
+            "size_in_bytes": 1058839680,
+            "created_at": "2026-10-15T04:42:39.375439Z"
+          },
+          {
+            "id": 8973906066,
+            "ref": "refs/heads/codex/bct-v4-integration",
+            "key": "v4-cpu-runtime-Linux-X64-3.12.15-fff880f684241e7320bcb1f19eecf3f5ad9a32f15f730cc2351aae63c13bda10",
+            "size_in_bytes": 1058822173,
+            "created_at": "2026-10-15T03:39:43.285461Z"
+          },
+          {
+            "id": 8974003038,
+            "ref": "refs/heads/codex/bct-v4-integration",
+            "key": "v4-cpu-preflight-state-38677679784-1-final",
+            "size_in_bytes": 343042,
+            "created_at": "2026-10-15T03:43:15.176166Z"
+          },
+          {
+            "id": 8973992407,
+            "ref": "refs/heads/codex/bct-v4-integration",
+            "key": "v4-cpu-preflight-state-38677679784-1-seed",
+            "size_in_bytes": 340443,
+            "created_at": "2026-10-15T03:42:55.130352Z"
+          },
+          {
+            "id": 8973907964,
+            "ref": "refs/heads/codex/bct-v4-integration",
+            "key": "v4-cpu-preflight-state-38677314487-1-final",
+            "size_in_bytes": 343027,
+            "created_at": "2026-10-15T03:39:45.274374Z"
+          },
+          {
+            "id": 8973878813,
+            "ref": "refs/heads/codex/bct-v4-integration",
+            "key": "v4-cpu-preflight-state-38677314487-1-seed",
+            "size_in_bytes": 340449,
+            "created_at": "2026-10-15T03:38:41.572153Z"
+          }
+        ]
+      },
+      "cache_usage": {
+        "full_name": "irewon1-lgtm/bottleneck-control-tower",
+        "active_caches_size_in_bytes": 2119028814,
+        "active_caches_count": 6
+      },
+      "seed_timing": {
+        "billable": {
+          "UBUNTU": {
+            "total_ms": 0,
+            "jobs": 1,
+            "job_runs": [
+              {
+                "job_id": 116250801128,
+                "duration_ms": 0
+              }
+            ]
+          }
+        },
+        "run_duration_ms": 81000
+      }
+    }
+  },
+  "publication_audit": {
+    "status": "BLOCKED",
+    "sqlite_sha256": "7b2c95aef6e235c6fd6673a55ef09fc29f36c91813572059468cc5c6ea919a20",
+    "documents": [
+      {
+        "document_id": "b0895b26-2b2d-4be5-88db-d07a4fba9a4d",
+        "origin_host": "www.defensenews.com",
+        "raw_sha256": "be569ee9756820831bf08579585b7e806fb8a1b9701a90bfe3a87627582b7f77",
+        "body_sha256": "697e5b7805edee3d0a771911850a1ae131a3f0e19b6b5980b73f86f3ee2151c1",
+        "raw_bytes": 233920,
+        "body_characters": 3515,
+        "contact_pattern_count": 2,
+        "copyright_notice": true,
+        "content_hashes_match": true,
+        "hash_bound_rights_and_privacy_review": false
+      },
+      {
+        "document_id": "ca0620ce-c872-40c4-b2fd-48fe47cc0f1d",
+        "origin_host": "www.defensenews.com",
+        "raw_sha256": "a10988c5da0ac90efd5c0ea31cd076f1238fadbba104a5d61dc624f14e1faf3c",
+        "body_sha256": "2267f36b5f0215db96d73725126d44725765b4bdcc40563a6d45baee9d2c994e",
+        "raw_bytes": 239695,
+        "body_characters": 7021,
+        "contact_pattern_count": 2,
+        "copyright_notice": true,
+        "content_hashes_match": true,
+        "hash_bound_rights_and_privacy_review": false
+      },
+      {
+        "document_id": "259046ea-7dde-4b39-889e-e6516f0c371c",
+        "origin_host": "electrek.co",
+        "raw_sha256": "ef8710ceda94b23f3e160c8ae94c082ecdbd3247843261091ab373d3da8224df",
+        "body_sha256": "98dd617199e4ce4e4ab38c77c455cc66c18f0d30e83e44e11c9d7cea3416b0c3",
+        "raw_bytes": 162232,
+        "body_characters": 3566,
+        "contact_pattern_count": 1,
+        "copyright_notice": true,
+        "content_hashes_match": true,
+        "hash_bound_rights_and_privacy_review": false
+      }
+    ],
+    "findings": [
+      {
+        "table": "documents",
+        "record_id": "b0895b26-2b2d-4be5-88db-d07a4fba9a4d",
+        "reason": "RAW_REDISTRIBUTION_OR_PRIVACY_UNREVIEWED"
+      },
+      {
+        "table": "documents",
+        "record_id": "ca0620ce-c872-40c4-b2fd-48fe47cc0f1d",
+        "reason": "RAW_REDISTRIBUTION_OR_PRIVACY_UNREVIEWED"
+      },
+      {
+        "table": "documents",
+        "record_id": "259046ea-7dde-4b39-889e-e6516f0c371c",
+        "reason": "RAW_REDISTRIBUTION_OR_PRIVACY_UNREVIEWED"
+      }
+    ],
+    "scan_is_not_a_privacy_certificate": true,
+    "originals_modified": false
+  },
+  "security": {
+    "main_protected": false,
+    "data_protected": false,
+    "repository_rulesets": [],
+    "contents_write_scope": "Repository contents, not limited to research ref. Fixed-ref Python code is not a server-enforced branch restriction.",
+    "read_process_and_write_isolation": "NOT_IMPLEMENTED_IN_OLD_PROPOSAL; must use separate read-only processor and independently authorized writer before activation.",
+    "permission_settings_read": "HTTP403; cannot inspect workflow defaults/admin protection or read/set enabled variable safely",
+    "enabled_variable_written": false,
+    "active_consumer_workflow_added": false,
+    "old_proposal_false_gated": true,
+    "untrusted_acquisition_artifacts_executed": false,
+    "main_runtime_seed_permissions": {
+      "contents": "read",
+      "actions": "read"
+    }
+  },
+  "storage": {
+    "existing_verified_archive_bytes": 339186,
+    "restored_SQLite_bytes": 3227648,
+    "raw_source_bytes": 635847,
+    "body_characters": 14102,
+    "new_public_research_branch_bytes": 0,
+    "new_public_research_branch_created": false,
+    "per_checkpoint_compressed_limit_bytes": 16777216,
+    "cumulative_unique_research_Git_object_limit_bytes": 67108864,
+    "cumulative_limit_behavior": "Measure complete reachable research Git objects including historic DB blobs before push. Refuse incomplete shallow history and limit breach; preserve every existing version. No force push or history deletion.",
+    "static_baseline_42_archives_bytes": 14245812,
+    "projection_limits": "42 is six daily slots times seven days; illustration only, excludes DB growth/metadata; not measured future use."
+  },
+  "preservation": {
+    "previous_evidence_files_checked": 148,
+    "changed": [],
+    "original_queue_sha256": "5d231f79819e3794544b9027dc1cace0d42962abda323d6032e0360a92485500",
+    "existing1210_windows_rerun": 0,
+    "existing67_windows_rerun": 0,
+    "UI_or_operating_workflow_files_changed": false
+  },
+  "tests": {
+    "impact": {
+      "passed": 67,
+      "seconds": 117.51,
+      "command": ".venv/bin/python -m pytest -q tests/test_v4_cpu_operations.py tests/test_v4_cpu_automation.py tests/test_v4_dashboard.py tests/test_v4_dashboard_research_sync.py",
+      "scope": "27 CPU-operation tests plus existing queue/read-only UI compatibility tests; not source inference or scheduled operation"
+    },
+    "main_seed_security": {
+      "passed": 1,
+      "deselected": 27,
+      "seconds": 0.2
+    },
+    "CI": "Exact final development SHA must be checked in GitHub; main-only Stage0 success is separately recorded, not relabelled as development CI."
+  },
+  "actual_new_CPU": {
+    "documents": 0,
+    "windows": 0,
+    "characters": 0,
+    "new_scheduled_persisted_results": 0
+  },
+  "first_regular_CPU_execution": "NOT_RUN",
+  "seven_day_observation": {
+    "status": "NOT_STARTED",
+    "start": null
+  },
+  "usage": {
+    "Groq_calls": 0,
+    "external_AI_calls": 0,
+    "API_tokens": 0,
+    "API_cost_KRW": 0,
+    "new_CPU_model_loads": 0,
+    "new_CPU_memory_benchmark": "NOT_RUN; previous hosted health-only 2126252KiB reused, not a new-input batch measurement",
+    "active_cache_bytes_before": 1060189134,
+    "cache_safety_bound_bytes": 8589934592,
+    "cache_free_included_bytes": 10737418240,
+    "platform_billing": "Not exposed; no paid resource/plan changes. Standard public GitHub-hosted Linux compute is free; no new artifact uploads.",
+    "active_cache_bytes_after": 2119028814,
+    "same_model_runtime_seed_runs": 1,
+    "same_model_downloaded_files": 9,
+    "model_verified_bytes": 845068741,
+    "seed_file_hash_check_process_peak_RSS_KiB": 22848,
+    "seed_run_duration_ms": 81000,
+    "seed_UBUNTU_billable_ms": 0,
+    "seed_full_job_peak_RSS": "NOT_MEASURED; file hash process footprint is not job maximum"
+  },
+  "unchanged_verdicts": {
+    "AI_adoption": "FAIL",
+    "independent_AI_evaluation": "BLOCKED",
+    "historical_lead_performance": "BLOCKED",
+    "real_S3": 0
+  },
+  "blockers": [
+    {
+      "code": "NO_SERVER_ENFORCED_MAIN_DATA_WRITE_ISOLATION",
+      "evidence": "branches main/data protected=false; rulesets empty; settings/protection API403",
+      "needed": "A verified writer identity/server policy denied main/data while existing RSS retains required behavior; isolate read-only processing from that writer. Do not enable broad write token as workaround."
+    },
+    {
+      "code": "PUBLIC_RAW_CHECKPOINT_REVIEW_UNRESOLVED",
+      "documents": 3,
+      "evidence": "Existing native pages have copyright notices and contact patterns, but no hash-bound redistribution/privacy clearance. No matched values published. Publicly accessible is not an inferred redistribution license.",
+      "needed": "Document the actual rights/privacy clearance for exact raw/body versions, or approve suitable non-public durable storage preserving originals. Do not redact/replace the frozen original DB silently."
+    },
+    {
+      "code": "ENABLED_VARIABLE_ACCESS_UNVERIFIED",
+      "evidence": "GET repository variable HTTP403",
+      "needed": "Only after other protections pass, set enabled variable using an authorized configuration path."
+    }
+  ],
+  "next_resume": "Reuse successful main-scoped cache (run38682772423). Complete writer isolation and exact-version source redistribution/privacy review first. Do not repeat CPU1210/67, model seed, old preflight or RSS. Then seed exact research DB remotely, requery/restore hashes, deploy separated guarded consumer, enable via authorized configuration, and require first real scheduled new-input validated/persisted CPU read to open seven-day observation."
+}

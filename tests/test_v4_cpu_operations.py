@@ -105,6 +105,21 @@ def test_no_schedule_or_operating_storage_or_secrets_in_preflight_workflow():
     assert 'pip install' not in '\n'.join(s.get('run','')for s in w['jobs']['restore']['steps'])
 
 
+def test_main_cache_seed_is_manual_readonly_pinned_and_never_consumes_data():
+    text=(REPO/'.github/workflows/v4-cpu-main-cache-seed.yml').read_text();w=yaml.safe_load(text)
+    assert set(w.get('on',w.get(True)))=={'workflow_dispatch'}
+    assert w['permissions']=={'contents':'read','actions':'read'}
+    job=w['jobs']['seed'];assert job['runs-on']=='ubuntu-24.04'
+    assert "github.ref == 'refs/heads/main'" in job['if']
+    checkout=job['steps'][0]['with']
+    assert checkout=={'ref':'6dea292a2ba712c1c4039f1d4ab3ab81c896a6b2','persist-credentials':False}
+    assert 'secrets.' not in text and 'upload-artifact' not in text
+    assert all(x not in text for x in ['--execute-cpu','--load-health-probe','publish-state','gh run download'])
+    setup=next(s for s in job['steps']if 'pip install' in s.get('run',''))
+    assert setup['if']=="steps.cache.outputs.cache-hit != 'true'"
+    assert 'timeout 120' in setup['run'] and '-r scripts/v4/requirements.lock' in setup['run']
+
+
 def schedule_context():
     acq={'id':2,'name':'New precursor evidence acquisition','event':'workflow_run','head_branch':'main','conclusion':'success'}
     rss={'id':1,'name':'RSS live environment check','event':'schedule','head_branch':'main','conclusion':'success','created_at':'2026-10-15T00:09:10Z'}
@@ -161,7 +176,9 @@ def test_separate_research_branch_CAS_keeps_old_checkpoints_and_operating_refs(t
     (repo/'preserved').write_text('original');git('add','preserved',cwd=repo);git('commit','-m','original',cwd=repo)
     original=git('rev-parse','HEAD',cwd=repo);git('remote','add','origin',str(bare),cwd=repo)
     git('push','origin','HEAD:refs/heads/main','HEAD:refs/heads/data',cwd=repo)
-    restore_baseline(tmp_path/'queue');l=open_queue(tmp_path/'queue');op.checkpoint(l,tmp_path/'checkpoint1')
+    # Synthetic empty research state: real news snapshots now require rights
+    # review and must never be published by this Git transport test.
+    l=open_queue(tmp_path/'queue');op.checkpoint(l,tmp_path/'checkpoint1')
     first=op.publish_checkpoint(repo,tmp_path/'checkpoint1','')
     op.observe(l,trigger='SYNTHETIC_TEST');op.checkpoint(l,tmp_path/'checkpoint2');l.close()
     with pytest.raises(ValueError,match='PARENT_CHANGED'):op.publish_checkpoint(repo,tmp_path/'checkpoint2','')
@@ -170,6 +187,47 @@ def test_separate_research_branch_CAS_keeps_old_checkpoints_and_operating_refs(t
     assert git('rev-parse',second['commit']+'^',cwd=bare)==first['commit']
     assert 'preserved' not in git('ls-tree','--name-only',op.STATE_REF,cwd=bare)
     assert git('show',first['commit']+':checkpoint.json',cwd=bare)!=git('show',second['commit']+':checkpoint.json',cwd=bare)
+    assert 0<first['history_unique_object_bytes']<second['history_unique_object_bytes']<op.STATE_HISTORY_LIMIT
+    shallow=tmp_path/'shallow'
+    git('clone','--depth=1','--branch',op.STATE_REF.removeprefix('refs/heads/'),bare.as_uri(),str(shallow))
+    with pytest.raises(ValueError,match='HISTORY_INCOMPLETE'):
+        op.publish_checkpoint(shallow,tmp_path/'checkpoint2',second['commit'])
+    op.STATE_HISTORY_LIMIT=second['history_unique_object_bytes']
+    try:
+        l=open_queue(tmp_path/'queue');op.observe(l,trigger='SYNTHETIC_QUOTA_TEST');op.checkpoint(l,tmp_path/'checkpoint3');l.close()
+        with pytest.raises(ValueError,match='CUMULATIVE_64MIB'):
+            op.publish_checkpoint(repo,tmp_path/'checkpoint3',second['commit'])
+        assert git('rev-parse',op.STATE_REF,cwd=bare)==second['commit']
+    finally:op.STATE_HISTORY_LIMIT=64*1024**2
+
+
+def test_real_news_publication_blocks_before_any_git_or_network_call(tmp_path,monkeypatch):
+    restore_baseline(tmp_path/'queue');l=open_queue(tmp_path/'queue');op.checkpoint(l,tmp_path/'checkpoint');l.close()
+    audit=op.public_checkpoint_audit(tmp_path/'checkpoint')
+    assert audit['status']=='BLOCKED' and len(audit['documents'])==3
+    assert all(not d['hash_bound_rights_and_privacy_review']for d in audit['documents'])
+    monkeypatch.setattr(op.subprocess,'run',lambda *a,**k:(_ for _ in ()).throw(AssertionError('No Git/network publication')))
+    with pytest.raises(ValueError,match='PUBLIC_RESEARCH_CHECKPOINT_REVIEW_BLOCKED'):
+        op.publish_checkpoint(tmp_path/'not-a-repo',tmp_path/'checkpoint','')
+
+
+def test_publication_review_requires_exact_versions_and_scans_nested_records(tmp_path):
+    l=open_queue(tmp_path/'queue')
+    raw=b'<p>Synthetic public-domain fixture, not collected news.</p>';body='Synthetic public-domain fixture, not collected news.'
+    d={'document_id':'synthetic','body':body,'body_sha256':sha(body.encode()),'raw_sha256':sha(raw),'origin_url':'https://example.org/synthetic'}
+    l.capture(d,raw);op.checkpoint(l,tmp_path/'first')
+    policy={'sources':{'synthetic':{'raw_sha256':sha(raw),'body_sha256':sha(body.encode()),
+        'redistribution':'PERMITTED','privacy_review':'CLEARED','rights_basis':'Synthetic test fixture','reviewed_by':'Automated fixture author; not a real source approval'}}}
+    assert op.public_checkpoint_audit(tmp_path/'first',policy)['status']=='PASS_PUBLICATION_REVIEW'
+    policy['sources']['synthetic']['body_sha256']='wrong version'
+    assert op.public_checkpoint_audit(tmp_path/'first',policy)['status']=='BLOCKED'
+    policy['sources']['synthetic']['body_sha256']=sha(body.encode())
+    with l.db:l.event('SYNTHETIC_ONLY',{'authorization':'Bearer '+'s'*30})
+    op.checkpoint(l,tmp_path/'second');l.close()
+    audit=op.public_checkpoint_audit(tmp_path/'second',policy)
+    assert audit['status']=='BLOCKED'
+    assert any(x['table']=='events'and x['reason']=='POSSIBLE_AUTHENTICATION_MATERIAL'for x in audit['findings'])
+    assert 's'*30 not in json.dumps(audit)
 
 
 def test_preflight_cli_cannot_publish_any_research_branch_without_activation(tmp_path):
@@ -203,6 +261,8 @@ def test_proposed_activation_is_not_an_active_workflow_and_is_off_by_default():
     data=yaml.safe_load(path.read_text());triggers=data.get('on',data.get(True))
     assert triggers['workflow_run']['workflows']==['New precursor evidence acquisition']
     assert 'BCT_V4_CPU_RESEARCH_ENABLED' in data['jobs']['research']['if']
+    assert 'false &&' in data['jobs']['research']['if']
+    assert data['jobs']['research']['steps'][0]['with']['persist-credentials'] is False
     assert all('pip install' not in step.get('run','')for step in data['jobs']['research']['steps'])
     assert 'fail-on-cache-miss: true' in path.read_text()
     assert 'refs/heads/codex/bct-v4-cpu-research-state' in path.read_text()

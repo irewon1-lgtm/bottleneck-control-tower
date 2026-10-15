@@ -1,7 +1,14 @@
-# NOT ACTIVE. Approval is required before copying this file to main workflows.
+# NOT ACTIVE. User approved free CPU activation on 2026-10-15, CONDITIONALLY.
+# BLOCKED: main/data are unprotected, contents:write is repository-scoped,
+# and the 3 existing raw pages have no redistribution/privacy clearance.
+# This proposal is deliberately false-gated; do not copy/enable as-is.
+# Required change before activation: read-only processing on one runner and
+# a separately authorized writer on another runner; server-enforced denial of
+# main/data writes by that writer. A fixed push ref alone is NOT protection.
+# Never execute code from acquired artifacts or cache a writer credential.
 # Prerequisites: a one-time main-scoped copy of the tested runtime cache;
 # separately seeded research-state ref from the verified checkpoint;
-# BCT_V4_CPU_RESEARCH_ENABLED=true; review contents:write for research ref only.
+# BCT_V4_CPU_RESEARCH_ENABLED=true only after those protections are proven.
 name: V4 CPU research consumer
 on:
   workflow_run:
@@ -15,7 +22,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   research:
-    if: ${{ vars.BCT_V4_CPU_RESEARCH_ENABLED == 'true' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ false && vars.BCT_V4_CPU_RESEARCH_ENABLED == 'true' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     env:
@@ -24,6 +31,8 @@ jobs:
       BCT_V4_CPU_RESEARCH_ENABLED: ${{ vars.BCT_V4_CPU_RESEARCH_ENABLED }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@v5
         id: python
         with:

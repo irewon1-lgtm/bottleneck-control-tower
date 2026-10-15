@@ -222,19 +222,77 @@ def github_schedule_context():
 
 
 STATE_REF='refs/heads/codex/bct-v4-cpu-research-state'
+STATE_HISTORY_LIMIT=64*1024**2
 
 
-def publish_checkpoint(repo,source,expected_parent):
+def public_checkpoint_audit(source,policy=None):
+    """Inspect a verified snapshot, never publish source text or matched secrets.
+
+    Public HTTP access/provenance is not permission to redistribute a raw page.
+    Approvals belong to reviewed repository policy, not acquisition artifacts.
+    A review binds both native and body hashes; changed versions need review.
+    This is a publication gate, not a claim that a pattern scan proves privacy.
+    """
+    import re
+    import tempfile
+    from urllib.parse import urlsplit
+    policy=policy or {};reviews=policy.get('sources',{})
+    findings=[];sources=[]
+    with tempfile.TemporaryDirectory(prefix='bct-publication-audit-')as tmp:
+        restore(source,Path(tmp)/'db')
+        with sqlite3.connect((Path(tmp)/'db/v4.sqlite3').as_uri()+'?mode=ro',uri=True)as db:
+            for doc_id,raw_id,payload in db.execute('SELECT id,raw_id,payload FROM documents'):
+                d=json.loads(payload);raw=db.execute('SELECT data FROM blobs WHERE id=?',(raw_id,)).fetchone()if raw_id else None
+                text=(raw[0].decode('utf-8',errors='replace')if raw else '')+'\n'+d.get('body','')
+                review=reviews.get(doc_id,{})
+                hashes_match=(raw is not None and sha(raw[0])==raw_id==d.get('raw_sha256')
+                              and sha(d.get('body','').encode())==d.get('body_sha256'))
+                approved=(hashes_match and review.get('raw_sha256')==raw_id
+                    and review.get('body_sha256')==d.get('body_sha256')
+                    and review.get('redistribution')=='PERMITTED'
+                    and review.get('privacy_review')=='CLEARED'
+                    and bool(review.get('rights_basis')) and bool(review.get('reviewed_by')))
+                sources.append({'document_id':doc_id,'origin_host':urlsplit(d.get('origin_url','')).hostname,
+                    'raw_sha256':raw_id,'body_sha256':d.get('body_sha256'),
+                    'raw_bytes':len(raw[0])if raw else 0,'body_characters':len(d.get('body','')),
+                    'contact_pattern_count':len(re.findall(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}',text)),
+                    'copyright_notice':bool(re.search(r'copyright|all rights reserved|©',text,re.I)),
+                    'content_hashes_match':hashes_match,'hash_bound_rights_and_privacy_review':approved})
+                if not approved:findings.append({'table':'documents','record_id':doc_id,'reason':'RAW_REDISTRIBUTION_OR_PRIVACY_UNREVIEWED'})
+            for blob_id, in db.execute('SELECT id FROM blobs WHERE id NOT IN (SELECT raw_id FROM documents WHERE raw_id IS NOT NULL)'):
+                findings.append({'table':'blobs','record_id':blob_id,'reason':'UNREVIEWED_ORPHAN_RAW_CONTENT'})
+            # Include original blobs AND all nested outputs/events, not just body.
+            patterns=[r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----',
+                      r'\b(?:gsk_|ghp_|github_pat_|sk-proj-)[A-Za-z0-9_\-]{20,}',
+                      r'(?i)\b(?:authorization|proxy-authorization)["\x27]?\s*[:=]\s*["\x27]?Bearer\s+[^\s"\x27]{8,}',
+                      r'(?i)[?&](?:access_token|auth_token|api_key|session_token|password|secret)=[^\s&"\x27]{4,}']
+            for table,column in [('blobs','data'),('documents','payload'),('readings','payload'),('runs','payload'),('events','payload'),('metadata','value')]:
+                for record_id,value in db.execute(f'SELECT rowid,{column} FROM {table}'):
+                    text=value.decode('utf-8',errors='replace')if isinstance(value,bytes)else value
+                    if any(re.search(pattern,text)for pattern in patterns):
+                        findings.append({'table':table,'record_id':record_id,'reason':'POSSIBLE_AUTHENTICATION_MATERIAL'})
+            if db.execute('SELECT count(*) FROM firsts').fetchone()[0]:
+                findings.append({'table':'firsts','reason':'CANDIDATE_OR_LIVE_FIRSTS_PRESENT'})
+    return {'status':'BLOCKED'if findings else 'PASS_PUBLICATION_REVIEW',
+            'sqlite_sha256':json.loads((Path(source)/'checkpoint.json').read_text())['sqlite_sha256'],
+            'documents':sources,'findings':findings,'scan_is_not_a_privacy_certificate':True,
+            'originals_modified':False}
+
+
+def publish_checkpoint(repo,source,expected_parent,*,publication_policy=None):
     """Prepared CAS writer for a dedicated research ref, never main/data.
 
-    Not invoked by preflight. The historical commits retain every checkpoint.
-    Execution requires separately approved workflow contents:write permission.
+    Historical commits are preserved; the cumulative object bound stops writes.
+    Fixed ref code does NOT branch-scope a GitHub contents:write token. Server
+    permissions must be separately verified before activating a writer job.
     """
     import tempfile
     repo,source=Path(repo),Path(source)
     proof=json.loads((source/'checkpoint.json').read_text());archive=source/'checkpoint.sqlite3.gz'
     if proof['archive']!=archive.name or file_sha(archive)!=proof['archive_sha256'] or archive.stat().st_size>16*1024**2:
         raise ValueError('RESEARCH_CHECKPOINT_HASH_OR_SIZE')
+    if public_checkpoint_audit(source,publication_policy)['status']!='PASS_PUBLICATION_REVIEW':
+        raise ValueError('PUBLIC_RESEARCH_CHECKPOINT_REVIEW_BLOCKED')
     with tempfile.TemporaryDirectory(prefix='bct-cpu-state-verify-')as temporary:
         verified=Path(temporary)/'verified'
         restore(source,verified)
@@ -251,6 +309,11 @@ def publish_checkpoint(repo,source,expected_parent):
     # The same fixed ref is used at both CAS check and push. No caller can
     # redirect this writer to an operational branch.
     if current:git('fetch','--no-tags','origin',STATE_REF)
+    if current:
+        shallow=Path(git('rev-parse','--git-path','shallow'))
+        if not shallow.is_absolute():shallow=repo/shallow
+        if shallow.exists() and set(shallow.read_text().split())&set(git('rev-list',current).split()):
+            raise ValueError('RESEARCH_STATE_HISTORY_INCOMPLETE')
     with tempfile.TemporaryDirectory(prefix='bct-cpu-research-index-')as temp:
         env={**os.environ,'GIT_INDEX_FILE':str(Path(temp)/'index')}
         git('read-tree',current if current else '--empty',env=env)
@@ -261,6 +324,17 @@ def publish_checkpoint(repo,source,expected_parent):
         command=['-c','user.name=BCT CPU research','-c','user.email=bct-research@users.noreply.github.com','commit-tree',tree]
         if current:command+=['-p',current]
         commit=git(*command,input='Preserve isolated CPU research checkpoint\n')
+        # Count unique raw Git object bytes across the complete research history,
+        # including old compressed DB blobs. Do not rely on pack/delta ratios or
+        # truncate/delete prior snapshots to fit. Local candidate objects are
+        # harmless if this check refuses the remote write.
+        objects=git('rev-list','--objects',commit)
+        sizes=git('cat-file','--batch-check=%(objectname) %(objecttype) %(objectsize)',
+                  input='\n'.join(line.split()[0]for line in objects.splitlines())+'\n')
+        history_bytes=sum(int(line.split()[2])for line in sizes.splitlines())
+        if history_bytes>STATE_HISTORY_LIMIT:
+            raise ValueError('RESEARCH_STATE_CUMULATIVE_64MIB_LIMIT')
         git('push','origin',commit+':'+STATE_REF)
     return {'research_ref':STATE_REF,'parent':current,'commit':commit,'archive_sha256':proof['archive_sha256'],
-            'operating_branches_written':False,'artifact_uploads':0}
+            'operating_branches_written':False,'artifact_uploads':0,
+            'history_unique_object_bytes':history_bytes,'history_limit_bytes':STATE_HISTORY_LIMIT}
