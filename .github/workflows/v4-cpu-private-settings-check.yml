@@ -96,6 +96,16 @@ jobs:
                   elif code!=200:
                       raise ValueError('PRIVATE_REFS_UNVERIFIED_NO_WRITE')
                   scope=private.writer_scope(token,api=audit_api)
+                  code,tree=audit_api(token,'GET','repos/'+private.PRIVATE_REPO+'/git/trees/main?recursive=1')
+                  assert code==200 and tree.get('truncated')is False,'PRIVATE_TREE_UNVERIFIED'
+                  remote_paths={x['path']:x for x in tree['tree']if x['type']=='blob'}
+                  def fetch_blob(oid):
+                      code,blob=audit_api(token,'GET','repos/'+private.PRIVATE_REPO+'/git/blobs/'+oid)
+                      assert code==200 and blob.get('encoding')=='base64','PRIVATE_IMMUTABLE_BLOB_READ_FAILED'
+                      body=base64.b64decode(blob['content'])
+                      import hashlib
+                      assert hashlib.sha1(b'blob '+str(len(body)).encode()+b'\0'+body).hexdigest()==oid,'REMOTE_GIT_BLOB_ID_MISMATCH'
+                      return body
                   results=[]
                   with tempfile.TemporaryDirectory(prefix='bct-private-check-')as tmp:
                       tmp=pathlib.Path(tmp)
@@ -125,31 +135,37 @@ jobs:
                                   m.event('PRIOR_COMPLETION_IDENTIFIER_ONLY',item);receipt_count+=1
                       op.checkpoint(m,tmp/'metadata-checkpoint');m.close()
                       metadata={'completion_receipts_total':receipt_count}
-                      for namespace,source in [('connection-check',tmp/'synthetic-checkpoint'),('metadata-receipts',tmp/'metadata-checkpoint')]:
+                      # Recover the prior partial synthetic publication via exact
+                      # immutable tree/blob IDs, never retry its failed path GET.
+                      if all('connection-check/'+n in remote_paths for n in ('checkpoint.json','checkpoint.sqlite3.gz')):
+                          source=tmp/'prior-synthetic';source.mkdir()
+                          for n in ('checkpoint.json','checkpoint.sqlite3.gz'):
+                              (source/n).write_bytes(fetch_blob(remote_paths['connection-check/'+n]['sha']))
+                          op.restore(source,tmp/'prior-synthetic-verified')
+                          synthetic_source=source
+                      else:synthetic_source=tmp/'synthetic-checkpoint'
+                      for namespace,source in [('connection-check',synthetic_source),('metadata-receipts/'+os.environ['GITHUB_RUN_ID'],tmp/'metadata-checkpoint')]:
                           review=op.checkpoint_storage_audit(source,scope='private')
                           assert review['status']=='PASS_PRIVATE_STORAGE_REVIEW'and review['documents']==[],'SOURCE_TEXT_MUST_NOT_BE_UPLOADED'
-                          packet=tmp/(namespace+'.gpg');private.seal(source,packet,key,'')
+                          packet=tmp/(namespace.replace('/','-')+'.gpg');private.seal(source,packet,key,'')
                           files={name:(source/name).read_bytes()for name in ('checkpoint.json','checkpoint.sqlite3.gz')}
                           files['state.gpg']=packet.read_bytes()
                           assert sum(map(len,files.values()))<64*1024,'CONNECTION_PAYLOAD_TOO_LARGE'
-                          downloaded=tmp/(namespace+'-remote');downloaded.mkdir()
+                          downloaded=tmp/(namespace.replace('/','-')+'-remote');downloaded.mkdir()
                           stored=0
                           for name,body in files.items():
                               endpoint='repos/'+private.PRIVATE_REPO+'/contents/'+namespace+'/'+name
-                              code,existing=audit_api(token,'GET',endpoint)
-                              if code==404:
-                                  code,_=audit_api(token,'PUT',endpoint,{'message':'Preserve non-production '+namespace,'content':base64.b64encode(body).decode()})
+                              path=namespace+'/'+name
+                              if path not in remote_paths:
+                                  code,written=audit_api(token,'PUT',endpoint,{'message':'Preserve non-production '+namespace,'content':base64.b64encode(body).decode()})
                                   assert code==201,'PRIVATE_CONTENT_WRITE_NOT_CONFIRMED'
-                              elif code==200:
-                                  assert base64.b64decode(existing['content'])==body,'REFUSE_REPLACE_EXISTING_TEST_VERSION'
-                              else:raise ValueError('PRIVATE_CONTENT_READ_NOT_VERIFIED')
-                              code,remote=audit_api(token,'GET',endpoint)
-                              assert code==200 and remote.get('encoding')=='base64','PRIVATE_CONTENT_REQUERY_FAILED'
-                              received=base64.b64decode(remote['content'])
+                                  oid=written['content']['sha']
+                              else:oid=remote_paths[path]['sha']
+                              received=fetch_blob(oid)
                               assert sha(received)==sha(body),'PRIVATE_REQUERY_HASH_MISMATCH'
                               (downloaded/name).write_bytes(received);stored+=len(body)
-                          unsealed=tmp/(namespace+'-unsealed');private.unseal(downloaded/'state.gpg',unsealed,key)
-                          process=subprocess.run([sys.executable,'-c','import json,sys;from bct.v4 import cpu_operations as o;print(json.dumps(o.restore(sys.argv[1],sys.argv[2])))',str(unsealed),str(tmp/(namespace+'-restored'))],capture_output=True,text=True,timeout=25)
+                          unsealed=tmp/(namespace.replace('/','-')+'-unsealed');private.unseal(downloaded/'state.gpg',unsealed,key)
+                          process=subprocess.run([sys.executable,'-c','import json,sys;from bct.v4 import cpu_operations as o;print(json.dumps(o.restore(sys.argv[1],sys.argv[2])))',str(unsealed),str(tmp/(namespace.replace('/','-')+'-restored'))],capture_output=True,text=True,timeout=25)
                           assert process.returncode==0,'REMOTE_NEW_PROCESS_RESTORE_FAILED'
                           restored=json.loads(process.stdout)
                           assert restored['sqlite_sha256']==review['sqlite_sha256'],'REMOTE_SQLITE_HASH_MISMATCH'
