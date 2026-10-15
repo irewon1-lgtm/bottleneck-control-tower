@@ -1,0 +1,70 @@
+name: V4 CPU main cache seed
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: v4-cpu-main-cache-seed
+  cancel-in-progress: false
+jobs:
+  seed:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PYTHONPATH: src
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Previously tested runtime tools, not upstream artifacts or PR code.
+          ref: 6dea292a2ba712c1c4039f1d4ab3ab81c896a6b2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        id: python
+        with:
+          python-version: '3.12.15'
+      - name: Verify free public standard runner and reserve within 8 GiB
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: timeout 120 python tools/v4_cpu_preflight.py guard --output var/v4/cpu-main-seed/free.json
+      - name: Use the same tested cache identity
+        id: key
+        env:
+          PYTHON_VERSION: ${{ steps.python.outputs.python-version }}
+          LOCK_SHA: ${{ hashFiles('scripts/v4/requirements.lock','docs/v4/cpu-automation/preflight/model-manifest.json') }}
+        run: echo "key=v4-cpu-runtime-${RUNNER_OS}-${RUNNER_ARCH}-${PYTHON_VERSION}-${LOCK_SHA}" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache/restore@v4
+        id: cache
+        with:
+          key: ${{ steps.key.outputs.key }}
+          path: |
+            .v4-cpu-env
+            .v4-cpu-runtime
+      - name: Explicit one-time main-scoped seed of the existing model only
+        if: steps.cache.outputs.cache-hit != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PIP_NO_CACHE_DIR: '1'
+        run: |
+          python -m venv .v4-cpu-env
+          timeout 120 .v4-cpu-env/bin/python -m pip install --extra-index-url https://download.pytorch.org/whl/cpu -r scripts/v4/requirements.lock
+          timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_preflight.py bootstrap-model --output var/v4/cpu-main-seed/model.json
+      - name: Verify pinned files and bound payload without loading or reading
+        run: |
+          timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_preflight.py probe-model --output var/v4/cpu-main-seed/verified.json
+          python - <<'PY'
+          from pathlib import Path
+          total=sum(p.stat().st_size for root in ('.v4-cpu-env','.v4-cpu-runtime') for p in Path(root).rglob('*') if p.is_file())
+          assert total < 3*1024**3, 'Runtime exceeds free cache reservation'
+          print({'runtime_payload_bytes':total,'new_CPU_inferences':0,'DB_writes':0,'AI_calls':0,'scheduled_CPU_enabled':False})
+          PY
+      - uses: actions/cache/save@v4
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          key: ${{ steps.key.outputs.key }}
+          path: |
+            .v4-cpu-env
+            .v4-cpu-runtime
