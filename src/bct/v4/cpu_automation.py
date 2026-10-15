@@ -105,7 +105,7 @@ def enqueue(ledger, doc, raw, upstream):
     return 'QUEUED'
 
 
-def ingest_delta(ledger, manifest, cache, *, upstream_run_id, reconsider_held=False):
+def ingest_delta(ledger, manifest, cache, *, upstream_run_id, reconsider_held=False,storage_policy=None):
     """Read only existing canonical delta + native cache; never fetch RSS/URLs."""
     if manifest.get('format') != 'bct-new-rss-delta-v1': raise ValueError('RSS_DELTA_CONTRACT')
     cache = Path(cache).resolve()
@@ -126,17 +126,29 @@ def ingest_delta(ledger, manifest, cache, *, upstream_run_id, reconsider_held=Fa
         previous = known.get(key)
         hits = index.get((item['document_id'],item['url']), [])
         changed = len(hits)==1 and sha(hits[0][0].read_bytes())!= (previous or {}).get('cache_document_sha256')
-        if previous and not (reconsider_held and previous['status']=='HELD_ISOLATED' and changed):
+        review_sha=sha(storage_policy.get('sources',{}).get(item['document_id'],{}))if storage_policy is not None else None
+        review_changed=bool(previous and previous.get('reason')=='PRIVATE_ARCHIVAL_OR_PRIVACY_UNREVIEWED'
+                            and review_sha is not None and review_sha!=previous.get('storage_review_sha256'))
+        if previous and not review_changed and not (reconsider_held and previous['status']=='HELD_ISOLATED' and changed):
             states.append({'document_id':item['document_id'],'status':'ALREADY_IMPORTED'}); continue
         receipt = {'item_key':key,'document_id':item['document_id'],'url':item['url'],
                    'upstream_run_id':str(upstream_run_id),'at':now()}
+        if review_sha is not None:receipt['storage_review_sha256']=review_sha
+        if review_changed:receipt['reconsidered_after_private_review_change']=True
         try:
             hits = index.get((item['document_id'],item['url']), [])
             if not hits: raise ValueError('UPSTREAM_BODY_NOT_AVAILABLE_NO_REFETCH')
             if len(hits)!=1: raise ValueError('UPSTREAM_VERSION_AMBIGUOUS')
             p,doc = hits[0]
             receipt['cache_document_sha256'] = sha(p.read_bytes())
-            if previous: receipt['reconsidered_after_new_cache_evidence'] = True
+            if storage_policy is not None:
+                review=storage_policy.get('sources',{}).get(doc['document_id'],{})
+                if not (review.get('raw_sha256')==doc.get('raw_sha256')
+                        and review.get('body_sha256')==doc.get('body_sha256')
+                        and review.get('private_archival')=='PERMITTED' and review.get('privacy_review')=='CLEARED'
+                        and review.get('rights_basis') and review.get('reviewed_by')):
+                    raise ValueError('PRIVATE_ARCHIVAL_OR_PRIVACY_UNREVIEWED')
+            if previous and changed: receipt['reconsidered_after_new_cache_evidence'] = True
             # Raw path from an artifact may refer to its old runner. Resolve
             # only a basename below raw/, never follow arbitrary artifact paths.
             filename = Path(doc['raw_path']).name

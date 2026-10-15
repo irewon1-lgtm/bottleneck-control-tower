@@ -1,12 +1,12 @@
 {
-  "plan_version": "3.0",
-  "plan_sha256": "250a2aec9255c84ea4a4c1815a48add37824051c9d4d2f106f8ac9e712eb384a",
+  "plan_version": "3.1",
+  "plan_sha256": "a327fdf903d317f612cc16b2011d5db6be8635c72a7fb6a1717fe17bab6e6d25",
   "stage": 4,
-  "status": "MAIN_CACHE_SEED_PASS_CPU_ACTIVATION_BLOCKED_7DAY_NOT_STARTED",
+  "status": "PRIVATE_STORAGE_PATH_FUNCTIONALLY_TESTED_ACTIVATION_BLOCKED_OWNER_SETUP_AND_ARCHIVAL_REVIEW",
   "handoff_sha": "cc190d429e369580cda5ac5790a9b45b9168baf8",
   "base_remote_sha": "cc190d429e369580cda5ac5790a9b45b9168baf8",
-  "last_completed": "Main-only read-permission manual cache seed38682772423 succeeded atadf31d5; remote main cache1058839680bytes verified, total2119028814bytes below8GiB. Main/data writer isolation and3 raw-page public clearance remain blocked. Publication/hash/cumulative64MiB safeguards tested;67 impact +1 additional security test PASS. No old/new source inference, AI calls, research-state publication, regularCPU or7day start.",
-  "next_action": "Reuse successful main-scoped cache (run38682772423). Complete writer isolation and exact-version source redistribution/privacy review first. Do not repeat CPU1210/67, model seed, old preflight or RSS. Then seed exact research DB remotely, requery/restore hashes, deploy separated guarded consumer, enable via authorized configuration, and require first real scheduled new-input validated/persisted CPU read to open seven-day observation.",
+  "last_completed": "Implemented private-only writer on existing bounded CAS/storage, separate read-only CPU/publisher jobs, authenticated encrypted cache handoff, stale bridge/retry isolation and durable ACK before7day start.62 focused offline tests passed plus final credential-format/redaction case. Dedicated repo creation403 and Secret settings403; exact3 original private archival reviews remain BLOCKED. No actual private GitHub DB publication or schedule start.",
+  "next_action": "After OWNER_SETUP.md one-time configuration, apply the read-only two-job workflow and verify-scope only first. Resolve exact-version private archival review, seed existing DB without re-reading CPU or reinstalling cache, remotely restore/hash-check, then remove false gate and enable only if all checks pass. First real scheduled new validated and acknowledged private read starts7days. Never repeat old Groq/CPU/RSS trials.",
   "blockers": [
     {
       "code": "SEVEN_STORED_ITEMS_REMAIN_INVALID",
@@ -234,8 +234,8 @@
       "role": "Research intake and frozen new20 sources/CPU/API first-unit push verified"
     }
   ],
-  "scope": "User-approved minimal free main cache/CPU research activation, conditional on actual main/data writer isolation, public checkpoint clearance and bounded storage. Existing operating features, RSS, data branch, UI and old evidence preserved; no paid API/AI/automatic S2/S3/LIVE.",
-  "updated_at": "2026-10-15T04:44:37.361681+00:00",
+  "scope": "Private-state storage/permission separation only, free CPU research. No public main/data runtime write token; no operating changes, new model/cache/RSS/oldCPU reprocessing, AI or automatic S2/S3/LIVE. Actual activation conditional on owner setup, verified exclusive permission and source archival rights.",
+  "updated_at": "2026-10-15T05:19:53.369624+00:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
@@ -346,22 +346,15 @@
   "api_usage_current_task": {
     "Groq_calls": 0,
     "external_AI_calls": 0,
-    "API_tokens": 0,
+    "tokens": 0,
     "API_cost_KRW": 0,
-    "new_CPU_model_loads": 0,
-    "new_CPU_memory_benchmark": "NOT_RUN; previous hosted health-only 2126252KiB reused, not a new-input batch measurement",
-    "active_cache_bytes_before": 1060189134,
-    "cache_safety_bound_bytes": 8589934592,
-    "cache_free_included_bytes": 10737418240,
-    "platform_billing": "Not exposed; no paid resource/plan changes. Standard public GitHub-hosted Linux compute is free; no new artifact uploads.",
-    "active_cache_bytes_after": 2119028814,
-    "same_model_runtime_seed_runs": 1,
-    "same_model_downloaded_files": 9,
-    "model_verified_bytes": 845068741,
-    "seed_file_hash_check_process_peak_RSS_KiB": 22848,
-    "seed_run_duration_ms": 81000,
-    "seed_UBUNTU_billable_ms": 0,
-    "seed_full_job_peak_RSS": "NOT_MEASURED; file hash process footprint is not job maximum"
+    "new_model_installs": 0,
+    "new_model_downloads": 0,
+    "new_actual_CPU_windows": 0,
+    "private_Actions_compute_runs": 0,
+    "paid_resources_or_plan_changes": false,
+    "new_GitHub_artifact_uploads": 0,
+    "account_platform_bill": "Not exposed; public standard CI only, no private runner/paid activation."
   },
   "remaining_issues": [
     {
@@ -3218,7 +3211,7 @@
     "at": "2026-10-15T03:12:39.484680+00:00",
     "start_sha": "f9a8ea5b53bff760bd5073e8d81a083b2e12f17e",
     "functionality": "PASS_DEVELOPMENT_CPU_QUEUE_RESTART_STORAGE_RESTORE_UI_AND_STAGE_FORWARDING",
-    "actual_scheduled_CPU_operation": "NOT_RUN_SECURITY_AND_PUBLIC_STORAGE_BLOCKED",
+    "actual_scheduled_CPU_operation": "NOT_RUN_PRIVATE_OWNER_SETUP_AND_ARCHIVAL_REVIEW_BLOCKED",
     "seven_day_observation": "NOT_STARTED",
     "existing_RSS": {
       "latest_run": 38658360952,
@@ -3296,13 +3289,12 @@
       "inflow_scope": "Latest9 RSS URLs only.67 CPUwindows+6sourceholds; not a measured all-industry daily rate"
     },
     "blockers": [
-      "NO_SERVER_ENFORCED_MAIN_DATA_WRITE_ISOLATION: A verified writer identity/server policy denied main/data while existing RSS retains required behavior; isolate read-only processing from that writer. Do not enable broad write token as workaround.",
-      "PUBLIC_RAW_CHECKPOINT_REVIEW_UNRESOLVED: Document the actual rights/privacy clearance for exact raw/body versions, or approve suitable non-public durable storage preserving originals. Do not redact/replace the frozen original DB silently.",
-      "ENABLED_VARIABLE_ACCESS_UNVERIFIED: Only after other protections pass, set enabled variable using an authorized configuration path.",
-      "Existing source-hold6 and lack of qualified future S3 gap unchanged; earlier evidence retained."
+      "OWNER_PRIVATE_REPOSITORY_SETUP: Owner creates/selects private target repository; preserve other projects.",
+      "PRIVATE_ONLY_AUTH_AND_ACTIONS_SETTINGS: Owner one-time fine-grained selected-repo token, separate handoff passphrase and reviewed code SHA settings. Do not set enabled=true yet. Actual private write/main-data denial tests remain NOT_RUN.",
+      "PRIVATE_ARCHIVAL_SCOPE_UNCONFIRMED: Resolve exact-version storage rights/privacy; preserve frozen originals and source holds; do not infer permission from private visibility."
     ],
-    "next_resume": "Reuse successful main-scoped cache (run38682772423). Complete writer isolation and exact-version source redistribution/privacy review first. Do not repeat CPU1210/67, model seed, old preflight or RSS. Then seed exact research DB remotely, requery/restore hashes, deploy separated guarded consumer, enable via authorized configuration, and require first real scheduled new-input validated/persisted CPU read to open seven-day observation.",
-    "report": "docs/v4/cpu-automation/preflight/ACTIVATION.md",
+    "next_resume": "After OWNER_SETUP.md one-time configuration, apply the read-only two-job workflow and verify-scope only first. Resolve exact-version private archival review, seed existing DB without re-reading CPU or reinstalling cache, remotely restore/hash-check, then remove false gate and enable only if all checks pass. First real scheduled new validated and acknowledged private read starts7days. Never repeat old Groq/CPU/RSS trials.",
+    "report": "docs/v4/cpu-automation/preflight/OWNER_SETUP.md",
     "results": "docs/v4/cpu-automation/RESULTS.json",
     "snapshot": "docs/v4/cpu-automation/ledger.sqlite3.gz",
     "storage_proof": "docs/v4/cpu-automation/storage-proof.json",
@@ -3858,6 +3850,96 @@
       "next_resume": "Reuse successful main-scoped cache (run38682772423). Complete writer isolation and exact-version source redistribution/privacy review first. Do not repeat CPU1210/67, model seed, old preflight or RSS. Then seed exact research DB remotely, requery/restore hashes, deploy separated guarded consumer, enable via authorized configuration, and require first real scheduled new-input validated/persisted CPU read to open seven-day observation.",
       "results": "docs/v4/cpu-automation/preflight/activation-results.json",
       "report": "docs/v4/cpu-automation/preflight/ACTIVATION.md"
+    },
+    "private_storage": {
+      "at": "2026-10-15T05:19:53.369624+00:00",
+      "start_sha": "39c909cb0353f2bd63f49d56cec0346f87797a46",
+      "status": "PRIVATE_STORAGE_PATH_FUNCTIONALLY_TESTED_ACTIVATION_BLOCKED_OWNER_SETUP_AND_ARCHIVAL_REVIEW",
+      "results": "docs/v4/cpu-automation/preflight/private-state-results.json",
+      "owner_setup": "docs/v4/cpu-automation/preflight/OWNER_SETUP.md",
+      "repository_created": false,
+      "dedicated_credential_actual_verification": "BLOCKED",
+      "private_archival_approved": 0,
+      "private_archival_unknown": 3,
+      "actual_private_GitHub_DB_uploads": 0,
+      "actual_remote_private_DB_restore": "BLOCKED",
+      "functional_tests": {
+        "impact": {
+          "passed": 62,
+          "seconds": 13.0,
+          "command": ".venv/bin/python -m pytest -q tests/test_v4_private_state.py tests/test_v4_cpu_operations.py tests/test_v4_cpu_automation.py",
+          "scope": "Synthetic/local storage and existing queue contract; not actual scoped GitHub authentication, CPU inference or periodic operation."
+        },
+        "actual_GitHub_dedicated_permission_tests": "NOT_RUN",
+        "local_private_Git_storage": "Synthetic bare-Git repository, not GitHub integration proof",
+        "encryption_new_process_restore": "PASS_LOCAL_SYNTHETIC",
+        "new_actual_CPU_documents": 0,
+        "API_calls": 0,
+        "final_credential_redaction": {
+          "passed": 1,
+          "deselected": 14,
+          "seconds": 0.17,
+          "scope": "Final invalid-header credential guard; overlaps impact tests, not added to62."
+        },
+        "final_development_CI": "To be verified externally on exact pushed SHA; no self-referential CI success claim."
+      },
+      "architecture": {
+        "public_job_GITHUB_TOKEN_permissions": {
+          "contents": "read",
+          "actions": "read"
+        },
+        "public_processing_receives_private_Git_write_token": false,
+        "publisher_receives_model_or_executes_acquired_code": false,
+        "inter_job_DB_transport": "Existing GnuPG AES256 with MDC authentication; ciphertext only in public Actions caches. Secret via FD, not argv/logs; no new dependency/model.",
+        "private_git_auth": "Ephemeral Authorization environment for exact private URL, credential.helper disabled, no token in remote/config/files/outputs",
+        "storage_reuse": "Existing Ledger/checkpoint/restore/8-table digests/CAS/fixed research ref and64MiB history bound",
+        "seven_day_start": "CPU event remains pending persistence. Publisher fresh-fetches/restores snapshot, writes a small private persistence ACK reusing identical DB blob, then re-fetches ACK. Only confirmed scheduled new validated reads may start observation.",
+        "stale_bridge": "Before model load require authenticated publisher run ID/attempt matching last successful consumer. Stale/failed/evicted state blocks CPU and requires private restore, never blank initialization.",
+        "source_policy": "New private-unreviewed raw sources isolated before capture. Same failed item not retried unless its own rights-review metadata changes; cache/source unchanged is recorded honestly.",
+        "public_UI": "Unchanged. No private DB/raw/quotes exported; only approved numeric/status/link projection permitted. No new live private-data UI connection claimed."
+      },
+      "preservation": {
+        "main_start_SHA": "adf31d5d546ad05fc14d70063b15743109aec6cc",
+        "data_start_SHA": "7d4bfd16f44fdd2d5a0f3bdac59e816e53d9ecad",
+        "operating_files_or_active_workflows_changed": false,
+        "changed_tracked_files_intersect_prior148_frozen_evidence": [],
+        "original_queue_sha256": "5d231f79819e3794544b9027dc1cace0d42962abda323d6032e0360a92485500",
+        "existing1210_windows_rerun": 0,
+        "existing67_windows_rerun": 0,
+        "main_cache_reinstalled_or_downloaded": false
+      },
+      "usage": {
+        "Groq_calls": 0,
+        "external_AI_calls": 0,
+        "tokens": 0,
+        "API_cost_KRW": 0,
+        "new_model_installs": 0,
+        "new_model_downloads": 0,
+        "new_actual_CPU_windows": 0,
+        "private_Actions_compute_runs": 0,
+        "paid_resources_or_plan_changes": false,
+        "new_GitHub_artifact_uploads": 0,
+        "account_platform_bill": "Not exposed; public standard CI only, no private runner/paid activation."
+      },
+      "blockers": [
+        {
+          "code": "OWNER_PRIVATE_REPOSITORY_SETUP",
+          "reason": "Dedicated target404; create403",
+          "needed": "Owner creates/selects private target repository; preserve other projects."
+        },
+        {
+          "code": "PRIVATE_ONLY_AUTH_AND_ACTIONS_SETTINGS",
+          "reason": "Dedicated scoped credential not available; Secret/variable settings403",
+          "needed": "Owner one-time fine-grained selected-repo token, separate handoff passphrase and reviewed code SHA settings. Do not set enabled=true yet. Actual private write/main-data denial tests remain NOT_RUN."
+        },
+        {
+          "code": "PRIVATE_ARCHIVAL_SCOPE_UNCONFIRMED",
+          "documents": 3,
+          "reason": "Terms review does not establish permission for repeated private raw backups",
+          "needed": "Resolve exact-version storage rights/privacy; preserve frozen originals and source holds; do not infer permission from private visibility."
+        }
+      ],
+      "next_resume": "After OWNER_SETUP.md one-time configuration, apply the read-only two-job workflow and verify-scope only first. Resolve exact-version private archival review, seed existing DB without re-reading CPU or reinstalling cache, remotely restore/hash-check, then remove false gate and enable only if all checks pass. First real scheduled new validated and acknowledged private read starts7days. Never repeat old Groq/CPU/RSS trials."
     }
   },
   "before_cpu_activation": {
@@ -3881,6 +3963,32 @@
       "CPU_model_loads": 2,
       "CPU_model_installs": 0,
       "platform_usage_or_fees": "UNKNOWN_SEPARATE_NOT_EXPOSED"
+    }
+  },
+  "before_private_storage": {
+    "status": "MAIN_CACHE_SEED_PASS_CPU_ACTIVATION_BLOCKED_7DAY_NOT_STARTED",
+    "scope": "User-approved minimal free main cache/CPU research activation, conditional on actual main/data writer isolation, public checkpoint clearance and bounded storage. Existing operating features, RSS, data branch, UI and old evidence preserved; no paid API/AI/automatic S2/S3/LIVE.",
+    "next_action": "Reuse successful main-scoped cache (run38682772423). Complete writer isolation and exact-version source redistribution/privacy review first. Do not repeat CPU1210/67, model seed, old preflight or RSS. Then seed exact research DB remotely, requery/restore hashes, deploy separated guarded consumer, enable via authorized configuration, and require first real scheduled new-input validated/persisted CPU read to open seven-day observation.",
+    "last_completed": "Main-only read-permission manual cache seed38682772423 succeeded atadf31d5; remote main cache1058839680bytes verified, total2119028814bytes below8GiB. Main/data writer isolation and3 raw-page public clearance remain blocked. Publication/hash/cumulative64MiB safeguards tested;67 impact +1 additional security test PASS. No old/new source inference, AI calls, research-state publication, regularCPU or7day start.",
+    "api_usage_current_task": {
+      "Groq_calls": 0,
+      "external_AI_calls": 0,
+      "API_tokens": 0,
+      "API_cost_KRW": 0,
+      "new_CPU_model_loads": 0,
+      "new_CPU_memory_benchmark": "NOT_RUN; previous hosted health-only 2126252KiB reused, not a new-input batch measurement",
+      "active_cache_bytes_before": 1060189134,
+      "cache_safety_bound_bytes": 8589934592,
+      "cache_free_included_bytes": 10737418240,
+      "platform_billing": "Not exposed; no paid resource/plan changes. Standard public GitHub-hosted Linux compute is free; no new artifact uploads.",
+      "active_cache_bytes_after": 2119028814,
+      "same_model_runtime_seed_runs": 1,
+      "same_model_downloaded_files": 9,
+      "model_verified_bytes": 845068741,
+      "seed_file_hash_check_process_peak_RSS_KiB": 22848,
+      "seed_run_duration_ms": 81000,
+      "seed_UBUNTU_billable_ms": 0,
+      "seed_full_job_peak_RSS": "NOT_MEASURED; file hash process footprint is not job maximum"
     }
   }
 }

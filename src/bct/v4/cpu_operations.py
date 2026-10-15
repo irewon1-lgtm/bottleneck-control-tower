@@ -126,7 +126,7 @@ def restore(source,root):
     return {'restored':True,'tables':len(p['tables']),'sqlite_sha256':p['sqlite_sha256']}
 
 
-def observe(ledger,*,trigger,scheduled_for=None,upstream=None,execute=False,extractor=None,schedule_context=None):
+def observe(ledger,*,trigger,scheduled_for=None,upstream=None,execute=False,extractor=None,schedule_context=None,persistence_required=False):
     """One bounded 120-second-supervised command uses the existing queue.
 
     This preflight does not certify a scheduler. Only independently verified
@@ -157,8 +157,10 @@ def observe(ledger,*,trigger,scheduled_for=None,upstream=None,execute=False,extr
             'queue':after,'model_loaded_by_queue':bool(result and result.get('model_loaded',result['new_windows']>0)),
             'prior_observations':len(prior),'API_calls':0,'API_tokens':0,'API_cost_KRW':0,
             'candidate_registration':False,'AI_adoption':'FAIL_UNCHANGED','lead_performance':'BLOCKED_UNCHANGED'}
-        if scheduled['verified'] and payload['actually_read_new_characters']>0 and payload['successful_new_CPU_windows']>0:
-            previous=[r['finished_at']for r in prior if r.get('scheduled_execution_verified') and r.get('actually_read_new_characters',0)>0 and r.get('successful_new_CPU_windows',0)>0]
+        payload['private_persistence_required']=persistence_required
+        if persistence_required:payload['seven_day_status']='NOT_STARTED_PENDING_PRIVATE_PERSISTENCE'
+        if not persistence_required and scheduled['verified'] and payload['actually_read_new_characters']>0 and payload['successful_new_CPU_windows']>0:
+            previous=[r['finished_at']for r in prior if not r.get('private_persistence_required') and r.get('scheduled_execution_verified') and r.get('actually_read_new_characters',0)>0 and r.get('successful_new_CPU_windows',0)>0]
             payload['seven_day_start']=min(previous)if previous else payload['finished_at']
             payload['seven_day_status']='OBSERVING_NOT_COMPLETED_REQUIRES7REAL_DAYS_AND_CONTINUITY_REVIEW'
         with ledger.db:ledger.event('CPU_OPERATION_OBSERVATION',payload)
@@ -191,7 +193,7 @@ def verified_schedule(context):
 
 def observation_summary(db):
     rows=[json.loads(p)for p, in db.execute("SELECT payload FROM events WHERE kind='CPU_OPERATION_OBSERVATION' ORDER BY seq")]
-    starts=[r['finished_at']for r in rows if r.get('scheduled_execution_verified') and r.get('actually_read_new_characters',0)>0 and r.get('successful_new_CPU_windows',0)>0]
+    starts=[r['finished_at']for r in rows if not r.get('private_persistence_required') and r.get('scheduled_execution_verified') and r.get('actually_read_new_characters',0)>0 and r.get('successful_new_CPU_windows',0)>0]
     return {'observations':len(rows),'latest':rows[-1]if rows else None,
         'first_verified_scheduled_CPU_success':min(starts)if starts else None,
         'seven_day_status':'NOT_RUN'if not starts else'OBSERVING_REQUIRES_CONTINUITY_REVIEW',
@@ -226,6 +228,10 @@ STATE_HISTORY_LIMIT=64*1024**2
 
 
 def public_checkpoint_audit(source,policy=None):
+    return checkpoint_storage_audit(source,policy,scope='public')
+
+
+def checkpoint_storage_audit(source,policy=None,*,scope='public'):
     """Inspect a verified snapshot, never publish source text or matched secrets.
 
     Public HTTP access/provenance is not permission to redistribute a raw page.
@@ -236,7 +242,9 @@ def public_checkpoint_audit(source,policy=None):
     import re
     import tempfile
     from urllib.parse import urlsplit
+    if scope not in ('public','private'):raise ValueError('UNKNOWN_STORAGE_SCOPE')
     policy=policy or {};reviews=policy.get('sources',{})
+    permission='redistribution'if scope=='public'else 'private_archival'
     findings=[];sources=[]
     with tempfile.TemporaryDirectory(prefix='bct-publication-audit-')as tmp:
         restore(source,Path(tmp)/'db')
@@ -249,7 +257,7 @@ def public_checkpoint_audit(source,policy=None):
                               and sha(d.get('body','').encode())==d.get('body_sha256'))
                 approved=(hashes_match and review.get('raw_sha256')==raw_id
                     and review.get('body_sha256')==d.get('body_sha256')
-                    and review.get('redistribution')=='PERMITTED'
+                    and review.get(permission)=='PERMITTED'
                     and review.get('privacy_review')=='CLEARED'
                     and bool(review.get('rights_basis')) and bool(review.get('reviewed_by')))
                 sources.append({'document_id':doc_id,'origin_host':urlsplit(d.get('origin_url','')).hostname,
@@ -258,7 +266,8 @@ def public_checkpoint_audit(source,policy=None):
                     'contact_pattern_count':len(re.findall(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}',text)),
                     'copyright_notice':bool(re.search(r'copyright|all rights reserved|©',text,re.I)),
                     'content_hashes_match':hashes_match,'hash_bound_rights_and_privacy_review':approved})
-                if not approved:findings.append({'table':'documents','record_id':doc_id,'reason':'RAW_REDISTRIBUTION_OR_PRIVACY_UNREVIEWED'})
+                if not approved:findings.append({'table':'documents','record_id':doc_id,'reason':
+                    'RAW_REDISTRIBUTION_OR_PRIVACY_UNREVIEWED'if scope=='public'else 'PRIVATE_ARCHIVAL_OR_PRIVACY_UNREVIEWED'})
             for blob_id, in db.execute('SELECT id FROM blobs WHERE id NOT IN (SELECT raw_id FROM documents WHERE raw_id IS NOT NULL)'):
                 findings.append({'table':'blobs','record_id':blob_id,'reason':'UNREVIEWED_ORPHAN_RAW_CONTENT'})
             # Include original blobs AND all nested outputs/events, not just body.
@@ -273,7 +282,8 @@ def public_checkpoint_audit(source,policy=None):
                         findings.append({'table':table,'record_id':record_id,'reason':'POSSIBLE_AUTHENTICATION_MATERIAL'})
             if db.execute('SELECT count(*) FROM firsts').fetchone()[0]:
                 findings.append({'table':'firsts','reason':'CANDIDATE_OR_LIVE_FIRSTS_PRESENT'})
-    return {'status':'BLOCKED'if findings else 'PASS_PUBLICATION_REVIEW',
+    return {'status':'BLOCKED'if findings else 'PASS_PUBLICATION_REVIEW'if scope=='public'else 'PASS_PRIVATE_STORAGE_REVIEW',
+            'scope':scope,
             'sqlite_sha256':json.loads((Path(source)/'checkpoint.json').read_text())['sqlite_sha256'],
             'documents':sources,'findings':findings,'scan_is_not_a_privacy_certificate':True,
             'originals_modified':False}
@@ -293,6 +303,16 @@ def publish_checkpoint(repo,source,expected_parent,*,publication_policy=None):
         raise ValueError('RESEARCH_CHECKPOINT_HASH_OR_SIZE')
     if public_checkpoint_audit(source,publication_policy)['status']!='PASS_PUBLICATION_REVIEW':
         raise ValueError('PUBLIC_RESEARCH_CHECKPOINT_REVIEW_BLOCKED')
+    return _publish_checkpoint(repo,source,expected_parent)
+
+
+def _publish_checkpoint(repo,source,expected_parent,*,git_env=None,persistence_receipt=None):
+    """Shared bounded CAS transport; callers must enforce storage/credential policy."""
+    import tempfile
+    repo,source=Path(repo),Path(source)
+    proof=json.loads((source/'checkpoint.json').read_text());archive=source/'checkpoint.sqlite3.gz'
+    if proof['archive']!=archive.name or file_sha(archive)!=proof['archive_sha256'] or archive.stat().st_size>16*1024**2:
+        raise ValueError('RESEARCH_CHECKPOINT_HASH_OR_SIZE')
     with tempfile.TemporaryDirectory(prefix='bct-cpu-state-verify-')as temporary:
         verified=Path(temporary)/'verified'
         restore(source,verified)
@@ -300,7 +320,8 @@ def publish_checkpoint(repo,source,expected_parent,*,publication_policy=None):
             if db.execute('SELECT count(*) FROM firsts').fetchone()[0]:
                 raise ValueError('RESEARCH_CHECKPOINT_MUST_NOT_REGISTER_LIVE_OR_CANDIDATE_FIRSTS')
     def git(*args,env=None,input=None):
-        p=subprocess.run(['git','-C',str(repo),*args],input=input,capture_output=True,text=True,env=env,timeout=25)
+        p=subprocess.run(['git','-C',str(repo),*args],input=input,capture_output=True,text=True,
+                         env={**os.environ,**(env or {}),**(git_env or {})},timeout=25)
         if p.returncode: raise ValueError('RESEARCH_STATE_GIT_OPERATION_FAILED')
         return p.stdout.strip()
     current=git('ls-remote','origin',STATE_REF)
@@ -320,6 +341,11 @@ def publish_checkpoint(repo,source,expected_parent,*,publication_policy=None):
         for name in ('checkpoint.json','checkpoint.sqlite3.gz'):
             blob=git('hash-object','-w',str((source/name).resolve()))
             git('update-index','--add','--cacheinfo',f'100644,{blob},{name}',env=env)
+        if persistence_receipt is not None:
+            receipt=Path(temp)/'private-persistence.json'
+            receipt.write_text(json.dumps(persistence_receipt,sort_keys=True))
+            blob=git('hash-object','-w',str(receipt))
+            git('update-index','--add','--cacheinfo',f'100644,{blob},private-persistence.json',env=env)
         tree=git('write-tree',env=env)
         command=['-c','user.name=BCT CPU research','-c','user.email=bct-research@users.noreply.github.com','commit-tree',tree]
         if current:command+=['-p',current]

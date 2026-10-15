@@ -1,105 +1,146 @@
-# NOT ACTIVE. User approved free CPU activation on 2026-10-15, CONDITIONALLY.
-# BLOCKED: main/data are unprotected, contents:write is repository-scoped,
-# and the 3 existing raw pages have no redistribution/privacy clearance.
-# This proposal is deliberately false-gated; do not copy/enable as-is.
-# Required change before activation: read-only processing on one runner and
-# a separately authorized writer on another runner; server-enforced denial of
-# main/data writes by that writer. A fixed push ref alone is NOT protection.
-# Never execute code from acquired artifacts or cache a writer credential.
-# Prerequisites: a one-time main-scoped copy of the tested runtime cache;
-# separately seeded research-state ref from the verified checkpoint;
-# BCT_V4_CPU_RESEARCH_ENABLED=true only after those protections are proven.
-name: V4 CPU research consumer
+# NOT ACTIVE: owner repository/secret setup and exact-version private storage review remain BLOCKED.
+# Replace the old public write-token proposal; no public contents:write, no raw artifacts/cache.
+# Existing main-scoped runtime cache is mandatory. No install/download fallback.
+name: V4 CPU private research consumer
 on:
   workflow_run:
     workflows: [New precursor evidence acquisition]
     types: [completed]
+  workflow_dispatch:
+    inputs:
+      purpose:
+        type: choice
+        options: [verify-scope, seed]
+        default: verify-scope
 permissions:
-  contents: write
+  contents: read
   actions: read
 concurrency:
-  group: v4-cpu-research-single-writer
+  group: v4-cpu-private-research-single-writer
   cancel-in-progress: false
+env:
+  PYTHONPATH: src
+  CPU_CODE_SHA: ${{ vars.BCT_V4_CPU_CODE_SHA }}
 jobs:
   research:
-    if: ${{ false && vars.BCT_V4_CPU_RESEARCH_ENABLED == 'true' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ false && github.ref == 'refs/heads/main' && github.event_name == 'workflow_run' && vars.BCT_V4_CPU_RESEARCH_ENABLED == 'true' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 10
     env:
       GH_TOKEN: ${{ github.token }}
-      PYTHONPATH: src
-      BCT_V4_CPU_RESEARCH_ENABLED: ${{ vars.BCT_V4_CPU_RESEARCH_ENABLED }}
+      BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+      HF_HUB_OFFLINE: '1'
+      TRANSFORMERS_OFFLINE: '1'
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
     steps:
+      - name: Require a reviewed immutable code SHA
+        run: test "${#CPU_CODE_SHA}" = 40 && [[ "$CPU_CODE_SHA" =~ ^[0-9a-f]+$ ]]
       - uses: actions/checkout@v4
         with:
+          ref: ${{ env.CPU_CODE_SHA }}
           persist-credentials: false
       - uses: actions/setup-python@v5
         id: python
         with:
-          python-version: '3.12'
-      - name: Free guard and exact runtime cache key
+          python-version: '3.12.15'
+      - name: Free guard and exact existing runtime key
         id: key
         env:
           PYTHON_VERSION: ${{ steps.python.outputs.python-version }}
           LOCK_SHA: ${{ hashFiles('scripts/v4/requirements.lock','docs/v4/cpu-automation/preflight/model-manifest.json') }}
         run: |
-          timeout 120 python tools/v4_cpu_preflight.py guard --output var/v4/cpu-operations/free.json
-          echo "runtime_key=v4-cpu-runtime-${RUNNER_OS}-${RUNNER_ARCH}-${PYTHON_VERSION}-${LOCK_SHA}" >> "$GITHUB_OUTPUT"
+          timeout 120 python tools/v4_cpu_preflight.py guard --output var/v4/cpu-private/free.json
+          echo "key=v4-cpu-runtime-${RUNNER_OS}-${RUNNER_ARCH}-${PYTHON_VERSION}-${LOCK_SHA}" >> "$GITHUB_OUTPUT"
       - uses: actions/cache/restore@v4
         with:
-          key: ${{ steps.key.outputs.runtime_key }}
+          key: ${{ steps.key.outputs.key }}
           fail-on-cache-miss: true
           path: |
             .v4-cpu-env
             .v4-cpu-runtime
-      - name: Receive only the existing upstream RSS delta and acquired bodies
+      - uses: actions/cache/restore@v4
+        with:
+          key: v4-cpu-private-bridge-prior-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: v4-cpu-private-bridge-
+          fail-on-cache-miss: true
+          path: var/v4/cpu-private/bridge
+      - name: Authenticate and restore private input; missing/corrupt stops
+        run: timeout 120 python tools/v4_cpu_private.py unseal --packet var/v4/cpu-private/bridge/state.gpg --checkpoint var/v4/cpu-private/prior
+      - name: Verify original scheduled RSS and receive existing data only
         env:
           ACQUISITION_RUN: ${{ github.event.workflow_run.id }}
         run: |
-          timeout 120 .v4-cpu-env/bin/python - <<'PY'
+          timeout 120 python - <<'PYCODE'
           from bct.v4.cpu_operations import github_schedule_context,verified_schedule
-          import json,os
-          from pathlib import Path
+          import os
           proof=verified_schedule(github_schedule_context())
-          Path('var/v4/cpu-operations/upstream-schedule.json').write_text(json.dumps(proof))
-          with open(os.environ['GITHUB_ENV'],'a') as out:out.write('RSS_RUN='+str(proof['RSS_run_id'])+'\n')
-          PY
-          gh run download "$RSS_RUN" --name rss-live-result --dir var/v4/cpu-operations/rss
-          gh run download "$ACQUISITION_RUN" --name precursor-private-cache --dir var/v4/cpu-operations/source
-      - name: Restore durable research checkpoint; missing/corrupt state blocks execution
-        run: |
-          set -euo pipefail
-          git fetch --no-tags origin refs/heads/codex/bct-v4-cpu-research-state
-          echo "STATE_PARENT=$(git rev-parse FETCH_HEAD)" >> "$GITHUB_ENV"
-          mkdir -p var/v4/cpu-operations/prior
-          git show FETCH_HEAD:checkpoint.json > var/v4/cpu-operations/prior/checkpoint.json
-          git show FETCH_HEAD:checkpoint.sqlite3.gz > var/v4/cpu-operations/prior/checkpoint.sqlite3.gz
-          timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_preflight.py restore --checkpoint var/v4/cpu-operations/prior --output var/v4/cpu-operations/restore.json
-      - name: Queue new versions only, then run the bounded existing CPU consumer
+          with open(os.environ['GITHUB_ENV'],'a')as out:out.write('RSS_RUN='+str(proof['RSS_run_id'])+'\n')
+          PYCODE
+          timeout 120 gh run download "$RSS_RUN" --name rss-live-result --dir var/v4/cpu-private/rss
+          timeout 120 gh run download "$ACQUISITION_RUN" --name precursor-private-cache --dir var/v4/cpu-private/source
+      - name: Consume approved new windows with the existing bounded CPU queue
+        run: timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_private.py process --checkpoint var/v4/cpu-private/prior --output var/v4/cpu-private/observation.json
+      - name: Seal output; only ciphertext crosses jobs
+        run: timeout 120 python tools/v4_cpu_private.py seal --checkpoint var/v4/cpu-private/next-checkpoint --packet var/v4/cpu-private/result/state.gpg --parent-file var/v4/cpu-private/prior/parent.json
+      - uses: actions/cache/save@v4
+        with:
+          key: v4-cpu-private-result-${{ github.run_id }}-${{ github.run_attempt }}
+          path: var/v4/cpu-private/result
+  publish:
+    needs: research
+    if: ${{ always() && github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || needs.research.result == 'success') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+    steps:
+      - name: Require a reviewed immutable code SHA
+        run: test "${#CPU_CODE_SHA}" = 40 && [[ "$CPU_CODE_SHA" =~ ^[0-9a-f]+$ ]]
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CPU_CODE_SHA }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Free/cache guard; private repo is storage only, no private Actions
+        run: timeout 120 python tools/v4_cpu_preflight.py guard --output var/v4/cpu-private/free.json
+      - name: Verify private write and actual public main/data write denials
         env:
-          HF_HUB_OFFLINE: '1'
-          TRANSFORMERS_OFFLINE: '1'
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+        run: timeout 120 python tools/v4_cpu_private.py verify-scope --output var/v4/cpu-private/scope.json
+      - name: Prepare existing verified seed without rereading or empty reset
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'seed' }}
+        run: timeout 120 python tools/v4_cpu_private.py prepare-seed
+      - uses: actions/cache/restore@v4
+        if: ${{ github.event_name == 'workflow_run' }}
+        with:
+          key: v4-cpu-private-result-${{ github.run_id }}-${{ github.run_attempt }}
+          fail-on-cache-miss: true
+          path: var/v4/cpu-private/result
+      - name: Authenticate CPU result, no model or upstream code execution
+        if: ${{ github.event_name == 'workflow_run' }}
+        run: timeout 120 python tools/v4_cpu_private.py unseal --packet var/v4/cpu-private/result/state.gpg --checkpoint var/v4/cpu-private/checkpoint
+      - name: Private CAS publish and fresh remote hash/table restore
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' }}
+        env:
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
         run: |
-          timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_automation.py --root var/v4/cpu-operations/ledger --manifest var/v4/cpu-operations/rss/new-document-manifest.json --cache var/v4/cpu-operations/source --upstream-run-id "$RSS_RUN" --output var/v4/cpu-operations/imports.json
-          .v4-cpu-env/bin/python - <<'PY'
-          import json
-          from pathlib import Path
-          r=Path('var/v4/cpu-operations')
-          items=json.load(open(r/'imports.json'))['imports']
-          receipt={'new_URLs':sum(x['status']!='ALREADY_IMPORTED' for x in items),'new_body_documents':sum(x['status']=='QUEUED' for x in items),
-                   'free_guard':json.load(open(r/'free.json')),'restored_checkpoint':json.load(open(r/'restore.json')),
-                   'schedule':json.load(open(r/'upstream-schedule.json'))}
-          (r/'upstream.json').write_text(json.dumps(receipt))
-          PY
-          timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_preflight.py observe --execute-cpu --record-scheduled-origin --upstream-receipt var/v4/cpu-operations/upstream.json --output var/v4/cpu-operations/result.json
-      - name: Retain checkpoint on the research-only branch, including isolated failures
-        if: ${{ always() }}
-        run: |
-          set -euo pipefail
-          test -f var/v4/cpu-operations/ledger/v4.sqlite3 || exit 0
-          test -n "${STATE_PARENT:-}" || exit 1
-          timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_preflight.py checkpoint --output var/v4/cpu-operations/checkpoint-result.json
-          timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_preflight.py publish-state --expected-state-parent "$STATE_PARENT" --output var/v4/cpu-operations/published.json
-# No artifact upload, RSS fetching, AI key, UI deployment, operating data branch
-# write, automatic stage promotion or LIVE registration is included.
-# Cache misses STOP. A maintainer must approve a new one-time runtime seed.
+          if test -f var/v4/cpu-private/checkpoint/parent.json; then
+            timeout 120 python tools/v4_cpu_private.py publish --parent-file var/v4/cpu-private/checkpoint/parent.json --output var/v4/cpu-private/published.json
+          else
+            timeout 120 python tools/v4_cpu_private.py publish --output var/v4/cpu-private/published.json
+          fi
+      - name: Seal acknowledged private state for next read-only CPU job
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' }}
+        run: timeout 120 python tools/v4_cpu_private.py seal --packet var/v4/cpu-private/bridge/state.gpg --parent-file var/v4/cpu-private/published.json
+      - uses: actions/cache/save@v4
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'seed' }}
+        with:
+          key: v4-cpu-private-bridge-${{ github.run_id }}-${{ github.run_attempt }}
+          path: var/v4/cpu-private/bridge
+# No raw DB/source artifact upload, code execution from upstream, public Git writes,
+# model setup, RSS refetch, external AI, automatic S2/S3, LIVE or UI deployment.
+# Seven-day start exists only after publisher remote restore and receipt ACK.

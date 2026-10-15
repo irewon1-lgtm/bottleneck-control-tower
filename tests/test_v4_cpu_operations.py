@@ -235,7 +235,8 @@ def test_preflight_cli_cannot_publish_any_research_branch_without_activation(tmp
     assert result.returncode!=0 and b'REQUIRES_APPROVED_MAIN_ACTIVATION' in result.stderr
 
 
-def test_only_verified_scheduled_actual_read_opens_observation_never_completes_it(tmp_path):
+@pytest.mark.parametrize('private_persistence',[False,True])
+def test_only_verified_scheduled_actual_read_opens_observation_never_completes_it(tmp_path,private_persistence):
     from bct.v4.cpu_automation import enqueue
     from bct.v4.adapters import MODEL,MODEL_REVISION
     body='Atlas ordered novel pumps in this synthetic observer test.'
@@ -248,11 +249,16 @@ def test_only_verified_scheduled_actual_read_opens_observation_never_completes_i
             return {'status':'PASS','model':MODEL,'revision':MODEL_REVISION,'selected_windows':windows,'spans':[]}
     l=open_queue(tmp_path)
     with l.worker():enqueue(l,d,raw,{'synthetic':True})
-    r=op.observe(l,trigger='SYNTHETIC_SCHEDULE_PROOF_TEST',execute=True,extractor=SyntheticOnly(),schedule_context=schedule_context())
-    assert r['actually_read_new_characters']==len(body) and r['seven_day_start']
+    r=op.observe(l,trigger='SYNTHETIC_SCHEDULE_PROOF_TEST',execute=True,extractor=SyntheticOnly(),schedule_context=schedule_context(),persistence_required=private_persistence)
+    assert r['actually_read_new_characters']==len(body)
     summary=op.observation_summary(l.db)
-    assert summary['first_verified_scheduled_CPU_success']==r['finished_at']
-    assert summary['seven_day_status']=='OBSERVING_REQUIRES_CONTINUITY_REVIEW' and not summary['automatic_completion']
+    if private_persistence:
+        assert r['seven_day_start']is None and summary['first_verified_scheduled_CPU_success']is None
+        assert summary['seven_day_status']=='NOT_RUN'
+    else:
+        assert r['seven_day_start']and summary['first_verified_scheduled_CPU_success']==r['finished_at']
+        assert summary['seven_day_status']=='OBSERVING_REQUIRES_CONTINUITY_REVIEW'
+    assert not summary['automatic_completion']
     assert l.db.execute('select count(*) from firsts').fetchone()==(0,);l.close()
 
 
@@ -262,10 +268,12 @@ def test_proposed_activation_is_not_an_active_workflow_and_is_off_by_default():
     assert triggers['workflow_run']['workflows']==['New precursor evidence acquisition']
     assert 'BCT_V4_CPU_RESEARCH_ENABLED' in data['jobs']['research']['if']
     assert 'false &&' in data['jobs']['research']['if']
-    assert data['jobs']['research']['steps'][0]['with']['persist-credentials'] is False
+    assert next(s for s in data['jobs']['research']['steps']if s.get('uses','').startswith('actions/checkout'))['with']['persist-credentials'] is False
     assert all('pip install' not in step.get('run','')for step in data['jobs']['research']['steps'])
     assert 'fail-on-cache-miss: true' in path.read_text()
-    assert 'refs/heads/codex/bct-v4-cpu-research-state' in path.read_text()
+    assert 'v4_cpu_private.py publish' in path.read_text()
+    assert data['permissions']=={'contents':'read','actions':'read'}
+    assert 'BCT_V4_PRIVATE_STATE_TOKEN' not in json.dumps(data['jobs']['research'])
 
 
 def test_source_validation_failure_after_model_read_cannot_start_seven_day(tmp_path):

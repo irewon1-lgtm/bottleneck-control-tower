@@ -1,0 +1,296 @@
+{
+  "at": "2026-10-15T05:19:53.369624+00:00",
+  "start_SHA": "39c909cb0353f2bd63f49d56cec0346f87797a46",
+  "status": "PRIVATE_STORAGE_PATH_FUNCTIONALLY_TESTED_ACTIVATION_BLOCKED_OWNER_SETUP_AND_ARCHIVAL_REVIEW",
+  "repository_discovery": {
+    "checks": [
+      {
+        "endpoint": "user/repos?visibility=private&affiliation=owner,collaborator&per_page=100",
+        "exit_code": 0,
+        "diagnostic": "",
+        "visible_private_repository_count": 5,
+        "names_not_republished": true
+      },
+      {
+        "endpoint": "repos/irewon1-lgtm/bct-v4-private-state",
+        "exit_code": 1,
+        "diagnostic": "gh: Not Found (HTTP 404)",
+        "result": {
+          "full_name": null,
+          "private": null,
+          "visibility": null,
+          "archived": null,
+          "default_branch": null,
+          "permissions": null,
+          "message": "Not Found",
+          "status": "404"
+        }
+      },
+      {
+        "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/actions/secrets",
+        "exit_code": 1,
+        "diagnostic": "gh: Resource not accessible by integration (HTTP 403)",
+        "result": {
+          "total_count": null,
+          "secrets": null,
+          "message": "Resource not accessible by integration",
+          "status": "403"
+        }
+      },
+      {
+        "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/actions/variables",
+        "exit_code": 1,
+        "diagnostic": "gh: Resource not accessible by integration (HTTP 403)",
+        "result": {
+          "names": [],
+          "message": "Resource not accessible by integration",
+          "status": "403"
+        }
+      }
+    ],
+    "unrelated_existing_private_research": "Inspected purpose of one related private project; active separate price research, not repurposed. No private project content/names copied to public evidence.",
+    "target": "irewon1-lgtm/bct-v4-private-state",
+    "create_attempts": 1,
+    "create_HTTP": 403,
+    "create_message": "Resource not accessible by integration",
+    "created": false,
+    "404_meaning": "Not available to this actor; not proof no inaccessible repository exists."
+  },
+  "credentials": {
+    "dedicated_private_credential_available_in_Codex": false,
+    "GitHub_secret_presence": "UNKNOWN_GET_SECRETS403",
+    "general_proxy_credential_reused_for_private_write": false,
+    "new_credentials_generated": false,
+    "owner_guide": "docs/v4/cpu-automation/preflight/OWNER_SETUP.md",
+    "required_secret_names": [
+      "BCT_V4_PRIVATE_STATE_TOKEN",
+      "BCT_V4_STATE_PASSPHRASE"
+    ],
+    "writer_scope": "Fine-grained token selected repository ONLY bct-v4-private-state; Contents read/write, Metadata read, all other permissions none",
+    "real_main_data_write_denial_test": "NOT_RUN_NO_SCOPED_CREDENTIAL",
+    "actual_private_visibility_write_probe": "NOT_RUN_NO_SCOPED_CREDENTIAL",
+    "enforced_contract": "Require exactly one visible private repository, private=true exact repo name, existing public main/data ref-create403/404 (not422), private constant-blob create201. Reject missing credential without GH_TOKEN/helper fallback."
+  },
+  "architecture": {
+    "public_job_GITHUB_TOKEN_permissions": {
+      "contents": "read",
+      "actions": "read"
+    },
+    "public_processing_receives_private_Git_write_token": false,
+    "publisher_receives_model_or_executes_acquired_code": false,
+    "inter_job_DB_transport": "Existing GnuPG AES256 with MDC authentication; ciphertext only in public Actions caches. Secret via FD, not argv/logs; no new dependency/model.",
+    "private_git_auth": "Ephemeral Authorization environment for exact private URL, credential.helper disabled, no token in remote/config/files/outputs",
+    "storage_reuse": "Existing Ledger/checkpoint/restore/8-table digests/CAS/fixed research ref and64MiB history bound",
+    "seven_day_start": "CPU event remains pending persistence. Publisher fresh-fetches/restores snapshot, writes a small private persistence ACK reusing identical DB blob, then re-fetches ACK. Only confirmed scheduled new validated reads may start observation.",
+    "stale_bridge": "Before model load require authenticated publisher run ID/attempt matching last successful consumer. Stale/failed/evicted state blocks CPU and requires private restore, never blank initialization.",
+    "source_policy": "New private-unreviewed raw sources isolated before capture. Same failed item not retried unless its own rights-review metadata changes; cache/source unchanged is recorded honestly.",
+    "public_UI": "Unchanged. No private DB/raw/quotes exported; only approved numeric/status/link projection permitted. No new live private-data UI connection claimed."
+  },
+  "private_archival_review": {
+    "audit": {
+      "status": "BLOCKED",
+      "scope": "private",
+      "sqlite_sha256": "7b2c95aef6e235c6fd6673a55ef09fc29f36c91813572059468cc5c6ea919a20",
+      "documents": [
+        {
+          "document_id": "b0895b26-2b2d-4be5-88db-d07a4fba9a4d",
+          "origin_host": "www.defensenews.com",
+          "raw_sha256": "be569ee9756820831bf08579585b7e806fb8a1b9701a90bfe3a87627582b7f77",
+          "body_sha256": "697e5b7805edee3d0a771911850a1ae131a3f0e19b6b5980b73f86f3ee2151c1",
+          "raw_bytes": 233920,
+          "body_characters": 3515,
+          "contact_pattern_count": 2,
+          "copyright_notice": true,
+          "content_hashes_match": true,
+          "hash_bound_rights_and_privacy_review": false
+        },
+        {
+          "document_id": "ca0620ce-c872-40c4-b2fd-48fe47cc0f1d",
+          "origin_host": "www.defensenews.com",
+          "raw_sha256": "a10988c5da0ac90efd5c0ea31cd076f1238fadbba104a5d61dc624f14e1faf3c",
+          "body_sha256": "2267f36b5f0215db96d73725126d44725765b4bdcc40563a6d45baee9d2c994e",
+          "raw_bytes": 239695,
+          "body_characters": 7021,
+          "contact_pattern_count": 2,
+          "copyright_notice": true,
+          "content_hashes_match": true,
+          "hash_bound_rights_and_privacy_review": false
+        },
+        {
+          "document_id": "259046ea-7dde-4b39-889e-e6516f0c371c",
+          "origin_host": "electrek.co",
+          "raw_sha256": "ef8710ceda94b23f3e160c8ae94c082ecdbd3247843261091ab373d3da8224df",
+          "body_sha256": "98dd617199e4ce4e4ab38c77c455cc66c18f0d30e83e44e11c9d7cea3416b0c3",
+          "raw_bytes": 162232,
+          "body_characters": 3566,
+          "contact_pattern_count": 1,
+          "copyright_notice": true,
+          "content_hashes_match": true,
+          "hash_bound_rights_and_privacy_review": false
+        }
+      ],
+      "findings": [
+        {
+          "table": "documents",
+          "record_id": "b0895b26-2b2d-4be5-88db-d07a4fba9a4d",
+          "reason": "PRIVATE_ARCHIVAL_OR_PRIVACY_UNREVIEWED"
+        },
+        {
+          "table": "documents",
+          "record_id": "ca0620ce-c872-40c4-b2fd-48fe47cc0f1d",
+          "reason": "PRIVATE_ARCHIVAL_OR_PRIVACY_UNREVIEWED"
+        },
+        {
+          "table": "documents",
+          "record_id": "259046ea-7dde-4b39-889e-e6516f0c371c",
+          "reason": "PRIVATE_ARCHIVAL_OR_PRIVACY_UNREVIEWED"
+        }
+      ],
+      "scan_is_not_a_privacy_certificate": true,
+      "originals_modified": false
+    },
+    "terms": [
+      {
+        "url": "https://www.defensenews.com/m/terms-of-services/",
+        "HTTP_status": 200,
+        "sha256": "ffd8831c2405dbf18ad9abdc63652035b90988c89957f0bfb7019d0106da8abe",
+        "finding": "Personal noncommercial single-page download is permitted with notices preserved; repeated Git archival/upload scope not established.",
+        "review_type": "AI-assisted source terms review; not human/legal clearance"
+      },
+      {
+        "url": "https://9to5mac.com/privacy/",
+        "HTTP_status": 200,
+        "sha256": "090ce238a7e0f4fc104450dcfc1dabec6dfadc3486c12d167a59b6715325e9dc",
+        "finding": "Linked privacy policy describes personal-data handling, not an archival copyright license.",
+        "review_type": "AI-assisted source terms review; not human/legal clearance"
+      }
+    ],
+    "approved_documents": 0,
+    "unresolved_documents": 3,
+    "originals_removed_or_rewritten": false,
+    "private_not_automatically_permitted": true
+  },
+  "storage": {
+    "actual_private_GitHub_uploads": 0,
+    "actual_private_GitHub_backup_restore": "BLOCKED",
+    "actual_encrypted_handoff_GitHub_runs": "NOT_RUN",
+    "original_archive_bytes": 339186,
+    "sqlite_sha256": "7b2c95aef6e235c6fd6673a55ef09fc29f36c91813572059468cc5c6ea919a20",
+    "source_archive_sha256": "fccdd5844d7cc5fae6034886c2dc39f5b64ea9209e8411aa1642a032a674d398",
+    "per_archive_limit_bytes": 16777216,
+    "history_limit_bytes": 67108864,
+    "handoff_limit_bytes": 25165824,
+    "source_hashes_match": true
+  },
+  "existing_RSS": {
+    "at": "2026-10-15T05:11:12.686639+00:00",
+    "results": [
+      {
+        "endpoint": "actions/workflows/rss-live-check.yml/runs?per_page=1",
+        "runs": [
+          {
+            "id": 38658360952,
+            "name": "RSS live environment check",
+            "event": "schedule",
+            "head_branch": "main",
+            "head_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-10-15T00:09:10Z"
+          }
+        ]
+      },
+      {
+        "endpoint": "actions/workflows/precursor-acquisition.yml/runs?per_page=1",
+        "runs": [
+          {
+            "id": 38658562958,
+            "name": "New precursor evidence acquisition",
+            "event": "workflow_run",
+            "head_branch": "main",
+            "head_sha": "9cba69d1785daa9d3199dd6309d76b96ef64c797",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-10-15T00:11:14Z"
+          }
+        ]
+      }
+    ]
+  },
+  "preservation": {
+    "main_start_SHA": "adf31d5d546ad05fc14d70063b15743109aec6cc",
+    "data_start_SHA": "7d4bfd16f44fdd2d5a0f3bdac59e816e53d9ecad",
+    "operating_files_or_active_workflows_changed": false,
+    "changed_tracked_files_intersect_prior148_frozen_evidence": [],
+    "original_queue_sha256": "5d231f79819e3794544b9027dc1cace0d42962abda323d6032e0360a92485500",
+    "existing1210_windows_rerun": 0,
+    "existing67_windows_rerun": 0,
+    "main_cache_reinstalled_or_downloaded": false
+  },
+  "tests": {
+    "impact": {
+      "passed": 62,
+      "seconds": 13.0,
+      "command": ".venv/bin/python -m pytest -q tests/test_v4_private_state.py tests/test_v4_cpu_operations.py tests/test_v4_cpu_automation.py",
+      "scope": "Synthetic/local storage and existing queue contract; not actual scoped GitHub authentication, CPU inference or periodic operation."
+    },
+    "actual_GitHub_dedicated_permission_tests": "NOT_RUN",
+    "local_private_Git_storage": "Synthetic bare-Git repository, not GitHub integration proof",
+    "encryption_new_process_restore": "PASS_LOCAL_SYNTHETIC",
+    "new_actual_CPU_documents": 0,
+    "API_calls": 0,
+    "final_credential_redaction": {
+      "passed": 1,
+      "deselected": 14,
+      "seconds": 0.17,
+      "scope": "Final invalid-header credential guard; overlaps impact tests, not added to62."
+    },
+    "final_development_CI": "To be verified externally on exact pushed SHA; no self-referential CI success claim."
+  },
+  "automation": {
+    "consumer_workflow_main_installed": false,
+    "enabled_variable_changed": false,
+    "first_real_scheduled_CPU_read": "NOT_RUN",
+    "first_real_private_persisted_read": 0,
+    "seven_day_start": null,
+    "seven_day_status": "NOT_STARTED"
+  },
+  "usage": {
+    "Groq_calls": 0,
+    "external_AI_calls": 0,
+    "tokens": 0,
+    "API_cost_KRW": 0,
+    "new_model_installs": 0,
+    "new_model_downloads": 0,
+    "new_actual_CPU_windows": 0,
+    "private_Actions_compute_runs": 0,
+    "paid_resources_or_plan_changes": false,
+    "new_GitHub_artifact_uploads": 0,
+    "account_platform_bill": "Not exposed; public standard CI only, no private runner/paid activation."
+  },
+  "unchanged_verdicts": {
+    "AI_adoption": "FAIL",
+    "independent_AI_evaluation": "BLOCKED",
+    "historical_lead_performance": "BLOCKED",
+    "new_S3": 0
+  },
+  "blockers": [
+    {
+      "code": "OWNER_PRIVATE_REPOSITORY_SETUP",
+      "reason": "Dedicated target404; create403",
+      "needed": "Owner creates/selects private target repository; preserve other projects."
+    },
+    {
+      "code": "PRIVATE_ONLY_AUTH_AND_ACTIONS_SETTINGS",
+      "reason": "Dedicated scoped credential not available; Secret/variable settings403",
+      "needed": "Owner one-time fine-grained selected-repo token, separate handoff passphrase and reviewed code SHA settings. Do not set enabled=true yet. Actual private write/main-data denial tests remain NOT_RUN."
+    },
+    {
+      "code": "PRIVATE_ARCHIVAL_SCOPE_UNCONFIRMED",
+      "documents": 3,
+      "reason": "Terms review does not establish permission for repeated private raw backups",
+      "needed": "Resolve exact-version storage rights/privacy; preserve frozen originals and source holds; do not infer permission from private visibility."
+    }
+  ],
+  "next_resume": "After OWNER_SETUP.md one-time configuration, apply the read-only two-job workflow and verify-scope only first. Resolve exact-version private archival review, seed existing DB without re-reading CPU or reinstalling cache, remotely restore/hash-check, then remove false gate and enable only if all checks pass. First real scheduled new validated and acknowledged private read starts7days. Never repeat old Groq/CPU/RSS trials."
+}
