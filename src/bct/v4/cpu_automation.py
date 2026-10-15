@@ -72,14 +72,23 @@ def body_key(doc):
 def enqueue(ledger, doc, raw, upstream):
     if sha(raw) != doc['raw_sha256'] or sha(doc['body'].encode()) != doc['body_sha256']:
         raise ValueError('NATIVE_OR_BODY_HASH_MISMATCH')
+    from .cpu_resume import completed,planned_read
+    if completed(ledger,doc):return 'UNCHANGED_BODY_COMPLETED_SOURCE_SEPARATED'
+    if planned_read(ledger,doc):return 'UNCHANGED_WINDOWS_UNREAD_CONTEXT_HELD'
     if not doc.get('published_at') or doc.get('provenance') != 'PASS' or doc.get('provenance_verified') is not True:
         raise ValueError('SOURCE_PUBLICATION_OR_PROVENANCE_HELD')
     pub = datetime.fromisoformat(doc['published_at'].replace('Z','+00:00'))
     acquired = datetime.fromisoformat(doc['acquired_at'].replace('Z','+00:00'))
     if pub.date() > acquired.date(): raise ValueError('PUBLICATION_AFTER_ACQUISITION')
     from bct.future_body import extract_document
-    if extract_document(raw.decode('utf-8',errors='replace')).get('body')!=doc['body']:
-        raise ValueError('NATIVE_TO_BODY_MISMATCH')
+    native_body=extract_document(raw.decode('utf-8',errors='replace')).get('body')
+    if native_body!=doc['body']:
+        # Same existing alternative extractor, selected explicitly for a native
+        # version; no rewritten body or provider/parser-supplied quote is used.
+        if doc.get('native_body_extractor')!='existing-trafilatura-tables-v1':
+            raise ValueError('NATIVE_TO_BODY_MISMATCH')
+        from .adapters import html_views
+        if html_views(raw)['trafilatura']!=doc['body']:raise ValueError('NATIVE_TO_BODY_MISMATCH')
     # Retain the existing extractor's source/identity/check contract; do not
     # silently mark media as official, or re-fetch a URL already captured.
     if not doc.get('checks') or not all(v is True for v in doc['checks'].values()):
@@ -105,7 +114,7 @@ def enqueue(ledger, doc, raw, upstream):
     return 'QUEUED'
 
 
-def ingest_delta(ledger, manifest, cache, *, upstream_run_id, reconsider_held=False,storage_policy=None):
+def ingest_delta(ledger, manifest, cache, *, upstream_run_id, reconsider_held=False,storage_policy=None,source_separated=False):
     """Read only existing canonical delta + native cache; never fetch RSS/URLs."""
     if manifest.get('format') != 'bct-new-rss-delta-v1': raise ValueError('RSS_DELTA_CONTRACT')
     cache = Path(cache).resolve()
@@ -141,12 +150,17 @@ def ingest_delta(ledger, manifest, cache, *, upstream_run_id, reconsider_held=Fa
             if len(hits)!=1: raise ValueError('UPSTREAM_VERSION_AMBIGUOUS')
             p,doc = hits[0]
             receipt['cache_document_sha256'] = sha(p.read_bytes())
+            from .cpu_resume import completed,transient_allowed,planned_read
+            if completed(ledger,doc) or planned_read(ledger,doc):
+                receipt['status']='UNCHANGED_BODY_COMPLETED_SOURCE_SEPARATED'if completed(ledger,doc)else 'UNCHANGED_WINDOWS_UNREAD_CONTEXT_HELD'
+                with ledger.db:ledger.event('CPU_QUEUE_IMPORT',receipt)
+                states.append(receipt);continue
             if storage_policy is not None:
                 review=storage_policy.get('sources',{}).get(doc['document_id'],{})
-                if not (review.get('raw_sha256')==doc.get('raw_sha256')
+                if not ((source_separated and transient_allowed(doc,storage_policy)) or (review.get('raw_sha256')==doc.get('raw_sha256')
                         and review.get('body_sha256')==doc.get('body_sha256')
                         and review.get('private_archival')=='PERMITTED' and review.get('privacy_review')=='CLEARED'
-                        and review.get('rights_basis') and review.get('reviewed_by')):
+                        and review.get('rights_basis') and review.get('reviewed_by'))):
                     raise ValueError('PRIVATE_ARCHIVAL_OR_PRIVACY_UNREVIEWED')
             if previous and changed: receipt['reconsidered_after_new_cache_evidence'] = True
             # Raw path from an artifact may refer to its old runner. Resolve
@@ -212,6 +226,8 @@ def state(ledger):
         coverage_rows.append({'document_id':doc['document_id'],'processing_state':processing_state,**cov,
             'unread_nonwhitespace_characters':sum(len(re.sub(r'\s','',doc['body'][g['start']:g['end']])) for g in cov['unread_ranges']),
             'held_ranges':item['held_ranges']})
+    from .cpu_resume import summary as resume_summary
+    detached=resume_summary(ledger)
     return {'documents':len(docs),'tasks':len(tasks),'pending_windows':len(pending),
         'completed_windows':len(tasks)-len(pending),
         'coverage':coverage_rows,
@@ -222,6 +238,7 @@ def state(ledger):
         'failed_windows':sum(x['status']=='FAILED_ISOLATED' for x in completed.values()),
         'isolated_imports':sum(x['status']=='HELD_ISOLATED' for x in imports),
         'legacy_documents_reused':len(legacy),
+        'source_separated':detached,
         'oldest_pending_at':min((d['at'] for d in docs if any(t['key'] not in completed for t in d['tasks']) and d['body_key'] not in legacy),default=None),
         'scheduled':'NOT_RUN_DISABLED','AI_reader':'DISABLED','candidate_promotion':'DISABLED','LIVE_registration':'DISABLED'}
 

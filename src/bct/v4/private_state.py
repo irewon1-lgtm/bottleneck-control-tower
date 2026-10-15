@@ -152,11 +152,21 @@ def verify_predecessor(parent,*,read=None):
     return {'previous_publisher_run':previous['id'],'verified_before_CPU':True}
 
 
-def publish(repo,source,expected_parent,token,policy,*,api=github_api):
+def publish(repo,source,expected_parent,token,policy,*,api=github_api,verified_scope=None):
     """Writer job only. No credential in Git URLs, argv, files, outputs or logs."""
     review=op.checkpoint_storage_audit(source,policy,scope='private')
     if review['status']!='PASS_PRIVATE_STORAGE_REVIEW':raise ValueError('PRIVATE_ARCHIVAL_REVIEW_BLOCKED')
-    scope=writer_scope(token,api=api)
+    if verified_scope is None:scope=writer_scope(token,api=api)
+    else:
+        # Trusted immutable owner-connection receipt, not input-artifact metadata.
+        # The actual fixed-private-URL CAS write still authenticates this token.
+        scope=verified_scope
+        if not (scope.get('private_repository')==PRIVATE_REPO and scope.get('visibility')=='private'
+                and scope.get('private_contents_probe')==201 and scope.get('visible_private_repository_count')==1
+                and set(scope.get('operating_ref_create_denials',{}))=={'main','data'}
+                and all(c in (403,404)for c in scope['operating_ref_create_denials'].values())
+                and scope.get('operating_refs_modified')is False):
+            raise ValueError('INVALID_PREVIOUSLY_VERIFIED_PRIVATE_SCOPE')
     repo=Path(repo);repo.mkdir(parents=True,exist_ok=True)
     def git(*args,env=None):
         p=subprocess.run(['git','-C',str(repo),*args],env=env,capture_output=True,timeout=25)

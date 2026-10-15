@@ -23,17 +23,15 @@ def main():
     p.add_argument('--rss',type=Path,default=Path('var/v4/cpu-private/rss'))
     p.add_argument('--cache',type=Path,default=Path('var/v4/cpu-private/source'))
     p.add_argument('--output',type=Path)
+    p.add_argument('--reuse-verified-scope',action='store_true',help='Reuse trusted committed owner connection proof; no authentication/ref-denial retest')
     a=p.parse_args();policy=json.loads(Path('docs/v4/cpu-automation/preflight/publication-policy.json').read_text())
     if a.action=='verify-scope':result=private.writer_scope(os.environ.get('BCT_V4_PRIVATE_STATE_TOKEN',''))
     elif a.action=='prepare-seed':
-        original=Path('docs/v4/cpu-automation/ledger.sqlite3.gz')
-        proof=json.loads(Path('docs/v4/cpu-automation/storage-proof.json').read_text())['ledger']
-        if file_sha(original)!=proof['archive_sha256']:raise ValueError('BASELINE_HASH_MISMATCH')
-        a.checkpoint.mkdir(parents=True,exist_ok=False)
-        with (a.checkpoint/'checkpoint.sqlite3.gz').open('xb')as out,original.open('rb')as src:shutil.copyfileobj(src,out)
-        proof={**proof,'archive':'checkpoint.sqlite3.gz'}
-        (a.checkpoint/'checkpoint.json').write_text(json.dumps(proof))
-        result={'baseline_copied_without_CPU':True,'original_changed':False}
+        from v4_cpu_resume import prepare
+        prepared=a.checkpoint.parent/'source-separated-seed'
+        result=prepare(prepared)
+        shutil.copytree(prepared/'checkpoint',a.checkpoint)
+        result.update(original_changed=False,source_articles_copied=False)
     elif a.action=='audit':result=op.checkpoint_storage_audit(a.checkpoint,policy,scope='private')
     elif a.action=='unseal':result=private.unseal(a.packet,a.checkpoint,os.environ.get('BCT_V4_STATE_PASSPHRASE',''))
     elif a.action=='seal':
@@ -44,7 +42,12 @@ def main():
         if os.environ.get('GITHUB_REF')!='refs/heads/main':raise ValueError('PRIVATE_PUBLICATION_REQUIRES_APPROVED_MAIN_WORKFLOW')
         op.github_guard()
         parent=json.loads(a.parent_file.read_text())['expected_parent']if a.parent_file else a.parent
-        result=private.publish(a.repository,a.checkpoint,parent,os.environ.get('BCT_V4_PRIVATE_STATE_TOKEN',''),policy)
+        scope=None
+        if a.reuse_verified_scope:
+            proof=json.loads(Path('docs/v4/cpu-automation/preflight/connection-results.json').read_text())
+            if proof['actual_remote_evidence']['run_id']!=38709974717:raise ValueError('OWNER_SCOPE_PROOF_NOT_PINNED')
+            scope=proof['actual_remote_evidence']['receipts']['BCT_PRIVATE_SCOPE_JSON']['scope']
+        result=private.publish(a.repository,a.checkpoint,parent,os.environ.get('BCT_V4_PRIVATE_STATE_TOKEN',''),policy,verified_scope=scope)
     else:
         from bct.v4.cpu_automation import open_queue,ingest_delta
         from bct.v4.adapters import CPUExtractor
@@ -55,14 +58,24 @@ def main():
         op.restore(a.checkpoint,a.root)
         ledger=open_queue(a.root)
         try:
+            from bct.v4 import cpu_resume as resume
+            if ledger.db.execute("SELECT value FROM metadata WHERE key='cpu_source_separated_format'").fetchone()!=(resume.FORMAT,):
+                raise ValueError('SOURCE_SEPARATED_RESTART_REQUIRED')
             with ledger.worker():
+                rehydrated=resume.hydrate(ledger,a.cache,policy)
                 imports=ingest_delta(ledger,json.loads((a.rss/'new-document-manifest.json').read_text()),a.cache,
-                    upstream_run_id=str(schedule['RSS_run_id']),storage_policy=policy)
+                    upstream_run_id=str(schedule['RSS_run_id']),storage_policy=policy,source_separated=True)
             result=op.observe(ledger,trigger='VERIFIED_SCHEDULE_PENDING_PRIVATE_PUBLICATION',execute=True,
                 extractor=CPUExtractor(a.runtime),schedule_context=context,persistence_required=True,
                 upstream={'new_URLs':sum(x['status']!='ALREADY_IMPORTED'for x in imports),
                           'new_body_documents':sum(x['status']=='QUEUED'for x in imports)})
-            op.checkpoint(ledger,a.root.parent/'next-checkpoint')
+            safe_root=a.root.parent/'source-separated-next'
+            resume.export_state(ledger.path,safe_root)
+            safe=resume.Ledger(safe_root)
+            try:
+                resume.audit(safe)
+                op.checkpoint(safe,a.root.parent/'next-checkpoint')
+            finally:safe.close()
         finally:ledger.close()
     if a.output:
         a.output.parent.mkdir(parents=True,exist_ok=True)

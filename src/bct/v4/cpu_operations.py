@@ -249,6 +249,12 @@ def checkpoint_storage_audit(source,policy=None,*,scope='public'):
     with tempfile.TemporaryDirectory(prefix='bct-publication-audit-')as tmp:
         restore(source,Path(tmp)/'db')
         with sqlite3.connect((Path(tmp)/'db/v4.sqlite3').as_uri()+'?mode=ro',uri=True)as db:
+            if db.execute("SELECT value FROM metadata WHERE key='cpu_source_separated_format'").fetchone():
+                from types import SimpleNamespace
+                from .cpu_resume import audit as separated_audit
+                try:separated_audit(SimpleNamespace(db=db))
+                except ValueError:
+                    findings.append({'table':'events','reason':'SOURCE_SEPARATED_STATE_SCHEMA_INVALID'})
             for doc_id,raw_id,payload in db.execute('SELECT id,raw_id,payload FROM documents'):
                 d=json.loads(payload);raw=db.execute('SELECT data FROM blobs WHERE id=?',(raw_id,)).fetchone()if raw_id else None
                 text=(raw[0].decode('utf-8',errors='replace')if raw else '')+'\n'+d.get('body','')
