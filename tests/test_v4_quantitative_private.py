@@ -105,3 +105,30 @@ def test_incremental_checkpoint_restores_exact_bytes_and_preserves_full_history(
     patch,_=delta.make_delta(before,after);before.write_bytes(b'c'*4096)
     with pytest.raises(ValueError,match='BASE_HASH'):delta.apply_delta(before,patch)
     l.close()
+
+
+def test_page_checkpoint_budget_failure_and_corruption_preserve_prior_state(tmp_path,monkeypatch):
+    from bct.v4 import quantitative_delta as delta
+    import shutil
+    l,m,row=facts(tmp_path);base=tmp_path/'base';private.checkpoint(l,base)
+    remote=tmp_path/'remote.git';writer=tmp_path/'writer';git('init','--bare',str(remote));git('clone',str(remote),str(writer))
+    for name in ['checkpoint.json','checkpoint.sqlite3.gz']:shutil.copyfile(base/name,writer/name)
+    git('add','.',cwd=writer);git('-c','user.name=test','-c','user.email=test@example.org','commit','-m','base',cwd=writer)
+    original=git('rev-parse','HEAD',cwd=writer)
+    for ref in [private.STATE_REF,'refs/heads/main','refs/heads/data']:git('push','origin','HEAD:'+ref,cwd=writer)
+    with l.db:l.event('QUANTITATIVE_VALIDATION',{'reason':'synthetic storage retry','originals_modified':False})
+    target=tmp_path/'target';private.checkpoint(l,target);l.close()
+    monkeypatch.setattr(op,'STATE_HISTORY_LIMIT',1)
+    with pytest.raises(ValueError,match='CUMULATIVE'):delta.publish(writer,target,original,os.environ.copy())
+    assert git('ls-remote','origin',private.STATE_REF,cwd=writer).split()[0]==original
+    monkeypatch.setattr(op,'STATE_HISTORY_LIMIT',64*1024**2)
+    receipt=delta.publish(writer,target,original,os.environ.copy());commit=receipt['commit']
+    for branch in ['main','data']:assert git('ls-remote','origin','refs/heads/'+branch,cwd=writer).split()[0]==original
+    def read(name):return subprocess.check_output(['git','-C',str(writer),'show',commit+':'+name])
+    damaged=tmp_path/'damaged';damaged.mkdir();manifest=json.loads(read(delta.HEAD))
+    for name in ['checkpoint.json','checkpoint.sqlite3.gz',delta.HEAD]+delta.names(manifest):
+        p=damaged/name;p.parent.mkdir(exist_ok=True);p.write_bytes(read(name))
+    first=damaged/delta.names(manifest)[0];first.write_bytes(b'invalid patch')
+    before=file_sha(damaged/'checkpoint.sqlite3.gz')
+    with pytest.raises(ValueError,match='PATCH_HASH'):delta.materialize(damaged,tmp_path/'incomplete')
+    assert not(tmp_path/'incomplete').exists()and file_sha(damaged/'checkpoint.sqlite3.gz')==before

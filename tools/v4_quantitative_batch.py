@@ -173,6 +173,7 @@ def finish():
  for source in ['sec','census_trade']:
   rows=[x['record']for x in active if x['record']['source_id']==source and x['record']['value_decimal_or_null']is not None]
   report['new_source_samples'][source]=[{k:r[k]for k in ['product_or_classification','metric','value_original','value_normalized_or_null','unit_original','geography','period_start','period_end','published_at','source_url','raw_or_safe_payload_hash','source_locator','quality_state']}for r in (rows[:2]+rows[-2:]if len(rows)>2 else rows)]
+ report['recovery']=json.loads((R/'recovery-proof.json').read_text())if(R/'recovery-proof.json').exists()else None
  report['total_numeric']=sum(x['record']['value_decimal_or_null']is not None for x in active)
  maps=state_scope()['census_trade']['annual_mapping']['records'];unit_map={(r['direction'],r['year'],r['code']):r['unit_original'].casefold()for r in maps}
  cr=[x['record']for x in active if x['record']['source_id']=='census_trade'and x['record']['measurement_type']=='PHYSICAL'and x['record']['value_decimal_or_null']is not None]
@@ -186,13 +187,36 @@ def finish():
  print('BCT_Q1_SOURCES_REPORT_JSON='+json.dumps(report))
 
 
+def recover():
+ R.mkdir(parents=True,exist_ok=True)
+ current=private.unseal(BRIDGE/'prior/state.gpg',R/'prior',os.environ['BCT_V4_STATE_PASSPHRASE'])
+ (R/'parent.json').write_text(json.dumps(current))
+ source=BRIDGE/'result/state.gpg';moved=R/'preserved-failed-result.gpg';source.rename(moved)
+ failed=private.unseal(moved,R/'failed-checkpoint',os.environ['BCT_V4_STATE_PASSPHRASE'])
+ current=json.loads((R/'parent.json').read_text())
+ if current['parent']!=failed['parent']and current['verified']['sqlite_sha256']!=failed['verified']['sqlite_sha256']:raise ValueError('RECOVERY_PARENT_DIVERGED_PRESERVE_REMOTE')
+ private.restore(R/'failed-checkpoint',R/'ledger');ledger=Ledger(R/'ledger')
+ from bct.objective_lock import require_objective
+ from bct.v4.quantitative_product import save as save_products
+ packet=json.loads(Path('docs/v4/quantitative/product-facts.json').read_text());require_objective(packet)
+ with ledger.worker():
+  save_products(ledger,packet['records'])
+  marker='Q1 complete HTS change-record review and objective-bound Q2 physical facts'
+  if not ledger.db.execute("select 1 from events where kind='QUANTITATIVE_VALIDATION'and json_extract(payload,'$.reason')=?",(marker,)).fetchone():
+   with ledger.db:ledger.event('QUANTITATIVE_VALIDATION',{'reason':marker,'originals_modified':False,'policy':json.loads(Path('docs/v4/quantitative/quality-evidence.json').read_text())['storage_quality_Q2_resume']['metadata_quality_review']})
+ ledger.close();(R/'recovery-proof.json').write_text(json.dumps({'failed_run':38761360115,'preserved_encrypted_input':True,'original_parent':failed['parent'],'current_parent':current['parent'],'previous_write_already_present':current['verified']['sqlite_sha256']==failed['verified']['sqlite_sha256'],'new_source_calls':0,'old_results_overwritten':False}))
+ finish()
+
+
 def quality():
  initialize();ledger=Ledger(R/'ledger');fetch=Fetch(ledger);done=False
  from bct.v4.quantitative_product import save as save_products
  from bct.v4.quantitative_sources import parse_sec_index,parse_sec_submission
  from datetime import date,timedelta
  with ledger.worker():
-  save_products(ledger,json.loads(Path('docs/v4/quantitative/product-facts.json').read_text())['records'])
+  from bct.objective_lock import require_objective
+  packet=json.loads(Path('docs/v4/quantitative/product-facts.json').read_text());require_objective(packet)
+  save_products(ledger,packet['records'])
   marker='Q2 exact field audit: old15 comparisons are different products'
   if not ledger.db.execute("select 1 from events where kind='QUANTITATIVE_VALIDATION'and json_extract(payload,'$.reason')=?",(marker,)).fetchone():
    with ledger.db:ledger.event('QUANTITATIVE_VALIDATION',{'reason':marker,'originals_modified':False,'policy':json.loads(Path('docs/v4/quantitative/quality-evidence.json').read_text())['storage_quality_Q2_resume']['Q2_gap_audit']})
@@ -268,11 +292,21 @@ def targets():
 def publish():
  result=private.unseal(BRIDGE/'result/state.gpg',R/'publish-checkpoint',os.environ['BCT_V4_STATE_PASSPHRASE'])
  owner=json.loads(Path('docs/v4/cpu-automation/preflight/connection-results.json').read_text());scope=owner['actual_remote_evidence']['receipts']['BCT_PRIVATE_SCOPE_JSON']['scope']
- receipt=private.publish(R/'private-write',R/'publish-checkpoint',result['parent'],os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],scope)
- print('BCT_Q1_SOURCES_PUBLISH_JSON='+json.dumps({'report':result['report'],'receipt':receipt,'code_SHA':os.environ['GITHUB_SHA']}))
+ receipt=private.publish(R/'private-write',R/'publish-checkpoint',result['parent'],os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],scope,verify_remote=False)
+ (R/'publish-receipt.json').write_text(json.dumps({'report':result['report'],'receipt':receipt,'code_SHA':os.environ['GITHUB_SHA']}))
+ print('BCT_Q1_WRITE_RECEIPT_JSON='+json.dumps({'report':result['report'],'receipt':receipt,'code_SHA':os.environ['GITHUB_SHA']}),flush=True)
+
+def verify():
+ packet=json.loads((R/'publish-receipt.json').read_text())
+ check=private.remote_checkpoint(R/'verification-read',R/'verification-checkpoint',os.environ['BCT_V4_PRIVATE_STATE_TOKEN'])
+ if check['parent']!=packet['receipt']['commit']:raise ValueError('Q1_VERIFY_REMOTE_HEAD_CHANGED')
+ expected=json.loads((R/'publish-checkpoint/checkpoint.json').read_text())
+ if check['verified']['sqlite_sha256']!=expected['sqlite_sha256']:raise ValueError('Q1_VERIFY_REMOTE_SQLITE_MISMATCH')
+ packet['receipt'].update(remote_restore_verified=True,remote_new_process_restore=check['verified'])
+ print('BCT_Q1_SOURCES_PUBLISH_JSON='+json.dumps(packet),flush=True)
 
 if __name__=='__main__':
- parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality']);a=parser.parse_args()
+ parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality','verify','recover']);a=parser.parse_args()
  if a.action=='quality':raise SystemExit(quality())
  if a.action in {'process','trade'}:raise SystemExit(process(only_trade=a.action=='trade'))
  else:globals()[a.action]()

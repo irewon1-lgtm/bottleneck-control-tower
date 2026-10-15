@@ -85,7 +85,18 @@ def materialize(source,destination):
             base=json.loads((source/'checkpoint.json').read_text())
             if base['archive_sha256']!=head['base_archive_sha256']:raise ValueError('Q1_DELTA_BASE_ARCHIVE')
             with tempfile.TemporaryDirectory(prefix='q1-delta-restore-')as tmp:
-                root=Path(tmp)/'base';restore(source,root);db=root/'v4.sqlite3'
+                root=Path(tmp)/'base';root.mkdir();db=root/'v4.sqlite3'
+                # Hash-bound base + final full audit avoid re-auditing all historical
+                # records at every delta. No validation is skipped on final state.
+                archive=source/'checkpoint.sqlite3.gz'
+                if archive.stat().st_size>LIMIT or file_sha(archive)!=base['archive_sha256']:raise ValueError('Q1_DELTA_BASE_ARCHIVE_HASH')
+                with gzip.open(archive,'rb')as src,db.open('xb')as out:
+                    count=0
+                    while block:=src.read(1048576):
+                        count+=len(block)
+                        if count>MAX_SQLITE:raise ValueError('Q1_DELTA_BASE_SIZE')
+                        out.write(block)
+                if file_sha(db)!=base['sqlite_sha256']:raise ValueError('Q1_DELTA_BASE_SQLITE_HASH')
                 for item in head['patches']:
                     path=source/item['path']
                     if path.stat().st_size>LIMIT or file_sha(path)!=item['sha256']:raise ValueError('Q1_DELTA_PATCH_HASH')
@@ -129,7 +140,9 @@ def publish(repo,source,parent,env):
     if git('rev-parse','--is-shallow-repository').strip()!=b'false':raise ValueError('RESEARCH_STATE_HISTORY_INCOMPLETE')
     with tempfile.TemporaryDirectory(prefix='q1-page-write-')as tmp:
         temp=Path(tmp);prior=temp/'prior';receive(git,parent,prior)
-        restore(prior,temp/'old');restore(source,temp/'new')
+        (temp/'old').mkdir()
+        with gzip.open(prior/'checkpoint.sqlite3.gz','rb')as src,(temp/'old/v4.sqlite3').open('xb')as out:shutil.copyfileobj(src,out)
+        restore(source,temp/'new')
         # Reuse the existing audited checkpoint's exact target proof.
         proof=json.loads((source/'checkpoint.json').read_text());blob,stats=make_delta(temp/'old/v4.sqlite3',temp/'new/v4.sqlite3')
         if HEAD in git('ls-tree','--name-only',parent).decode().splitlines():head=json.loads(git('show',parent+':'+HEAD))
@@ -148,8 +161,10 @@ def publish(repo,source,parent,env):
         sizes=git('cat-file','--batch-check=%(objectname) %(objecttype) %(objectsize)',input=('\n'.join(x.split()[0]for x in objects)+'\n').encode())
         history=sum(int(x.split()[2])for x in sizes.decode().splitlines())
         if history>STATE_HISTORY_LIMIT:raise ValueError('RESEARCH_STATE_CUMULATIVE_64MIB_LIMIT')
-        # Full re-materialization BEFORE push also proves the constructed chain.
-        receive(git,commit,temp/'candidate')
+        # The prior chain was fully verified by receive. Verify this new page
+        # transition exactly; replaying/auditing that prior chain again is redundant.
+        apply_delta(temp/'old/v4.sqlite3',blob)
+        if file_sha(temp/'old/v4.sqlite3')!=proof['sqlite_sha256']:raise ValueError('Q1_DELTA_CANDIDATE_HASH')
         git('push','origin',commit+':'+STATE_REF)
     return {'research_ref':STATE_REF,'parent':parent,'commit':commit,'archive_sha256':proof['archive_sha256'],
             'operating_branches_written':False,'artifact_uploads':0,'history_unique_object_bytes':history,

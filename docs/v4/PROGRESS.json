@@ -5149,7 +5149,7 @@
     "storage_quality_Q2_resume": {
       "start_SHA": "49501ab07178fc39bbfe28f55a8a321d9b24c91c",
       "plan_id": "BCT-V4-Q-1.0",
-      "status": "STORAGE_INCREMENTAL_TEST_BEFORE_ADDITIONAL_COLLECTION",
+      "status": "RECOVER_SEALED_RESULT_AFTER_120S_PUBLISH_TIMEOUT",
       "previous_history_bytes": 62518675,
       "limit_bytes": 67108864,
       "remaining_bytes": 4590189,
@@ -5157,13 +5157,84 @@
       "scope": "Q1 quality + Q2 real product facts, no Q3 promotion/CPU/UI/schedule/secret changes",
       "HS_revision_batch": {
         "listed_versions": 74,
-        "visited": 50,
-        "PDFs": 50,
+        "visited": 74,
+        "PDFs": 74,
         "failed": 0,
-        "HTTP_this_batch": 16,
-        "pending": 24,
-        "selected_hits": 2
-      }
+        "HTTP_this_batch": 6,
+        "pending": 0,
+        "selected_hits": 28
+      },
+      "storage_actual": {
+        "research_ref": "refs/heads/codex/bct-v4-quantitative-state",
+        "parent": "fc004fa0bc29636f39f6a818114bb9fb1b65d4bc",
+        "commit": "083bdb106696c0538619c16594fb849a404f37c7",
+        "archive_sha256": "be7dcf8eaa526ed2b6954a4cc79052020d9bdb2a88e2779a91bd1ee9b24c5d73",
+        "operating_branches_written": false,
+        "artifact_uploads": 0,
+        "history_unique_object_bytes": 62524428,
+        "history_limit_bytes": 67108864,
+        "incremental": {
+          "changed_pages": 1,
+          "delta_bytes": 3255,
+          "sqlite_bytes": 180269056
+        },
+        "unchanged_full_base_preserved": true,
+        "projection": {
+          "available_bytes_after": 4584436,
+          "same_sized_additional_checkpoints_upper_bound": 633,
+          "scope": "Observed patch size only, not a guarantee for future collection volume"
+        },
+        "remote_new_process_restore": {
+          "restored": true,
+          "tables": 8,
+          "sqlite_sha256": "88714d2a6837b7ac3c476a760ca9ec514ef2b32da83a81cbbb8c39270a3e9acc",
+          "review": {
+            "format": "bct-q1-private-facts-1",
+            "observation_versions": 42601,
+            "sources": [
+              "census_trade",
+              "eia",
+              "g17",
+              "m3",
+              "ted",
+              "usaspending",
+              "usgs"
+            ],
+            "article_bodies": 0,
+            "native_source_files": 0,
+            "original_evidence_recovery": false,
+            "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+            "CPU_queue_restored": false,
+            "automatic_promotion": false
+          }
+        },
+        "repository": "irewon1-lgtm/bct-v4-private-state",
+        "visibility": "private",
+        "private_writer_scope_reused": true,
+        "remote_restore_verified": true,
+        "CPU_state_written": false,
+        "seven_day_observation_started": false
+      },
+      "quality_source_run": 38761360115,
+      "source_retries_for_recovery": 0,
+      "Q2_actual_orders": [
+        {
+          "product": "H225M",
+          "quantity": "12",
+          "unit": "helicopters"
+        },
+        {
+          "product": "A321neo",
+          "quantity": "2",
+          "unit": "aircraft"
+        }
+      ],
+      "Q2_expected_shipments": 1,
+      "Q2_confirmed_qualified_capacity": 0,
+      "Q2_real_same_TARGET_pairs": 0,
+      "Q2_previous_15_product_mismatches": 15,
+      "HS_versions_visited": 74,
+      "HS_versions_pending": 0
     }
   }
 }

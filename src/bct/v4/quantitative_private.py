@@ -120,7 +120,7 @@ def restore(source,root):
         raise
 
 
-def publish(repo,source,expected_parent,token,scope):
+def publish(repo,source,expected_parent,token,scope,*,verify_remote=True):
     """Reuse trusted scope receipt; actual publication authenticates without probes."""
     if not (scope.get('private_repository')==private.PRIVATE_REPO and scope.get('visibility')=='private'
             and scope.get('private_contents_probe')==201 and scope.get('visible_private_repository_count')==1
@@ -141,6 +141,9 @@ def publish(repo,source,expected_parent,token,scope):
     if git('config','--get','remote.origin.url').decode().strip()!=private.PRIVATE_URL:raise ValueError('Q1_PRIVATE_REMOTE_IDENTITY')
     from .quantitative_delta import publish as page_publish
     result=page_publish(repo,source,private._parent(expected_parent),env)
+    if not verify_remote:
+        result.update(repository=private.PRIVATE_REPO,visibility='private',private_writer_scope_reused=True,remote_restore_verified=False,CPU_state_written=False,seven_day_observation_started=False)
+        return result
     git('fetch','--no-tags','origin',STATE_REF)
     if git('rev-parse','FETCH_HEAD').decode().strip()!=result['commit']:raise ValueError('Q1_REMOTE_COMMIT_CHANGED')
     with tempfile.TemporaryDirectory(prefix='bct-q1-remote-')as tmp:
@@ -172,8 +175,7 @@ def remote_checkpoint(repo,destination,token):
     git('init');git('remote','add','origin',private.PRIVATE_URL);git('fetch','--no-tags','origin',STATE_REF)
     parent=git('rev-parse','FETCH_HEAD').decode().strip();destination=Path(destination)
     from .quantitative_delta import receive
-    receive(git,parent,destination)
-    with tempfile.TemporaryDirectory(prefix='q1-input-verify-')as tmp:verified=restore(destination,Path(tmp)/'verified')
+    verified=receive(git,parent,destination)
     return {'parent':parent,'verified':verified}
 
 

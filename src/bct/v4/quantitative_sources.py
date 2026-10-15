@@ -168,6 +168,7 @@ def parse_sec_submission(raw,meta,cik,accession):
             def handle_data(self,data):
                 line,col=self.getpos();start=parser.offsets[line-1]+col
                 for m in re.finditer(r'(?<![\w$])(\d[\d,]*(?:\.\d+)?)\s+(MW|MWh|aircraft|helicopters|satellites|wafers|systems|weeks|months|metric tons)\b',data,re.I):
+                    if text[offset+start+m.start(1):offset+start+m.end(1)]!=m[1]:continue
                     proposals.append({'value_original':m[1],'unit_original':m[2],'start':offset+start+m.start(1),'end':offset+start+m.end(1),'document_type':kind,'meaning':'UNKNOWN_TABLE_OR_TEXT_RELATION_NOT_ADOPTED'})
         Tokens().feed(child)
         sections.append({'type':kind,'start':offset,'end':offset+len(child),'table_count':len(re.findall(r'<table\b',child,re.I)),**detail})
