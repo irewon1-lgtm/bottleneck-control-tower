@@ -52,7 +52,29 @@ main·data·기존 Pages workflow는 수정하지 않는다.
   이번 요청의 명시된 UI 변경과 충돌한 과거 기준이다. 당시 app.js/style.css
   원본을 frozen-assets에 그대로 보존해 초기 seal과 대조하고,현행 UI는 새
   기능·release gate로 검사한다. 연구/원문/DB 보존 기준은 변경하지 않는다.
-- GitHub push CI와 사이트 반영은 이어서 실제 실행한 결과로만 보고한다.
+- 최종 개발 SHA `f78126fc492a8cbe883a68910f54591380cab92e`를 실제 push했다.
+  전체 CI: https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/38658099871
+  Python 1429 PASS / 1 SKIP, Node 34 PASS.
+  배포 gate: https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/38658100128
+  Python 22 PASS, Node UI 8 PASS, 1703 상세 검증 및 접근제어 검사 PASS.
+- 두 CI 성공 이후 Sites의 기존 소유자 전용 URL에 수동으로 저장·배포했다.
+  Sites source SHA `36f5c2508b9a2eb93b57e66ba3222129d6d776ff`,
+  배포 ID `appgdep_6ad019a9db5881918cd4c2f2159bf724`, status succeeded.
+- 실제 HTTPS API 대조 결과는 SYNC_AFTER.json에 기록했다.
+  코드 SHA·235/511/23/2·CPU 1186/6·미래 후보 0 일치,
+  CPU/보도 상세 인용·download JSON 일치 PASS.
+  비인증 화면/API/export/detail 모두 403, 서버 소스/DB 경로 404 PASS.
+- 실제 PC 브라우저에서 네 화면 전환, 최신 CPU/보도 탭, PrSM 검색(2건),
+  공급 감소 필터(3건), 원문 상세, 후보0, AI 자동 판독 중단 표시,
+  새로고침 및 재접속 후 최신 코드·자료 표시를 확인했다.
+- 브라우저 파일 저장은 일반 클릭과 downloadMedia 모두 실패했다.
+  HTTPS export의 200/attachment/JSON 동일성 검사는 통과했지만
+  실제 브라우저 저장은 PASS로 처리하지 않는다. 브라우저는 실패 원인을
+  제공하지 않았다. 사용자 PC에서의 저장 가능 여부도 미확인이다.
+- 모바일 시뮬레이션 및 실제 휴대폰: NOT_RUN.
+- GitHub push→자동 테스트는 PASS. 이후 자동 배포·자동 연구 갱신·실패 시
+  이전 배포 유지의 실제 전체 과정은 BLOCKED/NOT_RUN이다.
+  이번 Sites 반영은 수동 배포이며 지속 CI/CD 성공으로 세지 않는다.
 
 Netlify project `def4b8b3-4d62-4eb6-9813-b2332f1e1b17`은 현재 미배포이며
 Git 미연결이다. 앞선 GitHub `Authorize Netlify` 클릭은 자동 승인 검토에서

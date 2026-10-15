@@ -1,0 +1,88 @@
+{
+  "origin": "https://bct-v4-dashboard.ire-won1.chatgpt.site",
+  "counts": {
+    "evidence": 511,
+    "reviewed": 23,
+    "structured": 211,
+    "discovery": 277,
+    "discovered_urls": 403,
+    "source_attempts": 128,
+    "source_success": 118,
+    "source_errors": 10,
+    "article_attempts": 343,
+    "captured": 315,
+    "body_status": {
+      "FULL": 148,
+      "UNAVAILABLE": 80,
+      "PARTIAL": 87
+    },
+    "body_nonempty": 235,
+    "article_errors": 28,
+    "pending": 2,
+    "quarantined": 80,
+    "s1_signals": 14,
+    "future_candidates": {
+      "S1": 0,
+      "S2": 0,
+      "S3": 0
+    }
+  },
+  "data_at": "2026-10-14T23:16:13.592709+00:00",
+  "publication": {
+    "code_commit": "f78126fc492a8cbe883a68910f54591380cab92e",
+    "source_branch": "codex/bct-v4-integration",
+    "last_sync_at": "2026-10-15T00:06:51.731256+00:00",
+    "status": "VERIFIED_READ_ONLY_SNAPSHOT",
+    "status_label": "최신 검증 자료 연결 · 지속 자동 배포는 GitHub 권한 연결 대기",
+    "automatic_deployment": "BLOCKED_GITHUB_NETLIFY_AUTHORIZATION"
+  },
+  "tests": [
+    {
+      "test": "cpu_product original quote endpoint",
+      "result": "PASS"
+    },
+    {
+      "test": "reported original quote endpoint",
+      "result": "PASS"
+    },
+    {
+      "test": "download matches latest saved research",
+      "result": "PASS"
+    },
+    {
+      "test": "anonymous blocked /",
+      "result": "PASS",
+      "http": 403
+    },
+    {
+      "test": "anonymous blocked /api/dashboard",
+      "result": "PASS",
+      "http": 403
+    },
+    {
+      "test": "anonymous blocked /api/export",
+      "result": "PASS",
+      "http": 403
+    },
+    {
+      "test": "anonymous blocked /api/evidence/72e5b04178e47f1edecfa68df0c9ba382997df90a8e0eb9f257c7ff1e9c7393c",
+      "result": "PASS",
+      "http": 403
+    },
+    {
+      "test": "source excluded /.env",
+      "result": "PASS",
+      "http": 404
+    },
+    {
+      "test": "source excluded /worker/index.js",
+      "result": "PASS",
+      "http": 404
+    },
+    {
+      "test": "source excluded /docs/v4/cpu-recovery/research-snapshot.sqlite3.gz",
+      "result": "PASS",
+      "http": 404
+    }
+  ]
+}
