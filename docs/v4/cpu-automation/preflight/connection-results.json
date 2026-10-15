@@ -1,0 +1,457 @@
+{
+  "at": "2026-10-15T09:06:37.933490+00:00",
+  "start_sha": "289c4e23bc78a6c45105076306f1f4b9577de06a",
+  "status": "PRIVATE_CONNECTION_AND_METADATA_RESTORE_PASS_ACTIVATION_BLOCKED_FULL_RESEARCH_SEED_AND_ARCHIVAL",
+  "actual_remote_evidence": {
+    "run_id": 38709974717,
+    "head_sha": "5b90519a006ca20f3440dcbd79d882e9d3a9136d",
+    "conclusion": "success",
+    "receipts": {
+      "BCT_SETTINGS_OBSERVED_JSON": {
+        "private_token_present": true,
+        "private_token_header_format_valid": true,
+        "handoff_secret_present": true,
+        "handoff_secret_exactly_64": true,
+        "handoff_secret_format_valid": true,
+        "code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+        "code_SHA_matches_tested_handoff": true,
+        "enabled_variable": "false",
+        "CPU_reading_performed": false,
+        "settings_modified": false
+      },
+      "BCT_PRIVATE_SCOPE_JSON": {
+        "status": "PASS_CONNECTION_AND_METADATA_ONLY_NOT_PRODUCTION_SEED",
+        "empty_private_repository_initialized": false,
+        "scope": {
+          "private_repository": "irewon1-lgtm/bct-v4-private-state",
+          "visibility": "private",
+          "operating_ref_create_denials": {
+            "main": 403,
+            "data": 403
+          },
+          "private_contents_probe": 201,
+          "visible_private_repository_count": 1,
+          "operating_refs_modified": false
+        },
+        "handoff_secret_exactly_64": true,
+        "results": [
+          {
+            "namespace": "connection-check",
+            "remote_requery_hashes_verified": true,
+            "authenticated_encrypted_remote_restore": true,
+            "new_process_restore": {
+              "restored": true,
+              "tables": 8,
+              "sqlite_sha256": "bebe3fd8af97546860086998b6eec5c85c6925fd9b09c16484fb54ab02da3905"
+            },
+            "bytes_stored": 6423,
+            "article_text_copied": 0,
+            "production_seed": false
+          },
+          {
+            "namespace": "metadata-receipts/38709974717",
+            "remote_requery_hashes_verified": true,
+            "authenticated_encrypted_remote_restore": true,
+            "new_process_restore": {
+              "restored": true,
+              "tables": 8,
+              "sqlite_sha256": "b56bab7e3052c52f3029fdb21dda07e90c2f7c4bae3d7cc0737a0e4dadb9661e"
+            },
+            "bytes_stored": 20442,
+            "article_text_copied": 0,
+            "production_seed": false
+          }
+        ],
+        "metadata_receipts": 41,
+        "original_semantic_DB_restored_remotely": false,
+        "original_articles_uploaded": 0,
+        "CPU_enabled": false,
+        "seven_day_start": null,
+        "requests": [
+          {
+            "method": "GET",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state",
+            "HTTP": 200
+          },
+          {
+            "method": "GET",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/git/refs",
+            "HTTP": 200
+          },
+          {
+            "method": "GET",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state",
+            "HTTP": 200
+          },
+          {
+            "method": "GET",
+            "endpoint": "user/repos?visibility=private&per_page=100",
+            "HTTP": 200,
+            "visible_private_count": 1
+          },
+          {
+            "method": "GET",
+            "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/ref/heads/main",
+            "HTTP": 200
+          },
+          {
+            "method": "POST",
+            "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/refs",
+            "HTTP": 403
+          },
+          {
+            "method": "GET",
+            "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/ref/heads/data",
+            "HTTP": 200
+          },
+          {
+            "method": "POST",
+            "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/refs",
+            "HTTP": 403
+          },
+          {
+            "method": "POST",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/git/blobs",
+            "HTTP": 201
+          },
+          {
+            "method": "GET",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/git/trees/main?recursive=1",
+            "HTTP": 200
+          },
+          {
+            "method": "GET",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/git/blobs/2d1719e61d853f613c38cf1da6a127f3df2c21b1",
+            "HTTP": 200
+          },
+          {
+            "method": "GET",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/git/blobs/f5aa0ea3f95d8f3e41f27e51671f0a304b5e4c8a",
+            "HTTP": 200
+          },
+          {
+            "method": "GET",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/git/blobs/2d1719e61d853f613c38cf1da6a127f3df2c21b1",
+            "HTTP": 200
+          },
+          {
+            "method": "GET",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/git/blobs/f5aa0ea3f95d8f3e41f27e51671f0a304b5e4c8a",
+            "HTTP": 200
+          },
+          {
+            "method": "PUT",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/contents/connection-check/state.gpg",
+            "HTTP": 201
+          },
+          {
+            "method": "GET",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/git/blobs/a87ca5ee99927c5980ee16277a184271cc81e15f",
+            "HTTP": 200
+          },
+          {
+            "method": "PUT",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/contents/metadata-receipts/38709974717/checkpoint.json",
+            "HTTP": 201
+          },
+          {
+            "method": "GET",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/git/blobs/5606658b5a252306cb385ef06ad18e2c47fbeaae",
+            "HTTP": 200
+          },
+          {
+            "method": "PUT",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/contents/metadata-receipts/38709974717/checkpoint.sqlite3.gz",
+            "HTTP": 201
+          },
+          {
+            "method": "GET",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/git/blobs/79f78c6567d5a97897b9ab8abab1ba0167df5437",
+            "HTTP": 200
+          },
+          {
+            "method": "PUT",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/contents/metadata-receipts/38709974717/state.gpg",
+            "HTTP": 201
+          },
+          {
+            "method": "GET",
+            "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/git/blobs/cf745856ebb2581493a133aabcd8f147f0011498",
+            "HTTP": 200
+          }
+        ]
+      }
+    },
+    "safe_errors": []
+  },
+  "storage": {
+    "status": "PASS_MEASURED_UNDER_64MIB",
+    "reachable_unique_Git_object_bytes": 29928,
+    "limit_bytes": 67108864,
+    "read_only_measurement_identity": "existing cloud Git proxy; dedicated PAT used separately for actual write and remote restores"
+  },
+  "original_private_archival": {
+    "documents": 3,
+    "approved": 0,
+    "unknown": 3,
+    "new_raw_copies": 0,
+    "original_SQLite_sha256_unchanged": "5d231f79819e3794544b9027dc1cace0d42962abda323d6032e0360a92485500",
+    "exact_version_review_reused": "private-state-results.json#private_archival_review",
+    "private_storage_is_not_automatic_archival_permission": true
+  },
+  "failure_history_preserved": [
+    {
+      "run_id": 38709094695,
+      "receipts": {
+        "BCT_SETTINGS_OBSERVED_JSON": {
+          "private_token_present": true,
+          "private_token_header_format_valid": true,
+          "handoff_secret_present": true,
+          "handoff_secret_format_valid": true,
+          "code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+          "code_SHA_matches_tested_handoff": true,
+          "enabled_variable": "false",
+          "CPU_reading_performed": false,
+          "settings_modified": false
+        },
+        "BCT_PRIVATE_SCOPE_JSON": {
+          "status": "BLOCKED",
+          "reason": "PRIVATE_CONTENTS_WRITE_NOT_VERIFIED",
+          "requests": [
+            {
+              "method": "GET",
+              "endpoint": "repos/irewon1-lgtm/bct-v4-private-state",
+              "HTTP": 200
+            },
+            {
+              "method": "GET",
+              "endpoint": "user/repos?visibility=private&per_page=100",
+              "HTTP": 200,
+              "visible_private_count": 1
+            },
+            {
+              "method": "GET",
+              "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/ref/heads/main",
+              "HTTP": 200
+            },
+            {
+              "method": "POST",
+              "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/refs",
+              "HTTP": 403
+            },
+            {
+              "method": "GET",
+              "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/ref/heads/data",
+              "HTTP": 200
+            },
+            {
+              "method": "POST",
+              "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/refs",
+              "HTTP": 403
+            },
+            {
+              "method": "POST",
+              "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/git/blobs",
+              "HTTP": 409
+            }
+          ],
+          "source_DB_uploaded": false
+        }
+      },
+      "result": "BLOCKED_409_PRIVATE_EMPTY_REPOSITORY_NOT_403_OR_404"
+    },
+    {
+      "run_id": 38709493726,
+      "receipts": {
+        "BCT_SETTINGS_OBSERVED_JSON": {
+          "private_token_present": true,
+          "private_token_header_format_valid": true,
+          "handoff_secret_present": true,
+          "handoff_secret_exactly_64": true,
+          "handoff_secret_format_valid": true,
+          "code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+          "code_SHA_matches_tested_handoff": true,
+          "enabled_variable": "false",
+          "CPU_reading_performed": false,
+          "settings_modified": false
+        }
+      },
+      "errors": [
+        "publisher_permission_check\tActual private-token writes and operating-ref denials, no source DB\t2026-10-15T08:58:35.3420974Z \u001b[36;1mexcept (ValueError,AssertionError) as exc:\u001b[0m",
+        "publisher_permission_check\tActual private-token writes and operating-ref denials, no source DB\t2026-10-15T08:58:35.5503978Z ModuleNotFoundError: No module named 'sqlalchemy'",
+        "publisher_permission_check\tActual private-token writes and operating-ref denials, no source DB\t2026-10-15T08:58:35.5636653Z ##[error]Process completed with exit code 1."
+      ]
+    },
+    {
+      "run_id": 38709718106,
+      "head_sha": "a727d03de58dc9556f3e7ed9b03b8cc5f6a71af2",
+      "conclusion": "failure",
+      "receipts": {
+        "BCT_SETTINGS_OBSERVED_JSON": {
+          "private_token_present": true,
+          "private_token_header_format_valid": true,
+          "handoff_secret_present": true,
+          "handoff_secret_exactly_64": true,
+          "handoff_secret_format_valid": true,
+          "code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+          "code_SHA_matches_tested_handoff": true,
+          "enabled_variable": "false",
+          "CPU_reading_performed": false,
+          "settings_modified": false
+        },
+        "BCT_PRIVATE_SCOPE_JSON": {
+          "status": "BLOCKED",
+          "reason": "PRIVATE_CONTENT_REQUERY_FAILED",
+          "requests": [
+            {
+              "method": "GET",
+              "endpoint": "repos/irewon1-lgtm/bct-v4-private-state",
+              "HTTP": 200
+            },
+            {
+              "method": "GET",
+              "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/git/refs",
+              "HTTP": 409
+            },
+            {
+              "method": "PUT",
+              "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/contents/connection-check/README.txt",
+              "HTTP": 201
+            },
+            {
+              "method": "GET",
+              "endpoint": "repos/irewon1-lgtm/bct-v4-private-state",
+              "HTTP": 200
+            },
+            {
+              "method": "GET",
+              "endpoint": "user/repos?visibility=private&per_page=100",
+              "HTTP": 200,
+              "visible_private_count": 1
+            },
+            {
+              "method": "GET",
+              "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/ref/heads/main",
+              "HTTP": 200
+            },
+            {
+              "method": "POST",
+              "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/refs",
+              "HTTP": 403
+            },
+            {
+              "method": "GET",
+              "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/ref/heads/data",
+              "HTTP": 200
+            },
+            {
+              "method": "POST",
+              "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/refs",
+              "HTTP": 403
+            },
+            {
+              "method": "POST",
+              "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/git/blobs",
+              "HTTP": 201
+            },
+            {
+              "method": "GET",
+              "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/contents/connection-check/checkpoint.json",
+              "HTTP": 404
+            },
+            {
+              "method": "PUT",
+              "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/contents/connection-check/checkpoint.json",
+              "HTTP": 201
+            },
+            {
+              "method": "GET",
+              "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/contents/connection-check/checkpoint.json",
+              "HTTP": 200
+            },
+            {
+              "method": "GET",
+              "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/contents/connection-check/checkpoint.sqlite3.gz",
+              "HTTP": 404
+            },
+            {
+              "method": "PUT",
+              "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/contents/connection-check/checkpoint.sqlite3.gz",
+              "HTTP": 201
+            },
+            {
+              "method": "GET",
+              "endpoint": "repos/irewon1-lgtm/bct-v4-private-state/contents/connection-check/checkpoint.sqlite3.gz",
+              "HTTP": 404
+            }
+          ],
+          "source_DB_uploaded": false
+        }
+      },
+      "safe_errors": [
+        "publisher_permission_check\tActual private-token writes and operating-ref denials, no source DB\t2026-10-15T09:00:31.4947259Z ##[error]Process completed with exit code 1."
+      ]
+    }
+  ],
+  "failure_diagnosis": {
+    "initial_409": "Empty Git repository; private GET200 and public denials403 were already working. Private README PUT201 then Git blob POST201 verified initialized write access.",
+    "module_import": "Connection-only helper unnecessarily imported CPU runtime SQLAlchemy dependency; removed those imports instead of reinstalling CPU/model/runtime.",
+    "binary_Contents_GET_404": "PUT201 and remote Git tree showed actual blob. Detailed route/ref/proxy cause UNKNOWN. Did not repeat failed binary path GET; immutable Git blob ID plus binary SHA256 and fresh-process authenticated restore succeeded."
+  },
+  "preservation": {
+    "existing_RSS_precursor_operating_UI_unchanged": true,
+    "main_changed_only": [
+      ".github/workflows/v4-cpu-private-settings-check.yml"
+    ],
+    "data_sha_observed": "deca5dbbf23a075ca143aeca4388edd1d6a1555b",
+    "data_update_by_existing_precursor": {
+      "sha": "deca5dbbf23a075ca143aeca4388edd1d6a1555b",
+      "author": "github-actions[bot]",
+      "message": "Persist new-only precursor index from run 38696488950",
+      "not_a_probe_write": true
+    },
+    "main_probe_sha": "5b90519a006ca20f3440dcbd79d882e9d3a9136d",
+    "previous_results_modified": false
+  },
+  "tests": {
+    "workflow_guard_and_full_synthetic_remote_simulation": {
+      "passed": 5,
+      "seconds": 3.99
+    },
+    "actual_GitHub_connection_and_authenticated_remote_restore": "PASS_TWO_NON_PRODUCTION_DATABASES_EIGHT_TABLES_EACH",
+    "final_CI": "Verify externally on exact final pushed development SHA."
+  },
+  "automation": {
+    "CPU_enabled": false,
+    "full_original_research_DB_remote_restore": "BLOCKED_ARCHIVAL_AND_VALID_RESTART_SEED",
+    "first_actual_scheduled_CPU_read": "NOT_RUN",
+    "seven_day_start": null,
+    "seven_day_status": "NOT_STARTED",
+    "automatic_S2_S3_LIVE": "DISABLED"
+  },
+  "usage": {
+    "external_AI_calls": 0,
+    "Groq_calls": 0,
+    "API_tokens": 0,
+    "API_cost_KRW": 0,
+    "new_CPU_inference_windows": 0,
+    "model_installs_or_downloads": 0,
+    "new_source_collection": 0,
+    "paid_resources_or_plan_changes": false,
+    "standard_public_Ubuntu_only": true,
+    "private_Actions_runs": 0,
+    "platform_account_bill": "Not exposed; no paid resource or plan change."
+  },
+  "owner_settings_still_required": [],
+  "remaining_blockers": [
+    "Exact original3 private archival permission/privacy remains unverified; no originals copied.",
+    "Metadata-only IDs/hashes are not full original research results or a production queue seed. Need a permitted full checkpoint or validated source-separated restart preserving original results, completion/dedup state and evidence checks."
+  ],
+  "next_resume": "Do not repeat connection probes, change Secret/token, reread CPU1210/67 or reinstall cache. Resolve archival/restart seed scope; remotely verify that actual safe research checkpoint and restart/dedup. Only then use the existing separated activation proposal, switch enabled and require actual scheduled NEW validated/durably saved read before7day start.",
+  "unchanged_verdicts": {
+    "AI_adoption": "FAIL",
+    "independent_AI_evaluation": "BLOCKED",
+    "historical_lead_performance": "BLOCKED",
+    "new_actual_S3": 0
+  }
+}

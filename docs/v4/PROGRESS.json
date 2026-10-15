@@ -1,12 +1,12 @@
 {
   "plan_version": "3.1",
-  "plan_sha256": "d0d4bc2d925b966b218b958a2530f7d18761411c0d3d82a8e0fc1887a350a74d",
+  "plan_sha256": "ea4f7286a200e722bf9d34fb6087470c0f0b1c00890fad8f5c965d1bb51f207f",
   "stage": 4,
-  "status": "ACTIVATION_BLOCKED_PRIVATE_REPO_TOKEN_ACCESS_AND_HANDOFF_SECRET",
+  "status": "PRIVATE_CONNECTION_AND_METADATA_RESTORE_PASS_ACTIVATION_BLOCKED_FULL_RESEARCH_SEED_AND_ARCHIVAL",
   "handoff_sha": "cc190d429e369580cda5ac5790a9b45b9168baf8",
   "base_remote_sha": "cc190d429e369580cda5ac5790a9b45b9168baf8",
-  "last_completed": "Verified actual owner setup in Actions: private repo exists, dedicated auth200, main/data write403/403; private GET404 and encryption Secret empty. Validated separate metadata-only local receipt DB and new-process eight-table restore without any CPU reread or raw copy.",
-  "next_action": "After meaningful owner-setting correction, verify private-only scope and write once, choose permitted checkpoint scope with originals retained, then actual private remote restore/hashes. Only then apply separated CPU workflow and enable; first real scheduled new read+validation+private durable ACK starts7days.",
+  "last_completed": "Actual private-only access/write and main/data403 verified;64-character encryption Secret delivered; non-sensitive test and41 identifier/hash-only receipt DB remotely stored, immutable-blob hash rechecked, decrypted and restored in fresh processes. Original research DB not seeded; CPU still OFF.",
+  "next_action": "Do not repeat connection probes, change Secret/token, reread CPU1210/67 or reinstall cache. Resolve archival/restart seed scope; remotely verify that actual safe research checkpoint and restart/dedup. Only then use the existing separated activation proposal, switch enabled and require actual scheduled NEW validated/durably saved read before7day start.",
   "blockers": [
     {
       "code": "SEVEN_STORED_ITEMS_REMAIN_INVALID",
@@ -235,7 +235,7 @@
     }
   ],
   "scope": "Private-state storage/permission separation only, free CPU research. No public main/data runtime write token; no operating changes, new model/cache/RSS/oldCPU reprocessing, AI or automatic S2/S3/LIVE. Actual activation conditional on owner setup, verified exclusive permission and source archival rights.",
-  "updated_at": "2026-10-15T06:56:02.522383+00:00",
+  "updated_at": "2026-10-15T09:06:37.933490+00:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
@@ -344,17 +344,17 @@
     "third_provider": false
   },
   "api_usage_current_task": {
-    "Groq_calls": 0,
     "external_AI_calls": 0,
+    "Groq_calls": 0,
     "API_tokens": 0,
     "API_cost_KRW": 0,
-    "CPU_inference_windows": 0,
-    "model_downloads": 0,
-    "source_document_fetches": 0,
-    "private_DB_uploads": 0,
-    "private_Actions_compute_runs": 0,
-    "manual_public_standard_Ubuntu_diagnostics": 4,
-    "account_total_bill": "Not exposed; no paid resource or plan change. Last diagnostic reported Ubuntu billable_ms0; this is not an account bill."
+    "new_CPU_inference_windows": 0,
+    "model_installs_or_downloads": 0,
+    "new_source_collection": 0,
+    "paid_resources_or_plan_changes": false,
+    "standard_public_Ubuntu_only": true,
+    "private_Actions_runs": 0,
+    "platform_account_bill": "Not exposed; no paid resource or plan change."
   },
   "remaining_issues": [
     {
@@ -3963,6 +3963,27 @@
       "seven_day_start": null,
       "impact_tests_passed": 19,
       "next_resume": "After meaningful owner-setting correction, verify private-only scope and write once, choose permitted checkpoint scope with originals retained, then actual private remote restore/hashes. Only then apply separated CPU workflow and enable; first real scheduled new read+validation+private durable ACK starts7days."
+    },
+    "connection_resume": {
+      "at": "2026-10-15T09:06:37.933490+00:00",
+      "start_sha": "289c4e23bc78a6c45105076306f1f4b9577de06a",
+      "status": "PRIVATE_CONNECTION_AND_METADATA_RESTORE_PASS_ACTIVATION_BLOCKED_FULL_RESEARCH_SEED_AND_ARCHIVAL",
+      "evidence": "docs/v4/cpu-automation/preflight/connection-results.json",
+      "actual_remote_run": 38709974717,
+      "private_GET": 200,
+      "private_write": 201,
+      "main_data_write_denials": [
+        403,
+        403
+      ],
+      "handoff_secret_exactly_64": true,
+      "authenticated_remote_restore": "PASS_NON_SENSITIVE_AND_IDENTIFIER_ONLY_EIGHT_TABLES",
+      "original_research_full_restore": "BLOCKED",
+      "private_archival_unknown": 3,
+      "CPU_enabled": false,
+      "seven_day_start": null,
+      "owner_settings_required": [],
+      "next_resume": "Do not repeat connection probes, change Secret/token, reread CPU1210/67 or reinstall cache. Resolve archival/restart seed scope; remotely verify that actual safe research checkpoint and restart/dedup. Only then use the existing separated activation proposal, switch enabled and require actual scheduled NEW validated/durably saved read before7day start."
     }
   },
   "before_cpu_activation": {
