@@ -21,11 +21,11 @@ concurrency:
   cancel-in-progress: false
 env:
   PYTHONPATH: src
-  CPU_CODE_SHA: b5bc01f1337466ad6d7f69fd537a6bb27cb58cec
-  EXPECTED_CPU_CODE_SHA: b5bc01f1337466ad6d7f69fd537a6bb27cb58cec
+  CPU_CODE_SHA: 221fa92b1cbff8950716ec373eac793ca340c873
+  EXPECTED_CPU_CODE_SHA: 221fa92b1cbff8950716ec373eac793ca340c873
 jobs:
   research:
-    if: ${{ vars.BCT_V4_CPU_CODE_SHA == 'b5bc01f1337466ad6d7f69fd537a6bb27cb58cec' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_run' && vars.BCT_V4_CPU_RESEARCH_ENABLED == 'true' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ vars.BCT_V4_CPU_CODE_SHA == '221fa92b1cbff8950716ec373eac793ca340c873' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_run' && vars.BCT_V4_CPU_RESEARCH_ENABLED == 'true' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
