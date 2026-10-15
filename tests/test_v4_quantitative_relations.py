@@ -46,6 +46,14 @@ def test_missing_manufacturer_does_not_start_global_manufacturing_menu_crawl():
     assert q.relation_links(t,{'origin_url':'https://www.eia.gov/x','document_id':'e','raw_sha256':sha(raw)},raw)==[]
 
 
+def test_observed_official_sec_company_lookup_is_retained_but_auth_params_are_rejected():
+    url='https://www.sec.gov/cgi-bin/browse-edgar?company=aehr&owner=exclude&action=getcompany'
+    assert q.relation_url(url)=='SEC_DISCOVERY_TRANSPORT_REQUIRED'
+    for query in ['&token=x','&session=x','&unknown=x','&company=another']:
+        with pytest.raises(ValueError):q.relation_url(url+query)
+    with pytest.raises(ValueError):q.safe_url(url)  # Not relaxed into an adoptable article.
+
+
 def test_all_search_results_preserved_for_queue_not_only_three(monkeypatch):
     raw=('<rss><channel>'+''.join('<item><link>https://agency.example/'+str(i)+'</link></item>'for i in range(12))+'</channel></rss>').encode()
     monkeypatch.setattr(a,'fetch',lambda u:(raw,u,200,'application/xml'))

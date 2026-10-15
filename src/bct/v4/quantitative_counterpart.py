@@ -6,7 +6,7 @@ paragraphs for review; they never prove equivalent scope, independence or supply
 import json
 import re
 import time
-from urllib.parse import urlsplit, urljoin
+from urllib.parse import urlsplit, urljoin, parse_qsl
 
 from bct.objective_lock import stamp_export, require_objective
 from bct.target_acquisition import plan as acquisition_plan, leads
@@ -25,6 +25,22 @@ REQUIRED = ('specification', 'region', 'customer', 'quantity', 'need_window',
 def safe_url(url):
     if not valid_article_url(url):
         raise ValueError('COUNTERPART_PUBLIC_ARTICLE_URL')
+
+
+def relation_url(url):
+    """A public SEC discovery query is not an article or an auth/session URL."""
+    p=urlsplit(url)
+    if p.scheme=='https'and p.hostname=='www.sec.gov'and p.port in (None,443)and p.path=='/cgi-bin/browse-edgar'and not p.fragment and not p.username and not p.password:
+        pairs=parse_qsl(p.query,keep_blank_values=True);v=dict(pairs)
+        if len(v)!=len(pairs)or set(v)-{'company','CIK','owner','action','count','type'}:raise ValueError('RELATION_SEC_QUERY')
+        if not v.get('company')and not v.get('CIK'):raise ValueError('RELATION_SEC_QUERY')
+        if v.get('company')and not re.fullmatch(r"[A-Za-z0-9 .&'-]{1,100}",v['company']):raise ValueError('RELATION_SEC_QUERY')
+        if v.get('CIK')and not re.fullmatch(r'\d{1,10}',v['CIK']):raise ValueError('RELATION_SEC_QUERY')
+        if v.get('owner','exclude')not in {'exclude','include','only'}or v.get('action','getcompany')!='getcompany':raise ValueError('RELATION_SEC_QUERY')
+        if v.get('count')and not re.fullmatch(r'[1-9]\d?',v['count']):raise ValueError('RELATION_SEC_QUERY')
+        if v.get('type')and not re.fullmatch(r'[A-Z0-9/-]{1,12}',v['type']):raise ValueError('RELATION_SEC_QUERY')
+        return 'SEC_DISCOVERY_TRANSPORT_REQUIRED'
+    safe_url(url);return 'PUBLIC_DOCUMENT'
 
 
 def search_terms(product):
@@ -383,6 +399,7 @@ def relation_links(task, doc, raw):
     """Cross-host citations are retained with their relationship still unproven."""
     from bct.target_acquisition import Metadata
     if sha(raw)!=doc['raw_sha256']:raise ValueError('RELATION_NATIVE_HASH')
+    if raw.lstrip().startswith(b'%PDF'):return []  # PDF text is handled separately, never as HTML links.
     parser=Metadata();parser.feed(raw.decode('utf-8',errors='replace'))
     words={'MANUFACTURER_FACILITY':r'facilit|manufactur|annual.report|investor.relation|sec.filing',
            'FACILITY_CAPACITY_READY':r'capacit|produc|expan|commission|annual.report|investor.relation',
@@ -393,14 +410,15 @@ def relation_links(task, doc, raw):
         return []  # Unknown maker is not a reason to crawl a statistics site's global manufacturing menu.
     for href,label in parser.links:
         url=urljoin(doc['origin_url'],href).split('#')[0]
-        try:safe_url(url)
+        try:kind=relation_url(url)
         except ValueError:continue
         if url==doc['origin_url']or url in seen:continue
         # No product-name or same-host gate. This is a relation lead, NOT proof
         # that an external institution or supplier is qualified/independent.
         if not re.search(words[task['facet']],href+' '+label,re.I):continue
         seen.add(url);out.append({'url':url,'via_document_id':doc['document_id'],
-                                  'status':'UNFETCHED_RELATION_LEAD','relation':'UNKNOWN_REVIEW_REQUIRED'})
+                                  'status':'HELD_SEC_INDEX_PRIOR_HOST_QUARANTINE'if kind=='SEC_DISCOVERY_TRANSPORT_REQUIRED'else'UNFETCHED_RELATION_LEAD',
+                                  'relation':'UNKNOWN_REVIEW_REQUIRED'})
     return out
 
 
@@ -427,7 +445,7 @@ def validate_relation(row):
     if type(row['cursor'])is not int or not 0<=row['cursor']<=len(row['urls']):raise ValueError('RELATION_CURSOR')
     for link in row['urls']:
         if set(link)!={'url','via_document_id','status','relation'}:raise ValueError('RELATION_LINK_FIELDS')
-        safe_url(link['url'])
+        relation_url(link['url'])
     if row['independence']!='UNKNOWN':raise ValueError('RELATION_UNREVIEWED_INDEPENDENCE')
     if re.search(r'"(?:body|quote|text|excerpt|response)"\s*:',json.dumps(row)):raise ValueError('RELATION_SOURCE_PROSE')
 

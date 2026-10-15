@@ -102,9 +102,22 @@ def run(*,network=False):
         if not task.get('party')and task['facet']in {'MANUFACTURER_FACILITY','FACILITY_CAPACITY_READY'}and task['cursor']==0:
             task['urls']=[]
         task['checked_sources']=[recovered.get(x['url'],x)for x in task['checked_sources']]
+        # Re-expand preserved HTML after the narrow SEC query contract changed;
+        # no network retry and no discarded future URL behind an old cursor.
+        used={x['url']for x in task['urls']}
+        for prior in list(task['checked_sources']):
+            prior_key=sha(prior['url']);df=cache/(prior_key+'.document.json');rf=cache/(prior_key+'.raw')
+            if df.exists()and rf.exists():
+                for link in q.relation_links(task,json.loads(df.read_text()),rf.read_bytes()):
+                    if link['url']not in used:task['urls'].append(link);used.add(link['url'])
         task['search_state']='PROVIDER_IRRELEVANT_RESPONSE_PENDING_ALTERNATIVE'if provider_bad else'OFFICIAL_CITED_LINK_DISCOVERY'
         while network and task['cursor']<len(task['urls']):
             link=task['urls'][task['cursor']];url=link['url'];key=sha(url);receipt=cache/(key+'.json');rawfile=cache/(key+'.raw')
+            if q.relation_url(url)=='SEC_DISCOVERY_TRANSPORT_REQUIRED':
+                # Retain the observed issuer lookup. Existing www.sec.gov403
+                # is quarantined; neither a generic-UA fetch nor a retry occurs.
+                task['checked_sources'].append({'url':url,'status':'NOT_REQUESTED_PRIOR_SEC_HOST_QUARANTINE','prior_http_status':403,'published_at':'UNKNOWN'})
+                task['cursor']+=1;continue
             if not receipt.exists():
                 if calls>=32 or time.monotonic()-started>=90 or event_calls[task['event_key']]>=3 or host_calls[urlsplit(url).hostname]>=6:break
                 # Journal BEFORE network: process death never causes blind retry.
@@ -153,6 +166,7 @@ def run(*,network=False):
         'relation_tasks':len(tasks),'facets':dict(Counter(t['facet']for t in tasks)),'new_HTTP_calls_this_batch':calls,
         'unique_new_source_results':results,'checked_unique_URLs':len({r['url']for t in tasks for r in t['checked_sources']}),
         'pending_URLs':sum(len(t['urls'])-t['cursor']for t in tasks),'pending_tasks':sum(t['cursor']<len(t['urls'])for t in tasks),
+        'observed_SEC_query_links_held':len({u['url']for t in tasks for u in t['urls']if u['status']=='HELD_SEC_INDEX_PRIOR_HOST_QUARANTINE'}),
         'reason_counts':dict(Counter(t['reason']for t in tasks)),'provider_response_irrelevant_not_no_data':provider_bad,
         'explicitly_private_source_evidence':0,'proven_absent_data':0,
         'skipped_unconfirmed_original_records':rejected,'save':saved,'verified_new_world_events':0,'verified_full_scope_demand':0,
