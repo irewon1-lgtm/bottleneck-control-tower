@@ -52,6 +52,11 @@ def inventory():
     # Add the exact Q2 typed order fields without discarding earlier proposals.
     products=json.loads(Path('docs/v4/quantitative/product-facts.json').read_text())
     seeds+=q.seeds(products['records'],[])
+    proof_path=Path('docs/v4/quantitative/relation-facts.json')
+    model_proofs=json.loads(proof_path.read_text()).get('model_identity_proofs',[])if proof_path.exists()else[]
+    for seed in seeds:
+        proof=next((p for p in model_proofs if p['surface']==seed['product']),None)
+        if proof:seed['verified_model_proof']=proof
     tasks=q.relation_tasks(seeds)
     for task in tasks:
         did=task['source_identity']['document_id']
@@ -67,7 +72,8 @@ def run(*,network=False):
     old=json.loads(path.read_text())if path.exists()else None
     if old:
         previous={r['task_id']:r for r in old['tasks']}
-        tasks=[previous.get(r['task_id'],r)for r in tasks]
+        tasks=[{**r,**{k:previous[r['task_id']][k]for k in ['urls','cursor','checked_sources','search_state','reason']}}
+               if r['task_id']in previous else r for r in tasks]
         # New verified events append; existing task states/cursors survive.
         tasks += [r for key,r in previous.items()if key not in {t['task_id']for t in tasks}]
     started=time.monotonic();calls=0;event_calls=Counter();host_calls=Counter();results=[]
@@ -134,7 +140,8 @@ def run(*,network=False):
                 task['urls'] += [x for x in more if x['url']not in used and not used.add(x['url'])]
         if task['cursor']<len(task['urls']):task['reason']='UNPROCESSED_OFFICIAL_LINKS_PENDING_BATCH_BUDGET'
         elif any(r['status']=='ACCESS_BLOCKED'for r in task['checked_sources']):task['reason']='ACCESS_BLOCKED_NO_ABSENCE_INFERENCE'
-        else:task['reason']='NO_VERIFIED_COUNTERPART_IN_EXAMINED_SCOPE_NOT_PROVEN_PRIVATE_OR_ABSENT'
+        elif not task['checked_sources']and provider_bad:task['reason']='EXTERNAL_SEARCH_NOT_EXECUTED_PROVIDER_IRRELEVANT'
+        else:task['reason']='DOCUMENT_FOUND_PUBLICATION_OR_SEMANTIC_RELATION_UNVERIFIED'
         task['id']=sha(['q2-relation-state-1',{k:v for k,v in task.items()if k!='id'}])
         # A crash preserves completed tasks and pending URL cursor atomically.
         packet=stamp_export({'plan_id':'BCT-V4-Q-1.0','tasks':tasks,'S2':0,'S3':0})
@@ -147,6 +154,7 @@ def run(*,network=False):
         'unique_new_source_results':results,'checked_unique_URLs':len({r['url']for t in tasks for r in t['checked_sources']}),
         'pending_URLs':sum(len(t['urls'])-t['cursor']for t in tasks),'pending_tasks':sum(t['cursor']<len(t['urls'])for t in tasks),
         'reason_counts':dict(Counter(t['reason']for t in tasks)),'provider_response_irrelevant_not_no_data':provider_bad,
+        'explicitly_private_source_evidence':0,'proven_absent_data':0,
         'skipped_unconfirmed_original_records':rejected,'save':saved,'verified_new_world_events':0,'verified_full_scope_demand':0,
         'qualified_capacity':0,'confirmed_delivery':0,'independent_pairs':0,'S2':0,'S3':0,'AI_calls':0,'CPU_windows':0,
         'original_DB_hashes_unchanged':protected})

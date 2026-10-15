@@ -324,7 +324,12 @@ def relation_tasks(seed_records):
         key = sha([seed.get('event_key', seed['id']), seed['role'], product])
         for facet, hint in hints.items():
             party = fields.get('customer') if facet == 'CUSTOMER_CONTRACT' else fields.get('supplier')
-            literals = [v for v in [party, product or seed['product']] if v and v != 'UNKNOWN']
+            proof=seed.get('verified_model_proof')
+            if proof and (proof['surface']!=seed['product'] or proof['relation']!='SAME_MANUFACTURER_MODEL_FAMILY_ONLY'
+                          or proof['specification_equivalence']!='UNKNOWN_NOT_MERGED'):
+                raise ValueError('RELATION_MODEL_PROOF_SCOPE')
+            discovery_model=proof['manufacturer_model']if proof else product or seed['product']
+            literals = [v for v in [party, discovery_model] if v and v != 'UNKNOWN']
             if facet == 'MANUFACTURER_FACILITY' and party:
                 literals = [party]
             task_id = sha(['q2-relation-1', key, facet])
@@ -338,7 +343,8 @@ def relation_tasks(seed_records):
                     'query': ' '.join('"'+v.replace('"','')+'"' for v in literals)+' '+hint+' official',
                     'source_identity': {k: source.get(k) for k in ['document_id','body_sha256','origin_url','published_at']},
                     'scope': {'public_literal_only': True, 'external_query_authorized_by_user': True,
-                              'method': 'RELATION_DISCOVERY_NOT_TARGET_EQUIVALENCE'},
+                              'method': 'RELATION_DISCOVERY_NOT_TARGET_EQUIVALENCE',
+                              'manufacturer_model_proof':proof},
                     'urls': [], 'cursor': 0, 'search_state': 'PENDING', 'checked_sources': [],
                     'independence': 'UNKNOWN', 'first_publication': source.get('published_at') or 'UNKNOWN',
                     'reason': 'COUNTERPART_NOT_YET_OBSERVED_NOT_ABSENT', 'research_only': True, 's_stage': 'UNKNOWN'}
@@ -434,3 +440,11 @@ def save_relations(ledger, packet_value):
             if ledger.db.execute("SELECT 1 FROM events WHERE kind=?AND json_extract(payload,'$.id')=?",(RELATION_KIND,row['id'])).fetchone():continue
             ledger.event(RELATION_KIND,row);added+=1
     return {'added':added,'task_states':len(packet_value['tasks']),'automatic_promotion':False}
+
+
+def latest_relations(ledger):
+    """One current cursor per task; previous immutable states remain history."""
+    rows={}
+    for payload, in ledger.db.execute("SELECT payload FROM events WHERE kind=? ORDER BY seq",(RELATION_KIND,)):
+        row=json.loads(payload);validate_relation(row);rows[row['task_id']]=row
+    return stamp_export({'plan_id':'BCT-V4-Q-1.0','tasks':list(rows.values()),'S2':0,'S3':0})

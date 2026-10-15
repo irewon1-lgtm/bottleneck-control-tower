@@ -61,6 +61,10 @@ def test_pending_urls_and_cursor_survive_restart_and_are_not_adopted(tmp_path):
     l=Ledger(tmp_path);before=file_sha(l.path);assert q.save_relations(l,packet)['added']==0
     r=json.loads(l.db.execute("SELECT payload FROM events WHERE kind=?",(q.RELATION_KIND,)).fetchone()[0])
     assert len(r['urls'])-r['cursor']==6 and r['s_stage']=='UNKNOWN';assert file_sha(l.path)==before;l.close()
+    newer=deepcopy(t);newer['cursor']=4;newer['id']=sha(['q2-relation-state-1',{k:v for k,v in newer.items()if k!='id'}])
+    l=Ledger(tmp_path);q.save_relations(l,stamp_export({'tasks':[newer]}));current=q.latest_relations(l)
+    assert len(current['tasks'])==1 and current['tasks'][0]['cursor']==4
+    assert l.db.execute('SELECT count(*)FROM events').fetchone()[0]==2;l.close()
 
 
 def test_manufacturer_model_proof_never_merges_configuration_or_loses_repeated_positions():
@@ -70,6 +74,12 @@ def test_manufacturer_model_proof_never_merges_configuration_or_loses_repeated_p
     records=q.catalogue_identity(d,raw,['FOX-XP TM system','FOX-XP ® wafer-level equipment'])
     assert len(records)==2 and all(len(r['positions'])==2 for r in records)
     assert all(r['specification_equivalence']=='UNKNOWN_NOT_MERGED'for r in records)
+    s=seed('FOX-XP TM system');s['verified_model_proof']=records[0]
+    tasks=q.relation_tasks([s]);capacity=next(t for t in tasks if t['facet']=='FACILITY_CAPACITY_READY')
+    assert '"FOX-XP"'in capacity['query']and'TM system'not in capacity['query']
+    assert capacity['product']=='FOX-XP TM system'and capacity['scope']['manufacturer_model_proof']==records[0]
+    s['verified_model_proof']=records[1]
+    with pytest.raises(ValueError,match='MODEL_PROOF_SCOPE'):q.relation_tasks([s])
 
 
 def test_real_twelve_regression_cases_and_qualified_supply_remain_unchanged():
