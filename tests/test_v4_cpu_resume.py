@@ -173,3 +173,20 @@ def test_corrupt_old_receipt_isolated_before_creating_any_runnable_task(tmp_path
     assert not q.events(l,'CPU_QUEUE_DOCUMENT')
     fake=Extractor();assert q.work(l,extractor=fake)['new_windows']==0 and fake.calls==0
     l.close()
+
+
+def test_failed_committed_window_not_retried_after_source_separation(tmp_path):
+    d,raw=document('Atlas ordered Helios heat pumps.\nA second separate paragraph.')
+    l=q.open_queue(tmp_path/'original');q.enqueue(l,d,raw,{})
+    assert q.work(l,extractor=Extractor(fail=True),max_windows=1)['after']['failed_windows']==1
+    l.close();r.export_state(tmp_path/'original/v4.sqlite3',tmp_path/'separated')
+    cache,policy=cache_source(tmp_path,d,raw);l=q.open_queue(tmp_path/'separated')
+    assert r.summary(l)['failed_windows_quarantined']==1
+    assert r.hydrate(l,cache,policy)[0]['status']=='SOURCE_REHYDRATED_NO_COMPLETED_WINDOW_RERUN'
+    fake=Extractor();out=q.work(l,extractor=fake)
+    assert fake.calls==1 and out['new_windows']==1 and out['after']['failed_windows']==1
+    l.close();r.export_state(tmp_path/'separated/v4.sqlite3',tmp_path/'again')
+    l=q.open_queue(tmp_path/'again');assert r.planned_read(l,d)
+    assert q.enqueue(l,d,raw,{})=='UNCHANGED_WINDOWS_UNREAD_CONTEXT_HELD'
+    fake=Extractor();assert q.work(l,extractor=fake)['new_windows']==0 and fake.calls==0
+    assert r.audit(l)['failed_windows_quarantined']==1;l.close()

@@ -20,7 +20,7 @@ MODEL = 'fastino/gliner2-base-v1'
 REVISION = 'f9634218e53580c56edf0de97ca1a7d3f1c2354e'
 LABELS = {'product','specification','industry','subindustry','location','customer','supplier','quantity','date'}
 SAFE_KINDS = {'CPU_RESUME_SOURCE','CPU_RESUME_WINDOW','CPU_RESUME_REVIEW','CPU_RESUME_RUN',
-              'CPU_RESUME_MANIFEST','CPU_QUEUE_LEGACY_COMPLETE','CPU_QUEUE_IMPORT','CROSS_COMMON_EVIDENCE','CPU_OPERATION_OBSERVATION'}
+              'CPU_RESUME_MANIFEST','CPU_RESUME_FAILURE','CPU_QUEUE_LEGACY_COMPLETE','CPU_QUEUE_IMPORT','CROSS_COMMON_EVIDENCE','CPU_OPERATION_OBSERVATION'}
 
 
 def rows(db, kind):
@@ -187,8 +187,11 @@ def export_state(source, destination, *, legacy=None):
             for row in results:
                 if row.get('restored_receipt_not_new_inference') and row['key']in prior_window_keys:continue
                 if row['key']in done:emit('CPU_RESUME_WINDOW',summarize_window(row,docs[row['document_id']]))
-                else:emit('CPU_RESUME_REVIEW',{'original_kind':'UNCOMPLETED_CPU_WINDOW','original_sha256':sha(row),
-                    'historical_fields':{'key':row['key'],'status':row['status']},'source_validation':'SOURCE_VERIFICATION_PENDING'})
+                else:emit('CPU_RESUME_FAILURE',{'key':row['key'],'document_id':row['document_id'],
+                    'original_sha256':sha(row),'status':'FAILED_ISOLATED',
+                    'actually_read_characters':row.get('actually_read_characters',0),
+                    'window':{**bounds(row['window']),'input_sha256':sha(row['window']['text'].encode())},
+                    'source_validation':'HELD_PREVIOUS_FAILURE_NO_AUTOMATIC_RETRY'})
             for r in imports:
                 receipt={k:r[k]for k in ('item_key','document_id','upstream_run_id','at','status','cache_document_sha256','storage_review_sha256')if k in r}
                 if r.get('url'):
@@ -230,7 +233,7 @@ def completed(ledger, doc):
 def planned_read(ledger,doc):
     if 'body'not in doc or sha(doc['body'].encode())!=doc.get('body_sha256'):return False
     source=latest_sources(ledger).get(key(doc))
-    done={r['key']for r in rows(ledger.db,'CPU_RESUME_WINDOW')}
+    done={r['key']for r in rows(ledger.db,'CPU_RESUME_WINDOW')+rows(ledger.db,'CPU_RESUME_FAILURE')}
     return bool(source and source['tasks'] and all(t['key']in done for t in source['tasks']))
 
 
@@ -243,6 +246,7 @@ def summary(ledger):
         'CPU_product_proposals_preserved':sum(s['label']=='product'for s in spans),
         'surfaces_withheld':sum(s['surface_withheld']for s in spans),
         'historical_reviews_preserved':len(rows(ledger.db,'CPU_RESUME_REVIEW')),
+        'failed_windows_quarantined':len({r['key']for r in rows(ledger.db,'CPU_RESUME_FAILURE')}),
         'pending_source_replay':len(windows),'partial_documents':sum(not s['complete']for s in sources.values()),
         'awaiting_source_windows':sum(t['key']not in windows for s in sources.values() if not s['complete']for t in s['tasks']),
         'unread_nonwhitespace_characters':sum(s['unread_nonwhitespace_characters']for s in sources.values()),
@@ -284,9 +288,10 @@ def hydrate(ledger, cache, policy):
     complete={v['body_key']for v in rows(ledger.db,'CPU_QUEUE_LEGACY_COMPLETE')}
     known=latest_sources(ledger)
     old={r['key']:r for r in rows(ledger.db,'CPU_RESUME_WINDOW')}
+    failures={r['key']:r for r in rows(ledger.db,'CPU_RESUME_FAILURE')}
     for bk,source in known.items():
         if bk in complete:continue
-        if source['tasks'] and all(t['key']in old for t in source['tasks']):
+        if source['tasks'] and all(t['key']in old or t['key']in failures for t in source['tasks']):
             result.append({'document_id':source['document_id'],'status':'HELD_UNREAD_CONTEXT_NOT_REPROCESSED'});continue
         candidates=[]
         for p in (cache/'documents').glob('*.json'):
@@ -308,12 +313,12 @@ def hydrate(ledger, cache, policy):
             # Validate EVERY prior receipt before materializing a runnable queue.
             # A corrupt proof must not turn committed windows into pending work.
             for task in source['tasks']:
-                r=old.get(task['key'])
+                r=old.get(task['key'])or failures.get(task['key'])
                 if not r:continue
                 w=task['window'];text=d['body'][w['start']:w['end']]
                 if sha(text.encode())!=r['window']['input_sha256']:
                     raise ValueError('RESUME_WINDOW_INPUT_CHANGED')
-                for s in r['CPU_spans']:
+                for s in r.get('CPU_spans',[]):
                     if sha(d['body'][s['start']:s['end']].encode())!=s['surface_sha256']:
                         raise ValueError('RESUME_SPAN_HASH_MISMATCH')
             q.enqueue(ledger,d,rawpath.read_bytes(),{'resume':'SOURCE_REHYDRATED_BY_EXACT_HASH'})
@@ -321,10 +326,15 @@ def hydrate(ledger, cache, policy):
             present={v['key']for v in q.events(ledger,'CPU_QUEUE_WINDOW_RESULT')}
             with ledger.db:
                 for task in item['tasks']:
-                    r=old.get(task['key'])
+                    r=old.get(task['key'])or failures.get(task['key'])
                     if not r or task['key']in present:continue
                     if sha(task['window']['text'].encode())!=r['window']['input_sha256']:
                         raise ValueError('RESUME_WINDOW_INPUT_CHANGED')
+                    if task['key']in failures:
+                        ledger.event('CPU_QUEUE_WINDOW_RESULT',{**task,'status':'FAILED_ISOLATED',
+                            'actually_read_characters':r['actually_read_characters'],
+                            'reason':'RESTORED_FAILURE_NOT_RETRIED','restored_receipt_not_new_inference':True})
+                        continue
                     spans=[]
                     for s in r['CPU_spans']:
                         text=d['body'][s['start']:s['end']]
