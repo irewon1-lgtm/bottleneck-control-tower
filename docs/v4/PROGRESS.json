@@ -5149,10 +5149,10 @@
     "storage_quality_Q2_resume": {
       "start_SHA": "49501ab07178fc39bbfe28f55a8a321d9b24c91c",
       "plan_id": "BCT-V4-Q-1.0",
-      "status": "RECOVER_SEALED_RESULT_AFTER_120S_PUBLISH_TIMEOUT",
+      "status": "ACTUAL_INCREMENTAL_RECOVERY_AND_PHYSICAL_FACT_STORE_VERIFIED",
       "previous_history_bytes": 62518675,
       "limit_bytes": 67108864,
-      "remaining_bytes": 4590189,
+      "remaining_bytes": 4566908,
       "data_collection_gate": "No additional source collection requiring storage until actual incremental remote restore succeeds",
       "scope": "Q1 quality + Q2 real product facts, no Q3 promotion/CPU/UI/schedule/secret changes",
       "HS_revision_batch": {
@@ -5234,7 +5234,152 @@
       "Q2_real_same_TARGET_pairs": 0,
       "Q2_previous_15_product_mismatches": 15,
       "HS_versions_visited": 74,
-      "HS_versions_pending": 0
+      "HS_versions_pending": 0,
+      "recovery_run": 38762910386,
+      "recovery": {
+        "failed_run": 38761360115,
+        "preserved_encrypted_input": true,
+        "original_parent": "083bdb106696c0538619c16594fb849a404f37c7",
+        "current_parent": "083bdb106696c0538619c16594fb849a404f37c7",
+        "previous_write_already_present": false,
+        "new_source_calls": 0,
+        "old_results_overwritten": false
+      },
+      "actual_private_receipt": {
+        "research_ref": "refs/heads/codex/bct-v4-quantitative-state",
+        "parent": "083bdb106696c0538619c16594fb849a404f37c7",
+        "commit": "3cdfbe85a86ed877ad14c5b6a621a511f2070794",
+        "archive_sha256": "b3f1c3c7882aaec7569faa3a95b102cee9bf043c64eb77610f3dff4e2d828ffa",
+        "operating_branches_written": false,
+        "artifact_uploads": 0,
+        "history_unique_object_bytes": 62541956,
+        "history_limit_bytes": 67108864,
+        "incremental": {
+          "changed_pages": 14,
+          "delta_bytes": 14756,
+          "sqlite_bytes": 180314112
+        },
+        "unchanged_full_base_preserved": true,
+        "projection": {
+          "available_bytes_after": 4566908,
+          "same_sized_additional_checkpoints_upper_bound": 241,
+          "scope": "Observed patch size only, not a guarantee for future collection volume"
+        },
+        "repository": "irewon1-lgtm/bct-v4-private-state",
+        "visibility": "private",
+        "private_writer_scope_reused": true,
+        "remote_restore_verified": true,
+        "CPU_state_written": false,
+        "seven_day_observation_started": false,
+        "remote_new_process_restore": {
+          "restored": true,
+          "tables": 8,
+          "sqlite_sha256": "eeffa2e6b8185520c93a64d6233dccb9a3cf7c3403ca6df5e0efb7b7776e403d",
+          "review": {
+            "format": "bct-q1-private-facts-1",
+            "observation_versions": 42601,
+            "sources": [
+              "census_trade",
+              "eia",
+              "g17",
+              "m3",
+              "ted",
+              "usaspending",
+              "usgs"
+            ],
+            "article_bodies": 0,
+            "native_source_files": 0,
+            "original_evidence_recovery": false,
+            "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+            "CPU_queue_restored": false,
+            "automatic_promotion": false
+          }
+        }
+      },
+      "Census_quality_review": {
+        "physical_records": 2583,
+        "unit_map_matches": 2583,
+        "geography_UNKNOWN": 2583,
+        "first_publication_UNKNOWN": 2583,
+        "no_completed_data_query_repeated": true
+      },
+      "numeric_observations_preserved": 38046,
+      "physical_observations_preserved": 21916,
+      "Q2_real_same_TARGET_pair_resolved": 0,
+      "Q2_source_blocks_resolved": 2,
+      "Q2_source_reviewed_orders": 2,
+      "Q2_confirmed_deadlines": 0,
+      "Q2_planned_deadlines": 1,
+      "independent_pairs": 0,
+      "ai_quality": "FAIL_PRESERVED",
+      "independent_AI": "BLOCKED_PRESERVED",
+      "historical_forecast": "BLOCKED_PRESERVED",
+      "new_S2": 0,
+      "new_S3": 0,
+      "new_AI_calls": 0,
+      "paid_API_cost": 0,
+      "source_validation_impact_tests": {
+        "passed": 66,
+        "seconds": 5.01
+      },
+      "UI_compatibility_tests": {
+        "passed": 22,
+        "seconds": 243.84,
+        "CPU_automation_runtime_limit_changed": false
+      },
+      "source_secrets_or_CPU_pin_changed": false,
+      "actual_remote_unchanged_state_check": {
+        "run": 38764194236,
+        "code_SHA": "5260d2355a733e625dc5d4118052a4dd72a0f59b",
+        "receipt": {
+          "research_ref": "refs/heads/codex/bct-v4-quantitative-state",
+          "parent": "3cdfbe85a86ed877ad14c5b6a621a511f2070794",
+          "commit": "3cdfbe85a86ed877ad14c5b6a621a511f2070794",
+          "archive_sha256": "b3f1c3c7882aaec7569faa3a95b102cee9bf043c64eb77610f3dff4e2d828ffa",
+          "operating_branches_written": false,
+          "artifact_uploads": 0,
+          "history_unique_object_bytes": 62541956,
+          "history_limit_bytes": 67108864,
+          "incremental": {
+            "changed_pages": 0,
+            "delta_bytes": 0,
+            "unchanged": true
+          },
+          "unchanged_full_base_preserved": true,
+          "repository": "irewon1-lgtm/bct-v4-private-state",
+          "visibility": "private",
+          "private_writer_scope_reused": true,
+          "remote_restore_verified": true,
+          "CPU_state_written": false,
+          "seven_day_observation_started": false,
+          "remote_new_process_restore": {
+            "restored": true,
+            "tables": 8,
+            "sqlite_sha256": "eeffa2e6b8185520c93a64d6233dccb9a3cf7c3403ca6df5e0efb7b7776e403d",
+            "review": {
+              "format": "bct-q1-private-facts-1",
+              "observation_versions": 42601,
+              "sources": [
+                "census_trade",
+                "eia",
+                "g17",
+                "m3",
+                "ted",
+                "usaspending",
+                "usgs"
+              ],
+              "article_bodies": 0,
+              "native_source_files": 0,
+              "original_evidence_recovery": false,
+              "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+              "CPU_queue_restored": false,
+              "automatic_promotion": false
+            }
+          }
+        },
+        "source_calls": 0,
+        "new_commit": false
+      }
     }
   }
 }
