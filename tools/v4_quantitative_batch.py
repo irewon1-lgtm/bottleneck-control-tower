@@ -126,7 +126,7 @@ def census(ledger,fetch):
    if start>end:continue
    code=item['code'];task='census-country-detail-v2-'+direction+'-'+year+'-'+code
    if q.cursor(ledger,task)['next']is None:continue
-   fields='E_COMMODITY,E_COMMODITY_LDESC,ALL_VAL_MO,QTY_1_MO,QTY_2_MO,UNIT_QY1,UNIT_QY2'if direction=='exports'else'I_COMMODITY,I_COMMODITY_LDESC,GEN_QY1_MO,CON_QY1_MO,GEN_VAL_MO,CON_VAL_MO,UNIT_QY1'
+   fields='E_COMMODITY_LDESC,ALL_VAL_MO,QTY_1_MO,QTY_2_MO,UNIT_QY1,UNIT_QY2'if direction=='exports'else'I_COMMODITY_LDESC,GEN_QY1_MO,CON_QY1_MO,GEN_VAL_MO,CON_VAL_MO,UNIT_QY1'
    # CTY_CODE is optional/default displayed in the official schema.
    # The old guessed world code 0000 produced 188 empty responses. Query
    # explicit country detail instead; preserve every returned geography.
@@ -139,6 +139,11 @@ def census(ledger,fetch):
       row.update(quality_state='HELD_CODE_UNIT_CHANGED',unknown_reason='API unit differs from same-year official primary unit; secondary quantities not treated as primary')
     for row in rows:q.verify_locator(row,raw)
     q.commit_page(ledger,task,meta,rows)
+   except (ValueError,KeyError)as e:
+    # A local parser/schema error must not discard other-source progress.
+    # Preserve safe diagnostics, stop this path; never relax duplicate checks.
+    with ledger.db:ledger.event('QUANTITATIVE_SOURCE_FAILURE',{'task':'source-'+sha(url),'page':1,'error':'LOCAL_PARSER_'+type(e).__name__+':'+str(e)[:100],'retry':False,'at':now()})
+    return
    except SourceFailure as e:
     if e.status in (202,204,401,403,429)or e.reason=='CENSUS_KEY_REJECTED_OR_UNACTIVATED'or e.reason.startswith('CENSUS_RESPONSE_'):return
 
