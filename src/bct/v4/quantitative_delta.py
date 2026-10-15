@@ -143,6 +143,17 @@ def publish(repo,source,parent,env):
         (temp/'old').mkdir()
         with gzip.open(prior/'checkpoint.sqlite3.gz','rb')as src,(temp/'old/v4.sqlite3').open('xb')as out:shutil.copyfileobj(src,out)
         restore(source,temp/'new')
+        prior_proof=json.loads((prior/'checkpoint.json').read_text())
+        target_proof=json.loads((source/'checkpoint.json').read_text())
+        if prior_proof['sqlite_sha256']==target_proof['sqlite_sha256']:
+            refs=git('for-each-ref','--format=%(objectname)','refs/remotes/origin').decode().splitlines()
+            objects=git('rev-list','--objects',parent,*refs).decode().splitlines()
+            sizes=git('cat-file','--batch-check=%(objectname) %(objecttype) %(objectsize)',input=('\n'.join(x.split()[0]for x in objects)+'\n').encode())
+            history=sum(int(x.split()[2])for x in sizes.decode().splitlines())
+            if history>STATE_HISTORY_LIMIT:raise ValueError('RESEARCH_STATE_CUMULATIVE_64MIB_LIMIT')
+            return {'research_ref':STATE_REF,'parent':parent,'commit':parent,'archive_sha256':target_proof['archive_sha256'],
+                    'operating_branches_written':False,'artifact_uploads':0,'history_unique_object_bytes':history,'history_limit_bytes':STATE_HISTORY_LIMIT,
+                    'incremental':{'changed_pages':0,'delta_bytes':0,'unchanged':True},'unchanged_full_base_preserved':True}
         # Reuse the existing audited checkpoint's exact target proof.
         proof=json.loads((source/'checkpoint.json').read_text());blob,stats=make_delta(temp/'old/v4.sqlite3',temp/'new/v4.sqlite3')
         if HEAD in git('ls-tree','--name-only',parent).decode().splitlines():head=json.loads(git('show',parent+':'+HEAD))

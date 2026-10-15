@@ -39,7 +39,7 @@
       "source_lineage_id": "SEC",
       "refresh": "monthly or stated release cycle; manual Q1 only",
       "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
-      "status": "PARTIAL_ACTUAL_LISTING_AND_ONE_BODY_NO_SELECTED_QUANTITY",
+      "status": "PARTIAL_LEGACY_ONLY_NEW_GLOBAL_INDEX_BLOCKED",
       "next_cursor": "first unprocessed manifest task",
       "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB",
       "settings_resume": {
@@ -50,6 +50,20 @@
         "numeric": 0,
         "physical": 0,
         "gap": "One fixed-range primary filing body has no selected exact inline production/order quantity; plain prose/attachments not yet extracted; issuer coverage limited to two existing configured CIKs"
+      },
+      "corporate_coverage": {
+        "legacy_configured_CIKs": [
+          "0001701605",
+          "0000320193"
+        ],
+        "legacy_bodies": 1,
+        "legacy_selected_numeric": 0,
+        "new_scope": "Daily filing indices over original2026-09-15..2026-10-14; then at most10distinct new issuer submissions, including main/ex99 tables. No industry whitelist.",
+        "actual_run": 38761360115,
+        "indices_completed": 0,
+        "new_corporate_submissions_read": 0,
+        "status": "BLOCKED_DAILY_INDEX_HEADER_VALIDATION_AND_HTTP403; no retry",
+        "all_company_body_coverage": false
       }
     },
     "m3": {
@@ -4419,6 +4433,18 @@
         "diagnostic_input": "Country predicate omitted; returned country/group IDs preserved, not summed or silently treated as original global aggregate",
         "original_geographic_scope_complete": false,
         "no_reclassification_as_customer_order": true
+      },
+      "quality_followup": {
+        "complete_data_queries_repeated": 0,
+        "country_ids": "UNKNOWN_NO_STORED_NATIVE_RESPONSE_TO_RECOVER",
+        "first_release_dates": "UNKNOWN_OFFICIAL_SCHEDULE_AND_RELEASE_ACCESS403",
+        "annual_units": "188 maps use kg; W kg not selected; no weight/content conversion",
+        "HTS_change_record_versions": 74,
+        "HTS_pending": 0,
+        "selected_import_headings_explicit_code_change_hits": 0,
+        "general_statistical_note_change_review": "2023Rev8 vsRev9 organic certification agreement changes, no selected quantity-unit definition changes",
+        "ScheduleB_export_midyear_revision_check": "UNKNOWN",
+        "current_scope_status": "PARTIAL"
       }
     },
     "eia": {
@@ -4506,7 +4532,16 @@
       "rights_scope": "Official public statistical/factual data for private research; no copyrighted article bodies; USGS third-party attribution retained; public redistribution not granted by this registry",
       "status": "PARTIAL_XML_QUANTITY_AND_LOT_RELATION_BLOCKED",
       "next_cursor": "first unprocessed manifest task",
-      "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB"
+      "state_storage": "existing V4 Ledger, isolated Q1 research namespace; not operational DB",
+      "alternate_format_followup": {
+        "HTML_notice": "669871-2026",
+        "HTTP": 202,
+        "body_bytes": 0,
+        "Retry_After": null,
+        "Location": null,
+        "XML_failures_retried": 0,
+        "status": "BLOCKED_EMPTY_XML_AND_HTML_CAUSE_UNKNOWN"
+      }
     }
   },
   "manifest_maintenance_notes": [

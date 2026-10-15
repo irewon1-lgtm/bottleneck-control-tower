@@ -98,6 +98,7 @@ def test_incremental_checkpoint_restores_exact_bytes_and_preserves_full_history(
         dest=tmp_path/('restored'+str(iteration));delta.receive(read,parent,dest)
         assert file_sha(dest/'checkpoint.sqlite3.gz')==file_sha(cp/'checkpoint.sqlite3.gz')
         private.restore(dest,tmp_path/('reload'+str(iteration)))
+    noop=delta.publish(writer,cp,parent,env);assert noop['commit']==parent and noop['incremental']['delta_bytes']==0
     with pytest.raises(ValueError,match='PARENT_CHANGED'):delta.publish(writer,cp,'0'*40,env)
     manifest=json.loads(read('show',parent+':'+delta.HEAD));assert len(manifest['patches'])==2
     with pytest.raises(ValueError,match='PATH'):delta.names({**manifest,'patches':[{'path':'../../outside','sha256':'x'}]})

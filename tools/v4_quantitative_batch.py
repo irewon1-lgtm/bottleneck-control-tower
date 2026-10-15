@@ -132,6 +132,10 @@ def census(ledger,fetch):
    # explicit country detail instead; preserve every returned geography.
    params={'get':fields+',CTY_CODE,CTY_NAME','time':'from '+start+' to '+end,('E_COMMODITY'if direction=='exports'else'I_COMMODITY'):code}
    url='https://api.census.gov/data/timeseries/intltrade/'+direction+'/hs?'+urlencode(params)
+   # Changing future requested geography fields must not replay old empty scopes.
+   legacy=dict(params,get=fields+',CTY_NAME')
+   legacy_url='https://api.census.gov/data/timeseries/intltrade/'+direction+'/hs?'+urlencode(legacy)
+   if ledger.db.execute("select 1 from events where kind='QUANTITATIVE_SOURCE_FAILURE'and json_extract(payload,'$.task')=?",('source-'+sha(legacy_url),)).fetchone():continue
    try:
     raw,meta=fetch.get(url,'census_trade');rows=parse_trade(raw,meta,direction,'VERIFIED_ANNUAL_CODE_UNIT')
     for row in rows:
@@ -268,7 +272,8 @@ def quality():
 def storage():
  initialize();ledger=Ledger(R/'ledger')
  with ledger.worker():
-  with ledger.db:ledger.event('QUANTITATIVE_VALIDATION',{'reason':'Actual incremental checkpoint compatibility check; no numerical facts added','originals_modified':False,'policy':{'scope':'Q1 private storage only','source_collection':False,'delete_history':False,'raise_retention_limit':False}})
+  if not ledger.db.execute("select 1 from events where kind='QUANTITATIVE_VALIDATION'and json_extract(payload,'$.reason')=?",('Actual incremental checkpoint compatibility check; no numerical facts added',)).fetchone():
+   with ledger.db:ledger.event('QUANTITATIVE_VALIDATION',{'reason':'Actual incremental checkpoint compatibility check; no numerical facts added','originals_modified':False,'policy':{'scope':'Q1 private storage only','source_collection':False,'delete_history':False,'raise_retention_limit':False}})
  ledger.close();finish()
 
 
