@@ -144,7 +144,8 @@ def test_historical_target_and_quantity_fields_survive_without_copying_context(t
         old.event('RECOVERY_EXISTING_REVIEWED_EVENT_PRESERVED',{'review_id':'synthetic-review','product':'Helios heat pumps','verdict':'PRESERVE',
             'original_review':{'role_in_original':'DEMAND_INCREASE','actuality_in_original':'ACTUAL',
                 'target_in_original':{'product':'Helios heat pumps','specification':None,'region':None,'customer_group':None,'supply_pool':None},
-                'fields_in_original':{'quantity':{'surface':'UNKNOWN','status':'UNKNOWN'},'unit':None},
+                'fields_in_original':{'quantity':{'surface':'UNKNOWN','status':'UNKNOWN'},'unit':None,
+                    'specification':{'surface':'long structured specification ' * 15}},
                 'references':[{'document_id':d['document_id'],'body_sha256':d['body_sha256'],'start':0,'end':5,'quote':d['body'][:5]}]}})
     old.close()
     r.export_state(tmp_path/'original/v4.sqlite3',tmp_path/'separated',legacy=tmp_path/'legacy/v4.sqlite3')
@@ -153,6 +154,7 @@ def test_historical_target_and_quantity_fields_survive_without_copying_context(t
     assert set(history['historical_target'])=={'product','specification','region','customer_group','supply_pool'}
     assert history['historical_target']['product']=='Helios heat pumps'
     assert history['historical_fields']['quantity']=={'surface':'UNKNOWN','status':'UNKNOWN'}
+    assert set(history['historical_fields']['specification']['surface'])=={'withheld_value_sha256'}
     assert history['original_judgment']['role_in_original']=='DEMAND_INCREASE'
     assert 'quote'not in history['references'][0] and history['references'][0]['quote_sha256']==sha(d['body'][:5].encode())
     assert not l.db.execute('SELECT *FROM firsts').fetchall();l.close()

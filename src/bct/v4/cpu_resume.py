@@ -338,7 +338,10 @@ def audit(ledger):
         if isinstance(value,dict):
             if forbidden.intersection(value):raise ValueError('VERBATIM_SOURCE_FIELD_PRESENT')
             for k,v in value.items():
-                if k in ('surface','product') and v is not None and short(v)is None:
+                withheld=(isinstance(v,dict) and set(v)=={'withheld_value_sha256'}
+                    and isinstance(v['withheld_value_sha256'],str)
+                    and re.fullmatch('[0-9a-f]{64}',v['withheld_value_sha256']))
+                if k in ('surface','product') and v is not None and not withheld and short(v)is None:
                     raise ValueError('UNREVIEWED_ENTITY_SURFACE')
                 walk(v)
         elif isinstance(value,list):
