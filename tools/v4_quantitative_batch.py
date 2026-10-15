@@ -183,6 +183,13 @@ def finish():
  print('BCT_Q1_SOURCES_REPORT_JSON='+json.dumps(report))
 
 
+def storage():
+ initialize();ledger=Ledger(R/'ledger')
+ with ledger.worker():
+  with ledger.db:ledger.event('QUANTITATIVE_VALIDATION',{'reason':'Actual incremental checkpoint compatibility check; no numerical facts added','originals_modified':False,'policy':{'scope':'Q1 private storage only','source_collection':False,'delete_history':False,'raise_retention_limit':False}})
+ ledger.close();finish()
+
+
 def targets():
  initialize();ledger=Ledger(R/'ledger')
  from bct.v4.quantitative_targets import save
@@ -207,6 +214,6 @@ def publish():
  print('BCT_Q1_SOURCES_PUBLISH_JSON='+json.dumps({'report':result['report'],'receipt':receipt,'code_SHA':os.environ['GITHUB_SHA']}))
 
 if __name__=='__main__':
- parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade']);a=parser.parse_args()
+ parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage']);a=parser.parse_args()
  if a.action in {'process','trade'}:raise SystemExit(process(only_trade=a.action=='trade'))
  else:globals()[a.action]()

@@ -135,12 +135,14 @@ def publish(repo,source,expected_parent,token,scope):
         return p.stdout
     if not(repo/'.git').exists():git('init');git('remote','add','origin',private.PRIVATE_URL)
     if git('config','--get','remote.origin.url').decode().strip()!=private.PRIVATE_URL:raise ValueError('Q1_PRIVATE_REMOTE_IDENTITY')
-    result=op._publish_checkpoint(repo,source,private._parent(expected_parent),git_env=env,namespace='q1')
+    from .quantitative_delta import publish as page_publish
+    result=page_publish(repo,source,private._parent(expected_parent),env)
     git('fetch','--no-tags','origin',STATE_REF)
     if git('rev-parse','FETCH_HEAD').decode().strip()!=result['commit']:raise ValueError('Q1_REMOTE_COMMIT_CHANGED')
     with tempfile.TemporaryDirectory(prefix='bct-q1-remote-')as tmp:
         cp=Path(tmp)/'checkpoint';cp.mkdir()
-        for name in ('checkpoint.json','checkpoint.sqlite3.gz'):(cp/name).write_bytes(git('show',result['commit']+':'+name))
+        from .quantitative_delta import receive
+        cp.rmdir();receive(git,result['commit'],cp)
         # A NEW Python process, not the in-memory writer connection.
         cmd=['python','-c','from bct.v4.quantitative_private import restore;import json,sys;print(json.dumps(restore(sys.argv[1],sys.argv[2])))',str(cp),str(Path(tmp)/'restored')]
         child=subprocess.run(cmd,capture_output=True,text=True,timeout=120)
@@ -164,8 +166,9 @@ def remote_checkpoint(repo,destination,token):
         if p.returncode:raise ValueError('Q1_PRIVATE_READ_FAILED')
         return p.stdout
     git('init');git('remote','add','origin',private.PRIVATE_URL);git('fetch','--no-tags','origin',STATE_REF)
-    parent=git('rev-parse','FETCH_HEAD').decode().strip();destination=Path(destination);destination.mkdir(parents=True,exist_ok=False)
-    for name in ('checkpoint.json','checkpoint.sqlite3.gz'):(destination/name).write_bytes(git('show',parent+':'+name))
+    parent=git('rev-parse','FETCH_HEAD').decode().strip();destination=Path(destination)
+    from .quantitative_delta import receive
+    receive(git,parent,destination)
     with tempfile.TemporaryDirectory(prefix='q1-input-verify-')as tmp:verified=restore(destination,Path(tmp)/'verified')
     return {'parent':parent,'verified':verified}
 

@@ -76,3 +76,32 @@ def test_unreviewed_record_text_cannot_hide_inside_a_numeric_event(tmp_path):
     with l.db:l.event(q.OBS,item)
     with pytest.raises(ValueError,match='UNREVIEWED_RECORD'):private.audit(l.db)
     l.close()
+
+
+def test_incremental_checkpoint_restores_exact_bytes_and_preserves_full_history(tmp_path):
+    from bct.v4 import quantitative_delta as delta
+    l,m,row=facts(tmp_path);base=tmp_path/'base';private.checkpoint(l,base)
+    bare=tmp_path/'remote.git';writer=tmp_path/'writer';git('init','--bare',str(bare));git('clone',str(bare),str(writer))
+    import shutil
+    for name in ['checkpoint.json','checkpoint.sqlite3.gz']:shutil.copyfile(base/name,writer/name)
+    git('add','.',cwd=writer);git('-c','user.name=test','-c','user.email=test@example.org','commit','-m','existing base',cwd=writer)
+    parent=git('rev-parse','HEAD',cwd=writer);git('push','origin','HEAD:'+private.STATE_REF,cwd=writer)
+    base_archive=git('rev-parse',parent+':checkpoint.sqlite3.gz',cwd=writer)
+    env=os.environ.copy()
+    for iteration in range(2):
+        with l.db:l.event('QUANTITATIVE_VALIDATION',{'reason':'synthetic append '+str(iteration),'originals_modified':False})
+        cp=tmp_path/('next'+str(iteration));private.checkpoint(l,cp)
+        receipt=delta.publish(writer,cp,parent,env);parent=receipt['commit']
+        assert receipt['incremental']['delta_bytes']<cp.joinpath('checkpoint.sqlite3.gz').stat().st_size
+        assert git('rev-parse',parent+':checkpoint.sqlite3.gz',cwd=writer)==base_archive
+        def read(*args):return subprocess.check_output(['git','-C',str(writer),*args])
+        dest=tmp_path/('restored'+str(iteration));delta.receive(read,parent,dest)
+        assert file_sha(dest/'checkpoint.sqlite3.gz')==file_sha(cp/'checkpoint.sqlite3.gz')
+        private.restore(dest,tmp_path/('reload'+str(iteration)))
+    with pytest.raises(ValueError,match='PARENT_CHANGED'):delta.publish(writer,cp,'0'*40,env)
+    manifest=json.loads(read('show',parent+':'+delta.HEAD));assert len(manifest['patches'])==2
+    with pytest.raises(ValueError,match='PATH'):delta.names({**manifest,'patches':[{'path':'../../outside','sha256':'x'}]})
+    before=tmp_path/'one';after=tmp_path/'two';before.write_bytes(b'a'*4096);after.write_bytes(b'b'*4096)
+    patch,_=delta.make_delta(before,after);before.write_bytes(b'c'*4096)
+    with pytest.raises(ValueError,match='BASE_HASH'):delta.apply_delta(before,patch)
+    l.close()
