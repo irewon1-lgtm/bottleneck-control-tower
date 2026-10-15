@@ -312,16 +312,21 @@ def publish_checkpoint(repo,source,expected_parent,*,publication_policy=None):
     return _publish_checkpoint(repo,source,expected_parent)
 
 
-def _publish_checkpoint(repo,source,expected_parent,*,git_env=None,persistence_receipt=None):
+def _publish_checkpoint(repo,source,expected_parent,*,git_env=None,persistence_receipt=None,namespace="cpu"):
     """Shared bounded CAS transport; callers must enforce storage/credential policy."""
     import tempfile
+    if namespace not in {"cpu","q1"}:raise ValueError("RESEARCH_STATE_NAMESPACE")
+    state_ref=STATE_REF if namespace=="cpu" else "refs/heads/codex/bct-v4-quantitative-state"
+    restore_checkpoint=restore
+    if namespace=="q1":
+        from .quantitative_private import restore as restore_checkpoint
     repo,source=Path(repo),Path(source)
     proof=json.loads((source/'checkpoint.json').read_text());archive=source/'checkpoint.sqlite3.gz'
     if proof['archive']!=archive.name or file_sha(archive)!=proof['archive_sha256'] or archive.stat().st_size>16*1024**2:
         raise ValueError('RESEARCH_CHECKPOINT_HASH_OR_SIZE')
     with tempfile.TemporaryDirectory(prefix='bct-cpu-state-verify-')as temporary:
         verified=Path(temporary)/'verified'
-        restore(source,verified)
+        restore_checkpoint(source,verified)
         with sqlite3.connect((verified/'v4.sqlite3').resolve().as_uri()+'?mode=ro',uri=True)as db:
             if db.execute('SELECT count(*) FROM firsts').fetchone()[0]:
                 raise ValueError('RESEARCH_CHECKPOINT_MUST_NOT_REGISTER_LIVE_OR_CANDIDATE_FIRSTS')
@@ -330,12 +335,12 @@ def _publish_checkpoint(repo,source,expected_parent,*,git_env=None,persistence_r
                          env={**os.environ,**(env or {}),**(git_env or {})},timeout=25)
         if p.returncode: raise ValueError('RESEARCH_STATE_GIT_OPERATION_FAILED')
         return p.stdout.strip()
-    current=git('ls-remote','origin',STATE_REF)
+    current=git('ls-remote','origin',state_ref)
     current=current.split()[0]if current else ''
     if current!=expected_parent: raise ValueError('RESEARCH_STATE_PARENT_CHANGED_NO_OVERWRITE')
     # The same fixed ref is used at both CAS check and push. No caller can
     # redirect this writer to an operational branch.
-    if current:git('fetch','--no-tags','origin',STATE_REF)
+    if current:git('fetch','--no-tags','origin',state_ref)
     if current:
         shallow=Path(git('rev-parse','--git-path','shallow'))
         if not shallow.is_absolute():shallow=repo/shallow
@@ -360,13 +365,18 @@ def _publish_checkpoint(repo,source,expected_parent,*,git_env=None,persistence_r
         # including old compressed DB blobs. Do not rely on pack/delta ratios or
         # truncate/delete prior snapshots to fit. Local candidate objects are
         # harmless if this check refuses the remote write.
-        objects=git('rev-list','--objects',commit)
+        extra=[]
+        if namespace=='q1':
+            git('fetch','--no-tags','origin','+refs/heads/*:refs/remotes/origin/*')
+            if git('rev-parse','--is-shallow-repository')!='false':raise ValueError('RESEARCH_STATE_HISTORY_INCOMPLETE')
+            extra=git('for-each-ref','--format=%(objectname)','refs/remotes/origin').splitlines()
+        objects=git('rev-list','--objects',commit,*extra)
         sizes=git('cat-file','--batch-check=%(objectname) %(objecttype) %(objectsize)',
                   input='\n'.join(line.split()[0]for line in objects.splitlines())+'\n')
         history_bytes=sum(int(line.split()[2])for line in sizes.splitlines())
         if history_bytes>STATE_HISTORY_LIMIT:
             raise ValueError('RESEARCH_STATE_CUMULATIVE_64MIB_LIMIT')
-        git('push','origin',commit+':'+STATE_REF)
-    return {'research_ref':STATE_REF,'parent':current,'commit':commit,'archive_sha256':proof['archive_sha256'],
+        git('push','origin',commit+':'+state_ref)
+    return {'research_ref':state_ref,'parent':current,'commit':commit,'archive_sha256':proof['archive_sha256'],
             'operating_branches_written':False,'artifact_uploads':0,
             'history_unique_object_bytes':history_bytes,'history_limit_bytes':STATE_HISTORY_LIMIT}

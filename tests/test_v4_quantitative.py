@@ -189,3 +189,16 @@ def test_exact_source_restore_then_noop_preserves_original_acquisition(tmp_path,
     assert tool.prepare('m3')['results'][0]['status']=='EXACT_VERSION_RESTORED'
     assert json.loads((tool.ROOT/'m3-orders.json').read_text())['acquired_at']=='2026-10-01'
     assert tool.prepare('m3')['requests']==0 and len(calls)==1
+
+
+def test_cached_checkpoint_budget_counts_real_gzip_members_and_mutation():
+    import gzip
+    raw=b'abc'*50000+bytes(range(256))*900
+    budget=q.CheckpointBudget()
+    def packed(value):
+        return b''.join(gzip.compress(value[i:i+65536],compresslevel=1,mtime=0)for i in range(0,len(value),65536))
+    assert budget.size(raw)==len(packed(raw))
+    assert budget.size(raw)==len(packed(raw))
+    changed=raw[:1234]+b'changed'+raw[1241:]
+    assert budget.size(changed)==len(packed(changed))
+    assert gzip.decompress(packed(changed))==changed

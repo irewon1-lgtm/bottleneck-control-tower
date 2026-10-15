@@ -26,7 +26,10 @@ def request_cache(url,source,body=None,*,budget):
   if source=='usaspending'and url.endswith('/search/spending_by_award/'):b=USAspendingTransport(timeout_seconds=25).post(body)
   elif body is not None:
    with urllib.request.urlopen(urllib.request.Request(url,data=json.dumps(body).encode(),headers={'Content-Type':'application/json','User-Agent':'BCT-Q1-research/1.0'},method='POST'),timeout=25)as r:b=r.read(20000001)
-  else:b=SourceClient().fetch(url)[0]
+  else:
+   b,final,status,content_type=SourceClient().fetch(url)
+   if status!=200:raise ValueError('SOURCE_HTTP_'+str(status))
+  if not b:raise ValueError('SOURCE_EMPTY_BODY')
   if len(b)>20000000:raise ValueError('MAX_SOURCE_BYTES')
   # These requests contain no API keys/Secret echoes; never persist token-bearing URLs.
   if any(x in url.lower()for x in ['api_key=','token=','secret=','session=']):raise ValueError('SECRET_URL')
@@ -46,13 +49,21 @@ def usa(budget):
     body['fields']+=['Start Date','End Date','Contract Award Type','NAICS','PSC']
     raw,meta=request_cache('https://api.usaspending.gov/api/v2/search/spending_by_award/','usaspending',body,budget=budget)
     rows,p=parse_awards(raw,meta);has=p['page_metadata']['hasNext'];done.append(commit_page(ledger,task,meta,rows,page=c['next'],has_next=has));c=cursor(ledger,task)
-  awards=sorted({r['record']['entity_or_facility_id']for r in records(ledger)if r['record']['source_id']=='usaspending'and r['record']['metric']=='award_amount'})
+  awards=[r[0]for r in ledger.db.execute("SELECT DISTINCT json_extract(payload,'$.record.entity_or_facility_id') FROM events WHERE kind='QUANTITATIVE_OBSERVATION' AND json_extract(payload,'$.record.source_id')='usaspending' AND json_extract(payload,'$.record.metric')='award_amount' ORDER BY 1")]
   for award in awards:
    task='usa-transactions-'+award;c=cursor(ledger,task)
    while c['next']and c['next']<=10:
     body={'award_id':award,'limit':100,'page':c['next'],'sort':'action_date','order':'asc'}
-    raw,meta=request_cache('https://api.usaspending.gov/api/v2/transactions/','usaspending',body,budget=budget)
-    rows,p=parse_transactions(raw,meta,award);done.append(commit_page(ledger,task,meta,rows,page=c['next'],has_next=p['page_metadata']['hasNext']));c=cursor(ledger,task)
+    try:
+     raw,meta=request_cache('https://api.usaspending.gov/api/v2/transactions/','usaspending',body,budget=budget)
+     rows,p=parse_transactions(raw,meta,award);done.append(commit_page(ledger,task,meta,rows,page=c['next'],has_next=p['page_metadata']['hasNext']));c=cursor(ledger,task)
+    except (TimeoutError,urllib.error.HTTPError):
+     raise  # Budget/rate/auth failures stop this source without another call.
+    except ValueError as exc:
+     if 'CHECKPOINT_'in str(exc) or 'PREVIOUS_FAILURE_QUARANTINED_429'in str(exc):raise
+     # A bad cached response or one award's schema must not starve all others.
+     with ledger.db:ledger.event('QUANTITATIVE_SOURCE_FAILURE',{'task':task,'page':c['next'],'error':str(exc)[:180],'retry':False,'at':now()})
+     break
  ledger.close();return done
 
 

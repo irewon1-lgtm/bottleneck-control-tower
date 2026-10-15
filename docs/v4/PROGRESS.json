@@ -4270,7 +4270,7 @@
       "docs/v4/quantitative/quality-evidence.json",
       "docs/v4/quantitative/Q1_RESULTS.md"
     ],
-    "next_action": "Q1 only: restore Codex GitHub connection without changing research Secrets/model/CPU CODE_SHA, fetch latest and merge-preserve existing documentation commit, then push this saved Q1 change and check exact SHA CI. Resume source-specific pending cursors in fixed scope; do not rerun committed pages or mark Q1 complete. Q2/automation not started. Before private Q1 publication, prepare/review a Q1 namespace and format adapter reusing generic Ledger/checkpoint/CAS; do not run CPU seed or change CPU CODE_SHA.",
+    "next_action": "Finish remaining transaction cursors; execute manual development-only encrypted Q1 handoff through existing private-only Actions writer, then final source quality/restore and exact-SHA CI. No CPU CODE_SHA/Secret/schedule changes.",
     "blocked_dependencies": [
       "SEC approved contact missing",
       "Census key and verified HS/unit mapping missing",
@@ -4372,6 +4372,39 @@
       "CI": "NOT_RUN_NO_REMOTE_Q1_COMMIT",
       "CPU_CODE_SHA_variable": "UNCHANGED; never set to documentation/Q1 commit"
     },
-    "last_evidence_at": "2026-10-15T12:52:51.277594+00:00"
+    "last_evidence_at": "2026-10-15T12:52:51.277594+00:00",
+    "auth_resume": {
+      "native_git_read_push": "PASS_EXISTING_PLATFORM_AUTH_WITHOUT_CONFIG_CHANGE",
+      "preserved_local_sha": "31e6d5ad8ab95321d2a5147b3274ab8d170d9b15",
+      "merged_remote_sha": "3c6174d4db53f65c6084ca8f544d0d638b404caf",
+      "verified_pushed_sha": "15019f0581524bea63df6a44f7d2c4b575a43bcf",
+      "exact_SHA_CI": {
+        "Stage 0 tests": {
+          "run": 38739965603,
+          "conclusion": "success"
+        },
+        "V4 dashboard release gate": {
+          "run": 38739965612,
+          "conclusion": "success"
+        }
+      },
+      "old_401_root_cause": "UNKNOWN; current native read/push succeed; no credential replacement or private token fallback",
+      "secret_variable_inventory_API": "403 Resource not accessible by integration; names/values not read; no retry"
+    },
+    "resume_in_progress": {
+      "at": "2026-10-15T13:21:53.272235+00:00",
+      "scope": "Q1 only",
+      "transactions": "Continuing unprocessed award histories with fixed32-call/95s batches, completed cursors reused",
+      "storage": "Q1 facts-only typed checkpoint and isolated private ref implemented; actual remote proof NOT_RUN",
+      "changed_scope_tests": {
+        "passed": 64,
+        "seconds": 9.45
+      },
+      "new_strict_audit_tests": {
+        "passed": 6,
+        "seconds": 0.72
+      },
+      "no_source_or_AI_reinstallation": true
+    }
   }
 }

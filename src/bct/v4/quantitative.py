@@ -79,6 +79,25 @@ def obs_key(r):
     return sha([r[k] for k in ('source_id','entity_or_facility_id','product_or_classification','geography','metric','period_start','period_end','adjustment','stock_or_flow')])
 
 
+class CheckpointBudget:
+    """Exact size of a valid concatenated-gzip checkpoint, cached by64KiB block.
+
+    Standard gzip supports multiple members. Changed SQLite pages only cause
+    their members to be recompressed; every block hash is still checked each
+    transaction. No raise of the existing16MiB bound and no skipped size check.
+    """
+    def __init__(self):self.blocks={}
+    def size(self, raw):
+        total=0;current={}
+        for at in range(0,len(raw),65536):
+            block=raw[at:at+65536];digest=sha(block)
+            length=self.blocks.get(digest)
+            if length is None:length=len(gzip.compress(block,compresslevel=1,mtime=0))
+            total+=length;current[digest]=length
+        self.blocks=current
+        return total
+
+
 def commit_page(ledger, task, meta, rows, *, page=1, has_next=False, total=None):
     """Atomic page + output checkpoint; exact repeat is a no-op, versions append."""
     if page<1 or type(has_next)is not bool:raise ValueError('INVALID_PAGE_METADATA')
@@ -88,6 +107,7 @@ def commit_page(ledger, task, meta, rows, *, page=1, has_next=False, total=None)
     # every historical source record for every small resumed page.
     with ledger.db:
         ledger.db.execute("CREATE INDEX IF NOT EXISTS q1_page_id ON events(json_extract(payload,'$.id')) WHERE kind='QUANTITATIVE_PAGE_COMMITTED'")
+        ledger.db.execute("CREATE INDEX IF NOT EXISTS q1_task_page ON events(json_extract(payload,'$.task'),json_extract(payload,'$.page')) WHERE kind='QUANTITATIVE_PAGE_COMMITTED'")
         ledger.db.execute("CREATE INDEX IF NOT EXISTS q1_observation_key ON events(json_extract(payload,'$.key')) WHERE kind='QUANTITATIVE_OBSERVATION'")
     if ledger.db.execute("select 1 from events where kind='QUANTITATIVE_PAGE_COMMITTED' and json_extract(payload,'$.id')=?",(pid,)).fetchone():
         return {'status':'UNCHANGED','added':0,'page':page}
@@ -115,14 +135,16 @@ def commit_page(ledger, task, meta, rows, *, page=1, has_next=False, total=None)
         ledger.event(PAGE,{'id':pid,'task':task,'page':page,'has_next':has_next,'total':total,'raw_hash':meta['sha256'],'parser':PARSER,'rows':len(rows),'added':added,'committed_at':now()})
         # Existing16MiB bound applies to the gzip checkpoint, not SQLite bytes.
         # Test inside the transaction so an oversized page rolls back entirely.
-        if len(gzip.compress(ledger.db.serialize(),compresslevel=1,mtime=0))>LIMIT:
+        budget=getattr(ledger,'_q1_checkpoint_budget',None)
+        if budget is None:budget=ledger._q1_checkpoint_budget=CheckpointBudget()
+        if budget.size(ledger.db.serialize())>LIMIT:
             raise ValueError('CHECKPOINT_16MIB_COMPRESSED_LIMIT')
     return {'status':'COMMITTED','added':added,'page':page,'changes':{c:changes.count(c)for c in set(changes)}}
 
 
 def cursor(ledger, task):
     pages={}
-    for p, in ledger.db.execute('select payload from events where kind=? order by seq',(PAGE,)):
+    for p, in ledger.db.execute("select payload from events where kind='QUANTITATIVE_PAGE_COMMITTED' and json_extract(payload,'$.task')=? order by seq",(task,)):
         r=json.loads(p)
         if r['task']==task:pages[r['page']]=r
     n=1

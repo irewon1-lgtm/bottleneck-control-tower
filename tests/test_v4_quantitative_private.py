@@ -1,0 +1,78 @@
+"""Synthetic transport/CAS tests, not numerical source accuracy or CPU operation."""
+import gzip,json,os,subprocess
+from pathlib import Path
+import pytest
+from bct.v4 import quantitative as q,quantitative_private as private,cpu_operations as op
+from bct.v4.store import Ledger,sha,file_sha
+
+
+def facts(tmp):
+    l=Ledger(tmp/'ledger');raw=tmp/'data.json';raw.write_text('{"value":12}')
+    m={'url':'https://api.usaspending.gov/api/v2/transactions/','source_id':'usaspending',
+       'path':str(raw),'sha256':file_sha(raw),'acquired_at':'2026-10-15','published_at':'UNKNOWN'}
+    row=q.observation(m,'synthetic-contract','synthetic-class','transaction_obligation','12','USD','MONEY','2026-09-01',{'format':'JSON','path':['value']})
+    q.commit_page(l,'synthetic-page',m,[row]);return l,m,row
+
+
+def git(*args,cwd=None):
+    return subprocess.check_output(['git',*args],cwd=cwd,stderr=subprocess.DEVNULL,text=True).strip()
+
+
+def test_q1_format_is_not_cpu_queue_and_new_process_restores_dedup(tmp_path):
+    l,m,row=facts(tmp_path);proof=private.checkpoint(l,tmp_path/'checkpoint');l.close()
+    with pytest.raises(ValueError,match='TABLES_OR_INTEGRITY'):op.restore(tmp_path/'checkpoint',tmp_path/'not-cpu')
+    env={**os.environ,'PYTHONPATH':str(Path(__file__).resolve().parents[1]/'src')}
+    command=['python','-c','import sys;from bct.v4.quantitative_private import restore;restore(sys.argv[1],sys.argv[2])',str(tmp_path/'checkpoint'),str(tmp_path/'new-process')]
+    subprocess.run(command,env=env,check=True,capture_output=True,timeout=25)
+    assert file_sha(tmp_path/'new-process/v4.sqlite3')==proof['sqlite_sha256']
+    l=Ledger(tmp_path/'new-process');before=file_sha(l.path)
+    assert q.commit_page(l,'synthetic-page',m,[row])['status']=='UNCHANGED'
+    assert file_sha(l.path)==before;l.close()
+
+
+def test_unknown_raw_or_contact_and_live_data_cannot_publish(tmp_path):
+    l,m,row=facts(tmp_path)
+    with l.db:l.event('UNREVIEWED_BODY',{'text':'synthetic article'})
+    with pytest.raises(ValueError,match='UNKNOWN_EVENT'):private.checkpoint(l,tmp_path/'blocked')
+    l.close()
+
+
+def test_q1_bounded_CAS_ref_isolation_failed_write_and_recovery(tmp_path,monkeypatch):
+    l,m,row=facts(tmp_path);private.checkpoint(l,tmp_path/'checkpoint');l.close()
+    bare=tmp_path/'remote.git';repo=tmp_path/'writer';git('init','--bare',str(bare));git('init',str(repo))
+    git('config','user.name','synthetic test',cwd=repo);git('config','user.email','test@example.org',cwd=repo)
+    git('remote','add','origin',str(bare),cwd=repo)
+    (repo/'preserved').write_text('synthetic existing CPU state');git('add','preserved',cwd=repo);git('commit','-m','existing',cwd=repo)
+    old=git('rev-parse','HEAD',cwd=repo)
+    for ref in ['main','data','codex/bct-v4-cpu-research-state']:git('push','origin','HEAD:refs/heads/'+ref,cwd=repo)
+    result=op._publish_checkpoint(repo,tmp_path/'checkpoint','',namespace='q1')
+    assert result['research_ref']==private.STATE_REF
+    for ref in ['main','data','codex/bct-v4-cpu-research-state']:
+        assert git('rev-parse','refs/heads/'+ref,cwd=bare)==old
+    with pytest.raises(ValueError,match='PARENT_CHANGED'):op._publish_checkpoint(repo,tmp_path/'checkpoint','',namespace='q1')
+    # Existing history cap applies across CPU and Q1 branches, not per new ref.
+    monkeypatch.setattr(op,'STATE_HISTORY_LIMIT',1)
+    with pytest.raises(ValueError,match='64MIB'):op._publish_checkpoint(repo,tmp_path/'checkpoint',result['commit'],namespace='q1')
+    assert git('rev-parse',private.STATE_REF,cwd=bare)==result['commit']
+    monkeypatch.setattr(op,'STATE_HISTORY_LIMIT',64*1024**2)
+    again=op._publish_checkpoint(repo,tmp_path/'checkpoint',result['commit'],namespace='q1')
+    assert again['parent']==result['commit']
+    with pytest.raises(ValueError,match='NAMESPACE'):op._publish_checkpoint(repo,tmp_path/'checkpoint','',namespace='main')
+
+
+def test_q1_corrupt_restore_cannot_overwrite_existing_or_leave_success(tmp_path):
+    l,_,_=facts(tmp_path);private.checkpoint(l,tmp_path/'checkpoint');l.close()
+    private.restore(tmp_path/'checkpoint',tmp_path/'restored');before=file_sha(tmp_path/'restored/v4.sqlite3')
+    with pytest.raises(ValueError,match='OVERWRITE'):private.restore(tmp_path/'checkpoint',tmp_path/'restored')
+    assert file_sha(tmp_path/'restored/v4.sqlite3')==before
+    archive=tmp_path/'checkpoint/checkpoint.sqlite3.gz';archive.write_bytes(archive.read_bytes()+b'corrupt')
+    with pytest.raises(ValueError,match='HASH_OR_SIZE'):private.restore(tmp_path/'checkpoint',tmp_path/'bad')
+    assert not(tmp_path/'bad/v4.sqlite3').exists()
+
+
+def test_unreviewed_record_text_cannot_hide_inside_a_numeric_event(tmp_path):
+    l,m,row=facts(tmp_path)
+    item=q.records(l)[0];item['record']['source_text']='synthetic article body'
+    with l.db:l.event(q.OBS,item)
+    with pytest.raises(ValueError,match='UNREVIEWED_RECORD'):private.audit(l.db)
+    l.close()

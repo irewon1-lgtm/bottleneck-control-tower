@@ -11,8 +11,17 @@ on:
     inputs:
       purpose:
         type: choice
-        options: [seed, recovery-check, bridge-recover]
+        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish]
         default: seed
+      q1_key_run:
+        type: string
+        default: ''
+      q1_blob_sha:
+        type: string
+        default: ''
+      q1_packet_sha:
+        type: string
+        default: ''
 permissions:
   contents: read
   actions: read
@@ -245,3 +254,45 @@ jobs:
 # model setup, RSS refetch, external AI, automatic S2/S3, LIVE or UI deployment.
 # Source-separated schema enforced before encryption/publication. No original3 copied.
 # Seven-day start exists only after publisher remote restore and receipt ACK.
+
+  q1-key:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'q1-transfer-key' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Prepare one-use public encryption recipient; reuse existing passphrase
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+        run: timeout 120 python tools/v4_quantitative_private.py prepare
+      - uses: actions/cache/save@v4
+        with:
+          key: v4-q1-wrapped-transport-key-${{ github.run_id }}
+          path: var/v4/quantitative/q1-transfer
+  q1-publish:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'q1-publish' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/cache/restore@v4
+        with:
+          key: v4-q1-wrapped-transport-key-${{ inputs.q1_key_run }}
+          fail-on-cache-miss: true
+          path: var/v4/quantitative/q1-transfer
+      - name: Publish audited facts only using existing private-only writer
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+          BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+          Q1_KEY_RUN: ${{ inputs.q1_key_run }}
+          Q1_BLOB_SHA: ${{ inputs.q1_blob_sha }}
+          Q1_PACKET_SHA: ${{ inputs.q1_packet_sha }}
+        run: timeout 120 python tools/v4_quantitative_private.py publish
