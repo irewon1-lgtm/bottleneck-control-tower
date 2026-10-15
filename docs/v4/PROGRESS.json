@@ -4331,7 +4331,7 @@
     ],
     "next_action": "Q1 remaining source gaps only: approved SEC identity, Census key/historical HTS mapping, M3/G17 old vintages/code scope, EIA July publication/API, USGS source/month coverage, TED XML body availability. Existing1260 award histories complete; do not refetch/reprocess. Q1 remains PARTIAL/BLOCKED; Q2 NOT_STARTED. Private Q1 state restored successfully; do not redo token/passphrase/CPU setup.",
     "blocked_dependencies": [
-      "Q1 actual private publish/remote restore pending; prepared capsule is not yet remote proof"
+      "Source-specific historical vintage/date/scope gaps retained; see source_status. Private Q1 store/restore already PASS, not a remaining blocker."
     ],
     "cpu_code_sha_variable_unchanged": true,
     "last_batch_observations": {
@@ -4574,6 +4574,13 @@
       "total_distinct_checked_records": 78,
       "scope": "Fixed samples only, not entire corpus semantic accuracy"
     },
-    "Q2_status": "BLOCKED_Q1_NOT_COMPLETE"
+    "Q2_status": "PREPARING_FROM_VERIFIED_SOURCE_SUBSET_NOT_Q1_PASS",
+    "settings_resume": {
+      "start_SHA": "6a4a88acf5d62d67a03581baf0e03fe55850c46f",
+      "status": "IN_PROGRESS_ACTIONS_CHECK",
+      "existing_values_changed": false,
+      "Q1_scope_preserved": true,
+      "Q2_policy": "STEP1 section7 explicitly permits prepared-source Q2 work while Q1 remains PARTIAL; latest user authorizes Q2. No all-source gate invented."
+    }
   }
 }

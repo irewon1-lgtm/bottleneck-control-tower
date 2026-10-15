@@ -11,7 +11,7 @@ on:
     inputs:
       purpose:
         type: choice
-        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish]
+        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity]
         default: seed
       q1_key_run:
         type: string
@@ -296,3 +296,26 @@ jobs:
           Q1_BLOB_SHA: ${{ inputs.q1_blob_sha }}
           Q1_PACKET_SHA: ${{ inputs.q1_packet_sha }}
         run: timeout 120 python tools/v4_quantitative_private.py publish
+
+  q1-connectivity:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'q1-connectivity' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Check existing Secret delivery and official responses without printing values
+        env:
+          BCT_SEC_USER_AGENT: ${{ secrets.BCT_SEC_USER_AGENT || vars.BCT_SEC_USER_AGENT }}
+          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
+          BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          timeout 120 python -c 'from bct.v4.cpu_operations import github_guard; github_guard()'
+          timeout 120 python tools/v4_quantitative_credentials.py
+      - uses: actions/cache/save@v4
+        with:
+          key: v4-q1-source-probe-${{ github.run_id }}
+          path: var/v4/quantitative/q1-source-probe

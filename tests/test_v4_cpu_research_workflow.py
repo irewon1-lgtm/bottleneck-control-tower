@@ -26,4 +26,4 @@ def test_deployed_consumer_requires_exact_configured_code_and_explicit_enable():
             if "<<'PYCODE'"in step.get('run',''):
                 ast.parse(step['run'].split("<<'PYCODE'\n",1)[1].rsplit('\nPYCODE',1)[0])
             if step.get('uses','').startswith('actions/cache/save'):
-                assert step['with']['path']in ('var/v4/cpu-private/result','var/v4/cpu-private/bridge','var/v4/quantitative/q1-transfer')
+                assert step['with']['path']in ('var/v4/cpu-private/result','var/v4/cpu-private/bridge','var/v4/quantitative/q1-transfer','var/v4/quantitative/q1-source-probe')
