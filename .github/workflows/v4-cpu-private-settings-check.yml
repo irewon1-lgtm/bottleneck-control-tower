@@ -1,6 +1,11 @@
 name: V4 CPU private settings check
 on:
   workflow_dispatch:
+    inputs:
+      auth_denials_only:
+        type: boolean
+        default: false
+        description: Diagnose authentication and public-ref denials without retrying private-repo access
 permissions:
   contents: read
   actions: read
@@ -50,6 +55,7 @@ jobs:
       - name: Actual private-token writes and operating-ref denials, no source DB
         env:
           STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+          AUTH_DENIALS_ONLY: ${{ inputs.auth_denials_only }}
         run: |
           timeout 120 python - <<'PY'
           import json,os,sys
@@ -62,12 +68,27 @@ jobs:
               receipts.append(row)
               return code,result
           try:
-              proof=private.writer_scope(os.environ.get('STATE_TOKEN',''),api=audit_api)
-              report={'status':'PASS','proof':proof,'requests':receipts,'source_DB_uploaded':False}
+              token=os.environ.get('STATE_TOKEN','')
+              if os.environ.get('AUTH_DENIALS_ONLY')=='true':
+                  code,user=audit_api(token,'GET','user')
+                  auth={'HTTP':code,'authenticated':code==200,'expected_owner':code==200 and user.get('login')=='irewon1-lgtm'}
+                  denials={}
+                  if code==200:
+                      for branch in ('main','data'):
+                          code,ref=private.github_api(os.environ['GH_TOKEN'],'GET',f'repos/{private.PUBLIC_REPO}/git/ref/heads/{branch}')
+                          if code!=200:raise ValueError('PUBLIC_READ_REFERENCE_UNVERIFIED')
+                          code,_=audit_api(token,'POST',f'repos/{private.PUBLIC_REPO}/git/refs',{'ref':'refs/heads/'+branch,'sha':ref['object']['sha']})
+                          denials[branch]=code
+                  report={'status':'DIAGNOSTIC_ONLY','authentication':auth,'public_existing_ref_creation_HTTP':denials,
+                      'public_write_denied':len(denials)==2 and all(c in (403,404)for c in denials.values()),
+                      'requests':receipts,'private_repo_failed_GET_repeated':False,'source_DB_uploaded':False}
+              else:
+                  proof=private.writer_scope(token,api=audit_api)
+                  report={'status':'PASS','proof':proof,'requests':receipts,'source_DB_uploaded':False}
           except ValueError as exc:
               report={'status':'BLOCKED','reason':str(exc),'requests':receipts,'source_DB_uploaded':False}
           print('BCT_PRIVATE_SCOPE_JSON='+json.dumps(report))
-          sys.exit(0 if report['status']=='PASS'else 1)
+          sys.exit(0 if report['status']in ('PASS','DIAGNOSTIC_ONLY')else 1)
           PY
 # Manual permission/settings verification only. No schedule, model/cache setup,
 # CPU inference, source archive publication, configuration writes or stage changes.
