@@ -1,0 +1,77 @@
+{
+  "at": "2026-10-15T00:05:50.323326+00:00",
+  "start_sha": "5bb8d2d1d4496a27a253dd6a9ffe7d63b7d4457b",
+  "as_of": "2026-10-15",
+  "review_records": 31,
+  "reviewed_product_role_cases": 25,
+  "unique_event_clusters": 20,
+  "primary_verified_event_clusters": 8,
+  "primary_full_scope_confirmed_clusters": 7,
+  "primary_partial_contract_confirmation": 1,
+  "original14_primary_source_gate_pass": 4,
+  "article6_full_primary_confirmation": 3,
+  "article6_partial_contract_confirmation": 1,
+  "article6_blocked": 2,
+  "source_review_linked_facts": 10,
+  "roles": {
+    "DEMAND_INCREASE": 5,
+    "SUPPLY_DECREASE": 3,
+    "RELIEF": 2
+  },
+  "new_verified_demand_facts": 1,
+  "new_verified_supply_decrease_facts": 3,
+  "new_relief_context_facts": 2,
+  "existing_reviewed_order_objects_linked": 4,
+  "S1_signal_product_records": 8,
+  "S1_previously_reviewed": 4,
+  "S1_new_primary_confirmation": 4,
+  "S1_new_primary_historical2025_closure": 1,
+  "S2": 0,
+  "S3": 0,
+  "independent_pairs": 0,
+  "new_LIVE_S1_S2_S3": [
+    0,
+    0,
+    0
+  ],
+  "CPU_product_proposals_accounted": 1186,
+  "prior_relation_hypotheses_accounted": 50,
+  "safe38_documents_triaged": 38,
+  "AI_adoption": "FAIL_UNCHANGED",
+  "independent_evaluation": "BLOCKED_UNCHANGED",
+  "lead_performance": "NOT_RUN",
+  "stage3": "RESEARCH_LINKAGE_EXECUTED_WITH_PRIMARY_SOURCE_BLOCKERS; FUTURE_GAP_NOT_ESTABLISHED",
+  "API_calls": 0,
+  "tokens": 0,
+  "API_cost_KRW": 0,
+  "platform_cost": "UNKNOWN_SEPARATE",
+  "scheduled_automation": "DISABLED_UNCHANGED",
+  "test_results": {
+    "changed_scope": {
+      "passed": 162,
+      "command": ".venv/bin/python -m pytest -q tests/test_v4_supply_linkage.py tests/test_v4_evidence_path.py tests/test_v4_cpu_recovery.py tests/test_v4_cross_industry.py tests/test_v4_repair.py tests/test_v4_integration.py tests/test_v4_dashboard.py tests/test_v4_post_ui.py"
+    },
+    "backup_restore": "PASS_NEW_PROCESS_ALL8TABLES",
+    "original_UI_query": "PASS_READ_ONLY_235_BODIES_511_EVIDENCE",
+    "isolated_new_UI_query": "PASS_10_FACTS_ALL_REFERENCES_VERIFIED_NO_DEPLOYMENT",
+    "post_upstream_integration": {
+      "passed": 52,
+      "command": ".venv/bin/python -m pytest -q tests/test_v4_dashboard.py tests/test_v4_post_ui.py tests/test_v4_dashboard_research_sync.py tests/test_v4_supply_linkage.py",
+      "overlaps_previous_tests_not_added": true
+    }
+  },
+  "identity_triage_not_truth": {
+    "IDENTITY_UNREVIEWED": 1055,
+    "PRODUCT_OR_EQUIPMENT_PROPOSED_NOT_VERIFIED": 125,
+    "ORGANIZATION_OR_GENERAL_EXPRESSION": 6
+  },
+  "known_limits": [
+    "707 unique literal strings are not707 validated products.1055 mentions remain identity-unreviewed; none automatically adopted.",
+    "Article6:3 fully scope-confirmed,1 contract-only partial,2blocked. Court order itself not acquired; Keytruda confirmation is issuer report.",
+    "Old14:4 order-object records pass existing full source gate;10remain source-held. Native excerpt receipts do not upgrade engine provenance.",
+    "All formal records are explicitly same-session Codex source adjudication, not CPU/Groq automatic discovery or independent accuracy.",
+    "New4S1 confirmations include one2025historicalclosure. No new LIVE registration and no future12–36month qualified gap."
+  ],
+  "preserved_upstream_head": "f78126fc492a8cbe883a68910f54591380cab92e",
+  "post_integration_replay": "PASS_SAME_RESTORED_DATA_FINAL_UI_QUERY"
+}

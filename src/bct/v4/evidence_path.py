@@ -18,6 +18,8 @@ NUMBER_WORDS = dict(zip(('zero','one','two','three','four','five','six','seven',
 
 def reference(doc, ref, within=None):
     if not isinstance(ref,dict): raise ValueError('REFERENCE_REQUIRED')
+    if any(k in ref and ref[k]!=doc[k] for k in ('document_id','body_sha256','origin_url')):
+        raise ValueError('FOREIGN_DOCUMENT_REFERENCE')
     a,b = ref.get('start'),ref.get('end')
     if type(a) is not int or type(b) is not int or not 0<=a<b<=len(doc['body']): raise ValueError('POSITION_REQUIRED')
     if doc['body'][a:b]!=ref.get('quote'): raise ValueError('EXACT_SOURCE_MISMATCH')
@@ -81,7 +83,7 @@ def relation_check(product, context, role, actuality):
     return True,'SOURCE_VERB_AND_LITERAL_OBJECT_RESEARCH_LIMITED'
 
 
-def accept(doc, proposal, *, reviewed=False):
+def accept(doc, proposal, *, reviewed=False, source_review=None):
     if sha(doc['body'].encode())!=doc['body_sha256']:raise ValueError('BODY_HASH_MISMATCH')
     context=reference(doc,proposal['reference'])
     product=value(doc,proposal['product'],context)
@@ -101,7 +103,45 @@ def accept(doc, proposal, *, reviewed=False):
     role,actuality=record['role'],record['actuality']
     if role not in ROLES:return record
     if actuality not in ACTUALITY:raise ValueError('INVALID_ACTUALITY')
-    if reviewed:
+    if source_review is not None:
+        # Explicit source adjudication is not an independent accuracy review.
+        # Reuse the source-review validator; never relabel it as model output
+        # or enable the separate oracle's S2 path.
+        if reviewed: raise ValueError('REVIEW_MODES_MUST_BE_SEPARATE')
+        if not doc.get('primary_source_verified'): raise ValueError('PRIMARY_SOURCE_REQUIRED')
+        from .exploration import source_review as validate_source_review
+        receipt=validate_source_review(doc,source_review,[context])
+        if (receipt['role']!=role or receipt['actuality']!=actuality
+                or receipt['product']['reference']!=proposal['product']['reference']
+                or receipt['fields']!=proposal.get('review_fields',{})
+                or source_review.get('reason_ko') in (None,'')):
+            raise ValueError('SOURCE_REVIEW_PROPOSAL_CONFLICT')
+        # Every field sent downstream must be the same reviewed literal.
+        if set(proposal.get('fields',{}))!=set(receipt['fields']) or any(
+                proposal['fields'][k]['value']!=v['surface']
+                or proposal['fields'][k]['reference']!=v['reference']
+                for k,v in receipt['fields'].items()):
+            raise ValueError('SOURCE_REVIEW_FIELD_CONFLICT')
+        # Source adjudication cannot override clear contradictory grammar.
+        text=context['quote'];name=re.escape(product['surface'])
+        if role=='DEMAND_INCREASE':
+            if re.search(r'\b(?:did not order|not ordered|no order|cancelled|canceled)\b',text,re.I):
+                raise ValueError('NEGATED_ORDER_CANNOT_BE_DEMAND')
+            if re.search(r'\b(?:ordered|purchased|order\s+for)\s+[^.;\n]{1,100}?\b(?:to produce|to manufacture|production of|manufacture of)\s+(?:[^.;\n]{0,60}?)'+name,text,re.I):
+                raise ValueError('ORDER_OUTPUT_NOT_ORDERED_EQUIPMENT')
+            if re.search(r'\b(?:grant|subsidy|funding)\b',text,re.I) and not re.search(r'\b(?:order|ordered|purchase|contract)\b',text,re.I):
+                raise ValueError('FUNDING_NOT_ORDER')
+        if actuality=='ACTUAL' and role=='SUPPLY_INCREASE':
+            relevant=[c for c in re.split(r'[.;\n]',text) if product['surface'] in c]
+            if any(re.search(r'\b(?:will|plans?|planned|expected|proposed|may|could)\b',c,re.I)for c in relevant):
+                raise ValueError('PLANNED_SUPPLY_NOT_AVAILABLE')
+        if actuality=='ACTUAL' and role in ('SUPPLY_DECREASE','SUPPLY_DELAY'):
+            if re.search(r'\b(?:not|never)\s+(?:closed|reduced|decreased|delayed|postponed)|\bno longer delayed\b',text,re.I):
+                raise ValueError('NEGATED_SUPPLY_CONSTRAINT')
+        record['source_review']=receipt
+        record['meaning_status']='EXPLICIT_SOURCE_REVIEW_NOT_INDEPENDENT_OR_AUTOMATIC'
+        ok,reason=True,'LOCATED_PRIMARY_SOURCE_ADJUDICATION_NOT_MODEL_PERFORMANCE'
+    elif reviewed:
         review=proposal.get('independent_review')or{}
         if review.get('type')!='SOURCE_ONLY_AI' or review.get('exposed_to_target_outputs')is not False:
             raise ValueError('ORACLE_REQUIRES_SEPARATE_SOURCE_REVIEW')
@@ -124,27 +164,34 @@ def target_key(record):
     return tuple(record['target'][k]['normalized'] if record['target'][k] else None for k in TARGET)
 
 
-def analyze(documents, proposals, *, enabled=False, reviewed=False):
+def analyze(documents, proposals, *, enabled=False, reviewed=False, source_reviews=None):
     docs={d['document_id']:d for d in documents};records=[];held=[]
     if enabled:
         for did,items in proposals.items():
             for index,p in enumerate(items):
-                try:records.append(accept(docs[did],p,reviewed=reviewed))
+                try:records.append(accept(docs[did],p,reviewed=reviewed,
+                    source_review=(source_reviews or {}).get(did,{}).get(index)))
                 except (ValueError,KeyError,TypeError)as e:held.append({'document_id':did,'index':index,'reason':str(e)})
     records=list({r['id']:r for r in records}.values());pairs=[]
     for d in records:
         if d['event_status']!='ADOPTED_RESEARCH_EVENT' or d['role']!='DEMAND_INCREASE' or d['actuality']!='ACTUAL':continue
         for s in records:
             if s['event_status']!='ADOPTED_RESEARCH_EVENT' or s['role']not in ('SUPPLY_DECREASE','SUPPLY_DELAY','SUPPLY_INCREASE'):continue
+            if s['actuality']!='ACTUAL':continue
             key=target_key(d)
             if not all(key) or key!=target_key(s):continue
             if d['context']['document_id']==s['context']['document_id']:continue
             dd,sd=docs[d['context']['document_id']],docs[s['context']['document_id']]
             if dd.get('origin_publisher')==sd.get('origin_publisher')or dd.get('origin_id')==sd.get('origin_id'):continue
+            if dd.get('origin_event_id') and dd['origin_event_id']==sd.get('origin_event_id'):continue
+            origin=d['original_proposal'].get('origin_event_id')
+            if origin and origin==s['original_proposal'].get('origin_event_id'):continue
             period=d['fields'].get('need_time');ready=s['fields'].get('ready_time')
             if not period or not ready or period['normalized']!=ready['normalized']:continue
-            relief=[r['id']for r in records if r['role']=='RELIEF'and r['event_status']=='ADOPTED_RESEARCH_EVENT'and target_key(r)==key]
+            relief=[r['id']for r in records if r['role']=='RELIEF'and r['actuality']=='ACTUAL'and r['event_status']=='ADOPTED_RESEARCH_EVENT'and target_key(r)==key]
+            planned_relief=[r['id']for r in records if r['role']=='RELIEF'and r['actuality']=='PLAN'and r['event_status']=='ADOPTED_RESEARCH_EVENT'and target_key(r)==key]
             pairs.append({'demand':d['id'],'supply':s['id'],'target':key,'related_relief':relief,'s_stage':'UNKNOWN',
+                          'planned_relief_not_available_supply':planned_relief,
                           'reason':'INDEPENDENT_SCOPED_PAIR; TOTAL_QUALIFIED_SUPPLY_AND_RESIDUAL_DEMAND_UNKNOWN'})
     return stamp_export({'version':VERSION,'enabled':enabled,'operational_integration_enabled':False,
        'records':records,'held':held,'pairs':pairs,'candidates':[],'s_stage':'UNKNOWN','forecast_performance':'NOT_RUN',
@@ -152,13 +199,15 @@ def analyze(documents, proposals, *, enabled=False, reviewed=False):
        'S1':len({target_key(r)for r in records if r['s_stage']=='S1'}),'S2':len({target_key(r)for r in records if r['s_stage']=='S2'}),'S3':0}})
 
 
-def save(ledger,documents,proposals,*,enabled=False,reviewed=False):
-    run_id='located-'+sha([VERSION,documents,proposals,enabled,reviewed])
+def save(ledger,documents,proposals,*,enabled=False,reviewed=False,source_reviews=None):
+    identity=[VERSION,documents,proposals,enabled,reviewed]
+    if source_reviews is not None: identity.append(source_reviews)
+    run_id='located-'+sha(identity)
     previous=ledger.db.execute('SELECT payload FROM runs WHERE id=?',(run_id,)).fetchone()
     if previous:
         import json
         return json.loads(previous[0])
     for doc in documents:ledger.capture(doc,reading={'original_proposal':proposals.get(doc['document_id']),
                                                 'origin':'ORACLE'if reviewed else'MODEL_OR_SOURCE'})
-    result=analyze(documents,proposals,enabled=enabled,reviewed=reviewed)
+    result=analyze(documents,proposals,enabled=enabled,reviewed=reviewed,source_reviews=source_reviews)
     return ledger.save_run(run_id,result,'BACKFILL')
