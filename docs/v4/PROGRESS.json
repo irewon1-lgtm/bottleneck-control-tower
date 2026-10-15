@@ -4115,7 +4115,7 @@
     "started_at": "2026-10-15T12:20:23.279797+00:00",
     "source_status": {
       "sec": {
-        "status": "SETUP_REQUIRED",
+        "status": "BINDING_AND_SUBMISSIONS_PASS_BODY_NUMBERS_PENDING",
         "coverage": "현재 실행환경에 승인된 SEC 실제 연락처 없음. 제출이력·수치 미수집. Secret 목록 API403으로 Actions 설정 존재 여부는 미확인. 임의 연락처/무승인 호출 없음.",
         "next_cursor": "승인된 BCT_SEC_USER_AGENT가 기존 연결 경로에 전달되면 고정30일 공시/정정 범위 재개",
         "counts": {
@@ -4220,7 +4220,7 @@
         }
       },
       "census_trade": {
-        "status": "SETUP_REQUIRED",
+        "status": "BINDING_PASS_RESPONSE_DIAGNOSIS_PENDING",
         "coverage": "공식 USITC 수입HTS10·단위29개 검증. 수출Schedule B PDF3개는 별도 보존. Census 키는 실행환경에 없어 무역 수량0; 과거 코드 개정 미확인.",
         "next_cursor": "Census 키 정상 전달 후 고정36개월 조회; 현재2026 코드표를 과거연도에 소급 적용 금지",
         "counts": {
@@ -4329,7 +4329,7 @@
       "docs/v4/quantitative/quality-evidence.json",
       "docs/v4/quantitative/Q1_RESULTS.md"
     ],
-    "next_action": "Q1 remaining source gaps only: approved SEC identity, Census key/historical HTS mapping, M3/G17 old vintages/code scope, EIA July publication/API, USGS source/month coverage, TED XML body availability. Existing1260 award histories complete; do not refetch/reprocess. Q1 remains PARTIAL/BLOCKED; Q2 NOT_STARTED. Private Q1 state restored successfully; do not redo token/passphrase/CPU setup.",
+    "next_action": "Run manual read-only SEC/Census batches from the existing private Q1 checkpoint. Source processing has no private writer credential; publisher uses existing dedicated token on Q1 ref only. Do not modify settings or duplicate completed requests.",
     "blocked_dependencies": [
       "Source-specific historical vintage/date/scope gaps retained; see source_status. Private Q1 store/restore already PASS, not a remaining blocker."
     ],
@@ -4577,10 +4577,59 @@
     "Q2_status": "PREPARING_FROM_VERIFIED_SOURCE_SUBSET_NOT_Q1_PASS",
     "settings_resume": {
       "start_SHA": "6a4a88acf5d62d67a03581baf0e03fe55850c46f",
-      "status": "IN_PROGRESS_ACTIONS_CHECK",
+      "status": "ACTIONS_BINDINGS_CONFIRMED_SOURCE_BATCH_PREPARED",
       "existing_values_changed": false,
       "Q1_scope_preserved": true,
-      "Q2_policy": "STEP1 section7 explicitly permits prepared-source Q2 work while Q1 remains PARTIAL; latest user authorizes Q2. No all-source gate invented."
+      "Q2_policy": "STEP1 section7 explicitly permits prepared-source Q2 work while Q1 remains PARTIAL; latest user authorizes Q2. No all-source gate invented.",
+      "credential_receipt": {
+        "at": "2026-10-15T14:10:46.159567+00:00",
+        "code_SHA": "49d36db5184d9587d33e6590f6e9b06e3128b25e",
+        "run_id": "38749046126",
+        "bindings": {
+          "BCT_SEC_USER_AGENT": {
+            "present": true,
+            "contact_format_valid": true
+          },
+          "CENSUS_API_KEY": {
+            "present": true,
+            "value_printed": false
+          }
+        },
+        "external_AI_calls": 0,
+        "settings_changed": false,
+        "sec": {
+          "HTTP": 200,
+          "cik": "0001701605",
+          "recent_filings": 969,
+          "sha256": "499ba6d918a9a73ee5785d638ce9f27bc5b69a973712adc30a2f03c289bfb368",
+          "actual_query": true
+        },
+        "census": {
+          "HTTP": "TRANSPORT_OR_SCHEMA_ERROR",
+          "error_type": "ValueError",
+          "retried": false
+        }
+      },
+      "actual_probe_run": 38749046126,
+      "settings_changed": false,
+      "initial_Census_error_cause": "UNKNOWN; generic ValueError receipt insufficient; same request not repeated. New export schema and safe response diagnostics prepared.",
+      "annual_codebooks": {
+        "PDFs": 24,
+        "years": [
+          2023,
+          2024,
+          2025,
+          2026
+        ],
+        "import_codes_per_year": 29,
+        "export_codes_per_year": 18,
+        "annual_base_code_unit_changes": 0,
+        "intra_year_revisions": "UNVERIFIED"
+      },
+      "impact_tests": {
+        "passed": 51,
+        "seconds": 2.92
+      }
     }
   }
 }

@@ -211,7 +211,9 @@ def parse_eia(raw,meta,ym,states):
 def verify_locator(record,raw):
     if sha(raw)!=record['raw_or_safe_payload_hash']:raise ValueError('SOURCE_HASH_MISMATCH')
     loc=record['source_locator'];v=None
-    if loc['format']=='FED_TEXT':
+    if loc['format']=='SEC_INLINE':
+        v=raw.decode('utf-8')[loc['start']:loc['end']]
+    elif loc['format']=='FED_TEXT':
         import shlex
         tokens=shlex.split(raw.decode('utf-8-sig').splitlines()[loc['line']-1]);v=tokens[loc['token']]
         if tokens[0]!=loc['series_token']or tokens[1]!=loc['year_token']:raise ValueError('FED_IDENTITY_MISMATCH')
@@ -224,6 +226,7 @@ def verify_locator(record,raw):
     else:raise ValueError('UNSUPPORTED_SOURCE_LOCATOR')
     if (None if v is None else str(v))!=record['value_original']:raise ValueError('LOCATOR_VALUE_MISMATCH')
     val,_=number(v)
+    if loc['format']=='SEC_INLINE'and val is not None and record['attributes'].get('ix_sign')=='-':val=format(-Decimal(val),'f')
     if record.get('attributes',{}).get('footnote_pointer'):val=None
     if val!=record['value_decimal_or_null']:raise ValueError('DECIMAL_REPLAY_MISMATCH')
     return True

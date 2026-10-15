@@ -397,3 +397,9 @@ V3.3과 독립된 V4 실행 환경, 영속 SQLite 저장 위치, 무료 자원 �
 - GroqCloud Structured Outputs: https://console.groq.com/docs/structured-outputs
 
 Groq 공식 문서 재확인일: 2026-10-14 (Asia/Seoul). 이번에는 GroqCloud Free Plan과 공개 원문 발췌만 사용한다. JSON 형식 일치는 원문 내용의 사실성·의미 정확성 보장이 아니다.
+
+## 2026-10-15 후속 승인: SEC·Census 설정 반영과 준비된 출처 Q2
+
+시작 원격 `6a4a88acf5d62d67a03581baf0e03fe55850c46f`. 기존32,880관측/37,435버전·CPU·AI판정·원본과 평가기록을 보존한다. 사용자가 설정한 BCT_SEC_USER_AGENT/CENSUS_API_KEY는 Actions에서 값 노출 없이 확인하며 재설정하지 않는다. SEC 제출이력·신규공시/정량 사실, Census 고정36개월 수입·수출 및2023~2026 공식 코드/단위를 이어 처리한다. 기존 비공개 Q1 ref를 복원→미처리만 추가→암호화 전달→전용 writer 게시→원격 새프로세스 복원한다. source 작업에 비공개 writer를 전달하지 않고 main/data·CPU pin·예약·UI는 바꾸지 않는다.
+
+STEP1_INSTRUCTIONS 7절의 “일부가 막혀도 준비된 출처의 Q2 작업은 진행할 수 있지만 Q1 전체 PASS로 바꾸지 않는다”를 그대로 적용한다. 준비된 제품·시설별 수요/공급/시점 자료를 Q2에서 연결하되 단위만 같은 다른 제품·규격·고객·적격 공급풀/기간은 결합하지 않는다. 금액·무역량·명목MW를 주문량/적격 공급으로 대신하지 않는다. 미검증·과거사건/계획·동일계보를 보류하고 후보 자동승격0·신규AI0·유료0·새예약0을 유지한다. 진행은 PROGRESS.json.quantitative_plan과 기존 정량 evidence 파일에 남긴다.

@@ -11,7 +11,7 @@ on:
     inputs:
       purpose:
         type: choice
-        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity]
+        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch]
         default: seed
       q1_key_run:
         type: string
@@ -319,3 +319,80 @@ jobs:
         with:
           key: v4-q1-source-probe-${{ github.run_id }}
           path: var/v4/quantitative/q1-source-probe
+
+  q1-source-prior:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'q1-source-batch' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Restore existing Q1 private state and seal read-only source handoff
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+          BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+        run: timeout 120 python tools/v4_quantitative_batch.py prepare
+      - uses: actions/cache/save@v4
+        with:
+          key: v4-q1-source-prior-${{ github.run_id }}
+          path: var/v4/quantitative/q1-source-bridge/prior
+  q1-source-process:
+    needs: q1-source-prior
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/cache/restore@v4
+        with:
+          key: v4-q1-source-prior-${{ github.run_id }}
+          fail-on-cache-miss: true
+          path: var/v4/quantitative/q1-source-bridge/prior
+      - uses: actions/cache/restore@v4
+        with:
+          key: v4-q1-source-probe-38749046126
+          fail-on-cache-miss: true
+          path: var/v4/quantitative/q1-source-probe
+      - name: Continue fixed SEC/Census scopes with no private writer credential or model
+        env:
+          BCT_SEC_USER_AGENT: ${{ secrets.BCT_SEC_USER_AGENT || vars.BCT_SEC_USER_AGENT }}
+          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
+          BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+        run: |
+          for batch in {1..8}; do
+            set +e
+            timeout 120 python tools/v4_quantitative_batch.py process
+            result=$?
+            set -e
+            if [ "$result" = 0 ]; then break; fi
+            if [ "$result" != 75 ]; then exit "$result"; fi
+          done
+          timeout 120 python tools/v4_quantitative_batch.py finish
+      - uses: actions/cache/save@v4
+        with:
+          key: v4-q1-source-result-${{ github.run_id }}
+          path: var/v4/quantitative/q1-source-bridge/result
+  q1-source-publish:
+    needs: q1-source-process
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/cache/restore@v4
+        with:
+          key: v4-q1-source-result-${{ github.run_id }}
+          fail-on-cache-miss: true
+          path: var/v4/quantitative/q1-source-bridge/result
+      - name: Publish Q1 facts to its private ref and verify remote fresh-process restore
+        env:
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+          BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+        run: timeout 120 python tools/v4_quantitative_batch.py publish
