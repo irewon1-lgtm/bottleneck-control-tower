@@ -395,6 +395,33 @@ def catalogue_identity(doc, raw, spellings):
     return rows
 
 
+def local_relation_pointers(task, documents, *, as_of, limit=3):
+    """Maker -> facility context, even when the seeded product is not named.
+
+    Exact positions prove existence only. A paragraph about another model is
+    explicitly unproven for this TARGET and cannot provide its capacity.
+    """
+    if task['facet']not in {'MANUFACTURER_FACILITY','FACILITY_CAPACITY_READY'}or not task['party']:
+        return {'selected':[],'remaining_URLs':[]}
+    matches=[]
+    for doc in documents:
+        if doc.get('provenance')!='PASS'or doc.get('body_status')!='FULL'or not doc.get('published_at'):continue
+        if doc['published_at'][:10]>as_of or task['party'].casefold()not in doc['body'].casefold():continue
+        if sha(doc['body'].encode())!=doc['body_sha256']:raise ValueError('RELATION_LOCAL_BODY_HASH')
+        positions=[]
+        for m in re.finditer(r'[^\n]+',doc['body']):
+            if not re.search(r'\b(?:facilit(?:y|ies)|factory|plant)\b',m.group(),re.I):continue
+            if task['facet']=='FACILITY_CAPACITY_READY'and not re.search(r'\b(?:capacity|production|commissioning)\b',m.group(),re.I):continue
+            positions.append({'start':m.start(),'end':m.end(),'context_sha256':sha(m.group().encode())})
+        if positions:matches.append({'url':doc['origin_url'],'document_id':doc['document_id'],'body_sha256':doc['body_sha256'],
+                                     'published_at':doc['published_at'],'positions':positions,'TARGET_relation':'UNKNOWN_NOT_ADOPTED',
+                                     'method':'MAKER_FACILITY_LITERAL_CONTEXT_NOT_PRODUCT_IDENTITY_OR_INDEPENDENCE'})
+    unique={}
+    for r in sorted(matches,key=lambda r:(r['published_at'],r['url'])):unique.setdefault(r['body_sha256'],r)
+    rows=list(unique.values())
+    return {'selected':rows[:limit],'remaining_URLs':list(dict.fromkeys(r['url']for r in rows[limit:]))}
+
+
 def relation_links(task, doc, raw):
     """Cross-host citations are retained with their relationship still unproven."""
     from bct.target_acquisition import Metadata

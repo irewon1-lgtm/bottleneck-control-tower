@@ -54,6 +54,17 @@ def test_observed_official_sec_company_lookup_is_retained_but_auth_params_are_re
     with pytest.raises(ValueError):q.safe_url(url)  # Not relaxed into an adoptable article.
 
 
+def test_maker_local_search_finds_other_model_facility_but_does_not_transfer_capacity():
+    task=next(t for t in q.relation_tasks([seed('ModelA equipment')])if t['facet']=='FACILITY_CAPACITY_READY')
+    body='Maker Corporation reports results.\nOur contract manufacturing facility produces ModelB with capacity of 20 systems per month.'
+    doc={'document_id':'other-model','origin_url':'https://maker.example/report','published_at':'2026-04-07',
+         'provenance':'PASS','body_status':'FULL','body':body,'body_sha256':sha(body.encode())}
+    r=q.local_relation_pointers(task,[doc],as_of='2026-10-15')
+    assert len(r['selected'])==1 and r['selected'][0]['TARGET_relation']=='UNKNOWN_NOT_ADOPTED'
+    assert task['product']=='ModelA equipment'and task['s_stage']=='UNKNOWN'
+    assert 'quantity'not in r['selected'][0]
+
+
 def test_all_search_results_preserved_for_queue_not_only_three(monkeypatch):
     raw=('<rss><channel>'+''.join('<item><link>https://agency.example/'+str(i)+'</link></item>'for i in range(12))+'</channel></rss>').encode()
     monkeypatch.setattr(a,'fetch',lambda u:(raw,u,200,'application/xml'))

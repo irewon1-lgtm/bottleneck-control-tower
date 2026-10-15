@@ -59,6 +59,7 @@ def inventory():
         if proof:seed['verified_model_proof']=proof
     tasks=q.relation_tasks(seeds)
     for task in tasks:
+        task['scope']['stored_maker_facility_search']=q.local_relation_pointers(task,list(docs.values()),as_of='2026-10-15')
         did=task['source_identity']['document_id']
         d=docs.get(did)or next((x for x in docs.values()if x['body_sha256']==task['source_identity']['body_sha256']),None)
         if d and d['document_id']in raws:task['urls']=q.relation_links(task,d,raws[d['document_id']])
