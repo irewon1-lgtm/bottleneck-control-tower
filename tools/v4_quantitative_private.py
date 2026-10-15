@@ -6,6 +6,8 @@ from bct.v4 import private_state as private,quantitative_private as q
 from bct.v4.store import Ledger,file_sha,sha
 
 ROOT=Path('var/v4/quantitative/q1-transfer')
+# Already successful immutable key-preparation code; no Secret/settings change.
+TRUSTED_PREPARE_SHA='0ed27c5f7f114b691afb900715795229c643013a'
 
 def gpg(home,*args,data=None):
     p=subprocess.run(['gpg','--no-options','--homedir',str(home),'--batch','--no-tty',*args],input=data,capture_output=True,timeout=25)
@@ -60,7 +62,9 @@ def publish():
     run=subprocess.run(['gh','api',f'repos/{private.PUBLIC_REPO}/actions/runs/{keyrun}'],capture_output=True,text=True,timeout=25)
     if run.returncode:raise ValueError('Q1_KEY_RUN_LOOKUP_FAILED')
     run=json.loads(run.stdout)
-    if run.get('head_sha')!=os.environ['GITHUB_SHA']or run.get('event')!='workflow_dispatch'or run.get('conclusion')!='success':raise ValueError('Q1_UNTRUSTED_KEY_RUN')
+    if (run.get('head_sha')not in {TRUSTED_PREPARE_SHA,os.environ['GITHUB_SHA']}or run.get('head_branch')!='codex/bct-v4-integration'
+        or run.get('event')!='workflow_dispatch'or run.get('conclusion')!='success'
+        or run.get('path')!='.github/workflows/v4-cpu-private-research.yml'):raise ValueError('Q1_UNTRUSTED_KEY_RUN')
     response=subprocess.run(['gh','api',f'repos/{private.PUBLIC_REPO}/git/blobs/{blob}'],capture_output=True,text=True,timeout=25)
     if response.returncode:raise ValueError('Q1_CIPHERTEXT_DOWNLOAD_FAILED')
     response=json.loads(response.stdout)
@@ -71,7 +75,7 @@ def publish():
     with tempfile.TemporaryDirectory(prefix='bct-q1-receiver-')as tmp:
         home=Path(tmp)/'gpg';home.mkdir(mode=0o700);gpg(home,'--import',data=secret)
         envelope=json.loads(gpg(home,'--max-output',str(private.MAX_TRANSPORT),'--decrypt',data=ciphertext))
-        if envelope['format']!=q.FORMAT or str(envelope['key_run'])!=keyrun or envelope['key_code_sha']!=os.environ['GITHUB_SHA']:raise ValueError('Q1_ENVELOPE_IDENTITY')
+        if envelope['format']!=q.FORMAT or str(envelope['key_run'])!=keyrun or envelope['key_code_sha']!=run['head_sha']:raise ValueError('Q1_ENVELOPE_IDENTITY')
         cp=Path(tmp)/'checkpoint';cp.mkdir()
         (cp/'checkpoint.json').write_text(json.dumps(envelope['proof']))
         archive=base64.b64decode(envelope['archive_base64'],validate=True)
@@ -82,7 +86,17 @@ def publish():
         if owner['actual_remote_evidence']['run_id']!=38709974717:raise ValueError('Q1_SCOPE_PROOF_NOT_PINNED')
         scope=owner['actual_remote_evidence']['receipts']['BCT_PRIVATE_SCOPE_JSON']['scope']
         # Existing dedicated PAT only; never fall back to the public GH_TOKEN.
-        result=q.publish(Path(tmp)/'private-git',cp,'',os.environ.get('BCT_V4_PRIVATE_STATE_TOKEN',''),scope)
+        repo=Path(tmp)/'private-git';token=os.environ.get('BCT_V4_PRIVATE_STATE_TOKEN','')
+        # Deliberate wrong-parent failure is nonmutating; then recover with the
+        # correct first-publication parent. Never reset or overwrite an old ref.
+        try:q.publish(repo,cp,'0'*40,token,scope)
+        except ValueError as exc:
+            if str(exc)!='RESEARCH_STATE_PARENT_CHANGED_NO_OVERWRITE':raise
+        else:raise ValueError('Q1_CAS_FAILURE_TEST_DID_NOT_REFUSE')
+        result=q.publish(repo,cp,'',token,scope)
+        result['actual_wrong_parent_refusal_then_recovery']=True
+        result['producer_code_SHA']=run['head_sha']
+        result['publisher_code_SHA']=os.environ['GITHUB_SHA']
         print('BCT_Q1_PRIVATE_RESULT_JSON='+json.dumps(result))
 
 

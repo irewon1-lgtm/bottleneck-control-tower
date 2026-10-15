@@ -4116,8 +4116,8 @@
     "source_status": {
       "sec": {
         "status": "SETUP_REQUIRED",
-        "coverage": "미수집. 승인된 BCT_SEC_USER_AGENT 연락처가 실행환경에 없음. 기존 수집기 우회 호출0.",
-        "next_cursor": "공식 연락처가 정상 전달되면 고정30일 제출/정정 범위부터 재개",
+        "coverage": "현재 실행환경에 승인된 SEC 실제 연락처 없음. 제출이력·수치 미수집. Secret 목록 API403으로 Actions 설정 존재 여부는 미확인. 임의 연락처/무승인 호출 없음.",
+        "next_cursor": "승인된 BCT_SEC_USER_AGENT가 기존 연결 경로에 전달되면 고정30일 공시/정정 범위 재개",
         "counts": {
           "versioned_records": 0,
           "distinct_observation_keys": 0,
@@ -4128,13 +4128,18 @@
           "with_publication_date": 0,
           "period_review_held": 0,
           "source_suppression_or_unknown": 0,
-          "with_usable_period": 0
+          "with_usable_period": 0,
+          "role_counts": {},
+          "actual_physical_customer_order": 0,
+          "qualified_supply_capacity": 0,
+          "physical_leadtime": 0,
+          "product_specification_region_period_fully_verified": 0
         }
       },
       "m3": {
         "status": "PARTIAL",
-        "coverage": "AMTM/ADAP/ANAP 접두 코드, 주문·출하·미이행·재고의36개월 범위540개 확보. API 키 없이 공식 XLSX 대안 사용. 코드 설명 PDF403 및 같은 관측월 과거 발표판 미확보.",
-        "next_cursor": "고정 범위 잔여 월 없음; 코드 정의/과거 발표판 및 비공개 저장 검증 대기",
+        "coverage": "공식 XLSX4개·36개월540금액 관측 완료. 코드 설명 PDF403 및 과거 발표판 미확보.",
+        "next_cursor": "코드 정의/같은 관측월의 공식 과거 발표판 확보; 월 범위 재처리 금지",
         "counts": {
           "versioned_records": 540,
           "distinct_observation_keys": 540,
@@ -4147,53 +4152,77 @@
           "with_publication_date": 540,
           "period_review_held": 0,
           "source_suppression_or_unknown": 0,
-          "with_usable_period": 540
+          "with_usable_period": 540,
+          "role_counts": {
+            "MONEY_ONLY_NOT_PHYSICAL_DEMAND": 540
+          },
+          "actual_physical_customer_order": 0,
+          "qualified_supply_capacity": 0,
+          "physical_leadtime": 0,
+          "product_specification_region_period_fully_verified": 0
         }
       },
       "g17": {
         "status": "PARTIAL",
-        "coverage": "36개월972개. IP·능력지수504, 가동률252, 자동차 연간환산216. 지정G22 코드는 현재파일에 없으며 임의 다른 코드로 바꾸지 않음. 과거 발표판 미확보.",
-        "next_cursor": "공식 산업코드 대응 확인 후 G22 의도 범위 보강; 나머지36개월 처리 완료",
+        "coverage": "기존972관측 보존+공식 전기·가스 G2211A2 부분집합108관측, 합계1080. 요청G22가 아님을 명시.36개월 처리 완료; 과거 발표판 미확보.",
+        "next_cursor": "전체NAICS22와 전기·가스NAICS2211,2 차이 유지; 과거 발표판/개정 증거 보강",
         "counts": {
-          "versioned_records": 972,
-          "distinct_observation_keys": 972,
-          "numeric_observations": 972,
+          "versioned_records": 1080,
+          "distinct_observation_keys": 1080,
+          "numeric_observations": 1080,
           "physical_quantity_observations": 216,
           "by_measurement_type": {
-            "INDEX": 504,
-            "RATIO": 252,
+            "INDEX": 576,
+            "RATIO": 288,
             "PHYSICAL": 216
           },
-          "with_period": 972,
-          "with_publication_date": 972,
+          "with_period": 1080,
+          "with_publication_date": 1080,
           "period_review_held": 0,
           "source_suppression_or_unknown": 0,
-          "with_usable_period": 972
+          "with_usable_period": 1080,
+          "role_counts": {
+            "PRODUCTION_INDEX": 288,
+            "CAPACITY_INDEX": 288,
+            "UTILIZATION_RATIO": 288,
+            "REPORTED_PRODUCTION_ANNUALIZED_RATE": 216
+          },
+          "actual_physical_customer_order": 0,
+          "qualified_supply_capacity": 0,
+          "physical_leadtime": 0,
+          "product_specification_region_period_fully_verified": 0
         }
       },
       "usaspending": {
         "status": "PARTIAL",
-        "coverage": "고정30일4검색 조건14페이지 회수. 계약1260개, 거래50페이지 처리; 미조회 거래 이력 계약1210개. 공개일 미확인. 계약 시작일을 관측기간으로 쓰던 초기 draft1261레코드(현재1260키)는 검토 이력/UNKNOWN 출력으로 분리.",
-        "next_cursor": "다음 award=CONT_AWD_1333ND23PNB680247_1341_-NONE-_-NONE-; var/v4/quantitative/q1/pending-award-ids.json 순서로 남은 배치 재개",
+        "coverage": "계약1260개 전체 변경 이력1269페이지 완료. 신규1219요청으로 기존 미처리1210계약을 끝까지 처리. 최신 고유금액8498, 공개일/수량/규격/납기는UNKNOWN. 총계약액과 거래증감 미합산.",
+        "next_cursor": "고정 검색/거래 잔여0; 공개일·실물량 및 향후 원본 수정 탐지 공백만 유지",
         "counts": {
-          "versioned_records": 1571,
-          "distinct_observation_keys": 1570,
-          "numeric_observations": 1570,
+          "versioned_records": 8499,
+          "distinct_observation_keys": 8498,
+          "numeric_observations": 8498,
           "physical_quantity_observations": 0,
           "by_measurement_type": {
-            "MONEY": 1570
+            "MONEY": 8498
           },
-          "with_period": 1570,
+          "with_period": 7238,
           "with_publication_date": 0,
           "period_review_held": 1260,
           "source_suppression_or_unknown": 0,
-          "with_usable_period": 310
+          "with_usable_period": 7238,
+          "role_counts": {
+            "MONEY_ONLY_NOT_PHYSICAL_DEMAND": 8498
+          },
+          "actual_physical_customer_order": 0,
+          "qualified_supply_capacity": 0,
+          "physical_leadtime": 0,
+          "product_specification_region_period_fully_verified": 0
         }
       },
       "census_trade": {
         "status": "SETUP_REQUIRED",
-        "coverage": "Census 키 없음. 공식 변수 목록과 HS 다운로드 대안을 확인했으나 품목별 물리 수량·단위와 동일한 대안을 확보하지 못함. 공식 HS 코드 매핑도 미완료.",
-        "next_cursor": "키가 정상 전달되고 공식HS-단위 매핑이 확인되면36개월 범위 재개; 임의코드/무인증 반복 호출 금지",
+        "coverage": "공식 USITC 수입HTS10·단위29개 검증. 수출Schedule B PDF3개는 별도 보존. Census 키는 실행환경에 없어 무역 수량0; 과거 코드 개정 미확인.",
+        "next_cursor": "Census 키 정상 전달 후 고정36개월 조회; 현재2026 코드표를 과거연도에 소급 적용 금지",
         "counts": {
           "versioned_records": 0,
           "distinct_observation_keys": 0,
@@ -4204,13 +4233,18 @@
           "with_publication_date": 0,
           "period_review_held": 0,
           "source_suppression_or_unknown": 0,
-          "with_usable_period": 0
+          "with_usable_period": 0,
+          "role_counts": {},
+          "actual_physical_customer_order": 0,
+          "qualified_supply_capacity": 0,
+          "physical_leadtime": 0,
+          "product_specification_region_period_fully_verified": 0
         }
       },
       "eia": {
         "status": "PARTIAL",
-        "coverage": "7·8월 두 판의 CA/TX/VA 설비 명목MW18745개. 7월 원본 재사용. 8월 공개일9월24일 확인;7월 공개일 미확인. API발전·판매·연료·재고는 키 없음. 명목MW는 적격 확약량이 아님.",
-        "next_cursor": "고정 XLSX 두 판 행 처리 완료;7월 공개일·API 계열 및 비공개 저장 검증 대기",
+        "coverage": "고정7·8월 CA/TX/VA 명목MW18745관측 완료.7월 발표일 미확인, 추가 API 계열은 키 없음. 계획/퇴역/취소를 현재 적격 공급과 분리.",
+        "next_cursor": "기존860M 재판독 불필요;7월 발표일과 API 계열 설정/공식자료 보강",
         "counts": {
           "versioned_records": 18745,
           "distinct_observation_keys": 18745,
@@ -4223,13 +4257,23 @@
           "with_publication_date": 9379,
           "period_review_held": 0,
           "source_suppression_or_unknown": 0,
-          "with_usable_period": 18745
+          "with_usable_period": 18745,
+          "role_counts": {
+            "OPERATING_NAMEPLATE_NOT_QUALIFIED": 12917,
+            "PLANNED_NAMEPLATE_NOT_AVAILABLE": 1662,
+            "RETIRED_NAMEPLATE": 3105,
+            "CANCELED_OR_POSTPONED_NAMEPLATE": 1061
+          },
+          "actual_physical_customer_order": 0,
+          "qualified_supply_capacity": 0,
+          "physical_leadtime": 0,
+          "product_specification_region_period_fully_verified": 0
         }
       },
       "usgs": {
         "status": "PARTIAL",
-        "coverage": "텅스텐 월보19판 처리. 최신 고유 수치372개·비공개/미확인185개, 실제 같은 기간 개정15건. 3개 다른 품목/MCS연간2024~26은 공식 DOI/pubs403. 월별2023-09..2023-12 및2026-08 등 범위 공백, 월보 공개일 미확인.",
-        "next_cursor": "권리 허용된 공식 연간/다른 광물 자료와 빠진 월보 확보. Census 계보의 무역값은 독립 근거 중복 금지",
+        "coverage": "기존 텅스텐19판·고유수치372, 비공개/UNKNOWN185 보존. 같은 기간 개정15건 기존 증거 재사용. 다른광물·연간자료403 및 월/공개일 공백 유지.",
+        "next_cursor": "공식 접근 가능한 누락 월보/연간/타광물 자료; 기존403 반복 금지",
         "counts": {
           "versioned_records": 1601,
           "distinct_observation_keys": 557,
@@ -4242,13 +4286,21 @@
           "with_publication_date": 0,
           "period_review_held": 0,
           "source_suppression_or_unknown": 185,
-          "with_usable_period": 372
+          "with_usable_period": 372,
+          "role_counts": {
+            "WITHHELD_OR_UNKNOWN": 185,
+            "REPORTED_TRADE_FLOW_NOT_QUALIFIED_SUPPLY": 372
+          },
+          "actual_physical_customer_order": 0,
+          "qualified_supply_capacity": 0,
+          "physical_leadtime": 0,
+          "product_specification_region_period_fully_verified": 0
         }
       },
       "ted": {
         "status": "PARTIAL",
-        "coverage": "고정30일4766공고48페이지·고유번호4766으로 검색 범위 끝까지 회수. 공고 금액3645개. lot 수량/단위의 관계·상태는XML 미검증으로 물리량0.",
-        "next_cursor": "검색 잔여0; XML lot/변경/취소/확정 상태 검증 및 비공개 저장 대기",
+        "coverage": "검색4766고유공고48페이지 완료. 금액3645관측. 수량 필드 공고59개 공식XML 조회에서 유효본문0; lot·계약/수정/취소 관계 검증 불가.",
+        "next_cursor": "XML 빈 응답의 제공 경로/가용성 변경 후만 재개. 같은URL 반복 금지; 수량/확정 주문UNKNOWN",
         "counts": {
           "versioned_records": 6970,
           "distinct_observation_keys": 3645,
@@ -4261,7 +4313,14 @@
           "with_publication_date": 3645,
           "period_review_held": 0,
           "source_suppression_or_unknown": 0,
-          "with_usable_period": 3645
+          "with_usable_period": 3645,
+          "role_counts": {
+            "MONEY_ONLY_NOT_PHYSICAL_DEMAND": 3645
+          },
+          "actual_physical_customer_order": 0,
+          "qualified_supply_capacity": 0,
+          "physical_leadtime": 0,
+          "product_specification_region_period_fully_verified": 0
         }
       }
     },
@@ -4270,15 +4329,15 @@
       "docs/v4/quantitative/quality-evidence.json",
       "docs/v4/quantitative/Q1_RESULTS.md"
     ],
-    "next_action": "Finish remaining transaction cursors; execute manual development-only encrypted Q1 handoff through existing private-only Actions writer, then final source quality/restore and exact-SHA CI. No CPU CODE_SHA/Secret/schedule changes.",
+    "next_action": "Q1 only: publish audited facts-only encrypted capsule with existing private-only writer; verify remote new-process restore and CAS refusal/recovery; record final exact-SHA CI. Remaining source setup/access/vintage gaps prevent Q1 PASS and Q2.",
     "blocked_dependencies": [
-      "SEC approved contact missing",
-      "Census key and verified HS/unit mapping missing",
-      "EIA API key missing; existing XLSX path executed",
-      "USGS official catalog/pubs403; annual/other mineral and publication-date gaps",
-      "Source-specific vintage/date/lot-relation and1210 award transaction-history tasks pending",
-      "Configured GitHub credential HTTP401; no scope/token/passphrase retest; push/private publish/CI blocked",
-      "Existing CPU private publisher/restore requires CPU queue format and its fixed research ref. Q1 must use a separate reviewed namespace/format adapter; do not add fake CPU-format metadata or overwrite CPU state. Remote Q1 publication not attempted."
+      "현재 실행환경에 승인된 SEC 실제 연락처 없음. 제출이력·수치 미수집. Secret 목록 API403으로 Actions 설정 존재 여부는 미확인. 임의 연락처/무승인 호출 없음.",
+      "공식 USITC 수입HTS10·단위29개 검증. 수출Schedule B PDF3개는 별도 보존. Census 키는 실행환경에 없어 무역 수량0; 과거 코드 개정 미확인.",
+      "M3/G17 historical vintage and G22 exact-scope gaps",
+      "EIA July publication date and API key unavailable",
+      "USGS annual/other-mineral403, month/publication gaps",
+      "TED59 official XML attempts produced no valid body; relations unverified",
+      "Q1 actual private publish/remote restore pending; prepared capsule is not yet remote proof"
     ],
     "cpu_code_sha_variable_unchanged": true,
     "last_batch_observations": {
@@ -4308,18 +4367,24 @@
       }
     },
     "updated_at": "2026-10-15T12:48:38.260169+00:00",
-    "numeric_observations": 25844,
+    "numeric_observations": 32880,
     "physical_quantity_observations": 19333,
-    "versioned_records": 30399,
+    "versioned_records": 37435,
     "tests": {
       "changed_scope_and_existing_UI_read": {
         "passed": 30,
         "seconds": 2.3,
         "command": "PYTHONPATH=/tmp/bct-q1-deps:src python -m pytest -q tests/test_v4_quantitative.py tests/test_v4_dashboard.py::test_actual_sqlite_records_revision_and_counts"
       },
-      "entire_previous_regression": "NOT_RUN_UNNECESSARY",
+      "entire_previous_regression": "NOT_RERUN_LOCALLY; required GitHub Stage0 CI remains separate",
       "230_original_source_QA": "NOT_RUN",
-      "GitHub_CI": "NOT_RUN_NO_PUSH_GITHUB_AUTH_HTTP401"
+      "GitHub_CI": "NOT_RUN_NO_PUSH_GITHUB_AUTH_HTTP401",
+      "final_changed_scope": {
+        "passed": 83,
+        "seconds": 13.35,
+        "command": "PYTHONPATH=/tmp/bct-q1-deps:src python -m pytest -q tests/test_v4_quantitative.py tests/test_v4_quantitative_private.py tests/test_v4_cpu_operations.py tests/test_v4_private_state.py tests/test_v4_cpu_research_workflow.py tests/test_v4_dashboard.py::test_actual_sqlite_records_revision_and_counts",
+        "scope": "Q1/source mappings/private transport and shared CPU CAS compatibility/UI read; not inference accuracy"
+      }
     },
     "usage": {
       "official_POST_API_calls": 112,
@@ -4335,8 +4400,8 @@
         "Census linked naicshist.pdf403"
       ],
       "native_file_bytes_local": 63410775,
-      "Q1_SQLite_bytes": 127696896,
-      "checkpoint_gzip_bytes": 6319996,
+      "Q1_SQLite_bytes": 157204480,
+      "checkpoint_gzip_bytes": 8101382,
       "checkpoint_bound": 16777216,
       "private_remote_bytes_written": 0,
       "external_AI_calls": 0,
@@ -4345,14 +4410,36 @@
       "API_payment_KRW": 0,
       "platform_bill_total": "NOT_EXPOSED_NO_PAID_RESOURCES_OR_PLANS_CHANGED",
       "measured_POST_HTTP_seconds": 56.60797094707959,
-      "wall_scope": "Receipt acquisition from2026-10-15T12:16UTC; final evidence_at records end, includes development/validation. HTTP seconds cover POST transport only, not full CPU/wall time."
+      "wall_scope": "Receipt acquisition from2026-10-15T12:16UTC; final evidence_at records end, includes development/validation. HTTP seconds cover POST transport only, not full CPU/wall time.",
+      "Q1_POST_calls_total": 1331,
+      "USAspending_POST_total": 1283,
+      "TED_POST_total": 48,
+      "new_USAspending_POST": 1219,
+      "new_official_GET": 78,
+      "source_receipts_by_family": {
+        "ted_xml": 59,
+        "usaspending": 1283,
+        "ted": 48,
+        "census_mapping": 18,
+        "g17_vintage": 1
+      },
+      "new_AI_calls": 0,
+      "new_CPU_windows": 0,
+      "API_cost_KRW": 0,
+      "platform_total_usage": "NOT_EXPOSED",
+      "Q1_SQLite_sha256": "56139de56fc1821212d7f4b3ff6e693ed505ebba52011f6605c2c887eaa0fce8",
+      "encrypted_transport_bytes": 7955769
     },
     "storage": {
       "existing_Ledger_format": true,
-      "local_new_process_restore": "PASS_8_TABLES_HASH",
-      "checkpoint_gzip_bytes": 6319996,
-      "private_remote_store_restore": "BLOCKED_GITHUB_HTTP401_NOT_RUN",
-      "CPU_originals_untouched": true
+      "local_new_process_restore": "PASS_CHECKPOINT_HASH_8_TABLES_AND_STRICT_FACTS_AUDIT",
+      "checkpoint_gzip_bytes": 8101382,
+      "private_remote_store_restore": "PREPARED_NOT_RUN",
+      "CPU_originals_untouched": true,
+      "Q1_typed_format": "bct-q1-private-facts-1",
+      "original_source_files_in_checkpoint": 0,
+      "checkpoint_sqlite_sha256": "0c0bc75b7ca8e2034b11e6da038a9b231ac21c4f4443c216c53f07e102a7bf77",
+      "CPU_state_ref_unchanged": true
     },
     "local_start_head": "155063676782ebb10a590d489899c281b922da8f",
     "verified_remote_head": "3c6174d4db53f65c6084ca8f544d0d638b404caf",
@@ -4366,13 +4453,23 @@
     "publication_and_delivery": {
       "local_base_sha": "155063676782ebb10a590d489899c281b922da8f",
       "remote_latest_verified_sha": "3c6174d4db53f65c6084ca8f544d0d638b404caf",
-      "remote_current_Q1_code_SHA": null,
+      "remote_current_Q1_code_SHA": "0ed27c5f7f114b691afb900715795229c643013a",
       "local_delivery_SHA": "Containing local Q1 commit, shown by git rev-parse HEAD; no self-referential hash claim.",
-      "push": "BLOCKED_CONFIGURED_GITHUB_AUTH401; not retried with unchanged credential",
-      "CI": "NOT_RUN_NO_REMOTE_Q1_COMMIT",
-      "CPU_CODE_SHA_variable": "UNCHANGED; never set to documentation/Q1 commit"
+      "push": "PASS_EXISTING_GITHUB_AUTH; changes pushed in preserved merge and resume commits",
+      "CI": {
+        "Stage 0 tests": {
+          "run": 38742067062,
+          "conclusion": "success"
+        },
+        "V4 dashboard release gate": {
+          "run": 38742066962,
+          "conclusion": "success"
+        }
+      },
+      "CPU_CODE_SHA_variable": "UNCHANGED; never set to documentation/Q1 commit",
+      "CI_scope": "Previous resume code SHA, not yet final code SHA"
     },
-    "last_evidence_at": "2026-10-15T12:52:51.277594+00:00",
+    "last_evidence_at": "2026-10-15T13:33:10.259933+00:00",
     "auth_resume": {
       "native_git_read_push": "PASS_EXISTING_PLATFORM_AUTH_WITHOUT_CONFIG_CHANGE",
       "preserved_local_sha": "31e6d5ad8ab95321d2a5147b3274ab8d170d9b15",
@@ -4405,6 +4502,25 @@
         "seconds": 0.72
       },
       "no_source_or_AI_reinstallation": true
+    },
+    "current_batch_checkpoint": {
+      "source": "usaspending",
+      "at": "2026-10-15T13:30:59.990606+00:00",
+      "HTTP_requests_this_batch": 3,
+      "transaction_pages": 1269,
+      "awards_completed": 1260,
+      "awards_total": 1260,
+      "awards_not_completed": 0,
+      "stop_reason": null,
+      "no_unchanged_failed_request_retry": true
+    },
+    "value_locator_validation": {
+      "previous_verified_checks": 66,
+      "previous_errors": 0,
+      "new_actual_checks": 12,
+      "new_errors": 0,
+      "total_distinct_checked_records": 78,
+      "scope": "Fixed samples only, not entire corpus semantic accuracy"
     }
   }
 }

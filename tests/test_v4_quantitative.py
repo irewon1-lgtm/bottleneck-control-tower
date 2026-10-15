@@ -202,3 +202,27 @@ def test_cached_checkpoint_budget_counts_real_gzip_members_and_mutation():
     changed=raw[:1234]+b'changed'+raw[1241:]
     assert budget.size(changed)==len(packed(changed))
     assert gzip.decompress(packed(changed))==changed
+
+
+def test_official_hs_leaf_units_not_parent_totals_or_tungsten_content_conversion(tmp_path):
+    raw=json.dumps([{'htsno':'8101','description':'synthetic root','units':[]},
+      {'htsno':'8101.10.00.00','description':'synthetic powder','units':['kg','W kg']},
+      {'htsno':'8102.10.00.00','description':'other material','units':['kg']}]).encode()
+    m=meta(tmp_path,raw);mapped=q.parse_hs_mapping(raw,m,'8101')
+    assert len(mapped)==1 and mapped[0]['import_HTS10']=='8101100000'
+    assert mapped[0]['primary_quantity_unit']=='kg'and mapped[0]['secondary_quantity_unit']=='W kg'
+    assert mapped[0]['trade_quantities']=='NOT_FETCHED'
+    with pytest.raises(ValueError,match='ROOT_NOT_IN_OFFICIAL'):q.parse_hs_mapping(raw,m,'2504')
+
+
+def test_report_roles_preserve_plan_amount_and_broad_production_distinctions(tmp_path):
+    m=meta(tmp_path,b'{}');r=row(m)
+    assert q.quantity_role(r)=='MONEY_ONLY_NOT_PHYSICAL_DEMAND'
+    r.update(source_id='eia',metric='nameplate_capacity',measurement_type='PHYSICAL',attributes={'sheet':'Planned'})
+    assert q.quantity_role(r)=='PLANNED_NAMEPLATE_NOT_AVAILABLE'
+    r['attributes']['sheet']='Operating'
+    assert q.quantity_role(r)=='OPERATING_NAMEPLATE_NOT_QUALIFIED'
+    r.update(source_id='g17',metric='vehicle_assemblies')
+    assert q.quantity_role(r)=='REPORTED_PRODUCTION_ANNUALIZED_RATE'
+    r['value_decimal_or_null']=None
+    assert q.quantity_role(r)=='WITHHELD_OR_UNKNOWN'

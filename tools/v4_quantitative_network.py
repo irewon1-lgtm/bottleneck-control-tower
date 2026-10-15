@@ -83,7 +83,22 @@ def ted(budget):
    c=cursor(ledger,'ted-search')
  ledger.close();return done
 
+def save_batch_progress(source,budget,error=None):
+ path=Path('docs/v4/PROGRESS.json')
+ if not path.exists():return
+ with __import__('sqlite3').connect(ROOT/'ledger/v4.sqlite3')as db:
+  completed=db.execute("SELECT count(DISTINCT json_extract(payload,'$.task')) FROM events WHERE kind='QUANTITATIVE_PAGE_COMMITTED' AND json_extract(payload,'$.task') LIKE 'usa-transactions-%' AND json_extract(payload,'$.has_next')=0").fetchone()[0]
+  pages=db.execute("SELECT count(*) FROM events WHERE kind='QUANTITATIVE_PAGE_COMMITTED' AND json_extract(payload,'$.task') LIKE 'usa-transactions-%'").fetchone()[0]
+  awards=db.execute("SELECT count(DISTINCT json_extract(payload,'$.record.entity_or_facility_id')) FROM events WHERE kind='QUANTITATIVE_OBSERVATION' AND json_extract(payload,'$.record.metric')='award_amount'").fetchone()[0]
+ d=json.loads(path.read_text());q=d['quantitative_plan']
+ q['current_batch_checkpoint']={'source':source,'at':now(),'HTTP_requests_this_batch':budget.calls,'transaction_pages':pages,'awards_completed':completed,'awards_total':awards,'awards_not_completed':awards-completed,'stop_reason':error,'no_unchanged_failed_request_retry':True}
+ temp=path.with_suffix('.json.q1-tmp');temp.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n');temp.replace(path)
+
+
 if __name__=='__main__':
- ap=argparse.ArgumentParser();ap.add_argument('source',choices=['usaspending','ted']);a=ap.parse_args();b=Budget()
+ ap=argparse.ArgumentParser();ap.add_argument('source',choices=['usaspending','ted']);a=ap.parse_args();b=Budget();failure=None
  try:r=usa(b)if a.source=='usaspending'else ted(b);print(json.dumps({'source':a.source,'results':r,'network_requests':b.calls}))
- except Exception as e:print(json.dumps({'source':a.source,'status':'PARTIAL_OR_BLOCKED','error':type(e).__name__,'reason':str(e)[:200],'network_requests':b.calls}));raise SystemExit(1)
+ except Exception as e:
+  failure=type(e).__name__+':'+str(e)[:200]
+  print(json.dumps({'source':a.source,'status':'PARTIAL_OR_BLOCKED','error':type(e).__name__,'reason':str(e)[:200],'network_requests':b.calls}));raise SystemExit(1)
+ finally:save_batch_progress(a.source,b,failure)

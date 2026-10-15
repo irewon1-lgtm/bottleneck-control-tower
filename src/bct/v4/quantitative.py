@@ -357,3 +357,48 @@ def research_export(ledger):
         out.append({'id':item['id'],'record':r})
     return stamp_export({'plan_id':'BCT-V4-Q-1.0','step':'Q1','research_only':True,'observations':out,'candidates':[],
       'meaning':'Statistics and numeric source observations; not qualified supply, physical demand or forecast candidates.'})
+
+
+def parse_hs_mapping(raw,meta,root_prefix):
+    """Official HTS10 metadata, not trade quantities or interchangeable Schedule B.
+
+    Prefixes must be present headings in this exact official export. No inferred
+    commodity code, no kg/W-kg conversion, no unit inherited from a parent total.
+    """
+    if not re.fullmatch(r'\d{4}|\d{6}|\d{8}|\d{10}',root_prefix):raise ValueError('HS_ROOT_CONTRACT')
+    rows=json.loads(raw)
+    if not isinstance(rows,list):raise ValueError('HS_TABLE_CONTRACT')
+    if not any(str(r.get('htsno','')).replace('.','')==root_prefix for r in rows):raise ValueError('HS_ROOT_NOT_IN_OFFICIAL_TABLE')
+    out=[]
+    for i,r in enumerate(rows):
+        code=str(r.get('htsno','')).replace('.','')
+        if not re.fullmatch(r'\d{10}',code)or not code.startswith(root_prefix):continue
+        units=r.get('units',[])
+        if not 1<=len(units)<=2 or any(not isinstance(u,str)or not u.strip()for u in units):raise ValueError('HS_LEAF_UNITS_UNKNOWN')
+        out.append({'import_HTS10':code,'display_code':r['htsno'],'description':r['description'],
+                    'units_original':units,'primary_quantity_unit':units[0],
+                    'secondary_quantity_unit':units[1]if len(units)>1 else None,
+                    'source_url':meta['url'],'source_hash':meta['sha256'],
+                    'source_locator':{'format':'JSON','path':[i]},'root_verified':root_prefix,
+                    'version':'CURRENT_RETRIEVED_HASH_NOT_HISTORICAL_CODEBOOK',
+                    'trade_quantities':'NOT_FETCHED','not_qualified_supply':True})
+    return out
+
+
+def quantity_role(record):
+    """Descriptive reporting buckets; never a TARGET or shortage inference."""
+    if record['value_decimal_or_null']is None:return 'WITHHELD_OR_UNKNOWN'
+    kind=record['measurement_type'];source=record['source_id'];metric=record['metric']
+    if kind=='MONEY':return 'MONEY_ONLY_NOT_PHYSICAL_DEMAND'
+    if kind=='INDEX':return 'CAPACITY_INDEX'if metric=='industrial_capacity'else'PRODUCTION_INDEX'
+    if kind=='RATIO':return 'UTILIZATION_RATIO'
+    if source=='eia'and metric=='nameplate_capacity':
+        return {'Operating':'OPERATING_NAMEPLATE_NOT_QUALIFIED','Planned':'PLANNED_NAMEPLATE_NOT_AVAILABLE',
+                'Retired':'RETIRED_NAMEPLATE','Canceled or Postponed':'CANCELED_OR_POSTPONED_NAMEPLATE'}.get(record['attributes'].get('sheet'),'CAPACITY_STATUS_UNKNOWN')
+    if source=='g17'and metric=='vehicle_assemblies':return 'REPORTED_PRODUCTION_ANNUALIZED_RATE'
+    if source=='usgs':
+        if metric=='Consumption':return 'REPORTED_CONSUMPTION_NOT_CUSTOMER_ORDER'
+        if metric.startswith('Net production'):return 'REPORTED_PRODUCTION_FLOW'
+        if metric.startswith('Stocks'):return 'REPORTED_INVENTORY_STOCK'
+        if 'import'in metric.lower()or'export'in metric.lower():return 'REPORTED_TRADE_FLOW_NOT_QUALIFIED_SUPPLY'
+    return 'PHYSICAL_ROLE_UNKNOWN'
