@@ -4299,7 +4299,7 @@
       },
       "ted": {
         "status": "PARTIAL",
-        "coverage": "검색4766고유공고48페이지 완료. 금액3645관측. 수량 필드 공고59개 공식XML 조회에서 유효본문0; lot·계약/수정/취소 관계 검증 불가.",
+        "coverage": "검색4766고유공고48페이지 완료. 금액3645관측. 수량 필드 공고59개 공식XML 조회에서 유효본문0; lot·계약/수정/취소 관계 검증 불가. 원인 세부:58개는 HTTP202 처리수락 후 본문 미제공, 첫1개는 예전 도구가 실제상태를 보존하지 않고200으로 기록한 빈 응답. 비동기 준비/접근제약 여부 미확인; 유효 XML0, 같은 URL 재요청0.",
         "next_cursor": "XML 빈 응답의 제공 경로/가용성 변경 후만 재개. 같은URL 반복 금지; 수량/확정 주문UNKNOWN",
         "counts": {
           "versioned_records": 6970,
@@ -4372,18 +4372,35 @@
       },
       "entire_previous_regression": "NOT_RERUN_LOCALLY; required GitHub Stage0 CI remains separate",
       "230_original_source_QA": "NOT_RUN",
-      "GitHub_CI": "NOT_RUN_NO_PUSH_GITHUB_AUTH_HTTP401",
+      "GitHub_CI": {
+        "verified_code_SHA": "87ea84037821a3b2ff4f9a9d3274f16f78e5e90d",
+        "Stage_0": {
+          "run_id": 38743999179,
+          "result": "success"
+        },
+        "dashboard_gate": {
+          "run_id": 38743999393,
+          "result": "success"
+        },
+        "actual_private_Q1_publish": {
+          "run_id": 38744043840,
+          "result": "success"
+        },
+        "not_executed": "Stage0 real230-source operating-wrapper QA skipped; not counted as PASS",
+        "final_documentation_commit": "Exact SHA CI must be verified externally after final push; no self-referential SHA claim"
+      },
       "final_changed_scope": {
         "passed": 83,
         "seconds": 13.35,
         "command": "PYTHONPATH=/tmp/bct-q1-deps:src python -m pytest -q tests/test_v4_quantitative.py tests/test_v4_quantitative_private.py tests/test_v4_cpu_operations.py tests/test_v4_private_state.py tests/test_v4_cpu_research_workflow.py tests/test_v4_dashboard.py::test_actual_sqlite_records_revision_and_counts",
         "scope": "Q1/source mappings/private transport and shared CPU CAS compatibility/UI read; not inference accuracy"
-      }
+      },
+      "previous_GitHub_auth_block": "HISTORICAL_HTTP401_RESOLVED_WITH_EXISTING_CONNECTION; no authentication settings replaced"
     },
     "usage": {
-      "official_POST_API_calls": 112,
+      "official_POST_API_calls": 1331,
       "by_endpoint_family": {
-        "USAspending": 64,
+        "USAspending": 1283,
         "TED": 48
       },
       "discovery_download_receipts": 63,
@@ -4403,8 +4420,8 @@
       "new_models": 0,
       "API_payment_KRW": 0,
       "platform_bill_total": "NOT_EXPOSED_NO_PAID_RESOURCES_OR_PLANS_CHANGED",
-      "measured_POST_HTTP_seconds": 56.60797094707959,
-      "wall_scope": "Receipt acquisition from2026-10-15T12:16UTC; final evidence_at records end, includes development/validation. HTTP seconds cover POST transport only, not full CPU/wall time.",
+      "measured_POST_HTTP_seconds": 286.41905470022175,
+      "wall_scope": "Total preserved official POST receipt transport times only; does not include full parse/backup/Actions/assistant time. No paid resource enabled.",
       "Q1_POST_calls_total": 1331,
       "USAspending_POST_total": 1283,
       "TED_POST_total": 48,
