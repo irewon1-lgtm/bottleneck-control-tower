@@ -130,7 +130,7 @@ def census(ledger,fetch):
    # CTY_CODE is optional/default displayed in the official schema.
    # The old guessed world code 0000 produced 188 empty responses. Query
    # explicit country detail instead; preserve every returned geography.
-   params={'get':fields+',CTY_NAME','time':'from '+start+' to '+end,('E_COMMODITY'if direction=='exports'else'I_COMMODITY'):code}
+   params={'get':fields+',CTY_CODE,CTY_NAME','time':'from '+start+' to '+end,('E_COMMODITY'if direction=='exports'else'I_COMMODITY'):code}
    url='https://api.census.gov/data/timeseries/intltrade/'+direction+'/hs?'+urlencode(params)
    try:
     raw,meta=fetch.get(url,'census_trade');rows=parse_trade(raw,meta,direction,'VERIFIED_ANNUAL_CODE_UNIT')
@@ -168,19 +168,77 @@ def finish():
  for source in sorted(private.SOURCES):
   rows=[r['record']for r in active if r['record']['source_id']==source];by[source]={'numeric':sum(r['value_decimal_or_null']is not None for r in rows),'physical':sum(r['value_decimal_or_null']is not None and r['measurement_type']=='PHYSICAL'for r in rows),'held':sum(r['quality_state'].startswith('HELD')for r in rows),'money':sum(r['value_decimal_or_null']is not None and r['measurement_type']=='MONEY'for r in rows),'publication_UNKNOWN':sum(r['published_at']=='UNKNOWN'for r in rows)}
  docs=[json.loads(p)for p, in ledger.db.execute("select payload from events where kind='QUANTITATIVE_DOCUMENT'")];failures=[json.loads(p)for p, in ledger.db.execute("select payload from events where kind='QUANTITATIVE_SOURCE_FAILURE'")]
- native=[json.loads(p.read_text())for p in (R/'native').glob('*.json')];report={'by_source':by,'SEC_documents':docs,'SEC_filings_seen':len({d['accession']for d in docs}),'SEC_bodies_extracted':sum(d['status'].startswith('EXACT')for d in docs),'failures':failures,'requests_including_reused_probe_receipts':len(native),'response_diagnostics':[m for m in native if m['status']!=200],'bindings':{'SEC_present':bool(os.environ.get('BCT_SEC_USER_AGENT')),'Census_present':bool(os.environ.get('CENSUS_API_KEY')),'Census_40hex_format':bool(re.fullmatch('[0-9a-fA-F]{40}',os.environ.get('CENSUS_API_KEY','')))},'Q2_report':json.loads((R/'q2-report.json').read_text())if(R/'q2-report.json').exists()else None,'firsts':ledger.db.execute('select count(*)from firsts').fetchone()[0],'AI_calls':0,'CPU_windows':0}
+ native=[json.loads(p.read_text())for p in (R/'native').glob('*.json')];report={'by_source':by,'SEC_documents':[d for d in docs if d['status']!='DISCOVERED_NOT_READ'],'SEC_discovered_filings':sum(d['status']=='DISCOVERED_NOT_READ'for d in docs),'SEC_submissions_read':sum(d['status']=='SUBMISSION_EXTRACTED_SEMANTICS_PENDING'for d in docs),'SEC_filings_seen':len({d['accession']for d in docs}),'SEC_bodies_extracted':sum(d['status'].startswith('EXACT')for d in docs),'failures':failures,'requests_including_reused_probe_receipts':len(native),'response_diagnostics':[m for m in native if m['status']!=200],'bindings':{'SEC_present':bool(os.environ.get('BCT_SEC_USER_AGENT')),'Census_present':bool(os.environ.get('CENSUS_API_KEY')),'Census_40hex_format':bool(re.fullmatch('[0-9a-fA-F]{40}',os.environ.get('CENSUS_API_KEY','')))},'Q2_report':json.loads((R/'q2-report.json').read_text())if(R/'q2-report.json').exists()else None,'Q2_product_facts':[json.loads(p)for p, in ledger.db.execute("select payload from events where kind='QUANTITATIVE_PRODUCT_FACT'")],'firsts':ledger.db.execute('select count(*)from firsts').fetchone()[0],'AI_calls':0,'CPU_windows':0}
  report['new_source_samples']={}
  for source in ['sec','census_trade']:
   rows=[x['record']for x in active if x['record']['source_id']==source and x['record']['value_decimal_or_null']is not None]
   report['new_source_samples'][source]=[{k:r[k]for k in ['product_or_classification','metric','value_original','value_normalized_or_null','unit_original','geography','period_start','period_end','published_at','source_url','raw_or_safe_payload_hash','source_locator','quality_state']}for r in (rows[:2]+rows[-2:]if len(rows)>2 else rows)]
  report['total_numeric']=sum(x['record']['value_decimal_or_null']is not None for x in active)
+ maps=state_scope()['census_trade']['annual_mapping']['records'];unit_map={(r['direction'],r['year'],r['code']):r['unit_original'].casefold()for r in maps}
+ cr=[x['record']for x in active if x['record']['source_id']=='census_trade'and x['record']['measurement_type']=='PHYSICAL'and x['record']['value_decimal_or_null']is not None]
+ report['Census_quality_review']={'physical_records':len(cr),'unit_map_matches':sum(r['unit_original'].casefold()==unit_map.get(('import'if r['attributes']['trade_direction']=='imports'else'export',r['attributes']['commodity_code_year'],r['product_or_classification']))for r in cr),'geography_UNKNOWN':sum('UNKNOWN'in r['geography']for r in cr),'first_publication_UNKNOWN':sum(r['published_at']=='UNKNOWN'for r in cr),'no_completed_data_query_repeated':True}
  report['Census_periods']=sorted({x['record']['period_start'][:7]for x in active if x['record']['source_id']=='census_trade'})
  report['source_scope']='SEC fixed30days/two configured issuers; Census fixed36months/annual mapped codes; country rows never summed as independent sources'
- report['source_task_counts']={prefix:ledger.db.execute("select count(*)from events where kind='QUANTITATIVE_PAGE_COMMITTED'and json_extract(payload,'$.task')like ?",(prefix+'%',)).fetchone()[0]for prefix in ['sec-filing-','census-country-detail-v2-']}
+ report['source_task_counts']={prefix:ledger.db.execute("select count(*)from events where kind='QUANTITATIVE_PAGE_COMMITTED'and json_extract(payload,'$.task')like ?",(prefix+'%',)).fetchone()[0]for prefix in ['sec-filing-','sec-global-index-','sec-full-submission-','census-country-detail-v2-']}
  with ledger.worker():private.checkpoint(ledger,R/'checkpoint')
  ledger.close();parent=json.loads((R/'parent.json').read_text())['parent']
  private.seal(R/'checkpoint',BRIDGE/'result/state.gpg',os.environ['BCT_V4_STATE_PASSPHRASE'],parent,report=report)
  print('BCT_Q1_SOURCES_REPORT_JSON='+json.dumps(report))
+
+
+def quality():
+ initialize();ledger=Ledger(R/'ledger');fetch=Fetch(ledger);done=False
+ from bct.v4.quantitative_product import save as save_products
+ from bct.v4.quantitative_sources import parse_sec_index,parse_sec_submission
+ from datetime import date,timedelta
+ with ledger.worker():
+  save_products(ledger,json.loads(Path('docs/v4/quantitative/product-facts.json').read_text())['records'])
+  marker='Q2 exact field audit: old15 comparisons are different products'
+  if not ledger.db.execute("select 1 from events where kind='QUANTITATIVE_VALIDATION'and json_extract(payload,'$.reason')=?",(marker,)).fetchone():
+   with ledger.db:ledger.event('QUANTITATIVE_VALIDATION',{'reason':marker,'originals_modified':False,'policy':json.loads(Path('docs/v4/quantitative/quality-evidence.json').read_text())['storage_quality_Q2_resume']['Q2_gap_audit']})
+  try:
+   spec=state_scope()['sec']['scope'];day=date.fromisoformat(spec['start']);end=date.fromisoformat(spec['end'])
+   while day<=end:
+    if day.weekday()<5:
+     task='sec-global-index-'+day.isoformat()
+     if q.cursor(ledger,task)['next']is not None:
+      url=f'https://www.sec.gov/Archives/edgar/daily-index/{day.year}/QTR{(day.month-1)//3+1}/master.{day:%Y%m%d}.idx'
+      try:
+       raw,meta=fetch.get(url,'sec');rows=parse_sec_index(raw,day.isoformat())
+       with ledger.db:
+        for r in rows:
+         filing='https://www.sec.gov/Archives/'+r['path'];ident=sha(filing)
+         if ledger.db.execute("select 1 from events where kind='QUANTITATIVE_DOCUMENT'and json_extract(payload,'$.document_id')=?",(ident,)).fetchone():continue
+         ledger.event('QUANTITATIVE_DOCUMENT',{'source_id':'sec','document_id':ident,'url':filing,'published_at':r['filing_date'],'filing_date':r['filing_date'],'accession':r['accession'],'form':r['form'],'cik':r['cik'],'status':'DISCOVERED_NOT_READ','detail':{'company':r['company'],'index_url':url,'index_sha256':meta['sha256'],'index_line':r['index_line']}})
+       q.commit_page(ledger,task,meta,[],total=len(rows))
+      except SourceFailure:pass
+      except(ValueError,KeyError)as exc:
+       with ledger.db:ledger.event('QUANTITATIVE_SOURCE_FAILURE',{'task':'source-'+sha(url),'page':1,'error':'LOCAL_SEC_INDEX_'+type(exc).__name__+':'+str(exc)[:80],'retry':False,'at':now()})
+    day+=timedelta(days=1)
+   docs=[json.loads(p)for p, in ledger.db.execute("select payload from events where kind='QUANTITATIVE_DOCUMENT'and json_extract(payload,'$.status')='DISCOVERED_NOT_READ'")]
+   # Broad deterministic issuer diversity, no industry/product keyword gate.
+   selected=[];ciks={str(c).zfill(10)for c in json.loads(Path('config/v4-sources.json').read_text())['ciks']}
+   for d in sorted(docs,key=lambda r:(r['filing_date'],r['cik'],r['accession']),reverse=True):
+    if d['cik']in ciks:continue
+    selected.append(d);ciks.add(d['cik'])
+    if len(selected)>=10:break
+   for d in selected:
+    task='sec-full-submission-'+d['accession']
+    if q.cursor(ledger,task)['next']is None:continue
+    if ledger.db.execute("select 1 from events where kind='QUANTITATIVE_SOURCE_FAILURE'and json_extract(payload,'$.task')=?",(task,)).fetchone():continue
+    try:
+     raw,meta=fetch.get(d['url'],'sec');meta['published_at']=d['filing_date']
+     rows,detail=parse_sec_submission(raw,meta,d['cik'],d['accession'])
+     for row in rows:q.verify_locator(row,raw)
+     q.commit_page(ledger,task,meta,rows)
+     with ledger.db:ledger.event('QUANTITATIVE_DOCUMENT',{**d,'document_id':meta['sha256'],'status':'SUBMISSION_EXTRACTED_SEMANTICS_PENDING','detail':detail})
+    except SourceFailure:pass
+    except(ValueError,KeyError)as exc:
+     with ledger.db:ledger.event('QUANTITATIVE_SOURCE_FAILURE',{'task':task,'page':1,'error':'LOCAL_SEC_PARSE_'+type(exc).__name__+':'+str(exc)[:80],'retry':False,'at':now()})
+   done=True
+  except StopBatch:pass
+ ledger.close();print('BCT_Q1_QUALITY_BATCH_JSON='+json.dumps({'HTTP_requests_this_batch':fetch.calls,'fixed_scope_unblocked_tasks_visited':done,'CPU_windows':0,'AI_calls':0}))
+ return 0 if done else 75
 
 
 def storage():
@@ -214,6 +272,7 @@ def publish():
  print('BCT_Q1_SOURCES_PUBLISH_JSON='+json.dumps({'report':result['report'],'receipt':receipt,'code_SHA':os.environ['GITHUB_SHA']}))
 
 if __name__=='__main__':
- parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage']);a=parser.parse_args()
+ parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality']);a=parser.parse_args()
+ if a.action=='quality':raise SystemExit(quality())
  if a.action in {'process','trade'}:raise SystemExit(process(only_trade=a.action=='trade'))
  else:globals()[a.action]()

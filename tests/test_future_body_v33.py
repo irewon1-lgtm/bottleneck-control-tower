@@ -275,3 +275,15 @@ def test_complete_written_article_with_supplementary_video_remains_full():
     html += '<p>An optional full interview is available in the video above.</p></article>'
     result = extract_document(html)
     assert result['body_status'] == 'FULL'
+
+
+def test_hidden_related_preview_does_not_mark_complete_article_as_preview():
+    from bct.future_body import extract_document
+    body='<p>A manufacturer has signed a contract for twelve aircraft. Deliveries are not specified.</p>'
+    hidden='<aside><article class="summary">A separate short teaser</article></aside>'
+    result=extract_document('<html><article>'+body+hidden+'</article></html>')
+    assert result['body_status']=='FULL'
+    assert 'separate short teaser'not in result['body']
+    preview=extract_document('<html><article class="preview">'+body+'</article></html>')
+    assert preview['body_status']=='PARTIAL'
+    assert 'PREVIEW_OR_SUMMARY_CONTENT'in preview['reasons']

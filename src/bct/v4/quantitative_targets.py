@@ -13,6 +13,7 @@ KIND='QUANTITATIVE_TARGET_REVIEW'
 def comparable(demand,supply):
     """Eligibility for a later existing-engine comparison, not a shortage rule."""
     a,b=target_key(demand),target_key(supply)
+    if a[0]and b[0]and a[0]!=b[0]:return False,'PRODUCT_MISMATCH'
     if not all(a)or not all(b):return False,'TARGET_FIELDS_UNKNOWN'
     if a!=b:return False,'DIFFERENT_TARGET'
     if demand.get('lineage')==supply.get('lineage'):return False,'SAME_OR_UNKNOWN_SOURCE_LINEAGE'

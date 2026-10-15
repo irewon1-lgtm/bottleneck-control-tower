@@ -16,7 +16,7 @@ def test_positive_comparison_only_prepares_existing_engine_and_blocks_mixed_scop
  assert not any(k in d for k in ['S1','S2','S3'])
  for field in TARGET:
   bad=deepcopy(s);bad['target'][field]['normalized']='other'
-  assert targets.comparable(d,bad)==(False,'DIFFERENT_TARGET')
+  assert targets.comparable(d,bad)==(False,'PRODUCT_MISMATCH'if field=='product'else'DIFFERENT_TARGET')
  for field,value,reason in [('lineage','CUSTOMER_A','SAME_OR_UNKNOWN_SOURCE_LINEAGE'),('period','2028-10','PERIOD_MISMATCH_OR_UNKNOWN'),('unit','USD','UNIT_MISMATCH_OR_UNKNOWN'),('actuality','PLAN','PLAN_OR_UNCONFIRMED_NOT_AVAILABLE_SUPPLY'),('quantity',None,'PHYSICAL_QUANTITY_UNKNOWN')]:
   bad=deepcopy(s);bad[field]=value;assert targets.comparable(d,bad)==(False,reason)
  d['unit']=s['unit']='USD';d['measurement_type']=s['measurement_type']='MONEY'

@@ -43,7 +43,7 @@ def make_delta(before,after):
     value={'format':FORMAT,'base_sqlite_sha256':file_sha(before),'target_sqlite_sha256':file_sha(after),
            'target_size':after.stat().st_size,'pages':changed}
     raw=pack(value)
-    if len(raw)>LIMIT:raise ValueError('Q1_DELTA_16MIB_LIMIT')
+    if len(raw)>min(LIMIT,1024**2):raise ValueError('Q1_DELTA_BATCH_1MIB_STOP_BEFORE_PUBLISH')
     return raw,{'changed_pages':len(changed),'delta_bytes':len(raw),'sqlite_bytes':after.stat().st_size}
 
 

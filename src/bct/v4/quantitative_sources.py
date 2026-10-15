@@ -126,3 +126,49 @@ def parse_codebook_text(text,direction):
             if u:unit=u[1];unitline=j+1;break
         if unit:entries.append({'code':code,'unit_original':unit,'printed_code_line':i+1,'printed_unit_line':unitline,'line_literal':line.strip()})
     return entries
+
+
+
+def parse_sec_index(raw,day):
+    """Complete official daily index, not all-company body coverage."""
+    text=raw.decode('utf-8');lines=text.splitlines()
+    if 'CIK|Company Name|Form Type|Date Filed|Filename'not in lines:raise ValueError('SEC_DAILY_INDEX_HEADER')
+    rows=[]
+    for i,line in enumerate(lines,1):
+        if not re.match(r'^\d+\|',line):continue
+        cik,company,form,date,path=line.split('|')
+        if date!=day:raise ValueError('SEC_INDEX_DATE_MISMATCH')
+        if not re.fullmatch(r'edgar/data/\d+/\d{10}-\d{2}-\d{6}\.txt',path):raise ValueError('SEC_INDEX_PATH')
+        if form.removesuffix('/A')in {'10-K','10-Q','8-K','20-F','6-K'}:
+            rows.append({'cik':cik.zfill(10),'company':company,'form':form,'filing_date':date,'path':path,'index_line':i,'accession':path.rsplit('/',1)[1][:-4]})
+    return rows
+
+
+def parse_sec_submission(raw,meta,cik,accession):
+    """Exact inline facts across main/ex99 sections. Text/table units stay proposals."""
+    text=raw.decode('utf-8');facts=[];sections=[];proposals=[]
+    for match in re.finditer(r'<DOCUMENT>(.*?)</DOCUMENT>',text,re.S|re.I):
+        section=match[1];typ=re.search(r'<TYPE>([^\r\n<]+)',section,re.I)
+        if not typ:continue
+        kind=typ[1].strip()
+        if kind.removesuffix('/A')not in {'10-K','10-Q','8-K','20-F','6-K'}and not kind.startswith('EX-99'):continue
+        body=re.search(r'<TEXT>(.*?)</TEXT>',section,re.S|re.I)
+        if not body or not re.search(r'<html',body[1][:10000],re.I):continue
+        offset=match.start(1)+body.start(1);child=body[1]
+        rows,detail=parse_sec_inline(child.encode(),meta,cik,accession)
+        for row in rows:
+            row['source_locator']['start']+=offset;row['source_locator']['end']+=offset
+            row['entity_or_facility_id']+='/'+kind+'/'+str(offset)
+            row['attributes']['sec_document_type']=kind
+            row['attributes']['sec_section_start']=offset
+            facts.append(row)
+        # Data tokens retain exact raw positions, not guessed table relationships.
+        parser=InlineFacts(child);parser.feed(child)
+        class Tokens(HTMLParser):
+            def handle_data(self,data):
+                line,col=self.getpos();start=parser.offsets[line-1]+col
+                for m in re.finditer(r'(?<![\w$])(\d[\d,]*(?:\.\d+)?)\s+(MW|MWh|aircraft|helicopters|satellites|wafers|systems|weeks|months|metric tons)\b',data,re.I):
+                    proposals.append({'value_original':m[1],'unit_original':m[2],'start':offset+start+m.start(1),'end':offset+start+m.end(1),'document_type':kind,'meaning':'UNKNOWN_TABLE_OR_TEXT_RELATION_NOT_ADOPTED'})
+        Tokens().feed(child)
+        sections.append({'type':kind,'start':offset,'end':offset+len(child),'table_count':len(re.findall(r'<table\b',child,re.I)),**detail})
+    return facts,{'sections':sections,'physical_or_time_token_proposals':proposals[:40],'proposal_count':len(proposals),'proposal_truncated':len(proposals)>40,'full_company_coverage':False}

@@ -1,5 +1,6 @@
 """Existing serial SEC HTTP client, isolated from optional ORM imports."""
 import time
+import re
 from urllib.request import Request,urlopen
 
 class SECTransport:
@@ -18,7 +19,8 @@ class SECTransport:
         self._previous = None
 
     def get(self, url: str) -> bytes:
-        if not (url.startswith("https://data.sec.gov/submissions/CIK") or
+        daily=bool(re.fullmatch(r"https://www\.sec\.gov/Archives/edgar/daily-index/20[0-9]{2}/QTR[1-4]/master\.20[0-9]{6}\.idx",url))
+        if not (daily or url.startswith("https://data.sec.gov/submissions/CIK") or
                 url.startswith("https://www.sec.gov/Archives/edgar/data/")):
             raise ValueError("unapproved SEC URL")
         if self._previous is not None:

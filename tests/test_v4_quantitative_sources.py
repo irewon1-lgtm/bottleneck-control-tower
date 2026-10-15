@@ -86,3 +86,15 @@ def test_trade_country_identity_and_ambiguous_columns_are_not_merged(tmp_path):
  bad=json.dumps([['E_COMMODITY','E_COMMODITY'],['2504100000','8101940000']]).encode()
  with pytest.raises(ValueError,match='CENSUS_DUPLICATE_COLUMNS'):
   source.parse_trade(bad,meta(tmp_path,bad),'exports','VERIFIED_ANNUAL_CODE_UNIT')
+
+
+def test_sec_full_index_and_attachment_locations_do_not_adopt_table_semantics(tmp_path):
+ raw=b'CIK|Company Name|Form Type|Date Filed|Filename\n1|Synthetic issuer|10-Q|2026-10-14|edgar/data/1/0000000001-26-000001.txt\n'
+ rows=source.parse_sec_index(raw,'2026-10-14');assert len(rows)==1
+ with pytest.raises(ValueError,match='DATE_MISMATCH'):source.parse_sec_index(raw,'2026-10-13')
+ raw=b'<DOCUMENT><TYPE>EX-99.1\n<TEXT><html><table><tr><td>20 aircraft</td><td>Expected in 2027</td></tr></table></html></TEXT></DOCUMENT>'
+ facts,detail=source.parse_sec_submission(raw,meta(tmp_path,raw,'sec'),'0000000001','0000000001-26-000001')
+ assert not facts and detail['sections'][0]['table_count']==1
+ p=detail['physical_or_time_token_proposals'][0]
+ assert raw.decode()[p['start']:p['end']]=='20'
+ assert p['meaning']=='UNKNOWN_TABLE_OR_TEXT_RELATION_NOT_ADOPTED'

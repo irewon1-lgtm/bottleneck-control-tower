@@ -372,9 +372,9 @@ def extract_document(html, *, http_status=200, content_type="text/html"):
             status = "PARTIAL"
             reasons.append("PUBLISHER_PRIMARY_SCOPE_UNVERIFIED")
         if body and node and (any(_PREVIEW_CLASS.search(str(n.attrs.get("class", "")))
-                                 for n in _nodes(node)) or
+                                 for n in _visible_nodes(node)) or
                              any(_PREVIEW_CLASS.search(str(n.attrs.get('class','')))
-                                 and any(child is node for child in _nodes(n)) for n in nodes)):
+                                 and any(child is node for child in _nodes(n)) for n in _visible_nodes(doc.root))):
             status = "PARTIAL"
             reasons.append("PREVIEW_OR_SUMMARY_CONTENT")
         if body and node and any(n.tag=='article' and 'article-card' in str(n.attrs.get('class','')).split()
