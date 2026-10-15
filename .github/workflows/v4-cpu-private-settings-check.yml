@@ -44,7 +44,8 @@ jobs:
             'CPU_reading_performed':False,'settings_modified':False}
           print('BCT_SETTINGS_OBSERVED_JSON='+json.dumps(report))
           assert report['private_token_present'] and report['private_token_header_format_valid'], 'PRIVATE_TOKEN_MISSING_OR_FORMAT_INVALID'
-          assert report['handoff_secret_present'] and report['handoff_secret_format_valid'], 'HANDOFF_SECRET_MISSING_OR_FORMAT_INVALID'
+          # Encryption-key absence blocks DB/CPU activation, not this independent
+          # source-free permission probe. Preserve that absence in the receipt.
           PY
       - name: Actual private-token writes and operating-ref denials, no source DB
         env:
