@@ -171,7 +171,13 @@ def test_alternative_extraction_does_not_turn_subscription_preview_into_body(tmp
     ledger.close()
 
 
-def test_original_UI_and_frozen_evidence_files_unchanged():
+def test_original_frozen_UI_copy_and_evidence_files_are_preserved():
     manifest = json.loads((REPORT / "initial-scope.json").read_text())
+    # The later dashboard-sync request explicitly requires visible version,
+    # sync status and new research scopes. Preserve the original sealed UI
+    # bytes here; current UI is covered by dashboard and release-gate tests.
+    evolved = {"src/bct/v4/dashboard_web/app.js": "app.js",
+               "src/bct/v4/dashboard_web/style.css": "style.css"}
     for name, expected in manifest["protected_files"].items():
-        assert sha((ROOT / name).read_bytes()) == expected, name
+        path = ROOT / "docs/v4/dashboard/frozen-assets" / evolved[name] if name in evolved else ROOT / name
+        assert sha(path.read_bytes()) == expected, name

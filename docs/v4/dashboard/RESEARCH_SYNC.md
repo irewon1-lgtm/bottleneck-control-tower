@@ -48,6 +48,10 @@ main·data·기존 Pages workflow는 수정하지 않는다.
 - 로컬 Python22 PASS,기존 Node UI8 PASS.
 - 실제 DB로1703개 상세 인용·해시 대조 PASS,조회·download·쓰기/파일 경계 검사 PASS.
 - 압축 백업·표 해시·집계 불일치 반례3종은 실제 거부했다.
+- 첫 전체 CI는1428 PASS/1 skip와 과거 UI byte 고정 검사1 FAIL이었다.
+  이번 요청의 명시된 UI 변경과 충돌한 과거 기준이다. 당시 app.js/style.css
+  원본을 frozen-assets에 그대로 보존해 초기 seal과 대조하고,현행 UI는 새
+  기능·release gate로 검사한다. 연구/원문/DB 보존 기준은 변경하지 않는다.
 - GitHub push CI와 사이트 반영은 이어서 실제 실행한 결과로만 보고한다.
 
 Netlify project `def4b8b3-4d62-4eb6-9813-b2332f1e1b17`은 현재 미배포이며
