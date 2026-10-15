@@ -20,7 +20,7 @@ def run(output):
              Path('var/v4/cpu-recovery/ledger/v4.sqlite3'),
              Path('var/v4/cross-industry/ledger/v4.sqlite3')]
     before = {str(p): file_sha(p) for p in paths if p.exists()}
-    documents = {}; native = {}
+    documents = {}; native = {}; prior_urls = set()
     for path in paths:
         if not path.exists():
             continue
@@ -30,6 +30,10 @@ def run(output):
                 raw = db.execute('SELECT data FROM blobs WHERE id=?', (doc['raw_sha256'],)).fetchone()
                 if raw:
                     native.setdefault(doc['document_id'], raw[0])
+            for payload, in db.execute("SELECT payload FROM events WHERE kind LIKE '%ATTEMPT' OR kind='POST_UI_BODY_REVIEW'"):
+                item = json.loads(payload)
+                if item.get('url'):
+                    prior_urls.add(item['url'])
     # Preserve the old PARTIAL versions. Add separately reviewed recaptures only.
     for path in Path('var/v4/quantitative/q1-quality').glob('*.verified.json'):
         doc = json.loads(path.read_text()); documents[doc['document_id']] = doc
@@ -52,7 +56,7 @@ def run(output):
             if doc['body_sha256'] != seed['source'].get('body_sha256') or doc['document_id'] not in native:
                 continue
             links += q2.linked_sources(row, doc, native[doc['document_id']],
-                                       attempted_urls=[d['origin_url'] for d in documents.values()])
+                                       attempted_urls=prior_urls | {d['origin_url'] for d in documents.values()})
         row['official_link_queue'] = list({x['url']: x for x in links}.values())[:3 - len(row['selected_sources'])]
         for link in row['official_link_queue']:
             if link['url'] in attempted:

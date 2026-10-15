@@ -104,3 +104,16 @@ def test_product_page_date_is_not_an_article_date_and_receipt_bound_article_is_p
     assert d['published_at'] is None and d['provenance']=='BLOCKED'
     raw=raw.replace(b'WebPage',b'NewsArticle');d=doc('Model-Q');q.bind_publication(d,raw)
     assert d['published_at']=='2026-10-01'and d['provenance']=='PASS'
+
+
+def test_batch_budget_leaves_other_links_unattempted(tmp_path):
+    p=q.packet([seed()],[],as_of='2026-10-15');r=p['records'][0]
+    r['official_link_queue']=[{'url':'https://www.airbus.com/'+name,'parent_document_id':'first',
+                              'status':'UNFETCHED_OFFICIAL_LINK_NOT_EVIDENCE'}for name in ['one','two']]
+    r['id']=sha([q.VERSION,{k:v for k,v in r.items()if k!='id'}])
+    class Client:
+        def fetch(self,url):raise TimeoutError()
+    l=Ledger(tmp_path)
+    assert len(q.acquire(p,l,Client(),max_calls=1))==1
+    assert l.db.execute("SELECT count(*) FROM events WHERE kind='Q2_COUNTERPART_FETCH_ATTEMPT'").fetchone()[0]==1
+    l.close()

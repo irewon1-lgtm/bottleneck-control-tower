@@ -6094,5 +6094,371 @@
       "source_calls": 0,
       "new_commit": false
     }
+  },
+  "Q2_counterpart_strengthening": {
+    "plan_id": "BCT-V4-Q-1.0",
+    "start_SHA": "f60c1655e3eba951c7acb6a110b1d0d85cc5f978",
+    "at": "2026-10-15T22:38:09.052221+00:00",
+    "scope": "Q2 counterpart discovery + bounded Q1 diagnostic improvements, not Q3 qualification or Q5 activation",
+    "common_path": {
+      "existing_components": [
+        "target_acquisition.plan/leads/Metadata/verify",
+        "existing V4 Ledger and append-only events",
+        "quantitative_targets.prepare",
+        "separated quantitative_private/delta writer"
+      ],
+      "new_function": "Reviewed orders/constraints/expected shipments create opposite-side requests without product/industry whitelist. Stored originals searched first, exact-source model identifiers only nominate review paragraphs. One-hop same-official-host references, at most3 sources per seed/round and32 GETs/90s batch; old attempt URLs retained across runs.",
+      "adoption_policy": "Discovery != verified fact != TARGET equivalence != independent pair. All queue records UNKNOWN stage; no automatic promotion.",
+      "selected_sources_are_not_independent_pairs": true,
+      "original_documents_are_not_rewritten": true,
+      "local_replay": {
+        "stored_documents_examined_by_literal_search": 443,
+        "seed_events": 12,
+        "selected_source_pointers": 12,
+        "unique_selected_sources": 6,
+        "unfetched_official_links": 0,
+        "new_order_fact_discovery": "Separate explicit source review; queue hits are not facts",
+        "actual_new_capacity_facts": 0,
+        "confirmed_deadlines": 0,
+        "independent_pairs": 0,
+        "new_S1": 0,
+        "new_S2": 0,
+        "new_S3": 0,
+        "save": {
+          "added": 12,
+          "records": 12,
+          "new_S2": 0,
+          "new_S3": 0
+        },
+        "new_process_dedup": true,
+        "backup_restore": true,
+        "protected_source_DB_hashes_unchanged": {
+          "var/v4/supply-linkage/ledger/v4.sqlite3": "8116eca6dfbf1e65cb605e1aab9b1af0d472a665bf7087899ccb23818d023bc8",
+          "var/v4/cpu-recovery/ledger/v4.sqlite3": "9ee09f1b54437d89d9731cd96d9332c01f2b1af99c532873d584d59fea1564ac",
+          "var/v4/cross-industry/ledger/v4.sqlite3": "0234453d685a49640ad4e0ba1f955ade631ebd45a9aa7e1a8a719fb99b8f0a1c"
+        },
+        "external_AI_calls": 0,
+        "scope": "Exact-name and role lead search, NOT full document semantic reading or independent accuracy"
+      },
+      "private_rows": {
+        "counterpart_queue": {
+          "added": 12,
+          "records": 12,
+          "new_S2": 0,
+          "new_S3": 0
+        },
+        "product_facts": {
+          "added": 1,
+          "reviewed_orders": [
+            {
+              "product": "A321neo",
+              "quantity": "2",
+              "unit": "aircraft"
+            },
+            {
+              "product": "H225M",
+              "quantity": "12",
+              "unit": "helicopters"
+            },
+            {
+              "product": "FOX-XP™ WLBI systems",
+              "quantity": null,
+              "unit": null
+            }
+          ],
+          "qualified_capacity": 0,
+          "independent_demand_supply_pairs": 0,
+          "new_S2": 0,
+          "new_S3": 0
+        },
+        "new_process_dedup": true,
+        "source_calls": 0,
+        "AI_calls": 0,
+        "CPU_windows": 0,
+        "independent_pairs": 0,
+        "new_S2": 0,
+        "new_S3": 0
+      }
+    },
+    "actual_product_results": {
+      "new_reviewed_actual_order_events": 1,
+      "new_confirmed_physical_order_quantities": 0,
+      "preserved_physical_orders": [
+        {
+          "product": "H225M",
+          "quantity": "12",
+          "unit": "helicopters"
+        },
+        {
+          "product": "A321neo",
+          "quantity": "2",
+          "unit": "aircraft"
+        }
+      ],
+      "new_event": {
+        "product": "FOX-XP™ WLBI systems",
+        "source": "https://www.aehr.com/2026/08/aehr-receives-22-million-follow-on-order-for-ai-processor-wafer-level-burn-in-systems/",
+        "published_at": "2026-08-12",
+        "physical_quantity": null,
+        "contract_value_is_not_quantity": true,
+        "planned_shipping_surface": "over the next six months",
+        "customer_need_window": null,
+        "qualified_supply_capacity": null,
+        "review": "SAME_SESSION_ASSISTANT_NOT_HUMAN_OR_INDEPENDENT"
+      },
+      "new_planned_shipping_expressions": 1,
+      "new_confirmed_deadlines": 0,
+      "new_qualified_capacity": 0,
+      "matched_product_specification_need_period_records": 0,
+      "independent_pairs": 0,
+      "prior15_comparisons_resolved": 0,
+      "new_S1": 0,
+      "new_S2": 0,
+      "new_S3": 0,
+      "existing_research_S1": 8,
+      "LIVE": 0,
+      "old_FOX_XP_2027H1_shipment_not_overwritten_or_customer_need": true
+    },
+    "missing_field_counts_over_12_seed_records": {
+      "region": 9,
+      "need_window": 12,
+      "qualified_supplier_pool": 12,
+      "qualified_capacity": 12,
+      "delivery": 12,
+      "specification": 5,
+      "customer": 3,
+      "quantity": 10,
+      "supplier": 2
+    },
+    "official_material_needed_by_field": {
+      "specification": "Customer contract and manufacturer configuration/part specification, not model name alone",
+      "region": "Actual contract delivery/service destination, not buyer headquarters",
+      "customer": "Buyer identity and actual active order/end-use scope, anonymous lead customer not a named qualified pool",
+      "quantity": "Firm purchase contract physical count and unit; money/multiple/wafer-test specification not equipment count",
+      "need_window": "Customer-required delivery/production schedule, not supplier forecast shipment",
+      "supplier": "Manufacturer/contract supplier identity",
+      "qualified_supplier_pool": "Customer-approved supplier and certification records for same specification/region",
+      "qualified_capacity": "Facility available, qualified and committed/free supply in same period; nameplate/cumulative deliveries not enough",
+      "delivery": "Firm delivery slots/readiness schedule with qualifications; expected date stays PLAN"
+    },
+    "case_followups": {
+      "H225M": "Romanian procurement/customer schedule, exact H225M configuration and qualified OEM production slots; customer country does not prove delivery scope",
+      "A321neo": "FLYONE Armenia required delivery schedule, LEAP/customer configuration and qualified Airbus allocated supply; another airline order is not counterpart supply",
+      "FOX_XP": "Identify the actual customer/configuration/order quantity and qualified Aehr equipment supply; do not combine silicon-photonics and AI-processor buyers or count nine wafers as equipment capacity"
+    },
+    "new_public_source_attempts": {
+      "total_GETs": 3,
+      "received_and_saved_native": 2,
+      "adopted_supply_facts": 0,
+      "attempts": [
+        {
+          "url": "https://www.airbus.com/en/a321neo",
+          "host": "www.airbus.com",
+          "status": "FAILED_ISOLATED",
+          "http_status": null,
+          "error_type": "ModuleNotFoundError",
+          "retry": false
+        },
+        {
+          "url": "https://www.airbus.com/en/newsroom/press-releases/2026-10-biman-bangladesh-airlines-places-firm-order-for-a350-900-and-a321neo-airbus-aircraft",
+          "status": "CAPTURED",
+          "document_id": "q2-source-c6a77192e12caa51b81a902849bc5549deb013a172c66402e31fe2555cbb2559",
+          "body_sha256": "de76106f89c3940b6d34d2331b29d47a28a12e31188a66be1396afe359ec4cd1",
+          "provenance": "BLOCKED",
+          "published_at": "2026-10-07",
+          "body_status": "PARTIAL",
+          "adoption": "NOT_ADOPTED_REVIEW_REQUIRED"
+        },
+        {
+          "url": "https://www.airbus.com/en/products-services/helicopters/military-helicopters/h225m",
+          "status": "CAPTURED",
+          "document_id": "q2-source-1a7ee6586afdc3f22eed0ae25c2ea0321ae1ec5cbc369d1aeda870014069b89a",
+          "body_sha256": "f9a227e2aa377fa9e67678ff45e4bc2fcf90be3a34658004226498975ccebe31",
+          "provenance": "PASS",
+          "published_at": "2026-10-08",
+          "body_status": "FULL",
+          "adoption": "NOT_ADOPTED_REVIEW_REQUIRED"
+        }
+      ],
+      "source_scope_review": [
+        {
+          "url": "https://www.airbus.com/en/newsroom/press-releases/2026-10-biman-bangladesh-airlines-places-firm-order-for-a350-900-and-a321neo-airbus-aircraft",
+          "original_publication": "2026-10-07",
+          "revised": {
+            "provenance": "BLOCKED",
+            "provenance_blockers": [
+              "full_accessible_body"
+            ],
+            "published_at": "2026-10-07"
+          }
+        },
+        {
+          "url": "https://www.airbus.com/en/products-services/helicopters/military-helicopters/h225m",
+          "original_publication": "2026-10-08",
+          "revised": {
+            "provenance": "BLOCKED",
+            "provenance_blockers": [
+              "ARTICLE_PUBLICATION_NOT_BOUND_TO_THIS_PAGE"
+            ],
+            "published_at": null
+          }
+        }
+      ],
+      "local_extraction_failure": "First A321neo product-page GET reached optional trafilatura import failure; URL not retried. Common acquisition now preserves raw before existing baseline parser; no new dependency/model install. Other URLs continued. H225M page publication not bound to article; Biman article PARTIAL, both held."
+    },
+    "Q1": {
+      "status": "PARTIAL",
+      "numeric_preserved": 38046,
+      "physical_preserved": 21916,
+      "completed_queries_repeated": 0,
+      "SEC_expansion": "BLOCKED: previous index header mismatch plus HTTP403, raw failed index unavailable in durable capsule. Structural diagnostic now distinguishes HTML/column shape without echoing body or relaxing header; no failed request replay. Prior2 CIK/1 body is not whole-company coverage.",
+      "Census": "2583 physical unit matches preserved. Geography/first release UNKNOWN because old native country response not in private capsule; import74 HTS revisions do not certify export midyear revisions. No completed188 query visits repeated.",
+      "other_gaps": "M3/G17 old vintages; EIA dated qualified output vs nameplate; USGS annual/other minerals; TED empty HTTP202 originals remain blocked. No duplicate retrieval to inflate counts."
+    },
+    "automation": {
+      "body_candidates_failure": {
+        "guard_run": 38806612718,
+        "validated_sha": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+        "main_sha": "14c2de541ced1f995f3725d67a37e7fdb1b4898d",
+        "added": [
+          ".github/workflows/v4-cpu-main-cache-seed.yml",
+          ".github/workflows/v4-cpu-private-research.yml",
+          ".github/workflows/v4-cpu-private-settings-check.yml"
+        ],
+        "removed": [],
+        "changed": []
+      },
+      "actual_log_error": "validated code/test file set changed or missing",
+      "diagnostic_code_change": "Report added/missing paths while preserving fail-closed checks; no exemption or manifest replacement",
+      "safe_application": "Operating owner must revalidate the existing full release gates with these3 exact added workflow blobs and bind a new actual receipt; no main/data workflow/settings change made here.",
+      "CPU_skipped_run": 38806957341,
+      "successful_upstream_run": 38806612836,
+      "CPU_jobs_had_no_steps": true,
+      "gate": "workflow_run/main/upstream success observed; CODE_SHA + ENABLED variable conjunction not satisfied. Current values not newly read; prior variable API HTTP403 not repeated.",
+      "last_actual_variable_observation": {
+        "run": 38709974717,
+        "observed_at": "2026-10-15T09:02:13Z",
+        "code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+        "enabled_variable": "false",
+        "current_variable_read": "NOT_REPEATED_PREVIOUS_HTTP403"
+      },
+      "required_CPU_pin_remains": "221fa92b1cbff8950716ec373eac793ca340c873",
+      "no_Q_commit_used_as_CPU_pin": true,
+      "Q5_status": "NOT_COMPLETED",
+      "settings_modified": false
+    },
+    "storage": {
+      "actual_run": 38817760228,
+      "execution_code_SHA": "4ab678850a080be1cf5da9166eb9cf7738a39e24",
+      "receipt": {
+        "research_ref": "refs/heads/codex/bct-v4-quantitative-state",
+        "parent": "3cdfbe85a86ed877ad14c5b6a621a511f2070794",
+        "commit": "88641b074b1c236f2ca01898989eae8ecfec195d",
+        "archive_sha256": "74f6acea3e9bcac05c8c40fd8394e759f0f778be6f3044972d9430ad7761c264",
+        "operating_branches_written": false,
+        "artifact_uploads": 0,
+        "history_unique_object_bytes": 62562683,
+        "history_limit_bytes": 67108864,
+        "incremental": {
+          "changed_pages": 14,
+          "delta_bytes": 17681,
+          "sqlite_bytes": 180355072
+        },
+        "unchanged_full_base_preserved": true,
+        "projection": {
+          "available_bytes_after": 4546181,
+          "same_sized_additional_checkpoints_upper_bound": 206,
+          "scope": "Observed patch size only, not a guarantee for future collection volume"
+        },
+        "repository": "irewon1-lgtm/bct-v4-private-state",
+        "visibility": "private",
+        "private_writer_scope_reused": true,
+        "remote_restore_verified": true,
+        "CPU_state_written": false,
+        "seven_day_observation_started": false,
+        "remote_new_process_restore": {
+          "restored": true,
+          "tables": 8,
+          "sqlite_sha256": "76b1ac94b1698c2dd78fe55308e0a09017965e65cd20be60e4cd35a6cd7ed68f",
+          "review": {
+            "format": "bct-q1-private-facts-1",
+            "observation_versions": 42601,
+            "sources": [
+              "census_trade",
+              "eia",
+              "g17",
+              "m3",
+              "ted",
+              "usaspending",
+              "usgs"
+            ],
+            "article_bodies": 0,
+            "native_source_files": 0,
+            "original_evidence_recovery": false,
+            "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+            "CPU_queue_restored": false,
+            "automatic_promotion": false
+          }
+        }
+      },
+      "before_bytes": 62541956,
+      "growth_bytes": 20727,
+      "remaining_bytes": 4546181,
+      "future_growth": "1MiB per-delta gate + cumulative all-ref64MiB pre-push guard retained. Current remaining space is approximately four1MiB patches before overhead; no guaranteed run count or unlimited retention.",
+      "long_term": "Incremental pages reduce repeated full snapshots but immutable Git history is still finite. Existing encrypted checkpoint handoff can support owner-controlled offline archive; it is not a tested unlimited remote replacement. No new store, deletion, force push, cap increase or paid transition applied.",
+      "native_body_restore": false,
+      "typed_facts_and_queue_restore": true,
+      "private_auth_probes_repeated": false,
+      "CPU_ref_written": false
+    },
+    "tests": {
+      "initial_change_impact": {
+        "passed": 51,
+        "seconds": 1.82
+      },
+      "final_batch_budget_and_queue_impact": {
+        "passed": 13,
+        "seconds": 0.11
+      },
+      "UI_readonly_compatibility": {
+        "passed": 2,
+        "seconds": 1.56
+      },
+      "counts_overlap_do_not_sum": true,
+      "functional_not_independent_accuracy": true,
+      "local_restart_backup_restore": true,
+      "actual_remote_new_process_restore": true,
+      "code_SHA_CI": {
+        "SHA": "4ab678850a080be1cf5da9166eb9cf7738a39e24",
+        "Stage0_run": 38817744274,
+        "Stage0": "success",
+        "dashboard_gate_run": 38817744262,
+        "dashboard_gate": "success"
+      },
+      "final_containing_commit_CI": "TO_QUERY_AFTER_FINAL_PUSH"
+    },
+    "usage": {
+      "new_Groq_calls": 0,
+      "external_AI_tokens": 0,
+      "paid_API_cost_KRW": 0,
+      "CPU_windows_replayed": 0,
+      "model_installs": 0,
+      "public_official_GETs": 3,
+      "Github_standard_Ubuntu_only": true,
+      "platform_invoice_amount": "NOT_EXPOSED",
+      "observed_cache_bytes": 2389663888,
+      "cache_safety_bytes": 8589934592
+    },
+    "verdict": {
+      "Q1": "PARTIAL",
+      "Q2": "PARTIAL_RESEARCH_COUNTERPART_QUEUE_FUNCTIONAL_REAL_QUALIFIED_PAIRS_BLOCKED",
+      "AI_quality": "FAIL_PRESERVED",
+      "independent_AI": "BLOCKED_PRESERVED",
+      "historical_forecast": "BLOCKED_PRESERVED",
+      "automatic_promotion": false
+    },
+    "next_action": "Use per-seed official contract/customer schedule, OEM qualified facility/slots/certification records to resolve exact missing fields; preserve old mismatched15 and failed sources. No Q3 promotion/Q5 activation until evidence and operating approvals support them.",
+    "objective_version": "bct-objective-1",
+    "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
   }
 }

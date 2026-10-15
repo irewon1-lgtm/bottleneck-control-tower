@@ -5,10 +5,11 @@ paragraphs for review; they never prove equivalent scope, independence or supply
 """
 import json
 import re
+import time
 from urllib.parse import urlsplit, urljoin
 
 from bct.objective_lock import stamp_export, require_objective
-from bct.target_acquisition import WORDS, plan as acquisition_plan, leads
+from bct.target_acquisition import plan as acquisition_plan, leads
 from .store import sha
 from .public_input import PUBLISHERS, valid_article_url
 
@@ -193,13 +194,16 @@ def save(ledger, value):
     return {'added': added, 'records': len(value['records']), 'new_S2': 0, 'new_S3': 0}
 
 
-def acquire(value, ledger, client):
+def acquire(value, ledger, client, *, max_calls=32, seconds=90):
     """One-hop, journaled official-link acquisition using the existing client.
 
     Public site failure is isolated, never retried under a new run ID. Raw
     originals are local only; retained private queue records exclude prose.
     """
     require_objective(value)
+    if not 1 <= max_calls <= 32 or not 0 < seconds <= 90:
+        raise ValueError('COUNTERPART_BATCH_BUDGET')
+    started = time.monotonic(); calls = 0
     attempts = {json.loads(p)['url'] for p, in ledger.db.execute(
         "SELECT payload FROM events WHERE kind='Q2_COUNTERPART_FETCH_ATTEMPT'")}
     blocked_hosts = {json.loads(p)['host'] for p, in ledger.db.execute(
@@ -211,10 +215,13 @@ def acquire(value, ledger, client):
             url = item['url']; host = urlsplit(url).hostname
             if url in attempts or host in blocked_hosts:
                 continue
+            if calls >= max_calls or time.monotonic() - started >= seconds:
+                return results  # Unattempted links remain pending, not failed/read.
             safe_url(url); attempts.add(url)
             with ledger.db:
                 ledger.event('Q2_COUNTERPART_FETCH_ATTEMPT', {'url': url, 'seed_id': row['seed_id']})
             try:
+                calls += 1
                 from bct.target_acquisition import verify, now
                 raw, final, status, content_type = client.fetch(url)
                 # Keep raw before parsing so a local parser failure can be
