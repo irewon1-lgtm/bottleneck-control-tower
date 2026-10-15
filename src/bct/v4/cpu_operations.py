@@ -130,7 +130,8 @@ def observe(ledger,*,trigger,scheduled_for=None,upstream=None,execute=False,extr
     """One bounded 120-second-supervised command uses the existing queue.
 
     This preflight does not certify a scheduler. Only independently verified
-    scheduled executions may open7day observation; this entrypoint cannot.
+    scheduled executions with a successful source-validated CPU read may open
+    observation. The push-preflight CLI never supplies that verified context.
     """
     from .cpu_automation import state,work
     scheduled=verified_schedule(schedule_context) if schedule_context is not None else {'verified':False}
@@ -146,6 +147,7 @@ def observe(ledger,*,trigger,scheduled_for=None,upstream=None,execute=False,extr
             'upstream':upstream or {},'new_URLs':(upstream or {}).get('new_URLs',0),'new_body_documents':(upstream or {}).get('new_body_documents',0),
             'CPU_documents_processed':len({c['document_id']for c in after['coverage']if c['read_characters']>next((d['read_characters']for d in before['coverage']if d['document_id']==c['document_id']),0)}),
             'new_CPU_windows':0 if result is None else result['new_windows'],
+            'successful_new_CPU_windows':(after['completed_windows']-after['failed_windows'])-(before['completed_windows']-before['failed_windows']),
             'actually_read_new_characters':after['actually_read_characters']-before['actually_read_characters'],
             'CPU_pending':after['pending_windows'],'review_pending_windows':after['completed_windows']-after['failed_windows'],
             'isolated_errors':after['failed_windows']+after['isolated_imports'],
@@ -155,8 +157,8 @@ def observe(ledger,*,trigger,scheduled_for=None,upstream=None,execute=False,extr
             'queue':after,'model_loaded_by_queue':bool(result and result.get('model_loaded',result['new_windows']>0)),
             'prior_observations':len(prior),'API_calls':0,'API_tokens':0,'API_cost_KRW':0,
             'candidate_registration':False,'AI_adoption':'FAIL_UNCHANGED','lead_performance':'BLOCKED_UNCHANGED'}
-        if scheduled['verified'] and payload['actually_read_new_characters']>0:
-            previous=[r['finished_at']for r in prior if r.get('scheduled_execution_verified') and r.get('actually_read_new_characters',0)>0]
+        if scheduled['verified'] and payload['actually_read_new_characters']>0 and payload['successful_new_CPU_windows']>0:
+            previous=[r['finished_at']for r in prior if r.get('scheduled_execution_verified') and r.get('actually_read_new_characters',0)>0 and r.get('successful_new_CPU_windows',0)>0]
             payload['seven_day_start']=min(previous)if previous else payload['finished_at']
             payload['seven_day_status']='OBSERVING_NOT_COMPLETED_REQUIRES7REAL_DAYS_AND_CONTINUITY_REVIEW'
         with ledger.db:ledger.event('CPU_OPERATION_OBSERVATION',payload)
@@ -189,7 +191,7 @@ def verified_schedule(context):
 
 def observation_summary(db):
     rows=[json.loads(p)for p, in db.execute("SELECT payload FROM events WHERE kind='CPU_OPERATION_OBSERVATION' ORDER BY seq")]
-    starts=[r['finished_at']for r in rows if r.get('scheduled_execution_verified') and r.get('actually_read_new_characters',0)>0]
+    starts=[r['finished_at']for r in rows if r.get('scheduled_execution_verified') and r.get('actually_read_new_characters',0)>0 and r.get('successful_new_CPU_windows',0)>0]
     return {'observations':len(rows),'latest':rows[-1]if rows else None,
         'first_verified_scheduled_CPU_success':min(starts)if starts else None,
         'seven_day_status':'NOT_RUN'if not starts else'OBSERVING_REQUIRES_CONTINUITY_REVIEW',

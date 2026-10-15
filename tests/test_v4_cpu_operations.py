@@ -206,3 +206,23 @@ def test_proposed_activation_is_not_an_active_workflow_and_is_off_by_default():
     assert all('pip install' not in step.get('run','')for step in data['jobs']['research']['steps'])
     assert 'fail-on-cache-miss: true' in path.read_text()
     assert 'refs/heads/codex/bct-v4-cpu-research-state' in path.read_text()
+
+
+def test_source_validation_failure_after_model_read_cannot_start_seven_day(tmp_path):
+    from bct.v4.cpu_automation import enqueue
+    from bct.v4.adapters import MODEL,MODEL_REVISION
+    body='Synthetic observer input with unvalidated pumps.';raw=('<article><p>'+body+'</p></article>').encode()
+    d={'document_id':'synthetic-invalid-reading','origin_url':'https://example.org/invalid','body':body,
+       'body_sha256':sha(body.encode()),'raw_sha256':sha(raw),'published_at':'2026-10-01',
+       'acquired_at':'2026-10-02','provenance':'PASS','provenance_verified':True,'checks':{'http_success':True}}
+    class InvalidSynthetic:
+        def extract_windows(self,doc,windows,**kwargs):
+            return {'status':'PASS','model':MODEL,'revision':MODEL_REVISION,'selected_windows':windows,
+                    'spans':[{'label':'product','text':'invented','body_sha256':doc['body_sha256'],
+                              'locator':{'start':0,'end':8}}]}
+    l=open_queue(tmp_path)
+    with l.worker():enqueue(l,d,raw,{'synthetic':True})
+    r=op.observe(l,trigger='SYNTHETIC_ONLY_INVALID_RESULT',execute=True,extractor=InvalidSynthetic(),schedule_context=schedule_context())
+    assert r['actually_read_new_characters']>0 and r['new_CPU_windows']==1
+    assert r['successful_new_CPU_windows']==0 and r['seven_day_start'] is None
+    assert op.observation_summary(l.db)['seven_day_status']=='NOT_RUN';l.close()

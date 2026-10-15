@@ -139,9 +139,10 @@
       "command": ".venv/bin/python -m pytest -q tests/test_v4_cpu_operations.py tests/test_v4_cpu_automation.py tests/test_v4_dashboard.py tests/test_v4_dashboard_research_sync.py"
     },
     "latest_storage_validation_followup": {
-      "passed": 24,
+      "passed": 25,
       "command": ".venv/bin/python -m pytest -q tests/test_v4_cpu_operations.py",
-      "overlaps_impact_not_added": true
+      "overlaps_impact_not_added": true,
+      "reason": "Source-validated successful window required for7day first success; model read followed by citation validation failure stays NOT_RUN."
     },
     "GitHub_real": "2 successful workflows,4 runner jobs; cold andwarm cache paths kept separate",
     "local_restart": "real frozen DB restored, observation1 saved, all8tables restored in a new process, observation2 appended; zero new CPU inference",
