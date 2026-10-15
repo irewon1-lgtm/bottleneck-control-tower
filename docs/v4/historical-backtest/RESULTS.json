@@ -1,0 +1,81 @@
+{
+  "registered_groups": 24,
+  "existing_development_groups": 20,
+  "reserved_but_inaccessible_holdout_candidates": 3,
+  "hindsight_diagnostic_added": 1,
+  "verified_actual_positive_outcomes": 1,
+  "verified_negative_outcomes": 0,
+  "verified_hard_negatives": 0,
+  "qualified_unused_independent_holdout": 0,
+  "UNKNOWN_outcomes": 23,
+  "existing_groups_incomplete36month_observation": 19,
+  "actual_replayed_cases": 1,
+  "not_replayed_cases": 23,
+  "eligible_metric_cases": 0,
+  "S1": 0,
+  "S2": 0,
+  "S3": 0,
+  "S3_leading_cases": 0,
+  "lead_days": null,
+  "new_CPU_documents": 1,
+  "new_CPU_windows": 10,
+  "CPU_product_mentions": 51,
+  "CPU_model_advisory_proposals": 48,
+  "existing_parser_retained_events": 9,
+  "actual_read_characters": 14912,
+  "source_body_characters": 386279,
+  "input_fraction_of_full_report": 0.03860422130118386,
+  "read_PDF_pages": [
+    122,
+    123,
+    124,
+    125,
+    126
+  ],
+  "full_report_PDF_pages": 151,
+  "CPU_wall_seconds": 9.170856477998313,
+  "CPU_seconds": 35.530730653,
+  "existing1210_windows_rerun": 0,
+  "new_Groq_calls": 0,
+  "new_API_tokens": 0,
+  "API_cost_KRW": 0,
+  "platform_cost": "UNKNOWN_SEPARATE",
+  "AI_adoption": "FAIL_UNCHANGED",
+  "independent_AI_evaluation": "BLOCKED_UNCHANGED",
+  "new_LIVE_firsts": 0,
+  "automation": "DISABLED_UNCHANGED",
+  "functional_validation": "PASS_SOURCE_GATES_REAL_REPLAY_STORAGE_REQUERY_RESTORE",
+  "independent_evaluation": "BLOCKED_NO_QUALIFIED_HOLDOUT",
+  "historical_lead_performance": "BLOCKED_MINIMUM_CASES_SCOPE_AND_STAGE_INTERFACE",
+  "existing_stage_interface_limit": "CPU reading_result retains DISCOVERY_ONLY and masks S stages; V4 pipeline sets candidate.s_stage UNKNOWN. No EARLY→S3 conversion authorized or applied.",
+  "miss_diagnostic": "Verified2021ERCOT blackout was not emitted as S3 in this partial-input diagnostic. FormalFN/Recall not assigned: summer planning input is not independently matched winter qualified supply.",
+  "metrics": {
+    "TP": 0,
+    "FP": 0,
+    "FN": 0,
+    "precision": null,
+    "recall": null,
+    "positive_denominator": 0,
+    "negative_denominator": 0,
+    "S3_leading_cases": 0
+  },
+  "metrics_interpretation": "No eligible positives/negatives; zero raw counters are empty sums, not perfect detection or zero-error evidence. Precision/Recall N/A.",
+  "tests": {
+    "impact": {
+      "passed": 93,
+      "command": ".venv/bin/python -m pytest -q tests/test_v4_historical_backtest.py tests/test_v4_supply_linkage.py tests/test_v4_evidence_path.py tests/test_v4_integration.py tests/test_v4_dashboard_research_sync.py"
+    },
+    "storage_comparison_followup": {
+      "passed": 18,
+      "command": ".venv/bin/python -m pytest -q tests/test_v4_historical_backtest.py",
+      "overlaps_impact_tests_not_added": true
+    }
+  },
+  "source_admission_holds": {
+    "HISTORICAL_VERSION_NOT_VERIFIED": 14,
+    "SOURCE_PROVENANCE_UNVERIFIED": 6
+  },
+  "original_research_S1_preserved": 8,
+  "precision_recall": "N/A_ELIGIBLE_DENOMINATORS_ZERO",
+  "result_reproduction": "PASS_ALL_DECISIONS_EQUAL_EXCEPT_EXECUTION_UUID"
+}

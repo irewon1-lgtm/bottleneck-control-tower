@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-15T01:17:01.454225+00:00",
+  "first_restore_result": "FAIL_SOURCE_LEDGER_CHANGED_INPUT",
+  "cause": "SQLite backup changes database header bytes. All8table contents in each4ledgers matched original; input/body/gold/engine unchanged.",
+  "fix": "Restore must match exact archived SQLite SHA plus all8table digests bound to original frozen database SHA. No source/score gate relaxed.",
+  "original_runner_sha256": "d84b9897010b3aa0a0ee4b8a87f54e31cfe25804a380ef1b00449ae9af590cfc",
+  "repaired_runner_sha256": "2a74c3d624595138c20a003456e1090b2e159d2290cbc8fa65960e1862212b4a",
+  "engine_and_scoring_frozen_unchanged": true,
+  "new_model_or_API_calls": 0,
+  "second_observation": {
+    "different_raw_results": "Only results/23/timeline/0/engine/batch_id differs; existing engine uses uuid4",
+    "all_decision_and_source_fields_equal": true,
+    "comparison_policy": "Ignore only validated early-UUID execution metadata; preserve both raw receipts and compare every other field."
+  },
+  "decision_sha256": "2f9d3011ce32e3304871fef8fd35a1448f6ecccb755bba9c9d1512ce300cb8dc"
+}
