@@ -370,7 +370,7 @@ def run(*,network=False,next_round=False,discover=False,official=False,research_
         'skipped_unconfirmed_original_records':rejected,'save':saved,'verified_new_world_events':0,'verified_full_scope_demand':0,
         'qualified_capacity':0,'confirmed_delivery':0,'independent_pairs':0,'S2':0,'S3':0,'AI_calls':0,'CPU_windows':0,
         'original_DB_hashes_unchanged':protected})
-    (ROOT/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False))
+    (ROOT/('automatic-report.json' if research_ledger else 'report.json')).write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False))
 
 
 if __name__=='__main__':

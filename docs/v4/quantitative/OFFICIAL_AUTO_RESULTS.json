@@ -14332,5 +14332,25 @@
     "extra_HTTP_calls": 0,
     "executor": "tools/v4_quantitative_relations.py --research-ledger",
     "source_state_read_only": true
+  },
+  "remote_attempts": [
+    {
+      "run": 38889566128,
+      "code_SHA": "5fdbca981e1f2619a0b230b9163b53e43f479adc",
+      "status": "FAIL_PACKAGING_OUTER_COMMAND_120S_TIMEOUT",
+      "ingestion_added_facts": 2103,
+      "relation_tasks": 88,
+      "new_process_dedup": true,
+      "published": false,
+      "same_source_HTTP": 0,
+      "AI": 0,
+      "repair": "Keep120s command limit; execute ingestion and checkpoint finish in separate commands, existing source-batch pattern."
+    }
+  ],
+  "local_legacy_summary_recovery": {
+    "automatic_summary_path": "var/v4/quantitative/q2-relations/automatic-report.json",
+    "legacy_derived_summary_restored_from": "maker-pointer-state.log",
+    "original_legacy_queue_and_DB_preserved": true,
+    "limitation": "Derived report recreated from preserved log; no claim that unrecorded file bytes were independently proved identical."
   }
 }

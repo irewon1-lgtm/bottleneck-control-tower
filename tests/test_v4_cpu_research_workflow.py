@@ -31,6 +31,10 @@ def test_deployed_consumer_requires_exact_configured_code_and_explicit_enable():
             assert step['if']=="${{ inputs.purpose == 'official-sources' || inputs.purpose == 'official-discovery' }}"
             assert step['run']=="timeout 120 python -m pip install -e '.[quantitative]' --disable-pip-version-check"
     assert len(installers)==1
+    process=w['jobs']['q1-source-process']['steps']
+    command=next(s['run']for s in process if 'OFFICIAL_DISCOVERY_ONLY'in s.get('run',''))
+    assert 'timeout 120 python -u tools/v4_quantitative_batch.py official_discovery\n'in command
+    assert 'timeout 120 python -u tools/v4_quantitative_batch.py finish\n'in command
     prior=w['jobs']['q1-source-prior']['if']
     assert "github.event_name == 'workflow_dispatch'"in prior
     assert "github.ref == 'refs/heads/codex/bct-v4-integration'"in prior

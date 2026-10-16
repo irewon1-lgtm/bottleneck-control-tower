@@ -452,7 +452,9 @@ def official_discovery():
  receipt={'summary':report['summary'],'Q3':report['Q3'],'added_facts':added,'regression_only':regression,'automatic':automatic,'queue':queue,'cursors':cursors,'typed_routes':routes,'new_process_dedup':True,'sqlite_sha256':before,'source_HTTP_calls_here':0,'native_originals_rechecked_here':False,'AI_calls':0,'CPU_windows':0}
  (R/'q2-report.json').write_text(json.dumps(receipt))
  print('BCT_OFFICIAL_DISCOVERY_STORE_JSON='+json.dumps(receipt),flush=True)
- finish()
+ # Packaging is a separate120s command, exactly as in the existing source
+ # collection path. Do not combine ingestion/dedup and checkpoint compression
+ # under one outer deadline or raise the established command limit.
 
 
 def official_input_packet():

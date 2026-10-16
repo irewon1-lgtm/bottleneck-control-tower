@@ -482,6 +482,7 @@ jobs:
         run: |
           if [ "$OFFICIAL_DISCOVERY_ONLY" = true ]; then
             timeout 120 python -u tools/v4_quantitative_batch.py official_discovery
+            timeout 120 python -u tools/v4_quantitative_batch.py finish
             exit 0
           fi
           if [ "$OFFICIAL_SOURCES_ONLY" = true ]; then
