@@ -4770,7 +4770,7 @@
   "global_sources": {
     "change_authorization": "User2026-10-16 worldwide official source expansion, BCT-V4-Q-1.0 unchanged; old8 source scopes/history preserved",
     "started_from": "ad41f2651eab010268d2879e1c4ce425ec3f9d54",
-    "as_of": "2026-10-16T05:06:31.214128+00:00",
+    "as_of": "2026-10-16T05:54:50.065207+00:00",
     "connections": {
       "sam_opportunities": {
         "name": "sam_opportunities",
@@ -4793,7 +4793,14 @@
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
-        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION",
+        "key_binding_observation": {
+          "run": 38857135706,
+          "secret_name": "BCT_SAM_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        }
       },
       "sam_awards": {
         "name": "sam_awards",
@@ -4816,7 +4823,14 @@
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
-        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION",
+        "key_binding_observation": {
+          "run": 38857135706,
+          "secret_name": "BCT_SAM_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        }
       },
       "us_dod_contracts": {
         "name": "us_dod_contracts",
@@ -4840,7 +4854,8 @@
         "S2": 0,
         "S3": 0,
         "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
-        "hold": "Observed HTTP403; no repeated GET, challenge bypass or alternate hostname attempt."
+        "hold": "Observed HTTP403; no repeated GET, challenge bypass or alternate hostname attempt.",
+        "cause_precision": "Observed HTTP403; policy/origin/role cause not independently established; no bypass/retry"
       },
       "dsca": {
         "name": "dsca",
@@ -4864,7 +4879,8 @@
         "S2": 0,
         "S3": 0,
         "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
-        "hold": "Observed HTTP403; no repeated GET, challenge bypass or alternate hostname attempt."
+        "hold": "Observed HTTP403; no repeated GET, challenge bypass or alternate hostname attempt.",
+        "cause_precision": "Observed HTTP403; policy/origin/role cause not independently established; no bypass/retry"
       },
       "ted": {
         "name": "ted",
@@ -4903,10 +4919,9 @@
         "secret_name": null,
         "authentication": "PUBLIC_NO_KEY",
         "status": "FACTS_STORED",
-        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
         "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
         "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
-        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "first_publication": "Per native record; current dataset/page creation date never substitutes fact-first-publication",
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
@@ -4917,7 +4932,14 @@
           "PARSE_VALIDATED",
           "FACTS_STORED"
         ],
-        "local_collection": {
+        "remote_storage": {
+          "verified": true,
+          "run": 38857135706,
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 3
+        },
+        "coverage": "COMPLETE_FIXED_UPDATED_WINDOW_2026-10-14:461 releases /5 pages; not entire provider history",
+        "actual_collection": {
           "record_versions": 1788,
           "unique_records": 1788,
           "numeric_fields": 412,
@@ -4929,8 +4951,7 @@
           },
           "published_at_unknown": 0
         },
-        "remote_storage": "PENDING_MANUAL_ACTION",
-        "coverage": "COMPLETE_FIXED_UPDATED_WINDOW_2026-10-14:461 releases /5 pages; not entire provider history"
+        "Q2_FACT_FIELDS_ENRICHED": "Exact procurement contract/award/buyer/supplier links or partial context only; no qualified physical gap"
       },
       "contracts_finder": {
         "name": "contracts_finder",
@@ -4946,10 +4967,9 @@
         "secret_name": null,
         "authentication": "PUBLIC_NO_KEY",
         "status": "FACTS_STORED",
-        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
         "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
         "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
-        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "first_publication": "Per native record; current dataset/page creation date never substitutes fact-first-publication",
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
@@ -4960,7 +4980,14 @@
           "PARSE_VALIDATED",
           "FACTS_STORED"
         ],
-        "local_collection": {
+        "remote_storage": {
+          "verified": true,
+          "run": 38857135706,
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 3
+        },
+        "coverage": "COMPLETE_FIXED_PUBLICATION_WINDOW_2026-10-14:241 releases /3 pages",
+        "actual_collection": {
           "record_versions": 476,
           "unique_records": 476,
           "numeric_fields": 465,
@@ -4970,8 +4997,7 @@
           },
           "published_at_unknown": 0
         },
-        "remote_storage": "PENDING_MANUAL_ACTION",
-        "coverage": "COMPLETE_FIXED_PUBLICATION_WINDOW_2026-10-14:241 releases /3 pages"
+        "Q2_FACT_FIELDS_ENRICHED": "Exact procurement contract/award/buyer/supplier links or partial context only; no qualified physical gap"
       },
       "canadabuys": {
         "name": "canadabuys",
@@ -4986,16 +5012,39 @@
         "role": "AWARD_CSV",
         "secret_name": null,
         "authentication": "PUBLIC_NO_KEY",
-        "status": "DISCOVERED",
-        "source_data_status": "NOT_FETCHED",
+        "status": "FACTS_STORED",
         "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
-        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
-        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "rights_scope": "Open Government Licence - Canada; selected factual fields only, all contact/address/description columns excluded",
+        "first_publication": "Per native record; current dataset/page creation date never substitutes fact-first-publication",
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
-        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
-        "hold": "Annual2026-27 CSV aborted by probe10MB response guard (ValueError); not a parsed record. Current dataset resource URLs and revision dates discovered. Streaming/official partition support pending."
+        "next_cursor": "next publication/version after fixed2026-10-15; fiscal file must remain<=20MB; unknown contracts/signature/delivery remain review tasks",
+        "hold": null,
+        "milestones": [
+          "DISCOVERED",
+          "LIVE_FETCH_PASS",
+          "PARSE_VALIDATED",
+          "FACTS_STORED"
+        ],
+        "actual_collection": {
+          "record_versions": 269,
+          "unique_records": 269,
+          "numeric_fields": 526,
+          "kinds": {
+            "PROCUREMENT_AWARD": 269
+          },
+          "published_at_unknown": 0
+        },
+        "remote_storage": {
+          "verified": true,
+          "run": 38857135706,
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 3
+        },
+        "Q2_FACT_FIELDS_ENRICHED": "Exact procurement contract/award/buyer/supplier links or partial context only; no qualified physical gap",
+        "coverage": "COMPLETE_FIXED_NOTICE_PUBLICATION_SCOPE2026-10-01..15;4533 full CSV rows scanned,269 selected; not all procurement history",
+        "transport": "Existing Q1 SourceClient20,000,000B maximum; HEAD16,172,272B; earlier10MB diagnostic guard failure preserved, not retried unchanged"
       },
       "austender": {
         "name": "austender",
@@ -5011,7 +5060,7 @@
         "secret_name": null,
         "authentication": "PUBLIC_NO_KEY",
         "status": "DISCOVERED",
-        "source_data_status": "NOT_FETCHED",
+        "source_data_status": "CURRENT_DATA_CONTRACT_OR_PARSER_UNFINISHED_NOT_AN_ACCESS_DENIAL",
         "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
         "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
         "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
@@ -5042,7 +5091,14 @@
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
-        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION",
+        "key_binding_observation": {
+          "run": 38857135706,
+          "secret_name": "BCT_DATA_GO_KR_SERVICE_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        }
       },
       "opendart": {
         "name": "opendart",
@@ -5065,7 +5121,14 @@
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
-        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION",
+        "key_binding_observation": {
+          "run": 38857135706,
+          "secret_name": "BCT_OPENDART_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        }
       },
       "edinet": {
         "name": "edinet",
@@ -5088,7 +5151,14 @@
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
-        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION",
+        "key_binding_observation": {
+          "run": 38857135706,
+          "secret_name": "BCT_EDINET_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        }
       },
       "companies_house": {
         "name": "companies_house",
@@ -5111,7 +5181,14 @@
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
-        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION",
+        "key_binding_observation": {
+          "run": 38857135706,
+          "secret_name": "BCT_COMPANIES_HOUSE_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        }
       },
       "gleif": {
         "name": "gleif",
@@ -5127,10 +5204,9 @@
         "secret_name": null,
         "authentication": "PUBLIC_NO_KEY",
         "status": "FACTS_STORED",
-        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
         "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
         "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
-        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "first_publication": "Per native record; current dataset/page creation date never substitutes fact-first-publication",
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
@@ -5141,7 +5217,13 @@
           "PARSE_VALIDATED",
           "FACTS_STORED"
         ],
-        "local_collection": {
+        "remote_storage": {
+          "verified": true,
+          "run": 38857135706,
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 3
+        },
+        "actual_collection": {
           "record_versions": 1,
           "unique_records": 1,
           "numeric_fields": 0,
@@ -5150,7 +5232,7 @@
           },
           "published_at_unknown": 0
         },
-        "remote_storage": "PENDING_MANUAL_ACTION"
+        "Q2_FACT_FIELDS_ENRICHED": "Exact procurement contract/award/buyer/supplier links or partial context only; no qualified physical gap"
       },
       "prodcom": {
         "name": "prodcom",
@@ -5214,10 +5296,9 @@
         "secret_name": "BCT_COMTRADE_API_KEY",
         "authentication": "NOT_TESTED_NEW_KEYS",
         "status": "FACTS_STORED",
-        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
         "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
         "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
-        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "first_publication": "Per native record; current dataset/page creation date never substitutes fact-first-publication",
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
@@ -5228,16 +5309,12 @@
           "PARSE_VALIDATED",
           "FACTS_STORED"
         ],
-        "local_collection": {
-          "record_versions": 1,
-          "unique_records": 1,
-          "numeric_fields": 3,
-          "kinds": {
-            "TRADE_STATISTIC": 1
-          },
-          "published_at_unknown": 1
+        "remote_storage": {
+          "verified": true,
+          "run": 38857135706,
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 3
         },
-        "remote_storage": "PENDING_MANUAL_ACTION",
         "quantity_unit_reference": {
           "url": "https://comtradeapi.un.org/files/v1/app/reference/QuantityUnits.json",
           "raw_sha256": "420267929eac391e9dcd97d18252a2aee9bff2a86c3e2162d1ec57ef53811c24",
@@ -5247,7 +5324,25 @@
             "qtyAbbr": "kg"
           },
           "validated": true
-        }
+        },
+        "actual_collection": {
+          "record_versions": 1,
+          "unique_records": 1,
+          "numeric_fields": 3,
+          "kinds": {
+            "TRADE_STATISTIC": 1
+          },
+          "published_at_unknown": 1
+        },
+        "Q2_FACT_FIELDS_ENRICHED": "Exact procurement contract/award/buyer/supplier links or partial context only; no qualified physical gap",
+        "key_binding_observation": {
+          "run": 38857135706,
+          "secret_name": "BCT_COMTRADE_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        },
+        "key_optional_for_current_guest_scope": true
       },
       "miso": {
         "name": "miso",
@@ -5263,10 +5358,9 @@
         "secret_name": null,
         "authentication": "PUBLIC_NO_KEY",
         "status": "FACTS_STORED",
-        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
         "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
         "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
-        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "first_publication": "Per native record; current dataset/page creation date never substitutes fact-first-publication",
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
@@ -5277,7 +5371,14 @@
           "PARSE_VALIDATED",
           "FACTS_STORED"
         ],
-        "local_collection": {
+        "remote_storage": {
+          "verified": true,
+          "run": 38857135706,
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 3
+        },
+        "coverage": "One full public snapshot3938 native rows,3937 projectNumber groups; duplicated projectNumber J2656 kept as distinct native IDs and same lineage, not summed",
+        "actual_collection": {
           "record_versions": 3938,
           "unique_records": 3938,
           "numeric_fields": 7876,
@@ -5286,8 +5387,7 @@
           },
           "published_at_unknown": 3938
         },
-        "remote_storage": "PENDING_MANUAL_ACTION",
-        "coverage": "One full public snapshot3938 native rows,3937 projectNumber groups; duplicated projectNumber J2656 kept as distinct native IDs and same lineage, not summed"
+        "Q2_FACT_FIELDS_ENRICHED": "Exact procurement contract/award/buyer/supplier links or partial context only; no qualified physical gap"
       },
       "pjm": {
         "name": "pjm",
@@ -5303,7 +5403,7 @@
         "secret_name": null,
         "authentication": "PUBLIC_NO_KEY",
         "status": "DISCOVERED",
-        "source_data_status": "NOT_FETCHED",
+        "source_data_status": "CURRENT_DATA_CONTRACT_OR_PARSER_UNFINISHED_NOT_AN_ACCESS_DENIAL",
         "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
         "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
         "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
@@ -5327,10 +5427,9 @@
         "secret_name": null,
         "authentication": "PUBLIC_NO_KEY",
         "status": "FACTS_STORED",
-        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
         "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
         "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
-        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "first_publication": "Per native record; current dataset/page creation date never substitutes fact-first-publication",
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
@@ -5341,7 +5440,14 @@
           "PARSE_VALIDATED",
           "FACTS_STORED"
         ],
-        "local_collection": {
+        "remote_storage": {
+          "verified": true,
+          "run": 38857135706,
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 3
+        },
+        "coverage": "August+September2026,4 tables/edition; other10 sheets unread, confidential projects absent",
+        "actual_collection": {
           "record_versions": 3684,
           "unique_records": 1916,
           "numeric_fields": 3684,
@@ -5350,8 +5456,7 @@
           },
           "published_at_unknown": 0
         },
-        "remote_storage": "PENDING_MANUAL_ACTION",
-        "coverage": "August+September2026,4 tables/edition; other10 sheets unread, confidential projects absent"
+        "Q2_FACT_FIELDS_ENRICHED": "Exact procurement contract/award/buyer/supplier links or partial context only; no qualified physical gap"
       },
       "neso": {
         "name": "neso",
@@ -5367,21 +5472,27 @@
         "secret_name": null,
         "authentication": "PUBLIC_NO_KEY",
         "status": "FACTS_STORED",
-        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
         "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
         "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
-        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "first_publication": "Per native record; current dataset/page creation date never substitutes fact-first-publication",
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
-        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "next_cursor": "Next official register version; same snapshot not refetched. Capacity/schedule records are not customer-qualified allocable supply.",
         "milestones": [
           "DISCOVERED",
           "LIVE_FETCH_PASS",
           "PARSE_VALIDATED",
           "FACTS_STORED"
         ],
-        "local_collection": {
+        "remote_storage": {
+          "verified": true,
+          "run": 38857135706,
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 3
+        },
+        "coverage": "Full public TEC CSV2225 rows/2082project IDs; exact official resource UUID download redirect confirmed, signed query never archived.",
+        "actual_collection": {
           "record_versions": 2225,
           "unique_records": 2225,
           "numeric_fields": 6675,
@@ -5390,8 +5501,7 @@
           },
           "published_at_unknown": 2225
         },
-        "remote_storage": "PENDING_MANUAL_ACTION",
-        "coverage": "One complete CSV2225 rows,2082 project IDs; stable Project ID/effective-date/stage/agreement keys; no new version comparison yet"
+        "Q2_FACT_FIELDS_ENRICHED": "Exact procurement contract/award/buyer/supplier links or partial context only; no qualified physical gap"
       },
       "entsoe": {
         "name": "entsoe",
@@ -5414,7 +5524,14 @@
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
-        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION",
+        "key_binding_observation": {
+          "run": 38857135706,
+          "secret_name": "BCT_ENTSOE_API_TOKEN",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        }
       },
       "doe_haleu": {
         "name": "doe_haleu",
@@ -5429,15 +5546,38 @@
         "role": "FUEL_PROGRAM_SCHEDULE_NOT_ORDER",
         "secret_name": null,
         "authentication": "PUBLIC_NO_KEY",
-        "status": "DISCOVERED",
-        "source_data_status": "NOT_FETCHED",
+        "status": "FACTS_STORED",
         "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
         "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
-        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "first_publication": "Per native record; current dataset/page creation date never substitutes fact-first-publication",
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
-        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER"
+        "next_cursor": "Actual allocated HALEU amount/customer need date/production-ready qualified supply remain missing. Mutable page2023/2025 creation dates do not date2026 facts.",
+        "milestones": [
+          "DISCOVERED",
+          "LIVE_FETCH_PASS",
+          "PARSE_VALIDATED",
+          "FACTS_STORED"
+        ],
+        "actual_collection": {
+          "record_versions": 3,
+          "unique_records": 3,
+          "numeric_fields": 0,
+          "kinds": {
+            "PROGRAM_CONTEXT_NOT_QUALIFIED_SUPPLY": 3
+          },
+          "published_at_unknown": 3
+        },
+        "remote_storage": {
+          "verified": true,
+          "run": 38857135706,
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 3
+        },
+        "Q2_FACT_FIELDS_ENRICHED": "Exact procurement contract/award/buyer/supplier links or partial context only; no qualified physical gap",
+        "coverage": "3 official program documents /14 source-reviewed literals with NIST combined. HALEU enrichment5..19.75percent, program term10years/conditional bids, funding context; not physical supply capacity.",
+        "review_method": "Explicit assistant original-source review; NOT human/independent semantic evaluation or automatic semantic extraction"
       },
       "chips": {
         "name": "chips",
@@ -5452,15 +5592,38 @@
         "role": "INCENTIVES_PLANS_NOT_PHYSICAL_CAPACITY",
         "secret_name": null,
         "authentication": "PUBLIC_NO_KEY",
-        "status": "DISCOVERED",
-        "source_data_status": "NOT_FETCHED",
+        "status": "FACTS_STORED",
         "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
         "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
-        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "first_publication": "Per native record; current dataset/page creation date never substitutes fact-first-publication",
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
-        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER"
+        "next_cursor": "Issuer/customer/facility production and customer qualification evidence, not incentive dollars.",
+        "milestones": [
+          "DISCOVERED",
+          "LIVE_FETCH_PASS",
+          "PARSE_VALIDATED",
+          "FACTS_STORED"
+        ],
+        "actual_collection": {
+          "record_versions": 1,
+          "unique_records": 1,
+          "numeric_fields": 0,
+          "kinds": {
+            "PROGRAM_CONTEXT_NOT_QUALIFIED_SUPPLY": 1
+          },
+          "published_at_unknown": 0
+        },
+        "remote_storage": {
+          "verified": true,
+          "run": 38857135706,
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 3
+        },
+        "Q2_FACT_FIELDS_ENRICHED": "Exact procurement contract/award/buyer/supplier links or partial context only; no qualified physical gap",
+        "coverage": "One dated2026-10-14 GlobalFoundries amendment,5 exact source literals:up to$955million incentives,$5billion investment,NY/VT facilities,technologies and unchanged award total. No physical capacity or firm ready date.",
+        "review_method": "Explicit assistant original-source review; NOT human/independent semantic evaluation or automatic semantic extraction"
       },
       "nrc": {
         "name": "nrc",
@@ -5484,7 +5647,8 @@
         "S2": 0,
         "S3": 0,
         "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
-        "hold": "Observed HTTP403; no repeated GET, challenge bypass or alternate hostname attempt."
+        "hold": "Observed HTTP403; no repeated GET, challenge bypass or alternate hostname attempt.",
+        "cause_precision": "Observed HTTP403; policy/origin/role cause not independently established; no bypass/retry"
       },
       "bgs": {
         "name": "bgs",
@@ -5538,7 +5702,14 @@
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
-        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION",
+        "key_binding_observation": {
+          "run": 38857135706,
+          "secret_name": "BCT_KOSIS_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        }
       },
       "estat": {
         "name": "estat",
@@ -5561,7 +5732,14 @@
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
-        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION",
+        "key_binding_observation": {
+          "run": 38857135706,
+          "secret_name": "BCT_ESTAT_APP_ID",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        }
       },
       "regulations": {
         "name": "regulations",
@@ -5584,7 +5762,14 @@
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
-        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION",
+        "key_binding_observation": {
+          "run": 38857135706,
+          "secret_name": "BCT_REGULATIONS_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        }
       },
       "federal_register": {
         "name": "federal_register",
@@ -5600,10 +5785,9 @@
         "secret_name": null,
         "authentication": "PUBLIC_NO_KEY",
         "status": "FACTS_STORED",
-        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
         "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
         "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
-        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "first_publication": "Per native record; current dataset/page creation date never substitutes fact-first-publication",
         "Q3_pairs": 0,
         "S2": 0,
         "S3": 0,
@@ -5614,7 +5798,14 @@
           "PARSE_VALIDATED",
           "FACTS_STORED"
         ],
-        "local_collection": {
+        "remote_storage": {
+          "verified": true,
+          "run": 38857135706,
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 3
+        },
+        "coverage": "COMPLETE_FIXED_MANUFACTURING_SEARCH_2026-10-01..15:101 metadata records /2 pages; bodies unread",
+        "actual_collection": {
           "record_versions": 101,
           "unique_records": 101,
           "numeric_fields": 0,
@@ -5623,8 +5814,7 @@
           },
           "published_at_unknown": 0
         },
-        "remote_storage": "PENDING_MANUAL_ACTION",
-        "coverage": "COMPLETE_FIXED_MANUFACTURING_SEARCH_2026-10-01..15:101 metadata records /2 pages; bodies unread"
+        "Q2_FACT_FIELDS_ENRICHED": "Exact procurement contract/award/buyer/supplier links or partial context only; no qualified physical gap"
       },
       "sec": {
         "name": "sec",
@@ -5775,18 +5965,25 @@
           "PARSE_VALIDATED",
           "FACTS_STORED"
         ],
-        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
-        "local_collection": {
+        "remote_storage": {
+          "verified": true,
+          "run": 38857135706,
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 3
+        },
+        "next_cursor": "HOLD stable documented ordering/date filter before offset100;100 release rows/80 unique notices in this returned prefix, not global absence or a current live feed.",
+        "actual_collection": {
           "record_versions": 100,
-          "unique_records": 100,
+          "unique_records": 80,
           "numeric_fields": 0,
           "kinds": {
             "PROCUREMENT_NOTICE": 100
           },
-          "published_at_unknown": 11
+          "published_at_unknown": 12
         },
-        "remote_storage": "PENDING_MANUAL_ACTION",
-        "next_cursor": "offset=100 of reported total422960; requested ordering not verified, historical prefix, not current official feed complete"
+        "first_publication": "Per native record; current dataset/page creation date never substitutes fact-first-publication",
+        "Q2_FACT_FIELDS_ENRICHED": "Exact procurement contract/award/buyer/supplier links or partial context only; no qualified physical gap",
+        "coverage": "PARTIAL historical prefix. Different request times returned duplicates; duplicates retained as versions, not independent contracts."
       },
       "issuer_ir": {
         "name": "Official issuer IR / annual reports",
@@ -6198,6 +6395,13 @@
     "Q2": "PARTIAL_RESEARCH",
     "Q3_pairs": 0,
     "S2": 0,
-    "S3": 0
+    "S3": 0,
+    "status": "PARTIAL_REAL_SOURCE_FETCH_PARSE_STORE_RESTORE_VERIFIED",
+    "successful_run": 38857135706,
+    "executed_code_SHA": "000326a9f943cd886ed65ca25d2e3f115294dfdc",
+    "actual_source_groups_archived": 12,
+    "source_groups_with_parsed_data_including_rights_hold": 13,
+    "original_fixed8_numeric_observations": 38046,
+    "native_originals_in_capsule": false
   }
 }

@@ -4111,7 +4111,7 @@
   "quantitative_plan": {
     "plan_id": "BCT-V4-Q-1.0",
     "current_step": "Q1",
-    "status": "Q1_PARTIAL_Q2_RELATION_RESEARCH_PARTIAL_INDEPENDENT_PAIRS_BLOCKED",
+    "status": "Q1_PARTIAL_Q2_OFFICIAL_FACT_ENRICHMENT_PARTIAL_INDEPENDENT_PAIRS_BLOCKED",
     "started_at": "2026-10-15T12:20:23.279797+00:00",
     "source_status": {
       "sec": {
@@ -4330,7 +4330,7 @@
       "docs/v4/quantitative/Q1_RESULTS.md",
       "docs/v4/quantitative/counterpart-review.json"
     ],
-    "next_action": "Commit tested source adapters; manual official-sources on latest monthly state; verify exact remote restore and final same-SHA CI",
+    "next_action": "Use archived Q2 contract/source pointers to verify physical object, quantity/unit/customer need and qualified supply. Configure only missing new provider keys with owner guide; do not refetch completed fixed windows. Resolve listed endpoint/parser/rights holds independently; no Q3/S2/S3 claim.",
     "blocked_dependencies": [
       "Source-specific historical vintage/date/scope gaps retained; see source_status. Private Q1 store/restore already PASS, not a remaining blocker."
     ],
@@ -4361,7 +4361,7 @@
         "numeric": 581
       }
     },
-    "updated_at": "2026-10-16T05:18:38.979834+00:00",
+    "updated_at": "2026-10-16T05:54:50.426844+00:00",
     "numeric_observations": 38046,
     "physical_quantity_observations": 21916,
     "versioned_records": 42601,
@@ -6223,9 +6223,9 @@
       "completed_at": "2026-10-16T03:17:27.067502+00:00"
     },
     "global_official_sources": {
-      "status": "RECOVERY_PREPARED_AFTER_REAL_DELTA_LIMIT_FAILURE",
+      "status": "PARTIAL_REAL_SOURCE_FETCH_PARSE_STORE_RESTORE_VERIFIED",
       "started_from": "ad41f2651eab010268d2879e1c4ce425ec3f9d54",
-      "as_of": "2026-10-16T05:18:38.979806+00:00",
+      "as_of": "2026-10-16T05:54:50.426813+00:00",
       "registry": "docs/v4/quantitative/source-registry.json#global_sources",
       "evidence": "docs/v4/quantitative/OFFICIAL_SOURCE_RESULTS.json",
       "keys_guide": "docs/v4/quantitative/OFFICIAL_SOURCE_KEYS.md",
@@ -6234,15 +6234,65 @@
       "local_numeric_fields": 19115,
       "field_checks": 108145,
       "BGS_parsed_not_archived": 200,
-      "Q2_signed_contract_review_inputs": 243,
+      "Q2_signed_contract_review_inputs": 239,
       "independent_pairs": 0,
       "Q3_eligible_targets": [],
       "S2": 0,
       "S3": 0,
-      "next": "Run fixed encrypted result recovery38855145291; reuse validated source pages; existing bounded full checkpoint on1MiB delta overflow; validate remote restore and same-SHA CI.",
+      "next": "Use archived Q2 contract/source pointers to verify physical object, quantity/unit/customer need and qualified supply. Configure only missing new provider keys with owner guide; do not refetch completed fixed windows. Resolve listed endpoint/parser/rights holds independently; no Q3/S2/S3 claim.",
       "first_runner_attempt": 38855145291,
-      "encrypted_results_preserved": true,
-      "remote_new_facts_published": false
+      "remote_new_facts_published": true,
+      "executed_code_SHA": "000326a9f943cd886ed65ca25d2e3f115294dfdc",
+      "successful_run": 38857135706,
+      "source_groups_archived": 12,
+      "source_groups_parsed_including_rights_hold": 13,
+      "remote_record_versions": 12587,
+      "remote_unique_typed_records": 10799,
+      "remote_numeric_fields": 19641,
+      "remote_exact_scalar_checks": 112875,
+      "remote_storage": {
+        "backend": "monthly-releases",
+        "tag": "bct-v4-archive-monthly-2026-10",
+        "generation": 3,
+        "manifest_sha256": "4a5714d334cbe89c838dfa9f3b5d22a2376084c95ef30e905246b6807680bcb8",
+        "sqlite_sha256": "c2e21ebc9cadcbae7247346d376a24f8b7b33fb1777526ccf1752f567380284a",
+        "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+      },
+      "new_process_restore_verified": true,
+      "new_process_dedup_verified": true,
+      "remaining": {
+        "keys": "10 optional named Secrets absent on runner; keyed authentication/parsers not live-validated. Guest Comtrade remains usable without a key.",
+        "HTTP403": [
+          "DoD",
+          "DSCA",
+          "NRC",
+          "UK article detail documents"
+        ],
+        "documentation_503": [
+          "data.go.kr/PPS",
+          "KOSIS"
+        ],
+        "contract_or_parser_incomplete": [
+          "AusTender current OCDS/download",
+          "PJM queue data",
+          "Eurostat structure HTTP400/prodcom+comext no statistical rows",
+          "World Bank stable ordering/current filter",
+          "Other official facility licensing sources"
+        ],
+        "rights": "BGS200parsed rows not archived; noncommercial/third-party redistribution permission not generally established",
+        "Q2": "239 signed contract records after4duplicate release rows removed from review count;38parent-lot conflicts; two declared item descriptions(4minibuses/three mortuary trolleys) held. Same-TARGET customer need/qualified supply remains missing.",
+        "scope": "Q1 overall PARTIAL;Q2 PARTIAL;Q3 comparison NOT_RUN;AI FAIL/independent and lead evaluation BLOCKED unchanged"
+      },
+      "platform_usage": {
+        "source_restore_workflow_job_seconds": 1091,
+        "CI_not_included": true,
+        "paid_API_cost": 0,
+        "AI_calls": 0,
+        "CPU_windows": 0,
+        "peak_RSS": "NOT_MEASURED"
+      },
+      "read_only_end_verification_run": 38858125830,
+      "final_evidence_commit_CI": "Check exact latest remote branch SHA in Actions after this evidence commit; prior code CI1693Python+34JS success is separate historical evidence."
     }
   }
 }
