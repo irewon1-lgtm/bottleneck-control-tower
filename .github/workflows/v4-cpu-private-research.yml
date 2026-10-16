@@ -11,7 +11,7 @@ on:
     inputs:
       purpose:
         type: choice
-        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart, q2-relations, official-sources, archive-storage-trial, monthly-storage-trial]
+        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart, q2-relations, official-sources, official-state-read, archive-storage-trial, monthly-storage-trial]
         default: seed
       q1_key_run:
         type: string
@@ -37,6 +37,21 @@ env:
   CPU_CODE_SHA: 221fa92b1cbff8950716ec373eac793ca340c873
   EXPECTED_CPU_CODE_SHA: 221fa92b1cbff8950716ec373eac793ca340c873
 jobs:
+  official-state-read:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'official-state-read' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Read current monthly state and emit compact restore evidence without writes or collection
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+          BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+        run: timeout 120 python -u tools/v4_quantitative_batch.py official_state_read
   monthly-storage-trial:
     if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'monthly-storage-trial' }}
     runs-on: ubuntu-24.04

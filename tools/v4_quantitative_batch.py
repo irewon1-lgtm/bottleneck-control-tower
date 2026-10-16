@@ -417,6 +417,7 @@ def publish():
   if result.get('storage',{}).get('backend')=='monthly-releases':raise ValueError('REFUSE_STALE_GIT_CUTOVER')
   receipt=private.publish(R/'private-write',R/'publish-checkpoint',result['parent'],os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],scope,verify_remote=False)
  (R/'publish-receipt.json').write_text(json.dumps({'report':result['report'],'receipt':receipt,'code_SHA':os.environ['GITHUB_SHA']}))
+ print('BCT_Q1_COMPACT_WRITE_JSON='+json.dumps({'receipt':receipt,'code_SHA':os.environ['GITHUB_SHA']}),flush=True)
  print('BCT_Q1_WRITE_RECEIPT_JSON='+json.dumps({'report':result['report'],'receipt':receipt,'code_SHA':os.environ['GITHUB_SHA']}),flush=True)
 
 def verify():
@@ -432,10 +433,29 @@ def verify():
  expected=json.loads((R/'publish-checkpoint/checkpoint.json').read_text())
  if check['verified']['sqlite_sha256']!=expected['sqlite_sha256']:raise ValueError('Q1_VERIFY_REMOTE_SQLITE_MISMATCH')
  packet['receipt'].update(remote_restore_verified=True,remote_new_process_restore=check['verified'])
+ print('BCT_Q1_COMPACT_VERIFY_JSON='+json.dumps({'receipt':packet['receipt'],'code_SHA':os.environ['GITHUB_SHA']}),flush=True)
  print('BCT_Q1_SOURCES_PUBLISH_JSON='+json.dumps(packet),flush=True)
 
+def official_state_read():
+ """End-of-batch read-only evidence; no collection, publication or benchmarks."""
+ prepare();private.restore(R/'prior',R/'state-read')
+ from bct.v4.official_sources import KIND,q2_review_inputs
+ from types import SimpleNamespace
+ with sqlite3.connect((R/'state-read/v4.sqlite3').resolve().as_uri()+'?mode=ro',uri=True)as db:
+  rows=[json.loads(p)for p, in db.execute('SELECT payload FROM events WHERE kind=?',(KIND,))]
+  handoff=q2_review_inputs(rows);active=q.research_export(SimpleNamespace(db=db))['observations']
+  numeric=sum(x['record']['value_decimal_or_null']is not None for x in active)
+  physical=sum(x['record']['value_decimal_or_null']is not None and x['record']['measurement_type']=='PHYSICAL'for x in active)
+ # prepare sealed only the verified checkpoint; read its authenticated packet.
+ from bct.v4.monthly_storage import Monthly
+ monthly=Monthly(os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],os.environ['BCT_V4_STATE_PASSPHRASE']);cursor=monthly.head()
+ from bct.v4.release_archive import load_commit
+ manifest,_=load_commit(monthly.store(cursor['tag']),cursor['generation'],os.environ['BCT_V4_STATE_PASSPHRASE'])
+ if file_sha(R/'state-read/v4.sqlite3')!=cursor['sqlite_sha256']:raise ValueError('OFFICIAL_STATE_CHANGED_DURING_READ')
+ print('BCT_OFFICIAL_STATE_READ_JSON='+json.dumps({'storage':cursor,'checkpoint_kind':manifest['kind'],'previous_manifest_sha256':manifest['previous_manifest_sha256'],'tables':manifest['proof']['tables'],'remote_restore_verified':True,'sqlite_sha256':file_sha(R/'state-read/v4.sqlite3'),'official_record_versions':len(rows),'by_source':{s:sum(r['source_id']==s for r in rows)for s in sorted({r['source_id']for r in rows})},'Q1_numeric':numeric,'Q1_physical':physical,'Q2':{k:v for k,v in handoff.items()if k!='review_inputs'},'originals_restored':False,'source_HTTP_requests':0,'writes':0,'AI_calls':0,'CPU_windows':0,'code_SHA':os.environ['GITHUB_SHA']}),flush=True)
+
 if __name__=='__main__':
- parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality','verify','recover','counterparts','relations','official']);a=parser.parse_args()
+ parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality','verify','recover','counterparts','relations','official','official_state_read']);a=parser.parse_args()
  if a.action=='official':raise SystemExit(official())
  if a.action=='quality':raise SystemExit(quality())
  if a.action in {'process','trade'}:raise SystemExit(process(only_trade=a.action=='trade'))
