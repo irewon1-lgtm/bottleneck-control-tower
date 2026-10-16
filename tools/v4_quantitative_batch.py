@@ -70,8 +70,13 @@ def state_scope():
 def prepare():
  from bct.v4.cpu_operations import github_guard
  github_guard();R.mkdir(parents=True,exist_ok=False)
- result=private.remote_checkpoint(R/'private-read',R/'prior',os.environ.get('BCT_V4_PRIVATE_STATE_TOKEN',''))
- sealed=private.seal(R/'prior',BRIDGE/'prior/state.gpg',os.environ['BCT_V4_STATE_PASSPHRASE'],result['parent'])
+ from bct.v4.monthly_storage import policy,Monthly
+ if policy()['backend']=='monthly-releases':
+  result=Monthly(os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],os.environ['BCT_V4_STATE_PASSPHRASE']).receive(R/'prior',git_repo=R/'private-read')
+ else:
+  if Monthly(os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],os.environ['BCT_V4_STATE_PASSPHRASE']).head()is not None:raise ValueError('MONTHLY_STATE_EXISTS_REFUSE_STALE_GIT_RESEARCH_READ')
+  result=private.remote_checkpoint(R/'private-read',R/'prior',os.environ.get('BCT_V4_PRIVATE_STATE_TOKEN',''))
+ sealed=private.seal(R/'prior',BRIDGE/'prior/state.gpg',os.environ['BCT_V4_STATE_PASSPHRASE'],result['parent'],storage=result.get('storage'))
  print('BCT_Q1_PRIOR_JSON='+json.dumps({'private_parent':result['parent'],'typed_restore':result['verified'],'encrypted_handoff':sealed}))
 
 
@@ -187,7 +192,7 @@ def finish():
  report['source_task_counts']={prefix:ledger.db.execute("select count(*)from events where kind='QUANTITATIVE_PAGE_COMMITTED'and json_extract(payload,'$.task')like ?",(prefix+'%',)).fetchone()[0]for prefix in ['sec-filing-','sec-global-index-','sec-full-submission-','census-country-detail-v2-']}
  with ledger.worker():private.checkpoint(ledger,R/'checkpoint')
  ledger.close();parent=json.loads((R/'parent.json').read_text())['parent']
- private.seal(R/'checkpoint',BRIDGE/'result/state.gpg',os.environ['BCT_V4_STATE_PASSPHRASE'],parent,report=report)
+ private.seal(R/'checkpoint',BRIDGE/'result/state.gpg',os.environ['BCT_V4_STATE_PASSPHRASE'],parent,report=report,storage=json.loads((R/'parent.json').read_text()).get('storage'))
  print('BCT_Q1_SOURCES_REPORT_JSON='+json.dumps(report))
 
 
@@ -348,14 +353,25 @@ def relations():
 def publish():
  result=private.unseal(BRIDGE/'result/state.gpg',R/'publish-checkpoint',os.environ['BCT_V4_STATE_PASSPHRASE'])
  owner=json.loads(Path('docs/v4/cpu-automation/preflight/connection-results.json').read_text());scope=owner['actual_remote_evidence']['receipts']['BCT_PRIVATE_SCOPE_JSON']['scope']
- receipt=private.publish(R/'private-write',R/'publish-checkpoint',result['parent'],os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],scope,verify_remote=False)
+ from bct.v4.monthly_storage import policy,Monthly
+ if policy()['backend']=='monthly-releases':
+  receipt=Monthly(os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],os.environ['BCT_V4_STATE_PASSPHRASE']).publish(R/'publish-checkpoint',result.get('storage'))
+ else:
+  if result.get('storage',{}).get('backend')=='monthly-releases':raise ValueError('REFUSE_STALE_GIT_CUTOVER')
+  receipt=private.publish(R/'private-write',R/'publish-checkpoint',result['parent'],os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],scope,verify_remote=False)
  (R/'publish-receipt.json').write_text(json.dumps({'report':result['report'],'receipt':receipt,'code_SHA':os.environ['GITHUB_SHA']}))
  print('BCT_Q1_WRITE_RECEIPT_JSON='+json.dumps({'report':result['report'],'receipt':receipt,'code_SHA':os.environ['GITHUB_SHA']}),flush=True)
 
 def verify():
  packet=json.loads((R/'publish-receipt.json').read_text())
- check=private.remote_checkpoint(R/'verification-read',R/'verification-checkpoint',os.environ['BCT_V4_PRIVATE_STATE_TOKEN'])
- if check['parent']!=packet['receipt']['commit']:raise ValueError('Q1_VERIFY_REMOTE_HEAD_CHANGED')
+ if packet['receipt'].get('backend')=='monthly-releases':
+  from bct.v4.monthly_storage import Monthly
+  m=Monthly(os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],os.environ['BCT_V4_STATE_PASSPHRASE'])
+  check=m.receive(R/'verification-checkpoint')
+  if check['storage']!=packet['receipt']['storage']:raise ValueError('Q1_MONTHLY_VERIFY_HEAD_CHANGED')
+ else:
+  check=private.remote_checkpoint(R/'verification-read',R/'verification-checkpoint',os.environ['BCT_V4_PRIVATE_STATE_TOKEN'])
+  if check['parent']!=packet['receipt']['commit']:raise ValueError('Q1_VERIFY_REMOTE_HEAD_CHANGED')
  expected=json.loads((R/'publish-checkpoint/checkpoint.json').read_text())
  if check['verified']['sqlite_sha256']!=expected['sqlite_sha256']:raise ValueError('Q1_VERIFY_REMOTE_SQLITE_MISMATCH')
  packet['receipt'].update(remote_restore_verified=True,remote_new_process_restore=check['verified'])

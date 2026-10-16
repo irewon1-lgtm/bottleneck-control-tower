@@ -5726,6 +5726,38 @@
         "dashboard": "success"
       },
       "next_action": "Keep existing writer unchanged. Review staged secondary archive evidence and approve any primary migration separately. If choosing R2, owner must review subscription/billing, private bucket and least-privilege S3 credentials; no signup/cards/Secrets were created. Before any years-long rollout, measure real change rate and approve bounded dataset partitions while retaining every historical archive."
+    },
+    "monthly_storage": {
+      "plan_id": "BCT-V4-Q-1.0",
+      "start_SHA": "1b07eb021ac718d8f753f376e7c05324c0fbf648",
+      "started_at": "2026-10-16T01:24:58.974165+00:00",
+      "status": "IN_PROGRESS",
+      "R2": "DEFERRED",
+      "scope": "24-month quantitative research state; old Git/CPU originals unchanged",
+      "steps": [
+        {
+          "step": "Monthly profile and writer integration",
+          "expected": "Monthly full seed, bounded encrypted deltas, previous month linkage, pinned old Git and explicit backend selector",
+          "status": "PASS"
+        },
+        {
+          "step": "Failure and dedup impact tests",
+          "expected": "No stale Git fallback; preserve cursors and task states; parent conflict/corruption/upload failure safe",
+          "status": "PASS",
+          "evidence": "26 changed-scope local tests,67.77s; extra HTTP metrics guard checks"
+        },
+        {
+          "step": "Actual remote primary path trial",
+          "expected": "Full8 tables/42601 versions, actual own validation event append, new process read, duplicate retry0, old Git unchanged",
+          "status": "IN_PROGRESS"
+        },
+        {
+          "step": "Exact final SHA CI",
+          "expected": "Development branch push and corresponding CI observed",
+          "status": "NOT_RUN"
+        }
+      ],
+      "policy": "docs/v4/quantitative/storage-policy.json"
     }
   }
 }

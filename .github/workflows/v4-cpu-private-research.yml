@@ -11,7 +11,7 @@ on:
     inputs:
       purpose:
         type: choice
-        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart, q2-relations, archive-storage-trial]
+        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart, q2-relations, archive-storage-trial, monthly-storage-trial]
         default: seed
       q1_key_run:
         type: string
@@ -33,6 +33,28 @@ env:
   CPU_CODE_SHA: 221fa92b1cbff8950716ec373eac793ca340c873
   EXPECTED_CPU_CODE_SHA: 221fa92b1cbff8950716ec373eac793ca340c873
 jobs:
+  monthly-storage-trial:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'monthly-storage-trial' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Validate actual monthly research save, resume and restore without scheduled activation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+          BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+        run: |
+          timeout 120 python -u tools/v4_monthly_storage_trial.py prepare
+          timeout 120 python -u tools/v4_monthly_storage_trial.py seed
+          timeout 120 python -u tools/v4_monthly_storage_trial.py append
+          timeout 120 python -u tools/v4_monthly_storage_trial.py resume
+          timeout 120 python -u tools/v4_monthly_storage_trial.py verify
+          timeout 120 python -u tools/v4_monthly_storage_trial.py rollover
+          timeout 120 python -u tools/v4_monthly_storage_trial.py finish
   archive-storage-trial:
     if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'archive-storage-trial' }}
     runs-on: ubuntu-24.04

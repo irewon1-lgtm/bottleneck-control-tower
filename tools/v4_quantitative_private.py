@@ -53,6 +53,8 @@ def encrypt(a):
 
 
 def publish():
+    from bct.v4.monthly_storage import policy
+    if policy()['backend']=='monthly-releases':raise ValueError('LEGACY_TRANSFER_PUBLISH_DISABLED_USE_RESUMABLE_RESEARCH_BATCH')
     if os.environ.get('GITHUB_REF')!='refs/heads/codex/bct-v4-integration':raise ValueError('Q1_MANUAL_DEVELOPMENT_ONLY')
     from bct.v4.cpu_operations import github_guard
     github_guard()

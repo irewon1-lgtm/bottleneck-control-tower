@@ -187,12 +187,13 @@ def remote_checkpoint(repo,destination,token):
     return {'parent':parent,'verified':verified}
 
 
-def seal(source,destination,passphrase,parent,*,report=None):
+def seal(source,destination,passphrase,parent,*,report=None,storage=None):
     source,destination=Path(source),Path(destination)
     proof=json.loads((source/'checkpoint.json').read_text());archive=(source/'checkpoint.sqlite3.gz').read_bytes()
     if len(archive)>LIMIT or file_sha(source/'checkpoint.sqlite3.gz')!=proof['archive_sha256']:raise ValueError('Q1_SEAL_CHECKPOINT_HASH_OR_SIZE')
     payload={'format':FORMAT,'proof':proof,'archive_base64':base64.b64encode(archive).decode(),
-             'parent':private._parent(parent),'report':report,'code_SHA':os.environ.get('GITHUB_SHA')}
+             'parent':private._parent(parent),'report':report,'code_SHA':os.environ.get('GITHUB_SHA'),
+             **({'storage':storage}if storage is not None else{})}
     destination.parent.mkdir(parents=True,exist_ok=True)
     with destination.open('xb')as out:out.write(private._gpg(json.dumps(payload).encode(),passphrase))
     return {'encrypted_sha256':file_sha(destination),'encrypted_bytes':destination.stat().st_size}
@@ -207,4 +208,5 @@ def unseal(source,destination,passphrase):
     (destination/'checkpoint.json').write_text(json.dumps(payload['proof']))
     (destination/'checkpoint.sqlite3.gz').write_bytes(archive)
     with tempfile.TemporaryDirectory(prefix='q1-unseal-')as tmp:verified=restore(destination,Path(tmp)/'verified')
-    return {'parent':private._parent(payload['parent']),'report':payload.get('report'),'verified':verified,'code_SHA':payload.get('code_SHA')}
+    return {'parent':private._parent(payload['parent']),'report':payload.get('report'),'verified':verified,'code_SHA':payload.get('code_SHA'),
+            **({'storage':payload['storage']}if 'storage'in payload else{})}
