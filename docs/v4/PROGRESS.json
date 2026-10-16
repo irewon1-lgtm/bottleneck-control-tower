@@ -5773,12 +5773,12 @@
       "current_storage": {
         "backend": "monthly-releases",
         "tag": "bct-v4-archive-monthly-2026-10",
-        "generation": 2,
-        "manifest_sha256": "e62516bfb9fde5d7e5dc4a6f89714e85d3984b371a36e27c222db4b07a5eb2af",
-        "sqlite_sha256": "5d45d56ef61e5cc74a4c0bc35b197fbee2b125353acb4c68bf85391e3793b0be",
+        "generation": 6,
+        "manifest_sha256": "f939433f6366438abb64b6a4c89f8305b6b91727ecce4362384c03b6e6a908fe",
+        "sqlite_sha256": "06bef86b0667c7d7170dc1521c7646324824edd76085eb61c1cb7913381e2093",
         "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
       },
-      "monthly_asset_bytes": 10112525,
+      "monthly_asset_bytes": 38084522,
       "automatic_scheduled_operation": "NOT_RUN_MAIN_SCHEDULE_UNCHANGED",
       "evidence": "docs/v4/quantitative/quality-evidence.json#monthly_storage",
       "updated_at": "2026-10-16T01:55:19.489681+00:00",
@@ -5823,8 +5823,38 @@
         "read_run": 38903997134,
         "restore_verified": true,
         "publisher_timeout_run": 38903154345,
-        "exact_packet_match": "PENDING_READ_ONLY_VERIFICATION"
-      }
+        "exact_packet_match": true,
+        "exact_packet_read_run": 38904493366,
+        "capacity": {
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 6,
+          "bytes": 38084522,
+          "remaining_monthly_bytes": 230350934,
+          "assets": 14,
+          "remaining_asset_slots": 386
+        },
+        "new_asset_bytes": 408746,
+        "operational_publisher": "FAIL_EXIT_124_WITH_DURABLE_COMMIT_AND_SEPARATE_SUCCESSFUL_RESTORE"
+      },
+      "current_storage_history": [
+        {
+          "storage": {
+            "backend": "monthly-releases",
+            "tag": "bct-v4-archive-monthly-2026-10",
+            "generation": 2,
+            "manifest_sha256": "e62516bfb9fde5d7e5dc4a6f89714e85d3984b371a36e27c222db4b07a5eb2af",
+            "sqlite_sha256": "5d45d56ef61e5cc74a4c0bc35b197fbee2b125353acb4c68bf85391e3793b0be",
+            "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+          },
+          "note": "Earlier verified cursor preserved; newer updates also remain in their original progress sections."
+        }
+      ],
+      "capacity_measurement_history": [
+        {
+          "bytes_field_previous_value": 10112525,
+          "context": "Earlier historical monthly-storage measurement retained"
+        }
+      ]
     },
     "Q2_real_evidence_resume": {
       "plan_id": "BCT-V4-Q-1.0",
@@ -7244,7 +7274,7 @@
           "new_firm_delivery_or_customer_need": 0
         },
         "selection_repair": {
-          "status": "PARTIAL_REMOTE_GENERATION6_RESTORED_EXACT_PACKET_READBACK_PENDING",
+          "status": "PARTIAL_SOURCE_SELECTION_REPAIRED_REMOTE_PACKET_AND_RESTORE_VERIFIED",
           "plan_id": "BCT-V4-Q-1.0",
           "start_SHA": "30dff15989bba974190e0b61004d8f7032a16c7a",
           "evidence_path": "docs/v4/quantitative/OFFICIAL_SELECTION_REPAIR_RESULTS.json",
@@ -7325,7 +7355,7 @@
           "CPU_windows": 0,
           "paid_API_cost": 0,
           "operating_changes": false,
-          "next_action": "Use the stored queue/source selectors and newly found publisher index lineage; obtain additional article metadata/index pagination without refetching old URLs. ENTITY/EXTRACTION remain blocked on product binding/inline markup; no qualified same-TARGET pair. Remote append/hash verification pending.",
+          "next_action": "Resume source article metadata/pagination discovery from stored 226 held/excluded entries only after a relevant new lead or version is available. Address exact markup/physical-product binding with captured development text. Keep independent Q3 comparison 0; do not repeat old GETs, CPU or storage stress tests.",
           "quality_verdicts_preserved": {
             "AI_adoption": "FAIL",
             "independent_AI_evaluation": "BLOCKED",
@@ -7360,11 +7390,12 @@
             "append_and_new_process_requery": "PASS",
             "source_requests_in_receiver": 0,
             "publisher": "FAIL_TIMEOUT_120_SECONDS_EXIT_124",
-            "complete_remote_restore": "GENERATION6_RESTORE_PASS_SEPARATE_READ_ONLY_RUN",
+            "complete_remote_restore": "PASS_VIA_SEPARATE_READ_ONLY_GENERATION6_AND_EXACT_PACKET_VERIFICATION",
             "candidate_sqlite_sha256": "0166fd6ffe59dbd1fda076b5d2842e11ac59f19947fe580b443f6e9561118077",
             "old_generation": 5,
             "write_retry": false,
-            "live_processing_db_hash_is_not_checkpoint_backup_hash": true
+            "live_processing_db_hash_is_not_checkpoint_backup_hash": true,
+            "candidate_sqlite_sha256_label": "PRE_CHECKPOINT_LIVE_SQLITE_NOT_BACKUP_BYTES"
           },
           "remote_archive_state": {
             "storage": {
@@ -7382,14 +7413,59 @@
             "originals_restored": false,
             "Q1_numeric": 38046,
             "Q1_physical": 21916,
-            "exact_new_packet_query": "PREPARED_NOT_RUN"
+            "exact_new_packet_query": "PASS",
+            "exact_packet_proof": {
+              "exact_packet_sha256": "2eae3a7099613bdb94868e2ba050ddbc7d6d35e2098ab8407b4508ef2b928eb0",
+              "remote_packet_match": true,
+              "initial_pending": 202,
+              "pending": 226,
+              "source_requests": 17,
+              "source_documents": 20,
+              "automatic_relation_tasks": 152,
+              "writes": 0,
+              "source_HTTP_requests": 0,
+              "code_SHA": "182d0472a9fdf672ea40b89a2835dbc21cf5b772"
+            },
+            "exact_packet_read_run": 38904493366,
+            "source_originals_restored": false,
+            "current_capacity": {
+              "tag": "bct-v4-archive-monthly-2026-10",
+              "generation": 6,
+              "bytes": 38084522,
+              "remaining_monthly_bytes": 230350934,
+              "assets": 14,
+              "remaining_asset_slots": 386
+            },
+            "new_asset_bytes_vs_generation5": 408746
           },
           "final_focused_tests": {
             "passed": 34,
             "failed": 0,
             "scope": "changed bidirectional reader plus protected workflow contract"
           },
-          "original_CPU_research_DB_hashes_preserved": true
+          "original_CPU_research_DB_hashes_preserved": true,
+          "remaining_work": {
+            "SOURCE": "226 metadata-held/excluded entries; no currently eligible unvisited lead. Additional index pagination/article relation metadata required, not blind traversal.",
+            "EXTRACTION": "Exact inline markup alignment still held; PDF failed before capture with coarse diagnostic. No unchanged request retried.",
+            "ENTITY": "No new unambiguous physical-product bindings in the seven identical prose inputs.",
+            "SCOPE_LINKAGE": "Customer need period, qualified available capacity, full supply scope and independent opposite facts still absent."
+          },
+          "remaining_BLOCKED": [
+            "NO_UNAMBIGUOUS_NEW_PHYSICAL_PRODUCT_BINDING_IN_ACTUAL_PROSE",
+            "INLINE_MARKUP_ALIGNMENT_HELD",
+            "NO_VERIFIED_CUSTOMER_NEED_AND_QUALIFIED_AVAILABLE_SUPPLY_PAIR",
+            "PUBLISHER_EXIT_124_AFTER_COMMIT_NO_ACK_OPERATIONAL_RELIABILITY_NOT_PASS",
+            "ANNUAL_PDF_FAILED_BEFORE_CAPTURE_EXACT_CAUSE_UNKNOWN_NO_RETRY"
+          ],
+          "final_CI": "Final documentation commit CI must be observed after push; prior code CI is not substituted."
+        },
+        "current_storage": {
+          "backend": "monthly-releases",
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 6,
+          "manifest_sha256": "f939433f6366438abb64b6a4c89f8305b6b91727ecce4362384c03b6e6a908fe",
+          "sqlite_sha256": "06bef86b0667c7d7170dc1521c7646324824edd76085eb61c1cb7913381e2093",
+          "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
         }
       }
     }
