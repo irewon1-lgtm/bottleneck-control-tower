@@ -27,8 +27,15 @@ jobs:
         env:
           COMMIT_REF: ${{ github.sha }}
         run: bash scripts/v4_dashboard_ci_build.sh
-      # Netlify runs the same gate before atomic publication. No deployment
-      # token, research output artifact, collector, or write permission is used.
+      - name: Export and verify public static V4 research pages
+        env:
+          PYTHONPATH: src
+          BCT_CODE_SHA: ${{ github.sha }}
+        run: |
+          python tools/v4_dashboard_static_export.py
+          python tools/v4_dashboard_static_check.py
+          node --check var/v4/pages-site/app.js
+      # The default-branch Pages workflow publishes only after this gate succeeds.
 
   readonly-release-revalidation:
     if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' }}
