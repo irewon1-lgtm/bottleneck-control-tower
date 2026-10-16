@@ -397,6 +397,63 @@ def publication_evidence(raw, url, acquired_at):
             'positions':positions, 'basis':'SOURCE_REPORTED_ARTICLE_DATE_NOT_VERSION_HISTORY'}
 
 
+
+def _inline_source_blocks(html):
+    """Map visible text through inline HTML tags without inventing offsets.
+
+    Block-level tags, hidden navigation and scripts break continuity. Native
+    coordinates point into the original decoded HTML, not the extracted body.
+    Entities/whitespace rewrites that cannot be mapped exactly remain held.
+    """
+    inline = frozenset(('a', 'b', 'i', 'em', 'strong', 'span', 'small',
+                        'sup', 'sub', 'u', 'abbr', 'code', 'mark', 'time'))
+    ignored = frozenset(('script', 'style', 'noscript', 'head', 'nav',
+                         'aside', 'footer', 'form', 'button', 'template'))
+    blocks = []
+    parts, spans, length, hidden = [], [], 0, 0
+
+    def flush():
+        nonlocal parts, spans, length
+        if parts:
+            blocks.append((''.join(parts), spans))
+        parts, spans, length = [], [], 0
+
+    for token in re.finditer(r'(?s)<!--.*?-->|<![^>]*>|<[^>]*>|[^<]+', html):
+        value = token.group()
+        if value.startswith('<'):
+            match = re.match(r'</?\s*([A-Za-z][A-Za-z0-9:-]*)', value)
+            if not match:
+                flush()
+                continue
+            tag = match[1].lower()
+            if tag in ignored:
+                flush()
+                if not value.rstrip().endswith('/>'):
+                    hidden = max(0, hidden + (-1 if value.startswith('</') else 1))
+            elif tag not in inline:
+                flush()
+            continue
+        if hidden:
+            continue
+        parts.append(value)
+        spans.append((length, length + len(value), token.start()))
+        length += len(value)
+    flush()
+    return blocks
+
+
+def _inline_quote_hits(blocks, quote):
+    """Return at most two visible-text matches for conservative uniqueness."""
+    matches = []
+    for text, spans in blocks:
+        start = text.find(quote)
+        while start >= 0:
+            matches.append((start, spans))
+            if len(matches) > 1:
+                return matches
+            start = text.find(quote, start + 1)
+    return matches
+
 def read_context(raw, meta):
     """Reuse the source/scope/temporal readers on an actual official HTML body.
 
@@ -441,13 +498,45 @@ def read_context(raw, meta):
         p = sr.bound_product(line, sr._products(doc, line))
         statements.append({'source_quote': line['quote'], 'locator': {'start': line['start'], 'end': line['end']},
                            'scope': {'product': p} if p else {}, 'quantity': 'UNKNOWN', 'unit': 'UNKNOWN'})
+    inline_blocks = None
     for old in statements:
         context = old['source_quote']; start = old['locator']['start']; end = old['locator']['end']
         role, kind, actuality = context_role(context)
         locations = [m.start() for m in re.finditer(re.escape(context), html)]
-        if len(locations) != 1:
-            holds.append({'stage': 'EXTRACTION', 'reason': 'RAW_CONTEXT_AMBIGUOUS' if locations else 'RAW_CONTEXT_MARKUP_ALIGNMENT_UNSUPPORTED',
+        inline_hit = None
+        ambiguous_inline = False
+        if not locations and not pdf:
+            if inline_blocks is None:
+                inline_blocks = _inline_source_blocks(html)
+            matches = _inline_quote_hits(inline_blocks, context)
+            if len(matches) == 1:
+                inline_hit = matches[0]
+
+                def native_char(local_offset):
+                    offset, spans = inline_hit
+                    cursor = offset + local_offset
+                    for begin, finish, native_start in spans:
+                        if begin <= cursor < finish:
+                            return native_start + cursor - begin
+                    raise ValueError('INLINE_CONTEXT_COORDINATE')
+
+                locations = [native_char(0)]
+            elif len(matches) > 1:
+                ambiguous_inline = True
+        if len(locations) != 1 or ambiguous_inline:
+            holds.append({'stage': 'EXTRACTION',
+                          'reason': 'RAW_CONTEXT_AMBIGUOUS' if locations or ambiguous_inline else 'RAW_CONTEXT_MARKUP_ALIGNMENT_UNSUPPORTED',
                           'body_position': old['locator'], 'context_sha256': sha(context.encode())}); continue
+
+        def source_span(local_start, local_end):
+            if not inline_hit:
+                return {'start': locations[0] + local_start, 'end': locations[0] + local_end}
+            first, last = native_char(local_start), native_char(local_end - 1) + 1
+            # A field interrupted by an HTML tag is not one exact native span.
+            if html[first:last] != context[local_start:local_end]:
+                return None
+            return {'start': first, 'end': last}
+
         field = old['scope'].get('product')
         relation_proposal = False
         if field is None and role in {'CONSTRAINT','SUPPLY_PLAN','SUPPLY_CHANGE'}:
@@ -460,7 +549,11 @@ def read_context(raw, meta):
             holds.append({'stage': 'ENTITY', 'reason': 'PRODUCT_OUTSIDE_EVENT_NEEDS_RELATION_PROOF', 'body_position': old['locator']})
             product = None; field = None
         at = locations[0]
-        position = ({'start': at + field['locator']['start']-start, 'end': at + field['locator']['end']-start} if field else None)
+        position = (source_span(field['locator']['start'] - start, field['locator']['end'] - start) if field else None)
+        if field and position is None:
+            holds.append({'stage': 'ENTITY', 'reason': 'INLINE_PRODUCT_NOT_CONTIGUOUS_NATIVE_SPAN',
+                          'body_position': old['locator']})
+            product = None; field = None
         if position and html[position['start']:position['end']] != product: raise ValueError('CONTEXT_PRODUCT_POSITION')
         amount = old.get('quantity')
         target = {k: None for k in TARGET}
@@ -469,13 +562,17 @@ def read_context(raw, meta):
         for key in ('specification', 'region', 'customer_group'):
             attr = old['scope'].get(key)
             if attr and start <= attr['locator']['start'] < attr['locator']['end'] <= end:
-                loc = {k: at+v-start for k,v in attr['locator'].items()}
+                loc = source_span(attr['locator']['start']-start, attr['locator']['end']-start)
+                if loc is None:
+                    holds.append({'stage': 'SCOPE', 'reason': 'INLINE_SCOPE_NOT_CONTIGUOUS_NATIVE_SPAN',
+                                  'field': key, 'body_position': old['locator']})
+                    continue
                 if html[loc['start']:loc['end']] != attr['value']: raise ValueError('CONTEXT_SCOPE_POSITION')
                 target[key] = {'normalized': attr['value'].casefold()}; scope_positions[key] = loc
         e = {'logical_id': sha([meta['url'], kind, product, sha(context.encode())]), 'source_hash': meta['sha256'],
              'source_url': meta['url'], 'lineage': meta['source_id'], 'published_at': meta.get('published_at') or 'UNKNOWN',
              'acquired_at': meta['acquired_at'], 'body_sha256': doc['body_sha256'], 'body_position': old['locator'],
-             'raw_position': {'start': at, 'end': at+len(context)}, 'context_sha256': sha(context.encode()),
+             'raw_position': {'start': at, 'end': native_char(len(context)-1)+1 if inline_hit else at+len(context)}, 'context_sha256': sha(context.encode()),
              'product': product, 'product_position': position, 'role': role, 'kind': kind, 'actuality': actuality,
              'state': 'PRODUCT_RELATION_PROPOSAL' if relation_proposal else 'SOURCE_BOUND_REPORTED_CHANGE' if product and role != 'CONTEXT' else 'CONTEXT_REVIEW_PENDING',
              'quantity': None if amount in (None, 'UNKNOWN') else amount, 'unit': old.get('unit', 'UNKNOWN'),
@@ -494,6 +591,8 @@ def read_context(raw, meta):
         e['reported_periods'] = [{k:p[k] for k in ('precision','start','end','fact_kind')}
                                  | {'body_position':p['reference']['locator']} for p in facts['periods']]
         e['bottleneck_relief_verified'] = False
+        if inline_hit:
+            e['raw_alignment'] = 'VERIFIED_INLINE_MARKUP_TEXT_ONLY'
         if pdf:
             e['page']=html.count('\f',0,at)+1
         e['id'] = sha(e); events.append(e)

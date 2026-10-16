@@ -63,6 +63,37 @@ def test_ambiguous_context_not_approved_at_first_match():
  assert any(h['reason']=='RAW_CONTEXT_AMBIGUOUS'for h in r['holds'])
 
 
+
+def test_inline_html_markup_preserves_exact_native_product_and_raw_span():
+ raw,meta=page('Production capacity for <strong>gas turbines</strong> increased in 2026.')
+ result=d.read_context(raw,meta)
+ matched=[e for e in result['events']if e['product']=='gas turbines']
+ assert matched
+ event=next(e for e in matched if e['role']=='SUPPLY_CHANGE')
+ native=raw.decode()
+ assert event['raw_alignment']=='VERIFIED_INLINE_MARKUP_TEXT_ONLY'
+ assert '<strong>' in native[event['raw_position']['start']:event['raw_position']['end']]
+ assert native[event['product_position']['start']:event['product_position']['end']]=='gas turbines'
+ assert not event['qualified'] and event['qualified_capacity'] is None
+
+
+def test_inline_product_split_across_tags_cannot_be_native_verified():
+ raw,meta=page('Production capacity for <strong>gas</strong> turbines increased in 2026.')
+ result=d.read_context(raw,meta)
+ assert not any(e['product']=='gas turbines' and e['state']=='SOURCE_BOUND_REPORTED_CHANGE'
+                for e in result['events'])
+ assert any(h['reason']=='INLINE_PRODUCT_NOT_CONTIGUOUS_NATIVE_SPAN' for h in result['holds'])
+
+
+def test_repeated_inline_quote_is_ambiguous_not_first_match():
+ raw,meta=page('Production capacity for <strong>gas turbines</strong> increased in 2026. '
+               'Production capacity for <strong>gas turbines</strong> increased in 2026.')
+ result=d.read_context(raw,meta)
+ assert not any(e['product']=='gas turbines' and e['state']=='SOURCE_BOUND_REPORTED_CHANGE'
+                for e in result['events'])
+ assert any(h['reason']=='RAW_CONTEXT_AMBIGUOUS' for h in result['holds'])
+
+
 def test_restart_dedup_tamper_and_source_absence(tmp_path):
  raw,m=page('Production capacity for gas turbines increased in 2026.')
  r=d.read_context(raw,m);l=Ledger(tmp_path/'ledger')
