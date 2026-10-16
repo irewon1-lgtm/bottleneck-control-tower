@@ -147,28 +147,44 @@ def run(*,network=False,next_round=False,discover=False,official=False):
     budget=q.RelationRound(ROOT/'request-rounds.json',next_round=next_round) if network else None
     cache=ROOT/'captures';cache.mkdir(exist_ok=True)
     held_hosts=json.loads((ROOT/'host-quarantine.json').read_text())if(ROOT/'host-quarantine.json').exists()else{}
+    prior_attempts={r['url']:r for t in tasks for r in t['checked_sources']
+                    if r['status']not in {'TRIAGED_NOT_SUPPLY_EVIDENCE'}}
+    for result in prior_attempts.values():
+        if result['status']=='HOST_ACCESS_QUARANTINED_NOT_REQUESTED':
+            held_hosts[urlsplit(result['url']).hostname]=result['reason']
     # Exact stored originals outrank a new GET. Re-extraction creates a derived
     # version; it never overwrites frozen documents or upgrades their records.
     needed={u['url']for t in tasks for u in t['urls'][t['cursor']:]}
     existing={d['origin_url']:d for d in docs.values()if d['document_id']in raws}
-    for url in needed:
+    def reuse_stored(url):
         key=sha(url);receipt=cache/(key+'.json')
-        if receipt.exists()or url not in existing:continue
+        if receipt.exists():return
+        if url not in existing:
+            if url in prior_attempts:
+                old=prior_attempts[url]
+                receipt.write_text(json.dumps({'url':url,'status':'PREVIOUS_ATTEMPT_NO_AUTOMATIC_REFETCH',
+                                              'prior_status':old['status'],'published_at':old.get('published_at','UNKNOWN'),
+                                              'native_available':False,'source_calls':0}))
+            return
         source=existing[url];raw=raws[source['document_id']]
         if sha(raw)!=source['raw_sha256']:raise ValueError('STORED_NATIVE_HASH')
-        if raw.startswith(b'%PDF'):continue  # Existing PDF recovery remains separate.
+        if raw.startswith(b'%PDF'):
+            (cache/(key+'.raw')).write_bytes(raw)
+            receipt.write_text(json.dumps({'url':url,'status':'REUSED_STORED_PDF_FORMAT_REVIEW_PENDING','raw_sha256':sha(raw),'published_at':'UNKNOWN','source_calls':0}))
+            return
         try:
             d=verify(raw,url,url,source['acquired_at']);d['document_id']='q2-offline-derived-'+sha([url,sha(raw)])
             q.bind_publication(d,raw)
         except Exception as exc:
             receipt.write_text(json.dumps({'url':url,'status':'STORED_ORIGINAL_EXTRACTION_HELD_NO_REFETCH','error_type':type(exc).__name__,'raw_sha256':sha(raw),'published_at':'UNKNOWN','source_calls':0}))
-            continue
+            return
         (cache/(key+'.raw')).write_bytes(raw)
         (cache/(key+'.document.json')).write_text(json.dumps(d,ensure_ascii=False))
         receipt.write_text(json.dumps({'url':url,'status':'REUSED_STORED_ORIGINAL_DERIVED_REVIEW',
                                       'document_id':d['document_id'],'raw_sha256':sha(raw),'body_sha256':d['body_sha256'],
                                       'provenance':d['provenance'],'published_at':d.get('published_at')or'UNKNOWN',
                                       'body_status':d['body_status'],'source_calls':0,'semantic_relation':'UNKNOWN_NOT_ADOPTED'}))
+    for url in needed:reuse_stored(url)
     # The already executed public-only search returned unrelated YouTube URLs.
     # Quarantine this provider response; do not treat it as evidence of absence.
     search_probe=json.loads((ROOT/'search-probe.json').read_text())if(ROOT/'search-probe.json').exists()else {}
@@ -178,7 +194,8 @@ def run(*,network=False,next_round=False,discover=False,official=False):
     # piloted against official H225M results; snippets never become facts.
     searches=ROOT/'searches';searches.mkdir(exist_ok=True)
     if official and network:calls+=official_searches(tasks,budget,started)
-    search_quarantined=(searches/'provider-quarantine.json').exists()
+    search_quarantined=((searches/'provider-quarantine.json').exists()or
+                        any('CHALLENGE'in t['scope'].get('external_search',{}).get('status','')for t in tasks))
     if discover and not search_quarantined:
         from bct.target_acquisition import Metadata
         official_hosts={urlsplit(t['source_identity']['origin_url']).hostname for t in tasks}
@@ -260,6 +277,7 @@ def run(*,network=False,next_round=False,discover=False,official=False):
         task['urls'][task['cursor']:]=pending
         while network and task['cursor']<len(task['urls']):
             link=task['urls'][task['cursor']];url=link['url'];key=sha(url);receipt=cache/(key+'.json');rawfile=cache/(key+'.raw')
+            reuse_stored(url)  # Includes URLs just discovered in this traversal.
             if q.relation_url(url)=='SEC_DISCOVERY_TRANSPORT_REQUIRED':
                 # Retain the observed issuer lookup. Existing www.sec.gov403
                 # is quarantined; neither a generic-UA fetch nor a retry occurs.

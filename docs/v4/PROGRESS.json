@@ -4116,8 +4116,8 @@
     "source_status": {
       "sec": {
         "status": "BINDING_AND_SUBMISSIONS_PASS_BODY_NUMBERS_PENDING",
-        "coverage": "현재 실행환경에 승인된 SEC 실제 연락처 없음. 제출이력·수치 미수집. Secret 목록 API403으로 Actions 설정 존재 여부는 미확인. 임의 연락처/무승인 호출 없음.",
-        "next_cursor": "승인된 BCT_SEC_USER_AGENT가 기존 연결 경로에 전달되면 고정30일 공시/정정 범위 재개",
+        "coverage": "기존 Actions SEC/Census 바인딩은 이번 시작 회차38841543797에서 값 노출 없이 존재 확인. 기존2CIK/본문1 시험 범위 보존, 수치0. Q2에서 별도 과거2025 SEC 본문1개를 확보했지만 제출이력/최초 공개일 결합과 현재 고정30일 범위 검증이 없어 Q1 확대 완료로 계산하지 않음. 저장된 실패 색인 원본은 없고 과거403은 재호출하지 않음.",
+        "next_cursor": "보존된 제출이력 및 승인된 SEC 전용 연결 경로로 고정30일/기업 범위의 미검증 공시 재개. 과거403의 조건 없는 반복과 현재 공개일 임의 추정 금지.",
         "counts": {
           "versioned_records": 0,
           "distinct_observation_keys": 0,
@@ -4361,7 +4361,7 @@
         "numeric": 581
       }
     },
-    "updated_at": "2026-10-16T03:08:45.710042+00:00",
+    "updated_at": "2026-10-16T03:17:27.067525+00:00",
     "numeric_observations": 38046,
     "physical_quantity_observations": 21916,
     "versioned_records": 42601,
@@ -5773,12 +5773,12 @@
       "current_storage": {
         "backend": "monthly-releases",
         "tag": "bct-v4-archive-monthly-2026-10",
-        "generation": 1,
-        "manifest_sha256": "1c91262862e70be40e8a7dcd5125166d7303c6b0deb96e6f158d00a6001350a3",
-        "sqlite_sha256": "43e583e70461069c3946e22ce10840ff52ce8abb0605aab01eb4f343c23c40ac",
+        "generation": 2,
+        "manifest_sha256": "e62516bfb9fde5d7e5dc4a6f89714e85d3984b371a36e27c222db4b07a5eb2af",
+        "sqlite_sha256": "5d45d56ef61e5cc74a4c0bc35b197fbee2b125353acb4c68bf85391e3793b0be",
         "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
       },
-      "monthly_asset_bytes": 9784371,
+      "monthly_asset_bytes": 10112525,
       "automatic_scheduled_operation": "NOT_RUN_MAIN_SCHEDULE_UNCHANGED",
       "evidence": "docs/v4/quantitative/quality-evidence.json#monthly_storage",
       "updated_at": "2026-10-16T01:55:19.489681+00:00",
@@ -5794,8 +5794,23 @@
       ],
       "two_year_stability": "NOT_RUN",
       "main_scheduled_cutover": "BLOCKED_UNCHANGED_MAIN_AND_SCHEDULE",
-      "next_action": "Resume retained147 URL entries/93 unique URLs only in next bounded round; replace irrelevant search provider with verified relevant public discovery before issuing57 external queries. Confirm product-facility/configuration edge, independent customer need/qualification and first publication before adopting any pair. SEC prior403 remains isolated. Operating full release application remains separate, CPU vars unchanged.",
-      "next_storage_action": "Development monthly research path is verified. Keep operating main unchanged; scheduled/main rollout requires separate verified application. Observe real ingestion and capsule growth, preserve all old Git/releases, stop at guarded bounds."
+      "next_action": "Use relation-tasks.json cursors for260 newly discovered pending URL entries/49unique; prioritize current direct manufacturer/customer/official contract documents before historic/republication references.30 original external-search requests remain uncalled due unavailable legitimate search routes; do not replay blocked DDG/SEC/Airbus. Review92 facets, not92 unique events. Qualified capacity, customer need period and independent same-TARGET opposite side still required. Q3 comparisons NOT_RUN.",
+      "next_storage_action": "Development monthly research path is verified. Keep operating main unchanged; scheduled/main rollout requires separate verified application. Observe real ingestion and capsule growth, preserve all old Git/releases, stop at guarded bounds.",
+      "previous_current_storage": {
+        "backend": "monthly-releases",
+        "tag": "bct-v4-archive-monthly-2026-10",
+        "generation": 1,
+        "manifest_sha256": "1c91262862e70be40e8a7dcd5125166d7303c6b0deb96e6f158d00a6001350a3",
+        "sqlite_sha256": "43e583e70461069c3946e22ce10840ff52ce8abb0605aab01eb4f343c23c40ac",
+        "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+      },
+      "last_research_update": {
+        "run": 38844180825,
+        "code_SHA": "fb59677d9795c62f383c764acd52a417e7730e17",
+        "uploaded_bytes": 328154,
+        "Git_writes": 0,
+        "remote_restore_verified": true
+      }
     },
     "Q2_real_evidence_resume": {
       "plan_id": "BCT-V4-Q-1.0",
@@ -5863,7 +5878,10 @@
         "AI_calls": 0,
         "CPU_windows": 0,
         "paid_API_cost": 0,
-        "pilot_WordPress_URL_refetched_once_before_cache_unification": true
+        "pilot_WordPress_URL_refetched_once_before_cache_unification": true,
+        "GitHub_research_run_duration_ms": 235000,
+        "GitHub_reported_billable_Ubuntu_ms": 0,
+        "scope": "Observed run timing only, not an account-wide bill"
       },
       "new_reviewed_facts": {
         "actual_orders": 3,
@@ -5982,11 +6000,23 @@
       "objective_version": "bct-objective-1",
       "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
       "tests": {
-        "changed_scope": "48 PASS / 1.67s",
+        "changed_scope": "48 PASS /1.67s; final lazy-discovery cache regression15 PASS /0.15s (14 overlapping cases)",
         "target_and_existing_dashboard_compatibility": "25 PASS / 24.20s",
         "independent_accuracy": "NOT_RUN",
-        "remote_storage": "PENDING_THIS_CHANGE",
-        "full_CI": "PENDING_PUSH_FINAL_SHA"
+        "remote_storage": "PASS_8_TABLES_42601_VERSIONS_HASH_RESTART_DEDUP",
+        "full_CI": "FINAL_SHA_CHECK_PENDING_AFTER_PUSH",
+        "latest_packet_impact": "27 PASS /1.59s, overlapping subset",
+        "implementation_CI": {
+          "SHA": "fb59677d9795c62f383c764acd52a417e7730e17",
+          "Stage0_run": 38844175810,
+          "status": "success",
+          "pytest_pass": 1667,
+          "pytest_skip": 1,
+          "seconds": 135.57,
+          "dashboard_run": 38844175753,
+          "dashboard": "success"
+        },
+        "final_cache_and_resume_guards": "17 PASS /0.18s, includes lazy native reuse and restored challenge/failed URL quarantine with no local cache"
       },
       "partial_fact_scope": {
         "source_reviewed_characters": 4409,
@@ -5999,18 +6029,198 @@
         "Direct source and official index discovery separated from global menus, unrelated products and article footer links",
         "Official WordPress and UK government search executed and cached across relation requests; DDG challenges quarantined rather than called no-data",
         "Received order FOR exact equipment and plural orders retained; output/equipment, money/units, planned shipping/customer need remain distinct",
-        "CAS checks restored monthly relation cursor before accepting public packet; typed facts and round receipts append to existing private state"
+        "CAS checks restored monthly relation cursor before accepting public packet; typed facts and round receipts append to existing private state",
+        "Access quarantines and attempted-URL receipts are reconstructed from retained task history when local cache files are unavailable; no automatic replay of known failures"
       ],
       "storage": {
         "baseline_restore": "PASS",
         "baseline_run": 38841543797,
         "baseline_generation": 1,
         "baseline_sha256": "43e583e70461069c3946e22ce10840ff52ce8abb0605aab01eb4f343c23c40ac",
-        "this_change_publish": "PENDING",
+        "this_change_publish": "PASS",
         "body_originals_not_archived": true,
         "storage_fault_tests_repeated": false,
-        "legacy_Git_not_written": true
-      }
+        "legacy_Git_not_written": true,
+        "run": 38844180825,
+        "publication_code_SHA": "fb59677d9795c62f383c764acd52a417e7730e17",
+        "receipt": {
+          "generation": 2,
+          "unchanged": false,
+          "kind": "PAGE_DELTA",
+          "patches": 2,
+          "manifest_sha256": "e62516bfb9fde5d7e5dc4a6f89714e85d3984b371a36e27c222db4b07a5eb2af",
+          "sqlite_sha256": "5d45d56ef61e5cc74a4c0bc35b197fbee2b125353acb4c68bf85391e3793b0be",
+          "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b",
+          "backend": "monthly-releases",
+          "storage": {
+            "backend": "monthly-releases",
+            "tag": "bct-v4-archive-monthly-2026-10",
+            "generation": 2,
+            "manifest_sha256": "e62516bfb9fde5d7e5dc4a6f89714e85d3984b371a36e27c222db4b07a5eb2af",
+            "sqlite_sha256": "5d45d56ef61e5cc74a4c0bc35b197fbee2b125353acb4c68bf85391e3793b0be",
+            "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+          },
+          "Git_writes": 0,
+          "request_metrics": {
+            "HTTP_requests": 71,
+            "upload_bytes": 328154,
+            "download_bytes": 10494792,
+            "rate_remaining": 4913,
+            "rate_limit": 5000,
+            "HTTP_seconds": 14.151947435999958
+          },
+          "remote_restore_verified": true,
+          "remote_new_process_restore": {
+            "restored": true,
+            "tables": 8,
+            "sqlite_sha256": "5d45d56ef61e5cc74a4c0bc35b197fbee2b125353acb4c68bf85391e3793b0be",
+            "review": {
+              "format": "bct-q1-private-facts-1",
+              "observation_versions": 42601,
+              "sources": [
+                "census_trade",
+                "eia",
+                "g17",
+                "m3",
+                "ted",
+                "usaspending",
+                "usgs"
+              ],
+              "article_bodies": 0,
+              "native_source_files": 0,
+              "original_evidence_recovery": false,
+              "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+              "CPU_queue_restored": false,
+              "automatic_promotion": false
+            },
+            "generation": 2,
+            "original_evidence_restore": false
+          }
+        },
+        "capacity_before": {
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 1,
+          "bytes": 9784371,
+          "remaining_monthly_bytes": 258651085,
+          "assets": 4,
+          "remaining_asset_slots": 396
+        },
+        "monthly_bytes_after_from_successful_uploads": 10112525,
+        "remaining_monthly_bytes_after": 258322931,
+        "new_process_restart_dedup": true,
+        "current_numeric": 38046,
+        "current_physical": 21916
+      },
+      "remote_saved_counts": {
+        "relation_states": {
+          "added": 92,
+          "task_states": 92,
+          "automatic_promotion": false
+        },
+        "new_product_facts": 3,
+        "new_relation_facts": 1,
+        "new_process_dedup": true,
+        "CPU_current_observation": {
+          "enabled": "false",
+          "code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+          "expected_pin": "221fa92b1cbff8950716ec373eac793ca340c873",
+          "modified": false
+        },
+        "source_calls": 0,
+        "AI_calls": 0,
+        "CPU_windows": 0,
+        "qualified_capacity": 0,
+        "independent_pairs": 0,
+        "new_S2": 0,
+        "new_S3": 0
+      },
+      "unexpected_reacquisitions": {
+        "count": 9,
+        "identical_raw": 8,
+        "changed_versions_preserved": 1,
+        "not_new_events": true,
+        "cause": "Original corpus was not seeded into capture cache before fresh discovery. Fixed lazy reuse also covers URLs discovered within the current traversal.",
+        "evidence": [
+          {
+            "url": "https://www.aehr.com/2026/04/aehr-receives-record-41-million-production-order-from-lead-hyperscale-ai-customer-second-half-bookings-exceed-92-million/",
+            "stored_raw_present": true,
+            "old_raw_sha256": "764d0f82016f3ec8823630be066528e790303029985c83be811b3497799cb9a5",
+            "new_raw_sha256": "764d0f82016f3ec8823630be066528e790303029985c83be811b3497799cb9a5",
+            "same_raw": true,
+            "reason": "Existing corpus-to-capture cache gap; fixed to reuse stored raw before GET. Not new evidence/event."
+          },
+          {
+            "url": "https://www.aehr.com/2026/04/aehr-test-systems-reports-over-37-million-in-quarterly-bookings-driven-by-strong-ai-and-data-center-infrastructure-demand/",
+            "stored_raw_present": true,
+            "old_raw_sha256": "1be23e35b11025d6ea763c1ebce548071d4eb4d943f34b7c4b875e81c858b9f3",
+            "new_raw_sha256": "1be23e35b11025d6ea763c1ebce548071d4eb4d943f34b7c4b875e81c858b9f3",
+            "same_raw": true,
+            "reason": "Existing corpus-to-capture cache gap; fixed to reuse stored raw before GET. Not new evidence/event."
+          },
+          {
+            "url": "https://www.aehr.com/2026/06/aehr-receives-follow-on-order-from-major-silicon-photonics-customer-for-fully-automated-wafer-level-burn-in-system-for-hyperscale-data-center-optical-interconnect/",
+            "stored_raw_present": true,
+            "old_raw_sha256": "3ec4460a675d6261bf0fb25a1bb61190c497e2f1b99691bc19f3c54b7073bda2",
+            "new_raw_sha256": "3ec4460a675d6261bf0fb25a1bb61190c497e2f1b99691bc19f3c54b7073bda2",
+            "same_raw": true,
+            "reason": "Existing corpus-to-capture cache gap; fixed to reuse stored raw before GET. Not new evidence/event."
+          },
+          {
+            "url": "https://www.aehr.com/2021/03/aehr-receives-fox-xp-multi-wafer-test-burn-in-solution-order-as-silicon-photonics-customer-makes-transition-to-volume-production/",
+            "stored_raw_present": true,
+            "old_raw_sha256": "6b6c6a611d9bec8759c5764f29b383133c4244528769c93af731602e8312cc53",
+            "new_raw_sha256": "6b6c6a611d9bec8759c5764f29b383133c4244528769c93af731602e8312cc53",
+            "same_raw": true,
+            "reason": "Existing corpus-to-capture cache gap; fixed to reuse stored raw before GET. Not new evidence/event."
+          },
+          {
+            "url": "https://www.aehr.com/2026/03/aehr-wins-major-new-silicon-photonics-customer-with-high-power-fox-xp-wafer-level-burn-in-system-for-hyperscale-data-center-optical-interconnect-market/",
+            "stored_raw_present": true,
+            "old_raw_sha256": "eb3e84a1eb51ae5f6933d1aad9e876e41dedc2edf818439139eb0e67116910b7",
+            "new_raw_sha256": "eb3e84a1eb51ae5f6933d1aad9e876e41dedc2edf818439139eb0e67116910b7",
+            "same_raw": true,
+            "reason": "Existing corpus-to-capture cache gap; fixed to reuse stored raw before GET. Not new evidence/event."
+          },
+          {
+            "url": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/",
+            "stored_raw_present": true,
+            "old_raw_sha256": "a02cb7e8c992432a0a6a2c506e4454f9a9f92572c4f01c9e0050888730c87321",
+            "new_raw_sha256": "a02cb7e8c992432a0a6a2c506e4454f9a9f92572c4f01c9e0050888730c87321",
+            "same_raw": true,
+            "reason": "Existing corpus-to-capture cache gap; fixed to reuse stored raw before GET. Not new evidence/event."
+          },
+          {
+            "url": "https://www.aehr.com/2026/10/aehr-receives-follow-on-sonoma-production-orders-for-lead-hyperscale-customer-s-next-generation-ai-processor/",
+            "stored_raw_present": true,
+            "old_raw_sha256": "d50a9faf83d7a96e24b4ec72d788b4a50a69aae81b5aaf4fd8d43033e9639962",
+            "new_raw_sha256": "d50a9faf83d7a96e24b4ec72d788b4a50a69aae81b5aaf4fd8d43033e9639962",
+            "same_raw": true,
+            "reason": "Existing corpus-to-capture cache gap; fixed to reuse stored raw before GET. Not new evidence/event."
+          },
+          {
+            "url": "https://www.aehr.com/2026/08/aehr-test-systems-expands-silicon-photonics-production-momentum-with-follow-on-production-order-from-lead-customer/",
+            "stored_raw_present": true,
+            "old_raw_sha256": "58b231f869562adced3ff6bea6b991782501288a5d085d5694d00138ea8d1c9a",
+            "new_raw_sha256": "58b231f869562adced3ff6bea6b991782501288a5d085d5694d00138ea8d1c9a",
+            "same_raw": true,
+            "reason": "Existing corpus-to-capture cache gap; fixed to reuse stored raw before GET. Not new evidence/event."
+          },
+          {
+            "url": "https://www.gov.uk/government/news/mhra-concludes-review-of-avacopan-vifor-following-reassessment-of-benefit-risk-balance",
+            "stored_raw_present": true,
+            "old_raw_sha256": "7d1c3cfe4426d3779a54c0d589e14db8e0d1d7a5642c9be024c3c7f80ccd6afd",
+            "new_raw_sha256": "3466909a1113dc645150ae40e5fcadd93cfc1625e951482c79da98906ac6f8ad",
+            "same_raw": false,
+            "reason": "Existing corpus-to-capture cache gap; fixed to reuse stored raw before GET. Not new evidence/event."
+          }
+        ]
+      },
+      "published_input_sha256": {
+        "docs/v4/quantitative/product-facts.json": "6a38b25bd03978aae1a8535c6a55acbbd77017ea1d5cc2137d008e06185aab12",
+        "docs/v4/quantitative/relation-facts.json": "9f7a4281c202f7eb1a2b3df7fec900a04d6e736fe93acf9a8ab40792a7237201",
+        "docs/v4/quantitative/relation-tasks.json": "a148ab81f207766f4ad51028b6c0437d4b788d5ca1565a5751473cac94324384"
+      },
+      "completed_at": "2026-10-16T03:17:27.067502+00:00"
     }
   }
 }

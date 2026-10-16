@@ -147,3 +147,41 @@ def test_stale_public_queue_cannot_replace_newer_private_cursor(tmp_path):
     q.save_relations(l,stamp_export({'tasks':[newer]}))
     with pytest.raises(ValueError,match='REMOTE_CURSOR_ADVANCED'):q.guard_relation_resume(l,{'tasks':[initial]})
     q.guard_relation_resume(l,{'tasks':[newer]});l.close()
+
+
+def test_newly_discovered_url_reuses_stored_native_without_network(monkeypatch,tmp_path):
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('relation_runner','tools/v4_quantitative_relations.py')
+    runner=importlib.util.module_from_spec(spec);spec.loader.exec_module(runner)
+    raw=b'<article><p>Maker facility expansion is reported without quantified capacity.</p></article>'
+    doc={'document_id':'old-doc','origin_url':'https://maker.example/2026/10/facility','raw_sha256':sha(raw),'acquired_at':'2026-10-15T10:00:00+00:00'}
+    task=q.relation_tasks([seed()])[0]
+    monkeypatch.setattr(runner,'ROOT',tmp_path/'research')
+    monkeypatch.setattr(runner,'inventory',lambda:([],[task],{'old-doc':doc},{'old-doc':raw},{},[]))
+    def index(tasks,budget,started):
+        tasks[0]['urls'].append({'url':doc['origin_url'],'via_document_id':'index','status':'AUTOMATIC_OFFICIAL_INDEX_LEAD','relation':'UNKNOWN_REVIEW_REQUIRED'})
+        return 0
+    monkeypatch.setattr(runner,'official_searches',index)
+    monkeypatch.setattr(runner,'fetch',lambda url:pytest.fail('Existing native must never be fetched again'))
+    runner.run(network=True,official=True)
+    receipt=json.loads((runner.ROOT/'captures'/(sha(doc['origin_url'])+'.json')).read_text())
+    assert receipt['status']=='REUSED_STORED_ORIGINAL_DERIVED_REVIEW'
+    assert json.loads((runner.ROOT/'report.json').read_text())['new_HTTP_calls_this_batch']==0
+
+
+@pytest.mark.parametrize('mode',['blocked-search','past-failed-url'])
+def test_restored_receipts_keep_access_blocks_without_local_cache(monkeypatch,tmp_path,mode):
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('restored_relation_runner','tools/v4_quantitative_relations.py')
+    runner=importlib.util.module_from_spec(spec);spec.loader.exec_module(runner)
+    prior=q.relation_tasks([seed()])[0];new=q.relation_tasks([seed('AnotherModel')])[0]
+    if mode=='blocked-search':prior['scope']['external_search']={'status':'SEARCH_HUMAN_CHALLENGE_NOT_DATA_ABSENCE','urls':[]}
+    else:
+        url='https://maker.example/2026/10/failed'
+        prior['checked_sources']=[{'url':url,'status':'FETCH_FAILED','http_status':404}]
+        new['urls']=[{'url':url,'via_document_id':'index','status':'UNFETCHED_RELATION_LEAD','relation':'UNKNOWN_REVIEW_REQUIRED'}]
+    monkeypatch.setattr(runner,'ROOT',tmp_path/'restored')
+    monkeypatch.setattr(runner,'inventory',lambda:([],[prior,new],{},{},{},[]))
+    monkeypatch.setattr(runner,'fetch',lambda url:pytest.fail('Restored block must survive missing local files'))
+    runner.run(network=True,discover=mode=='blocked-search')
+    assert json.loads((runner.ROOT/'report.json').read_text())['new_HTTP_calls_this_batch']==0
