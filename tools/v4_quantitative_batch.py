@@ -72,7 +72,9 @@ def prepare():
  github_guard();R.mkdir(parents=True,exist_ok=False)
  from bct.v4.monthly_storage import policy,Monthly
  if policy()['backend']=='monthly-releases':
-  result=Monthly(os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],os.environ['BCT_V4_STATE_PASSPHRASE']).receive(R/'prior',git_repo=R/'private-read')
+  monthly=Monthly(os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],os.environ['BCT_V4_STATE_PASSPHRASE'])
+  if not monthly.write_allowed:raise ValueError('MONTHLY_NEW_RESEARCH_WINDOW_ENDED_READ_ONLY_RESTORE_REMAINS_AVAILABLE')
+  result=monthly.receive(R/'prior',git_repo=R/'private-read')
  else:
   if Monthly(os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],os.environ['BCT_V4_STATE_PASSPHRASE']).head()is not None:raise ValueError('MONTHLY_STATE_EXISTS_REFUSE_STALE_GIT_RESEARCH_READ')
   result=private.remote_checkpoint(R/'private-read',R/'prior',os.environ.get('BCT_V4_PRIVATE_STATE_TOKEN',''))

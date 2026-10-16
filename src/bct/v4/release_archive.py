@@ -1,7 +1,8 @@
-"""Private, append-only backup transport; never selected by the running writer.
+"""Private, append-only transport for backups and monthly quantitative research.
 
 Reuses the audited Q1 capsule, page delta and authenticated GPG components.
-Releases are a secondary archive, not an unlimited database service.
+Monthly primary selection is explicit; this module never activates a schedule.
+Releases are not an unlimited database service.
 """
 import gzip
 import hashlib

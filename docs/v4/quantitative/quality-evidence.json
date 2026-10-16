@@ -8605,7 +8605,7 @@
     ],
     "remote_current_status": "PASS",
     "scheduled_reliability": "NOT_RUN_NO_SCHEDULE_CHANGE",
-    "selector_activation": "DEVELOPMENT_BATCH_ENABLED_PENDING_COMMON_PIPELINE_VERIFY",
+    "selector_activation": "PASS_DEVELOPMENT_RESEARCH_BATCH_PRIMARY_MONTHLY_RELEASES",
     "remote_run": 38836602256,
     "remote_receipt": {
       "plan_id": "BCT-V4-Q-1.0",
@@ -8892,6 +8892,232 @@
       "Stage0": "success",
       "dashboard_run": 38836597234,
       "dashboard": "success"
-    }
+    },
+    "capacity_limit_notes": {
+      "archive_projection_pass_only_if_constants_hold": true,
+      "two_year_archive_scenarios_bytes": [
+        1824227958,
+        4650475200
+      ],
+      "monthly_archive_scenarios_max_bytes": [
+        76328346,
+        195481536
+      ],
+      "monthly_assets_upper_at6_changes_daily": 372,
+      "monthly_asset_cap": 400,
+      "all_archive_byte_cap": 6442450944,
+      "SQLite_expanded_cap_bytes": 536870912,
+      "compressed_capsule_cap_bytes": 16777216,
+      "delta_cap_bytes": 1048576,
+      "future_actual_ingestion_and_DB_growth": "UNKNOWN; thresholds halt before upload, no unapproved limit increase",
+      "horizon_end": "2028-09 inclusive; archives remain readable after writes stop",
+      "source_collection_after_horizon": "Refused by prepare before downstream collection"
+    },
+    "regular_operation_verdict": {
+      "development_batch_primary": "PASS_ACTUAL_COMMON_PREPARE_PROCESS_PUBLISH_VERIFY",
+      "main_scheduled_primary": "NOT_RUN_NOT_DEPLOYED",
+      "actual_calendar_month_rollover": "NOT_RUN_ONLY_SYNTHETIC_NOVEMBER_TEST",
+      "two_year_stability": "NOT_RUN_TIME_NOT_ELAPSED",
+      "operating_primary_cutover": "BLOCKED_MAIN_NOT_DEPLOYED_NO_SCHEDULE_ACTIVATED"
+    },
+    "original_source_DB_hashes_unchanged": {
+      "var/v4/cross-industry/ledger/v4.sqlite3": "0234453d685a49640ad4e0ba1f955ade631ebd45a9aa7e1a8a719fb99b8f0a1c",
+      "var/v4/supply-linkage/ledger/v4.sqlite3": "8116eca6dfbf1e65cb605e1aab9b1af0d472a665bf7087899ccb23818d023bc8"
+    },
+    "common_pipeline": {
+      "run": 38837155276,
+      "code_SHA": "d7df856b7f29237684dcdfbde97c1f4dbaa9328e",
+      "receipt": {
+        "generation": 1,
+        "unchanged": true,
+        "uploaded_objects": 0,
+        "backend": "monthly-releases",
+        "storage": {
+          "backend": "monthly-releases",
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 1,
+          "manifest_sha256": "1c91262862e70be40e8a7dcd5125166d7303c6b0deb96e6f158d00a6001350a3",
+          "sqlite_sha256": "43e583e70461069c3946e22ce10840ff52ce8abb0605aab01eb4f343c23c40ac",
+          "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+        },
+        "Git_writes": 0,
+        "request_metrics": {
+          "HTTP_requests": 46,
+          "upload_bytes": 0,
+          "download_bytes": 9983995,
+          "rate_remaining": 4728,
+          "rate_limit": 5000,
+          "HTTP_seconds": 11.869585291000028
+        },
+        "remote_restore_verified": true,
+        "remote_new_process_restore": {
+          "restored": true,
+          "tables": 8,
+          "sqlite_sha256": "43e583e70461069c3946e22ce10840ff52ce8abb0605aab01eb4f343c23c40ac",
+          "review": {
+            "format": "bct-q1-private-facts-1",
+            "observation_versions": 42601,
+            "sources": [
+              "census_trade",
+              "eia",
+              "g17",
+              "m3",
+              "ted",
+              "usaspending",
+              "usgs"
+            ],
+            "article_bodies": 0,
+            "native_source_files": 0,
+            "original_evidence_recovery": false,
+            "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+            "CPU_queue_restored": false,
+            "automatic_promotion": false
+          },
+          "generation": 1,
+          "original_evidence_restore": false
+        }
+      },
+      "processing_report": {
+        "relation_states": {
+          "added": 0,
+          "task_states": 80,
+          "automatic_promotion": false
+        },
+        "new_relation_facts": 0,
+        "new_process_dedup": true,
+        "CPU_current_observation": {
+          "enabled": "false",
+          "code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+          "expected_pin": "221fa92b1cbff8950716ec373eac793ca340c873",
+          "modified": false
+        },
+        "source_calls": 0,
+        "AI_calls": 0,
+        "CPU_windows": 0,
+        "qualified_capacity": 0,
+        "independent_pairs": 0,
+        "new_S2": 0,
+        "new_S3": 0
+      }
+    },
+    "updated_at": "2026-10-16T01:55:19.473854+00:00",
+    "two_year_volume_verdict": "CONDITIONAL_PROJECTION_ONLY_NOT_2YEAR_STABILITY_PASS",
+    "usage": {
+      "new_source_calls": 0,
+      "new_AI_calls": 0,
+      "CPU_windows": 0,
+      "new_paid_services": 0,
+      "R2": "DEFERRED",
+      "trial_timing": {
+        "billable": {
+          "UBUNTU": {
+            "total_ms": 0,
+            "jobs": 10,
+            "job_runs": [
+              {
+                "job_id": 116767035748,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116767036994,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116767037122,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116767037157,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116767037161,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116767037162,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116767037172,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116767037242,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116767037272,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116767037766,
+                "duration_ms": 0
+              }
+            ]
+          }
+        },
+        "run_duration_ms": 291000
+      },
+      "common_pipeline_timing": {
+        "billable": {
+          "UBUNTU": {
+            "total_ms": 0,
+            "jobs": 10,
+            "job_runs": [
+              {
+                "job_id": 116768734533,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116768735684,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116768735832,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116768735909,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116768736131,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116768736166,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116768736202,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116768778389,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116768903186,
+                "duration_ms": 0
+              },
+              {
+                "job_id": 116769355178,
+                "duration_ms": 0
+              }
+            ]
+          }
+        },
+        "run_duration_ms": 227000
+      },
+      "billing_account_wide_not_inspected": true
+    },
+    "restoration_scope": {
+      "quantitative_facts_history": "42601 versioned observations plus all existing processing/queue/review state and new own storage validation record",
+      "exact_current_SQLite_SHA": "43e583e70461069c3946e22ce10840ff52ce8abb0605aab01eb4f343c23c40ac",
+      "CPU_originals": "Preserved separately, not migrated/restored by this quantitative capsule",
+      "source_originals": "Preserved separately; no new archive license assumed"
+    },
+    "next_action": "Use development research batches with monthly selector and preserve explicit input cursor. Main/scheduled rollout remains unapplied. Before rollout, verify same pinned code on allowed operating route without altering CPU/RSS/UI, then observe actual scheduled runs/month boundary. Stop before quota/16MiB capsule/512MiB SQLite/1MiB delta/24month write limit; retain read-only restoration and all old generations."
   }
 }
