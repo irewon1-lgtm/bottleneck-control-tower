@@ -565,6 +565,7 @@ def run(ledger, cache, root, *, documents=(), network=False, auxiliary_caches=()
     current = [json.loads(p) for p, in ledger.db.execute('SELECT payload FROM events WHERE kind=?', (fmt.KIND,))]
     changes = engine.project_changes(current)
     report = {'format': engine.VERSION, 'plan_id': 'BCT-V4-Q-1.0', 'inputs': inputs,
+              'order_change_evidence': engine.order_changes(ledger, combined['events']),
               'release_versions': len(releases), 'events': combined['events'], 'failures': combined['failures'],
               'supplier_sites': combined['supplier_sites'], 'baseline': combined['baseline'],
               'counterparts': opposites, 'supplier_discovery': external, 'project_changes': changes, 'Q3': q3,

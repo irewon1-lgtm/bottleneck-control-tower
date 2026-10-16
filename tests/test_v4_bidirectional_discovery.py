@@ -165,3 +165,23 @@ def test_explicit_gzip_body_and_positions_use_original_native_hash():
  e=next(e for e in r['events']if e['product']=='gas turbines')
  assert raw.decode()[e['product_position']['start']:e['product_position']['end']]=='gas turbines'
  with pytest.raises(ValueError,match='SIZE_LIMIT'):d.html_source(gzip.compress(b'X'*4_000_001))
+
+
+def test_real_collector_hook_compares_same_contract_revision_not_new_order(tmp_path):
+ from test_v4_official_discovery import native
+ from copy import deepcopy
+ l=Ledger(tmp_path/'ledger')
+ data=native();meta={'source_id':'find_tender','url':'https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages',
+                    'sha256':sha(json.dumps(data).encode()),'acquired_at':'2026-10-16T08:00:00Z'}
+ assert d.enqueue(l,data,meta)['added']==1
+ revised=deepcopy(data);revised['releases'][0].update(id='notice2',date='2026-10-15T12:00:00Z')
+ revised['releases'][0]['tender']['description']=revised['releases'][0]['tender']['description'].replace('fifteen','seventeen')
+ meta={**meta,'sha256':sha(json.dumps(revised).encode())}
+ assert d.enqueue(l,revised,meta)['added']==1
+ payload=json.loads(l.db.execute("select payload from events where kind='QUANTITATIVE_VALIDATION' order by seq desc limit 1").fetchone()[0])
+ change=payload['policy']['order_change_evidence'][0]
+ assert change['state']=='SAME_ITEM_COMMITTED_QUANTITY_INCREASE'
+ assert change['before_quantity']=='15' and change['after_quantity']=='17'
+ assert change['market_demand_increase']=='UNKNOWN' and not change['Q3_eligible']
+ assert payload['policy']['Q3']['S3']==0
+ l.close()

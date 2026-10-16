@@ -6738,7 +6738,7 @@
       "bidirectional_resume": {
         "plan_id": "BCT-V4-Q-1.0",
         "started_from": "5c564281296f20a0d8f13a6a7039f70fddcd6951",
-        "status": "IMPLEMENTED_LOCAL_EXECUTED_REMOTE_PUBLICATION_PENDING",
+        "status": "PARTIAL_BIDIRECTIONAL_RESEARCH_EXECUTED_AND_REMOTE_STATE_RESTORED",
         "Q1": "PARTIAL",
         "Q2": "PARTIAL",
         "evidence": "docs/v4/quantitative/OFFICIAL_BIDIRECTIONAL_RESULTS.json",
@@ -6832,7 +6832,7 @@
           "sqlite_sha256": "7adc9b865a62f5abaf38045c7da60cf11f7fe01c9bd071e48da70fad1551147d",
           "remaining_monthly_bytes": 230982966
         },
-        "next": "Persist this bounded batch, restore and verify; then consume saved index/award cursors only with a genuinely new approved round and remaining host/event budgets. No repeated Oct16 collection.",
+        "next": "Q1/Q2 remainPARTIAL. Reuse generation5. Resume persisted publisher link and USAspending page/detail cursors with genuine per-round limits and no previously failed GETs. Verify a complete same-TARGET qualified pool/customer need/independence before Q3. Do not rerun Oct16source collection,CPU/model,storage benchmarks.",
         "tests": {
           "impact_paths": 156,
           "impact_status": "PASS_LOCAL_BEFORE_ENCODING_GUARD",
@@ -6852,7 +6852,17 @@
             "EIA_native_value_cells": 32,
             "errors": 0
           },
-          "old_protected_DB_hashes_unchanged": true
+          "old_protected_DB_hashes_unchanged": true,
+          "impact_paths_final": 104,
+          "impact_status_final": "PASS_LOCAL_CHANGED_SOURCE_RELATION_WORKFLOW_PATHS",
+          "final_delivery_CI": "Must verify exact final remote SHA; older CI cannot imply current PASS. Final report and GitHub Actions checks carry the delivery SHA/run.",
+          "repaired_code_CI": {
+            "SHA": "ae7af2c07b31ba35d82a923e35abcf5e313c8690",
+            "Stage0_run": 38897185913,
+            "dashboard_run": 38897185894,
+            "status": "success",
+            "final_order_revision_hook": "Added after this CI;104 local impact tests passed; exact final SHA CI still required."
+          }
         },
         "remote_processing": {
           "run": 38896527628,
@@ -6907,7 +6917,7 @@
             "paid_cost": 0,
             "code_SHA": "243ce08aa1c8f3e62984952eeb9518fef4737479"
           },
-          "archive_publish": "IN_PROGRESS"
+          "archive_publish": "PASS_REMOTE_NEW_PROCESS_RESTORE_EIGHT_TABLES"
         },
         "pending_URL_entries": 202,
         "next_cursors": {
@@ -6920,8 +6930,305 @@
           "Free-text supply verified changes0; context signals11 have no bound physical product",
           "Facility changes are past reported status;4batteryrecords are storage power not new electricity generation",
           "Typed context -> complete qualified Q3 relation projection remains BLOCKED on missing proof; no S gate relaxation",
-          "Q1 PARTIAL/Q2 PARTIAL; Q3formal/Q4-Q7 not completed; operating automation unchanged"
-        ]
+          "Q1 PARTIAL/Q2 PARTIAL; Q3formal/Q4-Q7 not completed; operating automation unchanged",
+          "Free-text verified product-role evidence still0; no proof of improved independent semantics",
+          "Reverse search page2 and39of40identities remain; one detail scope is only a power-contract lead",
+          "Explicit native body version restore unavailable for2decoder failures; repeated GET not attempted"
+        ],
+        "storage_end": {
+          "run": 38896527628,
+          "executed_code_SHA": "243ce08aa1c8f3e62984952eeb9518fef4737479",
+          "status": "PASS_OWN_FACTS_STATE_RESTORE_NOT_ORIGINAL_ARTICLE_RESTORE",
+          "receipt": {
+            "generation": 5,
+            "unchanged": false,
+            "kind": "PAGE_DELTA",
+            "patches": 1,
+            "manifest_sha256": "1da6747b431087f1f31bdc82537ad1cc0306ff7de7c663bdacee59afebd5921e",
+            "sqlite_sha256": "6b43a0dcc5c3ecd0de2a981540835498d5e532fc4dd8a369ce2ef25ed8c72e46",
+            "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b",
+            "bounded_full_checkpoint_due_to_delta_size": false,
+            "backend": "monthly-releases",
+            "storage": {
+              "backend": "monthly-releases",
+              "tag": "bct-v4-archive-monthly-2026-10",
+              "generation": 5,
+              "manifest_sha256": "1da6747b431087f1f31bdc82537ad1cc0306ff7de7c663bdacee59afebd5921e",
+              "sqlite_sha256": "6b43a0dcc5c3ecd0de2a981540835498d5e532fc4dd8a369ce2ef25ed8c72e46",
+              "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+            },
+            "Git_writes": 0,
+            "request_metrics": {
+              "HTTP_requests": 68,
+              "upload_bytes": 223286,
+              "download_bytes": 14921753,
+              "rate_remaining": 4938,
+              "rate_limit": 5000,
+              "HTTP_seconds": 23.354046631999985
+            },
+            "remote_restore_verified": true,
+            "remote_new_process_restore": {
+              "restored": true,
+              "tables": 8,
+              "sqlite_sha256": "6b43a0dcc5c3ecd0de2a981540835498d5e532fc4dd8a369ce2ef25ed8c72e46",
+              "review": {
+                "format": "bct-q1-private-facts-1",
+                "observation_versions": 42601,
+                "sources": [
+                  "census_trade",
+                  "eia",
+                  "g17",
+                  "m3",
+                  "ted",
+                  "usaspending",
+                  "usgs"
+                ],
+                "article_bodies": 0,
+                "native_source_files": 0,
+                "original_evidence_recovery": false,
+                "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+                "CPU_queue_restored": false,
+                "automatic_promotion": false
+              },
+              "generation": 5,
+              "original_evidence_restore": false
+            }
+          },
+          "remaining_monthly_bytes_lower_bound": 230759680,
+          "legacy_private_Git_writes": 0,
+          "source_calls_repeated_in_receiver": 0
+        },
+        "order_history_review": {
+          "checked_actual_purchase_events": 18,
+          "states": {
+            "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY": 18
+          },
+          "reported_new_demand_increases": 0,
+          "source_HTTP": 0,
+          "old_native_or_CPU_reread": false,
+          "records": [
+            {
+              "event_id": "14576e6d6548752856d8804418c3b2b91a4542b69db1b90b61b74d5bf1c30683",
+              "logical_id": "4edfd523ffd611773327e2aef8446a1622adc435ee3f1c4d4edd60e61666ecaa",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "12acbf15993fcd9f5b2dc8b616b1de842ede0749abe760cc6f3125f48debad37",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "33dc462bf30a0afea18ba3088e833eeade595497e187c8fcacd6f2ddc31b8a70",
+              "logical_id": "dd3cdab05c51c248d592aa4b0cfeb61db12cb9cb64bdcb7c8f751d4c03452405",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "69606084311f1fa380c650d3b92df76bf4d70f533c78d00f8f61792807fb46d8",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "3ae22d18bf88ab0a4bfc604594612a9e56ec5c6f6e6548b866dd1f8e624a695e",
+              "logical_id": "a96dcbbe9488d7608a535de2fbd1fcc3d25d2dab96d4e40f9953ae603fff95a4",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "42d2aece92e66656384562474ec8a4076dd92aeccad442577ea257e6709c45c5",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "7f4dbf48e39dff7235015075aa10d5616d425e345f02a3952b882c1dd46d2bd2",
+              "logical_id": "98fa9e73a37c0b173f6c2de66b9e018ea3aa398dd64eeb827029248e2e35a449",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "88569aea3032a670726717546d31ce82464975e1abdee85807e0d779dab68ae7",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "25884e420da94ad21806e4882619a36ab10174cfcbebc0f12067078d38b6e2e2",
+              "logical_id": "d77624f616c81f5901c8b5bbc785d086ec9b8fa6f29c8a5e12895160164dbb62",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "2bb8abb8e2f688f3f54d78f1d1a4e82b6d0b25b6ae459b2d6cb230afde7105a7",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "782056107c1b1d9aa2cf8093a322a05bbc1895d56faeae9122cc6acf1e71ffe4",
+              "logical_id": "d15f8de284c115a4389bca381ad27f368f5096debffe0aead1b611bf80983710",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "1187100a5c2b2c12c023c57fb332e076da6c92d9ab011f2b3745f2cc0a744833",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "8c905cc8aae36c85149369de518af7048fb51a2ef3aab391a9bd6bf36f9ff7e8",
+              "logical_id": "4f7dfd22151e7a598f0d9fdd4f55fcb1befc1ff7abaf0fe64a2463e6c5db8867",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "64c133b9fdf85dab227769895ebacece0b090f2576533a77485ed5855fc0da08",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "b8c14d7d9553787063f5e5c5df5d67f0c946ea0020e6065a3cdb37f0f0436daa",
+              "logical_id": "e7dbf8f972e6e4c13167381114622031b755a50ca049078ac691de506dc718a6",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "b38aa125568bb5a0e29006414af0af76b1bccef03f48ae0a0f3c3fcbf4a8a817",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "c332f460f5f6187e26f8e618077774744ce86bd2994b56d7f3e7b181ea1c488f",
+              "logical_id": "cc3c28aabd0f1caeff2d35a996f383d7d16c4400872874b3de91c5305938ac8b",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "9bfd6936d2ada2943ec096ed607849b5981e2eda405a588fac274f2572228a2a",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "df40311f7e038a66d6e960de2b234339156a852749c8d4cff158a776f78bb255",
+              "logical_id": "c4e555513d262df195a04d2787ba393bef73b3b63f9a0111b7df8445f0de5ef9",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "b18eb25a227315ac3242bad5d518857268962e1ca2d4403b77089c62d4eec48f",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "a0b8a82380e88a8507f63e3791f87c3a0a419087e9c92d01c754a76a9a3bfb5f",
+              "logical_id": "dd69a8270c069bb82d6d0d2591cbcbe08b646f51d842b2037f65cb9b28279187",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "84cef29e966416a222fa247e8be35e89c4d93e7e1ee993bd71c38c94a95cf581",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "6d90ff5796d5974ec7eb7be3bd6ae12a3cae630a0a2502469252bdad4a69d5fc",
+              "logical_id": "e4cecf533ca05fd9d1bc28e5d903bcaa6548925f92616bd97aab5b56d90c26ef",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "89b7b80b0561ce81a26b21f82a4bee09eb5b4a48bf9a4dd9e7e75105bf7f1744",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "5d25510aff1fb05ded1cfd45e5ed1c43b6abb774b692a622e82493d5cf9d89e6",
+              "logical_id": "79d79f2e3fce4d45f63d4592e9efe4b1927caccb3c2a6b5c39170a468ca18b4a",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "17e2452ae3b2e0efd5abfd3ec3cab03122ff55a4dfcf1ff48b7003261f63ae67",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "783e67e57722a4d409ba8e32a0ff219b9cac6b5d549d637d9e445c2d8331edea",
+              "logical_id": "9aa19db635018aa72a49aa06fb423fd055e7bbf4e2294c4f1d319f1b1fbccf36",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "d0e3b0869a19bc39fa1bb9a59c6f7bbff42b20bde775c8afc76ab16872672baa",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "20e12238b942e34c2254d42ba5152e2993cc2eaafd77dc6056201f57874f0382",
+              "logical_id": "ea5efe0e7c0add38a3284adc0538f1784144cc4d8ca9ba5728ae21b095558be5",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "1d22a88e69a6c20cd8b38ef3351c7708a96dd9a2ebc2ec941a4b25f2a1f07ccd",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "4700e3d0b96eb03e345298c57b0de8104808f9c15e31e66044331896307033d9",
+              "logical_id": "55c529c6c2b95b34e7394d2d8ba1a99d7203b09108fcd3a75a8db23671851929",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "9436333b0bafac8c883ff1330b148c0f47e1032f5eab27eb28841950174eae5e",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "69cbb68921e5424a7f425c8bda592272cb63a842b30c5751d6852ae02520606c",
+              "logical_id": "29943cda46eadd5f6a122a75dba1482656be23c41327fc5a58fbaf5f274047ce",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "e2592cece1b44222077eaa777cc06a5a78d7d448e168296a947254ec7c105b9b",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            },
+            {
+              "event_id": "178371b144d0025fe358daede465a75a75a28c39885224910d5ec0efb2943796",
+              "logical_id": "b86bf5590151d65d8467ac06357dbc327b22294a2acec671f7304512b11ea705",
+              "state": "NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY",
+              "current_fact_id": "3088fd9b6fb6b57a5d2ace37f4dfaac7b2e6657af549673e2988d6d672ab6a5a",
+              "prior_fact_id": null,
+              "market_demand_increase": "UNKNOWN",
+              "customer_need_period": "UNKNOWN",
+              "Q3_eligible": false
+            }
+          ]
+        },
+        "technical_complete_scope": [
+          "Source-driven88-task queue consumed with durable per-URL and per-event budget receipts",
+          "Real manufacturer-site/index fetches and reverse USAspending queries/detail parsing",
+          "Source-exact paragraph/product positions; ambiguous/markup contexts held",
+          "Previously unprocessed EIA facility state comparison;129edits not counted as physical delays",
+          "New signed contract hook compares actual same-item quantity versions;18existingordinaryorders have no prior comparable quantity",
+          "Private monthly delta/remote8table restore; no original bodies or old CPU reruns"
+        ],
+        "usage": {
+          "official_forward_GET_invocations": 15,
+          "official_reverse_POST_invocations": 2,
+          "official_award_detail_GET_invocations": 2,
+          "total_official_request_invocations": 19,
+          "redirect_network_hops": "NOT_SEPARATELY_MEASURED",
+          "new_external_AI_calls": 0,
+          "tokens": 0,
+          "new_CPU_windows": 0,
+          "paid_API_cost": 0,
+          "private_state_upload_bytes": 223286,
+          "private_state_API_HTTP_requests": 68,
+          "private_success_runner_job_wall_seconds_not_invoice": [
+            50,
+            176,
+            152
+          ],
+          "paid_runner_or_account_changes": false
+        },
+        "source_event_scope": {
+          "new_issuer_extracted_bodies": 13,
+          "characters": 64235,
+          "proposals_with_no_bound_product": 11,
+          "old_EIA_compared_now_not_new_download": 145,
+          "EIA_reported_planned_to_operating": 16,
+          "EIA_generation_records": 12,
+          "EIA_storage_power_records_not_new_generation": 4,
+          "EIA_revision_only": 129,
+          "new_actual_demand_growth": 0,
+          "new_qualified_available_capacity": 0,
+          "new_firm_delivery_or_customer_need": 0
+        }
       }
     }
   }

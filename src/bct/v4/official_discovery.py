@@ -489,6 +489,37 @@ def typed_routes(records):
     return [{'source_id': source, 'route': route, 'versions': count} for (source, route), count in sorted(counts.items())]
 
 
+def order_changes(ledger, events):
+    """Compare actual same-contract/item versions, not new contract counts.
+
+    A committed quantity revision is not market growth; no money, renewal,
+    changed product/specification or inferred delivery period is compared.
+    """
+    previous = []
+    for p, in ledger.db.execute("SELECT payload FROM events WHERE kind='QUANTITATIVE_VALIDATION' AND json_extract(payload,'$.policy.format')=?", (VERSION,)):
+        previous += json.loads(p)['policy'].get('events', [])
+    out = []
+    for e in events:
+        if e['role'] != 'DEMAND' or e['state'] != 'SOURCE_BOUND_EVENT': continue
+        candidates = [p for p in previous if p.get('logical_id') == e['logical_id'] and p['source_fact_id'] != e['source_fact_id']
+                      and p['published_at'] < e['published_at'] and p['state'] == 'SOURCE_BOUND_EVENT']
+        row = {'event_id': e['id'], 'logical_id': e['logical_id'], 'state': 'NO_PRIOR_SAME_ITEM_COMMITTED_QUANTITY',
+               'current_fact_id': e['source_fact_id'], 'prior_fact_id': None,
+               'market_demand_increase': 'UNKNOWN', 'customer_need_period': 'UNKNOWN', 'Q3_eligible': False}
+        if candidates:
+            p = max(candidates, key=lambda x:x['published_at']);row['prior_fact_id'] = p['source_fact_id']
+            if any(p.get(k) != e.get(k) for k in ['target','unit','period']) or e.get('quantity') is None or p.get('quantity') is None:
+                row['state'] = 'SAME_CONTRACT_QUANTITY_OR_SCOPE_UNCOMPARABLE'
+            elif e.get('demand_change_class','').startswith(('REPLACEMENT','CANCELLED')):
+                row['state'] = e['demand_change_class']
+            else:
+                row.update(state=demand_status('',previous=p['quantity'],quantity_now=e['quantity']),
+                           before_quantity=p['quantity'],after_quantity=e['quantity'],unit=e['unit'],
+                           interpretation='COMMITTED_SAME_ITEM_REVISION_NOT_MARKET_GROWTH_OR_FUTURE_SHORTAGE')
+        out.append(row)
+    return out
+
+
 def counterparts(events, facts, documents, *, as_of):
     """Existing opposite-side search and relation queue; no network or new crawler.
 
@@ -609,6 +640,7 @@ def enqueue(ledger, native, meta):
     result = extract_ocds(native, meta)
     f.save(ledger, result['facts'])
     packet = stamp_export({'format': VERSION, 'plan_id': 'BCT-V4-Q-1.0', 'events': result['events'],
+                          'order_change_evidence': order_changes(ledger, result['events']),
                           'failures': result['failures'], 'supplier_sites': result['supplier_sites'],
                           'baseline_counts': {'events': len(result['baseline']), 'products': sum(bool(e['product']) for e in result['baseline'])},
                           'Q3': q3_input(result['events'], result['facts'], as_of=meta['acquired_at'], documents=result['documents']),
