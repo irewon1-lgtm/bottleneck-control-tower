@@ -195,6 +195,8 @@ def finish():
  report['Census_quality_review']={'physical_records':len(cr),'unit_map_matches':sum(r['unit_original'].casefold()==unit_map.get(('import'if r['attributes']['trade_direction']=='imports'else'export',r['attributes']['commodity_code_year'],r['product_or_classification']))for r in cr),'geography_UNKNOWN':sum('UNKNOWN'in r['geography']for r in cr),'first_publication_UNKNOWN':sum(r['published_at']=='UNKNOWN'for r in cr),'no_completed_data_query_repeated':True}
  report['Census_periods']=sorted({x['record']['period_start'][:7]for x in active if x['record']['source_id']=='census_trade'})
  report['source_scope']='SEC fixed30days/two configured issuers; Census fixed36months/annual mapped codes; country rows never summed as independent sources'
+ if(R/'global-sources/collection-report.json').exists():
+  report['official_source_expansion']=json.loads((R/'global-sources/collection-report.json').read_text())
  report['source_task_counts']={prefix:ledger.db.execute("select count(*)from events where kind='QUANTITATIVE_PAGE_COMMITTED'and json_extract(payload,'$.task')like ?",(prefix+'%',)).fetchone()[0]for prefix in ['sec-filing-','sec-global-index-','sec-full-submission-','census-country-detail-v2-']}
  with ledger.worker():private.checkpoint(ledger,R/'checkpoint')
  ledger.close();parent=json.loads((R/'parent.json').read_text())['parent']
@@ -366,6 +368,29 @@ def relations():
  finish()
 
 
+def official():
+ """Manual source-format research, on latest monthly state; no writer token."""
+ initialize();ledger=Ledger(R/'ledger')
+ from v4_official_sources import collect
+ from bct.v4.official_sources import KIND,save,q2_review_inputs
+ with ledger.worker():
+  result=collect(ledger,json.loads(REG.read_text()),R/'global-sources',network=True)
+  records=[json.loads(p)for p, in ledger.db.execute('SELECT payload FROM events WHERE kind=?',(KIND,))]
+  handoff=q2_review_inputs(records);marker='OFFICIAL_Q2_REVIEW_INPUTS:'+sha(handoff)
+  with ledger.db:
+   if not ledger.db.execute("SELECT 1 FROM events WHERE kind='QUANTITATIVE_VALIDATION' AND json_extract(payload,'$.reason')=?",(marker,)).fetchone():
+    ledger.event('QUANTITATIVE_VALIDATION',{'reason':marker,'originals_modified':False,'policy':handoff})
+  before=file_sha(ledger.path)
+ ledger.close()
+ import subprocess
+ code="import json;from bct.v4.store import Ledger,file_sha;from bct.v4.official_sources import KIND,save;L=Ledger('var/v4/quantitative/q1-source-work/ledger');rows=[json.loads(p)for p, in L.db.execute('select payload from events where kind=?',(KIND,))];assert save(L,rows)['added']==0;L.close()"
+ child=subprocess.run([sys.executable,'-c',code],capture_output=True,text=True,timeout=60)
+ if child.returncode or file_sha(R/'ledger/v4.sqlite3')!=before:raise ValueError('OFFICIAL_SOURCE_RESTART_DEDUP_FAILED')
+ (R/'q2-report.json').write_text(json.dumps({'official_source_expansion':result,'new_process_dedup':True,'originals_in_capsule':False,'Q3_pairs':0,'new_S2':0,'new_S3':0}))
+ print('BCT_OFFICIAL_SOURCE_REPORT_JSON='+json.dumps(result),flush=True)
+ return 75 if any(p['status']=='BATCH_LIMIT_PENDING'for p in result['pages'])else 0
+
+
 def publish():
  result=private.unseal(BRIDGE/'result/state.gpg',R/'publish-checkpoint',os.environ['BCT_V4_STATE_PASSPHRASE'])
  owner=json.loads(Path('docs/v4/cpu-automation/preflight/connection-results.json').read_text());scope=owner['actual_remote_evidence']['receipts']['BCT_PRIVATE_SCOPE_JSON']['scope']
@@ -394,7 +419,8 @@ def verify():
  print('BCT_Q1_SOURCES_PUBLISH_JSON='+json.dumps(packet),flush=True)
 
 if __name__=='__main__':
- parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality','verify','recover','counterparts','relations']);a=parser.parse_args()
+ parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality','verify','recover','counterparts','relations','official']);a=parser.parse_args()
+ if a.action=='official':raise SystemExit(official())
  if a.action=='quality':raise SystemExit(quality())
  if a.action in {'process','trade'}:raise SystemExit(process(only_trade=a.action=='trade'))
  else:globals()[a.action]()

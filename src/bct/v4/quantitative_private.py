@@ -39,8 +39,11 @@ RECORD_FIELDS=set("acquired_at adjustment attributes automatic_promotion backtes
 from .quantitative_product import FIELDS as PRODUCT_FIELDS
 from .quantitative_counterpart import FIELDS as COUNTERPART_FIELDS,validate as validate_counterpart
 from .quantitative_counterpart import RELATION_FIELDS,validate_relation,RELATION_FACT_FIELDS,validate_relation_fact
+from .official_sources import KIND as OFFICIAL_KIND, FIELDS as OFFICIAL_FIELDS, validate as validate_official
+KINDS.add(OFFICIAL_KIND)
 
 EVENT_FIELDS={
+ OFFICIAL_KIND:OFFICIAL_FIELDS,
  'QUANTITATIVE_RELATION_TASK':RELATION_FIELDS,
  'QUANTITATIVE_RELATION_FACT':RELATION_FACT_FIELDS,
  'QUANTITATIVE_COUNTERPART_REVIEW':COUNTERPART_FIELDS,
@@ -66,6 +69,7 @@ def audit(db):
         if set(event)-EVENT_FIELDS[kind]:raise ValueError('Q1_UNREVIEWED_EVENT_FIELD')
         if re.search(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|gh[pousr]_[A-Za-z0-9]{20,}|Bearer\s+\S+',payload):
             raise ValueError('Q1_CONTACT_OR_CREDENTIAL_NOT_ARCHIVABLE')
+        if kind==OFFICIAL_KIND:validate_official(event)
         if kind=='QUANTITATIVE_COUNTERPART_REVIEW':validate_counterpart(event)
         if kind=='QUANTITATIVE_RELATION_TASK':validate_relation(event)
         if kind=='QUANTITATIVE_RELATION_FACT':validate_relation_fact(event)

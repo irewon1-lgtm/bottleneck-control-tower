@@ -4766,5 +4766,1270 @@
   ],
   "source_version_policy": "Captured frozen files are immutable; same URL with different hash is a new held version, not restoration of this input.",
   "objective_version": "bct-objective-1",
-  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "global_sources": {
+    "change_authorization": "User2026-10-16 worldwide official source expansion, BCT-V4-Q-1.0 unchanged; old8 source scopes/history preserved",
+    "started_from": "ad41f2651eab010268d2879e1c4ce425ec3f9d54",
+    "as_of": "2026-10-16T05:06:31.214128+00:00",
+    "connections": {
+      "sam_opportunities": {
+        "name": "sam_opportunities",
+        "existing_connection": false,
+        "official_documentation": "https://open.gsa.gov/api/get-opportunities-public-api/",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "448b85ab4a22e33d139295cb1d6a3a6384b685a936d8c645dd12e69ed938fa62",
+          "bytes": 46217,
+          "final_url": "https://open.gsa.gov/api/get-opportunities-public-api/"
+        },
+        "role": "DEMAND_TENDER_NOT_ORDER",
+        "secret_name": "BCT_SAM_API_KEY",
+        "authentication": "NOT_TESTED_NEW_KEYS",
+        "status": "NEEDS_USER_KEY",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+      },
+      "sam_awards": {
+        "name": "sam_awards",
+        "existing_connection": false,
+        "official_documentation": "https://open.gsa.gov/api/contract-awards/",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "46cb995d2d026bef0d5a1e85ff2ec2220c3775b9d3701fded4895f5244ac7fb2",
+          "bytes": 276169,
+          "final_url": "https://open.gsa.gov/api/contract-awards/"
+        },
+        "role": "CONTRACT_REVEALED_ROLE_LIMITED",
+        "secret_name": "BCT_SAM_API_KEY",
+        "authentication": "NOT_TESTED_NEW_KEYS",
+        "status": "NEEDS_USER_KEY",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+      },
+      "us_dod_contracts": {
+        "name": "us_dod_contracts",
+        "existing_connection": false,
+        "official_documentation": "https://www.defense.gov/News/Contracts/",
+        "documentation_receipt": {
+          "status": 403,
+          "raw_sha256": null,
+          "bytes": null,
+          "final_url": null
+        },
+        "role": "CONTRACT",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "ACCESS_RESTRICTED",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "hold": "Observed HTTP403; no repeated GET, challenge bypass or alternate hostname attempt."
+      },
+      "dsca": {
+        "name": "dsca",
+        "existing_connection": false,
+        "official_documentation": "https://www.dsca.mil/",
+        "documentation_receipt": {
+          "status": 403,
+          "raw_sha256": null,
+          "bytes": null,
+          "final_url": null
+        },
+        "role": "PROPOSED_SALE_APPROVAL_NOT_ORDER",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "ACCESS_RESTRICTED",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "hold": "Observed HTTP403; no repeated GET, challenge bypass or alternate hostname attempt."
+      },
+      "ted": {
+        "name": "ted",
+        "existing_connection": true,
+        "official_documentation": "https://docs.ted.europa.eu/api/latest/search.html",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "d1a0ab9198aba521a0d4e80003e0476a3bf125fb843244c22209912ec2867809",
+          "bytes": 23001,
+          "final_url": "https://docs.ted.europa.eu/api/latest/search.html"
+        },
+        "role": "EXISTING_Q1_STATISTICS",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "REUSED_EXISTING_PARTIAL",
+        "source_data_status": "REUSED_PRIOR_EVIDENCE_NOT_REFETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER"
+      },
+      "find_tender": {
+        "name": "find_tender",
+        "existing_connection": false,
+        "official_documentation": "https://www.find-tender.service.gov.uk/Developer/Documentation",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "25d23505b64dfa219695db99ca8fc3eaf924a092a9788eeabdb7d7f34e9d74e9",
+          "bytes": 28473,
+          "final_url": "https://www.find-tender.service.gov.uk/Developer/Documentation"
+        },
+        "role": "OCDS_TENDER_AWARD_CONTRACT",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "FACTS_STORED",
+        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "milestones": [
+          "DISCOVERED",
+          "LIVE_FETCH_PASS",
+          "PARSE_VALIDATED",
+          "FACTS_STORED"
+        ],
+        "local_collection": {
+          "record_versions": 1788,
+          "unique_records": 1788,
+          "numeric_fields": 412,
+          "kinds": {
+            "PROCUREMENT_TENDER": 1116,
+            "PROCUREMENT_CONTRACT": 259,
+            "PROCUREMENT_AWARD": 411,
+            "PROCUREMENT_NOTICE": 2
+          },
+          "published_at_unknown": 0
+        },
+        "remote_storage": "PENDING_MANUAL_ACTION",
+        "coverage": "COMPLETE_FIXED_UPDATED_WINDOW_2026-10-14:461 releases /5 pages; not entire provider history"
+      },
+      "contracts_finder": {
+        "name": "contracts_finder",
+        "existing_connection": false,
+        "official_documentation": "https://www.contractsfinder.service.gov.uk/apidocumentation",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "f374b4695f8c621cef1682ef86637702b3bd719e29480879dae68abba4222921",
+          "bytes": 45718,
+          "final_url": "https://www.contractsfinder.service.gov.uk/apidocumentation"
+        },
+        "role": "OCDS_TENDER_AWARD_CONTRACT",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "FACTS_STORED",
+        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "milestones": [
+          "DISCOVERED",
+          "LIVE_FETCH_PASS",
+          "PARSE_VALIDATED",
+          "FACTS_STORED"
+        ],
+        "local_collection": {
+          "record_versions": 476,
+          "unique_records": 476,
+          "numeric_fields": 465,
+          "kinds": {
+            "PROCUREMENT_AWARD": 235,
+            "PROCUREMENT_TENDER": 241
+          },
+          "published_at_unknown": 0
+        },
+        "remote_storage": "PENDING_MANUAL_ACTION",
+        "coverage": "COMPLETE_FIXED_PUBLICATION_WINDOW_2026-10-14:241 releases /3 pages"
+      },
+      "canadabuys": {
+        "name": "canadabuys",
+        "existing_connection": false,
+        "official_documentation": "https://canadabuys.canada.ca/en/procurement-and-contracting-data",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "0a13ffb708d7d3077ba0bddabae54acda1cf631cc71428066849ded9f88d29ae",
+          "bytes": 55048,
+          "final_url": "https://canadabuys.canada.ca/en/procurement-and-contracting-data"
+        },
+        "role": "AWARD_CSV",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "DISCOVERED",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "hold": "Annual2026-27 CSV aborted by probe10MB response guard (ValueError); not a parsed record. Current dataset resource URLs and revision dates discovered. Streaming/official partition support pending."
+      },
+      "austender": {
+        "name": "austender",
+        "existing_connection": false,
+        "official_documentation": "https://www.tenders.gov.au/",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "adf9ac249a2dd0844d3def4850c8a1cc0bfaf56709081d22fad17428c8435c60",
+          "bytes": 98744,
+          "final_url": "https://www.tenders.gov.au/"
+        },
+        "role": "CONTRACT_NOTICE",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "DISCOVERED",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "hold": "Official homepage accessible, attempted developer open-data page404. OCDS/API current contract not verified; no fabricated endpoint."
+      },
+      "korea_pps": {
+        "name": "korea_pps",
+        "existing_connection": false,
+        "official_documentation": "https://www.data.go.kr/",
+        "documentation_receipt": {
+          "status": 503,
+          "raw_sha256": null,
+          "bytes": null,
+          "final_url": null
+        },
+        "role": "PROCUREMENT_STAGES_KEY_AND_OPERATION_REQUIRED",
+        "secret_name": "BCT_DATA_GO_KR_SERVICE_KEY",
+        "authentication": "NOT_TESTED_NEW_KEYS",
+        "status": "NEEDS_USER_KEY",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+      },
+      "opendart": {
+        "name": "opendart",
+        "existing_connection": false,
+        "official_documentation": "https://engopendart.fss.or.kr/",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "39f3bb91f4c627fab04f1c9a59d84c416f864639b206bdbcb1421c7ba8144150",
+          "bytes": 43579,
+          "final_url": "https://engopendart.fss.or.kr/"
+        },
+        "role": "CORPORATE_FILINGS",
+        "secret_name": "BCT_OPENDART_API_KEY",
+        "authentication": "NOT_TESTED_NEW_KEYS",
+        "status": "NEEDS_USER_KEY",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+      },
+      "edinet": {
+        "name": "edinet",
+        "existing_connection": false,
+        "official_documentation": "https://disclosure2.edinet-fsa.go.jp/",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "54bbff7d6c84e9de393f95b681c950471bd65a775103c6f9b6cc625e06b0ec46",
+          "bytes": 318,
+          "final_url": "https://disclosure2.edinet-fsa.go.jp/"
+        },
+        "role": "CORPORATE_FILINGS",
+        "secret_name": "BCT_EDINET_API_KEY",
+        "authentication": "NOT_TESTED_NEW_KEYS",
+        "status": "NEEDS_USER_KEY",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+      },
+      "companies_house": {
+        "name": "companies_house",
+        "existing_connection": false,
+        "official_documentation": "https://developer.company-information.service.gov.uk/",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "cabe057f0a3fea2c2dbe8155cf51e0a3ea21d2220945c310f096e2a3954bc101",
+          "bytes": 18564,
+          "final_url": "https://developer.company-information.service.gov.uk/"
+        },
+        "role": "LEGAL_ENTITY_FILINGS",
+        "secret_name": "BCT_COMPANIES_HOUSE_API_KEY",
+        "authentication": "NOT_TESTED_NEW_KEYS",
+        "status": "NEEDS_USER_KEY",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+      },
+      "gleif": {
+        "name": "gleif",
+        "existing_connection": false,
+        "official_documentation": "https://www.gleif.org/en/lei-data/gleif-api",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "66f64918fc196d058d4e31a8011496e2cbe7e6746bd3facf3471dbe7bec8ca23",
+          "bytes": 207838,
+          "final_url": "https://www.gleif.org/en/lei-data/gleif-api"
+        },
+        "role": "LEGAL_IDENTITY_NOT_SUPPLY",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "FACTS_STORED",
+        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "milestones": [
+          "DISCOVERED",
+          "LIVE_FETCH_PASS",
+          "PARSE_VALIDATED",
+          "FACTS_STORED"
+        ],
+        "local_collection": {
+          "record_versions": 1,
+          "unique_records": 1,
+          "numeric_fields": 0,
+          "kinds": {
+            "LEGAL_ENTITY": 1
+          },
+          "published_at_unknown": 0
+        },
+        "remote_storage": "PENDING_MANUAL_ACTION"
+      },
+      "prodcom": {
+        "name": "prodcom",
+        "existing_connection": false,
+        "official_documentation": "https://ec.europa.eu/eurostat/web/prodcom",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "82f31e038b94231fd2d21d7df6f2af88ce9e525875ae323aed93b71fabe1a1d4",
+          "bytes": 197403,
+          "final_url": "https://ec.europa.eu/eurostat/web/prodcom"
+        },
+        "role": "PRODUCT_PRODUCTION_STATISTICS_NOT_QUALIFIED_SUPPLY",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "BLOCKED",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "hold": "Official shared SDMX2.1 catalogue parsed; datastructure/dataflow requests HTTP400 including catalogue-specified version. No statistical row fetched; no further variant probing this round."
+      },
+      "comext": {
+        "name": "comext",
+        "existing_connection": false,
+        "official_documentation": "https://ec.europa.eu/eurostat/api/comext/dissemination",
+        "documentation_receipt": {
+          "status": 404,
+          "raw_sha256": null,
+          "bytes": null,
+          "final_url": null
+        },
+        "role": "TRADE_STATISTICS_NOT_CUSTOMER_ORDER",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "BLOCKED",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "hold": "Official shared SDMX2.1 catalogue parsed; datastructure/dataflow requests HTTP400 including catalogue-specified version. No statistical row fetched; no further variant probing this round."
+      },
+      "comtrade": {
+        "name": "comtrade",
+        "existing_connection": false,
+        "official_documentation": "https://comtrade.un.org/",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "fda951a6c3fd52895049ae01fd2faf359dee2def60c1a8891bce3727ee66f745",
+          "bytes": 78,
+          "final_url": "https://comtrade.un.org/"
+        },
+        "role": "TRADE_STATISTICS_NOT_CUSTOMER_ORDER",
+        "secret_name": "BCT_COMTRADE_API_KEY",
+        "authentication": "NOT_TESTED_NEW_KEYS",
+        "status": "FACTS_STORED",
+        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION",
+        "milestones": [
+          "DISCOVERED",
+          "LIVE_FETCH_PASS",
+          "PARSE_VALIDATED",
+          "FACTS_STORED"
+        ],
+        "local_collection": {
+          "record_versions": 1,
+          "unique_records": 1,
+          "numeric_fields": 3,
+          "kinds": {
+            "TRADE_STATISTIC": 1
+          },
+          "published_at_unknown": 1
+        },
+        "remote_storage": "PENDING_MANUAL_ACTION",
+        "quantity_unit_reference": {
+          "url": "https://comtradeapi.un.org/files/v1/app/reference/QuantityUnits.json",
+          "raw_sha256": "420267929eac391e9dcd97d18252a2aee9bff2a86c3e2162d1ec57ef53811c24",
+          "locator": "/results/7",
+          "value": {
+            "qtyCode": 8,
+            "qtyAbbr": "kg"
+          },
+          "validated": true
+        }
+      },
+      "miso": {
+        "name": "miso",
+        "existing_connection": false,
+        "official_documentation": "https://www.misoenergy.org/planning/resource-utilization/GI_Queue/gi-interactive-queue/",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "d905e04101b6aa8bf02a9a5be98268dd30f21b192fe1bf869c14f5754b37c131",
+          "bytes": 51195,
+          "final_url": "https://www.misoenergy.org/planning/resource-utilization/GI_Queue/gi-interactive-queue/"
+        },
+        "role": "CONNECTION_APPLICATION_NOT_AVAILABLE_SUPPLY",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "FACTS_STORED",
+        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "milestones": [
+          "DISCOVERED",
+          "LIVE_FETCH_PASS",
+          "PARSE_VALIDATED",
+          "FACTS_STORED"
+        ],
+        "local_collection": {
+          "record_versions": 3938,
+          "unique_records": 3938,
+          "numeric_fields": 7876,
+          "kinds": {
+            "CONNECTION_PROJECT": 3938
+          },
+          "published_at_unknown": 3938
+        },
+        "remote_storage": "PENDING_MANUAL_ACTION",
+        "coverage": "One full public snapshot3938 native rows,3937 projectNumber groups; duplicated projectNumber J2656 kept as distinct native IDs and same lineage, not summed"
+      },
+      "pjm": {
+        "name": "pjm",
+        "existing_connection": false,
+        "official_documentation": "https://www.pjm.com/",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "ed714e4c307eb31e0917af9204904da1103b2c86320a1769b237e265bae439e0",
+          "bytes": 178182,
+          "final_url": "https://www.pjm.com/"
+        },
+        "role": "CONNECTION_APPLICATION_NOT_AVAILABLE_SUPPLY",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "DISCOVERED",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "hold": "Official queue page fetched; data download contract not identified/implemented yet."
+      },
+      "ercot": {
+        "name": "ercot",
+        "existing_connection": false,
+        "official_documentation": "https://www.ercot.com/mp/data-products/data-product-details?id=PG7-200-ER",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "39158f67cd0a26aa36ed5711822e95b623832214ba1b4556da29c10374773a65",
+          "bytes": 63700,
+          "final_url": "https://www.ercot.com/mp/data-products/data-product-details?id=PG7-200-ER"
+        },
+        "role": "PUBLIC_PROJECT_PLANNING_AND_COMMISSIONING",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "FACTS_STORED",
+        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "milestones": [
+          "DISCOVERED",
+          "LIVE_FETCH_PASS",
+          "PARSE_VALIDATED",
+          "FACTS_STORED"
+        ],
+        "local_collection": {
+          "record_versions": 3684,
+          "unique_records": 1916,
+          "numeric_fields": 3684,
+          "kinds": {
+            "CONNECTION_PROJECT": 3684
+          },
+          "published_at_unknown": 0
+        },
+        "remote_storage": "PENDING_MANUAL_ACTION",
+        "coverage": "August+September2026,4 tables/edition; other10 sheets unread, confidential projects absent"
+      },
+      "neso": {
+        "name": "neso",
+        "existing_connection": false,
+        "official_documentation": "https://www.neso.energy/",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "ffe0bc74ac8bc7c69ee93fe4aa830b20561377ddec3381dc456d0fb74724195a",
+          "bytes": 1271212,
+          "final_url": "https://www.neso.energy/"
+        },
+        "role": "CONNECTION_REGISTER_NOT_ALLOCABLE_SUPPLY",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "FACTS_STORED",
+        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "milestones": [
+          "DISCOVERED",
+          "LIVE_FETCH_PASS",
+          "PARSE_VALIDATED",
+          "FACTS_STORED"
+        ],
+        "local_collection": {
+          "record_versions": 2225,
+          "unique_records": 2225,
+          "numeric_fields": 6675,
+          "kinds": {
+            "CONNECTION_PROJECT": 2225
+          },
+          "published_at_unknown": 2225
+        },
+        "remote_storage": "PENDING_MANUAL_ACTION",
+        "coverage": "One complete CSV2225 rows,2082 project IDs; stable Project ID/effective-date/stage/agreement keys; no new version comparison yet"
+      },
+      "entsoe": {
+        "name": "entsoe",
+        "existing_connection": false,
+        "official_documentation": "https://transparency.entsoe.eu/",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "ce3095395e09db7e250becef435e20ddc00680dc04b0706acb2d22d3eeaf1b95",
+          "bytes": 14498,
+          "final_url": "https://transparency.entsoe.eu/"
+        },
+        "role": "POWER_DATA_ACCESS_TOKEN",
+        "secret_name": "BCT_ENTSOE_API_TOKEN",
+        "authentication": "NOT_TESTED_NEW_KEYS",
+        "status": "NEEDS_USER_KEY",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+      },
+      "doe_haleu": {
+        "name": "doe_haleu",
+        "existing_connection": false,
+        "official_documentation": "https://www.energy.gov/ne/haleu-availability-program",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "66e7bbb14b997f89bc5ea9f90a77456b782cd96878f689266e186b9c56e562f7",
+          "bytes": 131232,
+          "final_url": "https://www.energy.gov/ne/haleu-availability-program"
+        },
+        "role": "FUEL_PROGRAM_SCHEDULE_NOT_ORDER",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "DISCOVERED",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER"
+      },
+      "chips": {
+        "name": "chips",
+        "existing_connection": false,
+        "official_documentation": "https://www.nist.gov/chips",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "f2ba921faa21e2ff0734129af9fc5ac0487c26b732d695519c54f5a2c82fccb5",
+          "bytes": 103021,
+          "final_url": "https://www.nist.gov/chips"
+        },
+        "role": "INCENTIVES_PLANS_NOT_PHYSICAL_CAPACITY",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "DISCOVERED",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER"
+      },
+      "nrc": {
+        "name": "nrc",
+        "existing_connection": false,
+        "official_documentation": "https://www.nrc.gov/",
+        "documentation_receipt": {
+          "status": 403,
+          "raw_sha256": null,
+          "bytes": null,
+          "final_url": null
+        },
+        "role": "LICENSING_NOT_CAPACITY",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "ACCESS_RESTRICTED",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "hold": "Observed HTTP403; no repeated GET, challenge bypass or alternate hostname attempt."
+      },
+      "bgs": {
+        "name": "bgs",
+        "existing_connection": false,
+        "official_documentation": "https://www.bgs.ac.uk/mineralsuk/",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "c6783ee5686ac4f0ca31f49563c61e3ceba1d3d8cabc2b58875d698b7461df4f",
+          "bytes": 94220,
+          "final_url": "https://www.bgs.ac.uk/mineralsuk/"
+        },
+        "role": "MINERAL_PRODUCTION_WITH_THIRD_PARTY_RIGHTS",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "PARSE_VALIDATED",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "offset=200; entire world dataset remains unread; terms review required before archive",
+        "rights_review": "Non-commercial academic/research and attribution allowed by page; redistribution/third-party ownership not generally cleared. Parse local only, archive disabled.",
+        "milestones": [
+          "DISCOVERED",
+          "LIVE_FETCH_PASS",
+          "PARSE_VALIDATED"
+        ],
+        "local_parsed_records": 200,
+        "archived_records": 0
+      },
+      "kosis": {
+        "name": "kosis",
+        "existing_connection": false,
+        "official_documentation": "https://kosis.kr/openapi/",
+        "documentation_receipt": {
+          "status": 503,
+          "raw_sha256": null,
+          "bytes": null,
+          "final_url": null
+        },
+        "role": "INDUSTRIAL_STATISTICS",
+        "secret_name": "BCT_KOSIS_API_KEY",
+        "authentication": "NOT_TESTED_NEW_KEYS",
+        "status": "NEEDS_USER_KEY",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+      },
+      "estat": {
+        "name": "estat",
+        "existing_connection": false,
+        "official_documentation": "https://www.e-stat.go.jp/api/en",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "19805209f449d114c6c327f9be54675dd9884adf6bef3ed6d4baf4482ed1fa37",
+          "bytes": 28374,
+          "final_url": "https://www.e-stat.go.jp/api/en"
+        },
+        "role": "INDUSTRIAL_STATISTICS",
+        "secret_name": "BCT_ESTAT_APP_ID",
+        "authentication": "NOT_TESTED_NEW_KEYS",
+        "status": "NEEDS_USER_KEY",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+      },
+      "regulations": {
+        "name": "regulations",
+        "existing_connection": false,
+        "official_documentation": "https://open.gsa.gov/api/regulationsgov/",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "5cfc5d92d1f37805a2c0a5016e6925e91b1292f99f59a8a02a9933fdc9a58044",
+          "bytes": 59455,
+          "final_url": "https://open.gsa.gov/api/regulationsgov/"
+        },
+        "role": "REGULATORY_DOCKET",
+        "secret_name": "BCT_REGULATIONS_API_KEY",
+        "authentication": "NOT_TESTED_NEW_KEYS",
+        "status": "NEEDS_USER_KEY",
+        "source_data_status": "NOT_FETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "AUTH_AND_ROLE_VERIFICATION_AFTER_OWNER_CONFIGURATION"
+      },
+      "federal_register": {
+        "name": "federal_register",
+        "existing_connection": true,
+        "official_documentation": "https://www.federalregister.gov/developers/documentation/api/v1",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "f0bcd75bcb01e51a943db4a2db0cbff1fd9f46a1e65470ba239afe636a519f64",
+          "bytes": 31934,
+          "final_url": "https://www.federalregister.gov/developers/documentation/api/v1"
+        },
+        "role": "REGULATORY_DOCUMENT_METADATA",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "FACTS_STORED",
+        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER",
+        "milestones": [
+          "DISCOVERED",
+          "LIVE_FETCH_PASS",
+          "PARSE_VALIDATED",
+          "FACTS_STORED"
+        ],
+        "local_collection": {
+          "record_versions": 101,
+          "unique_records": 101,
+          "numeric_fields": 0,
+          "kinds": {
+            "REGULATORY_DOCUMENT": 101
+          },
+          "published_at_unknown": 0
+        },
+        "remote_storage": "PENDING_MANUAL_ACTION",
+        "coverage": "COMPLETE_FIXED_MANUFACTURING_SEARCH_2026-10-01..15:101 metadata records /2 pages; bodies unread"
+      },
+      "sec": {
+        "name": "sec",
+        "existing_connection": true,
+        "official_documentation": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "16cef6f7bb93b61848594a823f9f64c654872a3fffbf7bf9fbe6436f02761435",
+          "bytes": 69015,
+          "final_url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
+        },
+        "role": "EXISTING_Q1_STATISTICS",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "REUSED_EXISTING_PARTIAL",
+        "source_data_status": "REUSED_PRIOR_EVIDENCE_NOT_REFETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER"
+      },
+      "usgs": {
+        "name": "usgs",
+        "existing_connection": true,
+        "official_documentation": "https://www.usgs.gov/centers/national-minerals-information-center",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "635a26ff2b8f2b9c0bc26b25ad58a70540ad36d01f7f62ba191636175aada6f3",
+          "bytes": 125087,
+          "final_url": "https://www.usgs.gov/centers/national-minerals-information-center"
+        },
+        "role": "EXISTING_Q1_STATISTICS",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "REUSED_EXISTING_PARTIAL",
+        "source_data_status": "REUSED_PRIOR_EVIDENCE_NOT_REFETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER"
+      },
+      "m3": {
+        "name": "m3",
+        "existing_connection": true,
+        "official_documentation": "https://www.census.gov/manufacturing/m3/",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "983a07d70a7ade192b705d67573d857f66c85d6b80e81bb50135cd7e758fefbe",
+          "bytes": 502449,
+          "final_url": "https://www.census.gov/manufacturing/m3/index.html"
+        },
+        "role": "EXISTING_Q1_STATISTICS",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "REUSED_EXISTING_PARTIAL",
+        "source_data_status": "REUSED_PRIOR_EVIDENCE_NOT_REFETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER"
+      },
+      "g17": {
+        "name": "g17",
+        "existing_connection": true,
+        "official_documentation": "https://www.federalreserve.gov/releases/g17/",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "158f1fab6c95d40c024ffb6ec0f7c70a4e1f3dc916fd32665081bc394125d83d",
+          "bytes": 330588,
+          "final_url": "https://www.federalreserve.gov/releases/g17/"
+        },
+        "role": "EXISTING_Q1_STATISTICS",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "REUSED_EXISTING_PARTIAL",
+        "source_data_status": "REUSED_PRIOR_EVIDENCE_NOT_REFETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER"
+      },
+      "eia": {
+        "name": "eia",
+        "existing_connection": true,
+        "official_documentation": "https://www.eia.gov/electricity/data/eia860m/index.php",
+        "documentation_receipt": {
+          "status": 200,
+          "raw_sha256": "4ce7a2f80cf65bf6b343f7f9682ffd67d4f2897944bfdc13d54be2aadec11c6b",
+          "bytes": 93647,
+          "final_url": "https://www.eia.gov/electricity/data/eia860m/index.php"
+        },
+        "role": "EXISTING_Q1_STATISTICS",
+        "secret_name": null,
+        "authentication": "PUBLIC_NO_KEY",
+        "status": "REUSED_EXISTING_PARTIAL",
+        "source_data_status": "REUSED_PRIOR_EVIDENCE_NOT_REFETCHED",
+        "refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+        "rights_scope": "NUMERICAL_FACTS_AND_IDENTIFIERS_ONLY; no native bodies in remote capsule",
+        "first_publication": "UNKNOWN_UNLESS_NATIVE_SOURCE_PROVES_IT",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "next_cursor": "VERIFIED_DATA_ENDPOINT_AND_PARSER"
+      },
+      "census_trade": {
+        "name": "Census international trade",
+        "existing_connection": true,
+        "official_documentation": "https://www.census.gov/data/developers/data-sets/international-trade.html",
+        "secret_name": "CENSUS_API_KEY",
+        "status": "REUSED_EXISTING_PARTIAL",
+        "source_data_status": "2583_PHYSICAL_RECORDS_PRIOR_NOT_REFETCHED",
+        "remaining": [
+          "country identity",
+          "first release date",
+          "intra-year export HS revisions"
+        ],
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0
+      },
+      "world_bank": {
+        "name": "World Bank procurement notices",
+        "existing_connection": false,
+        "official_documentation": "https://projects.worldbank.org/en/projects-operations/procurement",
+        "observed_data_endpoint": "https://search.worldbank.org/api/v2/procnotices?format=json&rows=50&srt=published_date&order=desc",
+        "status": "FACTS_STORED",
+        "secret_name": null,
+        "scope": "historical returned prefix 100; requested published_date sort not verified; not a current-feed claim",
+        "rights_scope": "NOTICE_IDS_STATUS_DATES_PROJECT_IDS_ONLY",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0,
+        "milestones": [
+          "DISCOVERED",
+          "LIVE_FETCH_PASS",
+          "PARSE_VALIDATED",
+          "FACTS_STORED"
+        ],
+        "source_data_status": "LOCAL_EXACT_FIELD_CHECKED_PRIVATE_PUBLISH_PENDING",
+        "local_collection": {
+          "record_versions": 100,
+          "unique_records": 100,
+          "numeric_fields": 0,
+          "kinds": {
+            "PROCUREMENT_NOTICE": 100
+          },
+          "published_at_unknown": 11
+        },
+        "remote_storage": "PENDING_MANUAL_ACTION",
+        "next_cursor": "offset=100 of reported total422960; requested ordering not verified, historical prefix, not current official feed complete"
+      },
+      "issuer_ir": {
+        "name": "Official issuer IR / annual reports",
+        "existing_connection": true,
+        "official_documentation": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces",
+        "status": "REUSED_EXISTING_PARTIAL",
+        "source_data_status": "existing Aehr/issuer raw captures/product facts reused; no new issuer HTTP in this round",
+        "parser": "existing common Metadata/pdftotext and strict product/relation reviews",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0
+      },
+      "facility_permits": {
+        "name": "Other official facility permits",
+        "existing_connection": true,
+        "official_documentation": "https://www.federalregister.gov/developers/documentation/api/v1",
+        "status": "DISCOVERED",
+        "source_data_status": "Federal Register metadata available; facility-specific permit decision/date not automatically established",
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0
+      },
+      "usaspending": {
+        "name": "USAspending",
+        "existing_connection": true,
+        "official_documentation": "https://api.usaspending.gov/docs/endpoints",
+        "status": "REUSED_EXISTING_PARTIAL",
+        "source_data_status": "Prior fixed award and transaction scopes preserved; no refetch",
+        "secret_name": null,
+        "Q3_pairs": 0,
+        "S2": 0,
+        "S3": 0
+      }
+    },
+    "collection_jobs": [
+      {
+        "id": "global-2026-10-16-ft_data",
+        "source_id": "find_tender",
+        "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00%3A00%3A00&updatedTo=2026-10-14T23%3A59%3A59&limit=100",
+        "format": "JSON",
+        "max_pages": 6,
+        "archive_facts": true,
+        "frozen_at": "2026-10-16T05:06:31.214079+00:00",
+        "pilot_raw_sha256": "f9e24ce78a353a0a5867fdd1f15435842b907132fb3fc7fa0ae5168eee9ad422",
+        "semantic_limits": "Release tags, lots, awards/contracts remain separate. Framework, amendments and amounts are not physical orders. Contract period is not firm delivery.",
+        "source_review_annotations": [
+          {
+            "notice_id": "097110-2026",
+            "reviewer_type": "ASSISTANT_SOURCE_REVIEW_NOT_HUMAN_OR_INDEPENDENT_EVALUATION",
+            "verdict": "ITEM_DESCRIPTION_LOCATED_CONTRACT_LOT_CONFLICT_HELD",
+            "fields": {
+              "product_label": {
+                "relative_pointer": "/tender/description",
+                "field_sha256": "253c75ff15b5612a743ddc75cc7178e8d2d73dc25c1066bc89ff1fb72e626fa9",
+                "anchor": "Purchase of 4 x Ford Transit L4H3 17 Seat Minibus RWD (33967)",
+                "literal": "Ford Transit L4H3 17 Seat Minibus RWD",
+                "offset": 16
+              },
+              "reported_item_quantity_literal": {
+                "relative_pointer": "/tender/description",
+                "field_sha256": "253c75ff15b5612a743ddc75cc7178e8d2d73dc25c1066bc89ff1fb72e626fa9",
+                "anchor": "Purchase of 4 x Ford Transit L4H3 17 Seat Minibus RWD (33967)",
+                "literal": "4",
+                "offset": 12
+              },
+              "item_unit": {
+                "relative_pointer": "/tender/description",
+                "field_sha256": "253c75ff15b5612a743ddc75cc7178e8d2d73dc25c1066bc89ff1fb72e626fa9",
+                "anchor": "Purchase of 4 x Ford Transit L4H3 17 Seat Minibus RWD (33967)",
+                "literal": "Minibus",
+                "offset": 42
+              }
+            }
+          },
+          {
+            "notice_id": "096838-2026",
+            "reviewer_type": "ASSISTANT_SOURCE_REVIEW_NOT_HUMAN_OR_INDEPENDENT_EVALUATION",
+            "verdict": "ITEM_DESCRIPTION_LOCATED_CONTRACT_LOT_CONFLICT_HELD",
+            "fields": {
+              "product_label": {
+                "relative_pointer": "/tender/description",
+                "field_sha256": "982302bf01c2dfd3cbcbf01fe67d25c79f497f8a8e626562f30c35729e07934f",
+                "anchor": "The procurement relates to the purchase of three stainless steel powered mortuary trolleys to support mortuary services at Ysbyty Gwynedd, Wrexham Maelor Hospital, and Ysbyty Glan Clwyd within Betsi Cadwaladr University Health Board (BCUHB).",
+                "literal": "stainless steel powered mortuary trolleys",
+                "offset": 49
+              },
+              "reported_item_quantity_literal": {
+                "relative_pointer": "/tender/description",
+                "field_sha256": "982302bf01c2dfd3cbcbf01fe67d25c79f497f8a8e626562f30c35729e07934f",
+                "anchor": "The procurement relates to the purchase of three stainless steel powered mortuary trolleys to support mortuary services at Ysbyty Gwynedd, Wrexham Maelor Hospital, and Ysbyty Glan Clwyd within Betsi Cadwaladr University Health Board (BCUHB).",
+                "literal": "three",
+                "offset": 43
+              },
+              "item_unit": {
+                "relative_pointer": "/tender/description",
+                "field_sha256": "982302bf01c2dfd3cbcbf01fe67d25c79f497f8a8e626562f30c35729e07934f",
+                "anchor": "The procurement relates to the purchase of three stainless steel powered mortuary trolleys to support mortuary services at Ysbyty Gwynedd, Wrexham Maelor Hospital, and Ysbyty Glan Clwyd within Betsi Cadwaladr University Health Board (BCUHB).",
+                "literal": "trolleys",
+                "offset": 82
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "global-2026-10-16-cf_data",
+        "source_id": "contracts_finder",
+        "url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-14T00%3A00%3A00&publishedTo=2026-10-14T23%3A59%3A59&limit=100",
+        "format": "JSON",
+        "max_pages": 4,
+        "archive_facts": true,
+        "frozen_at": "2026-10-16T05:06:31.214096+00:00",
+        "pilot_raw_sha256": "71e9e9f4d91ebd070b88e823fb2d3b87c6c0403ba673a72702a686d0c3f607ab",
+        "semantic_limits": "Open OCDS notices may include services/frameworks and modifications; amount is not order quantity. Same OCID is one procurement lineage."
+      },
+      {
+        "id": "global-2026-10-16-gleif_data",
+        "source_id": "gleif",
+        "url": "https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalName%5D=AIRBUS%20SE&page%5Bsize%5D=10",
+        "format": "JSON",
+        "max_pages": 1,
+        "archive_facts": true,
+        "frozen_at": "2026-10-16T05:06:31.214099+00:00",
+        "pilot_raw_sha256": "062864df5781ad85242e3424fdbd51a23a668f8a7cf8c2610f34793dda4f04f0",
+        "semantic_limits": "Exact legal-name query AIRBUS SE; one LEI identity, not a product equivalence or customer qualification proof."
+      },
+      {
+        "id": "global-2026-10-16-miso_data",
+        "source_id": "miso",
+        "url": "https://www.misoenergy.org/api/giqueue/getprojects",
+        "format": "JSON",
+        "max_pages": 1,
+        "archive_facts": true,
+        "frozen_at": "2026-10-16T05:06:31.214101+00:00",
+        "pilot_raw_sha256": "6a2436f9ef8db88444ec25a58e8be0dce18304e26824a6fcbf0a8091e410cf6d",
+        "semantic_limits": "Current public full array only; projected service dates and MW are applications, not available/qualified supply. Historical changes unavailable."
+      },
+      {
+        "id": "global-2026-10-16-neso_data",
+        "source_id": "neso",
+        "url": "https://api.neso.energy/dataset/cbd45e54-e6e2-4a38-99f1-8de6fd96d7c1/resource/17becbab-e3e8-473f-b303-3806f43a6a10/download/tec-register-13-october-2026.csv",
+        "format": "CSV",
+        "max_pages": 1,
+        "archive_facts": true,
+        "frozen_at": "2026-10-16T05:06:31.214103+00:00",
+        "pilot_raw_sha256": "ddb96d884672e73b853a5a4116323bd884207ded617b035fa63387db324865a3",
+        "semantic_limits": "Public TEC register 13 October 2026. Connected, increase/decrease, cumulative MW and effective date distinct. Connection customer is not proved product buyer."
+      },
+      {
+        "id": "global-2026-10-16-wb_data",
+        "source_id": "world_bank",
+        "url": "https://search.worldbank.org/api/v2/procnotices?format=json&rows=50&srt=published_date&order=desc",
+        "format": "JSON",
+        "max_pages": 1,
+        "archive_facts": true,
+        "frozen_at": "2026-10-16T05:06:31.214105+00:00",
+        "pilot_raw_sha256": "d090eb3146872970f3a0e37157804b6f81cebff78c3e8429e1136e920833fb06",
+        "semantic_limits": "Rows 0..49 returned historical notices; requested sort unverified. Cancelled notice is not active demand. Pending offset100 after second job."
+      },
+      {
+        "id": "global-2026-10-16-worldbank_page2",
+        "source_id": "world_bank",
+        "url": "https://search.worldbank.org/api/v2/procnotices?format=json&rows=50&os=50&srt=published_date&order=desc",
+        "format": "JSON",
+        "max_pages": 1,
+        "archive_facts": true,
+        "frozen_at": "2026-10-16T05:06:31.214107+00:00",
+        "pilot_raw_sha256": "aeb552e9bf060bbb6f18dae67c6aaeb1431c1e508084939c8e829909fa30df77",
+        "semantic_limits": "Rows50..99 same historical prefix; cancelled notices not actual orders, remaining hundreds of thousands not read."
+      },
+      {
+        "id": "global-2026-10-16-federal_month",
+        "source_id": "federal_register",
+        "url": "https://www.federalregister.gov/api/v1/documents.json?conditions%5Bterm%5D=manufacturing&conditions%5Bpublication_date%5D%5Bgte%5D=2026-10-01&conditions%5Bpublication_date%5D%5Blte%5D=2026-10-15&per_page=100&order=newest",
+        "format": "JSON",
+        "max_pages": 2,
+        "archive_facts": true,
+        "frozen_at": "2026-10-16T05:06:31.214110+00:00",
+        "pilot_raw_sha256": "4602af9f45c6766bce1df2838fd9878c69df39068badfa0edb70f587b1a1ac17",
+        "semantic_limits": "Manufacturing search publication dates2026-10-01..15, metadata only; no fulltext/permit/capacity claim."
+      },
+      {
+        "id": "global-2026-10-16-comtrade_guest",
+        "source_id": "comtrade",
+        "url": "https://comtradeapi.un.org/public/v1/preview/C/A/HS?period=2025&reporterCode=842&cmdCode=2805&flowCode=M&partnerCode=0&partner2Code=0&customsCode=C00&motCode=0&maxRecords=500",
+        "format": "JSON",
+        "max_pages": 1,
+        "archive_facts": true,
+        "frozen_at": "2026-10-16T05:06:31.214112+00:00",
+        "pilot_raw_sha256": "bb474f6db18398f85e78a6c2cf1a9f541ed4fa6d0bd2f1ce05496c3fecaf6a02",
+        "semantic_limits": "Guest preview: US2025 imports HS2805 partnerWorld. qty code8=kg from official QuantityUnits table; aggregate/estimated flags preserved; not customer demand or factory supply."
+      },
+      {
+        "id": "global-2026-10-16-bgs_data",
+        "source_id": "bgs",
+        "url": "https://ogcapi.bgs.ac.uk/collections/world-mineral-statistics/items?f=json&limit=100&sortby=-year",
+        "format": "JSON",
+        "max_pages": 2,
+        "archive_facts": false,
+        "frozen_at": "2026-10-16T05:06:31.214114+00:00",
+        "pilot_raw_sha256": "79cd9ae4434977535019b08e8b342f895a196842e8f9acf879ee012ef250d655",
+        "semantic_limits": "200 most recent production statistics rows only. Estimates/zero/NULL notation and attribution require review. No facts uploaded pending noncommercial/third-party rights confirmation."
+      },
+      {
+        "id": "global-2026-10-16-ercot_sep",
+        "source_id": "ercot",
+        "url": "https://www.ercot.com/misdownload/servlets/mirDownload?doclookupId=1281327706",
+        "format": "XLSX",
+        "max_pages": 1,
+        "archive_facts": true,
+        "frozen_at": "2026-10-16T05:06:31.214119+00:00",
+        "pilot_raw_sha256": "016cddbb7082fd30e02ede6242e3f33adc79ca0f2e7fb49bc9079ebde2671d58",
+        "semantic_limits": "September2026 public GIS Large/Small/Commissioning/Cancellation tables only. Partial confidential project coverage; capacities for planning, not allocable supply.",
+        "published_at": "2026-10-01T16:08:28-05:00"
+      },
+      {
+        "id": "global-2026-10-16-ercot_aug",
+        "source_id": "ercot",
+        "url": "https://www.ercot.com/misdownload/servlets/mirDownload?doclookupId=1269363208",
+        "format": "XLSX",
+        "max_pages": 1,
+        "archive_facts": true,
+        "frozen_at": "2026-10-16T05:06:31.214123+00:00",
+        "pilot_raw_sha256": "75543fb2772367aad3ca3f1ee6786e7ab1457c8c2f2e3cb76513ded2b419d5fb",
+        "semantic_limits": "August2026 same four tables. Historical snapshot, no LIVE discovery. All other workbook sheets unread.",
+        "published_at": "2026-09-01T14:38:04-05:00"
+      }
+    ],
+    "limits": {
+      "requests_per_batch": 32,
+      "seconds_per_batch": 90,
+      "public_transport_bytes": 4194304,
+      "command_seconds": 120,
+      "retries": 0,
+      "schedule_enabled": false,
+      "AI_calls": 0,
+      "CPU_windows": 0
+    },
+    "Secrets_metadata_API_observation": "GitHub integration denied secret-name listing HTTP403; do not infer Actions values from local absence. New optional bindings observed separately in manual development job.",
+    "Q1": "PARTIAL",
+    "Q2": "PARTIAL_RESEARCH",
+    "Q3_pairs": 0,
+    "S2": 0,
+    "S3": 0
+  }
 }

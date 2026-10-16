@@ -1,0 +1,3494 @@
+{
+  "plan_id": "BCT-V4-Q-1.0",
+  "started_from": "ad41f2651eab010268d2879e1c4ce425ec3f9d54",
+  "recorded_at": "2026-10-16T05:18:38.971285+00:00",
+  "task_status": "IN_PROGRESS_PRIVATE_PUBLISH_PENDING",
+  "scope": "Q1 official-source expansion / Q2 partial fact review only; no Q3 execution",
+  "baseline_monthly_run": 38852675601,
+  "baseline_monthly_receipts": {
+    "BCT_Q1_CURRENT_CAPACITY_JSON": {
+      "tag": "bct-v4-archive-monthly-2026-10",
+      "generation": 2,
+      "bytes": 10112525,
+      "remaining_monthly_bytes": 258322931,
+      "assets": 6,
+      "remaining_asset_slots": 394
+    },
+    "BCT_Q1_PRIOR_JSON": {
+      "private_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b",
+      "typed_restore": {
+        "restored": true,
+        "tables": 8,
+        "sqlite_sha256": "5d45d56ef61e5cc74a4c0bc35b197fbee2b125353acb4c68bf85391e3793b0be",
+        "review": {
+          "format": "bct-q1-private-facts-1",
+          "observation_versions": 42601,
+          "sources": [
+            "census_trade",
+            "eia",
+            "g17",
+            "m3",
+            "ted",
+            "usaspending",
+            "usgs"
+          ],
+          "article_bodies": 0,
+          "native_source_files": 0,
+          "original_evidence_recovery": false,
+          "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+          "CPU_queue_restored": false,
+          "automatic_promotion": false
+        },
+        "generation": 2,
+        "original_evidence_restore": false
+      },
+      "encrypted_handoff": {
+        "encrypted_sha256": "ea5723b5fcdfb1b72cd85c6f1a9edafd13206ec8857ada1c79f03c28044e8f5c",
+        "encrypted_bytes": 13239799
+      }
+    },
+    "BCT_Q1_SOURCES_PUBLISH_JSON": {
+      "report": {
+        "by_source": {
+          "census_trade": {
+            "numeric": 5166,
+            "physical": 2583,
+            "held": 444,
+            "money": 2583,
+            "publication_UNKNOWN": 5166
+          },
+          "eia": {
+            "numeric": 18745,
+            "physical": 18745,
+            "held": 0,
+            "money": 0,
+            "publication_UNKNOWN": 9366
+          },
+          "g17": {
+            "numeric": 1080,
+            "physical": 216,
+            "held": 0,
+            "money": 0,
+            "publication_UNKNOWN": 0
+          },
+          "m3": {
+            "numeric": 540,
+            "physical": 0,
+            "held": 0,
+            "money": 540,
+            "publication_UNKNOWN": 0
+          },
+          "sec": {
+            "numeric": 0,
+            "physical": 0,
+            "held": 0,
+            "money": 0,
+            "publication_UNKNOWN": 0
+          },
+          "ted": {
+            "numeric": 3645,
+            "physical": 0,
+            "held": 0,
+            "money": 3645,
+            "publication_UNKNOWN": 0
+          },
+          "usaspending": {
+            "numeric": 8498,
+            "physical": 0,
+            "held": 1260,
+            "money": 8498,
+            "publication_UNKNOWN": 8498
+          },
+          "usgs": {
+            "numeric": 372,
+            "physical": 372,
+            "held": 185,
+            "money": 0,
+            "publication_UNKNOWN": 557
+          }
+        },
+        "SEC_documents": [
+          {
+            "accession": "0001701605-26-000029",
+            "cik": "0001701605",
+            "detail": {
+              "inline_tags": 0,
+              "selected_numeric_facts": 0,
+              "unresolved_inline_context_or_unit": 0
+            },
+            "document_id": "ec707c707f8efead072580c9f489ddb54352a329caf67a0db3f8646cf56391c0",
+            "filing_date": "2026-10-01",
+            "form": "8-K/A",
+            "published_at": "2026-10-01T20:11:05.000Z",
+            "source_id": "sec",
+            "status": "EXACT_INLINE_EXTRACTION_SEMANTICS_PENDING",
+            "url": "https://www.sec.gov/Archives/edgar/data/1701605/000170160526000029/bkr-20260716.htm"
+          }
+        ],
+        "SEC_discovered_filings": 0,
+        "SEC_submissions_read": 0,
+        "SEC_filings_seen": 1,
+        "SEC_bodies_extracted": 1,
+        "failures": [
+          {
+            "at": "2026-10-15T14:28:19.669950+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-f7798ec20e4e58fec0a1bdf2b86298c522d84ff49c8739eb98d2906efaf504fa"
+          },
+          {
+            "at": "2026-10-15T14:28:20.530637+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-a899df4c16a492cf5cc732bce91683890dbd7bc68738d36b3843a878e014181e"
+          },
+          {
+            "at": "2026-10-15T14:28:21.569153+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-5195c75bdd35b0007920cbc87d59e7de151c6cd967b4152f868a13d24c80f564"
+          },
+          {
+            "at": "2026-10-15T14:28:32.576138+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-fe8987a1f630a27581df2e17fc6ce644d57bca9fc4b943caa2ccc11fc03a1f66"
+          },
+          {
+            "at": "2026-10-15T14:28:33.616800+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-ff115b9f86f6bb1ec36a9f03567c1783f495d176bf9b2cc948f79b40b3f76dfe"
+          },
+          {
+            "at": "2026-10-15T14:28:34.579469+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-187f005e07ff6c09cf528849d46428dac273a629c402acb80cd76bb84b292d44"
+          },
+          {
+            "at": "2026-10-15T14:28:35.594676+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-df8e43603f2e21d0717acc8919818e952163a81894c595615ecf9341af80c9ad"
+          },
+          {
+            "at": "2026-10-15T14:28:36.554411+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-0c998cd5236bd2955e5e367d05260f8d74f752547333688107cf1134b4fe5002"
+          },
+          {
+            "at": "2026-10-15T14:28:37.301479+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-2f68fa16510c2ae04e0fc557da44d724e15183fbb131037c5badb0b402fbb356"
+          },
+          {
+            "at": "2026-10-15T14:28:38.069898+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-a336942065714a737c8a503cec14b0a36cf9c5025c685a82de873ada3e7770cf"
+          },
+          {
+            "at": "2026-10-15T14:28:38.845590+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-4e2dadc86a589cfc742f766d8aee6d3c9220f066c1085027e7fc9fb21e441987"
+          },
+          {
+            "at": "2026-10-15T14:28:39.579383+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-f1cbef393289f4d6b737d4660befe656f57489c9ab70669b7c9b574e7d74645f"
+          },
+          {
+            "at": "2026-10-15T14:28:40.622818+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-e0d7bcc9fb8e9fb6c18cae4140b57d92dd628cf0013aeeba4ee1db7c82c013ea"
+          },
+          {
+            "at": "2026-10-15T14:28:41.510389+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-b545417dcaee888bd0f97226d2a9e4f48eb3e72c49dfa48b9434583f29cd8d1c"
+          },
+          {
+            "at": "2026-10-15T14:28:42.385615+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-b8604adfbe8ed436a569b06bec93e3c7a36daf948f6842de9496cc071a557814"
+          },
+          {
+            "at": "2026-10-15T14:28:43.392417+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-715afb70593453f6b604d3cf8f20336f97a84499810b9a56028e7ce756859298"
+          },
+          {
+            "at": "2026-10-15T14:28:44.270613+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-3ae6c9b364db9a1ad98d9bf20bf13da0d55c5906fb347953c092c0dff1c8f71d"
+          },
+          {
+            "at": "2026-10-15T14:28:45.138190+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-67abef5597df828d950868f36776cdfad9e35e1cf7e4017aacc8bd78b553b605"
+          },
+          {
+            "at": "2026-10-15T14:28:55.740489+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-68da8b7455cf8ec73ee83b03c14072802264c8694650d053e1c3ad61a0fa7847"
+          },
+          {
+            "at": "2026-10-15T14:28:56.501084+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-d8f31eff5b952de9aa385b5cb1ff4bd345838f7ef025f62bad89c0c19021d3ba"
+          },
+          {
+            "at": "2026-10-15T14:29:07.474792+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-1c3781acdfad6e6f505008c2379e509451f524ca41b745b64f843d716669ad50"
+          },
+          {
+            "at": "2026-10-15T14:29:08.410619+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-309c97ed983b9f2ff77ddd7fb1f8af5a9c131aee0725e0a980cc014f5ed9a469"
+          },
+          {
+            "at": "2026-10-15T14:29:09.090225+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-816c6f898bd739210c928fe63bfbee4242a80416fa2963c9a885b14a529d0d59"
+          },
+          {
+            "at": "2026-10-15T14:29:09.879306+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-6d1f9b29aee70a7ebd0bc7a4dcb004bd038fcc4435e2372de03bb0f5f69fe4c1"
+          },
+          {
+            "at": "2026-10-15T14:29:10.716243+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-aa64b3e5167ff80e0f137e5bab36ef62fdc5b5078fcc5eebd0e1c148c6d22cbc"
+          },
+          {
+            "at": "2026-10-15T14:29:11.487990+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-4616602a0d3f19fdf7f670d5faafea6f64403b16f9d6122ab3665cb8f60c7b48"
+          },
+          {
+            "at": "2026-10-15T14:29:12.187722+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-3e9cec60d8cd8e2d74638aca6418f27176bc917d3237927a9de32de705ca24bd"
+          },
+          {
+            "at": "2026-10-15T14:29:12.918859+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-75ef2799a45451c57e558ed87cfb0bd5d26c222a33f4cd66bf740e026b7511a2"
+          },
+          {
+            "at": "2026-10-15T14:29:13.640690+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-dcb40a2d70f5812409f8118719ae5dbefca734c1931d1083a1134e0be47f9fd1"
+          },
+          {
+            "at": "2026-10-15T14:29:14.346086+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-455dd7154dc9ef8db2626fb7c25a9a72dee669b939f8100da8ac327ebc138feb"
+          },
+          {
+            "at": "2026-10-15T14:29:15.667810+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-82f22cb0b2e7f09f738c99d3b55ddc25b31469df83e01d16e8acdf48550cfa70"
+          },
+          {
+            "at": "2026-10-15T14:29:16.411538+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-956becc1814cb44fae17c711d18462ca21f93c54de03e1eef349a7f95d06119d"
+          },
+          {
+            "at": "2026-10-15T14:29:17.094267+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-1f57833c39f3bf2bfad7309ea93f81f08b783fa44bee7483d5f68d703778458c"
+          },
+          {
+            "at": "2026-10-15T14:29:17.791637+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-53c5fbc28b1595366d04f82b54cb2e1c9b81092e04c41a4aabc5b5da3bc86581"
+          },
+          {
+            "at": "2026-10-15T14:29:18.462845+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-c72e64c81be0e68dafd7087bea2b1232dac8c6065ab9bb9d3c509c8a39321da1"
+          },
+          {
+            "at": "2026-10-15T14:29:19.297520+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-da99d4f8828e10c205208c050d2aa4900e75180e8cad894d535884ee80ed2765"
+          },
+          {
+            "at": "2026-10-15T14:29:30.256765+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-81dcb4f9d9d13103d3c0c1097cb9ed5653d12ed84e0c19c146b1f869906ceb29"
+          },
+          {
+            "at": "2026-10-15T14:29:30.991314+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-e1a64043d5fc754ed8bd732d201d3c20b8c866dfe6571b513ece6c049715da70"
+          },
+          {
+            "at": "2026-10-15T14:29:31.804941+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-789509c5aeb3dd09ba039523d14505a14fc65c977e92cc5f2c55551c5e2779d1"
+          },
+          {
+            "at": "2026-10-15T14:29:42.728945+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-38514f3c4d4601dac6dee7ab1586642c3cd16954a58b960c20ec5258f3f1ced5"
+          },
+          {
+            "at": "2026-10-15T14:29:43.402458+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-9addaeb31e69d9e83a5057c175d0d30ccd58c18b1bd3e27b8393c0c23ddab431"
+          },
+          {
+            "at": "2026-10-15T14:29:44.070368+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-cb96d0fc3c01196fc09ee99bdba0983463a43bc59924e0da4e859a259650574c"
+          },
+          {
+            "at": "2026-10-15T14:29:44.773226+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-7555e0399cda1782880f67612b60bcfdf6f4d207740798a7a86fb24a1be2a0cc"
+          },
+          {
+            "at": "2026-10-15T14:29:45.481865+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-a4eb7d03b483473613b31e2b9ba7d969081d68b834ce6ae4f8ab69f414cf4f82"
+          },
+          {
+            "at": "2026-10-15T14:29:46.208492+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-c813e807c4e9ae0ec7257a725a80f4091b72a3aa2168caeee6e987749c0fae0d"
+          },
+          {
+            "at": "2026-10-15T14:29:46.936266+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-105f86cdcd00aedc6f8645acbc653a03a42c596d90b5c1d8f0423904596eef01"
+          },
+          {
+            "at": "2026-10-15T14:29:47.627387+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-fe250d80a732107b0dcc787a08d291951884ffa17c8ad26300f324f71724fef8"
+          },
+          {
+            "at": "2026-10-15T14:29:48.292299+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-2a8d769558fe07332e243a58beb404eb4f2e49f9869ae2ea84a19e02dc5338dd"
+          },
+          {
+            "at": "2026-10-15T14:29:48.984871+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-5486cd5248a7ff13d6ab844b63d1de898076cdbda4d0839d84c19fa7800b7eae"
+          },
+          {
+            "at": "2026-10-15T14:29:49.671626+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-ce8dcac655a053af240ed638e03f9acf9149e2d80e0f498f95c67bf996885df9"
+          },
+          {
+            "at": "2026-10-15T14:29:50.358175+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-7d835e9cacb239020d7c82420d063e7a66bb9c308b7b0d4766ebee082e0a1d69"
+          },
+          {
+            "at": "2026-10-15T14:29:51.084856+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-8a13108e4fcebdaa004d7be2e5805ddf1cecfd0954417e3db75b1f10b0aeb153"
+          },
+          {
+            "at": "2026-10-15T14:29:51.826224+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-6668b2d09af03f2fc511c18a4799cb78a1400da5544ca847847a76432b63cc44"
+          },
+          {
+            "at": "2026-10-15T14:29:52.518723+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-4ddffa44ab06170984342dc2d35e3ae27149da58b2684d001c8f95f433e0d01f"
+          },
+          {
+            "at": "2026-10-15T14:30:03.549398+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-c27a05c468ada61352a092aa242352294a697ac4594f1dda37694c3396090b89"
+          },
+          {
+            "at": "2026-10-15T14:30:14.182429+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-3d3007ae1ffb51faa9100afd48a3e621aa1256d3e760d7d761eff11a3ce4b658"
+          },
+          {
+            "at": "2026-10-15T14:30:14.847593+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-c8f00342b1916f2d1e38c5a2c426c0c988557532fcc9c5af50b462c91c84e23d"
+          },
+          {
+            "at": "2026-10-15T14:30:15.510584+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-2a644cdb62bd27102a43e59f8843505ec9904b032fd15b8eaefb0b11fbab5dbe"
+          },
+          {
+            "at": "2026-10-15T14:30:16.307438+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-ac0be4088b176042a896d9f9130937ce4a0073b7866ba0b6e657da3c4d3a3018"
+          },
+          {
+            "at": "2026-10-15T14:30:16.990512+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-54deb1b521afc0570200918453a865c93e4122e51c830d3df4c71d9cf95f9293"
+          },
+          {
+            "at": "2026-10-15T14:30:17.654742+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-fdd930e8143ab6cc04c67b0768993a1c1dbd583d8b29471e83b37dc2cfc113f8"
+          },
+          {
+            "at": "2026-10-15T14:30:18.336392+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-12069dd2e3eff244a35c06d99ce638216a672dcf925171769107269520d665eb"
+          },
+          {
+            "at": "2026-10-15T14:30:19.637627+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-38e53b96b8893182ecc8d1b9aeda800186d356e83843d4c2c0640f995fbfed2f"
+          },
+          {
+            "at": "2026-10-15T14:30:20.310440+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-9cf9e01b84f4b84d80fc4cf03030dd389a55ed9de0d5b60d89225ab656678d40"
+          },
+          {
+            "at": "2026-10-15T14:30:20.978596+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-ef59333d469dfc8ac1c41ab5e110c8d99c0ac23a55620da116ae0280ea99505b"
+          },
+          {
+            "at": "2026-10-15T14:30:21.660919+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-97bc3f26d6ab84351ccdbec2ce7550a8e90888fcc575583a2ddf120a4b84b478"
+          },
+          {
+            "at": "2026-10-15T14:30:22.406301+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-220efb83be908762e0506296be24151df3d686e0cb54b379aa47eef8a87ec43f"
+          },
+          {
+            "at": "2026-10-15T14:30:23.087530+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-bef75b20875c796569b4497466d2a04a075fd893df797678862945adbbd14706"
+          },
+          {
+            "at": "2026-10-15T14:30:23.850816+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-52864dffdfd1826d1c25ba436849c632ac5ffe69e5980576d8e0c6f51b68339c"
+          },
+          {
+            "at": "2026-10-15T14:30:24.541345+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-d656d9280a01f3a6b20eead87e3236d5375dd873331d2a6de4d1c80842b463b7"
+          },
+          {
+            "at": "2026-10-15T14:30:25.214588+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-af999461b6957a85cb5d35c9726036fa16ee248314b6ddbe802083ecc68fe9b4"
+          },
+          {
+            "at": "2026-10-15T14:30:25.903209+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-95a6a757eeb6126f64b7e5b35d703b7aedfaef6b6bbfbf76b4290326e00c7771"
+          },
+          {
+            "at": "2026-10-15T14:30:29.301400+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-bc493eb11ffb863c5da573010a2641d009dd808f410ead1968a5d611fe45f38c"
+          },
+          {
+            "at": "2026-10-15T14:30:30.562694+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-2a8e563e5654cc3bff701e2cec344dcddccf4435d8f0de1f1fabe04bb0da5a65"
+          },
+          {
+            "at": "2026-10-15T14:30:34.560513+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-7ca6e46fe8a9f785dcbb04f620489a841fb8d7faa62bb9b62eed9abacc3cbd41"
+          },
+          {
+            "at": "2026-10-15T14:30:35.534839+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-7b3f7e4b99f61a7cc7433cd2da50dd2d18f2da05eea2e3d8be02efade0f176f4"
+          },
+          {
+            "at": "2026-10-15T14:30:36.320868+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-7dfce55f3d4fde12dcddded70f8a23263aec8d66c4c586b50f71b99462c128d3"
+          },
+          {
+            "at": "2026-10-15T14:30:37.045104+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-e35f1cc43c1dafe144e3e8cd7afdf4e681a4e30bf043c7bc8d56df0453e0e6d0"
+          },
+          {
+            "at": "2026-10-15T14:30:40.229659+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-97b364fc1544ed0b98fd355cbf2320f78f7de6778114d83f4f7755569681f5fc"
+          },
+          {
+            "at": "2026-10-15T14:30:43.608800+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-647bb6939eaec90f607fb0dae8488c8f05415380c99935e2ae58e555321d0771"
+          },
+          {
+            "at": "2026-10-15T14:30:44.659992+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-5499581a9339a8619342c9566d9ef8562766de24e5479cdcd64aaf0fac73ac64"
+          },
+          {
+            "at": "2026-10-15T14:30:45.575591+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-874c14204c3eaaf48aa6bef13ede35e444e4c52b22813a73e73a3195c285f611"
+          },
+          {
+            "at": "2026-10-15T14:30:48.538211+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-461a587cb2277fe74e8e0cef00fccff4aa919854a7db36447e5c642fd368bcac"
+          },
+          {
+            "at": "2026-10-15T14:30:49.447401+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-c1a727570a1445ea28da687156585d83b22b1213a388b4bbbbd568026522bf21"
+          },
+          {
+            "at": "2026-10-15T14:30:51.128833+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-ab0eaac4b3d2f1f745318647000a3921d8fd48f69ab9d734b9870635f8f88aba"
+          },
+          {
+            "at": "2026-10-15T14:30:52.087660+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-41dc6b51ce018516b8f9cda7678702605416e47e10a11aa44413cdd5bab95181"
+          },
+          {
+            "at": "2026-10-15T14:30:53.073150+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-8e17a4d1633f7799e0f19a16bb3c2ea457e53a42f52938f6c9750cb5131b0b4c"
+          },
+          {
+            "at": "2026-10-15T14:30:53.984637+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-9129a336918786b2c6f0ddfa5c0c7ba9ba4cea4b06f921967384de562d2c4538"
+          },
+          {
+            "at": "2026-10-15T14:30:54.948316+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-d40d466b1b0958fd1b1f3d6e38fc9bc26233eedc55dc7b018e073eb9da596b19"
+          },
+          {
+            "at": "2026-10-15T14:30:55.798581+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-e32ec32515c3c0cb76b8348426f37977a82a326ba0820ebe0d0d59b68781521b"
+          },
+          {
+            "at": "2026-10-15T14:30:56.635180+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-d960dbc0293050d8c097c76944ee1e5fed0c17fe6eca141dc2db8d262d900f47"
+          },
+          {
+            "at": "2026-10-15T14:30:57.617279+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-f04ca69f00fe68464acd5cd2bd9d0822a53f4e900285f331fec84f38d475c2a2"
+          },
+          {
+            "at": "2026-10-15T14:30:58.574376+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-220d5e94fc1e2cd985dcb7723ff38742d5f006cca07b45010f7f1b291a429f5f"
+          },
+          {
+            "at": "2026-10-15T14:30:59.368027+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-91950bec76c4cfbeddb796df2724346ed2618876299bbf68408d4f6fab85b918"
+          },
+          {
+            "at": "2026-10-15T14:31:01.176142+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-a844431de585ccd9927be45c3afb1f8cfba4b6f91b3d7e989ac3481c9c4d0d9d"
+          },
+          {
+            "at": "2026-10-15T14:31:02.105840+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-3a524d967953ceb9a04048b5cb9aa42dee9adf2ce107bb975624e1e664905705"
+          },
+          {
+            "at": "2026-10-15T14:31:02.921326+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-c6fad0660887d12b91eddc2977ff09113b7887f4dbb1a3f16e1940e2b5ad5c9e"
+          },
+          {
+            "at": "2026-10-15T14:31:04.168609+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-bd3ed70fcd26a20d707940637f82a716fb0444f53c7c4bea9a2652154d408bdd"
+          },
+          {
+            "at": "2026-10-15T14:31:05.022633+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-45b2b9a2e5dd9ce4ff26c77dfba7c44c2759bfed69bffa321888c49615094d0d"
+          },
+          {
+            "at": "2026-10-15T14:31:05.870888+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-adedd2138c47ff3390ef8160a47d134719be69b109c9d5217589ce5f3decc8f9"
+          },
+          {
+            "at": "2026-10-15T14:31:07.341419+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-ca388ed5496176b00df740cd6e12a66ffb296ebeda11a1d4ef2716eab4903829"
+          },
+          {
+            "at": "2026-10-15T14:31:10.231105+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-90567d6b0c4015badfb0a3b464c5529e501bb31f89905cd42a662e6466d9b6a3"
+          },
+          {
+            "at": "2026-10-15T14:31:11.192312+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-8934a03424da8d31027aa85769dea76fa21910cff91b9293a3ef5bb9dbae0c5b"
+          },
+          {
+            "at": "2026-10-15T14:31:14.420605+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-97ed45b828318d7d6395378cb9efa211996468ab111d9f033dd4ee0365356375"
+          },
+          {
+            "at": "2026-10-15T14:31:15.232901+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-b80dddae19ccfcc6037a38e9f527abb045b17ee297e1a866c0c454b682668333"
+          },
+          {
+            "at": "2026-10-15T14:31:18.111283+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-1e196f279752a56926fa589db241507e5ebd021cc26912d0f37fa08b2c143db3"
+          },
+          {
+            "at": "2026-10-15T14:31:18.842180+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-3bdedacf2ab4037e474d19b623d0470475ee9254c37c3b7a87f9aace8554c2bc"
+          },
+          {
+            "at": "2026-10-15T14:31:19.573969+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-f8d871dadf6b30c83cc8e18ba19e23ade35aec19eb31d7ecdcab5a946967d81d"
+          },
+          {
+            "at": "2026-10-15T14:31:20.384761+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-498802d18ef1e7ab1c9599165de6764859a1624a9b557ee2cf2035cde25c7f4d"
+          },
+          {
+            "at": "2026-10-15T14:31:21.188245+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-5f79661ace2ee943e43c93a4e6ffbc1f8cb15393c5f7952faab2e3fa75697188"
+          },
+          {
+            "at": "2026-10-15T14:31:22.373488+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-bbbed5fc66e04400b016ed0232f9e994ecca60d39b8a436852051f34613b3757"
+          },
+          {
+            "at": "2026-10-15T14:31:23.298139+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-9e6654f5900b8d2e9aaa70641e27ff3b08581768269f09b572d0fbbf19913fb6"
+          },
+          {
+            "at": "2026-10-15T14:31:24.167788+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-50538b97a261995f0d8f1303b035f68f72685926b1891dcca7f6efc80ab87a8e"
+          },
+          {
+            "at": "2026-10-15T14:31:25.027134+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-f0b61bba050358c7e1b3df11f17fce16bbe14473c1223bae94025a43760c7509"
+          },
+          {
+            "at": "2026-10-15T14:31:25.855824+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-8683114941cf0a775c36adea6e12b23622f579423fe372e4c1788a8ee3fc208a"
+          },
+          {
+            "at": "2026-10-15T14:31:26.644008+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-acd223a66f6c27efcf34c41db6003dfc929ac2570ca3e6e08da6fe24bde9dd37"
+          },
+          {
+            "at": "2026-10-15T14:31:27.446848+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-b07755b6bec74db8eb9f70f248d86e4307501da4d36c538f26df7db9cb2cb871"
+          },
+          {
+            "at": "2026-10-15T14:31:28.329024+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-14caf7d1c290c3031cf2e98524d3fe47831f3c23e74b4588822ecc20f71b2699"
+          },
+          {
+            "at": "2026-10-15T14:31:29.043129+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-73cb77610c916f7fd0d4c563611cc6322e59d850d712a90f4bf6d3d3381061a9"
+          },
+          {
+            "at": "2026-10-15T14:31:29.817873+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-446d5cc41414058d91b55e74c237f2f211c0436d76405a5b47d8194671528203"
+          },
+          {
+            "at": "2026-10-15T14:31:30.716590+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-28ebe7e2af5fa8153ae6cda70db4bb21f90e6941a5ddb1ee8761bc5364de3768"
+          },
+          {
+            "at": "2026-10-15T14:31:31.534184+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-db95da45d15ce27f7dc53479d5d08f4644d092463e9b7584812c7ce1aca1500f"
+          },
+          {
+            "at": "2026-10-15T14:31:32.278896+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-be31e120898cbd0f20b44ca7eb4a8f0284cf8175d9f7be9893f95195b1bb9f93"
+          },
+          {
+            "at": "2026-10-15T14:31:33.465602+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-0a8d725f68bbeb092276f01bbaed8c3a996d5022e4fd455cd09f3b1fdd29a030"
+          },
+          {
+            "at": "2026-10-15T14:31:34.800994+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-d19a462f7f0809fdf8f82c28a9d94f7c8608ed9898de23de314cfcd936fec559"
+          },
+          {
+            "at": "2026-10-15T14:31:35.679820+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-0eb63f266cecfeed3b5f47629cc56606f73fe1a647a4a76189cb3cab08ac39dd"
+          },
+          {
+            "at": "2026-10-15T14:31:37.231941+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-9341b166de76eab07737323aeaa7beb176b793a27b0ab323db468c8e6ee53e9c"
+          },
+          {
+            "at": "2026-10-15T14:31:38.520922+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-8ec641eb5960004369d517ad392aa21d11d92b26b68533abf9b42697a139578b"
+          },
+          {
+            "at": "2026-10-15T14:31:39.454717+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-aed768cd64e89fbd8be9a3409454fa4bac411854dbf5371eff3aa54f80366698"
+          },
+          {
+            "at": "2026-10-15T14:31:47.689564+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-abdc382ce16a3b86f0abb329709f309b6ac0292e26d3737db229aeb7e8d73c7c"
+          },
+          {
+            "at": "2026-10-15T14:31:50.883139+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-e7243c682724289db6f3a77c1924ad01195e3ca7ceb74cce56bf2816ad9e82e0"
+          },
+          {
+            "at": "2026-10-15T14:31:53.951024+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-385117c41ded4575626e118441cf4b8033191cec9a131464823feb60e09c9056"
+          },
+          {
+            "at": "2026-10-15T14:31:54.862392+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-7f047d2b5119536a4e26b1f11129970be37eca21f91c5e09e7f13bbdfbc499a3"
+          },
+          {
+            "at": "2026-10-15T14:31:55.631112+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-a26f134b4a7c3ffc2c150346cb5a9c89ec44df94edd45147dedbe4b50524d2b4"
+          },
+          {
+            "at": "2026-10-15T14:31:56.386519+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-ba3dc7f3eba4ec1d72a905808f16a9a326b19d94fdb6e9a9a343ffe66da4f660"
+          },
+          {
+            "at": "2026-10-15T14:31:59.224940+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-f919e9e130452ac169a3e72379b2f1c1e9b1711dd3c65cfabd72b20b45db7ff0"
+          },
+          {
+            "at": "2026-10-15T14:31:59.941557+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-274a0430bb35d615dc7031d634844f91ba5d6526104d816887e72006ffc7710c"
+          },
+          {
+            "at": "2026-10-15T14:32:00.665387+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-8396d217d36b231ca5cc2303cd72e3e8eecf98ca3487375e7247fff5df541daa"
+          },
+          {
+            "at": "2026-10-15T14:32:01.518738+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-d04b76c8ced66904a3f34e61bb06efda4d087608786008153388cb36e8148109"
+          },
+          {
+            "at": "2026-10-15T14:32:02.422998+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-88ac7a40a05099ff9bdc26fb5968606b9f068120407a3291763394d1b6943119"
+          },
+          {
+            "at": "2026-10-15T14:32:03.171742+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-0069a0abef6c7309c7dd6c5d12a611b1fe9aef1f0886327a89fabb8813c41009"
+          },
+          {
+            "at": "2026-10-15T14:32:04.234840+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-f1d683f1170ab6b76ab77a6dee6c3cd427c2e07b2cb89cd7eec10073bd99ec63"
+          },
+          {
+            "at": "2026-10-15T14:32:05.181805+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-40d62e15b7b07085b2b695a1b2d3aa9f1db923892377723a784434d4fa189afd"
+          },
+          {
+            "at": "2026-10-15T14:32:06.334382+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-2fe846be119cda99b3ab7a348c2b8e2fc8932d3e81f0afa65d3a10ef1e78e656"
+          },
+          {
+            "at": "2026-10-15T14:32:07.173549+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-7361802977e50edfbc20deb1edeea440973912cf5946bf903d7d0389186d1951"
+          },
+          {
+            "at": "2026-10-15T14:32:07.964299+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-14bee140995bed20c38fa741975d4ec35e7afa2807fc8477824501f8ecbe0944"
+          },
+          {
+            "at": "2026-10-15T14:32:08.729519+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-d5159854484736e71adb3acd057c53009500248a31e2a74fd942083d4a313523"
+          },
+          {
+            "at": "2026-10-15T14:32:09.435972+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-18bd17859d3577fa199933417cab4cd324982347fed812070d5bdd7b224be842"
+          },
+          {
+            "at": "2026-10-15T14:32:10.209669+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-cf4561546413c76b9f532033d10da22eb43365ab35526bce1e2faf4620cf38bd"
+          },
+          {
+            "at": "2026-10-15T14:32:10.993291+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-b32956388652ac84ec4e8d4de1d196fc3ea98bbae22ad5f64384d6d4ed13ab13"
+          },
+          {
+            "at": "2026-10-15T14:32:11.722343+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-3ce0246465d49905c554a3775833d0b33b8429583b7dce1bb4685a26b003e512"
+          },
+          {
+            "at": "2026-10-15T14:32:12.461937+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-a5ffcd6180e333e50b8185b49017b90d6b19d573c87fab817bceb3fa5332e909"
+          },
+          {
+            "at": "2026-10-15T14:32:13.503773+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-9acbbe053c7704ecfac0c1e8b88c7c5ca644b28783c1e972f9fcd2b15d0772b7"
+          },
+          {
+            "at": "2026-10-15T14:32:14.479242+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-2e22ff7a7cb05a67d172056117bb83fe6862d3a708cf809c921bbc23117f4a6b"
+          },
+          {
+            "at": "2026-10-15T14:32:15.313952+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-13ddd28eb213e9888e618032bd1c00e5d1fc32b770fca1f6762f88dc7ed218cc"
+          },
+          {
+            "at": "2026-10-15T14:32:16.221712+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-7421203925e9eca0cb4342dbcf873bcc55d09bd62dfd8825999633a4d9340751"
+          },
+          {
+            "at": "2026-10-15T14:32:17.202227+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-188516befd00221d2be15d0af8eb30c77b0f6055434dd4d2b5b9668851e69e7d"
+          },
+          {
+            "at": "2026-10-15T14:32:18.640366+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-63774034fe297fcf72e00774f9b75df95d9c2dcecbfe2540e4271b106780f49f"
+          },
+          {
+            "at": "2026-10-15T14:32:20.332005+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-84d7a21a4d4565125fdbc156cd86ba287afe8d66034fa337a88b099d7e9467e5"
+          },
+          {
+            "at": "2026-10-15T14:32:23.391663+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-a41810cad84d6c079ac585124fb68e0da3613ea0ea81dd8352e4d050085770d1"
+          },
+          {
+            "at": "2026-10-15T14:32:24.271613+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-6107cd811bb57baf8d89155506add1d76726f9a19349ec8b6b22609575bb9080"
+          },
+          {
+            "at": "2026-10-15T14:32:27.231155+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-4847f9ea7a59fe63fa4d3fdcd6b6fe7e9cab0655c9a4bd86a859e2e237b4447e"
+          },
+          {
+            "at": "2026-10-15T14:32:27.999406+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-7f597b4602954b8fdf1ce1ed2230f5532a0bd4f3fcdfb6f2bc56ed1f52fcbd07"
+          },
+          {
+            "at": "2026-10-15T14:32:30.873976+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-82c3e2c2724e3bf08f88f941bf263da5b98941a6028be519badecc8f66bb99a6"
+          },
+          {
+            "at": "2026-10-15T14:32:31.595200+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-37ac4b37c0180f7fdb16fc0926a834100fa5add1cccd82c8aeae513e28a38b02"
+          },
+          {
+            "at": "2026-10-15T14:32:32.326868+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-23b12e3c790a0cf449b84af2f8be0fc3012edf005f31f4634f2fa791af11914a"
+          },
+          {
+            "at": "2026-10-15T14:32:33.070139+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-a0bd4cf1d63bec7ea73827de8834a9fdba8f2ebe13e37c5cfb036dd973cb4494"
+          },
+          {
+            "at": "2026-10-15T14:32:33.862869+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-9a5131df32ad61a8fa995518d074f659c43776038b09a0354150b666bb3e3742"
+          },
+          {
+            "at": "2026-10-15T14:32:34.672289+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-bcaa7baeb4479f089fcdf44751271ba522ead707c7cfa99a37ad7f2f27b56b8d"
+          },
+          {
+            "at": "2026-10-15T14:32:35.430580+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-e16c563b7bfaf6c2c11705c505d3dc36f4a825a9821a02ea6d5a0ca2e0335f12"
+          },
+          {
+            "at": "2026-10-15T14:32:36.256786+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-f2a69f743253c709981d6c14e04c5631cc42d0bb0a1df8e9dcaedeeb03aeb0b2"
+          },
+          {
+            "at": "2026-10-15T14:32:37.080083+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-b05f85a250d88b96b14334b37391fc836744f7bed9f984ae2fa36a2d8db57d0f"
+          },
+          {
+            "at": "2026-10-15T14:32:37.869737+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-f9318d2f03fe48757972ff8a30fe3ca5c573b5b535f6d530cd3edba3e0c671a6"
+          },
+          {
+            "at": "2026-10-15T14:32:38.753505+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-35fa264d670d2720ad9e3dc8fbc9830be3280dd53a81b47185ce20bce541ec06"
+          },
+          {
+            "at": "2026-10-15T14:32:39.714691+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-d0ab023d287c9bdfe76da2212ac53425c1121f86e8ef83ca38d778c3ef0ed78d"
+          },
+          {
+            "at": "2026-10-15T14:32:46.855970+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-a5e121bbee23c4d8b0548d6ec1bca609ef5ced9aaff5c0a81a9c38cabf7eeb28"
+          },
+          {
+            "at": "2026-10-15T14:32:47.578672+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-7e3b9f5020619ceed01059133de1f793225ec71a4d4db44216555a99248540c1"
+          },
+          {
+            "at": "2026-10-15T14:32:48.332979+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-c992634d666cdaedbe2eea88cc93d07321ecc68f36ba11f5de8f42af84ff22b7"
+          },
+          {
+            "at": "2026-10-15T14:32:49.048412+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-1d32f055a8af337622da2f59c346e9b9025e6d1302db500cee8eb6ba10f7a294"
+          },
+          {
+            "at": "2026-10-15T14:32:49.765892+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-5a11103c492299089cf788089675799333f6e5a5c68fa6c1146d6467f8c37ebf"
+          },
+          {
+            "at": "2026-10-15T14:32:50.479114+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-e6ed7378794d2b70661eb3399e4ec92f9723868764936e5fde7e7d2cb86fa37e"
+          },
+          {
+            "at": "2026-10-15T14:32:51.448670+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-36ee51925207796faaddfb0041b0b95e8f01a079c7a01a09956ccb9e48e64443"
+          },
+          {
+            "at": "2026-10-15T14:32:52.330299+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-2a80b7e09bbe028574316cd725c3a4d85273986fda2a9c0a18bd64f7f91f892e"
+          },
+          {
+            "at": "2026-10-15T14:32:53.131081+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-3f2cf7c32d10b8ea19af113ddb46dd674e153fec4a7bea0340beb4e049572405"
+          },
+          {
+            "at": "2026-10-15T14:32:53.986855+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-62bd8ac2417307aa12b62bfcd99458f53634bbab31d73f8d400df51ce40c1122"
+          },
+          {
+            "at": "2026-10-15T14:32:54.912628+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-ab3b9c23bc3d951a2aadd25cff71c67ad9d7b1e26344b1053e0e62b6113b81eb"
+          },
+          {
+            "at": "2026-10-15T14:32:55.784474+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-a6f86c8cceefcaac705d7de8a809ed1ffa4967b5fa7af8c9c5af8e49b134ed3e"
+          },
+          {
+            "at": "2026-10-15T14:32:56.777935+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-47647ec5ddf8618f6204699a5149f0a6228cee0c484506ef3e69b45ec4915e6e"
+          },
+          {
+            "at": "2026-10-15T14:48:13.581984+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-7c6aa65aff89f25ae86ceabfbeb447bba8a344ca7784c62e55a242cf06298aa7"
+          },
+          {
+            "at": "2026-10-15T14:53:56.635726+00:00",
+            "error": "204:CENSUS_NON200_OR_PENDING",
+            "page": 1,
+            "retry": false,
+            "task": "source-748a080225da944153b3324b437029fd6b7f34129ecdd52f9ee1ab9e6e260bd3"
+          },
+          {
+            "at": "2026-10-15T15:34:57.007676+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-3f5b7a3a746d5c14dcc2884de6e75c6f8f7283ad1b70512151309df7aabecd6a"
+          },
+          {
+            "at": "2026-10-15T15:34:57.675589+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-b82667de4678af77f6a2e391bbb3ebbdcd024027a9d4dc5138916c6f38e63e72"
+          },
+          {
+            "at": "2026-10-15T15:34:58.238651+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-2663a5a52ba91188a5903b25a2e32c81cf66ecb5748052687cf230724b5a35ec"
+          },
+          {
+            "at": "2026-10-15T15:34:58.634214+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-3d3bbc49ce112f831b33239757e0efdaf09c4693da423ffea878a6d97675c719"
+          },
+          {
+            "at": "2026-10-15T15:34:58.959543+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-482265d71fdda6dd1e50ca2208309e60a03ff7170fa30c95562a27514f4fa94c"
+          },
+          {
+            "at": "2026-10-15T15:34:59.730507+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-db745b118cddea3b8acd28dbbaa8e1c64bc1ac5fc6b043000b0b4b3e2de786ae"
+          },
+          {
+            "at": "2026-10-15T15:35:00.534285+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-22340bc23d7b9e44cc35b00c55ae0848a9e5411f84cba647f461713e1296f21d"
+          },
+          {
+            "at": "2026-10-15T15:35:00.935156+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-9883e7bd7ebfd971caf2e4806c79a6da0645ae7cb7f15982f97991a7bcd718c6"
+          },
+          {
+            "at": "2026-10-15T15:35:01.378231+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-a42403d85280a69ee93973537fe5e220b4b2e829ba51c62bd2083dd5ed4a1008"
+          },
+          {
+            "at": "2026-10-15T15:35:01.815136+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-5a4b99f3b0e92393fedc1fa368a6fa853b1d626af1a6d0a20d6c8439ada88574"
+          },
+          {
+            "at": "2026-10-15T15:35:02.130667+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-23e4f14717b6e85bd780ca6b2529d9f83ea2ee5029783b938b189bd189b1a47a"
+          },
+          {
+            "at": "2026-10-15T15:35:02.686214+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-4057fbddee9976a09bb5de166d5a42d49079f43900322c16a1cd4351fb42153a"
+          },
+          {
+            "at": "2026-10-15T15:35:03.323032+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-f101d67153370ef8cbca65007dfc4c8e53176efe27ef8e68578433a46bf51774"
+          },
+          {
+            "at": "2026-10-15T15:35:03.704571+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-c547ad1051efc8e0ec3ebe7af9122ada04b16a340ebe031162e6c72be9ece880"
+          },
+          {
+            "at": "2026-10-15T15:35:04.087585+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-165ae8285949faa0f640868f0d6bdd48511529138752845346587a45dad63563"
+          },
+          {
+            "at": "2026-10-15T15:35:04.820170+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-3ff606da4eb03bac13c6c4f22173f6faae2d19115f14245526a5330362affbbe"
+          },
+          {
+            "at": "2026-10-15T15:35:05.606174+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-c23510d156e6dde53e4e82e09c5312072047d7ec460504f0035c9c84d9df718a"
+          },
+          {
+            "at": "2026-10-15T15:35:06.328589+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-f30df6e6fb848899c39e566c44bee37c2e8fd1c15743e75395d0b9f25d7dd9bd"
+          },
+          {
+            "at": "2026-10-15T15:35:06.820096+00:00",
+            "error": "LOCAL_SEC_INDEX_ValueError:SEC_DAILY_INDEX_HEADER",
+            "page": 1,
+            "retry": false,
+            "task": "source-b899a1ed3a42db5f1f1c734c8b7431a6a56903dcada0e73f5b943cac02a62496"
+          },
+          {
+            "at": "2026-10-15T15:35:07.379383+00:00",
+            "error": "403:HTTP_ERROR",
+            "page": 1,
+            "retry": false,
+            "task": "host-www.sec.gov"
+          }
+        ],
+        "requests_including_reused_probe_receipts": 1,
+        "response_diagnostics": [],
+        "bindings": {
+          "SEC_present": true,
+          "Census_present": true,
+          "Census_40hex_format": true
+        },
+        "Q2_report": {
+          "relation_states": {
+            "added": 0,
+            "task_states": 92,
+            "automatic_promotion": false
+          },
+          "new_product_facts": 0,
+          "new_relation_facts": 0,
+          "new_process_dedup": true,
+          "CPU_current_observation": {
+            "enabled": "false",
+            "code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+            "expected_pin": "221fa92b1cbff8950716ec373eac793ca340c873",
+            "modified": false
+          },
+          "source_calls": 0,
+          "AI_calls": 0,
+          "CPU_windows": 0,
+          "qualified_capacity": 0,
+          "independent_pairs": 0,
+          "new_S2": 0,
+          "new_S3": 0
+        },
+        "Q2_product_facts": [
+          {
+            "actuality": "ACTUAL",
+            "customer": "lead silicon photonics wafer-level burn-in (WLBI) customer",
+            "id": "02bfd705fd60e65e3a5bdfcfbfa0f69f2f7268730b217da359bc3f7ac17a1fe5",
+            "kind": "ACTUAL_ORDER_QUANTITY_UNKNOWN",
+            "need_window": null,
+            "planned_delivery": "the first half of calendar 2027",
+            "product": "FOX-XP ® multi-wafer production burn-in system",
+            "qualified_capacity": null,
+            "quantity": null,
+            "references": {
+              "customer": {
+                "end": 662,
+                "start": 604,
+                "value": "lead silicon photonics wafer-level burn-in (WLBI) customer"
+              },
+              "planned_delivery": {
+                "end": 2226,
+                "start": 2195,
+                "value": "the first half of calendar 2027"
+              },
+              "product": {
+                "end": 731,
+                "start": 685,
+                "value": "FOX-XP ® multi-wafer production burn-in system"
+              },
+              "specification": {
+                "end": 1600,
+                "start": 1561,
+                "value": "nine independent WaferPak ® test blades"
+              },
+              "supplier": {
+                "end": 331,
+                "start": 314,
+                "value": "Aehr Test Systems"
+              }
+            },
+            "region": null,
+            "research_only": true,
+            "review": "ASSISTANT_EXPLICIT_SOURCE_REVIEW_NOT_HUMAN_OR_INDEPENDENT",
+            "s_stage": "UNKNOWN",
+            "source": {
+              "acquired_at": "2026-10-16T02:44:23.513255+00:00",
+              "body_sha256": "5036f98fa0739941eea01125adcf674ff35876ca08edfeb2f8c79a47e70b0556",
+              "body_status": "FULL",
+              "context_end": 2227,
+              "context_sha256": "f21e84c304b976ff3270dd8785448a39a0a9da293658e120a6fd7ad6afee36fe",
+              "context_start": 283,
+              "document_id": "q2-relation-1e11d3d65ee5b958327803699dca64af114435c5b198727f8a8676ebf27b7ad3",
+              "origin_publisher": "Aehr Test Systems",
+              "origin_url": "https://www.aehr.com/2026/08/aehr-test-systems-expands-silicon-photonics-production-momentum-with-follow-on-production-order-from-lead-customer/",
+              "provenance": "PASS",
+              "published_at": "2026-08-04T11:29:26+00:00",
+              "raw_sha256": "58b231f869562adced3ff6bea6b991782501288a5d085d5694d00138ea8d1c9a"
+            },
+            "specification": "nine independent WaferPak ® test blades",
+            "supplier": "Aehr Test Systems",
+            "unit": null
+          },
+          {
+            "actuality": "ACTUAL",
+            "customer": "lead hyperscale customer",
+            "id": "1b1c7484eba9d8f99042bbd69bbd8e90b7064169391a51a1718ca40cea9f6de5",
+            "kind": "ACTUAL_ORDER_QUANTITY_UNKNOWN",
+            "need_window": null,
+            "planned_delivery": "next six months",
+            "product": "Sonoma™ high-power package-level test and burn-in systems",
+            "qualified_capacity": null,
+            "quantity": null,
+            "references": {
+              "customer": {
+                "end": 747,
+                "start": 723,
+                "value": "lead hyperscale customer"
+              },
+              "planned_delivery": {
+                "end": 1275,
+                "start": 1260,
+                "value": "next six months"
+              },
+              "product": {
+                "end": 957,
+                "start": 900,
+                "value": "Sonoma™ high-power package-level test and burn-in systems"
+              },
+              "region": {
+                "end": 1208,
+                "start": 1202,
+                "value": "Taiwan"
+              },
+              "specification": {
+                "end": 932,
+                "start": 908,
+                "value": "high-power package-level"
+              },
+              "supplier": {
+                "end": 439,
+                "start": 422,
+                "value": "Aehr Test Systems"
+              }
+            },
+            "region": "Taiwan",
+            "research_only": true,
+            "review": "ASSISTANT_EXPLICIT_SOURCE_REVIEW_NOT_HUMAN_OR_INDEPENDENT",
+            "s_stage": "UNKNOWN",
+            "source": {
+              "acquired_at": "2026-10-16T02:44:20.431812+00:00",
+              "body_sha256": "8cc6abf83688811c734ade1ed16f8764e5228006257d93db3f43d714757a1690",
+              "body_status": "FULL",
+              "context_end": 1276,
+              "context_sha256": "37745edac38202b62153b20a8250a93f27a7d1d84335a7c099958e56697c5d2b",
+              "context_start": 390,
+              "document_id": "q2-relation-b45452d19b024f469c70c5df6ca5d6c8edc2c4823bfe2228ce90955805904e3a",
+              "origin_publisher": "Aehr Test Systems",
+              "origin_url": "https://www.aehr.com/2026/10/aehr-receives-follow-on-sonoma-production-orders-for-lead-hyperscale-customer-s-next-generation-ai-processor/",
+              "provenance": "PASS",
+              "published_at": "2026-10-07T11:30:24+00:00",
+              "raw_sha256": "d50a9faf83d7a96e24b4ec72d788b4a50a69aae81b5aaf4fd8d43033e9639962"
+            },
+            "specification": "high-power package-level",
+            "supplier": "Aehr Test Systems",
+            "unit": null
+          },
+          {
+            "actuality": "ACTUAL",
+            "customer": "lead AI processor customer",
+            "id": "2605447afb5acf4dae3d558656a600e9ce8c2f888975c315293f8624b6d5b410",
+            "kind": "ACTUAL_ORDER_QUANTITY_UNKNOWN",
+            "need_window": null,
+            "planned_delivery": "within the next six months",
+            "product": "FOX-XP wafer-level test and burn-in systems",
+            "qualified_capacity": null,
+            "quantity": null,
+            "references": {
+              "customer": {
+                "end": 642,
+                "start": 616,
+                "value": "lead AI processor customer"
+              },
+              "planned_delivery": {
+                "end": 1255,
+                "start": 1229,
+                "value": "within the next six months"
+              },
+              "product": {
+                "end": 916,
+                "start": 873,
+                "value": "FOX-XP wafer-level test and burn-in systems"
+              },
+              "specification": {
+                "end": 971,
+                "start": 942,
+                "value": "nine 300mm wafers in parallel"
+              },
+              "supplier": {
+                "end": 371,
+                "start": 354,
+                "value": "Aehr Test Systems"
+              }
+            },
+            "region": null,
+            "research_only": true,
+            "review": "ASSISTANT_EXPLICIT_SOURCE_REVIEW_NOT_HUMAN_OR_INDEPENDENT",
+            "s_stage": "UNKNOWN",
+            "source": {
+              "acquired_at": "2026-10-16T02:50:21.602521+00:00",
+              "body_sha256": "d930a8dbad4333e2777988b242bb70f25023c1ccd1f9b896e8fb4a3cb7aef917",
+              "body_status": "FULL",
+              "context_end": 1256,
+              "context_sha256": "9658a69f50dd1a5a12e6c47958e03a94713edfbf2b9f2e3c5857e2157caf643b",
+              "context_start": 320,
+              "document_id": "q2-relation-1fd748c59d27eb1b746ee1f7f024e9b9cbca2606e0ec415dcd98ebf493f9ec52",
+              "origin_publisher": "Aehr Test Systems",
+              "origin_url": "https://www.aehr.com/2026/02/aehr-receives-14-million-order-from-lead-ai-processor-customer-for-multiple-new-fully-automated-fox-xp-wafer-level-burn-in-systems/",
+              "provenance": "PASS",
+              "published_at": "2026-02-26T12:30:17+00:00",
+              "raw_sha256": "d37425243a85fef1b3f8c62513298646e986b7611d0e96e2a7ddcf6f202421ed"
+            },
+            "specification": "nine 300mm wafers in parallel",
+            "supplier": "Aehr Test Systems",
+            "unit": null
+          },
+          {
+            "actuality": "ACTUAL",
+            "customer": "FLYONE Armenia",
+            "id": "3d12f2ecf09eddc60cd6f3d998fd0a1224a6ed30a59f980c5c8305a392a3a4df",
+            "kind": "ACTUAL_ORDER",
+            "need_window": null,
+            "planned_delivery": null,
+            "product": "A321neo",
+            "qualified_capacity": null,
+            "quantity": "2",
+            "references": {
+              "customer": {
+                "end": 52,
+                "start": 38,
+                "value": "FLYONE Armenia"
+              },
+              "product": {
+                "end": 154,
+                "start": 147,
+                "value": "A321neo"
+              },
+              "quantity": {
+                "end": 146,
+                "start": 143,
+                "value": "two"
+              },
+              "specification": {
+                "end": 154,
+                "start": 147,
+                "value": "A321neo"
+              },
+              "supplier": {
+                "end": 119,
+                "start": 113,
+                "value": "Airbus"
+              }
+            },
+            "region": null,
+            "research_only": true,
+            "review": "ASSISTANT_EXPLICIT_SOURCE_REVIEW_NOT_HUMAN_OR_INDEPENDENT",
+            "s_stage": "UNKNOWN",
+            "source": {
+              "acquired_at": "2026-10-15T15:22:22.636152+00:00",
+              "body_sha256": "fcbffb1b3d2726e021ba962994238614c54e9de9140a7717ef7ba797a90a9d97",
+              "body_status": "FULL",
+              "context_end": 164,
+              "context_sha256": "a6730e112896d52d3cfeb0587d9f9ee7cfe174b39423f25f57a4767407ba8b4e",
+              "context_start": 0,
+              "document_id": "q2-recovered-a71abae5def5e34ca67681b40e20c34a51551452802224f7841e802f6264e398",
+              "origin_publisher": "Airbus",
+              "origin_url": "https://www.airbus.com/en/newsroom/press-releases/2026-09-flyone-armenia-orders-two-airbus-a321neo",
+              "provenance": "PASS",
+              "published_at": "2026-09-30",
+              "raw_sha256": "f97d8a5246a495eb1db6483a357d72d8c8edd037f4aa02276c8ac0e7878e02e0"
+            },
+            "specification": "A321neo",
+            "supplier": "Airbus",
+            "unit": "aircraft"
+          },
+          {
+            "actuality": "ACTUAL",
+            "customer": "government of Romania",
+            "id": "48e2e3cc906c0ec567f90e96daaffdf41d49a30fffbe356466b171325ce26327",
+            "kind": "ACTUAL_ORDER",
+            "need_window": null,
+            "planned_delivery": null,
+            "product": "H225M",
+            "qualified_capacity": null,
+            "quantity": "12",
+            "references": {
+              "customer": {
+                "end": 61,
+                "start": 40,
+                "value": "government of Romania"
+              },
+              "product": {
+                "end": 122,
+                "start": 117,
+                "value": "H225M"
+              },
+              "quantity": {
+                "end": 109,
+                "start": 107,
+                "value": "12"
+              },
+              "specification": {
+                "end": 122,
+                "start": 117,
+                "value": "H225M"
+              },
+              "supplier": {
+                "end": 116,
+                "start": 110,
+                "value": "Airbus"
+              }
+            },
+            "region": null,
+            "research_only": true,
+            "review": "ASSISTANT_EXPLICIT_SOURCE_REVIEW_NOT_HUMAN_OR_INDEPENDENT",
+            "s_stage": "UNKNOWN",
+            "source": {
+              "acquired_at": "2026-10-15T15:22:22.484801+00:00",
+              "body_sha256": "067bb06d07a1c9814f235d1d8da890b4838518e55cb5bc4309a45b626f94cdd1",
+              "body_status": "FULL",
+              "context_end": 135,
+              "context_sha256": "2ca8e905a42e458f0e7bff1f5d1e6d3eee2196be552ceae22d206fbd8028a0bb",
+              "context_start": 0,
+              "document_id": "q2-recovered-ea238f7cf53989ed7ddeffb103e8d499c7c2cf29eed8b3175d9c1fdbbf05577e",
+              "origin_publisher": "Airbus",
+              "origin_url": "https://www.airbus.com/en/newsroom/press-releases/2026-10-romania-orders-12-airbus-h225m-multirole-military-helicopters",
+              "provenance": "PASS",
+              "published_at": "2026-10-08",
+              "raw_sha256": "f130e8cd725ab961eb8c54c24ef0cf2270bdeed6ab03df32f22287584c87690b"
+            },
+            "specification": "H225M",
+            "supplier": "Airbus",
+            "unit": "helicopters"
+          },
+          {
+            "actuality": "PLAN",
+            "customer": null,
+            "id": "57dcf57f93a2d13d6726830ab500f9f8be0de49d9e0afbea4abe1252002c2989",
+            "kind": "EXPECTED_DELIVERY",
+            "need_window": null,
+            "planned_delivery": "first half of calendar 2027",
+            "product": "FOX-XP ® multi-wafer production burn-in system",
+            "qualified_capacity": null,
+            "quantity": null,
+            "references": {
+              "planned_delivery": {
+                "end": 2226,
+                "start": 2199,
+                "value": "first half of calendar 2027"
+              },
+              "product": {
+                "end": 731,
+                "start": 685,
+                "value": "FOX-XP ® multi-wafer production burn-in system"
+              },
+              "supplier": {
+                "end": 331,
+                "start": 314,
+                "value": "Aehr Test Systems"
+              }
+            },
+            "region": null,
+            "research_only": true,
+            "review": "ASSISTANT_EXPLICIT_SOURCE_REVIEW_NOT_HUMAN_OR_INDEPENDENT",
+            "s_stage": "UNKNOWN",
+            "source": {
+              "acquired_at": "2026-10-14T01:49:18.633338+00:00",
+              "body_sha256": "5036f98fa0739941eea01125adcf674ff35876ca08edfeb2f8c79a47e70b0556",
+              "body_status": "FULL",
+              "context_end": 2227,
+              "context_sha256": "f21e84c304b976ff3270dd8785448a39a0a9da293658e120a6fd7ad6afee36fe",
+              "context_start": 283,
+              "document_id": "stage4doc-940490f1114e70420b1fcfe9118370b459dd1cec0cfc3cd701f7e85c17f1184b",
+              "origin_publisher": "Aehr Test Systems",
+              "origin_url": "https://www.aehr.com/2026/08/aehr-test-systems-expands-silicon-photonics-production-momentum-with-follow-on-production-order-from-lead-customer/",
+              "provenance": "PASS",
+              "published_at": "2026-08-04",
+              "raw_sha256": "58b231f869562adced3ff6bea6b991782501288a5d085d5694d00138ea8d1c9a"
+            },
+            "specification": null,
+            "supplier": "Aehr Test Systems",
+            "unit": null
+          },
+          {
+            "actuality": "ACTUAL",
+            "customer": "lead wafer-level AI processor customer",
+            "id": "da2ce44e93faf3b91a31205c19158a701ea19ed1f699d2e34ec9dac6355b262e",
+            "kind": "ACTUAL_ORDER_QUANTITY_UNKNOWN",
+            "need_window": null,
+            "planned_delivery": "over the next six months",
+            "product": "FOX-XP™ WLBI systems",
+            "qualified_capacity": null,
+            "quantity": null,
+            "references": {
+              "customer": {
+                "end": 750,
+                "start": 712,
+                "value": "lead wafer-level AI processor customer"
+              },
+              "planned_delivery": {
+                "end": 1284,
+                "start": 1260,
+                "value": "over the next six months"
+              },
+              "product": {
+                "end": 1024,
+                "start": 1004,
+                "value": "FOX-XP™ WLBI systems"
+              },
+              "supplier": {
+                "end": 443,
+                "start": 426,
+                "value": "Aehr Test Systems"
+              }
+            },
+            "region": null,
+            "research_only": true,
+            "review": "ASSISTANT_EXPLICIT_SOURCE_REVIEW_NOT_HUMAN_OR_INDEPENDENT",
+            "s_stage": "UNKNOWN",
+            "source": {
+              "acquired_at": "2026-10-14T01:49:21.105134+00:00",
+              "body_sha256": "54811824263eeaeb5cee2ce87ae993f689785572ce1c03f730d2a87265e4e2f5",
+              "body_status": "FULL",
+              "context_end": 1364,
+              "context_sha256": "5acc3611610d2f0285f6634cb571d0d9d2b8b839011770aedc22a0bc45ba7d1a",
+              "context_start": 394,
+              "document_id": "stage4doc-50ee56998fd180ed8df510c49b3d4f7a40272649d34aa60417cccd5b132b1e90",
+              "origin_publisher": "Aehr Test Systems",
+              "origin_url": "https://www.aehr.com/2026/08/aehr-receives-22-million-follow-on-order-for-ai-processor-wafer-level-burn-in-systems/",
+              "provenance": "PASS",
+              "published_at": "2026-08-12",
+              "raw_sha256": "2aa4e0311432cac326612d5adb5a1a8880201bdc134a050344a7c21f462519b8"
+            },
+            "specification": null,
+            "supplier": "Aehr Test Systems",
+            "unit": null
+          }
+        ],
+        "firsts": 0,
+        "AI_calls": 0,
+        "CPU_windows": 0,
+        "new_source_samples": {
+          "sec": [],
+          "census_trade": [
+            {
+              "product_or_classification": "2504100000",
+              "metric": "QTY_1_MO",
+              "value_original": "698461",
+              "value_normalized_or_null": "698461",
+              "unit_original": "KG",
+              "geography": "US/partner-code-UNKNOWN",
+              "period_start": "2023-09-01",
+              "period_end": "2023-09-30",
+              "published_at": "UNKNOWN",
+              "source_url": "https://api.census.gov/data/timeseries/intltrade/exports/hs?get=E_COMMODITY_LDESC%2CALL_VAL_MO%2CQTY_1_MO%2CQTY_2_MO%2CUNIT_QY1%2CUNIT_QY2%2CCTY_NAME&time=from+2023-09+to+2023-12&E_COMMODITY=2504100000",
+              "raw_or_safe_payload_hash": "137b7f771fa17929804124def2c6b123483499e33e3b176beeb21df214882c76",
+              "source_locator": {
+                "format": "JSON",
+                "path": [
+                  1,
+                  2
+                ]
+              },
+              "quality_state": "SOURCE_LOCATED_PENDING_REVIEW"
+            },
+            {
+              "product_or_classification": "2504100000",
+              "metric": "ALL_VAL_MO",
+              "value_original": "1801000",
+              "value_normalized_or_null": "1801000",
+              "unit_original": "USD",
+              "geography": "US/partner-code-UNKNOWN",
+              "period_start": "2023-09-01",
+              "period_end": "2023-09-30",
+              "published_at": "UNKNOWN",
+              "source_url": "https://api.census.gov/data/timeseries/intltrade/exports/hs?get=E_COMMODITY_LDESC%2CALL_VAL_MO%2CQTY_1_MO%2CQTY_2_MO%2CUNIT_QY1%2CUNIT_QY2%2CCTY_NAME&time=from+2023-09+to+2023-12&E_COMMODITY=2504100000",
+              "raw_or_safe_payload_hash": "137b7f771fa17929804124def2c6b123483499e33e3b176beeb21df214882c76",
+              "source_locator": {
+                "format": "JSON",
+                "path": [
+                  1,
+                  1
+                ]
+              },
+              "quality_state": "SOURCE_LOCATED_PENDING_REVIEW"
+            },
+            {
+              "product_or_classification": "8101998000",
+              "metric": "GEN_VAL_MO",
+              "value_original": "3701594",
+              "value_normalized_or_null": "3701594",
+              "unit_original": "USD",
+              "geography": "US/partner-code-UNKNOWN",
+              "period_start": "2026-08-01",
+              "period_end": "2026-08-31",
+              "published_at": "UNKNOWN",
+              "source_url": "https://api.census.gov/data/timeseries/intltrade/imports/hs?get=I_COMMODITY_LDESC%2CGEN_QY1_MO%2CCON_QY1_MO%2CGEN_VAL_MO%2CCON_VAL_MO%2CUNIT_QY1%2CCTY_NAME&time=from+2026-01+to+2026-08&I_COMMODITY=8101998000",
+              "raw_or_safe_payload_hash": "705151bacb4161738d2ca98e3adeff96bae9a41fc5af07823344989c245fe205",
+              "source_locator": {
+                "format": "JSON",
+                "path": [
+                  8,
+                  3
+                ]
+              },
+              "quality_state": "SOURCE_LOCATED_PENDING_REVIEW"
+            },
+            {
+              "product_or_classification": "8101998000",
+              "metric": "CON_VAL_MO",
+              "value_original": "3701594",
+              "value_normalized_or_null": "3701594",
+              "unit_original": "USD",
+              "geography": "US/partner-code-UNKNOWN",
+              "period_start": "2026-08-01",
+              "period_end": "2026-08-31",
+              "published_at": "UNKNOWN",
+              "source_url": "https://api.census.gov/data/timeseries/intltrade/imports/hs?get=I_COMMODITY_LDESC%2CGEN_QY1_MO%2CCON_QY1_MO%2CGEN_VAL_MO%2CCON_VAL_MO%2CUNIT_QY1%2CCTY_NAME&time=from+2026-01+to+2026-08&I_COMMODITY=8101998000",
+              "raw_or_safe_payload_hash": "705151bacb4161738d2ca98e3adeff96bae9a41fc5af07823344989c245fe205",
+              "source_locator": {
+                "format": "JSON",
+                "path": [
+                  8,
+                  4
+                ]
+              },
+              "quality_state": "SOURCE_LOCATED_PENDING_REVIEW"
+            }
+          ]
+        },
+        "recovery": null,
+        "total_numeric": 38046,
+        "Census_quality_review": {
+          "physical_records": 2583,
+          "unit_map_matches": 2583,
+          "geography_UNKNOWN": 2583,
+          "first_publication_UNKNOWN": 2583,
+          "no_completed_data_query_repeated": true
+        },
+        "Census_periods": [
+          "2023-09",
+          "2023-10",
+          "2023-11",
+          "2023-12",
+          "2024-01",
+          "2024-02",
+          "2024-03",
+          "2024-04",
+          "2024-05",
+          "2024-06",
+          "2024-07",
+          "2024-08",
+          "2024-09",
+          "2024-10",
+          "2024-11",
+          "2024-12",
+          "2025-01",
+          "2025-02",
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06",
+          "2025-07",
+          "2025-08",
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05",
+          "2026-06",
+          "2026-07",
+          "2026-08"
+        ],
+        "source_scope": "SEC fixed30days/two configured issuers; Census fixed36months/annual mapped codes; country rows never summed as independent sources",
+        "source_task_counts": {
+          "sec-filing-": 1,
+          "sec-global-index-": 0,
+          "sec-full-submission-": 0,
+          "census-country-detail-v2-": 186
+        }
+      },
+      "receipt": {
+        "generation": 2,
+        "unchanged": true,
+        "uploaded_objects": 0,
+        "backend": "monthly-releases",
+        "storage": {
+          "backend": "monthly-releases",
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 2,
+          "manifest_sha256": "e62516bfb9fde5d7e5dc4a6f89714e85d3984b371a36e27c222db4b07a5eb2af",
+          "sqlite_sha256": "5d45d56ef61e5cc74a4c0bc35b197fbee2b125353acb4c68bf85391e3793b0be",
+          "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+        },
+        "Git_writes": 0,
+        "request_metrics": {
+          "HTTP_requests": 49,
+          "upload_bytes": 0,
+          "download_bytes": 10380320,
+          "rate_remaining": 4947,
+          "rate_limit": 5000,
+          "HTTP_seconds": 11.426272739999717
+        },
+        "remote_restore_verified": true,
+        "remote_new_process_restore": {
+          "restored": true,
+          "tables": 8,
+          "sqlite_sha256": "5d45d56ef61e5cc74a4c0bc35b197fbee2b125353acb4c68bf85391e3793b0be",
+          "review": {
+            "format": "bct-q1-private-facts-1",
+            "observation_versions": 42601,
+            "sources": [
+              "census_trade",
+              "eia",
+              "g17",
+              "m3",
+              "ted",
+              "usaspending",
+              "usgs"
+            ],
+            "article_bodies": 0,
+            "native_source_files": 0,
+            "original_evidence_recovery": false,
+            "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+            "CPU_queue_restored": false,
+            "automatic_promotion": false
+          },
+          "generation": 2,
+          "original_evidence_restore": false
+        }
+      },
+      "code_SHA": "ad41f2651eab010268d2879e1c4ce425ec3f9d54"
+    }
+  },
+  "local_collection": {
+    "plan_id": "BCT-V4-Q-1.0",
+    "version": "bct-official-formats-1",
+    "pages": [
+      {
+        "job_id": "global-2026-10-16-ft_data",
+        "source_id": "find_tender",
+        "page": 1,
+        "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00%3A00%3A00&updatedTo=2026-10-14T23%3A59%3A59&limit=100",
+        "http_status": 200,
+        "records": 386,
+        "stored": 386,
+        "exact_fields_checked": 3958,
+        "next_url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTU4MQ==",
+        "status": "FACTS_STORED",
+        "source_hash": "f9e24ce78a353a0a5867fdd1f15435842b907132fb3fc7fa0ae5168eee9ad422",
+        "tables": {
+          "held_source_reviews": []
+        },
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Release tags, lots, awards/contracts remain separate. Framework, amendments and amounts are not physical orders. Contract period is not firm delivery."
+      },
+      {
+        "job_id": "global-2026-10-16-cf_data",
+        "source_id": "contracts_finder",
+        "page": 1,
+        "url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-14T00%3A00%3A00&publishedTo=2026-10-14T23%3A59%3A59&limit=100",
+        "http_status": 200,
+        "records": 194,
+        "stored": 194,
+        "exact_fields_checked": 2984,
+        "next_url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-14T00:00:00&publishedTo=2026-10-14T23:59:59&limit=100&cursor=cHVibGlzaGVkRnJvbT0yMDI2LTEwLTE0VDAwOjAwOjAwfHB1Ymxpc2hlZFRvPTIwMjYtMTAtMTRUMjM6NTk6NTl8bGltaXQ9MTAwfG5leHRDdXJzb3I9Nzg2NjUz",
+        "status": "FACTS_STORED",
+        "source_hash": "71e9e9f4d91ebd070b88e823fb2d3b87c6c0403ba673a72702a686d0c3f607ab",
+        "tables": {},
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Open OCDS notices may include services/frameworks and modifications; amount is not order quantity. Same OCID is one procurement lineage."
+      },
+      {
+        "job_id": "global-2026-10-16-gleif_data",
+        "source_id": "gleif",
+        "page": 1,
+        "url": "https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalName%5D=AIRBUS%20SE&page%5Bsize%5D=10",
+        "http_status": 200,
+        "records": 1,
+        "stored": 1,
+        "exact_fields_checked": 6,
+        "next_url": null,
+        "status": "FACTS_STORED",
+        "source_hash": "062864df5781ad85242e3424fdbd51a23a668f8a7cf8c2610f34793dda4f04f0",
+        "tables": {},
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Exact legal-name query AIRBUS SE; one LEI identity, not a product equivalence or customer qualification proof."
+      },
+      {
+        "job_id": "global-2026-10-16-miso_data",
+        "source_id": "miso",
+        "page": 1,
+        "url": "https://www.misoenergy.org/api/giqueue/getprojects",
+        "http_status": 200,
+        "records": 3938,
+        "stored": 3938,
+        "exact_fields_checked": 38167,
+        "next_url": null,
+        "status": "FACTS_STORED",
+        "source_hash": "6a2436f9ef8db88444ec25a58e8be0dce18304e26824a6fcbf0a8091e410cf6d",
+        "tables": {},
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Current public full array only; projected service dates and MW are applications, not available/qualified supply. Historical changes unavailable."
+      },
+      {
+        "job_id": "global-2026-10-16-neso_data",
+        "source_id": "neso",
+        "page": 1,
+        "url": "https://api.neso.energy/dataset/cbd45e54-e6e2-4a38-99f1-8de6fd96d7c1/resource/17becbab-e3e8-473f-b303-3806f43a6a10/download/tec-register-13-october-2026.csv",
+        "http_status": 200,
+        "records": 2225,
+        "stored": 2225,
+        "exact_fields_checked": 19657,
+        "next_url": null,
+        "status": "FACTS_STORED",
+        "source_hash": "ddb96d884672e73b853a5a4116323bd884207ded617b035fa63387db324865a3",
+        "tables": {},
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Public TEC register 13 October 2026. Connected, increase/decrease, cumulative MW and effective date distinct. Connection customer is not proved product buyer."
+      },
+      {
+        "job_id": "global-2026-10-16-wb_data",
+        "source_id": "world_bank",
+        "page": 1,
+        "url": "https://search.worldbank.org/api/v2/procnotices?format=json&rows=50&srt=published_date&order=desc",
+        "http_status": 200,
+        "records": 50,
+        "stored": 50,
+        "exact_fields_checked": 343,
+        "next_url": null,
+        "status": "FACTS_STORED",
+        "source_hash": "d090eb3146872970f3a0e37157804b6f81cebff78c3e8429e1136e920833fb06",
+        "tables": {},
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Rows 0..49 returned historical notices; requested sort unverified. Cancelled notice is not active demand. Pending offset100 after second job."
+      },
+      {
+        "job_id": "global-2026-10-16-worldbank_page2",
+        "source_id": "world_bank",
+        "page": 1,
+        "url": "https://search.worldbank.org/api/v2/procnotices?format=json&rows=50&os=50&srt=published_date&order=desc",
+        "http_status": 200,
+        "records": 50,
+        "stored": 50,
+        "exact_fields_checked": 346,
+        "next_url": null,
+        "status": "FACTS_STORED",
+        "source_hash": "aeb552e9bf060bbb6f18dae67c6aaeb1431c1e508084939c8e829909fa30df77",
+        "tables": {},
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Rows50..99 same historical prefix; cancelled notices not actual orders, remaining hundreds of thousands not read."
+      },
+      {
+        "job_id": "global-2026-10-16-federal_month",
+        "source_id": "federal_register",
+        "page": 1,
+        "url": "https://www.federalregister.gov/api/v1/documents.json?conditions%5Bterm%5D=manufacturing&conditions%5Bpublication_date%5D%5Bgte%5D=2026-10-01&conditions%5Bpublication_date%5D%5Blte%5D=2026-10-15&per_page=100&order=newest",
+        "http_status": 200,
+        "records": 100,
+        "stored": 100,
+        "exact_fields_checked": 300,
+        "next_url": "https://www.federalregister.gov/api/v1/documents?conditions%5Bpublication_date%5D%5Bgte%5D=2026-10-01&conditions%5Bpublication_date%5D%5Blte%5D=2026-10-15&conditions%5Bterm%5D=manufacturing&format=json&order=newest&page=2&per_page=100",
+        "status": "FACTS_STORED",
+        "source_hash": "4602af9f45c6766bce1df2838fd9878c69df39068badfa0edb70f587b1a1ac17",
+        "tables": {},
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Manufacturing search publication dates2026-10-01..15, metadata only; no fulltext/permit/capacity claim."
+      },
+      {
+        "job_id": "global-2026-10-16-comtrade_guest",
+        "source_id": "comtrade",
+        "page": 1,
+        "url": "https://comtradeapi.un.org/public/v1/preview/C/A/HS?period=2025&reporterCode=842&cmdCode=2805&flowCode=M&partnerCode=0&partner2Code=0&customsCode=C00&motCode=0&maxRecords=500",
+        "http_status": 200,
+        "records": 1,
+        "stored": 1,
+        "exact_fields_checked": 11,
+        "next_url": null,
+        "status": "FACTS_STORED",
+        "source_hash": "bb474f6db18398f85e78a6c2cf1a9f541ed4fa6d0bd2f1ce05496c3fecaf6a02",
+        "tables": {},
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Guest preview: US2025 imports HS2805 partnerWorld. qty code8=kg from official QuantityUnits table; aggregate/estimated flags preserved; not customer demand or factory supply."
+      },
+      {
+        "job_id": "global-2026-10-16-bgs_data",
+        "source_id": "bgs",
+        "page": 1,
+        "url": "https://ogcapi.bgs.ac.uk/collections/world-mineral-statistics/items?f=json&limit=100&sortby=-year",
+        "http_status": 200,
+        "records": 100,
+        "stored": 0,
+        "exact_fields_checked": 753,
+        "next_url": "https://ogcapi.bgs.ac.uk/collections/world-mineral-statistics/items?f=json&offset=100&limit=100&sortby=-year",
+        "status": "PARSE_VALIDATED_RIGHTS_HOLD",
+        "source_hash": "79cd9ae4434977535019b08e8b342f895a196842e8f9acf879ee012ef250d655",
+        "tables": {},
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "200 most recent production statistics rows only. Estimates/zero/NULL notation and attribution require review. No facts uploaded pending noncommercial/third-party rights confirmation."
+      },
+      {
+        "job_id": "global-2026-10-16-ercot_sep",
+        "source_id": "ercot",
+        "page": 1,
+        "url": "https://www.ercot.com/misdownload/servlets/mirDownload?doclookupId=1281327706",
+        "http_status": 200,
+        "records": 1838,
+        "stored": 1838,
+        "exact_fields_checked": 11051,
+        "next_url": null,
+        "status": "FACTS_STORED",
+        "source_hash": "016cddbb7082fd30e02ede6242e3f33adc79ca0f2e7fb49bc9079ebde2671d58",
+        "tables": {
+          "Project Details - Large Gen": 1758,
+          "Project Details - Small Gen": 31,
+          "Commissioning Update": 23,
+          "Cancellation Update": 26
+        },
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "September2026 public GIS Large/Small/Commissioning/Cancellation tables only. Partial confidential project coverage; capacities for planning, not allocable supply."
+      },
+      {
+        "job_id": "global-2026-10-16-ercot_aug",
+        "source_id": "ercot",
+        "page": 1,
+        "url": "https://www.ercot.com/misdownload/servlets/mirDownload?doclookupId=1269363208",
+        "http_status": 200,
+        "records": 1846,
+        "stored": 1846,
+        "exact_fields_checked": 11093,
+        "next_url": null,
+        "status": "FACTS_STORED",
+        "source_hash": "75543fb2772367aad3ca3f1ee6786e7ab1457c8c2f2e3cb76513ded2b419d5fb",
+        "tables": {
+          "Project Details - Large Gen": 1778,
+          "Project Details - Small Gen": 32,
+          "Commissioning Update": 17,
+          "Cancellation Update": 19
+        },
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "August2026 same four tables. Historical snapshot, no LIVE discovery. All other workbook sheets unread."
+      },
+      {
+        "job_id": "global-2026-10-16-ft_data",
+        "source_id": "find_tender",
+        "page": 2,
+        "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTU4MQ==",
+        "http_status": 200,
+        "records": 369,
+        "stored": 369,
+        "exact_fields_checked": 3855,
+        "next_url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTQ4MQ==",
+        "status": "FACTS_STORED",
+        "source_hash": "ae8b4958d853e09e895d236152697fafef26ba325013dcdfb1b2e7bd897184ed",
+        "tables": {
+          "held_source_reviews": []
+        },
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Release tags, lots, awards/contracts remain separate. Framework, amendments and amounts are not physical orders. Contract period is not firm delivery."
+      },
+      {
+        "job_id": "global-2026-10-16-cf_data",
+        "source_id": "contracts_finder",
+        "page": 2,
+        "url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-14T00:00:00&publishedTo=2026-10-14T23:59:59&limit=100&cursor=cHVibGlzaGVkRnJvbT0yMDI2LTEwLTE0VDAwOjAwOjAwfHB1Ymxpc2hlZFRvPTIwMjYtMTAtMTRUMjM6NTk6NTl8bGltaXQ9MTAwfG5leHRDdXJzb3I9Nzg2NjUz",
+        "http_status": 200,
+        "records": 198,
+        "stored": 198,
+        "exact_fields_checked": 2998,
+        "next_url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-14T00:00:00&publishedTo=2026-10-14T23:59:59&limit=100&cursor=cHVibGlzaGVkRnJvbT0yMDI2LTEwLTE0VDAwOjAwOjAwfHB1Ymxpc2hlZFRvPTIwMjYtMTAtMTRUMjM6NTk6NTl8bGltaXQ9MTAwfG5leHRDdXJzb3I9Nzg2NTUz",
+        "status": "FACTS_STORED",
+        "source_hash": "99d829516f12a0e55d1ea9a1b8bc4de8066d68f80c449aa0fb5cdd314c6704d6",
+        "tables": {},
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Open OCDS notices may include services/frameworks and modifications; amount is not order quantity. Same OCID is one procurement lineage."
+      },
+      {
+        "job_id": "global-2026-10-16-federal_month",
+        "source_id": "federal_register",
+        "page": 2,
+        "url": "https://www.federalregister.gov/api/v1/documents?conditions%5Bpublication_date%5D%5Bgte%5D=2026-10-01&conditions%5Bpublication_date%5D%5Blte%5D=2026-10-15&conditions%5Bterm%5D=manufacturing&format=json&order=newest&page=2&per_page=100",
+        "http_status": 200,
+        "records": 1,
+        "stored": 1,
+        "exact_fields_checked": 3,
+        "next_url": null,
+        "status": "FACTS_STORED",
+        "source_hash": "636b5df6b97f428ac524229ea3fda763db3587a05ac3147624861028942ee480",
+        "tables": {},
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Manufacturing search publication dates2026-10-01..15, metadata only; no fulltext/permit/capacity claim."
+      },
+      {
+        "job_id": "global-2026-10-16-bgs_data",
+        "source_id": "bgs",
+        "page": 2,
+        "url": "https://ogcapi.bgs.ac.uk/collections/world-mineral-statistics/items?f=json&offset=100&limit=100&sortby=-year",
+        "http_status": 200,
+        "records": 100,
+        "stored": 0,
+        "exact_fields_checked": 746,
+        "next_url": "https://ogcapi.bgs.ac.uk/collections/world-mineral-statistics/items?f=json&offset=200&limit=100&sortby=-year",
+        "status": "PARSE_VALIDATED_RIGHTS_HOLD",
+        "source_hash": "1b3e3bfd28cf3679d754c1b956fa681b8a2b45083f77ff36603ed3786ba07958",
+        "tables": {},
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "200 most recent production statistics rows only. Estimates/zero/NULL notation and attribution require review. No facts uploaded pending noncommercial/third-party rights confirmation."
+      },
+      {
+        "job_id": "global-2026-10-16-ft_data",
+        "source_id": "find_tender",
+        "page": 3,
+        "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTQ4MQ==",
+        "http_status": 200,
+        "records": 396,
+        "stored": 396,
+        "exact_fields_checked": 4145,
+        "next_url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTM4MQ==",
+        "status": "FACTS_STORED",
+        "source_hash": "6cda10ce3a012ff93f5a4be836d4f1b792ddbf59604029fe08e4592a05b765fa",
+        "tables": {
+          "held_source_reviews": []
+        },
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Release tags, lots, awards/contracts remain separate. Framework, amendments and amounts are not physical orders. Contract period is not firm delivery."
+      },
+      {
+        "job_id": "global-2026-10-16-cf_data",
+        "source_id": "contracts_finder",
+        "page": 3,
+        "url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-14T00:00:00&publishedTo=2026-10-14T23:59:59&limit=100&cursor=cHVibGlzaGVkRnJvbT0yMDI2LTEwLTE0VDAwOjAwOjAwfHB1Ymxpc2hlZFRvPTIwMjYtMTAtMTRUMjM6NTk6NTl8bGltaXQ9MTAwfG5leHRDdXJzb3I9Nzg2NTUz",
+        "http_status": 200,
+        "records": 84,
+        "stored": 84,
+        "exact_fields_checked": 1267,
+        "next_url": null,
+        "status": "FACTS_STORED",
+        "source_hash": "99cbd732272904d1955473dade4ab0611a734c9f24ab88f9173cd938a4b48918",
+        "tables": {},
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Open OCDS notices may include services/frameworks and modifications; amount is not order quantity. Same OCID is one procurement lineage."
+      },
+      {
+        "job_id": "global-2026-10-16-ft_data",
+        "source_id": "find_tender",
+        "page": 4,
+        "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTM4MQ==",
+        "http_status": 200,
+        "records": 417,
+        "stored": 417,
+        "exact_fields_checked": 4165,
+        "next_url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTI4MQ==",
+        "status": "FACTS_STORED",
+        "source_hash": "fa89356c3c5c514d23b9774b1d4c4067d9b353cf53ded5f2eaab33a7f07f45de",
+        "tables": {
+          "held_source_reviews": []
+        },
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Release tags, lots, awards/contracts remain separate. Framework, amendments and amounts are not physical orders. Contract period is not firm delivery."
+      },
+      {
+        "job_id": "global-2026-10-16-ft_data",
+        "source_id": "find_tender",
+        "page": 5,
+        "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTI4MQ==",
+        "http_status": 200,
+        "records": 220,
+        "stored": 220,
+        "exact_fields_checked": 2297,
+        "next_url": null,
+        "status": "FACTS_STORED",
+        "source_hash": "cfebaa7c42d9ad366ae42760522f0001e47d2a34207f171e5fd64f1dcb42e2da",
+        "tables": {
+          "held_source_reviews": []
+        },
+        "native_source_in_remote_capsule": false,
+        "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+        "limits": "Release tags, lots, awards/contracts remain separate. Framework, amendments and amounts are not physical orders. Contract period is not firm delivery."
+      }
+    ],
+    "by_source": {
+      "comtrade": {
+        "record_versions": 1,
+        "unique_records": 1,
+        "numeric_fields": 3,
+        "kinds": {
+          "TRADE_STATISTIC": 1
+        },
+        "published_at_unknown": 1
+      },
+      "contracts_finder": {
+        "record_versions": 476,
+        "unique_records": 476,
+        "numeric_fields": 465,
+        "kinds": {
+          "PROCUREMENT_AWARD": 235,
+          "PROCUREMENT_TENDER": 241
+        },
+        "published_at_unknown": 0
+      },
+      "ercot": {
+        "record_versions": 3684,
+        "unique_records": 1916,
+        "numeric_fields": 3684,
+        "kinds": {
+          "CONNECTION_PROJECT": 3684
+        },
+        "published_at_unknown": 0
+      },
+      "federal_register": {
+        "record_versions": 101,
+        "unique_records": 101,
+        "numeric_fields": 0,
+        "kinds": {
+          "REGULATORY_DOCUMENT": 101
+        },
+        "published_at_unknown": 0
+      },
+      "find_tender": {
+        "record_versions": 1788,
+        "unique_records": 1788,
+        "numeric_fields": 412,
+        "kinds": {
+          "PROCUREMENT_TENDER": 1116,
+          "PROCUREMENT_CONTRACT": 259,
+          "PROCUREMENT_AWARD": 411,
+          "PROCUREMENT_NOTICE": 2
+        },
+        "published_at_unknown": 0
+      },
+      "gleif": {
+        "record_versions": 1,
+        "unique_records": 1,
+        "numeric_fields": 0,
+        "kinds": {
+          "LEGAL_ENTITY": 1
+        },
+        "published_at_unknown": 0
+      },
+      "miso": {
+        "record_versions": 3938,
+        "unique_records": 3938,
+        "numeric_fields": 7876,
+        "kinds": {
+          "CONNECTION_PROJECT": 3938
+        },
+        "published_at_unknown": 3938
+      },
+      "neso": {
+        "record_versions": 2225,
+        "unique_records": 2225,
+        "numeric_fields": 6675,
+        "kinds": {
+          "CONNECTION_PROJECT": 2225
+        },
+        "published_at_unknown": 2225
+      },
+      "world_bank": {
+        "record_versions": 100,
+        "unique_records": 100,
+        "numeric_fields": 0,
+        "kinds": {
+          "PROCUREMENT_NOTICE": 100
+        },
+        "published_at_unknown": 11
+      }
+    },
+    "HTTP_requests_this_batch": 0,
+    "bindings": {
+      "sam_opportunities": {
+        "secret_name": "BCT_SAM_API_KEY",
+        "present": false,
+        "authentication": "NOT_TESTED",
+        "status": "NEEDS_USER_KEY"
+      },
+      "sam_awards": {
+        "secret_name": "BCT_SAM_API_KEY",
+        "present": false,
+        "authentication": "NOT_TESTED",
+        "status": "NEEDS_USER_KEY"
+      },
+      "opendart": {
+        "secret_name": "BCT_OPENDART_API_KEY",
+        "present": false,
+        "authentication": "NOT_TESTED",
+        "status": "NEEDS_USER_KEY"
+      },
+      "edinet": {
+        "secret_name": "BCT_EDINET_API_KEY",
+        "present": false,
+        "authentication": "NOT_TESTED",
+        "status": "NEEDS_USER_KEY"
+      },
+      "companies_house": {
+        "secret_name": "BCT_COMPANIES_HOUSE_API_KEY",
+        "present": false,
+        "authentication": "NOT_TESTED",
+        "status": "NEEDS_USER_KEY"
+      },
+      "entsoe": {
+        "secret_name": "BCT_ENTSOE_API_TOKEN",
+        "present": false,
+        "authentication": "NOT_TESTED",
+        "status": "NEEDS_USER_KEY"
+      },
+      "estat": {
+        "secret_name": "BCT_ESTAT_APP_ID",
+        "present": false,
+        "authentication": "NOT_TESTED",
+        "status": "NEEDS_USER_KEY"
+      },
+      "kosis": {
+        "secret_name": "BCT_KOSIS_API_KEY",
+        "present": false,
+        "authentication": "NOT_TESTED",
+        "status": "NEEDS_USER_KEY"
+      },
+      "regulations": {
+        "secret_name": "BCT_REGULATIONS_API_KEY",
+        "present": false,
+        "authentication": "NOT_TESTED",
+        "status": "NEEDS_USER_KEY"
+      },
+      "comtrade": {
+        "secret_name": "BCT_COMTRADE_API_KEY",
+        "present": false,
+        "authentication": "NOT_TESTED",
+        "status": "NEEDS_USER_KEY"
+      },
+      "korea_pps": {
+        "secret_name": "BCT_DATA_GO_KR_SERVICE_KEY",
+        "present": false,
+        "authentication": "NOT_TESTED",
+        "status": "NEEDS_USER_KEY"
+      }
+    },
+    "record_versions_total": 12314,
+    "unique_records_total": 10546,
+    "native_originals_archived": 0,
+    "confirmed_new_physical_orders": 0,
+    "qualified_supply_records": 0,
+    "Q2_signed_contract_review_inputs": 243,
+    "Q3_pairs": 0,
+    "S2": 0,
+    "S3": 0,
+    "AI_calls": 0,
+    "CPU_windows": 0,
+    "objective_version": "bct-objective-1",
+    "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  },
+  "local_exact_scalar_field_checks": 108145,
+  "local_unique_request_urls": 94,
+  "local_HTTP_status_counts": {
+    "None": 1,
+    "200": 71,
+    "400": 6,
+    "403": 5,
+    "404": 8,
+    "503": 3
+  },
+  "Q2_handoff_summary": {
+    "signed_contract_records": 243,
+    "exact_unique_contract_award_links": 243,
+    "supplier_ids_via_exact_award_link": 243,
+    "parent_lot_conflict_review_inputs": 38,
+    "source_reviewed_item_descriptions_not_confirmed_orders": [
+      "7ac1053934e3e5a32fa247f7691564f4c84065bf2b976214bdf2020cab9f0398",
+      "b598dac25714c9882acf4deccfc0cc2c1d375034d2c2bc363306b92cb22e043e"
+    ],
+    "independent_pairs": 0,
+    "Q3_eligible_targets": [],
+    "S2": 0,
+    "S3": 0
+  },
+  "source_samples_not_independent_accuracy": [
+    {
+      "source_id": "comtrade",
+      "native_id": "2025:842:0:M:2805:C00:0",
+      "source_hash": "bb474f6db18398f85e78a6c2cf1a9f541ed4fa6d0bd2f1ce05496c3fecaf6a02",
+      "url": "https://comtradeapi.un.org/public/v1/preview/C/A/HS?period=2025&reporterCode=842&cmdCode=2805&flowCode=M&partnerCode=0&partner2Code=0&customsCode=C00&motCode=0&maxRecords=500",
+      "published_at": "UNKNOWN",
+      "publication_basis": "UNKNOWN",
+      "claims": {
+        "commodity_code": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/cmdCode"
+          },
+          "value": "2805"
+        },
+        "flow_code": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/flowCode"
+          },
+          "value": "M"
+        },
+        "is_aggregate": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/isAggregate"
+          },
+          "value": true
+        },
+        "is_estimated": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/isQtyEstimated"
+          },
+          "value": false
+        },
+        "partner_code": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/partnerCode"
+          },
+          "value": 0
+        },
+        "reporter_code": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/reporterCode"
+          },
+          "value": 842
+        },
+        "trade_net_weight_kg": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/netWgt"
+          },
+          "unit": "kg",
+          "unit_basis": "UN_COMTRADE_NETWGT_DEFINITION",
+          "value": 12521578.0
+        },
+        "trade_period": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/period"
+          },
+          "value": "2025"
+        },
+        "trade_quantity": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/qty"
+          },
+          "unit": "kg",
+          "unit_basis": "https://comtradeapi.un.org/files/v1/app/reference/QuantityUnits.json#qtyCode=8",
+          "value": 12521578.0
+        },
+        "trade_unit_code": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/qtyUnitCode"
+          },
+          "value": 8
+        },
+        "trade_value_USD": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/primaryValue"
+          },
+          "unit": "USD",
+          "unit_basis": "UN_COMTRADE_PRIMARYVALUE_DEFINITION_NOT_QUANTITY",
+          "value": 64852137.0
+        }
+      },
+      "s_stage": "UNKNOWN",
+      "qualified_supply": "UNKNOWN",
+      "evidence_scope": "EXACT_NATIVE_FIELD_CHECKED_AT_ACQUISITION_NATIVE_NOT_IN_CAPSULE"
+    },
+    {
+      "source_id": "contracts_finder",
+      "native_id": "ocds-b5fd17-5a34ba06-1430-421e-9f16-d54fadc51cc2:22f8387a-393c-4377-935b-991f11155e5b-917900:awards:ocds-b5fd17-5a34ba06-1430-421e-9f16-d54fadc51cc2-1",
+      "source_hash": "71e9e9f4d91ebd070b88e823fb2d3b87c6c0403ba673a72702a686d0c3f607ab",
+      "url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-14T00%3A00%3A00&publishedTo=2026-10-14T23%3A59%3A59&limit=100",
+      "published_at": "2026-10-14T16:09:27+01:00",
+      "publication_basis": "RELEASE_DATE_NOT_PROVEN_FIRST_PUBLICATION",
+      "claims": {
+        "amount": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/18/awards/0/value/amount"
+          },
+          "unit": "GBP",
+          "unit_basis": "NATIVE_CURRENCY_FIELD",
+          "value": 17200
+        },
+        "award_date": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/18/awards/0/date"
+          },
+          "value": "2026-09-07T00:00:00+01:00"
+        },
+        "award_id": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/18/awards/0/id"
+          },
+          "value": "ocds-b5fd17-5a34ba06-1430-421e-9f16-d54fadc51cc2-1"
+        },
+        "buyer_id": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/18/buyer/id"
+          },
+          "value": "GB-CFS-58064"
+        },
+        "buyer_name": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/18/buyer/name"
+          },
+          "value": "Bristol City Council"
+        },
+        "currency": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/18/awards/0/value/currency"
+          },
+          "value": "GBP"
+        },
+        "notice_id": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/18/id"
+          },
+          "value": "22f8387a-393c-4377-935b-991f11155e5b-917900"
+        },
+        "ocid": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/18/ocid"
+          },
+          "value": "ocds-b5fd17-5a34ba06-1430-421e-9f16-d54fadc51cc2"
+        },
+        "period_end": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/18/awards/0/contractPeriod/endDate"
+          },
+          "value": "2027-01-07T23:59:59Z"
+        },
+        "period_start": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/18/awards/0/contractPeriod/startDate"
+          },
+          "value": "2026-09-08T00:00:00+01:00"
+        },
+        "publication_date": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/18/date"
+          },
+          "value": "2026-10-14T16:09:27+01:00"
+        },
+        "release_tags": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/18/tag"
+          },
+          "value": [
+            "award"
+          ]
+        },
+        "status": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/18/awards/0/status"
+          },
+          "value": "active"
+        },
+        "supplier_id": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/18/awards/0/suppliers/0/id"
+          },
+          "value": "GB-CFS-307173"
+        },
+        "supplier_name": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/18/awards/0/suppliers/0/name"
+          },
+          "value": "Constellia Public Limited"
+        }
+      },
+      "s_stage": "UNKNOWN",
+      "qualified_supply": "UNKNOWN",
+      "evidence_scope": "EXACT_NATIVE_FIELD_CHECKED_AT_ACQUISITION_NATIVE_NOT_IN_CAPSULE"
+    },
+    {
+      "source_id": "ercot",
+      "native_id": "Project Details - Large Gen:21INR0006",
+      "source_hash": "016cddbb7082fd30e02ede6242e3f33adc79ca0f2e7fb49bc9079ebde2671d58",
+      "url": "https://www.ercot.com/misdownload/servlets/mirDownload?doclookupId=1281327706",
+      "published_at": "2026-10-01T16:08:28-05:00",
+      "publication_basis": "ERCOT_CATALOG_DOCUMENT_PUBLISH_DATE",
+      "claims": {
+        "generation_type": {
+          "locator": {
+            "cell": "I100",
+            "datetime_rule": "EXCEL_DATETIME_ISO",
+            "format": "XLSX_CELL",
+            "sheet": "Project Details - Large Gen"
+          },
+          "value": "WIN"
+        },
+        "geography": {
+          "locator": {
+            "cell": "F100",
+            "datetime_rule": "EXCEL_DATETIME_ISO",
+            "format": "XLSX_CELL",
+            "sheet": "Project Details - Large Gen"
+          },
+          "value": "Upton"
+        },
+        "planned_service_date": {
+          "locator": {
+            "cell": "H100",
+            "datetime_rule": "EXCEL_DATETIME_ISO",
+            "format": "XLSX_CELL",
+            "sheet": "Project Details - Large Gen"
+          },
+          "value": "2030-09-09T00:00:00"
+        },
+        "project_id": {
+          "locator": {
+            "cell": "A100",
+            "datetime_rule": "EXCEL_DATETIME_ISO",
+            "format": "XLSX_CELL",
+            "sheet": "Project Details - Large Gen"
+          },
+          "value": "21INR0006"
+        },
+        "project_name": {
+          "locator": {
+            "cell": "B100",
+            "datetime_rule": "EXCEL_DATETIME_ISO",
+            "format": "XLSX_CELL",
+            "sheet": "Project Details - Large Gen"
+          },
+          "value": "Giddings Wind"
+        },
+        "reported_project_MW": {
+          "locator": {
+            "cell": "K100",
+            "datetime_rule": "EXCEL_DATETIME_ISO",
+            "format": "XLSX_CELL",
+            "sheet": "Project Details - Large Gen"
+          },
+          "unit": "MW",
+          "unit_basis": "NATIVE_MW_FIELD_OR_VERIFIED_MW_COLUMN_HEADER",
+          "value": 240
+        }
+      },
+      "s_stage": "UNKNOWN",
+      "qualified_supply": "UNKNOWN",
+      "evidence_scope": "EXACT_NATIVE_FIELD_CHECKED_AT_ACQUISITION_NATIVE_NOT_IN_CAPSULE"
+    },
+    {
+      "source_id": "federal_register",
+      "native_id": "2026-21051",
+      "source_hash": "4602af9f45c6766bce1df2838fd9878c69df39068badfa0edb70f587b1a1ac17",
+      "url": "https://www.federalregister.gov/api/v1/documents.json?conditions%5Bterm%5D=manufacturing&conditions%5Bpublication_date%5D%5Bgte%5D=2026-10-01&conditions%5Bpublication_date%5D%5Blte%5D=2026-10-15&per_page=100&order=newest",
+      "published_at": "2026-10-15",
+      "publication_basis": "FEDERAL_REGISTER_PUBLICATION",
+      "claims": {
+        "notice_id": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/results/0/document_number"
+          },
+          "value": "2026-21051"
+        },
+        "publication_date": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/results/0/publication_date"
+          },
+          "value": "2026-10-15"
+        },
+        "publication_type": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/results/0/type"
+          },
+          "value": "Rule"
+        }
+      },
+      "s_stage": "UNKNOWN",
+      "qualified_supply": "UNKNOWN",
+      "evidence_scope": "EXACT_NATIVE_FIELD_CHECKED_AT_ACQUISITION_NATIVE_NOT_IN_CAPSULE"
+    },
+    {
+      "source_id": "find_tender",
+      "native_id": "ocds-h6vhtk-0787a3:097045-2026:lot:1",
+      "source_hash": "ae8b4958d853e09e895d236152697fafef26ba325013dcdfb1b2e7bd897184ed",
+      "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTU4MQ==",
+      "published_at": "2026-10-14T14:10:54+01:00",
+      "publication_basis": "RELEASE_DATE_NOT_PROVEN_FIRST_PUBLICATION",
+      "claims": {
+        "buyer_id": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/88/buyer/id"
+          },
+          "value": "GB-FTS-187295"
+        },
+        "buyer_name": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/88/buyer/name"
+          },
+          "value": "NWSSP"
+        },
+        "lot_id": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/88/tender/lots/0/id"
+          },
+          "value": "1"
+        },
+        "lot_status": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/88/tender/lots/0/status"
+          },
+          "value": "cancelled"
+        },
+        "notice_id": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/88/id"
+          },
+          "value": "097045-2026"
+        },
+        "ocid": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/88/ocid"
+          },
+          "value": "ocds-h6vhtk-0787a3"
+        },
+        "publication_date": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/88/date"
+          },
+          "value": "2026-10-14T14:10:54+01:00"
+        },
+        "release_tags": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/releases/88/tag"
+          },
+          "value": [
+            "award",
+            "contract"
+          ]
+        }
+      },
+      "s_stage": "UNKNOWN",
+      "qualified_supply": "UNKNOWN",
+      "evidence_scope": "EXACT_NATIVE_FIELD_CHECKED_AT_ACQUISITION_NATIVE_NOT_IN_CAPSULE"
+    },
+    {
+      "source_id": "gleif",
+      "native_id": "MINO79WLOO247M1IL051",
+      "source_hash": "062864df5781ad85242e3424fdbd51a23a668f8a7cf8c2610f34793dda4f04f0",
+      "url": "https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalName%5D=AIRBUS%20SE&page%5Bsize%5D=10",
+      "published_at": "2026-10-15T16:00:00Z",
+      "publication_basis": "CURRENT_GOLDEN_COPY_NOT_INITIAL_REGISTRATION",
+      "claims": {
+        "dataset_update": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/meta/goldenCopy/publishDate"
+          },
+          "value": "2026-10-15T16:00:00Z"
+        },
+        "entity_status": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/attributes/entity/status"
+          },
+          "value": "ACTIVE"
+        },
+        "legal_jurisdiction": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/attributes/entity/jurisdiction"
+          },
+          "value": "NL"
+        },
+        "legal_name": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/attributes/entity/legalName/name"
+          },
+          "value": "AIRBUS SE"
+        },
+        "lei": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/attributes/lei"
+          },
+          "value": "MINO79WLOO247M1IL051"
+        },
+        "registration_last_update": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/data/0/attributes/registration/lastUpdateDate"
+          },
+          "value": "2025-10-23T10:49:10Z"
+        }
+      },
+      "s_stage": "UNKNOWN",
+      "qualified_supply": "UNKNOWN",
+      "evidence_scope": "EXACT_NATIVE_FIELD_CHECKED_AT_ACQUISITION_NATIVE_NOT_IN_CAPSULE"
+    },
+    {
+      "source_id": "miso",
+      "native_id": "3453166",
+      "source_hash": "6a2436f9ef8db88444ec25a58e8be0dce18304e26824a6fcbf0a8091e410cf6d",
+      "url": "https://www.misoenergy.org/api/giqueue/getprojects",
+      "published_at": "UNKNOWN",
+      "publication_basis": "UNKNOWN",
+      "claims": {
+        "application_date": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/3131/queueDate"
+          },
+          "value": "2019-06-24T04:00:00+00:00"
+        },
+        "planned_service_date": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/3131/inService"
+          },
+          "value": "2022-10-01T04:00:00+00:00"
+        },
+        "project_id": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/3131/projectNumber"
+          },
+          "value": "R1000"
+        },
+        "project_status": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/3131/applicationStatus"
+          },
+          "value": "Done"
+        },
+        "summer_net_MW": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/3131/summerNetMW"
+          },
+          "unit": "MW",
+          "unit_basis": "NATIVE_MW_FIELD_OR_VERIFIED_MW_COLUMN_HEADER",
+          "value": 103.1
+        },
+        "transmission_owner": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/3131/transmissionOwner"
+          },
+          "value": "MONTANA-DAKOTA UTILITIES CO."
+        },
+        "winter_net_MW": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/3131/winterNetMW"
+          },
+          "unit": "MW",
+          "unit_basis": "NATIVE_MW_FIELD_OR_VERIFIED_MW_COLUMN_HEADER",
+          "value": 103.1
+        }
+      },
+      "s_stage": "UNKNOWN",
+      "qualified_supply": "UNKNOWN",
+      "evidence_scope": "EXACT_NATIVE_FIELD_CHECKED_AT_ACQUISITION_NATIVE_NOT_IN_CAPSULE"
+    },
+    {
+      "source_id": "neso",
+      "native_id": "[\"a0l8e00000120NhAAI\", \"2031-11-30\", \"\", \"Direct Connection\"]",
+      "source_hash": "ddb96d884672e73b853a5a4116323bd884207ded617b035fa63387db324865a3",
+      "url": "https://api.neso.energy/dataset/cbd45e54-e6e2-4a38-99f1-8de6fd96d7c1/resource/17becbab-e3e8-473f-b303-3806f43a6a10/download/tec-register-13-october-2026.csv",
+      "published_at": "UNKNOWN",
+      "publication_basis": "UNKNOWN",
+      "claims": {
+        "capacity_change_MW": {
+          "locator": {
+            "column": "MW Increase / Decrease",
+            "format": "CSV_RECORD",
+            "record": 906
+          },
+          "unit": "MW",
+          "unit_basis": "NATIVE_MW_FIELD_OR_VERIFIED_MW_COLUMN_HEADER",
+          "value": "104.00"
+        },
+        "connected_MW": {
+          "locator": {
+            "column": "MW Connected",
+            "format": "CSV_RECORD",
+            "record": 906
+          },
+          "unit": "MW",
+          "unit_basis": "NATIVE_MW_FIELD_OR_VERIFIED_MW_COLUMN_HEADER",
+          "value": "0.00"
+        },
+        "connection_customer": {
+          "locator": {
+            "column": "Customer Name",
+            "format": "CSV_RECORD",
+            "record": 906
+          },
+          "value": "SSE Renewables Services (UK) Limited"
+        },
+        "cumulative_MW": {
+          "locator": {
+            "column": "Cumulative Total Capacity (MW)",
+            "format": "CSV_RECORD",
+            "record": 906
+          },
+          "unit": "MW",
+          "unit_basis": "NATIVE_MW_FIELD_OR_VERIFIED_MW_COLUMN_HEADER",
+          "value": "104.00"
+        },
+        "facility_id": {
+          "locator": {
+            "column": "Connection Site",
+            "format": "CSV_RECORD",
+            "record": 906
+          },
+          "value": "GLENTARKEN WIND FARM 132/33KV SUBSTATION"
+        },
+        "planned_service_date": {
+          "locator": {
+            "column": "MW Effective From",
+            "format": "CSV_RECORD",
+            "record": 906
+          },
+          "value": "2031-11-30"
+        },
+        "product_label": {
+          "locator": {
+            "column": "Plant Type",
+            "format": "CSV_RECORD",
+            "record": 906
+          },
+          "value": "Wind Onshore"
+        },
+        "project_id": {
+          "locator": {
+            "column": "Project ID",
+            "format": "CSV_RECORD",
+            "record": 906
+          },
+          "value": "a0l8e00000120NhAAI"
+        },
+        "project_status": {
+          "locator": {
+            "column": "Project Status",
+            "format": "CSV_RECORD",
+            "record": 906
+          },
+          "value": "Scoping"
+        }
+      },
+      "s_stage": "UNKNOWN",
+      "qualified_supply": "UNKNOWN",
+      "evidence_scope": "EXACT_NATIVE_FIELD_CHECKED_AT_ACQUISITION_NATIVE_NOT_IN_CAPSULE"
+    },
+    {
+      "source_id": "world_bank",
+      "native_id": "OP00019250",
+      "source_hash": "aeb552e9bf060bbb6f18dae67c6aaeb1431c1e508084939c8e829909fa30df77",
+      "url": "https://search.worldbank.org/api/v2/procnotices?format=json&rows=50&os=50&srt=published_date&order=desc",
+      "published_at": "2013-01-17",
+      "publication_basis": "NOTICE_DATE_NOT_PROVEN_FIRST_VERSION",
+      "claims": {
+        "notice_id": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/procnotices/6/id"
+          },
+          "value": "OP00019250"
+        },
+        "notice_status": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/procnotices/6/notice_status"
+          },
+          "value": "Cancelled"
+        },
+        "notice_type": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/procnotices/6/notice_type"
+          },
+          "value": "Contract Award"
+        },
+        "project_country": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/procnotices/6/project_ctry_name"
+          },
+          "value": "Albania"
+        },
+        "project_id": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/procnotices/6/project_id"
+          },
+          "value": "P055383"
+        },
+        "project_name": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/procnotices/6/project_name"
+          },
+          "value": "Social Services Delivery Project"
+        },
+        "publication_date": {
+          "locator": {
+            "format": "JSON_POINTER",
+            "pointer": "/procnotices/6/noticedate"
+          },
+          "value": "17-Jan-2013"
+        }
+      },
+      "s_stage": "UNKNOWN",
+      "qualified_supply": "UNKNOWN",
+      "evidence_scope": "EXACT_NATIVE_FIELD_CHECKED_AT_ACQUISITION_NATIVE_NOT_IN_CAPSULE"
+    }
+  ],
+  "tests": {
+    "impact_command": "PYTHONPATH=/tmp/bct-q1-deps:src timeout120 python -m pytest tests/test_v4_official_sources.py tests/test_v4_quantitative_private.py tests/test_v4_quantitative_counterpart.py tests/test_v4_quantitative_product.py tests/test_v4_dashboard.py tests/test_v4_dashboard_research_sync.py",
+    "passed": 64,
+    "independent_semantic_accuracy": "NOT_RUN"
+  },
+  "protected_before": {
+    "var/v4/cross-industry/ledger/v4.sqlite3": "0234453d685a49640ad4e0ba1f955ade631ebd45a9aa7e1a8a719fb99b8f0a1c",
+    "var/v4/supply-linkage/ledger/v4.sqlite3": "8116eca6dfbf1e65cb605e1aab9b1af0d472a665bf7087899ccb23818d023bc8"
+  },
+  "usage": {
+    "external_AI_calls": 0,
+    "CPU_windows": 0,
+    "paid_API_cost": 0,
+    "platform_usage": "GitHub standard runner minutes/storage separately observed; not assumed unlimited"
+  },
+  "Q1": "PARTIAL",
+  "Q2": "PARTIAL_RESEARCH",
+  "Q3_pairs": 0,
+  "S1_new": 0,
+  "S2_new": 0,
+  "S3_new": 0,
+  "AI_adoption": "FAIL_PRESERVED",
+  "independent_AI_evaluation": "BLOCKED_PRESERVED",
+  "lead_performance": "BLOCKED_PRESERVED",
+  "operating_changes": false,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+}

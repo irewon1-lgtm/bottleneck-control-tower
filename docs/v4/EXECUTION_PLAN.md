@@ -445,3 +445,13 @@ Q1~Q7 순서와 모든 과거 기록을 유지한다. Git64MiB 한도·이력·�
 초기147 URL항목/93고유 URL은 확보 또는 제외/보류 이유를 기록했다. 새 후속260항목/49고유 URL과 미실행 검색은 커서를 보존한다. 새 주문 검토3개/시설 확장 주장1개를 기존 사실 구조에 추가했으나, 물리적 신규 주문 대수·적격 공급능력·확정 납기와 독립 수급쌍은0이다. 원문2개 재검토와 새 공식 문서1개 검토를 신규 LIVE 발견으로 세지 않는다. `relation-facts.json.q3_handoff`는 부분 사실 전달이며 Q3 비교 실행/합격이 아니다. 저장된 과거15개 다른 제품 비교는 여전히 오연결 반례다.
 
 진행·수치·실제 원격 저장 결과·다음 커서는 기존PROGRESS.json.quantitative_plan.Q2_real_evidence_resume와 quality-evidence.json의 같은 항목에 기록한다. main/data/운영 예약/CPU pin/Secrets/UI와 AI FAIL·독립/선행 성능 미검증은 유지한다.
+
+### 2026-10-16 승인된 공식 원천자료 확장 (BCT-V4-Q-1.0 Q1/Q2)
+
+사용자의 전 세계 공식 API·공개 파일·공시 원문 확대 지시를 기존 Q1/Q2 안에 통합한다. 기존8개 출처의 동결 범위·38,046개 수치·21,916개 물리량·과거 기록은 유지하고, 같은 source-registry.json의 global_sources 아래 확장 후보·인증·실행·커서를 구분한다. 별도 마스터 계획, 산업별 엔진, 새 정기 실행은 만들지 않는다.
+
+공통 형식(JSON OCDS/기관 API, CSV, XLSX) → 정확한 원본 필드/문자 구간/행·셀 검증 → 기존 append-only 연구 Ledger의 QUANTITATIVE_OFFICIAL_FACT → 계약/낙찰 ID의 정확한 관계 검토 → 기존 월별 비공개 Releases 저장을 사용한다. 자료형별 수집만 추가하며, 기존 CPU·RSS·UI·main/data·Secret·CPU pin은 변경하지 않는다. 개발 브랜치의 기존 수동 workflow에 official-sources 선택지를 추가한다. 읽기 전용 수집 작업과 전용 토큰 게시 작업은 계속 분리한다.
+
+수치 위치 일치, 제품 의미, 계약 체결, 고객 필요일, 적격 공급 및 독립성은 별도로 판정한다. 조달 단계·lot 취소·서명일·계약기간·금액·접속 신청MW·계획 가동일·통계 물리량을 서로 바꾸지 않는다. 원문·연락처는 원격 facts capsule에 복제하지 않는다. BGS처럼 보관/재배포 조건이 불명확한 출처는 로컬 파싱 증거만 남기고 원격 저장을 보류한다. 키 미등록·역할 제한·접근 차단은 해당 경로만 보류한다. 새 Secret은 사용자만 등록하며 선택적 전달 위치와 실제 실행기 present 불리언을 구분한다.
+
+현재 실행 증거·잔여 커서는 docs/v4/quantitative/OFFICIAL_SOURCE_RESULTS.json과 기존 PROGRESS.json.quantitative_plan.global_official_sources에 기록한다. Q3에 적격한 독립 수급쌍이 없으면0을 유지하며 S2/S3를 만들지 않는다. AI FAIL·독립 평가/선행성 BLOCKED도 그대로 유지한다. 이번 공식 출처 연결이 Q1 전체 완료나 병목 선행 성공을 뜻하지 않는다.
