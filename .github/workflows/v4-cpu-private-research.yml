@@ -11,7 +11,7 @@ on:
     inputs:
       purpose:
         type: choice
-        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart, q2-relations, official-sources, official-discovery, official-state-read, archive-storage-trial, monthly-storage-trial]
+        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart, q2-relations, official-sources, official-discovery, official-bidirectional, official-state-read, archive-storage-trial, monthly-storage-trial]
         default: seed
       q1_key_run:
         type: string
@@ -386,7 +386,7 @@ jobs:
           path: var/v4/quantitative/q1-source-probe
 
   q1-source-prior:
-    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && (inputs.purpose == 'q1-source-batch' || inputs.purpose == 'q1-trade-resume' || inputs.purpose == 'q2-review' || inputs.purpose == 'q1-storage-check' || inputs.purpose == 'q1-quality-Q2' || inputs.purpose == 'q1-recover-result' || inputs.purpose == 'q2-counterpart' || inputs.purpose == 'q2-relations' || inputs.purpose == 'official-sources' || inputs.purpose == 'official-discovery') }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && (inputs.purpose == 'q1-source-batch' || inputs.purpose == 'q1-trade-resume' || inputs.purpose == 'q2-review' || inputs.purpose == 'q1-storage-check' || inputs.purpose == 'q1-quality-Q2' || inputs.purpose == 'q1-recover-result' || inputs.purpose == 'q2-counterpart' || inputs.purpose == 'q2-relations' || inputs.purpose == 'official-sources' || inputs.purpose == 'official-discovery' || inputs.purpose == 'official-bidirectional') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
@@ -430,13 +430,13 @@ jobs:
           fail-on-cache-miss: true
           path: var/v4/quantitative/q1-source-bridge/result
       - uses: actions/setup-python@v5
-        if: ${{ inputs.purpose == 'official-sources' || inputs.purpose == 'official-discovery' }}
+        if: ${{ inputs.purpose == 'official-sources' || inputs.purpose == 'official-discovery' || inputs.purpose == 'official-bidirectional' }}
         with:
           python-version: '3.12'
           cache: pip
           cache-dependency-path: pyproject.toml
       - name: Prepare existing lightweight source-parser dependencies (no CPU model)
-        if: ${{ inputs.purpose == 'official-sources' || inputs.purpose == 'official-discovery' }}
+        if: ${{ inputs.purpose == 'official-sources' || inputs.purpose == 'official-discovery' || inputs.purpose == 'official-bidirectional' }}
         run: timeout 120 python -m pip install -e '.[quantitative]' --disable-pip-version-check
       - uses: actions/cache/restore@v4
         if: ${{ inputs.purpose == 'official-sources' && inputs.official_result_run == '38855145291' }}
@@ -456,6 +456,7 @@ jobs:
           QUALITY: ${{ inputs.purpose == 'q1-quality-Q2' }}
           STORAGE_ONLY: ${{ inputs.purpose == 'q1-storage-check' }}
           RELATIONS_ONLY: ${{ inputs.purpose == 'q2-relations' }}
+          OFFICIAL_BIDIRECTIONAL_ONLY: ${{ inputs.purpose == 'official-bidirectional' }}
           OFFICIAL_DISCOVERY_ONLY: ${{ inputs.purpose == 'official-discovery' }}
           OFFICIAL_INPUT_KEY_RUN: ${{ inputs.q1_key_run }}
           GH_TOKEN: ${{ github.token }}
@@ -480,6 +481,11 @@ jobs:
           BCT_COMTRADE_API_KEY: ${{ secrets.BCT_COMTRADE_API_KEY }}
           BCT_REGULATIONS_API_KEY: ${{ secrets.BCT_REGULATIONS_API_KEY }}
         run: |
+          if [ "$OFFICIAL_BIDIRECTIONAL_ONLY" = true ]; then
+            timeout 120 python -u tools/v4_quantitative_batch.py official_bidirectional
+            timeout 120 python -u tools/v4_quantitative_batch.py finish
+            exit 0
+          fi
           if [ "$OFFICIAL_DISCOVERY_ONLY" = true ]; then
             timeout 120 python -u tools/v4_quantitative_batch.py official_discovery
             timeout 120 python -u tools/v4_quantitative_batch.py finish

@@ -27,6 +27,27 @@ NO_VOLUME = re.compile(r'no (?:minimum|maximum|obligation|commitment)|no obligat
 NEGATED = re.compile(r'\b(?:not ordered|did not order|cancelled order|canceled order|no purchase)\b', re.I)
 
 
+def demand_status(context, *, previous=None, quantity_now=None):
+    """A new identifier/signature is not proof of additional physical demand.
+
+    Comparisons require the caller's same-contract/item lineage, never amounts
+    or contract end dates. Replacement and mixed/negated claims stay explicit.
+    """
+    if re.search(r'\b(?:replacement|replace(?:ment|s|d)?|renewal|renewed|retender|re-tender)\b', context, re.I):
+        return 'REPLACEMENT_OR_RENEWAL_NOT_PROVEN_INCREMENT'
+    if re.search(r'\b(?:cancelled|canceled|terminated|did not order|not ordered|no additional|not increased)\b', context, re.I):
+        return 'CANCELLED_OR_NEGATED_NOT_INCREMENT'
+    if previous is not None and quantity_now is not None:
+        from decimal import Decimal
+        if Decimal(quantity_now) > Decimal(previous): return 'SAME_ITEM_COMMITTED_QUANTITY_INCREASE'
+        if Decimal(quantity_now) < Decimal(previous): return 'SAME_ITEM_COMMITTED_QUANTITY_DECREASE'
+        return 'UNCHANGED_COMMITTED_QUANTITY'
+    # Explicit source wording is a research claim, not a historical comparison.
+    if re.search(r'\b(?:additional|incremental|increased)\s+(?:orders?|demand|quantity|units)\b', context, re.I):
+        return 'REPORTED_INCREMENT_PRIOR_BASELINE_UNKNOWN'
+    return 'UNKNOWN_ORDINARY_ORDER_NOT_PROVEN_INCREMENT'
+
+
 def located_object(text):
     """Conservative grammar for a native goods contract's object, not a model list.
 
@@ -183,6 +204,7 @@ def extract_ocds(native, meta):
                          'supplier': award.get('suppliers', [{}])[0].get('name'),
                          'published_at': rel.get('date', 'UNKNOWN'), 'first_publication_verified': False,
                          'blockers': reasons, 'demand_increase_vs_prior_period': 'UNKNOWN',
+                         'demand_change_class': demand_status(text),
                          'research_only': True, 's_stage': 'UNKNOWN',
                          'extraction_path': 'NATIVE_GOODS_CONTRACT_PLUS_LOCATED_PURCHASE_OBJECT_NOT_LEGACY_PROSE_EVENT'}
                 event['id'] = sha(event); events.append(event)
@@ -231,6 +253,201 @@ def indicative_supply(raw, meta):
              'extraction_path': 'UNIQUE_PRODUCT_H1_AND_NATIVE_LEAD_TIME_LITERAL'}
     event['id'] = sha(event)
     return fact, event
+
+
+def context_role(context):
+    """Deterministic change semantics, separate from exact-source verification.
+
+    No issuer/product allowlist. A reported plan is not completed supply;
+    backlog currency is not physical volume, nor a machine's processing rate
+    its manufacturer's capacity. Mixed relations are retained for review.
+    """
+    q = context
+    if re.search(r'\b(?:can process|capable of processing|processes up to|can test)\b', q, re.I):
+        return 'CONTEXT', 'PROCESSING_SPECIFICATION_NOT_MANUFACTURER_CAPACITY', 'SPECIFICATION'
+    if re.search(r'\b(?:not|never|no longer)\b.{0,25}\b(?:increas|decreas|delay|expand|qualif|cancel)', q, re.I):
+        return 'CONTEXT', 'NEGATED_CHANGE', 'NEGATED'
+    plan = bool(re.search(r'\b(?:plans?|expects?|targets?|propos\w*|will|would|could|may|aims?|scheduled|anticipated)\b', q, re.I))
+    actuality = 'PLANNED_OR_EXPECTED' if plan else 'REPORTED_ACTUAL'
+    if re.search(r'\b(?:backlog|bookings|orders?|demand)\b', q, re.I):
+        if re.search(r'\b(?:cancel\w*|decreas\w*|declin\w*|fell|reduc\w*)\b', q, re.I):
+            return 'RELIEF', 'DEMAND_REDUCTION', actuality
+        if re.search(r'\b(?:backlog|bookings)\b', q, re.I):
+            return 'DEMAND', 'BACKLOG_OR_BOOKINGS', actuality
+        if re.search(r'\b(?:reserv\w*|prepayment|long.term)\b', q, re.I):
+            return 'DEMAND', 'RESERVATION', actuality
+        if re.search(r'\b(?:orders?|demand)\b', q, re.I):
+            return 'DEMAND', 'ORDER_OR_DEMAND_CLAIM', actuality
+    if re.search(r'\b(?:plant|factory|facility|production line|commission\w*|permit|certif\w*|qualif\w*)\b', q, re.I):
+        if re.search(r'\b(?:delay\w*|postpon\w*|await\w*|pending|closed?|closure|suspend\w*|restrict\w*)\b', q, re.I):
+            return 'CONSTRAINT', 'FACILITY_OR_QUALIFICATION_CONSTRAINT', actuality
+        if re.search(r'\b(?:completed|opened|operational|commissioned|certified|qualified|approved)\b', q, re.I):
+            return 'RELIEF' if not plan else 'SUPPLY_PLAN', 'FACILITY_OR_QUALIFICATION_READY', actuality
+    if re.search(r'\b(?:production|output|capacity|utilization|yield|inventory|inventories|lead.times?|export|import|supply)\b', q, re.I):
+        if re.search(r'\b(?:can|capable of|up to|process\w*|test\w*|measurement|bandwidth)\b', q, re.I) and not re.search(r'\b(?:increased|decreased|expanded|delayed|reduced)\b', q, re.I):
+            return 'CONTEXT', 'PROCESSING_SPECIFICATION_NOT_MANUFACTURER_CAPACITY', 'SPECIFICATION'
+        down = bool(re.search(r'\b(?:decreas\w*|declin\w*|reduc\w*|fell|delay\w*|restrict\w*|ban\w*|shortage|limited|unavailable|suspend\w*)\b', q, re.I))
+        up = bool(re.search(r'\b(?:increas\w*|rose|expand\w*|doubl\w*|recover\w*|restor\w*|resum\w*)\b', q, re.I))
+        lead = bool(re.search(r'\blead.times?\b', q, re.I))
+        if up and down: return 'CONTEXT', 'MIXED_CHANGE_REQUIRES_ATTRIBUTION', 'UNKNOWN'
+        if down or up:
+            constraint = up if lead else down
+            return ('CONSTRAINT' if constraint else 'SUPPLY_PLAN' if plan else 'RELIEF'), 'REPORTED_SUPPLY_CHANGE', actuality
+    if re.search(r'\b(?:CAPEX|capital expenditure|capacity expansion|investment|new factory|new plant)\b', q, re.I):
+        return 'SUPPLY_PLAN', 'INVESTMENT_NOT_AVAILABLE_CAPACITY', 'PLANNED_OR_EXPECTED'
+    return 'CONTEXT', 'NO_DIRECTIONAL_CHANGE_PROVEN', 'UNKNOWN'
+
+
+def read_context(raw, meta):
+    """Reuse the source/scope/temporal readers on an actual official HTML body.
+
+    A complete sentence must map exactly once into the unchanged raw document.
+    Its product position is then resolved *inside that sentence*, never by a
+    convenient first global product hit. Markup/ambiguous quotations are held.
+    Only short factual scalars, positions and hashes leave this function.
+    """
+    from bct import future_body
+    counterpart.relation_url(meta['url'])
+    if sha(raw) != meta['sha256']: raise ValueError('CONTEXT_NATIVE_HASH')
+    import gzip
+    decoded = gzip.decompress(raw) if raw.startswith(b'\x1f\x8b') else raw
+    if len(decoded) > 4_000_000: raise ValueError('CONTEXT_DECODED_SIZE_LIMIT')
+    html = decoded.decode('utf-8', errors='strict')
+    extraction = future_body.extract_document(html, content_type='text/html')
+    body = extraction.get('body', '')
+    doc = prose_document(body, meta, ['OFFICIAL_CONTEXT', meta['url']])
+    doc['body_status'] = extraction['body_status']
+    structured = pc.structure(doc)
+    events, holds = [], []
+    statements = list(structured['precursor_events'])
+    # The old trigger list misses output/yield changes without the phrase
+    # 'production capacity'. Reuse its sentence and physical-object binding,
+    # extending only trigger coverage in this research path.
+    positions = {(e['locator']['start'], e['locator']['end']) for e in statements}
+    for line in sr.sentences(doc, sr.allowed_lines(doc, decoded)[0]):
+        if (line['start'], line['end']) in positions or context_role(line['quote'])[0] == 'CONTEXT': continue
+        p = sr.bound_product(line, sr._products(doc, line))
+        statements.append({'source_quote': line['quote'], 'locator': {'start': line['start'], 'end': line['end']},
+                           'scope': {'product': p} if p else {}, 'quantity': 'UNKNOWN', 'unit': 'UNKNOWN'})
+    for old in statements:
+        context = old['source_quote']; start = old['locator']['start']; end = old['locator']['end']
+        role, kind, actuality = context_role(context)
+        locations = [m.start() for m in re.finditer(re.escape(context), html)]
+        if len(locations) != 1:
+            holds.append({'stage': 'EXTRACTION', 'reason': 'RAW_CONTEXT_AMBIGUOUS' if locations else 'RAW_CONTEXT_MARKUP_ALIGNMENT_UNSUPPORTED',
+                          'body_position': old['locator'], 'context_sha256': sha(context.encode())}); continue
+        field = old['scope'].get('product')
+        # Incomplete scope is preserved; it is not a verified physical event.
+        product = field['value'] if field else None
+        if field and not start <= field['locator']['start'] < field['locator']['end'] <= end:
+            # Cross-sentence scope references need separate relation proof.
+            holds.append({'stage': 'ENTITY', 'reason': 'PRODUCT_OUTSIDE_EVENT_NEEDS_RELATION_PROOF', 'body_position': old['locator']})
+            product = None; field = None
+        at = locations[0]
+        position = ({'start': at + field['locator']['start']-start, 'end': at + field['locator']['end']-start} if field else None)
+        if position and html[position['start']:position['end']] != product: raise ValueError('CONTEXT_PRODUCT_POSITION')
+        amount = old.get('quantity')
+        target = {k: None for k in TARGET}
+        if product: target['product'] = {'normalized': sr.product_key(product)}
+        scope_positions = {}
+        for key in ('specification', 'region', 'customer_group'):
+            attr = old['scope'].get(key)
+            if attr and start <= attr['locator']['start'] < attr['locator']['end'] <= end:
+                loc = {k: at+v-start for k,v in attr['locator'].items()}
+                if html[loc['start']:loc['end']] != attr['value']: raise ValueError('CONTEXT_SCOPE_POSITION')
+                target[key] = {'normalized': attr['value'].casefold()}; scope_positions[key] = loc
+        e = {'logical_id': sha([meta['url'], kind, product, sha(context.encode())]), 'source_hash': meta['sha256'],
+             'source_url': meta['url'], 'lineage': meta['source_id'], 'published_at': meta.get('published_at') or 'UNKNOWN',
+             'acquired_at': meta['acquired_at'], 'body_sha256': doc['body_sha256'], 'body_position': old['locator'],
+             'raw_position': {'start': at, 'end': at+len(context)}, 'context_sha256': sha(context.encode()),
+             'product': product, 'product_position': position, 'role': role, 'kind': kind, 'actuality': actuality,
+             'state': 'SOURCE_BOUND_REPORTED_CHANGE' if product and role != 'CONTEXT' else 'CONTEXT_REVIEW_PENDING',
+             'quantity': None if amount in (None, 'UNKNOWN') else amount, 'unit': old.get('unit', 'UNKNOWN'),
+             'quantity_meaning': 'REPORTED_LITERAL_NOT_QUALIFIED_AVAILABLE_SUPPLY',
+             'target': target, 'scope_positions': scope_positions,
+             'temporal_references': [{'start': x['locator']['start'], 'end': x['locator']['end']} for x in old.get('raw_period_references', [])],
+             'demand_change_class': demand_status(context) if role in {'DEMAND','RELIEF'} else None,
+             'qualified': False, 'coverage_complete': False, 'customer_need_date': None, 'supply_ready_date': None,
+             'qualified_capacity': None, 'first_publication_verified': False, 'research_only': True, 's_stage': 'UNKNOWN'}
+        e['id'] = sha(e); events.append(e)
+    return {'source': {**{k: meta[k] for k in ['source_id', 'url', 'sha256', 'acquired_at']},
+                       'body_sha256': doc['body_sha256'], 'body_status': extraction['body_status'],
+                       'read_characters': len(body), 'scope': 'EXTRACTED_BODY_NOT_WHOLE_NATIVE_DOCUMENT',
+                       'position_space': 'GZIP_DECODED_UTF8_HTML_CHARACTERS' if decoded is not raw else 'UTF8_HTML_CHARACTERS',
+                       'published_at': meta.get('published_at') or 'UNKNOWN'}, 'events': events, 'holds': holds}
+
+
+def context_seeds(results):
+    """Both directions feed the same existing four-facet relation queue."""
+    out = []
+    for r in results:
+        for e in r['events']:
+            if e['state'] != 'SOURCE_BOUND_REPORTED_CHANGE': continue
+            role = 'DEMAND' if e['role'] == 'DEMAND' else 'CONSTRAINT' if e['role'] == 'CONSTRAINT' else 'SUPPLY_PLAN'
+            out.append({'id': e['id'], 'event_key': e['logical_id'], 'product': e['product'], 'role': role,
+                        'source': {'document_id': e['logical_id'], 'body_sha256': e['body_sha256'],
+                                   'origin_url': e['source_url'], 'published_at': e['published_at']},
+                        'fields': {'specification': None, 'region': None, 'customer': None, 'supplier': None,
+                                   'quantity': e['quantity'], 'need_window': None, 'qualified_capacity': None, 'delivery': None}})
+    return out
+
+
+def save_context(ledger, result, *, raw=None, meta=None):
+    """Verify with the captured native before retaining non-body research state.
+
+    A restored receipt is evidence of prior acquisition, not a claim that its
+    unavailable original has just been verified again.
+    """
+    if raw is None or meta is None or read_context(raw, meta) != result:
+        raise ValueError('CONTEXT_REPLAY_REQUIRED')
+    reason = 'OFFICIAL_BIDIRECTIONAL_CONTEXT:'+sha(result)
+    with ledger.db:
+        old = ledger.db.execute("SELECT 1 FROM events WHERE kind='QUANTITATIVE_VALIDATION' AND json_extract(payload,'$.reason')=?", (reason,)).fetchone()
+        if not old: ledger.event('QUANTITATIVE_VALIDATION', {'reason': reason, 'originals_modified': False, 'policy': result})
+    return {'added': int(not old), 'events': len(result['events'])}
+
+
+def structured_supply_changes(ledger):
+    """Reuse verified Q1 EIA rows; compare present-present facility identities.
+
+    Missing rows are not retirements. Date/nameplate edits are reported edits,
+    not proved production delays or qualified customer-allocated capacity.
+    This reads facts, never reruns a model or downloads a completed workbook.
+    """
+    from collections import defaultdict
+    from .quantitative import research_export
+    groups = defaultdict(lambda: defaultdict(list))
+    for obs in research_export(ledger)['observations']:
+        r = obs['record']
+        if r['source_id'] != 'eia' or r['metric'] != 'nameplate_capacity': continue
+        groups[(r['entity_or_facility_id'], r['product_or_classification'], r['geography'], r['unit_original'])][r['period_start']].append(obs)
+    changes = []; holds = []
+    for key, periods in sorted(groups.items()):
+        for first, second in zip(sorted(periods), sorted(periods)[1:]):
+            if len(periods[first]) != 1 or len(periods[second]) != 1:
+                holds.append({'facility_id': key[0], 'periods': [first, second], 'reason': 'AMBIGUOUS_FACILITY_ROWS'}); continue
+            a, b = periods[first][0], periods[second][0]; x, y = a['record'], b['record']
+            if x['unit_original'] != y['unit_original']: continue
+            before, after = x['attributes']['sheet'], y['attributes']['sheet']
+            role = 'RELIEF' if before == 'Planned' and after == 'Operating' else 'CONSTRAINT' if before == 'Operating' and after == 'Retired' else 'CONTEXT'
+            dates = lambda r: [r['attributes'].get('Planned Operation Year'), r['attributes'].get('Planned Operation Month')]
+            capacity_changed = x['value_decimal_or_null'] != y['value_decimal_or_null']
+            dates_changed = dates(x) != dates(y)
+            if before == after and not dates_changed and not capacity_changed: continue
+            e = {'facility_id': key[0], 'technology': key[1], 'region': key[2], 'unit': key[3],
+                 'periods': [first, second], 'before_status': before, 'after_status': after,
+                 'before_nameplate': x['value_decimal_or_null'], 'after_nameplate': y['value_decimal_or_null'],
+                 'before_planned_date': dates(x), 'after_planned_date': dates(y),
+                 'role': role, 'kind': 'REPORTED_FACILITY_STATUS_CHANGE' if role != 'CONTEXT' else 'RECORD_REVISION_NOT_PROVEN_SUPPLY_CHANGE',
+                 'actuality': 'REPORTED_STATUS_NOT_DELIVERY', 'product': 'electricity',
+                 'source_ids': [a['id'], b['id']], 'source_hashes': [x['raw_or_safe_payload_hash'], y['raw_or_safe_payload_hash']],
+                 'positions': [x['source_locator'], y['source_locator']], 'source_urls': [x['source_url'], y['source_url']],
+                 'published_at': [x['published_at'], y['published_at']], 'lineage': 'eia',
+                 'customer_need_date': None, 'qualified_capacity': None, 'qualified': False,
+                 'coverage_complete': False, 's_stage': 'UNKNOWN', 'research_only': True}
+            e['id'] = sha(e); changes.append(e)
+    return {'changes': changes, 'holds': holds, 'source_HTTP': 0, 'CPU_windows': 0,
+            'originals_rechecked_here': False, 'basis': 'PREVIOUSLY_LOCATED_Q1_NATIVE_ROWS_NOT_COMPLETE_QUALIFIED_SUPPLY'}
 
 
 def seeds(events, facts):

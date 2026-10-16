@@ -418,6 +418,28 @@ def official():
  return 75 if any(p['status']=='BATCH_LIMIT_PENDING'for p in result['pages'])else 0
 
 
+def official_bidirectional():
+ """Resume current monthly facts and the existing automatic queue; no collector."""
+ initialize();ledger=Ledger(R/'ledger')
+ from v4_official_discovery import import_bidirectional,bidirectional
+ packet=json.loads(Path('docs/v4/quantitative/OFFICIAL_BIDIRECTIONAL_RESULTS.json').read_text())
+ with ledger.worker():
+  imported=import_bidirectional(ledger,packet)
+  result=bidirectional(ledger,R/'bidirectional',network=True)
+  before=file_sha(ledger.path)
+ ledger.close()
+ # Fresh process confirms stored output and complete old numerical lineage.
+ import subprocess
+ code="import json;from bct.v4.store import Ledger;from bct.v4.quantitative_counterpart import latest_relations;L=Ledger('var/v4/quantitative/q1-source-work/ledger');r=L.db.execute(\"select count(*)from events where kind='QUANTITATIVE_VALIDATION' and json_extract(payload,'$.policy.format')='bct-official-bidirectional-1'\").fetchone()[0];assert r>=1;assert len(latest_relations(L)['tasks'])>=88;L.close()"
+ child=subprocess.run([sys.executable,'-c',code],capture_output=True,text=True,timeout=60)
+ if child.returncode or file_sha(R/'ledger/v4.sqlite3')!=before:raise ValueError('BIDIRECTIONAL_RESTART_STATE_FAILED')
+ compact={'summary':result['summary'],'Q3':result['Q3'],'import':imported,'new_process_requery':True,'sqlite_sha256':before,
+          'native_originals_rechecked_here':False,'external_requests_in_receiver':result['summary']['new_HTTP_this_batch'],
+          'AI_calls':0,'CPU_windows':0,'paid_cost':0,'code_SHA':os.environ['GITHUB_SHA']}
+ (R/'q2-report.json').write_text(json.dumps({'official_bidirectional':compact}))
+ print('BCT_OFFICIAL_BIDIRECTIONAL_JSON='+json.dumps(compact),flush=True)
+
+
 def official_discovery():
  """Append the actual locally replayed source batch to current monthly state.
 
@@ -541,7 +563,7 @@ def official_state_read():
  print('BCT_OFFICIAL_STATE_READ_JSON='+json.dumps({'storage':cursor,'checkpoint_kind':manifest['kind'],'previous_manifest_sha256':manifest['previous_manifest_sha256'],'tables':manifest['proof']['tables'],'remote_restore_verified':True,'sqlite_sha256':file_sha(R/'state-read/v4.sqlite3'),'official_record_versions':len(rows),'by_source':{s:sum(r['source_id']==s for r in rows)for s in sorted({r['source_id']for r in rows})},'Q1_numeric':numeric,'Q1_physical':physical,'Q2':{k:v for k,v in handoff.items()if k!='review_inputs'},'originals_restored':False,'source_HTTP_requests':0,'writes':0,'AI_calls':0,'CPU_windows':0,'code_SHA':os.environ['GITHUB_SHA']}),flush=True)
 
 if __name__=='__main__':
- parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality','verify','recover','counterparts','relations','official','official_state_read','official_discovery']);a=parser.parse_args()
+ parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality','verify','recover','counterparts','relations','official','official_state_read','official_discovery','official_bidirectional']);a=parser.parse_args()
  if a.action=='official':raise SystemExit(official())
  if a.action=='quality':raise SystemExit(quality())
  if a.action in {'process','trade'}:raise SystemExit(process(only_trade=a.action=='trade'))
