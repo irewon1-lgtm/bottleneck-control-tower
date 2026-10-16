@@ -41,3 +41,21 @@ def test_received_order_preserved_with_unknown_physical_quantity_and_planned_shi
   with pytest.raises(ValueError,match='UNCONFIRMED'):review(d,s)
  t=text.replace('multiple ModelZ equipment units','equipment to produce ModelZ equipment units');d.update(body=t,body_sha256=sha(t.encode()));s['context']=t
  with pytest.raises(ValueError,match='OBJECT_UNKNOWN'):review(d,s)
+
+
+def test_order_for_equipment_is_retained_but_output_and_currency_are_not_quantity():
+ text='Maker announced it has received a $8 million order from Buyer for a fully automated ModelQ test system.\nThe system is expected to ship during the first half of 2027.'
+ d={'document_id':'synthetic-new-industry','body':text,'body_sha256':sha(text.encode()),'body_status':'FULL','provenance':'PASS','origin_url':'https://maker.example/order'}
+ s={'context':text,'kind':'ACTUAL_ORDER_QUANTITY_UNKNOWN','product':'ModelQ test system','customer':'Buyer','planned_delivery':'the first half of 2027'}
+ r=review(d,s)
+ assert r['quantity']is None and r['unit']is None and r['need_window']is None and r['qualified_capacity']is None
+ for clause in ['equipment to produce ','chips made using ','a plant with ']:
+  bad=text.replace('a fully automated ModelQ',clause+'ModelQ');d.update(body=bad,body_sha256=sha(bad.encode()));s['context']=bad
+  with pytest.raises(ValueError,match='OBJECT_UNKNOWN'):review(d,s)
+
+
+def test_plural_order_and_scheduled_delivery_remain_supplier_plan_not_customer_need():
+ text='Maker announced production orders from Buyer.\nThe orders include ModelQ equipment. Deliveries under the order are scheduled over the next six months.'
+ d={'document_id':'synthetic-plural','body':text,'body_sha256':sha(text.encode()),'body_status':'FULL','provenance':'PASS','origin_url':'https://maker.example/order'}
+ s={'context':text,'kind':'ACTUAL_ORDER_QUANTITY_UNKNOWN','product':'ModelQ equipment','planned_delivery':'next six months'}
+ r=review(d,s);assert r['actuality']=='ACTUAL'and r['need_window']is None and r['quantity']is None

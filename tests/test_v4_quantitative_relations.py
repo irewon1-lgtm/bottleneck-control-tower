@@ -40,6 +40,13 @@ def test_cross_institution_citation_can_be_found_without_product_literal():
     assert links[0]['relation']=='UNKNOWN_REVIEW_REQUIRED'
 
 
+def test_article_citations_do_not_expand_global_navigation_or_encoding_declaration():
+    raw=b'<?xml version="1.0" encoding="UTF-8"?><html><header><a href="https://agency.example/all-contracts">Contracts</a></header><article><a href="https://agency.example/contract-12">Purchase contract</a></article></html>'
+    t=next(t for t in q.relation_tasks([seed()])if t['facet']=='CUSTOMER_CONTRACT')
+    links=q.relation_links(t,{'origin_url':'https://maker.example/release','document_id':'doc','raw_sha256':sha(raw)},raw)
+    assert [x['url']for x in links]==['https://agency.example/contract-12']
+
+
 def test_missing_manufacturer_does_not_start_global_manufacturing_menu_crawl():
     s=seed();s['fields']['supplier']=None;t=q.relation_tasks([s])[0]
     raw=b'<a href="https://www.eia.gov/consumption/manufacturing/">Manufacturing</a>'
@@ -110,3 +117,33 @@ def test_real_twelve_regression_cases_and_qualified_supply_remain_unchanged():
     assert capacity['subject']=='Sonoma'and capacity['quantity']=='20'and capacity['unit']=='systems/month'
     assert capacity['bound']=='GREATER_THAN'and capacity['qualification']=='UNKNOWN'
     assert all(f['s_stage']=='UNKNOWN'for f in facts)
+
+
+def test_round_restart_preserves_limits_but_historical_receipts_do_not_block_next_round(tmp_path):
+    path=tmp_path/'rounds.json';r=q.RelationRound(path)
+    for i in range(3):r.charge('event','https://maker.example/'+str(i))
+    assert not q.RelationRound(path).allow('event','maker.example')
+    with pytest.raises(ValueError,match='NOT_CLOSED'):q.RelationRound(path,next_round=True)
+    r.close();assert not q.RelationRound(path).allow('event','maker.example')
+    r=q.RelationRound(path,next_round=True)
+    assert r.current['number']==2 and r.allow('event','maker.example')
+    for i in range(6):r.charge('event-'+str(i),'https://maker.example/'+str(i))
+    assert not r.allow('another-event','maker.example')
+    assert len(json.loads(path.read_text())['rounds'][0]['charges'])==3
+
+
+def test_triage_preserves_direct_document_and_does_not_call_menu_capacity():
+    t=q.relation_tasks([seed()])[0]
+    assert q.relation_link_class(t,'https://maker.example/2026/10/orders')=='DIRECT_DOCUMENT_CANDIDATE'
+    assert q.relation_link_class(t,'https://maker.example/investor-relations/')=='OFFICIAL_INDEX_NOT_EVIDENCE'
+    assert q.relation_link_class(t,'https://www.eia.gov/consumption/manufacturing/data/2022/pdf/report.pdf')=='IRRELEVANT_AGGREGATE_NOT_TARGET_SUPPLY'
+
+
+def test_stale_public_queue_cannot_replace_newer_private_cursor(tmp_path):
+    initial=q.relation_tasks([seed()])[0];l=Ledger(tmp_path)
+    q.save_relations(l,stamp_export({'tasks':[initial]}))
+    newer=deepcopy(initial);newer['reason']='ANOTHER_WORKER_ADVANCED';newer['id']=sha(['q2-relation-state-1',{k:v for k,v in newer.items()if k!='id'}])
+    q.guard_relation_resume(l,{'tasks':[newer],'resume_parent_ids':{initial['task_id']:initial['id']}})
+    q.save_relations(l,stamp_export({'tasks':[newer]}))
+    with pytest.raises(ValueError,match='REMOTE_CURSOR_ADVANCED'):q.guard_relation_resume(l,{'tasks':[initial]})
+    q.guard_relation_resume(l,{'tasks':[newer]});l.close()

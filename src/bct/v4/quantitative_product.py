@@ -46,14 +46,20 @@ def review(doc,spec):
         # A reviewed order is preserved without treating money/multiple as units.
         # Require the order to explicitly include the source-literal equipment.
         if re.search(r'\b(?:not|cancelled|canceled|non-binding|options?|would|may|could)\b',text,re.I):raise ValueError('PRODUCT_FACT_ORDER_UNCONFIRMED')
-        if not re.search(r'\b(?:announced|has received)\b[^\n]*\border\b',text,re.I):raise ValueError('PRODUCT_FACT_ORDER_RELATION_UNKNOWN')
-        claim=re.search(r'\b(?:announced|has received)\b[^\n]*?\border\b',text,re.I).group()
+        if not re.search(r'\b(?:announced|has received)\b[^\n]*\borders?\b',text,re.I):raise ValueError('PRODUCT_FACT_ORDER_RELATION_UNKNOWN')
+        claim=re.search(r'\b(?:announced|has received)\b[^\n]*?\borders?\b',text,re.I).group()
         if re.search(r'\b(?:expected|planned|plans|forecast|interest|anticipated)\b',claim,re.I):raise ValueError('PRODUCT_FACT_ORDER_UNCONFIRMED')
-        object_relation=re.search(r'\border\b[^\n]*?\bincludes?\b[^\n]*?'+re.escape(product['value']),text,re.I)
+        object_relation=re.search(r'\borders?\b[^\n]*?\bincludes?\b[^\n]*?'+re.escape(product['value']),text,re.I)
+        if not object_relation:
+            # A received order FOR equipment is a relation even when the issuer
+            # does not use "includes". Keep the produced output exclusion.
+            object_relation=re.search(r'\breceived\b[^\n]*?\border\b[^\n]*?\bfor\b(?P<object>[^\n]*?)'+re.escape(product['value']),text,re.I)
+            if object_relation and re.search(r'\b(?:to|from|with|using|made|produce|produced|manufacture|manufactured|production|support|enable)\b',object_relation['object'],re.I):
+                object_relation=None
         if not object_relation or re.search(r'\b(?:to produce|to manufacture|production of)\b',object_relation.group(),re.I):raise ValueError('PRODUCT_FACT_ORDER_OBJECT_UNKNOWN')
         if spec.get('quantity_literal')or spec.get('unit'):raise ValueError('PRODUCT_FACT_UNREVIEWED_QUANTITY')
         if spec.get('planned_delivery'):
-            if not re.search(r'\bexpects? to ship\b',text,re.I):raise ValueError('PRODUCT_FACT_SHIP_RELATION_UNKNOWN')
+            if not re.search(r'\bexpects? to ship\b|\b(?:is )?expected to ship\b|\bscheduled to ship\b|\bdeliveries under the order are scheduled\b',text,re.I):raise ValueError('PRODUCT_FACT_SHIP_RELATION_UNKNOWN')
             refs['planned_delivery']=literal(doc,spec['planned_delivery'],context)
         normalized=None;unit=None;actuality='ACTUAL'
     elif kind=='EXPECTED_DELIVERY':

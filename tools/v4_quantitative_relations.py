@@ -7,7 +7,7 @@ import re
 import sqlite3
 import subprocess
 import time
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, parse_qs, urlencode
 
 from bct.objective_lock import stamp_export
 from bct.target_acquisition import fetch, verify, now
@@ -15,6 +15,67 @@ from bct.v4 import quantitative_counterpart as q
 from bct.v4.store import Ledger, sha, file_sha
 
 ROOT=Path('var/v4/quantitative/q2-relations')
+
+
+def official_searches(tasks,budget,started):
+    """Two verified public index interfaces, shared across the research queue.
+
+    These are bounded discovery records, not article evidence. Unsupported
+    hosts remain pending; no replacement of a blocked SEC/issuer request.
+    """
+    folder=ROOT/'official-searches';folder.mkdir(exist_ok=True);calls=0
+    for task in tasks:
+        if task['scope'].get('official_search'):continue
+        host=urlsplit(task['source_identity']['origin_url']).hostname
+        product=task['scope'].get('manufacturer_model_proof')or{}
+        model=product.get('manufacturer_model')or task['entity_literal']
+        if host=='www.aehr.com':
+            query='manufacturing facility'if task['facet']=='MANUFACTURER_FACILITY'else re.sub('[®™]','',model).strip()
+            url='https://www.aehr.com/wp-json/wp/v2/search?'+urlencode({'search':query,'per_page':20})
+            method='VERIFIED_WORDPRESS_SEARCH_PAGE1_MORE_PAGES_UNREAD'
+        elif host in {'www.gov.uk','www.gsk.com','ir.halozyme.com'}:
+            query=task['entity_literal']
+            url='https://www.gov.uk/api/search.json?'+urlencode({'q':query,'count':20})
+            method='VERIFIED_UK_GOV_SEARCH_ONLY_NOT_GLOBAL_ABSENCE'
+        else:
+            task['scope']['official_discovery_hold']='ISSUER_SEARCH_UNAVAILABLE_OR_UNVERIFIED_NEEDS_OTHER_OFFICIAL_INDEX'
+            continue
+        key=sha(url);p=folder/(key+'.json');native=folder/(key+'.raw')
+        if not p.exists():
+            if time.monotonic()-started>=90 or not budget.allow(task['event_key'],urlsplit(url).hostname):continue
+            budget.charge(task['event_key'],url);calls+=1
+            p.write_text(json.dumps({'status':'INTERRUPTED_NO_RETRY','url':url,'urls':[]}))
+            try:
+                raw,final,status,ctype=fetch(url);native.write_bytes(raw)
+                if urlsplit(final).hostname!=urlsplit(url).hostname:raise ValueError('INDEX_REDIRECT_IDENTITY')
+                value=json.loads(raw);rows=value if isinstance(value,list)else value.get('results',[])
+                urls=[];unrelated=[]
+                for row in rows:
+                    dest=row.get('url')or('https://www.gov.uk'+row['link']if row.get('link','').startswith('/')else None)
+                    if not dest:continue
+                    try:q.relation_url(dest)
+                    except ValueError:continue
+                    if urlsplit(dest).hostname!=urlsplit(url).hostname:continue
+                    if 'gov.uk'in url:
+                        tokens=[s.casefold()for s in re.findall(r'[\w-]+',query)if len(s)>3 and s.casefold()not in {'site','system','systems','plant','facility'}]
+                        if not tokens or tokens[0]not in str(row.get('title','')).casefold():
+                            unrelated.append(dest);continue
+                    if dest not in urls:urls.append(dest)
+                result={'status':'OFFICIAL_INDEX_LEADS_FOUND'if urls else'NO_LEAD_IN_INDEX_RANGE_NOT_GLOBAL_ABSENCE',
+                        'url':url,'urls':urls,'raw_sha256':sha(raw),'acquired_at':now(),'method':method,
+                        'rows':len(rows),'unread_index_pages':'UNKNOWN','automatic':True,'not_evidence':True}
+                result['unrelated_index_results']=unrelated
+            except Exception as exc:
+                result={'status':'OFFICIAL_INDEX_ACCESS_OR_PARSE_FAILED','url':url,'urls':[],
+                        'http_status':getattr(exc,'code',None),'error_type':type(exc).__name__,'method':method}
+            p.write_text(json.dumps(result))
+        result=json.loads(p.read_text());task['scope']['official_search']=result
+        used={x['url']for x in task['urls']}
+        for dest in result['urls']:
+            if dest not in used:
+                task['urls'].append({'url':dest,'via_document_id':'official-index-'+key,
+                                    'status':'AUTOMATIC_OFFICIAL_INDEX_LEAD','relation':'UNKNOWN_REVIEW_REQUIRED'});used.add(dest)
+    return calls
 
 
 def inventory():
@@ -67,28 +128,99 @@ def inventory():
     return seeds,tasks,docs,raws,protected,rejected
 
 
-def run(*,network=False):
+def run(*,network=False,next_round=False,discover=False,official=False):
     ROOT.mkdir(parents=True,exist_ok=True);path=ROOT/'queue.json'
+    parents={t['task_id']:t['id']for t in json.loads(Path('docs/v4/quantitative/relation-tasks.json').read_text())['tasks']}
     seeds,tasks,docs,raws,protected,rejected=inventory()
     old=json.loads(path.read_text())if path.exists()else None
     if old:
         previous={r['task_id']:r for r in old['tasks']}
         tasks=[{**r,**{k:previous[r['task_id']][k]for k in ['urls','cursor','checked_sources','search_state','reason']}}
                if r['task_id']in previous else r for r in tasks]
+        for task in tasks:
+            prior=previous.get(task['task_id'],{})
+            for name in ['external_search','official_search','official_discovery_hold']:
+                if prior.get('scope',{}).get(name):task['scope'][name]=prior['scope'][name]
         # New verified events append; existing task states/cursors survive.
         tasks += [r for key,r in previous.items()if key not in {t['task_id']for t in tasks}]
-    started=time.monotonic();calls=0;event_calls=Counter();host_calls=Counter();results=[]
+    started=time.monotonic();calls=0;results=[]
+    budget=q.RelationRound(ROOT/'request-rounds.json',next_round=next_round) if network else None
     cache=ROOT/'captures';cache.mkdir(exist_ok=True)
-    for previous in cache.glob('*.json'):
-        if previous.name.endswith('.document.json'):continue
-        saved=json.loads(previous.read_text())
-        if saved.get('event_key'):
-            event_calls[saved['event_key']]+=1;host_calls[urlsplit(saved['url']).hostname]+=1
+    held_hosts=json.loads((ROOT/'host-quarantine.json').read_text())if(ROOT/'host-quarantine.json').exists()else{}
+    # Exact stored originals outrank a new GET. Re-extraction creates a derived
+    # version; it never overwrites frozen documents or upgrades their records.
+    needed={u['url']for t in tasks for u in t['urls'][t['cursor']:]}
+    existing={d['origin_url']:d for d in docs.values()if d['document_id']in raws}
+    for url in needed:
+        key=sha(url);receipt=cache/(key+'.json')
+        if receipt.exists()or url not in existing:continue
+        source=existing[url];raw=raws[source['document_id']]
+        if sha(raw)!=source['raw_sha256']:raise ValueError('STORED_NATIVE_HASH')
+        if raw.startswith(b'%PDF'):continue  # Existing PDF recovery remains separate.
+        try:
+            d=verify(raw,url,url,source['acquired_at']);d['document_id']='q2-offline-derived-'+sha([url,sha(raw)])
+            q.bind_publication(d,raw)
+        except Exception as exc:
+            receipt.write_text(json.dumps({'url':url,'status':'STORED_ORIGINAL_EXTRACTION_HELD_NO_REFETCH','error_type':type(exc).__name__,'raw_sha256':sha(raw),'published_at':'UNKNOWN','source_calls':0}))
+            continue
+        (cache/(key+'.raw')).write_bytes(raw)
+        (cache/(key+'.document.json')).write_text(json.dumps(d,ensure_ascii=False))
+        receipt.write_text(json.dumps({'url':url,'status':'REUSED_STORED_ORIGINAL_DERIVED_REVIEW',
+                                      'document_id':d['document_id'],'raw_sha256':sha(raw),'body_sha256':d['body_sha256'],
+                                      'provenance':d['provenance'],'published_at':d.get('published_at')or'UNKNOWN',
+                                      'body_status':d['body_status'],'source_calls':0,'semantic_relation':'UNKNOWN_NOT_ADOPTED'}))
     # The already executed public-only search returned unrelated YouTube URLs.
     # Quarantine this provider response; do not treat it as evidence of absence.
     search_probe=json.loads((ROOT/'search-probe.json').read_text())if(ROOT/'search-probe.json').exists()else {}
     irrelevant_hosts={'www.youtube.com','accounts.google.com','play.google.com','en.wikipedia.org'}
     provider_bad=bool(search_probe.get('urls')and all(urlsplit(u).hostname in irrelevant_hosts for u in search_probe['urls']))
+    # The old Bing response is quarantined. This explicit alternative was first
+    # piloted against official H225M results; snippets never become facts.
+    searches=ROOT/'searches';searches.mkdir(exist_ok=True)
+    if official and network:calls+=official_searches(tasks,budget,started)
+    search_quarantined=(searches/'provider-quarantine.json').exists()
+    if discover and not search_quarantined:
+        from bct.target_acquisition import Metadata
+        official_hosts={urlsplit(t['source_identity']['origin_url']).hostname for t in tasks}
+        for task in tasks:
+            old_search=task['scope'].get('external_search')
+            if old_search:continue
+            url='https://html.duckduckgo.com/html/?'+urlencode({'q':task['query']})
+            key=sha(url);rp=searches/(key+'.json');rawpath=searches/(key+'.raw')
+            if not rp.exists():
+                if not network or time.monotonic()-started>=90 or not budget.allow(task['event_key'],urlsplit(url).hostname):continue
+                budget.charge(task['event_key'],url);calls+=1
+                rp.write_text(json.dumps({'url':url,'status':'INTERRUPTED_NO_RETRY','urls':[]}))
+                try:
+                    raw,final,status,ctype=fetch(url);rawpath.write_bytes(raw)
+                    html=raw.decode('utf-8',errors='replace')
+                    if re.search(r'anomaly\.js|anomaly-modal|Unfortunately, bots',html,re.I):
+                        (searches/'provider-quarantine.json').write_text(json.dumps({'status':'HUMAN_CHALLENGE_NO_BYPASS','url_sha256':key,'at':now()}))
+                        raise ValueError('SEARCH_HUMAN_CHALLENGE')
+                    parser=Metadata();parser.feed(html);found=[];seen=set()
+                    for href,label in parser.links:
+                        dest=parse_qs(urlsplit(href).query).get('uddg',[None])[0]
+                        if not dest or dest in seen:continue
+                        seen.add(dest);host=urlsplit(dest).hostname or ''
+                        try:q.relation_url(dest)
+                        except ValueError:continue
+                        if host not in official_hosts and not (host.endswith('.gov')or host.endswith('.gov.uk')or host.endswith('.europa.eu')):continue
+                        # Full query/result matching nominates URLs only, never
+                        # proves the manufacturer, product or independence.
+                        found.append(dest)
+                    result={'url':url,'status':'OFFICIAL_LEADS_FOUND'if found else'NO_OFFICIAL_LEAD_IN_SEARCH_RANGE',
+                            'raw_sha256':sha(raw),'acquired_at':now(),'urls':found,'automatic':True,'not_evidence':True}
+                except Exception as exc:
+                    result={'url':url,'status':'SEARCH_ACCESS_OR_TRANSPORT_FAILED','http_status':getattr(exc,'code',None),'error_type':type(exc).__name__,'urls':[]}
+                rp.write_text(json.dumps(result))
+                if (searches/'provider-quarantine.json').exists():
+                    task['scope']['external_search']={k:v for k,v in result.items()if k!='url'}
+                    break
+            result=json.loads(rp.read_text());task['scope']['external_search']={k:v for k,v in result.items()if k!='url'}
+            used={x['url']for x in task['urls']}
+            for dest in result['urls']:
+                if dest not in used:
+                    task['urls'].append({'url':dest,'via_document_id':'external-search-'+key,'status':'AUTOMATIC_OFFICIAL_SEARCH_LEAD','relation':'UNKNOWN_REVIEW_REQUIRED'});used.add(dest)
     # Recovery uses preserved raw responses, never repeats the old failed GET.
     recovered={}
     for native in cache.glob('*.raw'):
@@ -112,6 +244,20 @@ def run(*,network=False):
                 for link in q.relation_links(task,json.loads(df.read_text()),rf.read_bytes()):
                     if link['url']not in used:task['urls'].append(link);used.add(link['url'])
         task['search_state']='PROVIDER_IRRELEVANT_RESPONSE_PENDING_ALTERNATIVE'if provider_bad else'OFFICIAL_CITED_LINK_DISCOVERY'
+        if task['scope'].get('external_search'):task['search_state']=task['scope']['external_search']['status']
+        if task['scope'].get('official_search'):task['search_state']=task['scope']['official_search']['status']
+        # Triage pending links without discarding history. Direct documents lead;
+        # menus/other products are marked, not fetched or adopted as evidence.
+        pending=task['urls'][task['cursor']:]
+        # Resolve non-fetch classifications first so exhausted network quota
+        # cannot strand hundreds of menu/law entries behind one direct URL.
+        # Actual GETs are still direct-only, newest dated sources first.
+        def priority(link):
+            match=re.search(r'/(\d{4})[/-](\d{2})',urlsplit(link['url']).path)
+            period=int(''.join(match.groups()))if match else 0
+            return (q.relation_link_class(task,link['url'])=='DIRECT_DOCUMENT_CANDIDATE',-period)
+        pending.sort(key=priority)
+        task['urls'][task['cursor']:]=pending
         while network and task['cursor']<len(task['urls']):
             link=task['urls'][task['cursor']];url=link['url'];key=sha(url);receipt=cache/(key+'.json');rawfile=cache/(key+'.raw')
             if q.relation_url(url)=='SEC_DISCOVERY_TRANSPORT_REQUIRED':
@@ -119,11 +265,20 @@ def run(*,network=False):
                 # is quarantined; neither a generic-UA fetch nor a retry occurs.
                 task['checked_sources'].append({'url':url,'status':'NOT_REQUESTED_PRIOR_SEC_HOST_QUARANTINE','prior_http_status':403,'published_at':'UNKNOWN'})
                 task['cursor']+=1;continue
+            classification=q.relation_link_class(task,url)
+            if url in task['scope'].get('official_search',{}).get('unrelated_index_results',[]):classification='UNRELATED_OFFICIAL_INDEX_RESULT'
+            if classification!='DIRECT_DOCUMENT_CANDIDATE':
+                task['checked_sources'].append({'url':url,'status':'TRIAGED_NOT_SUPPLY_EVIDENCE','classification':classification,'published_at':'UNKNOWN'})
+                task['cursor']+=1;continue
+            if not receipt.exists()and urlsplit(url).hostname in held_hosts:
+                task['checked_sources'].append({'url':url,'status':'HOST_ACCESS_QUARANTINED_NOT_REQUESTED','reason':held_hosts[urlsplit(url).hostname],'published_at':'UNKNOWN'})
+                task['cursor']+=1;continue
             if not receipt.exists():
-                if calls>=32 or time.monotonic()-started>=90 or event_calls[task['event_key']]>=3 or host_calls[urlsplit(url).hostname]>=6:break
+                if calls>=32 or time.monotonic()-started>=90 or not budget.allow(task['event_key'],urlsplit(url).hostname):break
                 # Journal BEFORE network: process death never causes blind retry.
+                budget.charge(task['event_key'],url)
                 receipt.write_text(json.dumps({'url':url,'event_key':task['event_key'],'status':'ATTEMPT_INTERRUPTED_NO_AUTO_RETRY','at':now()}))
-                calls+=1;event_calls[task['event_key']]+=1;host_calls[urlsplit(url).hostname]+=1
+                calls+=1
                 try:
                     raw,final,status,ctype=fetch(url);rawfile.write_bytes(raw)
                     if raw.startswith(b'%PDF'):
@@ -154,17 +309,23 @@ def run(*,network=False):
                 task['urls'] += [x for x in more if x['url']not in used and not used.add(x['url'])]
         if task['cursor']<len(task['urls']):task['reason']='UNPROCESSED_OFFICIAL_LINKS_PENDING_BATCH_BUDGET'
         elif any(r['status']=='ACCESS_BLOCKED'for r in task['checked_sources']):task['reason']='ACCESS_BLOCKED_NO_ABSENCE_INFERENCE'
+        elif task['scope'].get('external_search')or task['scope'].get('official_search'):task['reason']='SEARCH_EXECUTED_COUNTERPART_FIELDS_REVIEW_PENDING'
         elif not task['checked_sources']and provider_bad:task['reason']='EXTERNAL_SEARCH_NOT_EXECUTED_PROVIDER_IRRELEVANT'
         else:task['reason']='DOCUMENT_FOUND_PUBLICATION_OR_SEMANTIC_RELATION_UNVERIFIED'
         task['id']=sha(['q2-relation-state-1',{k:v for k,v in task.items()if k!='id'}])
         # A crash preserves completed tasks and pending URL cursor atomically.
         packet=stamp_export({'plan_id':'BCT-V4-Q-1.0','tasks':tasks,'S2':0,'S3':0})
         temp=path.with_suffix('.tmp');temp.write_text(json.dumps(packet,ensure_ascii=False,indent=2));temp.replace(path)
-    packet=stamp_export({'plan_id':'BCT-V4-Q-1.0','tasks':tasks,'S2':0,'S3':0})
+    if budget:budget.close()
+    packet=stamp_export({'plan_id':'BCT-V4-Q-1.0','tasks':tasks,'S2':0,'S3':0,'resume_parent_ids':parents,
+                        'request_rounds':budget.state if budget else json.loads((ROOT/'request-rounds.json').read_text())if(ROOT/'request-rounds.json').exists()else None})
+    temp=path.with_suffix('.tmp');temp.write_text(json.dumps(packet,ensure_ascii=False,indent=2));temp.replace(path)
     l=Ledger(ROOT/'ledger');saved=q.save_relations(l,packet);l.close()
     assert all(file_sha(Path(p))==h for p,h in protected.items())
     report=stamp_export({'seed_records':len(seeds),'document_role_clusters':len({s.get('event_key',s['id'])for s in seeds}),
         'relation_tasks':len(tasks),'facets':dict(Counter(t['facet']for t in tasks)),'new_HTTP_calls_this_batch':calls,
+        'round':budget.current if budget else None,'external_searches_executed':sum(bool(t['scope'].get('external_search'))for t in tasks),
+        'official_index_requests_covered':sum(bool(t['scope'].get('official_search'))for t in tasks),
         'unique_new_source_results':results,'checked_unique_URLs':len({r['url']for t in tasks for r in t['checked_sources']}),
         'pending_URLs':sum(len(t['urls'])-t['cursor']for t in tasks),'pending_tasks':sum(t['cursor']<len(t['urls'])for t in tasks),
         'observed_SEC_query_links_held':len({u['url']for t in tasks for u in t['urls']if u['status']=='HELD_SEC_INDEX_PRIOR_HOST_QUARANTINE'}),
@@ -177,4 +338,5 @@ def run(*,network=False):
 
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('--network',action='store_true');run(network=parser.parse_args().network)
+    parser=argparse.ArgumentParser();parser.add_argument('--network',action='store_true');parser.add_argument('--next-round',action='store_true');parser.add_argument('--discover',action='store_true');parser.add_argument('--official-discover',action='store_true')
+    args=parser.parse_args();run(network=args.network,next_round=args.next_round,discover=args.discover,official=args.official_discover)

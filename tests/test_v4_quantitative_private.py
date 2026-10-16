@@ -41,7 +41,7 @@ def test_counterpart_positions_and_unknown_quantity_fact_survive_typed_capsule(t
     proof=private.checkpoint(l,tmp_path/'checkpoint');l.close()
     private.restore(tmp_path/'checkpoint',tmp_path/'restored')
     restored=Ledger(tmp_path/'restored');assert counterpart.save(restored,packet)['added']==0
-    assert restored.db.execute("SELECT count(*) FROM events WHERE kind='QUANTITATIVE_PRODUCT_FACT'").fetchone()[0]==4
+    assert restored.db.execute("SELECT count(*) FROM events WHERE kind='QUANTITATIVE_PRODUCT_FACT'").fetchone()[0]==len(products['records'])
     assert restored.db.execute('SELECT count(*)FROM firsts').fetchone()[0]==0;restored.close()
 
 

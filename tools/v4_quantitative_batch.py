@@ -75,6 +75,10 @@ def prepare():
   monthly=Monthly(os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],os.environ['BCT_V4_STATE_PASSPHRASE'])
   if not monthly.write_allowed:raise ValueError('MONTHLY_NEW_RESEARCH_WINDOW_ENDED_READ_ONLY_RESTORE_REMAINS_AVAILABLE')
   result=monthly.receive(R/'prior',git_repo=R/'private-read')
+  assets=monthly.store(result['storage']['tag']).assets()
+  used=sum(a['size']for a in assets)
+  if used>=monthly.p['monthly_bytes_budget']or len(assets)>=monthly.p['monthly_assets_budget']:raise ValueError('MONTHLY_CAPACITY_STOP')
+  print('BCT_Q1_CURRENT_CAPACITY_JSON='+json.dumps({'tag':result['storage']['tag'],'generation':result['storage']['generation'],'bytes':used,'remaining_monthly_bytes':monthly.p['monthly_bytes_budget']-used,'assets':len(assets),'remaining_asset_slots':monthly.p['monthly_assets_budget']-len(assets)}))
  else:
   if Monthly(os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],os.environ['BCT_V4_STATE_PASSPHRASE']).head()is not None:raise ValueError('MONTHLY_STATE_EXISTS_REFUSE_STALE_GIT_RESEARCH_READ')
   result=private.remote_checkpoint(R/'private-read',R/'prior',os.environ.get('BCT_V4_PRIVATE_STATE_TOKEN',''))
@@ -329,26 +333,36 @@ def counterparts():
 def relations():
  initialize();ledger=Ledger(R/'ledger')
  from bct.objective_lock import require_objective
- from bct.v4.quantitative_counterpart import save_relations,validate_relation_fact
+ from bct.v4.quantitative_counterpart import save_relations,validate_relation_fact,guard_relation_resume
+ from bct.v4.quantitative_product import save as save_products
  packet=json.loads(Path('docs/v4/quantitative/relation-tasks.json').read_text());require_objective(packet)
  facts=json.loads(Path('docs/v4/quantitative/relation-facts.json').read_text());require_objective(facts)
+ products=json.loads(Path('docs/v4/quantitative/product-facts.json').read_text());require_objective(products)
+ # A later monthly task state must never be replaced by a stale public packet.
+ guard_relation_resume(ledger,packet)
  with ledger.worker():
+  product_saved=save_products(ledger,products['records'])
   saved=save_relations(ledger,packet);added=0
   with ledger.db:
    for row in facts['records']:
     validate_relation_fact(row)
     if ledger.db.execute("SELECT 1 FROM events WHERE kind='QUANTITATIVE_RELATION_FACT'AND json_extract(payload,'$.id')=?",(row['id'],)).fetchone():continue
     ledger.event('QUANTITATIVE_RELATION_FACT',row);added+=1
+   if packet.get('request_rounds'):
+    evidence_policy={'request_rounds':packet['request_rounds'],'queue_sha256':file_sha(Path('docs/v4/quantitative/relation-tasks.json')),'Q3_handoff':facts.get('q3_handoff')}
+    marker='Q2 persisted request rounds '+sha(evidence_policy)
+    if not ledger.db.execute("SELECT 1 FROM events WHERE kind='QUANTITATIVE_VALIDATION'AND json_extract(payload,'$.reason')=?",(marker,)).fetchone():
+     ledger.event('QUANTITATIVE_VALIDATION',{'reason':marker,'originals_modified':False,'policy':evidence_policy})
   before=file_sha(ledger.path)
  ledger.close()
  import subprocess
- code="import json;from bct.v4.store import Ledger;from bct.v4.quantitative_counterpart import save_relations;L=Ledger('var/v4/quantitative/q1-source-work/ledger');r=save_relations(L,json.load(open('docs/v4/quantitative/relation-tasks.json')));L.close();assert r['added']==0"
+ code="import json;from bct.v4.store import Ledger;from bct.v4.quantitative_counterpart import save_relations;from bct.v4.quantitative_product import save;L=Ledger('var/v4/quantitative/q1-source-work/ledger');r=save_relations(L,json.load(open('docs/v4/quantitative/relation-tasks.json')));p=save(L,json.load(open('docs/v4/quantitative/product-facts.json'))['records']);F=json.load(open('docs/v4/quantitative/relation-facts.json'))['records'];assert all(L.db.execute(\"SELECT count(*)FROM events WHERE kind='QUANTITATIVE_RELATION_FACT'AND json_extract(payload,'$.id')=?\",(f['id'],)).fetchone()[0]==1 for f in F);L.close();assert r['added']==p['added']==0"
  child=subprocess.run([sys.executable,'-c',code],capture_output=True,text=True,timeout=60)
  if child.returncode or file_sha(R/'ledger/v4.sqlite3')!=before:raise ValueError('RELATION_RESTART_DEDUP')
  observed_enabled=os.environ.get('OBSERVED_CPU_ENABLED','');observed_code=os.environ.get('OBSERVED_CPU_CODE_SHA','')
  observation={'enabled':observed_enabled if observed_enabled in {'true','false'}else'MISSING_OR_INVALID','code_SHA':observed_code if re.fullmatch('[0-9a-f]{40}',observed_code)else'MISSING_OR_INVALID',
               'expected_pin':'221fa92b1cbff8950716ec373eac793ca340c873','modified':False}
- (R/'q2-report.json').write_text(json.dumps({'relation_states':saved,'new_relation_facts':added,'new_process_dedup':True,'CPU_current_observation':observation,'source_calls':0,'AI_calls':0,'CPU_windows':0,'qualified_capacity':0,'independent_pairs':0,'new_S2':0,'new_S3':0}))
+ (R/'q2-report.json').write_text(json.dumps({'relation_states':saved,'new_product_facts':product_saved['added'],'new_relation_facts':added,'new_process_dedup':True,'CPU_current_observation':observation,'source_calls':0,'AI_calls':0,'CPU_windows':0,'qualified_capacity':0,'independent_pairs':0,'new_S2':0,'new_S3':0}))
  finish()
 
 

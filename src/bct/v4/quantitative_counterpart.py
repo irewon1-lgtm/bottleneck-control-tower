@@ -427,7 +427,19 @@ def relation_links(task, doc, raw):
     from bct.target_acquisition import Metadata
     if sha(raw)!=doc['raw_sha256']:raise ValueError('RELATION_NATIVE_HASH')
     if raw.lstrip().startswith(b'%PDF'):return []  # PDF text is handled separately, never as HTML links.
-    parser=Metadata();parser.feed(raw.decode('utf-8',errors='replace'))
+    html=raw.decode('utf-8',errors='replace')
+    # Global headers, recommendations and footers are not article citations.
+    # Keep the existing raw-anchor contract for fragments/official indices.
+    from lxml import html as dom_html
+    dom=dom_html.fromstring(raw)
+    articles=dom.xpath('//article')
+    if len(articles)==1:html=dom_html.tostring(articles[0],encoding='unicode')
+    elif re.search(br'<html\b|<!doctype',raw,re.I):
+        mains=dom.xpath('//main')
+        if len(mains)!=1:return []  # Whole-site navigation is not a citation.
+        for n in mains[0].xpath('.//nav|.//header|.//footer|.//aside'):n.drop_tree()
+        html=''.join(dom_html.tostring(n,encoding='unicode')for n in mains[0].xpath('.//p//a|.//td//a'))
+    parser=Metadata();parser.feed(html)
     words={'MANUFACTURER_FACILITY':r'facilit|manufactur|annual.report|investor.relation|sec.filing',
            'FACILITY_CAPACITY_READY':r'capacit|produc|expan|commission|annual.report|investor.relation',
            'CUSTOMER_CONTRACT':r'contract|procure|purchase|defen[cs]e|ministry|supply.agreement',
@@ -493,3 +505,75 @@ def latest_relations(ledger):
     for payload, in ledger.db.execute("SELECT payload FROM events WHERE kind=? ORDER BY seq",(RELATION_KIND,)):
         row=json.loads(payload);validate_relation(row);rows[row['task_id']]=row
     return stamp_export({'plan_id':'BCT-V4-Q-1.0','tasks':list(rows.values()),'S2':0,'S3':0})
+
+
+def guard_relation_resume(ledger,packet):
+    """Compare with the restored current month, never a stale Git baseline."""
+    proposed={r['task_id']:r for r in packet['tasks']};parents=packet.get('resume_parent_ids',{})
+    for current in latest_relations(ledger)['tasks']:
+        target=proposed.get(current['task_id'])
+        if not target or current['id']not in {target['id'],parents.get(current['task_id'])}:
+            raise ValueError('RELATION_REMOTE_CURSOR_ADVANCED_NO_OVERWRITE')
+
+
+class RelationRound:
+    """Persist charges BEFORE I/O; a process/run ID never resets a round.
+
+    A new, explicitly requested research round is allowed only after the prior
+    traversal closed. Historical URL receipts remain a no-retry cache, not the
+    next round's quota. Restarting an interrupted round retains every charge.
+    """
+    def __init__(self, path, *, next_round=False):
+        from pathlib import Path
+        self.path=Path(path)
+        self.state=json.loads(self.path.read_text()) if self.path.exists() else {'rounds':[]}
+        rounds=self.state['rounds']
+        if next_round and rounds and rounds[-1]['status']!='CLOSED':
+            raise ValueError('RELATION_ROUND_NOT_CLOSED_RESUME_FIRST')
+        if not rounds or next_round:
+            rounds.append({'number':len(rounds)+1,'status':'OPEN','charges':[]})
+            self._save()
+        self.current=rounds[-1]
+
+    def _save(self):
+        self.path.parent.mkdir(parents=True,exist_ok=True)
+        temp=self.path.with_suffix('.tmp');temp.write_text(json.dumps(self.state));temp.replace(self.path)
+
+    def allow(self, event, host):
+        charges=self.current['charges']
+        return (self.current['status']=='OPEN' and len(charges)<32
+                and sum(c['event']==event for c in charges)<3
+                and sum(c['host']==host for c in charges)<6)
+
+    def charge(self, event, url):
+        host=urlsplit(url).hostname
+        if not self.allow(event,host):raise ValueError('RELATION_ROUND_BUDGET')
+        self.current['charges'].append({'event':event,'host':host,'url_sha256':sha(url)})
+        self._save()
+
+    def close(self):
+        self.current['status']='CLOSED';self._save()
+
+
+def relation_link_class(task,url):
+    """Triage only. A direct candidate is not validated supply evidence."""
+    if relation_url(url)=='SEC_DISCOVERY_TRANSPORT_REQUIRED' or urlsplit(url).hostname in {'www.sec.gov','data.sec.gov'}:return 'ACCESS_HELD_SEC'
+    p=urlsplit(url);path=p.path.lower()
+    if p.hostname in {'globenewswire.com','www.globenewswire.com','www.prnewswire.com'}:
+        return 'SECONDARY_REPUBLICATION_OR_MENU_NOT_INDEPENDENT'
+    if p.hostname=='www.eia.gov' and '/consumption/manufacturing/'in path:
+        return 'IRRELEVANT_AGGREGATE_NOT_TARGET_SUPPLY'
+    if p.hostname=='www.prnewswire.com' and ('-list/'in path or 'solutions'in path or '/heavy-industry-manufacturing-latest-news/'in path or '/energy-latest-news/'in path):
+        return 'GENERIC_MENU_NOT_EVIDENCE'
+    if p.hostname=='www.gov.uk' and any(w in path for w in ('/organisations/','/search/','/about','isotretinoin','doctors-led-ai','regulation-of-ai','stewart-appointed','fitzgerald-appointed','spending-over-500')):
+        return 'UNRELATED_OR_GENERAL_INSTITUTION_PAGE'
+    if p.hostname=='www.boeing.com' and 'fa-xx'not in path:
+        return 'OTHER_PRODUCT_OR_GENERAL_MENU'
+    if p.hostname=='www.energy.gov' and any(w in path for w in ('sankey','manufacturing-energy-and-carbon')):
+        return 'IRRELEVANT_AGGREGATE_NOT_TARGET_SUPPLY'
+    if p.hostname=='www.legislation.gov.uk':return 'GENERAL_LEGISLATION_NOT_TARGET_CONTRACT'
+    if path in ('','/','/solutions/','/renewable/'):
+        return 'GENERIC_MENU_NOT_EVIDENCE'
+    if any(w in path for w in ('investor-relations','/archive/','/search/','/about','/reports.php')):
+        return 'OFFICIAL_INDEX_NOT_EVIDENCE'
+    return 'DIRECT_DOCUMENT_CANDIDATE'
