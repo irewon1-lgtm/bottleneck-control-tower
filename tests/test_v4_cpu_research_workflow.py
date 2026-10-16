@@ -28,7 +28,7 @@ def test_deployed_consumer_requires_exact_configured_code_and_explicit_enable():
             if 'pip install'not in step.get('run',''):continue
             installers.append((name,step))
             assert name=='q1-source-process'
-            assert step['if']=="${{ inputs.purpose == 'official-sources' && inputs.official_result_run == '' }}"
+            assert step['if']=="${{ inputs.purpose == 'official-sources' }}"
             assert step['run']=="timeout 120 python -m pip install -e '.[quantitative]' --disable-pip-version-check"
     assert len(installers)==1
     prior=w['jobs']['q1-source-prior']['if']
