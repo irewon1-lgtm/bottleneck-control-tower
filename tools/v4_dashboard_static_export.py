@@ -52,6 +52,17 @@ def export(repo, dest, commit):
                            "status": "PUBLISHED_STATIC_SNAPSHOT",
                            "status_label": "무료 GitHub Pages · 자동 배포",
                            "automatic_deployment": "GITHUB_PAGES_ACTIONS"}
+    # Include the entire existing public progress receipt, not just older dashboard records.
+    progress = json.loads((repo / "docs/v4/PROGRESS.json").read_text(encoding="utf-8"))
+    q = progress.get("quantitative_plan", {})
+    data["quantitative_progress"] = {
+        "updated_at": q.get("updated_at"), "current_step": q.get("current_step"),
+        "status": q.get("status"), "numeric_observations": q.get("numeric_observations", 0),
+        "physical_quantity_observations": q.get("physical_quantity_observations", 0),
+        "versioned_records": q.get("versioned_records", 0),
+        "source_status": {name: {"status": item.get("status"), "counts": item.get("counts", {})}
+                          for name, item in q.get("source_status", {}).items()},
+    }
     html = (ASSETS / "index.html").read_text(encoding="utf-8")
     html = change_once(html, 'href="/style.css"', 'href="./style.css"')
     html = change_once(html, 'src="/app.js"', 'src="./app.js"')
@@ -62,6 +73,20 @@ def export(repo, dest, commit):
     var = "$" + "{id}"
     js = change_once(js, "request(" + tick + "/api/evidence/" + var + tick + ")",
                      "request(" + tick + "./api/evidence/" + var + ".json" + tick + ")")
+    progress_panel = """
+    if (data.quantitative_progress) {
+      const q = data.quantitative_progress;
+      const p = panel("최신 Q1·Q2·Q3 연구 진행", "공식 통계 수치와 미래 병목 판정은 구분합니다.");
+      p.append(add(el("div",null,"stats-grid"),
+        stat("수치 관측",q.numeric_observations,"공식 자료 원문에 저장된 관측","▤"),
+        stat("실물량 관측",q.physical_quantity_observations,"관측 수이며 적격 공급 확정은 아님","◫"),
+        stat("미래 병목 후보",Object.values(data.counts.future_candidates).reduce((a,b)=>a+b,0),"독립 공급 공백 Q3 미검증","◎")));
+      p.append(el("p","현재 판정: "+q.status+" · 기록 시각 "+date(q.updated_at),"section-note"),
+               link("전체 연구 진행 기록 열기 →","./api/progress.json"));
+      content.append(p);
+    }
+"""
+    js = change_once(js, "    recoverySummary();", "    recoverySummary();\n" + progress_panel)
     if dest.exists():
         shutil.rmtree(dest)
     dest.mkdir(parents=True, exist_ok=True)
@@ -70,6 +95,7 @@ def export(repo, dest, commit):
         "app.js": js.encode("utf-8"),
         "style.css": (ASSETS / "style.css").read_bytes(),
         "api/dashboard.json": pack(data),
+        "api/progress.json": pack(progress),
     }.items():
         path = dest / name
         path.parent.mkdir(parents=True, exist_ok=True)
