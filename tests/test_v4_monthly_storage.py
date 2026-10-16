@@ -104,7 +104,7 @@ def test_encrypted_handoff_preserves_exact_monthly_input_cursor(tmp_path):
 
 def test_scope_month_horizon_and_monthly_budget_are_finite(tmp_path,monkeypatch):
     with pytest.raises(ValueError,match='HORIZON_ENDED'):
-        m.Monthly('test-token',PASSWORD,at=datetime(2028,10,1,tzinfo=timezone.utc))
+        m.Monthly('test-token',PASSWORD,at=datetime(2028,10,1,tzinfo=timezone.utc)).publish(None,None)
     s=a.Releases('test-token','bct-v4-archive-monthly-2026-10','a'*40);s.release_id=2
     monkeypatch.setattr(s,'assets',lambda:[{'name':'old','size':a.MONTHLY_BYTES}])
     def api(method,path,*args,**kw):
@@ -113,6 +113,13 @@ def test_scope_month_horizon_and_monthly_budget_are_finite(tmp_path,monkeypatch)
         return 200,[{'size':a.MONTHLY_BYTES}]
     monkeypatch.setattr(s,'_request',api)
     with pytest.raises(ValueError,match='BUDGET_STOP'):s.put('commit-00000002.gpg',b'x')
+
+
+def test_archives_remain_readable_after_write_horizon_expires(tmp_path):
+    reg,obj,cp,proof,seed=setup(tmp_path);obj.publish(cp,seed)
+    after=m.Monthly('test-token',PASSWORD,settings=obj.p,at=datetime(2029,1,1,tzinfo=timezone.utc),factory=reg.factory)
+    assert after.receive(tmp_path/'after-expiry')['verified']['sqlite_sha256']==proof['sqlite_sha256']
+    with pytest.raises(ValueError,match='HORIZON_ENDED'):after.publish(cp,after.head())
 
 
 def test_research_batch_carries_cursor_and_legacy_upload_is_disabled():

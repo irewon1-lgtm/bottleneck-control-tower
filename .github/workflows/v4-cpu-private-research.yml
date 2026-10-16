@@ -51,7 +51,9 @@ jobs:
           timeout 120 python -u tools/v4_monthly_storage_trial.py prepare
           timeout 120 python -u tools/v4_monthly_storage_trial.py seed
           timeout 120 python -u tools/v4_monthly_storage_trial.py append
+          timeout 120 python -u tools/v4_monthly_storage_trial.py interrupt
           timeout 120 python -u tools/v4_monthly_storage_trial.py resume
+          timeout 120 python -u tools/v4_monthly_storage_trial.py duplicate
           timeout 120 python -u tools/v4_monthly_storage_trial.py verify
           timeout 120 python -u tools/v4_monthly_storage_trial.py rollover
           timeout 120 python -u tools/v4_monthly_storage_trial.py finish

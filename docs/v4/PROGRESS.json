@@ -5757,7 +5757,15 @@
           "status": "NOT_RUN"
         }
       ],
-      "policy": "docs/v4/quantitative/storage-policy.json"
+      "policy": "docs/v4/quantitative/storage-policy.json",
+      "first_remote_attempt": {
+        "run": 38836040358,
+        "code_SHA": "4394bfc1031a92031fe2a034aa2d33173bae0f2b",
+        "status": "FAIL",
+        "exit_code": 124,
+        "failure": "Combined append preparation and primary history validation exceeded120s; monthly full seed persisted, selector stillGit",
+        "change": "Split preparation/interruption/commit/lost-ack into bounded commands and stream exact history prefix instead of EXCEPT temp b-tree; limits unchanged"
+      }
     }
   }
 }

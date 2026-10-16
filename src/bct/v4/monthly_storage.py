@@ -38,8 +38,8 @@ class Monthly:
         self.anchor = self.p['anchor_legacy_parent']; self.factory = factory or archive.Releases
         self.metrics = {'HTTP_requests':0, 'upload_bytes':0, 'download_bytes':0,
                         'rate_remaining':None, 'rate_limit':None, 'HTTP_seconds':0.0}
-        if not 0 <= month_number(self.month) - month_number(self.p['monthly_start']) < self.p['months']:
-            raise ValueError('MONTHLY_24_MONTH_HORIZON_ENDED')
+        # The write window expires; existing archives must remain readable afterward.
+        self.write_allowed = 0 <= month_number(self.month) - month_number(self.p['monthly_start']) < self.p['months']
 
     def store(self, tag=None, *, create=False):
         return self.client(tag or self.prefix + self.month).ensure(create=create)
@@ -113,6 +113,8 @@ class Monthly:
         return {'parent':self.anchor, 'verified':verified, 'storage':cursor}
 
     def publish(self, checkpoint, expected, *, interrupt_before_commit=False):
+        if not self.write_allowed:
+            raise ValueError('MONTHLY_24_MONTH_HORIZON_ENDED')
         current = self.head()
         proof = json.loads((Path(checkpoint)/'checkpoint.json').read_text())
         if expected is None:

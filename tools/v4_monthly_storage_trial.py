@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import time
 
 from bct.objective_lock import stamp_export
 from bct.v4 import monthly_storage as ms, quantitative_private as private
@@ -36,7 +37,9 @@ def seed():
 
 
 def append():
-    m=monthly();got=m.receive(ROOT/'monthly-input');private.restore(ROOT/'monthly-input',ROOT/'monthly-ledger')
+    started=time.monotonic();m=monthly();got=m.receive(ROOT/'monthly-input')
+    print('Monthly append input received seconds='+str(round(time.monotonic()-started,2)),flush=True)
+    private.restore(ROOT/'monthly-input',ROOT/'monthly-ledger')
     l=Ledger(ROOT/'monthly-ledger');before=state(l.db)
     reason='MONTHLY_RELEASES_RESEARCH_PRIMARY_'+m.month
     exists=l.db.execute("SELECT 1 FROM events WHERE kind='QUANTITATIVE_VALIDATION'AND json_extract(payload,'$.reason')=?",(reason,)).fetchone()
@@ -45,6 +48,12 @@ def append():
           'policy':{'scope':'Actual monthly primary storage migration verification','source_collection':False,'new_numerical_facts':0}})
     proof=private.checkpoint(l,ROOT/'monthly-result');l.close()
     write('monthly-input-proof.json',{'storage':got['storage'],'state':before,'target_proof':proof})
+    write('monthly-append-prepared.json',{'already_present':bool(exists),'seconds':time.monotonic()-started})
+    print('Monthly append checkpoint prepared seconds='+str(round(time.monotonic()-started,2)),flush=True)
+
+
+def interrupt():
+    started=time.monotonic();m=monthly();got=read('monthly-input-proof.json');exists=read('monthly-append-prepared.json')['already_present']
     if not exists:
         try:m.publish(ROOT/'monthly-result',got['storage'],interrupt_before_commit=True)
         except ValueError as exc:
@@ -52,8 +61,8 @@ def append():
         else:raise ValueError('MONTHLY_INTERRUPT_NOT_TRIGGERED')
         assert m.head()==got['storage']
     write('monthly-interrupted.json',{'incomplete_generation_not_committed':not bool(exists),
-                                    'actual_own_validation_event_added':not bool(exists)})
-    print('Real research-state append prepared; interrupted save left last committed head intact')
+                                    'actual_own_validation_event_added':not bool(exists),'seconds':time.monotonic()-started})
+    print('Monthly interrupted publish verified seconds='+str(round(time.monotonic()-started,2)),flush=True)
 
 
 def resume():
@@ -62,11 +71,17 @@ def resume():
     after=len(m.store().assets())
     expected_new=0 if result.get('unchanged')else 1
     assert after-before==expected_new  # Data already uploaded before interruption.
-    lost=m.publish(ROOT/'monthly-result',input['storage'])
-    assert lost['unchanged'] and len(m.store().assets())==after
-    write('monthly-write.json',{'saved':result,'new_objects_on_resume':after-before,'lost_ack_retry':lost,
+    write('monthly-write.json',{'saved':result,'new_objects_on_resume':after-before,'lost_ack_retry':None,
                                'prior_data_object_reused':True})
-    print('New research state committed without Git DB write; repeated/lost-ack save adds no objects')
+    print('New research state committed without Git DB write',flush=True)
+
+
+def duplicate():
+    m=monthly();input=read('monthly-input-proof.json');before=len(m.store().assets())
+    lost=m.publish(ROOT/'monthly-result',input['storage'])
+    assert lost['unchanged'] and len(m.store().assets())==before
+    result=read('monthly-write.json');result['lost_ack_retry']=lost;write('monthly-write.json',result)
+    print('Repeated/lost-ack save adds no objects',flush=True)
 
 
 def read_current(args):
@@ -147,7 +162,7 @@ def finish():
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('action',choices=['prepare','seed','append','resume','verify','rollover','finish','read-current'])
+    p=argparse.ArgumentParser();p.add_argument('action',choices=['prepare','seed','append','interrupt','resume','duplicate','verify','rollover','finish','read-current'])
     p.add_argument('--dest');p.add_argument('--corrupt',action='store_true');args=p.parse_args()
     if args.action=='read-current':read_current(args)
     else:globals()[args.action]()

@@ -5,6 +5,7 @@ Releases are a secondary archive, not an unlimited database service.
 """
 import gzip
 import hashlib
+from itertools import zip_longest
 import json
 import re
 import shutil
@@ -255,7 +256,11 @@ def require_append_only(previous, target):
         db.execute('ATTACH DATABASE ? AS prior', (Path(previous).resolve().as_uri()+'?mode=ro',))
         if list(db.execute('SELECT * FROM metadata ORDER BY key')) != list(db.execute('SELECT * FROM prior.metadata ORDER BY key')):
             raise ValueError('ARCHIVE_PRIMARY_METADATA_CHANGED')
-        if db.execute('SELECT 1 FROM (SELECT seq,at,kind,payload FROM prior.events EXCEPT SELECT seq,at,kind,payload FROM events) LIMIT 1').fetchone():
+        last = db.execute('SELECT coalesce(max(seq),0) FROM prior.events').fetchone()[0]
+        before = db.execute('SELECT seq,at,kind,payload FROM prior.events ORDER BY seq')
+        after = db.execute('SELECT seq,at,kind,payload FROM events WHERE seq<=? ORDER BY seq',(last,))
+        # Stream exact rows by the primary key: no huge temporary EXCEPT b-tree.
+        if any(a != b for a,b in zip_longest(before,after)):
             raise ValueError('ARCHIVE_PRIMARY_EXISTING_HISTORY_LOST')
 
 
