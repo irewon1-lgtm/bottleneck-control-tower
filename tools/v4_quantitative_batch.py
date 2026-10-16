@@ -425,7 +425,14 @@ def official_bidirectional():
  packet=json.loads(Path('docs/v4/quantitative/OFFICIAL_BIDIRECTIONAL_RESULTS.json').read_text())
  with ledger.worker():
   imported=import_bidirectional(ledger,packet)
-  result=bidirectional(ledger,R/'bidirectional',network=True)
+  repair=Path('docs/v4/quantitative/OFFICIAL_SELECTION_REPAIR_RESULTS.json')
+  if repair.exists():
+   # Own locally source-replayed state only; captures stay out of Releases.
+   # Import is idempotent and rejects stale queue parents before any write.
+   repaired=json.loads(repair.read_text())
+   imported['selection_repair']=import_bidirectional(ledger,repaired)
+   result=bidirectional(ledger,R/'bidirectional',network=False)
+  else:result=bidirectional(ledger,R/'bidirectional',network=True)
   before=file_sha(ledger.path)
  ledger.close()
  # Fresh process confirms stored output and complete old numerical lineage.

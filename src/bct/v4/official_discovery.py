@@ -269,6 +269,11 @@ def context_role(context):
         return 'CONTEXT', 'NEGATED_CHANGE', 'NEGATED'
     plan = bool(re.search(r'\b(?:plans?|expects?|targets?|propos\w*|will|would|could|may|aims?|scheduled|anticipated)\b', q, re.I))
     actuality = 'PLANNED_OR_EXPECTED' if plan else 'REPORTED_ACTUAL'
+    # Different directional subjects in one sentence need attribution, not
+    # the first keyword's role applied to all products and amounts.
+    if (re.search(r'\b(?:orders?|backlog|demand)\b',q,re.I) and
+            re.search(r'\b(?:capacity|production|inventory|lead.times?)\b',q,re.I)):
+        return 'CONTEXT', 'MIXED_DEMAND_SUPPLY_REQUIRES_ATTRIBUTION', 'UNKNOWN'
     if re.search(r'\b(?:backlog|bookings|orders?|demand)\b', q, re.I):
         if re.search(r'\b(?:cancel\w*|decreas\w*|declin\w*|fell|reduc\w*)\b', q, re.I):
             return 'RELIEF', 'DEMAND_REDUCTION', actuality
@@ -278,11 +283,11 @@ def context_role(context):
             return 'DEMAND', 'RESERVATION', actuality
         if re.search(r'\b(?:orders?|demand)\b', q, re.I):
             return 'DEMAND', 'ORDER_OR_DEMAND_CLAIM', actuality
-    if re.search(r'\b(?:plant|factory|facility|production line|commission\w*|permit|certif\w*|qualif\w*)\b', q, re.I):
+    if re.search(r'\b(?:plant|factory|facility|production line|commission\w*|permit|certif\w*|qualif\w*|clearance|approval|authorization)\b', q, re.I):
         if re.search(r'\b(?:delay\w*|postpon\w*|await\w*|pending|closed?|closure|suspend\w*|restrict\w*)\b', q, re.I):
             return 'CONSTRAINT', 'FACILITY_OR_QUALIFICATION_CONSTRAINT', actuality
-        if re.search(r'\b(?:completed|opened|operational|commissioned|certified|qualified|approved)\b', q, re.I):
-            return 'RELIEF' if not plan else 'SUPPLY_PLAN', 'FACILITY_OR_QUALIFICATION_READY', actuality
+        if re.search(r'\b(?:completed|opened|operational|commissioned|certified|qualified|approved|cleared)\b|\breceived?\b.{0,50}\b(?:clearance|approval|authorization)\b', q, re.I):
+            return 'SUPPLY_CHANGE' if not plan else 'SUPPLY_PLAN', 'FACILITY_OR_QUALIFICATION_READY', actuality
     if re.search(r'\b(?:production|output|capacity|utilization|yield|inventory|inventories|lead.times?|export|import|supply)\b', q, re.I):
         if re.search(r'\b(?:can|capable of|up to|process\w*|test\w*|measurement|bandwidth)\b', q, re.I) and not re.search(r'\b(?:increased|decreased|expanded|delayed|reduced)\b', q, re.I):
             return 'CONTEXT', 'PROCESSING_SPECIFICATION_NOT_MANUFACTURER_CAPACITY', 'SPECIFICATION'
@@ -292,10 +297,27 @@ def context_role(context):
         if up and down: return 'CONTEXT', 'MIXED_CHANGE_REQUIRES_ATTRIBUTION', 'UNKNOWN'
         if down or up:
             constraint = up if lead else down
-            return ('CONSTRAINT' if constraint else 'SUPPLY_PLAN' if plan else 'RELIEF'), 'REPORTED_SUPPLY_CHANGE', actuality
+            return ('CONSTRAINT' if constraint else 'SUPPLY_PLAN' if plan else 'SUPPLY_CHANGE'), 'REPORTED_SUPPLY_CHANGE', actuality
     if re.search(r'\b(?:CAPEX|capital expenditure|capacity expansion|investment|new factory|new plant)\b', q, re.I):
         return 'SUPPLY_PLAN', 'INVESTMENT_NOT_AVAILABLE_CAPACITY', 'PLANNED_OR_EXPECTED'
     return 'CONTEXT', 'NO_DIRECTIONAL_CHANGE_PROVEN', 'UNKNOWN'
+
+
+def supply_object(line):
+    """An explicit same-sentence product relation, not an issuer/name list.
+
+    Still a product proposal: a located noun phrase does not prove physical
+    identity, factory qualification or available supply for a customer.
+    """
+    found=[]
+    pattern=r'\b(?:production(?: capacity)?|manufacturing capacity|output|lead times?)\s+(?:for|of)\s+(?P<object>[A-Za-z][A-Za-z0-9 /-]{2,100}?)\s+(?:has |have |was |were |will |is |are )?(?:increas\w*|decreas\w*|expand\w*|reduc\w*|rose|fell|doubl\w*|delay\w*)\b'
+    for m in re.finditer(pattern,line['quote'],re.I):
+        name=m['object'].strip()
+        if NONPHYSICAL.search(name) or re.search(r'\b(?:and|or|factory|plant|facility|company|dollars)\b',name,re.I):continue
+        if name.casefold() in sr.GENERIC:continue
+        found.append({'value':name,'locator':{'start':line['start']+m.start('object'),
+                                             'end':line['start']+m.end('object')}})
+    return found[0] if len(found)==1 else None
 
 
 def html_source(raw):
@@ -310,6 +332,70 @@ def html_source(raw):
     return decoded
 
 
+def publication_evidence(raw, url, acquired_at):
+    """Bind a single article date to its canonical/headline and corroboration.
+
+    Page creation, modification and retrieval dates aren't article publication.
+    This is source-reported publication, not proof of the first historical
+    release or an archived version existing at a past backtest cutoff.
+    """
+    from html import unescape
+    from bct.target_acquisition import Metadata, nodes, norm
+    html = html_source(raw).decode('utf-8')
+    p = Metadata(); p.feed(html)
+    result = {'published_at': 'UNKNOWN', 'first_publication_verified': False,
+              'reason': 'NO_UNIQUE_BOUND_ARTICLE_PUBLICATION', 'positions': []}
+    canon = re.findall(r'<link\b[^>]*>', html, re.I)
+    canon = [x for x in canon if re.search(r'rel=[\"\']canonical[\"\']', x, re.I)]
+    if len(canon) != 1 or norm(p.canonical) != norm(url): return result
+    # Some official IR publishers use visible article-header metadata rather
+    # than JSON-LD. Require one heading, one labelled article body and exactly
+    # one labelled date between them. Never take a convenient date in a list.
+    headers=list(re.finditer(r'<h1\b[^>]*>.*?</h1>',html,re.I|re.S))
+    bodies=list(re.finditer(r'<(?:div|section)\b[^>]*class=[\"\'][^\"\']*(?:bodytext|article-body)[^\"\']*[\"\']',html,re.I))
+    if len(headers)==len(bodies)==1 and 0<bodies[0].start()-headers[0].end()<1024:
+        header=html[headers[0].end():bodies[0].start()]
+        dates=list(re.finditer(r'<span\b[^>]*class=[\"\']date[\"\'][^>]*>\s*([^<>]+?)\s*</span>',header,re.I))
+        if len(dates)==1:
+            value=dates[0][1]
+            try:
+                dt=datetime.strptime(value,'%B %d, %Y')
+                if dt.date()<=datetime.fromisoformat(acquired_at.replace('Z','+00:00')).date():
+                    start=headers[0].end()+dates[0].start(1)
+                    return {**result,'published_at':dt.date().isoformat(),
+                            'reason':'CANONICAL_UNIQUE_ARTICLE_HEADER_LABELLED_DATE',
+                            'basis':'SOURCE_REPORTED_ARTICLE_DATE_NOT_VERSION_HISTORY',
+                            'positions':[{'start':start,'end':start+len(value)}]}
+            except ValueError:pass
+    articles = [x for x in nodes(p.ld) if x.get('@type') in ('Article','NewsArticle','BlogPosting')]
+    if len(articles) != 1: return result
+    article = articles[0]
+    clean = lambda x: ' '.join(unescape(re.sub('<[^>]+>', '', x)).split()).casefold()
+    headings = [clean(x) for x in re.findall(r'<h1\b[^>]*>(.*?)</h1>', html, re.I|re.S)]
+    if not isinstance(article.get('headline'),str):return result
+    headline = clean(article['headline'])
+    identity = article.get('url') or article.get('@id')
+    if identity is not None and not isinstance(identity,str):return result
+    if identity and norm(identity.split('#')[0]) != norm(url): return result
+    if not headline or headings != [headline]: return result
+    value = article.get('datePublished')
+    if not isinstance(value,str): return result
+    try:
+        dt = datetime.fromisoformat(value.replace('Z','+00:00'))
+        if dt.date() > datetime.fromisoformat(acquired_at.replace('Z','+00:00')).date(): return result
+        if len(value) != 10 and dt.tzinfo is None: return result
+    except ValueError: return result
+    # Only explicit publication metadata or a visible time can corroborate.
+    candidates = [p.meta.get('dc.date'), p.meta.get('article:published_time')]
+    candidates += re.findall(r'<time\b[^>]*datetime=[\"\']([^\"\']+)', html, re.I)
+    dates = {x[:10] for x in candidates if isinstance(x,str)}
+    if dates != {value[:10]}:
+        return {**result,'reason':'PUBLICATION_CORROBORATION_MISSING_OR_CONFLICTING'}
+    positions = [{'start':m.start(),'end':m.end()} for m in re.finditer(re.escape(value), html)]
+    return {**result,'published_at':value, 'reason':'CANONICAL_HEADLINE_ARTICLE_DATE_CORROBORATED',
+            'positions':positions, 'basis':'SOURCE_REPORTED_ARTICLE_DATE_NOT_VERSION_HISTORY'}
+
+
 def read_context(raw, meta):
     """Reuse the source/scope/temporal readers on an actual official HTML body.
 
@@ -321,9 +407,24 @@ def read_context(raw, meta):
     from bct import future_body
     counterpart.relation_url(meta['url'])
     if sha(raw) != meta['sha256']: raise ValueError('CONTEXT_NATIVE_HASH')
-    decoded = html_source(raw)
-    html = decoded.decode('utf-8', errors='strict')
-    extraction = future_body.extract_document(html, content_type='text/html')
+    pdf = raw.lstrip().startswith(b'%PDF')
+    if pdf:
+        # Same installed layout extractor as quantitative_relations. Source
+        # coordinates explicitly refer to this hash-bound text layer, not PDF
+        # byte offsets; images/unvalidated table relationships remain unread.
+        import subprocess, tempfile
+        from pathlib import Path
+        if len(raw)>16*1024*1024:raise ValueError('CONTEXT_PDF_SIZE_LIMIT')
+        with tempfile.TemporaryDirectory(prefix='bct-context-') as folder:
+            src=Path(folder)/'source.pdf';src.write_bytes(raw)
+            result=subprocess.run(['pdftotext','-layout',str(src),'-'],capture_output=True,check=True,timeout=20)
+        if len(result.stdout)>4_000_000:raise ValueError('CONTEXT_DECODED_SIZE_LIMIT')
+        html=result.stdout.decode('utf-8',errors='strict');decoded=None
+        extraction={'body':html,'body_status':'PARTIAL'}
+    else:
+        decoded = html_source(raw)
+        html = decoded.decode('utf-8', errors='strict')
+        extraction = future_body.extract_document(html, content_type='text/html')
     body = extraction.get('body', '')
     doc = prose_document(body, meta, ['OFFICIAL_CONTEXT', meta['url']])
     doc['body_status'] = extraction['body_status']
@@ -347,6 +448,10 @@ def read_context(raw, meta):
             holds.append({'stage': 'EXTRACTION', 'reason': 'RAW_CONTEXT_AMBIGUOUS' if locations else 'RAW_CONTEXT_MARKUP_ALIGNMENT_UNSUPPORTED',
                           'body_position': old['locator'], 'context_sha256': sha(context.encode())}); continue
         field = old['scope'].get('product')
+        relation_proposal = False
+        if field is None and role in {'CONSTRAINT','SUPPLY_PLAN','SUPPLY_CHANGE'}:
+            field = supply_object({'quote':context,'start':start})
+            relation_proposal = field is not None
         # Incomplete scope is preserved; it is not a verified physical event.
         product = field['value'] if field else None
         if field and not start <= field['locator']['start'] < field['locator']['end'] <= end:
@@ -371,7 +476,7 @@ def read_context(raw, meta):
              'acquired_at': meta['acquired_at'], 'body_sha256': doc['body_sha256'], 'body_position': old['locator'],
              'raw_position': {'start': at, 'end': at+len(context)}, 'context_sha256': sha(context.encode()),
              'product': product, 'product_position': position, 'role': role, 'kind': kind, 'actuality': actuality,
-             'state': 'SOURCE_BOUND_REPORTED_CHANGE' if product and role != 'CONTEXT' else 'CONTEXT_REVIEW_PENDING',
+             'state': 'PRODUCT_RELATION_PROPOSAL' if relation_proposal else 'SOURCE_BOUND_REPORTED_CHANGE' if product and role != 'CONTEXT' else 'CONTEXT_REVIEW_PENDING',
              'quantity': None if amount in (None, 'UNKNOWN') else amount, 'unit': old.get('unit', 'UNKNOWN'),
              'quantity_meaning': 'REPORTED_LITERAL_NOT_QUALIFIED_AVAILABLE_SUPPLY',
              'target': target, 'scope_positions': scope_positions,
@@ -379,11 +484,24 @@ def read_context(raw, meta):
              'demand_change_class': demand_status(context) if role in {'DEMAND','RELIEF'} else None,
              'qualified': False, 'coverage_complete': False, 'customer_need_date': None, 'supply_ready_date': None,
              'qualified_capacity': None, 'first_publication_verified': False, 'research_only': True, 's_stage': 'UNKNOWN'}
+        from bct import precursor_temporal as temporal
+        facts = temporal.extract(doc, {**old,'role':role})
+        # Reuse the temporal/quantity reader but retain scalars and locators,
+        # never quotations or a derived customer need/qualified readiness.
+        e['reported_measures'] = [{k:a[k] for k in ('value','unit','rate','fact_kind','basis','qualification_status','coverage')}
+                                  | {'body_position':a['reference']['locator']} for a in facts['quantities']]
+        e['reported_periods'] = [{k:p[k] for k in ('precision','start','end','fact_kind')}
+                                 | {'body_position':p['reference']['locator']} for p in facts['periods']]
+        e['bottleneck_relief_verified'] = False
+        if pdf:
+            e['page']=html.count('\f',0,at)+1
         e['id'] = sha(e); events.append(e)
     return {'source': {**{k: meta[k] for k in ['source_id', 'url', 'sha256', 'acquired_at']},
                        'body_sha256': doc['body_sha256'], 'body_status': extraction['body_status'],
                        'read_characters': len(body), 'scope': 'EXTRACTED_BODY_NOT_WHOLE_NATIVE_DOCUMENT',
-                       'position_space': 'GZIP_DECODED_UTF8_HTML_CHARACTERS' if decoded is not raw else 'UTF8_HTML_CHARACTERS',
+                       'position_space': 'PDF_LAYOUT_TEXT_CHARACTERS' if pdf else 'GZIP_DECODED_UTF8_HTML_CHARACTERS' if decoded is not raw else 'UTF8_HTML_CHARACTERS',
+                       'extracted_text_sha256':sha(html.encode()) if pdf else None,
+                       'unread_scope':'IMAGES_AND_TABLE_RELATIONS_NOT_VALIDATED' if pdf else 'OUTSIDE_EXTRACTED_BODY',
                        'published_at': meta.get('published_at') or 'UNKNOWN'}, 'events': events, 'holds': holds}
 
 
@@ -439,7 +557,7 @@ def structured_supply_changes(ledger):
             a, b = periods[first][0], periods[second][0]; x, y = a['record'], b['record']
             if x['unit_original'] != y['unit_original']: continue
             before, after = x['attributes']['sheet'], y['attributes']['sheet']
-            role = 'RELIEF' if before == 'Planned' and after == 'Operating' else 'CONSTRAINT' if before == 'Operating' and after == 'Retired' else 'CONTEXT'
+            role = 'FACILITY_STATUS' if before == 'Planned' and after == 'Operating' else 'CONSTRAINT' if before == 'Operating' and after == 'Retired' else 'CONTEXT'
             dates = lambda r: [r['attributes'].get('Planned Operation Year'), r['attributes'].get('Planned Operation Month')]
             capacity_changed = x['value_decimal_or_null'] != y['value_decimal_or_null']
             dates_changed = dates(x) != dates(y)
@@ -454,7 +572,8 @@ def structured_supply_changes(ledger):
                  'positions': [x['source_locator'], y['source_locator']], 'source_urls': [x['source_url'], y['source_url']],
                  'published_at': [x['published_at'], y['published_at']], 'lineage': 'eia',
                  'customer_need_date': None, 'qualified_capacity': None, 'qualified': False,
-                 'coverage_complete': False, 's_stage': 'UNKNOWN', 'research_only': True}
+                 'coverage_complete': False, 's_stage': 'UNKNOWN', 'research_only': True,
+                 'bottleneck_relief_verified': False}
             e['id'] = sha(e); changes.append(e)
     return {'changes': changes, 'holds': holds, 'source_HTTP': 0, 'CPU_windows': 0,
             'originals_rechecked_here': False, 'basis': 'PREVIOUSLY_LOCATED_Q1_NATIVE_ROWS_NOT_COMPLETE_QUALIFIED_SUPPLY'}

@@ -7228,6 +7228,107 @@
           "new_actual_demand_growth": 0,
           "new_qualified_available_capacity": 0,
           "new_firm_delivery_or_customer_need": 0
+        },
+        "selection_repair": {
+          "status": "PARTIAL_LOCAL_SOURCE_REPLAY_EXECUTED_REMOTE_APPEND_PENDING",
+          "plan_id": "BCT-V4-Q-1.0",
+          "start_SHA": "30dff15989bba974190e0b61004d8f7032a16c7a",
+          "evidence_path": "docs/v4/quantitative/OFFICIAL_SELECTION_REPAIR_RESULTS.json",
+          "initial_queue": 202,
+          "initial_queue_triage": {
+            "index_only": 9,
+            "held": 167,
+            "excluded": 26
+          },
+          "relative_base_resolution_corrections": 5,
+          "new_source_requests": 17,
+          "new_HTTP_200": 16,
+          "native_body_context_reads": 7,
+          "new_read_characters": 24220,
+          "initial_selector_false_inflow": 3,
+          "final_selector_rejects_same_three": 3,
+          "new_reads": {
+            "industrial_leads": 4,
+            "initial_wrongly_admitted_training_or_corporate_news": 3,
+            "index_discovery_only": 9
+          },
+          "past13_publication_dates_recovered": 2,
+          "past13_dates_unknown": 11,
+          "new_source_dates_bound": 3,
+          "first_historical_publication_versions_verified": 0,
+          "facility_status_transitions": 16,
+          "facility_relief_successes": 0,
+          "record_edits_not_physical_delay": 129,
+          "verified_incremental_demand": 0,
+          "verified_supply_constraints": 0,
+          "verified_bottleneck_relief": 0,
+          "qualified_available_capacity": 0,
+          "confirmed_customer_need_dates": 0,
+          "independent_pairs": 0,
+          "Q3_eligible_TARGETs": 0,
+          "S2": 0,
+          "S3": 0,
+          "same_new_input_comparison": {
+            "documents": 7,
+            "before_bound_products": 0,
+            "after_bound_products": 0,
+            "TP": null,
+            "FP": null,
+            "FN": null,
+            "reason": "NEW_DOCUMENT_EVENT_TRUTH_NOT_INDEPENDENTLY_ADJUDICATED_NOT_A_PRECISION_RECALL_CLAIM"
+          },
+          "consumed20_score_reused": {
+            "TP": 11,
+            "confirmed_FP": 0,
+            "FN": 9,
+            "not_new_independent_evaluation": true
+          },
+          "impact_tests": {
+            "command": "pytest tests/test_v4_bidirectional_discovery.py tests/test_v4_official_discovery.py tests/test_v4_quantitative_counterpart.py tests/test_v4_quantitative_relations.py tests/test_v4_cpu_research_workflow.py",
+            "passed": 89,
+            "failed": 0
+          },
+          "local_store_new_process_dedup": {
+            "first_append": 1,
+            "second_append": 0,
+            "hash_unchanged_on_repeat": true
+          },
+          "pending_entries": 226,
+          "source_BLOCKED": [
+            "ANNUAL_REPORT_EXCEEDS_EXISTING_4_MIB_RESPONSE_BOUND_NO_RETRY",
+            "PRIOR_HTTP_OR_DECODE_FAILURE_RECEIPTS_RETAINED_NO_RETRY"
+          ],
+          "stage_blockers": {
+            "EXTRACTION": "INLINE_MARKUP_ALIGNMENT_AND_PDF_SIZE_BOUND",
+            "ENTITY": "NEW_PROSE_NO_UNAMBIGUOUS_PHYSICAL_PRODUCT_BINDING",
+            "SCOPE": "SPECIFICATION_CUSTOMER_NEED_AND_QUALIFIED_SUPPLY_POOL_UNKNOWN",
+            "LINKAGE": "NO_SAME_TARGET_OPPOSITE_FACT",
+            "INDEPENDENCE": "NO_PROVEN_DISTINCT_DEMAND_SUPPLY_LINEAGE_PAIR",
+            "COMPARISON": "NO_QUALIFIED_QUANTITY_OR_VERIFIED_NEED_READINESS_PAIR"
+          },
+          "AI_calls": 0,
+          "CPU_windows": 0,
+          "paid_API_cost": 0,
+          "operating_changes": false,
+          "next_action": "Use the stored queue/source selectors and newly found publisher index lineage; obtain additional article metadata/index pagination without refetching old URLs. ENTITY/EXTRACTION remain blocked on product binding/inline markup; no qualified same-TARGET pair. Remote append/hash verification pending.",
+          "quality_verdicts_preserved": {
+            "AI_adoption": "FAIL",
+            "independent_AI_evaluation": "BLOCKED",
+            "lead_performance": "BLOCKED",
+            "Q1": "PARTIAL",
+            "Q2": "PARTIAL"
+          },
+          "extended_impact_tests": {
+            "passed": 131,
+            "skipped": 1,
+            "failed": 0,
+            "scope": "changed discovery/counterpart/relations/workflow plus existing dashboard queries and forecast"
+          },
+          "pending_selection": {
+            "HOLD": 194,
+            "EXCLUDE_PRESERVED": 32,
+            "eligible_unvisited": 0
+          }
         }
       }
     }

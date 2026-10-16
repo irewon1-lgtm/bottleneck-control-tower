@@ -21,6 +21,31 @@ from bct.v4.quantitative_counterpart import RelationRound, relation_url, relatio
 from bct.v4.store import Ledger, sha, now, file_sha
 
 BIDIRECTIONAL = 'bct-official-bidirectional-1'
+SELECTION_REVISION = 'industrial-selection-and-supply-1'
+
+
+def link_selection(url, label='', *, product=None):
+    """Triage before I/O. An official host or /news/ path is not relevance.
+
+    Indices are discovery-only; direct documents need an industrial relation
+    in the title/path. Literal product overlap nominates, never proves scope.
+    """
+    from urllib.parse import unquote
+    path = unquote(urlsplit(url).path).casefold()
+    title = ' '.join(label.split()); value = title+' '+' '.join(path.split('/')[-2:])
+    industrial = bool(re.search(r'capacit|manufactur|production|factory|plant|backlog|orders?|reservation|supply.agreement|supplier|qualif|certif|lead.time|delivery|annual.report|financial.results|results.for|full.year|quarter|year.end.report|clearance|regulatory.approval', value, re.I))
+    if re.search(r'career|workshop|course|conference|webinar|iso.?iec.?27001|iso.?14006|invitation|annual.general.meeting|board.of.directors|nomination.committee',value,re.I):
+        return {'kind':'TRAINING_OR_CORPORATE_POLICY','decision':'EXCLUDE','reason':'NO_PRODUCT_ORDER_CAPACITY_OR_CUSTOMER_QUALIFICATION_RELATION','priority':9}
+    if not industrial and re.search(r'boat.race|sports?|career|workshop|course|conference|webinar|image.bank|video|contact|calendar|share.price|the.share|sustainab', value, re.I):
+        return {'kind':'UNRELATED_OR_CORPORATE_NEWS','decision':'EXCLUDE','reason':'NO_PRODUCT_SUPPLY_RELATION_IN_AVAILABLE_METADATA','priority':9}
+    if re.search(r'/(?:[a-z]{2}/)?(?:news|press-releases|newsroom|investors|financials|reports-presentations|annual-reports)(?:/|\.html)?$',path):
+        priority=1 if re.search(r'press-releases|reports-presentations|annual-reports',path) else 3
+        return {'kind':'OFFICIAL_INDEX','decision':'DISCOVER_LINKS_ONLY','reason':'INDEX_NOT_EVENT_OR_ARTICLE','priority':priority}
+    if industrial:
+        return {'kind':'INDUSTRIAL_DOCUMENT','decision':'READ_SOURCE','reason':'EXPLICIT_INDUSTRIAL_RELATION_LEAD_NOT_VERIFIED_FACT','priority':0}
+    if product and re.search(re.escape(product),title,re.I):
+        return {'kind':'PRODUCT_DOCUMENT','decision':'READ_SOURCE','reason':'EXACT_PRODUCT_TITLE_LEAD_NOT_SUPPLY_PROOF','priority':1}
+    return {'kind':'RELEVANCE_UNKNOWN','decision':'HOLD','reason':'TITLE_OR_RELATION_INSUFFICIENT_NOT_EVIDENCE_OF_ABSENCE','priority':8}
 
 
 def relation_index_links(raw, url):
@@ -33,9 +58,14 @@ def relation_index_links(raw, url):
     decoded = engine.html_source(raw)
     parser = Metadata(); parser.feed(decoded.decode('utf-8', errors='strict'))
     host = urlsplit(url).hostname.removeprefix('www.')
+    # Respect the observed same-publisher HTML base; otherwise relative links
+    # from /news/article incorrectly become /news/test-and-measurement/...
+    bases = re.findall(r'<base\b[^>]*href=[\"\']([^\"\']+)',decoded.decode('utf-8'),re.I)
+    base = urljoin(url,bases[0]) if len(bases)==1 else url
+    if urlsplit(base).hostname.removeprefix('www.') != host: base=url
     out = {}; html = decoded.decode('utf-8')
     for href, label in parser.links:
-        dest = urljoin(url, href).split('#')[0]
+        dest = urljoin(base, href).split('#')[0]
         h = urlsplit(dest).hostname or ''
         if h.removeprefix('www.') != host and not h.endswith('.'+host): continue
         try: relation_url(dest)
@@ -43,14 +73,63 @@ def relation_index_links(raw, url):
         value = href+' '+' '.join(label.split())
         if not re.search(r'capacit|manufactur|facilit|production|annual.report|investor|financial|press.release|news', value, re.I): continue
         if re.search(r'contact|calendar|funding|the.share|share.price', value, re.I): continue
+        selection=link_selection(dest,label)
         # Raw href is a precise discovery position, not a semantic assertion.
         locs = [m.start() for m in re.finditer(re.escape(href), html)]
         if not locs: continue
-        rank = 0 if re.search(r'capacit|manufactur|facilit|production', value, re.I) else 1 if re.search(r'press.release|annual.report|reports.presentation', value, re.I) else 2
         out.setdefault(dest, {'url': dest, 'via_url': url, 'via_hash': sha(raw),
+                             'label': ' '.join(label.split())[:240], 'selection': selection,
                              'href_positions': [{'start': i, 'end': i+len(href)} for i in locs],
-                             'rank': rank, 'relation': 'PUBLISHER_INDEX_LEAD_NOT_TARGET_EQUIVALENCE'})
+                             'rank': selection['priority'], 'relation': 'PUBLISHER_INDEX_LEAD_NOT_TARGET_EQUIVALENCE'})
     return sorted(out.values(), key=lambda x: (x['rank'], x['url']))
+
+
+def selection_audit(packet, captures):
+    """Offline replay of preserved parent bytes; no collection or old mutation.
+
+    Recover labels/base relationships from the actual hashed parent rather
+    than inventing product matches from naked URLs. Missing bytes stay held.
+    """
+    available={}
+    for folder in map(Path,captures):
+        for path in folder.glob('*.json'):
+            try: meta=json.loads(path.read_text())
+            except (ValueError,UnicodeError):continue
+            rawpath=path.with_suffix('.raw')
+            if meta.get('source_hash') and rawpath.exists():
+                raw=rawpath.read_bytes()
+                if sha(raw)==meta['source_hash']:available[meta['source_hash']]=(raw,meta)
+    checked=[]; dates=[]; corrected=[]
+    for link in packet['pending']:
+        original=dict(link); parent=available.get(link.get('via_hash'))
+        if parent:
+            raw,meta=parent
+            candidates=relation_index_links(raw,link['via_url'])
+            same=[x for x in candidates if x['url']==link['url']]
+            if len(same)==1:original.update(label=same[0]['label'])
+            # Detect the old missing-<base> resolution by its exact href span.
+            elif link.get('href_positions'):
+                spans={(p['start'],p['end'])for p in link['href_positions']}
+                replacements=[x for x in candidates if spans & {(p['start'],p['end'])for p in x['href_positions']}]
+                if len(replacements)==1:
+                    original['selection']={'decision':'HOLD','kind':'INVALID_RELATIVE_RESOLUTION','priority':8,'reason':'OBSERVED_BASE_HREF_DIFFERS_PRESERVE_OLD_URL'}
+                    corrected.append({**replacements[0],'seed_id':link['seed_id'],'depth':link.get('depth',0),'corrected_from':link['url']})
+        original.setdefault('selection',link_selection(original['url'],original.get('label','')))
+        checked.append(original)
+    for source in packet['context_results']:
+        src=source['source']; parent=available.get(src['sha256'])
+        if not parent:
+            dates.append({'url':src['url'],'source_hash':src['sha256'],'status':'ORIGINAL_UNAVAILABLE_NOT_REFETCHED'});continue
+        raw,meta=parent
+        dates.append({'url':src['url'],'source_hash':src['sha256'],
+                      'publication':engine.publication_evidence(raw,src['url'],src['acquired_at']),
+                      'selection':link_selection(src['url']),
+                      'replay':engine.read_context(raw,{'url':src['url'],'source_id':src['source_id'],'sha256':src['sha256'],
+                                                     'acquired_at':src['acquired_at'],'published_at':src['published_at']})})
+    return {'revision':SELECTION_REVISION,'initial_pending':len(checked),'pending':checked,
+            'corrected_links':corrected,'old_document_replay':dates,
+            'selection_counts':dict(Counter(x['selection']['decision']for x in checked)),
+            'source_HTTP':0,'AI_calls':0,'CPU_windows':0,'past_results_modified':False}
 
 
 def structured_demand_queries(changes, root, *, network=False, as_of=None, max_calls=32):
@@ -134,7 +213,7 @@ def award_detail_leads(queries, root, *, network=False):
     return out
 
 
-def bidirectional(ledger, root, *, network=False, seed_links=(), documents=()):
+def bidirectional(ledger, root, *, network=False, seed_links=(), documents=(), selection_round=False):
     """Resume the restored common queue, with one durable bounded I/O round.
 
     The source collector is not run here. Prior successful or failed URLs are
@@ -149,6 +228,13 @@ def bidirectional(ledger, root, *, network=False, seed_links=(), documents=()):
     roundfile = root/'request-rounds.json'
     if prior and not roundfile.exists(): roundfile.write_text(json.dumps(prior['budget']))
     budget = RelationRound(roundfile)
+    # One explicitly authorized follow-up, not a run-ID quota reset. Resuming
+    # this revision retains its charges, receipts and interrupted requests.
+    marker = root/'selection-round.json'
+    if selection_round and not marker.exists() and (prior or {}).get('selection_revision') != SELECTION_REVISION:
+        budget.close()
+        budget = RelationRound(roundfile, next_round=True)
+        marker.write_text(json.dumps({'revision':SELECTION_REVISION,'round':budget.current['number']}))
     tasks = q.latest_relations(ledger)['tasks']
     tasks = [t for t in tasks if 'automatic_stored_search' in t['scope']]
     receipts = dict(prior['receipts']) if prior else {}
@@ -180,7 +266,7 @@ def bidirectional(ledger, root, *, network=False, seed_links=(), documents=()):
     for r in receipts.values():
         if r.get('status') in {401, 403, 429}: held_hosts[urlsplit(r['url']).hostname] = r['status']
     # Round-robin tasks: new links are appended behind already pending work.
-    pending.sort(key=lambda p: (p.get('depth', 0), p.get('rank', 2), p['seed_id'], p['url']))
+    pending.sort(key=lambda p: (link_selection(p['url'],p.get('label',''))['priority'], p.get('depth', 0), p['seed_id'], p['url']))
     done = set()
     while pending:
         link = pending.pop(0); url = link['url']; sid = link['seed_id']; relation_url(url)
@@ -191,6 +277,9 @@ def bidirectional(ledger, root, *, network=False, seed_links=(), documents=()):
         if url in receipts:
             # A prior native is not silently fetched to reconstruct links.
             readbacks += 1; continue
+        selection = link['selection'] if link.get('selection',{}).get('kind')=='INVALID_RELATIVE_RESOLUTION' else link_selection(url,link.get('label',''))
+        if selection['decision'] in {'EXCLUDE','HOLD'}:
+            remaining.append({**link,'selection':selection,'hold':selection['reason']});continue
         if host in held_hosts:
             receipts[url] = {'url': url, 'status': 'HOST_QUARANTINED', 'http_status': held_hosts[host], 'retry': False}; continue
         if not network or time.monotonic()-started >= 90 or not budget.allow(task['event_key'], host):
@@ -199,7 +288,7 @@ def bidirectional(ledger, root, *, network=False, seed_links=(), documents=()):
             remaining.append({**link, 'hold': 'SEC_TRANSPORT_PRIOR_QUARANTINE'}); continue
         budget.charge(task['event_key'], url); calls += 1
         rp = root/(sha(url.encode())+'.json')
-        receipt = {'url': url, 'status': 'INTERRUPTED_NO_RETRY', 'acquired_at': now(), 'seed_id': sid}
+        receipt = {'url': url, 'status': 'INTERRUPTED_NO_RETRY', 'acquired_at': now(), 'seed_id': sid, 'selection':selection}
         rp.write_text(json.dumps(receipt))
         try:
             raw, final, status, ct = fetch(url); relation_url(final)
@@ -210,19 +299,31 @@ def bidirectional(ledger, root, *, network=False, seed_links=(), documents=()):
             h = host.removeprefix('www.'); fh = urlsplit(final).hostname.removeprefix('www.')
             if fh != h and not fh.endswith('.'+h) and not h.endswith('.'+fh): raise ValueError('UNVERIFIED_ISSUER_REDIRECT')
             if raw.lstrip().startswith(b'%PDF'):
-                receipt.update(status='PDF_EXTRACTION_PENDING', source_hash=sha(raw))
+                meta={'source_id':'ISSUER:'+fh,'url':final,'sha256':sha(raw),
+                      'acquired_at':receipt['acquired_at'],'published_at':'UNKNOWN'}
+                context=engine.read_context(raw,meta)
+                engine.save_context(ledger,context,raw=raw,meta=meta);results.append(context)
+                receipt.update(status=status,body_status='PARTIAL',source_hash=sha(raw),
+                               published_at='UNKNOWN',publication_reason='PDF_PUBLICATION_NOT_BOUND',
+                               read_characters=context['source']['read_characters'],source_events=len(context['events']))
             else:
                 decoded = engine.html_source(raw)
                 d = verify(decoded, url, final, receipt['acquired_at'], status, ct)
                 q.bind_publication(d, decoded)
+                publication = engine.publication_evidence(raw, final, receipt['acquired_at'])
                 meta = {'source_id': 'ISSUER:'+fh, 'url': final, 'sha256': sha(raw),
-                        'acquired_at': receipt['acquired_at'], 'published_at': d.get('published_at') or 'UNKNOWN'}
-                context = engine.read_context(raw, meta)
-                engine.save_context(ledger, context, raw=raw, meta=meta)
-                results.append(context)
+                        'acquired_at': receipt['acquired_at'], 'published_at': publication['published_at']}
+                # A list is for discovery, never a fabricated article/event.
+                context = None
+                if selection['decision'] == 'READ_SOURCE':
+                    context = engine.read_context(raw, meta)
+                    engine.save_context(ledger, context, raw=raw, meta=meta)
+                    results.append(context)
                 receipt.update(status=status, source_hash=sha(raw), final_url=final,
-                               read_characters=context['source']['read_characters'], body_status=context['source']['body_status'],
-                               published_at=meta['published_at'], source_events=len(context['events']))
+                               read_characters=context['source']['read_characters'] if context else 0,
+                               body_status=context['source']['body_status'] if context else 'INDEX_DISCOVERY_ONLY',
+                               publication_evidence=publication,
+                               published_at=meta['published_at'], source_events=len(context['events']) if context else 0)
                 newlinks = relation_index_links(raw, final)
                 # Reuse existing facet-specific article citations too.
                 doc = {**d, 'document_id': sha([final, sha(raw)])}
@@ -268,6 +369,10 @@ def bidirectional(ledger, root, *, network=False, seed_links=(), documents=()):
                                      'supplier': None, 'quantity': None, 'need_window': None,
                                      'qualified_capacity': None, 'delivery': None}})
     new_tasks = q.relation_tasks(new_seeds)
+    # A reclassification of an already queued facility row is not a new event
+    # and must not manufacture another four tasks for the same source version.
+    existing_sources={(t['source_identity']['document_id'],t['product'],t['known_side'],t['facet']) for t in tasks}
+    new_tasks=[t for t in new_tasks if (t['source_identity']['document_id'],t['product'],t['known_side'],t['facet']) not in existing_sources]
     for t in new_tasks:
         pointers = q.local_relation_pointers(t, list(documents), as_of=now()[:10], limit=3)
         t['scope']['automatic_stored_search'] = pointers
@@ -302,15 +407,20 @@ def bidirectional(ledger, root, *, network=False, seed_links=(), documents=()):
                           'summary': {'source_queue_tasks': len(tasks), 'new_context_tasks': len(new_tasks),
                                       'new_HTTP_this_batch': calls, 'unique_native_documents_read': len(results),
                                       'actual_characters': sum(r['source']['read_characters'] for r in results),
-                                      'actual_demand_change': sum(x['role']=='DEMAND' and x['actuality']=='REPORTED_ACTUAL' and x.get('demand_change_class')=='REPORTED_INCREMENT_PRIOR_BASELINE_UNKNOWN' for x in e),
+                                      'actual_demand_change': sum(x['role']=='DEMAND' and x['actuality']=='REPORTED_ACTUAL' and x.get('demand_change_class')=='SAME_ITEM_COMMITTED_QUANTITY_INCREASE' for x in e),
                                       'reported_supply_constraints': sum(x['role']=='CONSTRAINT' and x['actuality']=='REPORTED_ACTUAL' and x['product'] is not None for x in e),
                                       'reported_relief': sum(x['role']=='RELIEF' and x['actuality']=='REPORTED_ACTUAL' and x['product'] is not None for x in e),
                                       'supply_plans': sum(x['role']=='SUPPLY_PLAN' and x['product'] is not None for x in e),
-                                      'reported_facility_relief': sum(x['role']=='RELIEF' for x in structured['changes']),
+                                      'reported_facility_relief': 0,
+                                      'facility_status_transitions': sum(x['role']=='FACILITY_STATUS' for x in structured['changes']),
                                       'reported_facility_constraints': sum(x['role']=='CONSTRAINT' for x in structured['changes']),
                                       'facility_record_revisions_not_physical_delay': sum(x['role']=='CONTEXT' for x in structured['changes']),
                                       'context_proposals': len(e), 'independent_pairs': 0, 'Q3_eligible': 0, 'future_candidates': 0},
+                          'selection_revision': SELECTION_REVISION,
                           'AI_calls': 0, 'CPU_windows': 0, 'paid_cost': 0, 'operating_changes': False})
+    for key in ('selection_audit','publication_repairs','same_input_comparison','research_status',
+                'all_new_HTTP_requests','actual_new_read_characters','new_successful_source_documents','prior_results_preserved'):
+        if key in (prior or {}):report[key]=prior[key]
     reason = 'OFFICIAL_BIDIRECTIONAL_BATCH:'+sha(report)
     with ledger.db:
         if not ledger.db.execute("SELECT 1 FROM events WHERE kind='QUANTITATIVE_VALIDATION' AND json_extract(payload,'$.reason')=?", (reason,)).fetchone():
@@ -357,7 +467,9 @@ def import_bidirectional(ledger, packet):
             raise ValueError('BIDIRECTIONAL_AWARD_NOT_PHYSICAL_SUPPLY_PAIR')
         if not 0 <= query.get('records', 0) <= 20: raise ValueError('BIDIRECTIONAL_REVERSE_PAGE_LIMIT')
     rounds = packet['budget']['rounds'] + reverse.get('budget', {}).get('rounds', [])
-    if sum(len(r['charges']) for r in rounds) > 32: raise ValueError('BIDIRECTIONAL_COMBINED_BATCH_LIMIT')
+    # Prior closed rounds are history, not the current round's allowance.
+    if len(packet['budget']['rounds'][-1]['charges']) + sum(len(r['charges']) for r in reverse.get('budget',{}).get('rounds',[]) if r['status']=='OPEN') > 32:
+        raise ValueError('BIDIRECTIONAL_COMBINED_BATCH_LIMIT')
     for rnd in rounds:
         if len(rnd['charges']) > 32: raise ValueError('BIDIRECTIONAL_BUDGET')
         if any(v > 3 for v in Counter(x['event'] for x in rnd['charges']).values()): raise ValueError('BIDIRECTIONAL_EVENT_BUDGET')

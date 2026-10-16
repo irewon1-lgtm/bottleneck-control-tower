@@ -12,11 +12,11 @@ from v4_official_discovery import relation_index_links,bidirectional
 
 
 @pytest.mark.parametrize('sentence,expected',[
- ('Production capacity for gas turbines increased in 2026.',('RELIEF','REPORTED_SUPPLY_CHANGE','REPORTED_ACTUAL')),
+ ('Production capacity for gas turbines increased in 2026.',('SUPPLY_CHANGE','REPORTED_SUPPLY_CHANGE','REPORTED_ACTUAL')),
  ('Production capacity for gas turbines will increase in 2028.',('SUPPLY_PLAN','REPORTED_SUPPLY_CHANGE','PLANNED_OR_EXPECTED')),
  ('The gas turbine plant was delayed until 2028.',('CONSTRAINT','FACILITY_OR_QUALIFICATION_CONSTRAINT','REPORTED_ACTUAL')),
  ('Lead times for gas turbines increased.',('CONSTRAINT','REPORTED_SUPPLY_CHANGE','REPORTED_ACTUAL')),
- ('Lead times for gas turbines decreased.',('RELIEF','REPORTED_SUPPLY_CHANGE','REPORTED_ACTUAL')),
+ ('Lead times for gas turbines decreased.',('SUPPLY_CHANGE','REPORTED_SUPPLY_CHANGE','REPORTED_ACTUAL')),
  ('Gas turbine production did not increase.',('CONTEXT','NEGATED_CHANGE','NEGATED')),
  ('The machine can process up to 1000 wafers per hour.',('CONTEXT','PROCESSING_SPECIFICATION_NOT_MANUFACTURER_CAPACITY','SPECIFICATION')),
  ('Customer orders for gas turbines were cancelled.',('RELIEF','DEMAND_REDUCTION','REPORTED_ACTUAL')),
@@ -47,7 +47,7 @@ def page(sentence):
 def test_exact_native_position_not_first_global_product_occurrence():
  raw,m=page('Gas turbines were discussed. Production capacity for gas turbines increased in 2026.')
  r=d.read_context(raw,m)
- e=next(e for e in r['events']if e['role']=='RELIEF')
+ e=next(e for e in r['events']if e['role']=='SUPPLY_CHANGE')
  assert e['product']=='gas turbines'
  assert raw.decode()[e['product_position']['start']:e['product_position']['end']]=='gas turbines'
  assert e['product_position']['start']>raw.decode().lower().index('gas turbines')
@@ -114,7 +114,7 @@ def test_structured_facility_change_not_missing_row_or_nameplate_gap(monkeypatch
  monkeypatch.setattr(q,'research_export',lambda _: {'observations':rows})
  r=d.structured_supply_changes(None);by={e['facility_id']:e for e in r['changes']}
  assert set(by)=={'new','retire','plan','mw'}
- assert by['new']['role']=='RELIEF' and by['retire']['role']=='CONSTRAINT'
+ assert by['new']['role']=='FACILITY_STATUS' and by['retire']['role']=='CONSTRAINT'
  assert by['plan']['role']==by['mw']['role']=='CONTEXT'
  assert all(not e['qualified'] and e['qualified_capacity']is None for e in by.values())
 
@@ -185,3 +185,89 @@ def test_real_collector_hook_compares_same_contract_revision_not_new_order(tmp_p
  assert change['market_demand_increase']=='UNKNOWN' and not change['Q3_eligible']
  assert payload['policy']['Q3']['S3']==0
  l.close()
+
+
+def test_parent_base_is_respected_and_irrelevant_news_not_read():
+ from v4_official_discovery import link_selection
+ raw=b'<base href="/"><a href="news/new-factory-production">Factory production expanded</a><a href="news/sports-race">Sports race</a><a href="news/">News</a>'
+ links=relation_index_links(raw,'https://example.gov/news/article')
+ by={x['url']:x for x in links}
+ assert by['https://example.gov/news/new-factory-production']['selection']['decision']=='READ_SOURCE'
+ assert by['https://example.gov/news/sports-race']['selection']['decision']=='EXCLUDE'
+ assert by['https://example.gov/news/']['selection']['decision']=='DISCOVER_LINKS_ONLY'
+ assert link_selection('https://example.gov/')['decision']=='HOLD'
+ assert link_selection('https://example.gov/news/medical-research')['decision']=='HOLD'
+ assert link_selection('https://example.gov/news/supply-qualification-conference')['decision']=='EXCLUDE'
+
+
+def test_corroborated_article_date_is_not_index_creation_or_retrieval():
+ html='''<link rel="canonical" href="https://example.gov/news/plant"><h1>Factory update</h1><meta name="dc.date" content="2026-10-01"><time datetime="2026-10-01T12:00:00Z"></time><script type="application/ld+json">{"@type":"Article","headline":"Factory update","datePublished":"2026-10-01"}</script>'''
+ result=d.publication_evidence(html.encode(),'https://example.gov/news/plant','2026-10-16T00:00:00Z')
+ assert result['published_at']=='2026-10-01' and not result['first_publication_verified']
+ assert all(html[p['start']:p['end']]=='2026-10-01' for p in result['positions'])
+ assert d.publication_evidence(html.replace('"Article"','"CollectionPage"').encode(),'https://example.gov/news/plant','2026-10-16')['published_at']=='UNKNOWN'
+ assert d.publication_evidence(html.replace('2026-10-01T12','2026-10-02T12').encode(),'https://example.gov/news/plant','2026-10-16')['published_at']=='UNKNOWN'
+ assert d.publication_evidence(html.encode(),'https://example.gov/news/other','2026-10-16')['published_at']=='UNKNOWN'
+
+
+def test_generic_explicit_product_relation_is_proposal_and_keeps_measures():
+ raw,m=page('Production capacity for ceramic membranes increased to 120 units per month in 2026.')
+ r=d.read_context(raw,m);e=next(e for e in r['events']if e['role']=='SUPPLY_CHANGE')
+ assert e['product']=='ceramic membranes' and e['state']=='PRODUCT_RELATION_PROPOSAL'
+ assert e['reported_measures'][0]['value']==120
+ assert e['reported_measures'][0]['unit']=='units per month'
+ assert e['reported_periods'][0]['start']=='2026-01-01'
+ assert not e['bottleneck_relief_verified'] and e['qualified_capacity']is None
+ assert not d.context_seeds([r])
+
+
+def test_mixed_demand_and_supply_must_not_assign_one_role_to_all_objects():
+ assert d.context_role('Orders rose while production capacity fell.')[0]=='CONTEXT'
+ raw,m=page('Gas turbine backlog increased to $800 million.')
+ r=d.read_context(raw,m)
+ assert all(not e['reported_measures'] and e['qualified_capacity']is None for e in r['events'])
+
+
+def test_source_selection_blocks_irrelevant_before_network(tmp_path,monkeypatch):
+ import v4_official_discovery as t
+ from bct.v4 import quantitative_counterpart as q
+ monkeypatch.setattr(t,'fetch',lambda *a:pytest.fail('irrelevant source fetched'))
+ seed={'id':'seed','event_key':'event','product':'gas turbines','role':'DEMAND',
+       'source':{'document_id':'doc','body_sha256':sha(b'parent'),'origin_url':'https://example.gov/','published_at':'2026-10-01'},'fields':{}}
+ tasks=q.relation_tasks([seed])
+ for task in tasks:
+  task['scope']['automatic_stored_search']=[]
+  task['checked_sources']=[{'url':'https://example.gov/','source_hash':sha(b'parent'),'status':200}]
+  task['id']=sha(['q2-relation-state-1',{k:v for k,v in task.items()if k!='id'}])
+ l=Ledger(tmp_path/'ledger');q.save_relations(l,__import__('bct.objective_lock',fromlist=['stamp_export']).stamp_export({'tasks':tasks}))
+ report=bidirectional(l,tmp_path/'captures',network=True,seed_links=[{'seed_id':'seed','url':'https://example.gov/news/sports-race','via_url':'https://example.gov/','via_hash':sha(b'parent')}])
+ assert report['summary']['new_HTTP_this_batch']==0
+ assert report['pending'][0]['selection']['decision']=='EXCLUDE'
+ l.close()
+
+
+def test_pdf_text_coordinates_are_not_pdf_bytes_and_tables_remain_partial(monkeypatch):
+ import subprocess
+ from types import SimpleNamespace
+ content='Official report\f\nProduction capacity for ceramic membranes increased to 120 units per month in 2026.\n'
+ def extract(*args,**kwargs):
+  assert args[0][0:2]==['pdftotext','-layout'] and kwargs['timeout']==20
+  return SimpleNamespace(stdout=content.encode())
+ monkeypatch.setattr(subprocess,'run',extract)
+ raw=b'%PDF-test-native';m={'url':'https://example.gov/report.pdf','source_id':'OFFICIAL:example.gov','sha256':sha(raw),'acquired_at':'2026-10-16','published_at':'UNKNOWN'}
+ r=d.read_context(raw,m)
+ assert r['source']['position_space']=='PDF_LAYOUT_TEXT_CHARACTERS'
+ assert r['source']['body_status']=='PARTIAL' and r['source']['extracted_text_sha256']==sha(content.encode())
+ e=next(e for e in r['events']if e['product']=='ceramic membranes')
+ assert e['page']==2
+ assert content[e['product_position']['start']:e['product_position']['end']]=='ceramic membranes'
+ assert e['state']=='PRODUCT_RELATION_PROPOSAL' and e['qualified_capacity']is None
+
+
+def test_visible_ir_header_publication_not_dates_in_body_or_index():
+ html='<link rel="canonical" href="https://example.gov/report"><h1>Quarterly report</h1><div class="_metadata"><span class="date">August 27, 2026</span></div><div class="__bodytext">Order information</div>'
+ r=d.publication_evidence(html.encode(),'https://example.gov/report','2026-10-16')
+ assert r['published_at']=='2026-08-27' and not r['first_publication_verified']
+ loc=r['positions'][0];assert html[loc['start']:loc['end']]=='August 27, 2026'
+ assert d.publication_evidence(html.replace('__bodytext','menu').encode(),'https://example.gov/report','2026-10-16')['published_at']=='UNKNOWN'
+ assert d.publication_evidence(html.replace('2026</span>','2027</span>').encode(),'https://example.gov/report','2026-10-16')['published_at']=='UNKNOWN'
