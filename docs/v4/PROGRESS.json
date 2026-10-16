@@ -5644,6 +5644,46 @@
         }
       },
       "remote_restore_run": 38825310140
+    },
+    "long_term_storage": {
+      "start_SHA": "f0190f43a557dccc2f1dd3ca970d123e27bfd570",
+      "status": "IN_PROGRESS",
+      "plan_id": "BCT-V4-Q-1.0",
+      "started_at": "2026-10-16T00:36:08.031354+00:00",
+      "scope": "Manual private encrypted archive validation; no primary backend cutover",
+      "steps": [
+        {
+          "step": "Official limits and current contract",
+          "expected": "Official policy evidence; existing Git cap untouched",
+          "status": "PASS"
+        },
+        {
+          "step": "Archive implementation and failure tests",
+          "expected": "Content dedup, hash chained deltas/checkpoints, immutable commit last, bounded restore",
+          "status": "PASS",
+          "evidence": "33 local impact tests; 41.11s"
+        },
+        {
+          "step": "Private Releases remote trial",
+          "expected": "Non-sensitive upload/download/new process restore, interruption/corruption recovery, audited current facts shadow restore and legacy rollback equality",
+          "status": "IN_PROGRESS"
+        },
+        {
+          "step": "Final commit and exact SHA CI",
+          "expected": "Development branch only; required checks observed for final SHA",
+          "status": "NOT_RUN"
+        }
+      ],
+      "implementation": {
+        "module": "src/bct/v4/release_archive.py",
+        "manual_trial": "tools/v4_release_archive_trial.py",
+        "default_primary_enabled": false,
+        "checkpoint_after_deltas": 32,
+        "checkpoint_after_days": 7,
+        "existing_Git_limit_unchanged_bytes": 67108864,
+        "separate_all_archive_pilot_asset_budget_bytes": 67108864,
+        "max_assets_per_release": 400
+      }
     }
   }
 }

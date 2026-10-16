@@ -11,7 +11,7 @@ on:
     inputs:
       purpose:
         type: choice
-        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart, q2-relations]
+        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart, q2-relations, archive-storage-trial]
         default: seed
       q1_key_run:
         type: string
@@ -33,6 +33,28 @@ env:
   CPU_CODE_SHA: 221fa92b1cbff8950716ec373eac793ca340c873
   EXPECTED_CPU_CODE_SHA: 221fa92b1cbff8950716ec373eac793ca340c873
 jobs:
+  archive-storage-trial:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'archive-storage-trial' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Validate private encrypted secondary archives with existing credentials only
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+          BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+        run: |
+          timeout 120 python -u tools/v4_release_archive_trial.py prepare
+          timeout 120 python -u tools/v4_release_archive_trial.py synthetic
+          timeout 120 python -u tools/v4_release_archive_trial.py recover
+          timeout 120 python -u tools/v4_release_archive_trial.py verify-synthetic
+          timeout 120 python -u tools/v4_release_archive_trial.py shadow
+          timeout 120 python -u tools/v4_release_archive_trial.py verify-shadow
+          timeout 120 python -u tools/v4_release_archive_trial.py rollback
   research:
     if: ${{ vars.BCT_V4_CPU_CODE_SHA == '221fa92b1cbff8950716ec373eac793ca340c873' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_run' && vars.BCT_V4_CPU_RESEARCH_ENABLED == 'true' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-24.04
