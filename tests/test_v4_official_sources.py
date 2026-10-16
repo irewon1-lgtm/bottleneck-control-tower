@@ -68,6 +68,16 @@ def test_reviewed_description_requires_unique_anchor_exact_field_and_retains_con
     with pytest.raises(ValueError, match='CHANGED'): f.reviewed_item_descriptions(changed, meta('find_tender', changed), [annotation])
 
 
+def test_repeated_contract_releases_are_one_review_and_latest_date_wins_not_fetch_order():
+    native = ocds(); old = deepcopy(native['releases'][0]); old['id'] = 'older'; old['date'] = '2026-10-12T00:00:00Z'
+    native['releases'].append(old)  # API newest-first; processing older second must not roll back.
+    rows, _ = f.parse_json(native, meta('find_tender', native)); h = f.q2_review_inputs(rows)
+    assert h['signed_release_records_before_contract_dedup'] == 2
+    assert h['signed_contract_records'] == 1 and h['duplicate_contract_release_records'] == 1
+    newest = next(r for r in rows if r['record_kind'] == 'PROCUREMENT_CONTRACT' and r['claims']['notice_id']['value'] == 'release1')
+    assert h['review_inputs'][0]['evidence_id'] == newest['id'] and h['independent_pairs'] == 0
+
+
 def test_exact_item_quantity_requires_physical_unit_not_currency():
     native = ocds(); native['releases'][0]['awards'][0]['items'] = [{'id': 'item1', 'quantity': 12, 'unit': {'name': 'widgets'}}]
     rows, _ = f.parse_json(native, meta('find_tender', native))
@@ -158,6 +168,25 @@ def _collector():
     spec = importlib.util.spec_from_file_location('official_tool', 'tools/v4_official_sources.py'); module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module); return module
 
 
+def test_neso_official_resource_redirect_is_exact_and_signed_query_not_saved():
+    tool=_collector();rid='17becbab-e3e8-473f-b303-3806f43a6a10'
+    original='https://api.neso.energy/dataset/cbd45e54-e6e2-4a38-99f1-8de6fd96d7c1/resource/'+rid+'/download/sample.csv'
+    final='https://83025b28472d6aa2bf5ae59f3724aa78.eu.r2.cloudflarestorage.com/dx-national-grid/national-grid/resources/'+rid+'/sample.csv?X-Amz-Signature=synthetic-not-real'
+    public,redacted=tool.redirect_identity('neso',original,final)
+    assert redacted and '?'not in public and 'synthetic-not-real'not in public
+    with pytest.raises(ValueError):tool.redirect_identity('neso',original,final.replace(rid,'other-resource'))
+    with pytest.raises(ValueError):tool.redirect_identity('neso',original,final.replace('83025b28472d6aa2bf5ae59f3724aa78','other-bucket'))
+
+
+def test_mutable_program_creation_date_cannot_backdate_later_funding_or_eligibility():
+    raw=b'<html><head><link rel="canonical" href="https://www.energy.gov/synthetic"><meta property="article:published_time" content="2023-01-01T00:00:00Z"></head><body>2026 program: pending appropriations. $800 million is funding.</body></html>'
+    m=meta('doe_haleu',{});m.update(url='https://www.energy.gov/synthetic',sha256=sha(raw))
+    annotation={'immutable_dated_article':False,'fields':{'procurement_eligibility_literal':{'anchor':'2026 program: pending appropriations.','offset':14,'literal':'pending appropriations'}}}
+    rows,native=f.reviewed_html(raw,m,annotation)
+    assert rows[0]['published_at']=='UNKNOWN' and f.recheck(rows[0],native)==1
+    assert rows[0]['record_kind']=='PROGRAM_CONTEXT_NOT_QUALIFIED_SUPPLY' and rows[0]['qualified_supply']=='UNKNOWN'
+
+
 def test_failure_isolated_offline_cache_and_pending_can_resume_without_new_run_id(tmp_path):
     tool = _collector(); cache = tmp_path/'captures'; cache.mkdir()
     data = [{'id': 1, 'projectNumber': 'J1', 'summerNetMW': 1}]; u = 'https://www.misoenergy.org/synthetic'
@@ -172,4 +201,18 @@ def test_failure_isolated_offline_cache_and_pending_can_resume_without_new_run_i
     assert again['record_versions_total'] == 1 and again['HTTP_requests_this_batch'] == 0
     (cache/(k+'.raw')).write_bytes(b'corrupted')
     with pytest.raises(ValueError, match='CACHE_HASH'): tool.Capture(cache).get('miso', u)
+    l.close()
+
+
+def test_corrupt_receipt_is_quarantined_without_refetch_and_other_source_continues(tmp_path):
+    tool = _collector(); cache = tmp_path/'captures'; cache.mkdir()
+    bad = 'https://www.misoenergy.org/synthetic'; (cache/(sha(bad.encode())+'.json')).write_text('{broken')
+    good = 'https://api.gleif.org/synthetic'; data = {'data': [{'id': 'synthetic-lei', 'attributes': {'lei': 'synthetic-lei'}}]}
+    raw = json.dumps(data).encode(); k = sha(good.encode()); (cache/(k+'.raw')).write_bytes(raw)
+    (cache/(k+'.json')).write_text(json.dumps({'url': good, 'status': 200, 'raw_sha256': sha(raw), 'acquired_at': '2026-10-16'}))
+    base = {'format': 'JSON', 'max_pages': 1, 'archive_facts': True, 'semantic_limits': 'synthetic'}
+    reg = stamp_export({'global_sources': {'collection_jobs': [{**base, 'id': 'bad', 'source_id': 'miso', 'url': bad}, {**base, 'id': 'good', 'source_id': 'gleif', 'url': good}]}})
+    l = Ledger(tmp_path/'ledger'); result = tool.collect(l, reg, tmp_path)
+    assert result['record_versions_total'] == 1 and result['HTTP_requests_this_batch'] == 0
+    assert result['pages'][0]['status'] == 'BLOCKED' and result['pages'][1]['status'] == 'FACTS_STORED'
     l.close()

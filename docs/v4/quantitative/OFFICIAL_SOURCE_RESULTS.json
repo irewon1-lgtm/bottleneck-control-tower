@@ -3490,5 +3490,569 @@
   "lead_performance": "BLOCKED_PRESERVED",
   "operating_changes": false,
   "objective_version": "bct-objective-1",
-  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "first_runner_attempt": {
+    "run": 38855145291,
+    "code_SHA": "c3fd0cbb2690dc54eaa8c3f7b76b61019f6d4444",
+    "collection": {
+      "plan_id": "BCT-V4-Q-1.0",
+      "version": "bct-official-formats-1",
+      "pages": [
+        {
+          "job_id": "global-2026-10-16-ft_data",
+          "source_id": "find_tender",
+          "page": 1,
+          "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00%3A00%3A00&updatedTo=2026-10-14T23%3A59%3A59&limit=100",
+          "http_status": 200,
+          "records": 386,
+          "stored": 386,
+          "exact_fields_checked": 3958,
+          "next_url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTU4MQ==",
+          "status": "FACTS_STORED",
+          "source_hash": "f9e24ce78a353a0a5867fdd1f15435842b907132fb3fc7fa0ae5168eee9ad422",
+          "tables": {
+            "held_source_reviews": []
+          },
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "Release tags, lots, awards/contracts remain separate. Framework, amendments and amounts are not physical orders. Contract period is not firm delivery."
+        },
+        {
+          "job_id": "global-2026-10-16-cf_data",
+          "source_id": "contracts_finder",
+          "page": 1,
+          "url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-14T00%3A00%3A00&publishedTo=2026-10-14T23%3A59%3A59&limit=100",
+          "http_status": 200,
+          "records": 194,
+          "stored": 194,
+          "exact_fields_checked": 2984,
+          "next_url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-14T00:00:00&publishedTo=2026-10-14T23:59:59&limit=100&cursor=cHVibGlzaGVkRnJvbT0yMDI2LTEwLTE0VDAwOjAwOjAwfHB1Ymxpc2hlZFRvPTIwMjYtMTAtMTRUMjM6NTk6NTl8bGltaXQ9MTAwfG5leHRDdXJzb3I9Nzg2NjUz",
+          "status": "FACTS_STORED",
+          "source_hash": "71e9e9f4d91ebd070b88e823fb2d3b87c6c0403ba673a72702a686d0c3f607ab",
+          "tables": {},
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "Open OCDS notices may include services/frameworks and modifications; amount is not order quantity. Same OCID is one procurement lineage."
+        },
+        {
+          "job_id": "global-2026-10-16-gleif_data",
+          "source_id": "gleif",
+          "page": 1,
+          "url": "https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalName%5D=AIRBUS%20SE&page%5Bsize%5D=10",
+          "http_status": 200,
+          "records": 1,
+          "stored": 1,
+          "exact_fields_checked": 6,
+          "next_url": null,
+          "status": "FACTS_STORED",
+          "source_hash": "062864df5781ad85242e3424fdbd51a23a668f8a7cf8c2610f34793dda4f04f0",
+          "tables": {},
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "Exact legal-name query AIRBUS SE; one LEI identity, not a product equivalence or customer qualification proof."
+        },
+        {
+          "job_id": "global-2026-10-16-miso_data",
+          "source_id": "miso",
+          "page": 1,
+          "url": "https://www.misoenergy.org/api/giqueue/getprojects",
+          "http_status": 200,
+          "records": 3938,
+          "stored": 3938,
+          "exact_fields_checked": 38167,
+          "next_url": null,
+          "status": "FACTS_STORED",
+          "source_hash": "6a2436f9ef8db88444ec25a58e8be0dce18304e26824a6fcbf0a8091e410cf6d",
+          "tables": {},
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "Current public full array only; projected service dates and MW are applications, not available/qualified supply. Historical changes unavailable."
+        },
+        {
+          "job_id": "global-2026-10-16-neso_data",
+          "source_id": "neso",
+          "page": 1,
+          "url": "https://api.neso.energy/dataset/cbd45e54-e6e2-4a38-99f1-8de6fd96d7c1/resource/17becbab-e3e8-473f-b303-3806f43a6a10/download/tec-register-13-october-2026.csv",
+          "http_status": "TRANSPORT_OR_SIZE_FAILURE",
+          "records": 0,
+          "stored": 0,
+          "exact_fields_checked": 0,
+          "next_url": null,
+          "status": "BLOCKED",
+          "reason": "ValueError",
+          "retry": false
+        },
+        {
+          "job_id": "global-2026-10-16-wb_data",
+          "source_id": "world_bank",
+          "page": 1,
+          "url": "https://search.worldbank.org/api/v2/procnotices?format=json&rows=50&srt=published_date&order=desc",
+          "http_status": 200,
+          "records": 50,
+          "stored": 50,
+          "exact_fields_checked": 343,
+          "next_url": null,
+          "status": "FACTS_STORED",
+          "source_hash": "d090eb3146872970f3a0e37157804b6f81cebff78c3e8429e1136e920833fb06",
+          "tables": {},
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "Rows 0..49 returned historical notices; requested sort unverified. Cancelled notice is not active demand. Pending offset100 after second job."
+        },
+        {
+          "job_id": "global-2026-10-16-worldbank_page2",
+          "source_id": "world_bank",
+          "page": 1,
+          "url": "https://search.worldbank.org/api/v2/procnotices?format=json&rows=50&os=50&srt=published_date&order=desc",
+          "http_status": 200,
+          "records": 50,
+          "stored": 50,
+          "exact_fields_checked": 345,
+          "next_url": null,
+          "status": "FACTS_STORED",
+          "source_hash": "f01a389670544c37b418a69a8019420fc47cd4b0a23a4c6567534e7f25971bbb",
+          "tables": {},
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "Rows50..99 same historical prefix; cancelled notices not actual orders, remaining hundreds of thousands not read."
+        },
+        {
+          "job_id": "global-2026-10-16-federal_month",
+          "source_id": "federal_register",
+          "page": 1,
+          "url": "https://www.federalregister.gov/api/v1/documents.json?conditions%5Bterm%5D=manufacturing&conditions%5Bpublication_date%5D%5Bgte%5D=2026-10-01&conditions%5Bpublication_date%5D%5Blte%5D=2026-10-15&per_page=100&order=newest",
+          "http_status": 200,
+          "records": 100,
+          "stored": 100,
+          "exact_fields_checked": 300,
+          "next_url": "https://www.federalregister.gov/api/v1/documents?conditions%5Bpublication_date%5D%5Bgte%5D=2026-10-01&conditions%5Bpublication_date%5D%5Blte%5D=2026-10-15&conditions%5Bterm%5D=manufacturing&format=json&order=newest&page=2&per_page=100",
+          "status": "FACTS_STORED",
+          "source_hash": "4602af9f45c6766bce1df2838fd9878c69df39068badfa0edb70f587b1a1ac17",
+          "tables": {},
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "Manufacturing search publication dates2026-10-01..15, metadata only; no fulltext/permit/capacity claim."
+        },
+        {
+          "job_id": "global-2026-10-16-comtrade_guest",
+          "source_id": "comtrade",
+          "page": 1,
+          "url": "https://comtradeapi.un.org/public/v1/preview/C/A/HS?period=2025&reporterCode=842&cmdCode=2805&flowCode=M&partnerCode=0&partner2Code=0&customsCode=C00&motCode=0&maxRecords=500",
+          "http_status": 200,
+          "records": 1,
+          "stored": 1,
+          "exact_fields_checked": 11,
+          "next_url": null,
+          "status": "FACTS_STORED",
+          "source_hash": "bb474f6db18398f85e78a6c2cf1a9f541ed4fa6d0bd2f1ce05496c3fecaf6a02",
+          "tables": {},
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "Guest preview: US2025 imports HS2805 partnerWorld. qty code8=kg from official QuantityUnits table; aggregate/estimated flags preserved; not customer demand or factory supply."
+        },
+        {
+          "job_id": "global-2026-10-16-bgs_data",
+          "source_id": "bgs",
+          "page": 1,
+          "url": "https://ogcapi.bgs.ac.uk/collections/world-mineral-statistics/items?f=json&limit=100&sortby=-year",
+          "http_status": 200,
+          "records": 100,
+          "stored": 0,
+          "exact_fields_checked": 752,
+          "next_url": "https://ogcapi.bgs.ac.uk/collections/world-mineral-statistics/items?f=json&offset=100&limit=100&sortby=-year",
+          "status": "PARSE_VALIDATED_RIGHTS_HOLD",
+          "source_hash": "58593d338aba0244c9f0b671236e49312200236a3cd42271d43cf2bac31a68ca",
+          "tables": {},
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "200 most recent production statistics rows only. Estimates/zero/NULL notation and attribution require review. No facts uploaded pending noncommercial/third-party rights confirmation."
+        },
+        {
+          "job_id": "global-2026-10-16-ercot_sep",
+          "source_id": "ercot",
+          "page": 1,
+          "url": "https://www.ercot.com/misdownload/servlets/mirDownload?doclookupId=1281327706",
+          "http_status": 200,
+          "records": 1838,
+          "stored": 1838,
+          "exact_fields_checked": 11051,
+          "next_url": null,
+          "status": "FACTS_STORED",
+          "source_hash": "016cddbb7082fd30e02ede6242e3f33adc79ca0f2e7fb49bc9079ebde2671d58",
+          "tables": {
+            "Project Details - Large Gen": 1758,
+            "Project Details - Small Gen": 31,
+            "Commissioning Update": 23,
+            "Cancellation Update": 26
+          },
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "September2026 public GIS Large/Small/Commissioning/Cancellation tables only. Partial confidential project coverage; capacities for planning, not allocable supply."
+        },
+        {
+          "job_id": "global-2026-10-16-ercot_aug",
+          "source_id": "ercot",
+          "page": 1,
+          "url": "https://www.ercot.com/misdownload/servlets/mirDownload?doclookupId=1269363208",
+          "http_status": 200,
+          "records": 1846,
+          "stored": 1846,
+          "exact_fields_checked": 11093,
+          "next_url": null,
+          "status": "FACTS_STORED",
+          "source_hash": "75543fb2772367aad3ca3f1ee6786e7ab1457c8c2f2e3cb76513ded2b419d5fb",
+          "tables": {
+            "Project Details - Large Gen": 1778,
+            "Project Details - Small Gen": 32,
+            "Commissioning Update": 17,
+            "Cancellation Update": 19
+          },
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "August2026 same four tables. Historical snapshot, no LIVE discovery. All other workbook sheets unread."
+        },
+        {
+          "job_id": "global-2026-10-16-ft_data",
+          "source_id": "find_tender",
+          "page": 2,
+          "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTU4MQ==",
+          "http_status": 200,
+          "records": 369,
+          "stored": 369,
+          "exact_fields_checked": 3855,
+          "next_url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTQ4MQ==",
+          "status": "FACTS_STORED",
+          "source_hash": "ae8b4958d853e09e895d236152697fafef26ba325013dcdfb1b2e7bd897184ed",
+          "tables": {
+            "held_source_reviews": []
+          },
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "Release tags, lots, awards/contracts remain separate. Framework, amendments and amounts are not physical orders. Contract period is not firm delivery."
+        },
+        {
+          "job_id": "global-2026-10-16-cf_data",
+          "source_id": "contracts_finder",
+          "page": 2,
+          "url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-14T00:00:00&publishedTo=2026-10-14T23:59:59&limit=100&cursor=cHVibGlzaGVkRnJvbT0yMDI2LTEwLTE0VDAwOjAwOjAwfHB1Ymxpc2hlZFRvPTIwMjYtMTAtMTRUMjM6NTk6NTl8bGltaXQ9MTAwfG5leHRDdXJzb3I9Nzg2NjUz",
+          "http_status": 200,
+          "records": 198,
+          "stored": 198,
+          "exact_fields_checked": 2998,
+          "next_url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-14T00:00:00&publishedTo=2026-10-14T23:59:59&limit=100&cursor=cHVibGlzaGVkRnJvbT0yMDI2LTEwLTE0VDAwOjAwOjAwfHB1Ymxpc2hlZFRvPTIwMjYtMTAtMTRUMjM6NTk6NTl8bGltaXQ9MTAwfG5leHRDdXJzb3I9Nzg2NTUz",
+          "status": "FACTS_STORED",
+          "source_hash": "99d829516f12a0e55d1ea9a1b8bc4de8066d68f80c449aa0fb5cdd314c6704d6",
+          "tables": {},
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "Open OCDS notices may include services/frameworks and modifications; amount is not order quantity. Same OCID is one procurement lineage."
+        },
+        {
+          "job_id": "global-2026-10-16-federal_month",
+          "source_id": "federal_register",
+          "page": 2,
+          "url": "https://www.federalregister.gov/api/v1/documents?conditions%5Bpublication_date%5D%5Bgte%5D=2026-10-01&conditions%5Bpublication_date%5D%5Blte%5D=2026-10-15&conditions%5Bterm%5D=manufacturing&format=json&order=newest&page=2&per_page=100",
+          "http_status": 200,
+          "records": 1,
+          "stored": 1,
+          "exact_fields_checked": 3,
+          "next_url": null,
+          "status": "FACTS_STORED",
+          "source_hash": "636b5df6b97f428ac524229ea3fda763db3587a05ac3147624861028942ee480",
+          "tables": {},
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "Manufacturing search publication dates2026-10-01..15, metadata only; no fulltext/permit/capacity claim."
+        },
+        {
+          "job_id": "global-2026-10-16-bgs_data",
+          "source_id": "bgs",
+          "page": 2,
+          "url": "https://ogcapi.bgs.ac.uk/collections/world-mineral-statistics/items?f=json&offset=100&limit=100&sortby=-year",
+          "http_status": 200,
+          "records": 100,
+          "stored": 0,
+          "exact_fields_checked": 753,
+          "next_url": "https://ogcapi.bgs.ac.uk/collections/world-mineral-statistics/items?f=json&offset=200&limit=100&sortby=-year",
+          "status": "PARSE_VALIDATED_RIGHTS_HOLD",
+          "source_hash": "2e382a32f460f8043693cbe454f6dc0e82eb609a3a315e85fef9041b4dbcd115",
+          "tables": {},
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "200 most recent production statistics rows only. Estimates/zero/NULL notation and attribution require review. No facts uploaded pending noncommercial/third-party rights confirmation."
+        },
+        {
+          "job_id": "global-2026-10-16-ft_data",
+          "source_id": "find_tender",
+          "page": 3,
+          "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTQ4MQ==",
+          "http_status": 200,
+          "records": 396,
+          "stored": 396,
+          "exact_fields_checked": 4145,
+          "next_url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTM4MQ==",
+          "status": "FACTS_STORED",
+          "source_hash": "6cda10ce3a012ff93f5a4be836d4f1b792ddbf59604029fe08e4592a05b765fa",
+          "tables": {
+            "held_source_reviews": []
+          },
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "Release tags, lots, awards/contracts remain separate. Framework, amendments and amounts are not physical orders. Contract period is not firm delivery."
+        },
+        {
+          "job_id": "global-2026-10-16-cf_data",
+          "source_id": "contracts_finder",
+          "page": 3,
+          "url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-14T00:00:00&publishedTo=2026-10-14T23:59:59&limit=100&cursor=cHVibGlzaGVkRnJvbT0yMDI2LTEwLTE0VDAwOjAwOjAwfHB1Ymxpc2hlZFRvPTIwMjYtMTAtMTRUMjM6NTk6NTl8bGltaXQ9MTAwfG5leHRDdXJzb3I9Nzg2NTUz",
+          "http_status": 200,
+          "records": 84,
+          "stored": 84,
+          "exact_fields_checked": 1267,
+          "next_url": null,
+          "status": "FACTS_STORED",
+          "source_hash": "99cbd732272904d1955473dade4ab0611a734c9f24ab88f9173cd938a4b48918",
+          "tables": {},
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "Open OCDS notices may include services/frameworks and modifications; amount is not order quantity. Same OCID is one procurement lineage."
+        },
+        {
+          "job_id": "global-2026-10-16-ft_data",
+          "source_id": "find_tender",
+          "page": 4,
+          "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTM4MQ==",
+          "http_status": 200,
+          "records": 417,
+          "stored": 417,
+          "exact_fields_checked": 4165,
+          "next_url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTI4MQ==",
+          "status": "FACTS_STORED",
+          "source_hash": "fa89356c3c5c514d23b9774b1d4c4067d9b353cf53ded5f2eaab33a7f07f45de",
+          "tables": {
+            "held_source_reviews": []
+          },
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "Release tags, lots, awards/contracts remain separate. Framework, amendments and amounts are not physical orders. Contract period is not firm delivery."
+        },
+        {
+          "job_id": "global-2026-10-16-ft_data",
+          "source_id": "find_tender",
+          "page": 5,
+          "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-14T00:00:00&updatedTo=2026-10-14T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0xNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0xNFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTc0OTI4MQ==",
+          "http_status": 200,
+          "records": 220,
+          "stored": 220,
+          "exact_fields_checked": 2297,
+          "next_url": null,
+          "status": "FACTS_STORED",
+          "source_hash": "cfebaa7c42d9ad366ae42760522f0001e47d2a34207f171e5fd64f1dcb42e2da",
+          "tables": {
+            "held_source_reviews": []
+          },
+          "native_source_in_remote_capsule": false,
+          "proof_scope": "SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING",
+          "limits": "Release tags, lots, awards/contracts remain separate. Framework, amendments and amounts are not physical orders. Contract period is not firm delivery."
+        }
+      ],
+      "by_source": {
+        "comtrade": {
+          "record_versions": 1,
+          "unique_records": 1,
+          "numeric_fields": 3,
+          "kinds": {
+            "TRADE_STATISTIC": 1
+          },
+          "published_at_unknown": 1
+        },
+        "contracts_finder": {
+          "record_versions": 476,
+          "unique_records": 476,
+          "numeric_fields": 465,
+          "kinds": {
+            "PROCUREMENT_AWARD": 235,
+            "PROCUREMENT_TENDER": 241
+          },
+          "published_at_unknown": 0
+        },
+        "ercot": {
+          "record_versions": 3684,
+          "unique_records": 1916,
+          "numeric_fields": 3684,
+          "kinds": {
+            "CONNECTION_PROJECT": 3684
+          },
+          "published_at_unknown": 0
+        },
+        "federal_register": {
+          "record_versions": 101,
+          "unique_records": 101,
+          "numeric_fields": 0,
+          "kinds": {
+            "REGULATORY_DOCUMENT": 101
+          },
+          "published_at_unknown": 0
+        },
+        "find_tender": {
+          "record_versions": 1788,
+          "unique_records": 1788,
+          "numeric_fields": 412,
+          "kinds": {
+            "PROCUREMENT_TENDER": 1116,
+            "PROCUREMENT_CONTRACT": 259,
+            "PROCUREMENT_AWARD": 411,
+            "PROCUREMENT_NOTICE": 2
+          },
+          "published_at_unknown": 0
+        },
+        "gleif": {
+          "record_versions": 1,
+          "unique_records": 1,
+          "numeric_fields": 0,
+          "kinds": {
+            "LEGAL_ENTITY": 1
+          },
+          "published_at_unknown": 0
+        },
+        "miso": {
+          "record_versions": 3938,
+          "unique_records": 3938,
+          "numeric_fields": 7876,
+          "kinds": {
+            "CONNECTION_PROJECT": 3938
+          },
+          "published_at_unknown": 3938
+        },
+        "world_bank": {
+          "record_versions": 100,
+          "unique_records": 80,
+          "numeric_fields": 0,
+          "kinds": {
+            "PROCUREMENT_NOTICE": 100
+          },
+          "published_at_unknown": 12
+        }
+      },
+      "HTTP_requests_this_batch": 20,
+      "bindings": {
+        "sam_opportunities": {
+          "secret_name": "BCT_SAM_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        },
+        "sam_awards": {
+          "secret_name": "BCT_SAM_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        },
+        "opendart": {
+          "secret_name": "BCT_OPENDART_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        },
+        "edinet": {
+          "secret_name": "BCT_EDINET_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        },
+        "companies_house": {
+          "secret_name": "BCT_COMPANIES_HOUSE_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        },
+        "entsoe": {
+          "secret_name": "BCT_ENTSOE_API_TOKEN",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        },
+        "estat": {
+          "secret_name": "BCT_ESTAT_APP_ID",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        },
+        "kosis": {
+          "secret_name": "BCT_KOSIS_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        },
+        "regulations": {
+          "secret_name": "BCT_REGULATIONS_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        },
+        "comtrade": {
+          "secret_name": "BCT_COMTRADE_API_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        },
+        "korea_pps": {
+          "secret_name": "BCT_DATA_GO_KR_SERVICE_KEY",
+          "present": false,
+          "authentication": "NOT_TESTED",
+          "status": "NEEDS_USER_KEY"
+        }
+      },
+      "record_versions_total": 10089,
+      "unique_records_total": 8301,
+      "native_originals_archived": 0,
+      "confirmed_new_physical_orders": 0,
+      "qualified_supply_records": 0,
+      "Q2_signed_contract_review_inputs": 243,
+      "Q3_pairs": 0,
+      "S2": 0,
+      "S3": 0,
+      "AI_calls": 0,
+      "CPU_windows": 0,
+      "objective_version": "bct-objective-1",
+      "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+    },
+    "process_success": true,
+    "publish_success": false,
+    "publish_error": "Q1_DELTA_BATCH_1MIB_STOP_BEFORE_PUBLISH",
+    "encrypted_result_cache_preserved": "v4-q1-source-result-38855145291",
+    "prior_monthly_generation_preserved": 2,
+    "new_key_bindings_observed_missing": true,
+    "scope": "Runner original-value checks. NESO final-host guard rejected official resource redirect; not classified as API authentication failure."
+  },
+  "CI_history": [
+    {
+      "SHA": "c3fd0cbb2690dc54eaa8c3f7b76b61019f6d4444",
+      "Stage0": {
+        "run": 38855137653,
+        "conclusion": "failure",
+        "passed": 1685,
+        "skipped": 1,
+        "failed": 1,
+        "failure": "Whole-workflow installer string guard must check the manual parser dependency exception and preserve all scheduled CPU no-install/write/pin restrictions"
+      },
+      "dashboard": {
+        "run": 38855137647,
+        "conclusion": "success"
+      }
+    }
+  ],
+  "recovery_preparation": {
+    "only_allowlisted_result_run": 38855145291,
+    "latest_parent_must_equal_failed_parent": true,
+    "append_only_history_check": true,
+    "old_sources_refetched": false,
+    "old_1MiB_delta_limit_unchanged": true,
+    "full_checkpoint_fallback": "existing bounded16MiB checkpoint path, monthly256MiB and6GiB aggregate/400asset guards unchanged",
+    "new_live_requests_planned": "one reviewed NESO resource-identity confirmation plus4 new DOE/NIST source documents; old successful source pages skipped from restored processing state",
+    "tests": {
+      "recovery_related_passed": 56,
+      "then_targeted_final": "pending result recording"
+    }
+  }
 }

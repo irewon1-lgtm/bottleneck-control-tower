@@ -23,6 +23,25 @@ ROOT = Path('var/v4/quantitative/global-sources')
 PREFIX = 'OFFICIAL_SOURCE_PAGE:'
 
 
+def redirect_identity(source, original, final):
+    """NESO's published resource redirects to its own signed download CDN.
+
+    Accept only this verified resource-ID/path mapping, no broad R2 allowlist,
+    no Authorization header, and never retain the signed query values.
+    """
+    u = urlsplit(final)
+    if source == 'neso' and u.hostname == '83025b28472d6aa2bf5ae59f3724aa78.eu.r2.cloudflarestorage.com':
+        import re
+        match = re.fullmatch(r'/dataset/[0-9a-f-]{36}/resource/([0-9a-f-]{36})/download/([^/]+\.csv)', urlsplit(original).path)
+        allowed = {'response-content-disposition', 'response-content-type', 'X-Amz-Algorithm', 'X-Amz-Expires', 'X-Amz-Credential', 'X-Amz-SignedHeaders', 'X-Amz-Date', 'X-Amz-Signature'}
+        if (not match or u.scheme != 'https' or u.username or u.password
+                or u.path != '/dx-national-grid/national-grid/resources/'+match[1]+'/'+match[2]
+                or set(dict(parse_qsl(u.query)))-allowed): raise ValueError('NESO_RESOURCE_REDIRECT_IDENTITY')
+        return urlunsplit((u.scheme, u.netloc, u.path, '', '')), True
+    fmt.safe_url(source, final)
+    return final, False
+
+
 def canonical(url):
     u = urlsplit(url)
     return urlunsplit((u.scheme, u.netloc, u.path, urlencode(sorted(parse_qsl(u.query))), ''))
@@ -33,20 +52,26 @@ class Capture:
         self.root = Path(root); self.root.mkdir(parents=True, exist_ok=True)
         self.network = network; self.calls = 0; self.max_calls = max_calls
         self.started = time.monotonic(); self.seconds = seconds
-        self.index = {}; self.held_hosts = set()
+        self.index = {}; self.held_hosts = set(); self.invalid_receipts = set()
         for p in self.root.glob('*.json'):
-            m = json.loads(p.read_text())
+            try: m = json.loads(p.read_text())
+            except (ValueError, UnicodeError): self.invalid_receipts.add(p.stem); continue
             if 'url' not in m: continue
             self.index[canonical(m['url'])] = p
             if m.get('status') in (401, 403, 429): self.held_hosts.add(urlsplit(m['url']).hostname)
 
     def get(self, source, url):
         fmt.safe_url(source, url); key = canonical(url)
+        if sha(url.encode()) in self.invalid_receipts: return None, {'status': 'CORRUPT_CACHE_RECEIPT', 'url': url}
         if key in self.index:
             p = self.index[key]; m = json.loads(p.read_text())
             if m.get('status') != 200: return None, m
             raw = p.with_suffix('.raw')
             if not raw.exists() or file_sha(raw) != m['raw_sha256']: raise ValueError('SOURCE_CACHE_HASH_MISMATCH')
+            final, redacted = redirect_identity(source, url, m.get('final_url', url))
+            if redacted:
+                m.update(final_url=final, signed_download_parameters_redacted=True)
+                p.write_text(json.dumps(m))
             return raw.read_bytes(), m
         if not self.network: return None, {'status': 'NOT_FETCHED_OFFLINE', 'url': url}
         if self.calls >= self.max_calls or time.monotonic()-self.started >= self.seconds: return None, {'status': 'BATCH_LIMIT_PENDING', 'url': url}
@@ -57,13 +82,14 @@ class Capture:
         p.write_text(json.dumps(m)); self.index[key] = p; self.calls += 1
         try:
             raw, final, status, content_type = fetch(url)
-            fmt.safe_url(source, final)
+            final, redacted = redirect_identity(source, url, final)
             if status != 200 or not raw: raise ValueError('NON200_OR_EMPTY')
             p.with_suffix('.raw').write_bytes(raw)
-            m.update(status=status, final_url=final, bytes=len(raw), raw_sha256=sha(raw), content_type=content_type)
+            m.update(status=status, final_url=final, signed_download_parameters_redacted=redacted, bytes=len(raw), raw_sha256=sha(raw), content_type=content_type)
         except Exception as exc:
             status = getattr(exc, 'code', None)
-            m.update(status=status or 'TRANSPORT_OR_SIZE_FAILURE', error_type=type(exc).__name__, retry=False)
+            safe_reason = str(exc) if isinstance(exc, ValueError) and str(exc) in {'SOURCE_CACHE_HASH_MISMATCH', 'OFFICIAL_SOURCE_URL_NOT_REVIEWED', 'NESO_RESOURCE_REDIRECT_IDENTITY', 'response exceeds bounded 4MB capture'} else type(exc).__name__
+            m.update(status=status or 'TRANSPORT_OR_SIZE_FAILURE', error_type=safe_reason, retry=False)
             if status in (401, 403, 429): self.held_hosts.add(urlsplit(url).hostname)
             retry_after = getattr(exc, 'headers', {}).get('Retry-After') if getattr(exc, 'headers', None) else None
             if retry_after and retry_after.isdecimal(): m['retry_after_seconds'] = int(retry_after)
@@ -77,7 +103,9 @@ def parse(raw, receipt, job):
     meta = {'source_id': job['source_id'], 'url': receipt['url'], 'sha256': sha(raw), 'acquired_at': acquired, 'published_at': job.get('published_at', 'UNKNOWN')}
     if receipt['raw_sha256'] != meta['sha256']: raise ValueError('SOURCE_HASH_MISMATCH')
     extra = {}
-    if job['format'] == 'CSV':
+    if job['format'] == 'HTML_REVIEW':
+        records, native = fmt.reviewed_html(raw, meta, job['source_review']); nxt = None
+    elif job['format'] == 'CSV':
         records, native = fmt.parse_csv(raw, meta); nxt = None
     elif job['format'] == 'XLSX':
         from io import BytesIO
@@ -120,7 +148,9 @@ def collect(ledger, registry, root, *, network=False):
                 continue
             url = current[job['id']]
             if not url: stopped.add(job['id']); continue
-            raw, receipt = transport.get(job['source_id'], url)
+            try: raw, receipt = transport.get(job['source_id'], url)
+            except ValueError as exc:
+                raw, receipt = None, {'status': 'CACHE_OR_SOURCE_GUARD_FAILED', 'url': url, 'error_type': str(exc)}
             if receipt['status'] in {'BATCH_LIMIT_PENDING', 'NOT_FETCHED_OFFLINE'}:
                 report.append({'job_id': job['id'], 'page': page, 'status': receipt['status'], 'next_url': url}); stopped.add(job['id']); continue
             policy = {'job_id': job['id'], 'source_id': job['source_id'], 'page': page, 'url': url, 'http_status': receipt['status'], 'records': 0, 'stored': 0, 'exact_fields_checked': 0, 'next_url': None}

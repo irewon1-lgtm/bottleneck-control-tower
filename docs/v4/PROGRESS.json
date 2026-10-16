@@ -6223,7 +6223,7 @@
       "completed_at": "2026-10-16T03:17:27.067502+00:00"
     },
     "global_official_sources": {
-      "status": "IN_PROGRESS_PRIVATE_PUBLISH_PENDING",
+      "status": "RECOVERY_PREPARED_AFTER_REAL_DELTA_LIMIT_FAILURE",
       "started_from": "ad41f2651eab010268d2879e1c4ce425ec3f9d54",
       "as_of": "2026-10-16T05:18:38.979806+00:00",
       "registry": "docs/v4/quantitative/source-registry.json#global_sources",
@@ -6239,7 +6239,10 @@
       "Q3_eligible_targets": [],
       "S2": 0,
       "S3": 0,
-      "next": "Commit tested source adapters; manual official-sources on latest monthly state; verify exact remote restore and final same-SHA CI"
+      "next": "Run fixed encrypted result recovery38855145291; reuse validated source pages; existing bounded full checkpoint on1MiB delta overflow; validate remote restore and same-SHA CI.",
+      "first_runner_attempt": 38855145291,
+      "encrypted_results_preserved": true,
+      "remote_new_facts_published": false
     }
   }
 }

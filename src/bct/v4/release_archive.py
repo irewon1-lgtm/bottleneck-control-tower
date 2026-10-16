@@ -326,11 +326,20 @@ def publish(store, checkpoint, password, *, expected_generation, max_deltas=MAX_
         elif primary and prior_checkpoint:
             materialize_verified(prior_checkpoint, root/'previous-month.sqlite3')
             require_append_only(root/'previous-month.sqlite3', root/'target/v4.sqlite3')
+        raw = None; size_checkpoint = False
+        if not checkpoint_due:
+            try: raw, _ = delta.make_delta(root/'old.sqlite3', root/'target/v4.sqlite3')
+            except ValueError as exc:
+                if str(exc) != 'Q1_DELTA_BATCH_1MIB_STOP_BEFORE_PUBLISH': raise
+                # A large, append-only source batch uses the already bounded
+                # full-checkpoint path, never a larger delta or a second store.
+                # typed.restore above enforces16MiB; store.put still enforces
+                # monthly/global/asset budgets BEFORE any new object upload.
+                checkpoint_due = True; size_checkpoint = True
         if checkpoint_due:
             base = put_blob(store, (checkpoint / 'checkpoint.sqlite3.gz').read_bytes(), password)
             patches = []; checkpoint_at = now.isoformat(); kind = 'CHECKPOINT'
         else:
-            raw, _ = delta.make_delta(root/'old.sqlite3', root/'target/v4.sqlite3')
             base = previous['base']; patches = previous['patches'] + [put_blob(store, raw, password)]
             checkpoint_at = previous['checkpoint_at']; kind = 'PAGE_DELTA'
         m = stamp_export({'format': FORMAT, 'tag': store.tag, 'legacy_parent': store.parent,
@@ -353,4 +362,5 @@ def publish(store, checkpoint, password, *, expected_generation, max_deltas=MAX_
             raise ValueError('ARCHIVE_COMMIT_READBACK_HASH')
         return {'generation': latest + 1, 'unchanged': False, 'kind': loaded['kind'],
                 'patches': len(patches), 'manifest_sha256': got_sha,
-                'sqlite_sha256': proof['sqlite_sha256'], 'legacy_parent': store.parent}
+                'sqlite_sha256': proof['sqlite_sha256'], 'legacy_parent': store.parent,
+                'bounded_full_checkpoint_due_to_delta_size': size_checkpoint}

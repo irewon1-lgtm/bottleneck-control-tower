@@ -5,7 +5,7 @@ not automatically an order or available supply. Native files stay in the local
 acquisition cache; the existing private capsule receives numerical facts/IDs.
 """
 import csv
-from datetime import datetime
+from datetime import datetime, timezone
 from io import StringIO
 import json
 import re
@@ -31,6 +31,7 @@ HOSTS = {
     'regulations': {'api.regulations.gov'}, 'estat': {'api.e-stat.go.jp'},
     'kosis': {'kosis.kr'}, 'entsoe': {'web-api.tp.entsoe.eu'},
     'korea_pps': {'apis.data.go.kr'},
+    'doe_haleu': {'www.energy.gov'}, 'chips': {'www.nist.gov'},
 }
 FIELDS = set('source_id url source_hash acquired_at native_id logical_id id format record_kind source_lineage published_at publication_basis first_publication_verified claims unknowns research_only s_stage qualified_supply independence evidence_scope'.split())
 CLAIMS = set('notice_id ocid release_tags status procurement_category classification_code classification_scheme product_label buyer_id buyer_name supplier_id supplier_name contract_id award_id award_date signed_date period_start period_end delivery_date item_quantity item_unit amount currency framework_amendment facility_id facility_type project_id project_status geography transmission_owner connection_customer summer_net_MW winter_net_MW connected_MW capacity_change_MW cumulative_MW planned_service_date application_date lei legal_name legal_jurisdiction entity_status registration_last_update publication_date publication_type project_country project_name notice_type notice_status trade_quantity trade_unit_code trade_net_weight_kg trade_value_USD trade_period commodity_code reporter_code partner_code flow_code is_estimated is_aggregate statistic_value statistic_unit statistic_period statistic_product statistic_country statistic_type generation_type dataset_update legal_form parent_lei'.split())
@@ -38,9 +39,11 @@ CLAIMS.update({'reported_project_MW', 'commissioning_status', 'approval_date', '
 CLAIMS.add('procurement_id')
 CLAIMS.update({'lot_id', 'lot_status'})
 CLAIMS.add('reported_item_quantity_literal')
+CLAIMS.update({'material_specification_literal', 'program_funding_literal', 'investment_literal', 'facility_region_literal', 'technology_literal', 'program_duration_literal', 'procurement_eligibility_literal', 'conditional_allocation_literal', 'counterevidence_literal', 'regulatory_condition_literal'})
 KINDS = {'PROCUREMENT_TENDER', 'PROCUREMENT_AWARD', 'PROCUREMENT_CONTRACT',
          'PROCUREMENT_NOTICE', 'LEGAL_ENTITY', 'CONNECTION_PROJECT',
          'REGULATORY_DOCUMENT', 'TRADE_STATISTIC', 'PRODUCTION_STATISTIC'}
+KINDS.add('PROGRAM_CONTEXT_NOT_QUALIFIED_SUPPLY')
 SENSITIVE = re.compile(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|gh[pousr]_[A-Za-z0-9]{20,}|Bearer\s+\S+', re.I)
 MW_FIELDS = {'summer_net_MW', 'winter_net_MW', 'connected_MW', 'capacity_change_MW', 'cumulative_MW', 'reported_project_MW'}
 NUMERIC = MW_FIELDS | {'amount', 'item_quantity', 'trade_quantity', 'trade_net_weight_kg', 'trade_value_USD', 'statistic_value'}
@@ -100,7 +103,7 @@ def record(meta, native_id, kind, data, selectors, *, published=None,
         if name not in CLAIMS: raise ValueError('UNREVIEWED_FACT_FIELD')
         try:
             if isinstance(selector, dict):
-                value = pointer(data, selector['pointer'])[selector['start']:selector['end']]
+                value = data[selector['start']:selector['end']] if selector.get('raw_utf8_html') else pointer(data, selector['pointer'])[selector['start']:selector['end']]
             else: value = data[selector] if csv_row is not None or xlsx_sheet is not None else pointer(data, selector)
         except (KeyError, IndexError, TypeError): value = None
         if value is None or value == '' or isinstance(value, dict):
@@ -108,7 +111,8 @@ def record(meta, native_id, kind, data, selectors, *, published=None,
         if (len(json.dumps(value)) > 700 or SENSITIVE.search(json.dumps(value))
                 or (isinstance(value, list) and not all(isinstance(v, str) for v in value))):
             unknowns.append(name + ':UNSAFE_OR_UNSUPPORTED_FIELD'); continue
-        loc = ({'format': 'JSON_STRING_SPAN', **selector} if isinstance(selector, dict) else
+        loc = ({'format': 'UTF8_HTML_CHARACTER_SPAN', 'start': selector['start'], 'end': selector['end']} if isinstance(selector, dict) and selector.get('raw_utf8_html') else
+               {'format': 'JSON_STRING_SPAN', **selector} if isinstance(selector, dict) else
                {'format': 'XLSX_CELL', 'sheet': xlsx_sheet, 'cell': selector, 'datetime_rule': 'EXCEL_DATETIME_ISO'} if xlsx_sheet is not None else
                {'format': 'CSV_RECORD', 'record': csv_row, 'column': selector} if csv_row is not None else {'format': 'JSON_POINTER', 'pointer': selector})
         claims[name] = {'value': value, 'locator': loc}
@@ -152,6 +156,8 @@ def validate(row):
             if set(loc) != {'format', 'pointer'} or not loc['pointer'].startswith('/'): raise ValueError('OFFICIAL_FACT_POINTER')
         elif loc.get('format') == 'JSON_STRING_SPAN':
             if set(loc) != {'format', 'pointer', 'start', 'end'} or not loc['pointer'].startswith('/') or type(loc['start']) is not int or type(loc['end']) is not int or not 0 <= loc['start'] < loc['end']: raise ValueError('OFFICIAL_FACT_STRING_SPAN')
+        elif loc.get('format') == 'UTF8_HTML_CHARACTER_SPAN':
+            if set(loc) != {'format', 'start', 'end'} or type(loc['start']) is not int or type(loc['end']) is not int or not 0 <= loc['start'] < loc['end']: raise ValueError('OFFICIAL_FACT_HTML_SPAN')
         elif loc.get('format') == 'CSV_RECORD':
             if set(loc) != {'format', 'record', 'column'} or type(loc['record']) is not int or loc['record'] < 1: raise ValueError('OFFICIAL_FACT_CSV_POSITION')
         elif loc.get('format') == 'XLSX_CELL':
@@ -174,6 +180,7 @@ def recheck(row, data):
         loc = claim['locator']
         if loc['format'] == 'CSV_RECORD': actual = data[loc['record'] - 1][loc['column']]
         elif loc['format'] == 'JSON_STRING_SPAN': actual = pointer(data, loc['pointer'])[loc['start']:loc['end']]
+        elif loc['format'] == 'UTF8_HTML_CHARACTER_SPAN': actual = data[loc['start']:loc['end']]
         elif loc['format'] == 'XLSX_CELL':
             actual = data[loc['sheet']][loc['cell']].value
             if isinstance(actual, datetime): actual = actual.isoformat()
@@ -204,6 +211,28 @@ def reviewed_item_descriptions(data, meta, annotations):
             selectors[name] = {'pointer': p, 'start': start, 'end': end}
         out.append(record(meta, rel['ocid']+':'+rel['id']+':reviewed-item-description', 'PROCUREMENT_NOTICE', data, selectors, published=rel.get('date'), publication_basis='RELEASE_DATE_NOT_PROVEN_FIRST_PUBLICATION', lineage='OCDS:'+rel['ocid']))
     return out
+
+
+def reviewed_html(raw, meta, annotation):
+    """Source-reviewed public government literals, not automatic semantic truth.
+
+    Raw UTF8 HTML character offsets stay exact. Mutable program-page creation
+    dates cannot backdate facts added years later: their publication is UNKNOWN.
+    """
+    from bct.target_acquisition import Metadata
+    text = raw.decode('utf-8'); parser = Metadata(); parser.feed(text)
+    if parser.canonical != meta['url']: raise ValueError('HTML_CANONICAL_SOURCE_IDENTITY')
+    selectors = {}
+    for name, review in annotation['fields'].items():
+        anchor = review['anchor']
+        if text.count(anchor) != 1: raise ValueError('HTML_REVIEW_ANCHOR_NOT_UNIQUE')
+        start = text.index(anchor)+review['offset']; end = start+len(review['literal'])
+        if text[start:end] != review['literal']: raise ValueError('HTML_REVIEW_LITERAL_MISMATCH')
+        selectors[name] = {'raw_utf8_html': True, 'start': start, 'end': end}
+    pub = parser.meta.get('article:published_time') if annotation.get('immutable_dated_article') else None
+    row = record(meta, meta['url'], 'PROGRAM_CONTEXT_NOT_QUALIFIED_SUPPLY', text, selectors, published=pub,
+                 publication_basis='DATED_NEWS_ARTICLE_NOT_PROGRAM_PAGE_CREATION_DATE', lineage=meta['url'])
+    return [row], text
 
 
 def parse_ocds(data, meta):
@@ -336,7 +365,18 @@ def q2_review_inputs(records):
         context.setdefault(scope(r), []).append(r)
         if r['record_kind'] == 'PROCUREMENT_AWARD' and 'award_id' in r['claims']:
             award_index.setdefault((*scope(r), r['claims']['award_id']['value']), []).append(r)
-    for r in latest.values():
+    contracts = {}; signed_before = 0
+    def published_rank(r):
+        if r['published_at'] == 'UNKNOWN': return float('-inf'), r['id']
+        value = datetime.fromisoformat(r['published_at'].replace('Z', '+00:00'))
+        if value.tzinfo is None: value = value.replace(tzinfo=timezone.utc)
+        return value.timestamp(), r['id']
+    contract_rows = [r for r in latest.values() if r['record_kind'] == 'PROCUREMENT_CONTRACT']
+    for r in contract_rows:
+        c = r['claims']; signed_before += 'signed_date' in c
+        identity = (r['source_lineage'], c.get('contract_id', {}).get('value', r['native_id']))
+        if identity not in contracts or published_rank(r) > published_rank(contracts[identity]): contracts[identity] = r
+    for r in contracts.values():
         c = r['claims']
         if r['record_kind'] != 'PROCUREMENT_CONTRACT' or 'signed_date' not in c: continue
         matches = award_index.get((*scope(r), c.get('award_id', {}).get('value')), [])
@@ -359,6 +399,9 @@ def q2_review_inputs(records):
                                      'allocable_capacity_and_ready_date', 'independent_counterpart_evidence'],
                          'Q3_eligible': False, 's_stage': 'UNKNOWN'})
     return {'review_inputs': requests, 'signed_contract_records': len(requests),
+            'signed_release_records_before_contract_dedup': signed_before,
+            'contract_groups_all': len(contracts),
+            'duplicate_contract_release_records': len(contract_rows)-len(contracts),
             'exact_unique_contract_award_links': sum(len(r['award_evidence_ids']) == 1 for r in requests),
             'supplier_ids_via_exact_award_link': sum(r['supplier_id_via_exact_award_id'] is not None for r in requests),
             'parent_lot_conflict_review_inputs': sum(bool(r['parent_lot_conflicts_not_resolved_contract_cancellation']) for r in requests),

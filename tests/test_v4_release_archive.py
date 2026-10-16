@@ -56,6 +56,21 @@ def test_full_delta_checkpoint_exact_restore_and_noop_dedup(tmp_path):
         assert got['sqlite_sha256'] == wanted['sqlite_sha256'] and got['tables'] == 8
 
 
+def test_oversize_delta_uses_existing_bounded_checkpoint_without_raising_delta_limit(tmp_path, monkeypatch):
+    s = Memory(); cp, proof = capsule(tmp_path/'base')
+    context={'purpose':'QUANTITATIVE_RESEARCH_PRIMARY'}
+    a.publish(s, cp, PASSWORD, expected_generation=-1, context=context)
+    p.restore(cp,tmp_path/'working'); ledger=Ledger(tmp_path/'working')
+    with ledger.db: ledger.event('QUANTITATIVE_VALIDATION',{'reason':'synthetic large source batch','originals_modified':False})
+    proof1=p.checkpoint(ledger,tmp_path/'next');ledger.close()
+    def too_large(*args):raise ValueError('Q1_DELTA_BATCH_1MIB_STOP_BEFORE_PUBLISH')
+    monkeypatch.setattr(a.delta,'make_delta',too_large)
+    result=a.publish(s,tmp_path/'next',PASSWORD,expected_generation=0,context=context)
+    assert result['kind']=='CHECKPOINT' and result['patches']==0 and result['bounded_full_checkpoint_due_to_delta_size']
+    assert a.restore(s,1,PASSWORD,tmp_path/'recovered',expected_sqlite_sha256=proof1['sqlite_sha256'])['restored']
+    assert a.restore(s,0,PASSWORD,tmp_path/'preserved',expected_sqlite_sha256=proof['sqlite_sha256'])['restored']
+
+
 def test_interrupted_upload_reuses_orphan_without_duplicate_data_or_commit(tmp_path):
     s = Memory(); cp, proof = capsule(tmp_path / 'v0')
     with pytest.raises(ValueError, match='INTERRUPTED'):

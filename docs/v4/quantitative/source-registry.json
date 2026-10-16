@@ -5933,7 +5933,13 @@
         "archive_facts": true,
         "frozen_at": "2026-10-16T05:06:31.214103+00:00",
         "pilot_raw_sha256": "ddb96d884672e73b853a5a4116323bd884207ded617b035fa63387db324865a3",
-        "semantic_limits": "Public TEC register 13 October 2026. Connected, increase/decrease, cumulative MW and effective date distinct. Connection customer is not proved product buyer."
+        "semantic_limits": "Public TEC register 13 October 2026. Connected, increase/decrease, cumulative MW and effective date distinct. Connection customer is not proved product buyer.",
+        "runner_failure_history": {
+          "run": 38855145291,
+          "status": "BLOCKED",
+          "cause": "Strict final-host guard rejected official signed download CDN; raw not saved on runner",
+          "retry_same_contract": false
+        }
       },
       {
         "id": "global-2026-10-16-wb_data",
@@ -6013,6 +6019,153 @@
         "pilot_raw_sha256": "75543fb2772367aad3ca3f1ee6786e7ab1457c8c2f2e3cb76513ded2b419d5fb",
         "semantic_limits": "August2026 same four tables. Historical snapshot, no LIVE discovery. All other workbook sheets unread.",
         "published_at": "2026-09-01T14:38:04-05:00"
+      },
+      {
+        "id": "global-2026-10-16-neso_data-verified-resource-cdn-v2",
+        "source_id": "neso",
+        "url": "https://api.neso.energy/dataset/cbd45e54-e6e2-4a38-99f1-8de6fd96d7c1/resource/17becbab-e3e8-473f-b303-3806f43a6a10/download/tec-register-13-october-2026.csv",
+        "format": "CSV",
+        "max_pages": 1,
+        "archive_facts": true,
+        "frozen_at": "2026-10-16T05:06:31.214103+00:00",
+        "pilot_raw_sha256": "ddb96d884672e73b853a5a4116323bd884207ded617b035fa63387db324865a3",
+        "semantic_limits": "Public TEC register 13 October 2026. Connected, increase/decrease, cumulative MW and effective date distinct. Connection customer is not proved product buyer.",
+        "replaces_guard_failure_only": "global-2026-10-16-neso_data",
+        "recovery_reason": "Official CKAN original URL -> exact resource-ID CDN path verified. One changed-contract confirmation, not an authorization bypass."
+      },
+      {
+        "id": "global-2026-10-16-chips_gf",
+        "source_id": "chips",
+        "url": "https://www.nist.gov/news-events/news/2026/10/department-commerce-announces-agreement-globalfoundries-amend-its-existing",
+        "format": "HTML_REVIEW",
+        "max_pages": 1,
+        "archive_facts": true,
+        "pilot_raw_sha256": "9a2ea29943c07ca8707040bd7a3a6f2134f314d7fc7c0fd74707a6b8e62fb4b8",
+        "semantic_limits": "Assistant source review, not human or independent validation. Funding/eligible bidders/conditional allocation/10year program are not product quantity, customer orders or allocable qualified supply. Mutable page date not fact publication.",
+        "source_review": {
+          "reviewer_type": "ASSISTANT_SOURCE_REVIEW_NOT_HUMAN_OR_INDEPENDENT",
+          "immutable_dated_article": true,
+          "fields": {
+            "program_funding_literal": {
+              "anchor": "<p>WASHINGTON, D.C. – The Department of Commerce’s CHIPS Program Office has agreed with GlobalFoundries to amend its existing award and reallocate up to $955 million in incentives under the CHIPS and Science Act.",
+              "offset": 153,
+              "literal": "$955 million"
+            },
+            "investment_literal": {
+              "anchor": "expand its capital investment in these facilities to $5 billion",
+              "offset": 53,
+              "literal": "$5 billion"
+            },
+            "facility_region_literal": {
+              "anchor": "Malta, NY and Burlington, VT",
+              "offset": 0,
+              "literal": "Malta, NY and Burlington, VT"
+            },
+            "technology_literal": {
+              "anchor": "silicon photonics, silicon-germanium",
+              "offset": 0,
+              "literal": "silicon photonics, silicon-germanium"
+            },
+            "counterevidence_literal": {
+              "anchor": "The total amount of the existing CHIPS Program award will not be increased.",
+              "offset": 0,
+              "literal": "The total amount of the existing CHIPS Program award will not be increased."
+            }
+          }
+        }
+      },
+      {
+        "id": "global-2026-10-16-haleu_enrichment",
+        "source_id": "doe_haleu",
+        "url": "https://www.energy.gov/ne/haleu-enrichment-services",
+        "format": "HTML_REVIEW",
+        "max_pages": 1,
+        "archive_facts": true,
+        "pilot_raw_sha256": "6564019fbb53793b8397b6e59a97900be837d4ac2a35cbef4d5815f8f4b23b9b",
+        "semantic_limits": "Assistant source review, not human or independent validation. Funding/eligible bidders/conditional allocation/10year program are not product quantity, customer orders or allocable qualified supply. Mutable page date not fact publication.",
+        "source_review": {
+          "reviewer_type": "ASSISTANT_SOURCE_REVIEW_NOT_HUMAN_OR_INDEPENDENT",
+          "immutable_dated_article": false,
+          "fields": {
+            "material_specification_literal": {
+              "anchor": "5 and 19.75 percent",
+              "offset": 0,
+              "literal": "5 and 19.75 percent"
+            },
+            "program_duration_literal": {
+              "anchor": "over the next 10 years",
+              "offset": 0,
+              "literal": "over the next 10 years"
+            },
+            "program_funding_literal": {
+              "anchor": "American Centrifuge Operating ($900 million)",
+              "offset": 0,
+              "literal": "American Centrifuge Operating ($900 million)"
+            },
+            "procurement_eligibility_literal": {
+              "anchor": "pending appropriations",
+              "offset": 0,
+              "literal": "pending appropriations"
+            }
+          }
+        }
+      },
+      {
+        "id": "global-2026-10-16-haleu_deconversion",
+        "source_id": "doe_haleu",
+        "url": "https://www.energy.gov/ne/haleu-deconversion-services",
+        "format": "HTML_REVIEW",
+        "max_pages": 1,
+        "archive_facts": true,
+        "pilot_raw_sha256": "f47abfe1c3da4bc50f8691ab30b2a27fbee97c1a0fc79a789ad80e7d266e8c6a",
+        "semantic_limits": "Assistant source review, not human or independent validation. Funding/eligible bidders/conditional allocation/10year program are not product quantity, customer orders or allocable qualified supply. Mutable page date not fact publication.",
+        "source_review": {
+          "reviewer_type": "ASSISTANT_SOURCE_REVIEW_NOT_HUMAN_OR_INDEPENDENT",
+          "immutable_dated_article": false,
+          "fields": {
+            "program_duration_literal": {
+              "anchor": "Contracts will last for up to 10 years",
+              "offset": 0,
+              "literal": "Contracts will last for up to 10 years"
+            },
+            "program_funding_literal": {
+              "anchor": "Up to $800 million",
+              "offset": 0,
+              "literal": "Up to $800 million"
+            },
+            "facility_region_literal": {
+              "anchor": "continental United States",
+              "offset": 0,
+              "literal": "continental United States"
+            },
+            "regulatory_condition_literal": {
+              "anchor": "All activities must comply with the National Environmental Policy Act",
+              "offset": 0,
+              "literal": "All activities must comply with the National Environmental Policy Act"
+            }
+          }
+        }
+      },
+      {
+        "id": "global-2026-10-16-haleu_allocation",
+        "source_id": "doe_haleu",
+        "url": "https://www.energy.gov/ne/us-department-energy-haleu-allocation-process",
+        "format": "HTML_REVIEW",
+        "max_pages": 1,
+        "archive_facts": true,
+        "pilot_raw_sha256": "36052bcb71e69b2a858de99f899e74382880a07fb32562a35f16aaae68eb1fe4",
+        "semantic_limits": "Assistant source review, not human or independent validation. Funding/eligible bidders/conditional allocation/10year program are not product quantity, customer orders or allocable qualified supply. Mutable page date not fact publication.",
+        "source_review": {
+          "reviewer_type": "ASSISTANT_SOURCE_REVIEW_NOT_HUMAN_OR_INDEPENDENT",
+          "immutable_dated_article": false,
+          "fields": {
+            "conditional_allocation_literal": {
+              "anchor": "Round 3 Conditional Selections (July 23, 2026)",
+              "offset": 0,
+              "literal": "Round 3 Conditional Selections (July 23, 2026)"
+            }
+          }
+        }
       }
     ],
     "limits": {

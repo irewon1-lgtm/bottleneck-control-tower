@@ -86,11 +86,20 @@ def prepare():
  print('BCT_Q1_PRIOR_JSON='+json.dumps({'private_parent':result['parent'],'typed_restore':result['verified'],'encrypted_handoff':sealed}))
 
 
-def initialize():
+def initialize(*,official_result=False):
  if (R/'ledger/v4.sqlite3').exists():return
  R.mkdir(parents=True,exist_ok=True)
  prior=private.unseal(BRIDGE/'prior/state.gpg',R/'prior',os.environ['BCT_V4_STATE_PASSPHRASE'])
- private.restore(R/'prior',R/'ledger');(R/'parent.json').write_text(json.dumps(prior))
+ if official_result:
+  failed=private.unseal(BRIDGE/'result/state.gpg',R/'failed-official-checkpoint',os.environ['BCT_V4_STATE_PASSPHRASE'])
+  if failed.get('storage')!=prior.get('storage')or failed['parent']!=prior['parent']:raise ValueError('OFFICIAL_RECOVERY_PARENT_CHANGED_NO_OVERWRITE')
+  private.restore(R/'failed-official-checkpoint',R/'ledger')
+  from bct.v4.release_archive import materialize_verified,require_append_only
+  materialize_verified(R/'prior',R/'official-prior.sqlite3')
+  require_append_only(R/'official-prior.sqlite3',R/'ledger/v4.sqlite3')
+  print('BCT_OFFICIAL_RECOVERY_JSON='+json.dumps({'recovered_run':38855145291,'failed_result_preserved':True,'append_only_parent_verified':True,'source_refetch':False,'native_originals_recovered':False}),flush=True)
+ else:private.restore(R/'prior',R/'ledger')
+ (R/'parent.json').write_text(json.dumps(prior))
  bundle=json.loads(_gpg(Path('var/v4/quantitative/q1-source-probe/result.gpg').read_bytes(),os.environ['BCT_V4_STATE_PASSPHRASE'],decrypt=True))
  probe={k:base64.b64decode(v,validate=True)for k,v in bundle.items()};receipt=json.loads(probe['receipt.json']);native=R/'native';native.mkdir()
  if 'sec-original.json'in probe:
@@ -370,7 +379,9 @@ def relations():
 
 def official():
  """Manual source-format research, on latest monthly state; no writer token."""
- initialize();ledger=Ledger(R/'ledger')
+ recover_run=os.environ.get('OFFICIAL_RESULT_RUN','')
+ if recover_run not in {'','38855145291'}:raise ValueError('OFFICIAL_RESULT_RUN_NOT_REVIEWED')
+ initialize(official_result=bool(recover_run));ledger=Ledger(R/'ledger')
  from v4_official_sources import collect
  from bct.v4.official_sources import KIND,save,q2_review_inputs
  with ledger.worker():
