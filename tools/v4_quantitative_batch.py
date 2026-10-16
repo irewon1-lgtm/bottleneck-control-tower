@@ -561,6 +561,18 @@ def official_state_read():
   handoff=q2_review_inputs(rows);active=q.research_export(SimpleNamespace(db=db))['observations']
   numeric=sum(x['record']['value_decimal_or_null']is not None for x in active)
   physical=sum(x['record']['value_decimal_or_null']is not None and x['record']['measurement_type']=='PHYSICAL'for x in active)
+  repair=Path('docs/v4/quantitative/OFFICIAL_SELECTION_REPAIR_RESULTS.json')
+  if repair.exists():
+   packet=json.loads(repair.read_text());expected=sha(packet)
+   stored=db.execute("SELECT payload FROM events WHERE kind='QUANTITATIVE_VALIDATION' AND json_extract(payload,'$.reason')=?",('OFFICIAL_BIDIRECTIONAL_BATCH:'+expected,)).fetchone()
+   if not stored or sha(json.loads(stored[0])['policy'])!=expected:raise ValueError('SELECTION_REPAIR_REMOTE_PACKET_NOT_CONFIRMED')
+   from bct.v4.quantitative_counterpart import latest_relations
+   tasks=latest_relations(SimpleNamespace(db=db))['tasks']
+   print('BCT_SELECTION_REPAIR_RESTORE_JSON='+json.dumps({'exact_packet_sha256':expected,'remote_packet_match':True,
+         'initial_pending':packet['selection_audit']['initial_pending'],'pending':len(packet['pending']),
+         'source_requests':packet['all_new_HTTP_requests'],'source_documents':len(packet['context_results']),
+         'automatic_relation_tasks':sum('automatic_stored_search'in t['scope']for t in tasks),
+         'writes':0,'source_HTTP_requests':0,'code_SHA':os.environ['GITHUB_SHA']}),flush=True)
  # prepare sealed only the verified checkpoint; read its authenticated packet.
  from bct.v4.monthly_storage import Monthly
  monthly=Monthly(os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],os.environ['BCT_V4_STATE_PASSPHRASE']);cursor=monthly.head()

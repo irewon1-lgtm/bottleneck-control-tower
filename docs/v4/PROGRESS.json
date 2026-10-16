@@ -5810,6 +5810,20 @@
         "uploaded_bytes": 328154,
         "Git_writes": 0,
         "remote_restore_verified": true
+      },
+      "last_research_update_selection_repair": {
+        "storage": {
+          "backend": "monthly-releases",
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 6,
+          "manifest_sha256": "f939433f6366438abb64b6a4c89f8305b6b91727ecce4362384c03b6e6a908fe",
+          "sqlite_sha256": "06bef86b0667c7d7170dc1521c7646324824edd76085eb61c1cb7913381e2093",
+          "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+        },
+        "read_run": 38903997134,
+        "restore_verified": true,
+        "publisher_timeout_run": 38903154345,
+        "exact_packet_match": "PENDING_READ_ONLY_VERIFICATION"
       }
     },
     "Q2_real_evidence_resume": {
@@ -7230,7 +7244,7 @@
           "new_firm_delivery_or_customer_need": 0
         },
         "selection_repair": {
-          "status": "PARTIAL_LOCAL_SOURCE_REPLAY_EXECUTED_REMOTE_APPEND_PENDING",
+          "status": "PARTIAL_REMOTE_GENERATION6_RESTORED_EXACT_PACKET_READBACK_PENDING",
           "plan_id": "BCT-V4-Q-1.0",
           "start_SHA": "30dff15989bba974190e0b61004d8f7032a16c7a",
           "evidence_path": "docs/v4/quantitative/OFFICIAL_SELECTION_REPAIR_RESULTS.json",
@@ -7295,16 +7309,17 @@
           },
           "pending_entries": 226,
           "source_BLOCKED": [
-            "ANNUAL_REPORT_EXCEEDS_EXISTING_4_MIB_RESPONSE_BOUND_NO_RETRY",
+            "ANNUAL_REPORT_VALUE_ERROR_BEFORE_NATIVE_CAPTURE_DETAILED_CAUSE_UNRECORDED_NO_RETRY",
             "PRIOR_HTTP_OR_DECODE_FAILURE_RECEIPTS_RETAINED_NO_RETRY"
           ],
           "stage_blockers": {
-            "EXTRACTION": "INLINE_MARKUP_ALIGNMENT_AND_PDF_SIZE_BOUND",
+            "EXTRACTION": "INLINE_MARKUP_ALIGNMENT_UNSUPPORTED",
             "ENTITY": "NEW_PROSE_NO_UNAMBIGUOUS_PHYSICAL_PRODUCT_BINDING",
             "SCOPE": "SPECIFICATION_CUSTOMER_NEED_AND_QUALIFIED_SUPPLY_POOL_UNKNOWN",
             "LINKAGE": "NO_SAME_TARGET_OPPOSITE_FACT",
             "INDEPENDENCE": "NO_PROVEN_DISTINCT_DEMAND_SUPPLY_LINEAGE_PAIR",
-            "COMPARISON": "NO_QUALIFIED_QUANTITY_OR_VERIFIED_NEED_READINESS_PAIR"
+            "COMPARISON": "NO_QUALIFIED_QUANTITY_OR_VERIFIED_NEED_READINESS_PAIR",
+            "SOURCE": "Annual report failed before native capture: ValueError only; response-size bound suspected but not proven by preserved receipt"
           },
           "AI_calls": 0,
           "CPU_windows": 0,
@@ -7328,7 +7343,53 @@
             "HOLD": 194,
             "EXCLUDE_PRESERVED": 32,
             "eligible_unvisited": 0
-          }
+          },
+          "final_publication_guard_tests": {
+            "passed": 33,
+            "failed": 0
+          },
+          "baseline_compatibility": {
+            "publication_repairs_replayed_same": 7,
+            "native_procurement_and_Q3_function_AST_unchanged": true,
+            "past13_outputs_unchanged": true
+          },
+          "remote_append_run": {
+            "run_id": 38903154345,
+            "code_SHA": "a0ed4b5028ff43bed271bfd8c4b9fdd644ef2948",
+            "prepare": "PASS",
+            "append_and_new_process_requery": "PASS",
+            "source_requests_in_receiver": 0,
+            "publisher": "FAIL_TIMEOUT_120_SECONDS_EXIT_124",
+            "complete_remote_restore": "GENERATION6_RESTORE_PASS_SEPARATE_READ_ONLY_RUN",
+            "candidate_sqlite_sha256": "0166fd6ffe59dbd1fda076b5d2842e11ac59f19947fe580b443f6e9561118077",
+            "old_generation": 5,
+            "write_retry": false,
+            "live_processing_db_hash_is_not_checkpoint_backup_hash": true
+          },
+          "remote_archive_state": {
+            "storage": {
+              "backend": "monthly-releases",
+              "tag": "bct-v4-archive-monthly-2026-10",
+              "generation": 6,
+              "manifest_sha256": "f939433f6366438abb64b6a4c89f8305b6b91727ecce4362384c03b6e6a908fe",
+              "sqlite_sha256": "06bef86b0667c7d7170dc1521c7646324824edd76085eb61c1cb7913381e2093",
+              "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+            },
+            "remote_restore_verified": true,
+            "tables": 8,
+            "read_run": 38903997134,
+            "checkpoint_kind": "PAGE_DELTA",
+            "originals_restored": false,
+            "Q1_numeric": 38046,
+            "Q1_physical": 21916,
+            "exact_new_packet_query": "PREPARED_NOT_RUN"
+          },
+          "final_focused_tests": {
+            "passed": 34,
+            "failed": 0,
+            "scope": "changed bidirectional reader plus protected workflow contract"
+          },
+          "original_CPU_research_DB_hashes_preserved": true
         }
       }
     }

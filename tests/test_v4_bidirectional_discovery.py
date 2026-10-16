@@ -271,3 +271,8 @@ def test_visible_ir_header_publication_not_dates_in_body_or_index():
  loc=r['positions'][0];assert html[loc['start']:loc['end']]=='August 27, 2026'
  assert d.publication_evidence(html.replace('__bodytext','menu').encode(),'https://example.gov/report','2026-10-16')['published_at']=='UNKNOWN'
  assert d.publication_evidence(html.replace('2026</span>','2027</span>').encode(),'https://example.gov/report','2026-10-16')['published_at']=='UNKNOWN'
+
+
+def test_visible_date_does_not_override_conflicting_article_metadata():
+ html='<link rel="canonical" href="https://example.gov/report"><h1>Quarterly report</h1><span class="date">August 27, 2026</span><div class="__bodytext">Report</div><script type="application/ld+json">{"@type":"Article","headline":"Different article","datePublished":"2026-01-01"}</script>'
+ assert d.publication_evidence(html.encode(),'https://example.gov/report','2026-10-16')['published_at']=='UNKNOWN'

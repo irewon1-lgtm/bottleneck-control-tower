@@ -348,18 +348,20 @@ def publication_evidence(raw, url, acquired_at):
     canon = re.findall(r'<link\b[^>]*>', html, re.I)
     canon = [x for x in canon if re.search(r'rel=[\"\']canonical[\"\']', x, re.I)]
     if len(canon) != 1 or norm(p.canonical) != norm(url): return result
+    articles = [x for x in nodes(p.ld) if x.get('@type') in ('Article','NewsArticle','BlogPosting')]
     # Some official IR publishers use visible article-header metadata rather
     # than JSON-LD. Require one heading, one labelled article body and exactly
     # one labelled date between them. Never take a convenient date in a list.
     headers=list(re.finditer(r'<h1\b[^>]*>.*?</h1>',html,re.I|re.S))
     bodies=list(re.finditer(r'<(?:div|section)\b[^>]*class=[\"\'][^\"\']*(?:bodytext|article-body)[^\"\']*[\"\']',html,re.I))
-    if len(headers)==len(bodies)==1 and 0<bodies[0].start()-headers[0].end()<1024:
+    if not articles and not p.meta.get('article:published_time') and len(headers)==len(bodies)==1 and 0<bodies[0].start()-headers[0].end()<1024:
         header=html[headers[0].end():bodies[0].start()]
         dates=list(re.finditer(r'<span\b[^>]*class=[\"\']date[\"\'][^>]*>\s*([^<>]+?)\s*</span>',header,re.I))
         if len(dates)==1:
             value=dates[0][1]
             try:
                 dt=datetime.strptime(value,'%B %d, %Y')
+                if p.meta.get('dc.date') and p.meta['dc.date'][:10]!=dt.date().isoformat():return result
                 if dt.date()<=datetime.fromisoformat(acquired_at.replace('Z','+00:00')).date():
                     start=headers[0].end()+dates[0].start(1)
                     return {**result,'published_at':dt.date().isoformat(),
@@ -367,7 +369,6 @@ def publication_evidence(raw, url, acquired_at):
                             'basis':'SOURCE_REPORTED_ARTICLE_DATE_NOT_VERSION_HISTORY',
                             'positions':[{'start':start,'end':start+len(value)}]}
             except ValueError:pass
-    articles = [x for x in nodes(p.ld) if x.get('@type') in ('Article','NewsArticle','BlogPosting')]
     if len(articles) != 1: return result
     article = articles[0]
     clean = lambda x: ' '.join(unescape(re.sub('<[^>]+>', '', x)).split()).casefold()

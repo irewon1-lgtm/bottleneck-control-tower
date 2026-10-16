@@ -338,6 +338,14 @@ def bidirectional(ledger, root, *, network=False, seed_links=(), documents=(), s
                 rp.with_suffix('.raw').write_bytes(raw)  # ephemeral only, not archive
         except Exception as exc:
             receipt.update(status=getattr(exc, 'code', type(exc).__name__), reason=type(exc).__name__, retry=False)
+            # A coarse ValueError receipt cannot prove a size/identity/parser
+            # cause later. Retain only enumerated non-secret diagnostics.
+            safe_errors={'response exceeds bounded 4MB capture':'RESPONSE_SIZE_LIMIT_4_MIB',
+                         'UNVERIFIED_ISSUER_REDIRECT':'UNVERIFIED_ISSUER_REDIRECT',
+                         'CONTEXT_DECODED_SIZE_LIMIT':'CONTEXT_DECODED_SIZE_LIMIT',
+                         'CONTEXT_PDF_SIZE_LIMIT':'CONTEXT_PDF_SIZE_LIMIT'}
+            receipt['diagnostic']=safe_errors.get(str(exc),'UNCLASSIFIED_'+type(exc).__name__)
+            receipt['failure_stage']='EXTRACTION' if receipt.get('source_hash') else 'SOURCE'
             if receipt['status'] in {401,403,429}: held_hosts[host] = receipt['status']
         rp.write_text(json.dumps(receipt)); receipts[url] = receipt; attempted.append(receipt)
     # Retain every source-driven task, including sources with no locator. A
