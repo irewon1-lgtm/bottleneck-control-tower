@@ -97,6 +97,11 @@ def initialize(*,official_result=False):
   from bct.v4.release_archive import materialize_verified,require_append_only
   materialize_verified(R/'prior',R/'official-prior.sqlite3')
   require_append_only(R/'official-prior.sqlite3',R/'ledger/v4.sqlite3')
+  # The restored cache is an immutable INPUT. Keep it under a separate name;
+  # finish() intentionally creates its OUTPUT with exclusive xb, never overwrites.
+  preserved=R/'preserved-source-result-38855145291.gpg'
+  if preserved.exists():raise ValueError('OFFICIAL_RECOVERY_INPUT_ALREADY_PRESERVED')
+  (BRIDGE/'result/state.gpg').rename(preserved)
   print('BCT_OFFICIAL_RECOVERY_JSON='+json.dumps({'recovered_run':38855145291,'failed_result_preserved':True,'append_only_parent_verified':True,'source_refetch':False,'native_originals_recovered':False}),flush=True)
  else:private.restore(R/'prior',R/'ledger')
  (R/'parent.json').write_text(json.dumps(prior))

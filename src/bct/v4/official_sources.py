@@ -32,6 +32,7 @@ HOSTS = {
     'kosis': {'kosis.kr'}, 'entsoe': {'web-api.tp.entsoe.eu'},
     'korea_pps': {'apis.data.go.kr'},
     'doe_haleu': {'www.energy.gov'}, 'chips': {'www.nist.gov'},
+    'canadabuys': {'canadabuys.canada.ca'},
 }
 FIELDS = set('source_id url source_hash acquired_at native_id logical_id id format record_kind source_lineage published_at publication_basis first_publication_verified claims unknowns research_only s_stage qualified_supply independence evidence_scope'.split())
 CLAIMS = set('notice_id ocid release_tags status procurement_category classification_code classification_scheme product_label buyer_id buyer_name supplier_id supplier_name contract_id award_id award_date signed_date period_start period_end delivery_date item_quantity item_unit amount currency framework_amendment facility_id facility_type project_id project_status geography transmission_owner connection_customer summer_net_MW winter_net_MW connected_MW capacity_change_MW cumulative_MW planned_service_date application_date lei legal_name legal_jurisdiction entity_status registration_last_update publication_date publication_type project_country project_name notice_type notice_status trade_quantity trade_unit_code trade_net_weight_kg trade_value_USD trade_period commodity_code reporter_code partner_code flow_code is_estimated is_aggregate statistic_value statistic_unit statistic_period statistic_product statistic_country statistic_type generation_type dataset_update legal_form parent_lei'.split())
@@ -40,18 +41,19 @@ CLAIMS.add('procurement_id')
 CLAIMS.update({'lot_id', 'lot_status'})
 CLAIMS.add('reported_item_quantity_literal')
 CLAIMS.update({'material_specification_literal', 'program_funding_literal', 'investment_literal', 'facility_region_literal', 'technology_literal', 'program_duration_literal', 'procurement_eligibility_literal', 'conditional_allocation_literal', 'counterevidence_literal', 'regulatory_condition_literal'})
+CLAIMS.update({'amendment_number', 'amendment_date', 'instrument_type', 'reported_total_contract_value'})
 KINDS = {'PROCUREMENT_TENDER', 'PROCUREMENT_AWARD', 'PROCUREMENT_CONTRACT',
          'PROCUREMENT_NOTICE', 'LEGAL_ENTITY', 'CONNECTION_PROJECT',
          'REGULATORY_DOCUMENT', 'TRADE_STATISTIC', 'PRODUCTION_STATISTIC'}
 KINDS.add('PROGRAM_CONTEXT_NOT_QUALIFIED_SUPPLY')
 SENSITIVE = re.compile(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|gh[pousr]_[A-Za-z0-9]{20,}|Bearer\s+\S+', re.I)
 MW_FIELDS = {'summer_net_MW', 'winter_net_MW', 'connected_MW', 'capacity_change_MW', 'cumulative_MW', 'reported_project_MW'}
-NUMERIC = MW_FIELDS | {'amount', 'item_quantity', 'trade_quantity', 'trade_net_weight_kg', 'trade_value_USD', 'statistic_value'}
+NUMERIC = MW_FIELDS | {'amount', 'reported_total_contract_value', 'item_quantity', 'trade_quantity', 'trade_net_weight_kg', 'trade_value_USD', 'statistic_value'}
 
 
 def _unit(name, claims):
     if name in MW_FIELDS: return 'MW', 'NATIVE_MW_FIELD_OR_VERIFIED_MW_COLUMN_HEADER'
-    if name == 'amount': return claims.get('currency', {}).get('value', 'UNKNOWN'), 'NATIVE_CURRENCY_FIELD'
+    if name in {'amount', 'reported_total_contract_value'}: return claims.get('currency', {}).get('value', 'UNKNOWN'), 'NATIVE_CURRENCY_FIELD'
     if name == 'item_quantity': return claims.get('item_unit', {}).get('value', 'UNKNOWN'), 'NATIVE_ITEM_UNIT_FIELD'
     if name == 'trade_net_weight_kg': return 'kg', 'UN_COMTRADE_NETWGT_DEFINITION'
     if name == 'trade_value_USD': return 'USD', 'UN_COMTRADE_PRIMARYVALUE_DEFINITION_NOT_QUANTITY'
@@ -300,8 +302,20 @@ def parse_json(data, meta):
     return out, next_url
 
 
-def parse_csv(raw, meta):
+def parse_csv(raw, meta, *, scope=None):
     rows = list(csv.DictReader(StringIO(raw.decode('utf-8-sig'))))
+    if meta['source_id'] == 'canadabuys':
+        if not scope or set(scope) != {'published_from', 'published_to'}: raise ValueError('CANADA_FIXED_PUBLICATION_SCOPE_REQUIRED')
+        mapping = {'notice_id': 'referenceNumber-numeroReference', 'amendment_number': 'amendmentNumber-numeroModification', 'amendment_date': 'amendmentDate-dateModification', 'contract_id': 'contractNumber-numeroContrat', 'publication_date': 'publicationDate-datePublication', 'award_date': 'contractAwardDate-dateAttributionContrat', 'period_start': 'contractStartDate-contratDateDebut', 'period_end': 'contractEndDate-dateFinContrat', 'amount': 'contractAmount-montantContrat', 'reported_total_contract_value': 'totalContractValue-valeurTotaleContrat', 'currency': 'contractCurrency-contratMonnaie', 'status': 'awardStatus-attributionStatut-eng', 'instrument_type': 'instrumentType-typeInstrument-eng', 'classification_code': 'unspsc', 'product_label': 'title-titre-eng', 'procurement_category': 'procurementCategory-categorieApprovisionnement', 'geography': 'regionsOfDelivery-regionsLivraison-eng', 'supplier_name': 'supplierLegalName-nomLegalFournisseur-eng', 'buyer_name': 'contractingEntityName-nomEntitContractante-eng'}
+        out = []
+        for i, obj in enumerate(rows):
+            pub = obj.get('publicationDate-datePublication', '')
+            if not _day(pub) or not scope['published_from'] <= pub[:10] <= scope['published_to']: continue
+            reference = obj['referenceNumber-numeroReference']; contract = obj.get('contractNumber-numeroContrat', '')
+            if not reference: raise ValueError('CANADA_REFERENCE_REQUIRED')
+            native = json.dumps([reference, obj.get('amendmentNumber-numeroModification'), contract])
+            out.append(record(meta, native, 'PROCUREMENT_AWARD', obj, mapping, csv_row=i+1, published=pub, publication_basis='NOTICE_PUBLICATION_NOT_PROVEN_INITIAL_CONTRACT_RELEASE', lineage='CANADABUYS:'+(contract or reference)))
+        return out, rows
     if meta['source_id'] != 'neso': raise ValueError('CSV_SOURCE_NOT_IMPLEMENTED')
     mapping = {'project_id': 'Project ID', 'product_label': 'Plant Type', 'connection_customer': 'Customer Name', 'facility_id': 'Connection Site', 'project_status': 'Project Status', 'connected_MW': 'MW Connected', 'capacity_change_MW': 'MW Increase / Decrease', 'cumulative_MW': 'Cumulative Total Capacity (MW)', 'planned_service_date': 'MW Effective From'}
     out = []

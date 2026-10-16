@@ -187,6 +187,38 @@ def test_mutable_program_creation_date_cannot_backdate_later_funding_or_eligibil
     assert rows[0]['record_kind']=='PROGRAM_CONTEXT_NOT_QUALIFIED_SUPPLY' and rows[0]['qualified_supply']=='UNKNOWN'
 
 
+def test_canada_award_window_amendment_money_and_contact_exclusion():
+    raw=('referenceNumber-numeroReference,amendmentNumber-numeroModification,publicationDate-datePublication,contractAmount-montantContrat,totalContractValue-valeurTotaleContrat,contractCurrency-contratMonnaie,contractEndDate-dateFinContrat,contactInfoEmail-informationsContactCourriel\n'
+         'R1,001,2026-10-14,100,900,CAD,2028-01-01,synthetic@example.org\nR0,000,2026-09-01,500,500,CAD,2027-01-01,other@example.org\n').encode()
+    rows,native=f.parse_csv(raw,meta('canadabuys',{}),scope={'published_from':'2026-10-01','published_to':'2026-10-15'})
+    assert len(rows)==1 and len(native)==2 and f.recheck(rows[0],native)>4
+    assert rows[0]['claims']['amount']['value']=='100' and rows[0]['claims']['reported_total_contract_value']['value']=='900'
+    assert rows[0]['claims']['amount']['unit']=='CAD' and rows[0]['claims']['amendment_number']['value']=='001'
+    assert 'synthetic@example.org'not in json.dumps(rows) and 'item_quantity'not in rows[0]['claims']
+    assert 'delivery_date'not in rows[0]['claims'] and rows[0]['s_stage']=='UNKNOWN'
+
+
+def test_encrypted_failed_input_is_preserved_and_new_seal_does_not_overwrite_it(tmp_path,monkeypatch):
+    import base64
+    spec=importlib.util.spec_from_file_location('batch','tools/v4_quantitative_batch.py');batch=importlib.util.module_from_spec(spec);spec.loader.exec_module(batch)
+    l=Ledger(tmp_path/'seed');raw=tmp_path/'value.json';raw.write_bytes(b'{"value":1}')
+    m={'source_id':'usaspending','url':'https://api.usaspending.gov/api/v2/transactions/','sha256':file_sha(raw),'path':str(raw),'acquired_at':'2026-10-16'}
+    q.commit_page(l,'synthetic',m,[q.observation(m,'synthetic','class','money',1,'USD','MONEY','2026-09',{'path':['value']})]);private.checkpoint(l,tmp_path/'base');l.close()
+    private.restore(tmp_path/'base',tmp_path/'changed');l=Ledger(tmp_path/'changed')
+    with l.db:l.event('QUANTITATIVE_VALIDATION',{'reason':'synthetic source work','originals_modified':False})
+    private.checkpoint(l,tmp_path/'failed');l.close()
+    password='synthetic-test-password-not-a-user-secret';parent='a'*40;storage={'backend':'monthly-releases','generation':2}
+    bridge=tmp_path/'bridge';private.seal(tmp_path/'base',bridge/'prior/state.gpg',password,parent,storage=storage);private.seal(tmp_path/'failed',bridge/'result/state.gpg',password,parent,storage=storage)
+    original=file_sha(bridge/'result/state.gpg');monkeypatch.setattr(batch,'R',tmp_path/'work');monkeypatch.setattr(batch,'BRIDGE',bridge);monkeypatch.setenv('BCT_V4_STATE_PASSPHRASE',password)
+    monkeypatch.chdir(tmp_path);probe=Path('var/v4/quantitative/q1-source-probe/result.gpg');probe.parent.mkdir(parents=True);probe.write_bytes(b'synthetic-probe')
+    monkeypatch.setattr(batch,'_gpg',lambda *a,**kw:json.dumps({'receipt.json':base64.b64encode(b'{"at":"2026-10-16"}').decode()}).encode())
+    batch.initialize(official_result=True)
+    assert not(bridge/'result/state.gpg').exists()
+    assert file_sha(tmp_path/'work/preserved-source-result-38855145291.gpg')==original
+    private.seal(tmp_path/'failed',bridge/'result/state.gpg',password,parent,storage=storage)
+    assert file_sha(tmp_path/'work/preserved-source-result-38855145291.gpg')==original
+
+
 def test_failure_isolated_offline_cache_and_pending_can_resume_without_new_run_id(tmp_path):
     tool = _collector(); cache = tmp_path/'captures'; cache.mkdir()
     data = [{'id': 1, 'projectNumber': 'J1', 'summerNetMW': 1}]; u = 'https://www.misoenergy.org/synthetic'

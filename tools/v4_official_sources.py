@@ -57,11 +57,13 @@ class Capture:
             try: m = json.loads(p.read_text())
             except (ValueError, UnicodeError): self.invalid_receipts.add(p.stem); continue
             if 'url' not in m: continue
-            self.index[canonical(m['url'])] = p
+            self.index[canonical(m['url'])+('|'+m['transport_contract'] if m.get('transport_contract') else '')] = p
             if m.get('status') in (401, 403, 429): self.held_hosts.add(urlsplit(m['url']).hostname)
 
     def get(self, source, url):
         fmt.safe_url(source, url); key = canonical(url)
+        contract = 'Q1_EXISTING_20MB' if source == 'canadabuys' else None
+        if contract: key += '|'+contract
         if sha(url.encode()) in self.invalid_receipts: return None, {'status': 'CORRUPT_CACHE_RECEIPT', 'url': url}
         if key in self.index:
             p = self.index[key]; m = json.loads(p.read_text())
@@ -77,11 +79,18 @@ class Capture:
         if self.calls >= self.max_calls or time.monotonic()-self.started >= self.seconds: return None, {'status': 'BATCH_LIMIT_PENDING', 'url': url}
         if urlsplit(url).hostname in self.held_hosts: return None, {'status': 'HOST_QUARANTINED', 'url': url}
         # Journal BEFORE the call: a killed call cannot be silently retried.
-        p = self.root/(sha(url.encode())+'.json')
+        p = self.root/((sha([url, contract]) if contract else sha(url.encode()))+'.json')
         m = {'url': url, 'purpose': 'DATA', 'status': 'INTERRUPTED_NO_AUTO_RETRY', 'acquired_at': now()}
+        if contract: m['transport_contract'] = contract
         p.write_text(json.dumps(m)); self.index[key] = p; self.calls += 1
         try:
-            raw, final, status, content_type = fetch(url)
+            if contract:
+                # Existing Q1 SourceClient already caps files at20,000,000B.
+                # The16,172,272B public Canada file was independently HEAD-sized.
+                # This is not an increase of the authoritative registry cap.
+                from bct.v4.adapters import SourceClient
+                raw, final, status, content_type = SourceClient().fetch(url)
+            else: raw, final, status, content_type = fetch(url)
             final, redacted = redirect_identity(source, url, final)
             if status != 200 or not raw: raise ValueError('NON200_OR_EMPTY')
             p.with_suffix('.raw').write_bytes(raw)
@@ -106,7 +115,10 @@ def parse(raw, receipt, job):
     if job['format'] == 'HTML_REVIEW':
         records, native = fmt.reviewed_html(raw, meta, job['source_review']); nxt = None
     elif job['format'] == 'CSV':
-        records, native = fmt.parse_csv(raw, meta); nxt = None
+        records, native = fmt.parse_csv(raw, meta, scope=job.get('scope')); nxt = None
+        extra['CSV_records_scanned'] = len(native)
+        extra['CSV_records_selected'] = len(records)
+        extra['fixed_publication_scope'] = job.get('scope')
     elif job['format'] == 'XLSX':
         from io import BytesIO
         from openpyxl import load_workbook
@@ -176,7 +188,7 @@ def collect(ledger, registry, root, *, network=False):
     by = {}
     for source in sorted({r['source_id'] for r in all_records}):
         rows = [r for r in all_records if r['source_id'] == source]
-        by[source] = {'record_versions': len(rows), 'unique_records': len({r['logical_id'] for r in rows}), 'numeric_fields': sum(sum(k in {'amount', 'item_quantity', 'summer_net_MW', 'winter_net_MW', 'connected_MW', 'capacity_change_MW', 'cumulative_MW', 'reported_project_MW', 'trade_quantity', 'trade_net_weight_kg', 'trade_value_USD', 'statistic_value'} for k in r['claims']) for r in rows), 'kinds': dict(Counter(r['record_kind'] for r in rows)), 'published_at_unknown': sum(r['published_at'] == 'UNKNOWN' for r in rows)}
+        by[source] = {'record_versions': len(rows), 'unique_records': len({r['logical_id'] for r in rows}), 'numeric_fields': sum(sum(k in fmt.NUMERIC for k in r['claims']) for r in rows), 'kinds': dict(Counter(r['record_kind'] for r in rows)), 'published_at_unknown': sum(r['published_at'] == 'UNKNOWN' for r in rows)}
     handoff = fmt.q2_review_inputs(all_records)
     result = stamp_export({'plan_id': 'BCT-V4-Q-1.0', 'version': fmt.VERSION, 'pages': report, 'by_source': by, 'HTTP_requests_this_batch': transport.calls, 'bindings': bindings(), 'record_versions_total': len(all_records), 'unique_records_total': len({r['logical_id'] for r in all_records}), 'native_originals_archived': 0, 'confirmed_new_physical_orders': 0, 'qualified_supply_records': 0, 'Q2_signed_contract_review_inputs': handoff['signed_contract_records'], 'Q3_pairs': 0, 'S2': 0, 'S3': 0, 'AI_calls': 0, 'CPU_windows': 0})
     Path(root).mkdir(parents=True, exist_ok=True); (Path(root)/'q2-review-inputs.json').write_text(json.dumps(handoff, indent=2)+'\n')
