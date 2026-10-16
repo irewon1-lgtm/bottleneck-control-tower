@@ -505,11 +505,15 @@ def read_context(raw, meta):
         locations = [m.start() for m in re.finditer(re.escape(context), html)]
         inline_hit = None
         ambiguous_inline = False
-        if not locations and not pdf:
+        if not pdf and len(locations) < 2:
             if inline_blocks is None:
                 inline_blocks = _inline_source_blocks(html)
             matches = _inline_quote_hits(inline_blocks, context)
-            if len(matches) == 1:
+            # A literal quote and an inline-formatted copy are still two
+            # occurrences; accepting the first silently misattributes facts.
+            if len(matches) > 1:
+                ambiguous_inline = True
+            elif not locations and len(matches) == 1:
                 inline_hit = matches[0]
 
                 def native_char(local_offset):
@@ -521,8 +525,6 @@ def read_context(raw, meta):
                     raise ValueError('INLINE_CONTEXT_COORDINATE')
 
                 locations = [native_char(0)]
-            elif len(matches) > 1:
-                ambiguous_inline = True
         if len(locations) != 1 or ambiguous_inline:
             holds.append({'stage': 'EXTRACTION',
                           'reason': 'RAW_CONTEXT_AMBIGUOUS' if locations or ambiguous_inline else 'RAW_CONTEXT_MARKUP_ALIGNMENT_UNSUPPORTED',

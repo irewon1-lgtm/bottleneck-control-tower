@@ -94,6 +94,15 @@ def test_repeated_inline_quote_is_ambiguous_not_first_match():
  assert any(h['reason']=='RAW_CONTEXT_AMBIGUOUS' for h in result['holds'])
 
 
+def test_one_literal_and_one_inline_copy_are_ambiguous_not_unique():
+ raw,meta=page('Production capacity for gas turbines increased in 2026. '
+               'Production capacity for <strong>gas turbines</strong> increased in 2026.')
+ result=d.read_context(raw,meta)
+ assert any(h['reason']=='RAW_CONTEXT_AMBIGUOUS' for h in result['holds'])
+ assert not any(e['product']=='gas turbines' and e['state']=='SOURCE_BOUND_REPORTED_CHANGE'
+                for e in result['events'])
+
+
 def test_restart_dedup_tamper_and_source_absence(tmp_path):
  raw,m=page('Production capacity for gas turbines increased in 2026.')
  r=d.read_context(raw,m);l=Ledger(tmp_path/'ledger')
