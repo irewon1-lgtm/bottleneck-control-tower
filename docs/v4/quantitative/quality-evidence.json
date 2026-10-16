@@ -8300,5 +8300,598 @@
       "var/v4/cross-industry/ledger/v4.sqlite3": "0234453d685a49640ad4e0ba1f955ade631ebd45a9aa7e1a8a719fb99b8f0a1c",
       "var/v4/supply-linkage/ledger/v4.sqlite3": "8116eca6dfbf1e65cb605e1aab9b1af0d472a665bf7087899ccb23818d023bc8"
     }
+  },
+  "monthly_storage": {
+    "plan_id": "BCT-V4-Q-1.0",
+    "start_SHA": "1b07eb021ac718d8f753f376e7c05324c0fbf648",
+    "scope": "24-month quantitative research writer; CPU original storage remains separate",
+    "R2": "DEFERRED_BY_USER",
+    "implementation_SHA": "cdb7d7e0b826452fe89a8dce90f6904828d2a044",
+    "local_tests": [
+      {
+        "passed": 26,
+        "seconds": 67.77,
+        "scope": "monthly/archive/private/workflow impact"
+      },
+      {
+        "passed": 4,
+        "seconds": 11.92,
+        "scope": "HTTP metrics, quota and lost-ack recovery"
+      },
+      {
+        "passed": 3,
+        "seconds": 22.72,
+        "scope": "exact streamed history preservation and read after write-window expiry"
+      }
+    ],
+    "first_remote_failure": {
+      "run": 38836040358,
+      "exit": 124,
+      "monthly_initial_full_checkpoint": "STORED_AND_PRESERVED",
+      "new_generation_not_declared_PASS": true,
+      "selector_still_git": true,
+      "confirmed": "Append preparation and full primary validation combined exceeded120s",
+      "unisolated_hypothesis": "Large temporary EXCEPT b-tree contributes to runtime",
+      "fix": "Split bounded commands and exact streaming comparison; no120s increase/no skipped audit"
+    },
+    "official_reference_receipts": [
+      {
+        "name": "releases",
+        "url": "https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases",
+        "status": 200,
+        "bytes": 182780,
+        "sha256": "4a55168dc12a4be93fce3493bddf4de68bed1ff93132b7196c72003087edca0e"
+      },
+      {
+        "name": "acceptable-use",
+        "url": "https://docs.github.com/en/site-policy/acceptable-use-policies/github-acceptable-use-policies",
+        "status": 200,
+        "bytes": 171284,
+        "sha256": "28fbf6a85c899729fe6ea9f3ec23ca1be1b6501b26b064c412e21913d78712f1"
+      },
+      {
+        "name": "additional-terms",
+        "url": "https://docs.github.com/en/site-policy/github-terms/github-terms-for-additional-products-and-features",
+        "status": 200,
+        "bytes": 191657,
+        "sha256": "83115a928c805f5949a4cb6082f7a1a0250c2ee5369adbb22cc137ed517c5244"
+      },
+      {
+        "name": "api-rate",
+        "url": "https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api",
+        "status": 200,
+        "bytes": 337117,
+        "sha256": "9529136b74ed9d99fccce90e60a98aba5c28803771bc7415a75bfa9d94586726"
+      }
+    ],
+    "terms_review": {
+      "release_asset_count_limit": 1000,
+      "file_limit_strictly_under_bytes": 2147483648,
+      "no_total_release_size_or_bandwidth_quota_documented": "Not treated as unlimited/permanent guarantee",
+      "acceptable_use_section9": "GitHub may throttle/suspend excessive bandwidth or undue infrastructure strain",
+      "additional_terms_Actions": "Only repository-related software development/testing/production/deployment/publication; no CDN/serverless service/off-project compute",
+      "our_scope": "Low-frequency project-related research-state persistence, no public file serving or unrelated compute",
+      "PAT_documented_primary_requests_per_hour": 5000,
+      "public_workflow_token_documented_per_repo_per_hour": 1000,
+      "secondary_content_writes_general_per_minute": 80,
+      "secondary_content_writes_general_per_hour": 500,
+      "limits_may_change_and_provider_no_2year_availability_guarantee": true
+    },
+    "storage_policy": {
+      "format": "bct-monthly-storage-policy-1",
+      "plan_id": "BCT-V4-Q-1.0",
+      "backend": "monthly-releases",
+      "monthly_start": "2026-10",
+      "months": 24,
+      "anchor_legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b",
+      "all_archive_bytes_budget": 6442450944,
+      "monthly_bytes_budget": 268435456,
+      "monthly_assets_budget": 400,
+      "checkpoint_deltas": 32,
+      "checkpoint_age_days": 7,
+      "R2": "DEFERRED_BY_USER",
+      "CPU_state_backend": "UNCHANGED",
+      "objective_version": "bct-objective-1",
+      "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+    },
+    "two_year_math": {
+      "period": "2026-10 through2028-09",
+      "assumptions_not_observed_rate": true,
+      "all_generations_retained": true,
+      "calendar": [
+        {
+          "month": "2026-10",
+          "writes_assumed": 186,
+          "full_checkpoints": 6,
+          "deltas": 180,
+          "asset_count_upper": 372
+        },
+        {
+          "month": "2026-11",
+          "writes_assumed": 180,
+          "full_checkpoints": 6,
+          "deltas": 174,
+          "asset_count_upper": 360
+        },
+        {
+          "month": "2026-12",
+          "writes_assumed": 186,
+          "full_checkpoints": 6,
+          "deltas": 180,
+          "asset_count_upper": 372
+        },
+        {
+          "month": "2027-01",
+          "writes_assumed": 186,
+          "full_checkpoints": 6,
+          "deltas": 180,
+          "asset_count_upper": 372
+        },
+        {
+          "month": "2027-02",
+          "writes_assumed": 168,
+          "full_checkpoints": 6,
+          "deltas": 162,
+          "asset_count_upper": 336
+        },
+        {
+          "month": "2027-03",
+          "writes_assumed": 186,
+          "full_checkpoints": 6,
+          "deltas": 180,
+          "asset_count_upper": 372
+        },
+        {
+          "month": "2027-04",
+          "writes_assumed": 180,
+          "full_checkpoints": 6,
+          "deltas": 174,
+          "asset_count_upper": 360
+        },
+        {
+          "month": "2027-05",
+          "writes_assumed": 186,
+          "full_checkpoints": 6,
+          "deltas": 180,
+          "asset_count_upper": 372
+        },
+        {
+          "month": "2027-06",
+          "writes_assumed": 180,
+          "full_checkpoints": 6,
+          "deltas": 174,
+          "asset_count_upper": 360
+        },
+        {
+          "month": "2027-07",
+          "writes_assumed": 186,
+          "full_checkpoints": 6,
+          "deltas": 180,
+          "asset_count_upper": 372
+        },
+        {
+          "month": "2027-08",
+          "writes_assumed": 186,
+          "full_checkpoints": 6,
+          "deltas": 180,
+          "asset_count_upper": 372
+        },
+        {
+          "month": "2027-09",
+          "writes_assumed": 180,
+          "full_checkpoints": 6,
+          "deltas": 174,
+          "asset_count_upper": 360
+        },
+        {
+          "month": "2027-10",
+          "writes_assumed": 186,
+          "full_checkpoints": 6,
+          "deltas": 180,
+          "asset_count_upper": 372
+        },
+        {
+          "month": "2027-11",
+          "writes_assumed": 180,
+          "full_checkpoints": 6,
+          "deltas": 174,
+          "asset_count_upper": 360
+        },
+        {
+          "month": "2027-12",
+          "writes_assumed": 186,
+          "full_checkpoints": 6,
+          "deltas": 180,
+          "asset_count_upper": 372
+        },
+        {
+          "month": "2028-01",
+          "writes_assumed": 186,
+          "full_checkpoints": 6,
+          "deltas": 180,
+          "asset_count_upper": 372
+        },
+        {
+          "month": "2028-02",
+          "writes_assumed": 174,
+          "full_checkpoints": 6,
+          "deltas": 168,
+          "asset_count_upper": 348
+        },
+        {
+          "month": "2028-03",
+          "writes_assumed": 186,
+          "full_checkpoints": 6,
+          "deltas": 180,
+          "asset_count_upper": 372
+        },
+        {
+          "month": "2028-04",
+          "writes_assumed": 180,
+          "full_checkpoints": 6,
+          "deltas": 174,
+          "asset_count_upper": 360
+        },
+        {
+          "month": "2028-05",
+          "writes_assumed": 186,
+          "full_checkpoints": 6,
+          "deltas": 180,
+          "asset_count_upper": 372
+        },
+        {
+          "month": "2028-06",
+          "writes_assumed": 180,
+          "full_checkpoints": 6,
+          "deltas": 174,
+          "asset_count_upper": 360
+        },
+        {
+          "month": "2028-07",
+          "writes_assumed": 186,
+          "full_checkpoints": 6,
+          "deltas": 180,
+          "asset_count_upper": 372
+        },
+        {
+          "month": "2028-08",
+          "writes_assumed": 186,
+          "full_checkpoints": 6,
+          "deltas": 180,
+          "asset_count_upper": 372
+        },
+        {
+          "month": "2028-09",
+          "writes_assumed": 180,
+          "full_checkpoints": 6,
+          "deltas": 174,
+          "asset_count_upper": 360
+        }
+      ],
+      "scenarios": [
+        {
+          "constant_full_bytes": 9775781,
+          "delta_bytes": 95707,
+          "two_year_bytes": 1824227958,
+          "largest_month_bytes": 76328346,
+          "archive_budget_bytes": 6442450944,
+          "fits_archive_budget": true
+        },
+        {
+          "constant_full_bytes": 16777216,
+          "delta_bytes": 524288,
+          "two_year_bytes": 4650475200,
+          "largest_month_bytes": 195481536,
+          "archive_budget_bytes": 6442450944,
+          "fits_archive_budget": true
+        }
+      ],
+      "capsule_limits_still_apply": {
+        "compressed_bytes": 16777216,
+        "SQLite_bytes": 536870912,
+        "delta_bytes": 1048576
+      },
+      "source_db_growth_rate": "UNKNOWN_REAL_OPERATION_NOT_STARTED"
+    },
+    "safety": [
+      "Parent compare-and-set cursor from encrypted input to output",
+      "Full original metadata/event prefix exact equality before adopting primary changes",
+      "First month full checkpoint must equal legacy seed",
+      "Next month full checkpoint binds previous completed manifest",
+      "Unchanged DB/lost publication acknowledgment upload0",
+      "No automatic stale Git fallback on Releases failure",
+      "Writes stop after24months; existing archives remain readable",
+      "No original/history deletion or candidate promotion"
+    ],
+    "remote_current_status": "PASS",
+    "scheduled_reliability": "NOT_RUN_NO_SCHEDULE_CHANGE",
+    "selector_activation": "DEVELOPMENT_BATCH_ENABLED_PENDING_COMMON_PIPELINE_VERIFY",
+    "remote_run": 38836602256,
+    "remote_receipt": {
+      "plan_id": "BCT-V4-Q-1.0",
+      "run": "38836602256",
+      "code_SHA": "cdb7d7e0b826452fe89a8dce90f6904828d2a044",
+      "seed": {
+        "storage": {
+          "backend": "monthly-releases",
+          "tag": "bct-v4-archive-monthly-2026-10",
+          "generation": 0,
+          "manifest_sha256": "eb371cee2aecce8897a992560b4a0d47f27acbe08e62f0dcb642d1619f32a755",
+          "sqlite_sha256": "8b725e750f95810f423fdfacc3432183f5403888cf0e6d31dbfbe15ab6d6c16c",
+          "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+        },
+        "existing_month_preserved": true
+      },
+      "interruption": {
+        "incomplete_generation_not_committed": true,
+        "actual_own_validation_event_added": true,
+        "seconds": 39.89451701799999
+      },
+      "save": {
+        "saved": {
+          "generation": 1,
+          "unchanged": false,
+          "kind": "PAGE_DELTA",
+          "patches": 1,
+          "manifest_sha256": "1c91262862e70be40e8a7dcd5125166d7303c6b0deb96e6f158d00a6001350a3",
+          "sqlite_sha256": "43e583e70461069c3946e22ce10840ff52ce8abb0605aab01eb4f343c23c40ac",
+          "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b",
+          "backend": "monthly-releases",
+          "storage": {
+            "backend": "monthly-releases",
+            "tag": "bct-v4-archive-monthly-2026-10",
+            "generation": 1,
+            "manifest_sha256": "1c91262862e70be40e8a7dcd5125166d7303c6b0deb96e6f158d00a6001350a3",
+            "sqlite_sha256": "43e583e70461069c3946e22ce10840ff52ce8abb0605aab01eb4f343c23c40ac",
+            "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+          },
+          "Git_writes": 0,
+          "request_metrics": {
+            "HTTP_requests": 49,
+            "upload_bytes": 2914,
+            "download_bytes": 10001754,
+            "rate_remaining": 4921,
+            "rate_limit": 5000,
+            "HTTP_seconds": 14.779816108000091
+          }
+        },
+        "new_objects_on_resume": 1,
+        "lost_ack_retry": {
+          "backend": "monthly-releases",
+          "storage": {
+            "backend": "monthly-releases",
+            "tag": "bct-v4-archive-monthly-2026-10",
+            "generation": 1,
+            "manifest_sha256": "1c91262862e70be40e8a7dcd5125166d7303c6b0deb96e6f158d00a6001350a3",
+            "sqlite_sha256": "43e583e70461069c3946e22ce10840ff52ce8abb0605aab01eb4f343c23c40ac",
+            "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+          },
+          "unchanged": true,
+          "recovered_lost_acknowledgment": true,
+          "Git_writes": 0
+        },
+        "prior_data_object_reused": true
+      },
+      "restore": {
+        "new_process": {
+          "storage": {
+            "backend": "monthly-releases",
+            "tag": "bct-v4-archive-monthly-2026-10",
+            "generation": 1,
+            "manifest_sha256": "1c91262862e70be40e8a7dcd5125166d7303c6b0deb96e6f158d00a6001350a3",
+            "sqlite_sha256": "43e583e70461069c3946e22ce10840ff52ce8abb0605aab01eb4f343c23c40ac",
+            "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+          },
+          "verified": {
+            "restored": true,
+            "tables": 8,
+            "sqlite_sha256": "43e583e70461069c3946e22ce10840ff52ce8abb0605aab01eb4f343c23c40ac",
+            "review": {
+              "format": "bct-q1-private-facts-1",
+              "observation_versions": 42601,
+              "sources": [
+                "census_trade",
+                "eia",
+                "g17",
+                "m3",
+                "ted",
+                "usaspending",
+                "usgs"
+              ],
+              "article_bodies": 0,
+              "native_source_files": 0,
+              "original_evidence_recovery": false,
+              "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+              "CPU_queue_restored": false,
+              "automatic_promotion": false
+            },
+            "generation": 1,
+            "original_evidence_restore": false
+          },
+          "processing_state": {
+            "QUANTITATIVE_PAGE_COMMITTED": {
+              "rows": 1618,
+              "sha256": "f987ccaa3e25747b43f2750ff31260b0b834c3e29b8f1573d3f96af9c713d08f"
+            },
+            "QUANTITATIVE_SOURCE_FAILURE": {
+              "rows": 210,
+              "sha256": "c35198834b70a013df752d5e417e7b1b329d1377e24477357ed14612d4886606"
+            },
+            "QUANTITATIVE_RELATION_TASK": {
+              "rows": 246,
+              "sha256": "eed98f2751fada7bd7b32d5ecddbd0643e6d1e087ebb5eb13a93890ad74bcef7"
+            },
+            "QUANTITATIVE_COUNTERPART_REVIEW": {
+              "rows": 12,
+              "sha256": "853d9c2e38a993da6d1c59628ce0ba8a1e5c726ea1b8038a6826e1bfefdb7f08"
+            },
+            "QUANTITATIVE_PRODUCT_FACT": {
+              "rows": 4,
+              "sha256": "b49040d7050fd58cc32a5b10273dd839e6327f3f5e10f7c30c0fc0c67286a355"
+            },
+            "QUANTITATIVE_TARGET_REVIEW": {
+              "rows": 303,
+              "sha256": "e7f2084a00a8289fd16d55a69a250d0f7ff8fbc2bde99f9b842ff5a552006894"
+            }
+          },
+          "existing_relation_additions": 0,
+          "dedup_DB_hash_unchanged": true,
+          "sample_resumed_page_cursors": {
+            "census-country-detail-v2-exports-2023-2504100000": {
+              "next": null,
+              "committed_pages": 1,
+              "gap": false
+            },
+            "census-country-detail-v2-exports-2023-2504900000": {
+              "next": null,
+              "committed_pages": 1,
+              "gap": false
+            },
+            "census-country-detail-v2-exports-2023-2805300000": {
+              "next": null,
+              "committed_pages": 1,
+              "gap": false
+            }
+          }
+        },
+        "corrupted_download_refused": true,
+        "clean_redownload_recovered": true,
+        "remote_asset_itself_not_modified": true
+      },
+      "rollover": {
+        "mode": "SYNTHETIC_DATE_ROLLOVER_NOT_ACTUAL_NOVEMBER",
+        "previous": {
+          "generation": 0,
+          "unchanged": false,
+          "kind": "CHECKPOINT",
+          "patches": 0,
+          "manifest_sha256": "0755a8681cded52efb97b3f1c0eb9164a2d8e09284ea345c234d2d5a05d0cdcb",
+          "sqlite_sha256": "cc8ce0eaea4ebc767f20659c0ee083d02dce74c9a747e4adae14939c8a991836",
+          "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b",
+          "backend": "monthly-releases",
+          "storage": {
+            "backend": "monthly-releases",
+            "tag": "bct-v4-archive-monthly-trial-38836602256-2026-10",
+            "generation": 0,
+            "manifest_sha256": "0755a8681cded52efb97b3f1c0eb9164a2d8e09284ea345c234d2d5a05d0cdcb",
+            "sqlite_sha256": "cc8ce0eaea4ebc767f20659c0ee083d02dce74c9a747e4adae14939c8a991836",
+            "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+          },
+          "Git_writes": 0,
+          "request_metrics": {
+            "HTTP_requests": 29,
+            "upload_bytes": 5478,
+            "download_bytes": 157821,
+            "rate_remaining": 4884,
+            "rate_limit": 5000,
+            "HTTP_seconds": 11.350204759999883
+          }
+        },
+        "next": {
+          "generation": 0,
+          "unchanged": false,
+          "kind": "CHECKPOINT",
+          "patches": 0,
+          "manifest_sha256": "e20d5979f9b6502df358e45527fc3f22eaa4648b831ecf9e5645b282b0bd5af0",
+          "sqlite_sha256": "b196f94f967cbdf813bf8de8706ceb2af244cf19f37f2620006117bf576b3606",
+          "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b",
+          "backend": "monthly-releases",
+          "storage": {
+            "backend": "monthly-releases",
+            "tag": "bct-v4-archive-monthly-trial-38836602256-2026-11",
+            "generation": 0,
+            "manifest_sha256": "e20d5979f9b6502df358e45527fc3f22eaa4648b831ecf9e5645b282b0bd5af0",
+            "sqlite_sha256": "b196f94f967cbdf813bf8de8706ceb2af244cf19f37f2620006117bf576b3606",
+            "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+          },
+          "Git_writes": 0,
+          "request_metrics": {
+            "HTTP_requests": 45,
+            "upload_bytes": 5876,
+            "download_bytes": 225726,
+            "rate_remaining": 4861,
+            "rate_limit": 5000,
+            "HTTP_seconds": 15.91270621499973
+          }
+        },
+        "next_month_full_restore": {
+          "restored": true,
+          "tables": 8,
+          "sqlite_sha256": "b196f94f967cbdf813bf8de8706ceb2af244cf19f37f2620006117bf576b3606",
+          "review": {
+            "format": "bct-q1-private-facts-1",
+            "observation_versions": 1,
+            "sources": [
+              "usaspending"
+            ],
+            "article_bodies": 0,
+            "native_source_files": 0,
+            "original_evidence_recovery": false,
+            "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+            "CPU_queue_restored": false,
+            "automatic_promotion": false
+          },
+          "generation": 0,
+          "original_evidence_restore": false
+        }
+      },
+      "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b",
+      "legacy_Git_bytes_before": 62864528,
+      "legacy_Git_bytes_after": 62864528,
+      "monthly_assets": [
+        {
+          "id": 645772992,
+          "name": "blob-09a9461041b09bea1cc8d87125717dbd6ac992ce0caf12150de78294b8a0de52.gpg",
+          "size": 9775781
+        },
+        {
+          "id": 645789720,
+          "name": "blob-75dc07a9ef6200b5dc58b9d6e934e7a9c36940a00ef9dd9a74d6259a3a3ce0a9.gpg",
+          "size": 3111
+        },
+        {
+          "id": 645773120,
+          "name": "commit-00000000.gpg",
+          "size": 2565
+        },
+        {
+          "id": 645791294,
+          "name": "commit-00000001.gpg",
+          "size": 2914
+        }
+      ],
+      "monthly_encrypted_bytes": 9784371,
+      "free_guard": {
+        "status": "PASS_PUBLIC_STANDARD_LINUX_AND_CACHE_BELOW_FREE_BOUND",
+        "repository": "irewon1-lgtm/bottleneck-control-tower",
+        "runner": "ubuntu-24.04",
+        "active_cache_bytes": 2506483167,
+        "reserved_bytes": 3221225472,
+        "free_cache_allowance_bytes": 10737418240,
+        "safety_bound_bytes": 8589934592,
+        "additional_artifact_uploads": false,
+        "minutes_remaining": "N/A_PUBLIC_STANDARD_RUNNER_MINUTES_FREE",
+        "account_billing_permission": "NOT_REQUIRED_FOR_PUBLIC_STANDARD_COMPUTE; not proof of total account bill",
+        "basis": "https://docs.github.com/en/billing/concepts/product-billing/github-actions",
+        "checked_at": "2026-10-16T01:43:07.877858+00:00"
+      },
+      "new_AI_CPU_source_calls": 0,
+      "scheduled_execution": "NOT_RUN",
+      "existing_main_CPU_RSS_UI_changed": false,
+      "selector_at_trial": "git",
+      "objective_version": "bct-objective-1",
+      "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+    },
+    "bounded_command_seconds": {
+      "append_input_and_checkpoint": 52.16,
+      "interrupt_validation": 39.89
+    },
+    "implementation_CI": {
+      "SHA": "cdb7d7e0b826452fe89a8dce90f6904828d2a044",
+      "Stage0_run": 38836597249,
+      "Stage0": "success",
+      "dashboard_run": 38836597234,
+      "dashboard": "success"
+    }
   }
 }

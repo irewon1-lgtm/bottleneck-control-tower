@@ -5731,8 +5731,8 @@
       "plan_id": "BCT-V4-Q-1.0",
       "start_SHA": "1b07eb021ac718d8f753f376e7c05324c0fbf648",
       "started_at": "2026-10-16T01:24:58.974165+00:00",
-      "status": "IN_PROGRESS",
-      "R2": "DEFERRED",
+      "status": "MONTHLY_REMOTE_RESEARCH_SAVE_RESTORE_PASS_DEVELOPMENT_SELECTOR_ENABLED",
+      "R2": "DEFERRED_BY_USER",
       "scope": "24-month quantitative research state; old Git/CPU originals unchanged",
       "steps": [
         {
@@ -5749,12 +5749,13 @@
         {
           "step": "Actual remote primary path trial",
           "expected": "Full8 tables/42601 versions, actual own validation event append, new process read, duplicate retry0, old Git unchanged",
-          "status": "IN_PROGRESS"
+          "status": "PASS",
+          "evidence": "38836602256: actual research metadata append +42,601 versions/8tables and all processing signature/dedup restoration; monthly rollover synthetic only"
         },
         {
           "step": "Exact final SHA CI",
           "expected": "Development branch push and corresponding CI observed",
-          "status": "NOT_RUN"
+          "status": "IN_PROGRESS"
         }
       ],
       "policy": "docs/v4/quantitative/storage-policy.json",
@@ -5765,7 +5766,20 @@
         "exit_code": 124,
         "failure": "Combined append preparation and primary history validation exceeded120s; monthly full seed persisted, selector stillGit",
         "change": "Split preparation/interruption/commit/lost-ack into bounded commands and stream exact history prefix instead of EXCEPT temp b-tree; limits unchanged"
-      }
+      },
+      "remote_run": 38836602256,
+      "legacy_Git_bytes": 62864528,
+      "current_storage": {
+        "backend": "monthly-releases",
+        "tag": "bct-v4-archive-monthly-2026-10",
+        "generation": 1,
+        "manifest_sha256": "1c91262862e70be40e8a7dcd5125166d7303c6b0deb96e6f158d00a6001350a3",
+        "sqlite_sha256": "43e583e70461069c3946e22ce10840ff52ce8abb0605aab01eb4f343c23c40ac",
+        "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+      },
+      "monthly_asset_bytes": 9784371,
+      "automatic_scheduled_operation": "NOT_RUN_MAIN_SCHEDULE_UNCHANGED",
+      "evidence": "docs/v4/quantitative/quality-evidence.json#monthly_storage"
     }
   }
 }
