@@ -298,6 +298,18 @@ def context_role(context):
     return 'CONTEXT', 'NO_DIRECTIONAL_CHANGE_PROVEN', 'UNKNOWN'
 
 
+def html_source(raw):
+    """Decode only an explicit gzip signature; cap expansion before parsing."""
+    import gzip
+    from io import BytesIO
+    if raw.startswith(b'\x1f\x8b'):
+        with gzip.GzipFile(fileobj=BytesIO(raw)) as stream: decoded = stream.read(4_000_001)
+    else: decoded = raw
+    if len(decoded) > 4_000_000: raise ValueError('CONTEXT_DECODED_SIZE_LIMIT')
+    decoded.decode('utf-8', errors='strict')  # unknown encodings remain held
+    return decoded
+
+
 def read_context(raw, meta):
     """Reuse the source/scope/temporal readers on an actual official HTML body.
 
@@ -309,9 +321,7 @@ def read_context(raw, meta):
     from bct import future_body
     counterpart.relation_url(meta['url'])
     if sha(raw) != meta['sha256']: raise ValueError('CONTEXT_NATIVE_HASH')
-    import gzip
-    decoded = gzip.decompress(raw) if raw.startswith(b'\x1f\x8b') else raw
-    if len(decoded) > 4_000_000: raise ValueError('CONTEXT_DECODED_SIZE_LIMIT')
+    decoded = html_source(raw)
     html = decoded.decode('utf-8', errors='strict')
     extraction = future_body.extract_document(html, content_type='text/html')
     body = extraction.get('body', '')

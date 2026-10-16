@@ -153,3 +153,15 @@ def test_supply_to_customer_official_query_uses_shared_scope_and_no_repeat(tmp_p
  structured_demand_queries(changes,tmp_path,network=True,as_of='2026-10-16')
  assert len(calls)==1
  assert first['queries'][0]['customer_need_date']is None
+
+
+def test_explicit_gzip_body_and_positions_use_original_native_hash():
+ import gzip
+ raw,m=page('Production capacity for gas turbines increased in 2026.')
+ encoded=gzip.compress(raw);m={**m,'sha256':sha(encoded)}
+ r=d.read_context(encoded,m)
+ assert r['source']['sha256']==sha(encoded)
+ assert r['source']['position_space']=='GZIP_DECODED_UTF8_HTML_CHARACTERS'
+ e=next(e for e in r['events']if e['product']=='gas turbines')
+ assert raw.decode()[e['product_position']['start']:e['product_position']['end']]=='gas turbines'
+ with pytest.raises(ValueError,match='SIZE_LIMIT'):d.html_source(gzip.compress(b'X'*4_000_001))

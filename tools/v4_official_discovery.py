@@ -30,9 +30,10 @@ def relation_index_links(raw, url):
     Cross-domain leads need separate ownership proof; issuer subdomains are
     only discovery leads and never evidence of a qualified manufacturer.
     """
-    parser = Metadata(); parser.feed(raw.decode('utf-8', errors='strict'))
+    decoded = engine.html_source(raw)
+    parser = Metadata(); parser.feed(decoded.decode('utf-8', errors='strict'))
     host = urlsplit(url).hostname.removeprefix('www.')
-    out = {}; html = raw.decode('utf-8')
+    out = {}; html = decoded.decode('utf-8')
     for href, label in parser.links:
         dest = urljoin(url, href).split('#')[0]
         h = urlsplit(dest).hostname or ''
@@ -211,8 +212,9 @@ def bidirectional(ledger, root, *, network=False, seed_links=(), documents=()):
             if raw.lstrip().startswith(b'%PDF'):
                 receipt.update(status='PDF_EXTRACTION_PENDING', source_hash=sha(raw))
             else:
-                d = verify(raw, url, final, receipt['acquired_at'], status, ct)
-                q.bind_publication(d, raw)
+                decoded = engine.html_source(raw)
+                d = verify(decoded, url, final, receipt['acquired_at'], status, ct)
+                q.bind_publication(d, decoded)
                 meta = {'source_id': 'ISSUER:'+fh, 'url': final, 'sha256': sha(raw),
                         'acquired_at': receipt['acquired_at'], 'published_at': d.get('published_at') or 'UNKNOWN'}
                 context = engine.read_context(raw, meta)
@@ -225,7 +227,7 @@ def bidirectional(ledger, root, *, network=False, seed_links=(), documents=()):
                 # Reuse existing facet-specific article citations too.
                 doc = {**d, 'document_id': sha([final, sha(raw)])}
                 for facet in [t for t in tasks if t['seed_id'] == sid]:
-                    for p in relation_links(facet, doc, raw):
+                    for p in relation_links(facet, doc, decoded):
                         if p['status'] == 'UNFETCHED_RELATION_LEAD' and (urlsplit(p['url']).hostname or '').removeprefix('www.') == fh:
                             newlinks.append({'url': p['url'], 'via_url': final, 'via_hash': sha(raw), 'rank': 0})
                 for p in newlinks:
@@ -345,7 +347,18 @@ def import_bidirectional(ledger, packet):
             if e['s_stage'] != 'UNKNOWN' or e['qualified'] or e['coverage_complete'] or e['qualified_capacity'] is not None: raise ValueError('BIDIRECTIONAL_UNPROVEN_CAPACITY')
             p = e.get('product_position'); loc = e['raw_position']
             if p and not loc['start'] <= p['start'] < p['end'] <= loc['end']: raise ValueError('BIDIRECTIONAL_POSITION')
-    for rnd in packet['budget']['rounds']:
+    reverse = packet.get('reverse_queries', {})
+    from bct.collectors.usaspending.collector import request_bytes, ENDPOINT
+    for query in reverse.get('queries', []):
+        if query.get('status') == 'PENDING_OFFICIAL_QUERY': continue
+        if query['url'] != ENDPOINT or query['query_id'] != sha(request_bytes(query['request'])):
+            raise ValueError('BIDIRECTIONAL_REVERSE_REQUEST_ID')
+        if query.get('physical_quantity') is not None or query.get('customer_need_date') is not None or query.get('Q3_eligible'):
+            raise ValueError('BIDIRECTIONAL_AWARD_NOT_PHYSICAL_SUPPLY_PAIR')
+        if not 0 <= query.get('records', 0) <= 20: raise ValueError('BIDIRECTIONAL_REVERSE_PAGE_LIMIT')
+    rounds = packet['budget']['rounds'] + reverse.get('budget', {}).get('rounds', [])
+    if sum(len(r['charges']) for r in rounds) > 32: raise ValueError('BIDIRECTIONAL_COMBINED_BATCH_LIMIT')
+    for rnd in rounds:
         if len(rnd['charges']) > 32: raise ValueError('BIDIRECTIONAL_BUDGET')
         if any(v > 3 for v in Counter(x['event'] for x in rnd['charges']).values()): raise ValueError('BIDIRECTIONAL_EVENT_BUDGET')
         if any(v > 6 for v in Counter(x['host'] for x in rnd['charges']).values()): raise ValueError('BIDIRECTIONAL_HOST_BUDGET')
