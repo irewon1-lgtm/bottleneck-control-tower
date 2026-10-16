@@ -5647,7 +5647,7 @@
     },
     "long_term_storage": {
       "start_SHA": "f0190f43a557dccc2f1dd3ca970d123e27bfd570",
-      "status": "IN_PROGRESS",
+      "status": "SECONDARY_ARCHIVE_REMOTE_TRIAL_COMPLETE_PRIMARY_CUTOVER_NOT_RUN",
       "plan_id": "BCT-V4-Q-1.0",
       "started_at": "2026-10-16T00:36:08.031354+00:00",
       "scope": "Manual private encrypted archive validation; no primary backend cutover",
@@ -5666,12 +5666,14 @@
         {
           "step": "Private Releases remote trial",
           "expected": "Non-sensitive upload/download/new process restore, interruption/corruption recovery, audited current facts shadow restore and legacy rollback equality",
-          "status": "IN_PROGRESS"
+          "status": "PASS",
+          "evidence": "Private Releases run38830844488; non-sensitive3 generations and actual42601-version state/8table restore/legacy return"
         },
         {
           "step": "Final commit and exact SHA CI",
-          "expected": "Development branch only; required checks observed for final SHA",
-          "status": "NOT_RUN"
+          "expected": "Implementation code pushed and exact implementation SHA CI verified; final documentation SHA CI verified separately in completion report",
+          "status": "PASS",
+          "evidence": "Implementation b020a4a07330293dc10c900b7083f22fe999361c: Stage0 38830844628 and dashboard 38830844203 success; final documentation SHA CI is a post-push check"
         }
       ],
       "implementation": {
@@ -5683,7 +5685,47 @@
         "existing_Git_limit_unchanged_bytes": 67108864,
         "separate_all_archive_pilot_asset_budget_bytes": 67108864,
         "max_assets_per_release": 400
-      }
+      },
+      "evidence": "docs/v4/quantitative/quality-evidence.json#long_term_storage",
+      "updated_at": "2026-10-16T00:44:46.922187+00:00",
+      "remote_run": 38830844488,
+      "verdicts": {
+        "secondary_archive_transport": "PASS",
+        "current_audited_fact_state_lossless_restore": "PASS_42601_VERSIONED_OBSERVATIONS_8_TABLE_HASHES",
+        "non_sensitive_upload_interrupt_and_download_corruption_recovery": "PASS",
+        "legacy_Git_return": "PASS_UNCHANGED_PARENT_AND_SQLITE_HASH",
+        "existing_original_CPU_DB_or_article_backup_migrated": "NOT_RUN_PRESERVED_IN_ORIGINAL_LOCATION",
+        "R2_connection_restore": "NOT_RUN_ACCOUNT_SUBSCRIPTION_AND_SCOPED_CREDENTIALS_NEEDED",
+        "primary_backend_cutover": "NOT_RUN_SEPARATE_APPROVAL",
+        "multiyear_unbounded_free_operation": "NOT_PROVEN_FINITE_CAPACITY_AND_EXISTING_CAPSULE_LIMITS",
+        "existing_primary_Git_space_exhaustion_solved": "NO_PRIMARY_WRITER_STILL_USES_OLD_GIT_BACKEND"
+      },
+      "actual_sizes": {
+        "Git_history_before_bytes": 62864528,
+        "Git_history_after_bytes": 62864528,
+        "Git_limit_unchanged_bytes": 67108864,
+        "Git_remaining_bytes": 4244336,
+        "encrypted_release_assets_total_bytes": 9793648,
+        "all_archive_pilot_budget_bytes": 67108864,
+        "archive_pilot_remaining_bytes": 57315216,
+        "private_trial_assets": 6,
+        "private_shadow_assets": 2,
+        "shadow_full_blob_encrypted_bytes": 9775781,
+        "shadow_manifest_encrypted_bytes": 2397
+      },
+      "legacy_private_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b",
+      "preserved_SQLite_sha256": "8b725e750f95810f423fdfacc3432183f5403888cf0e6d31dbfbe15ab6d6c16c",
+      "implementation_CI": {
+        "SHA": "b020a4a07330293dc10c900b7083f22fe999361c",
+        "Stage0_run": 38830844628,
+        "Stage0": "success",
+        "pytest_pass": 1652,
+        "pytest_skip": 1,
+        "pytest_seconds": 104.94,
+        "dashboard_run": 38830844203,
+        "dashboard": "success"
+      },
+      "next_action": "Keep existing writer unchanged. Review staged secondary archive evidence and approve any primary migration separately. If choosing R2, owner must review subscription/billing, private bucket and least-privilege S3 credentials; no signup/cards/Secrets were created. Before any years-long rollout, measure real change rate and approve bounded dataset partitions while retaining every historical archive."
     }
   }
 }

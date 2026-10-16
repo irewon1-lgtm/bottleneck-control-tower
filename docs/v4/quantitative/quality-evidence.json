@@ -7881,5 +7881,424 @@
       "var/v4/supply-linkage/ledger/v4.sqlite3": "8116eca6dfbf1e65cb605e1aab9b1af0d472a665bf7087899ccb23818d023bc8"
     },
     "next_action": "Resume retained147 URL entries/93 unique URLs only in next bounded round; replace irrelevant search provider with verified relevant public discovery before issuing57 external queries. Confirm product-facility/configuration edge, independent customer need/qualification and first publication before adopting any pair. SEC prior403 remains isolated. Operating full release application remains separate, CPU vars unchanged."
+  },
+  "long_term_storage": {
+    "plan_id": "BCT-V4-Q-1.0",
+    "start_SHA": "f0190f43a557dccc2f1dd3ca970d123e27bfd570",
+    "implementation_SHA": "b020a4a07330293dc10c900b7083f22fe999361c",
+    "at": "2026-10-16T00:42:49.548768+00:00",
+    "scope": "Secondary private archive; no primary cutover or automatic execution",
+    "official_reference_receipts": [
+      {
+        "name": "github-releases",
+        "url": "https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases",
+        "status": 200,
+        "bytes": 182780,
+        "sha256": "4a55168dc12a4be93fce3493bddf4de68bed1ff93132b7196c72003087edca0e"
+      },
+      {
+        "name": "github-assets",
+        "url": "https://docs.github.com/en/rest/releases/assets",
+        "status": 200,
+        "bytes": 352124,
+        "sha256": "5b1caa201018cf391cbf2ba9b6c80e867402bcdb45537ddeffe749887dba6fa2"
+      },
+      {
+        "name": "r2-pricing",
+        "url": "https://developers.cloudflare.com/r2/pricing/",
+        "error": "HTTPError"
+      },
+      {
+        "name": "r2-start",
+        "url": "https://developers.cloudflare.com/r2/get-started/",
+        "error": "HTTPError"
+      },
+      {
+        "name": "r2-limits",
+        "url": "https://developers.cloudflare.com/r2/platform/limits/",
+        "error": "HTTPError"
+      },
+      {
+        "name": "r2-pricing-source",
+        "url": "https://raw.githubusercontent.com/cloudflare/cloudflare-docs/production/src/content/docs/r2/pricing.mdx",
+        "status": 200,
+        "bytes": 10811,
+        "sha256": "bee9f44fb8feaf6331039d32eb24aaad864aaa83e3c1488277a7a0e1cc22e6b7"
+      },
+      {
+        "name": "r2-start-source",
+        "url": "https://raw.githubusercontent.com/cloudflare/cloudflare-docs/production/src/content/docs/r2/get-started/index.mdx",
+        "status": 200,
+        "bytes": 2381,
+        "sha256": "ffb287008b69281745100aa9c4bbcd1294dd4b838ae46ce739e24ec1f8464e30"
+      },
+      {
+        "name": "r2-limits-source",
+        "url": "https://raw.githubusercontent.com/cloudflare/cloudflare-docs/production/src/content/docs/r2/platform/limits.mdx",
+        "status": 200,
+        "bytes": 4194,
+        "sha256": "fc786c6399e035cc4956d69c6c2f4a7eca0cff02fdb7e435dc74c2626adc72ec"
+      }
+    ],
+    "comparison": {
+      "GitHub_Releases": {
+        "classification": "SECONDARY_BACKUP_AND_MIGRATION_STAGING_ONLY",
+        "purpose": "Deployable software releases; not an assured long-term database service",
+        "official_limits": {
+          "assets_per_release": 1000,
+          "file_bytes_strictly_less_than": 2147483648,
+          "total_release_size_or_bandwidth_quota": "No limit documented; not treated as a permanence/unlimited-use guarantee"
+        },
+        "existing_account_and_credentials_reused": true,
+        "new_account_or_card_or_secret": false,
+        "actual_remote_validation": "PASS_NON_SENSITIVE_AND_CURRENT_AUDITED_FACTS_SHADOW",
+        "restore_assurance": "Application exact hashes, authenticated ciphertext, immutable completion point, independent restore test; no independent provider durability test"
+      },
+      "Cloudflare_R2": {
+        "classification": "PREFERRED_LONG_TERM_OBJECT_BACKEND_IF_OWNER_ACCEPTS_ACCOUNT_AND_BILLING_GUARDS",
+        "standard_free_storage_GB_month": 10,
+        "free_ClassA_per_month": 1000000,
+        "free_ClassB_per_month": 10000000,
+        "standard_overage_USD_per_GB_month": "0.015",
+        "ClassA_overage_USD_per_million": "4.50",
+        "ClassB_overage_USD_per_million": "0.36",
+        "egress_fee": "0",
+        "free_not_applicable_to_Infrequent_Access": true,
+        "official_object_size_limit": "4.995TiB",
+        "bucket_capacity_not_a_free_quota": true,
+        "setup": "Cloudflare account + R2 subscription checkout, private bucket and scoped S3 API credentials; extra runtime Secrets required",
+        "card_requirement": "Actual account checkout not inspected; no card registration or subscription made",
+        "billing": "Monthly usage-based; no automatic hard free-only spending cutoff verified",
+        "actual_connection_and_restore": "NOT_RUN_NO_ACCOUNT_OR_SECRETS_CONFIGURED",
+        "official_docs_access": "Direct docs HTTPError; pricing/get-started/limits obtained from official cloudflare/cloudflare-docs source, byte hashes retained"
+      }
+    },
+    "local_impact_tests": {
+      "passed": 33,
+      "seconds": 41.11,
+      "files": [
+        "tests/test_v4_release_archive.py",
+        "tests/test_v4_quantitative_private.py",
+        "tests/test_v4_cpu_research_workflow.py",
+        "tests/test_v4_private_state.py"
+      ]
+    },
+    "controls": {
+      "existing_Git_history_limit_bytes_unchanged": 67108864,
+      "separate_pilot_archive_total_bytes_all_run_IDs": 67108864,
+      "asset_limit_per_release": 400,
+      "delta_chain_limit": 32,
+      "checkpoint_age_days": 7,
+      "existing_capsule_compressed_limit_bytes": 16777216,
+      "existing_expanded_SQLite_limit_bytes": 536870912,
+      "existing_delta_batch_limit_bytes": 1048576,
+      "old_full_bases_and_deltas_deleted": 0,
+      "primary_backend_enabled": false,
+      "source_or_AI_or_CPU_calls": 0,
+      "signed_download_redirect_credential_forwarding": false
+    },
+    "new_remote_run": 38830844488,
+    "remote_trial_status": "PASS",
+    "operating_conversion": "NOT_RUN_REQUIRES_SEPARATE_APPROVAL",
+    "limitations": [
+      "No finite free service can guarantee arbitrary multiyear all-history retention with unbounded arrivals.",
+      "Pilot archive budget is not a new unlimited production quota.",
+      "Existing typed Q1 facts are not a complete restore of copyrighted originals/CPU original DB. Those remain preserved in their prior locations.",
+      "Existing16MiB compressed/512MiB expanded capsule and1MiB delta guards remain; larger datasets require reviewed partitioning, not raising these silently."
+    ],
+    "actual_remote_receipt": {
+      "plan_id": "BCT-V4-Q-1.0",
+      "code_SHA": "b020a4a07330293dc10c900b7083f22fe999361c",
+      "run": "38830844488",
+      "non_sensitive_initial": {
+        "first": {
+          "generation": 0,
+          "unchanged": false,
+          "kind": "CHECKPOINT",
+          "patches": 0,
+          "manifest_sha256": "b528c9eb419f47a021de6df6e5a24be3cf533a0afeee221ba38fc11cebb0ca42",
+          "sqlite_sha256": "90a4cd7ad132bee37da1d70f6093c7f50d7d49f67e636629fb7850f5aba8bcea",
+          "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+        },
+        "unchanged": {
+          "generation": 0,
+          "unchanged": true,
+          "uploaded_objects": 0
+        },
+        "before_recovery_assets": 3,
+        "incomplete_generation_not_visible": true
+      },
+      "non_sensitive_recovery": {
+        "resumed": {
+          "generation": 1,
+          "unchanged": false,
+          "kind": "PAGE_DELTA",
+          "patches": 1,
+          "manifest_sha256": "b7d7b078806375232803fd49c75e7d636eebb1c569ab9522e0f463330aaf3cfb",
+          "sqlite_sha256": "796a82ea8b34ba838e3341f5b77203e3bac037add8c316c6ac9bff1177255d9e",
+          "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+        },
+        "reused_orphan_no_duplicate_object": true,
+        "periodic_checkpoint": {
+          "generation": 2,
+          "unchanged": false,
+          "kind": "CHECKPOINT",
+          "patches": 0,
+          "manifest_sha256": "adb487dc77cf79c5e00b313cc210ec538b0c205bed87af04cc36a78613b7a37a",
+          "sqlite_sha256": "abf0eabc5d677b2990e540de30dd60c6c6323bac52e34ae6f125eeccd0129e51",
+          "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b"
+        },
+        "short_chain_is_test_only": true,
+        "production_chain_cap": 32
+      },
+      "non_sensitive_verification": {
+        "failure_injection": "Locally corrupted download of a real remote ciphertext; remote object not modified",
+        "damage": {
+          "corrupt_download_rejected": true,
+          "new_destination_not_committed": true
+        },
+        "correct_remote_redownload_new_process": {
+          "restored": true,
+          "tables": 8,
+          "sqlite_sha256": "abf0eabc5d677b2990e540de30dd60c6c6323bac52e34ae6f125eeccd0129e51",
+          "review": {
+            "format": "bct-q1-private-facts-1",
+            "observation_versions": 1,
+            "sources": [
+              "usaspending"
+            ],
+            "article_bodies": 0,
+            "native_source_files": 0,
+            "original_evidence_recovery": false,
+            "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+            "CPU_queue_restored": false,
+            "automatic_promotion": false
+          },
+          "generation": 2,
+          "original_evidence_restore": false
+        },
+        "explicit_old_generation_restore": {
+          "restored": true,
+          "tables": 8,
+          "sqlite_sha256": "90a4cd7ad132bee37da1d70f6093c7f50d7d49f67e636629fb7850f5aba8bcea",
+          "review": {
+            "format": "bct-q1-private-facts-1",
+            "observation_versions": 1,
+            "sources": [
+              "usaspending"
+            ],
+            "article_bodies": 0,
+            "native_source_files": 0,
+            "original_evidence_recovery": false,
+            "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+            "CPU_queue_restored": false,
+            "automatic_promotion": false
+          },
+          "generation": 0,
+          "original_evidence_restore": false
+        }
+      },
+      "current_facts_shadow": {
+        "new_process_remote_restore": {
+          "restored": true,
+          "tables": 8,
+          "sqlite_sha256": "8b725e750f95810f423fdfacc3432183f5403888cf0e6d31dbfbe15ab6d6c16c",
+          "review": {
+            "format": "bct-q1-private-facts-1",
+            "observation_versions": 42601,
+            "sources": [
+              "census_trade",
+              "eia",
+              "g17",
+              "m3",
+              "ted",
+              "usaspending",
+              "usgs"
+            ],
+            "article_bodies": 0,
+            "native_source_files": 0,
+            "original_evidence_recovery": false,
+            "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+            "CPU_queue_restored": false,
+            "automatic_promotion": false
+          },
+          "generation": 0,
+          "original_evidence_restore": false
+        },
+        "all_original_tables_equal": true,
+        "article_originals_not_in_this_capsule": true
+      },
+      "legacy_parent": "c87e8db9666387fa2d7346f43ac39c86bb45742b",
+      "legacy_rollback_equal": true,
+      "legacy_Git_bytes_before": 62864528,
+      "legacy_Git_bytes_after": 62864528,
+      "new_tags_point_to_existing_commit": [
+        "refs/tags/bct-v4-archive-shadow-38830844488",
+        "refs/tags/bct-v4-archive-test-38830844488"
+      ],
+      "archive_assets": {
+        "test": [
+          {
+            "id": 645652399,
+            "name": "blob-4b63e89e24057583b8a5eeb7524283d5e63d438d4bc9458a01e875a5533b33d4.gpg",
+            "size": 2014
+          },
+          {
+            "id": 645651988,
+            "name": "blob-7e4a0adbc43e02fe0c7e6cb2115ee2c995266eb1202945cc5e799cb9cec35c52.gpg",
+            "size": 2975
+          },
+          {
+            "id": 645652900,
+            "name": "blob-a35917f0b3742814eb6db0767d43afe70b1165f64e2cae99dd7572ec8cb54c2f.gpg",
+            "size": 3055
+          },
+          {
+            "id": 645652074,
+            "name": "commit-00000000.gpg",
+            "size": 2339
+          },
+          {
+            "id": 645652683,
+            "name": "commit-00000001.gpg",
+            "size": 2686
+          },
+          {
+            "id": 645653021,
+            "name": "commit-00000002.gpg",
+            "size": 2401
+          }
+        ],
+        "shadow": [
+          {
+            "id": 645653904,
+            "name": "blob-09a9461041b09bea1cc8d87125717dbd6ac992ce0caf12150de78294b8a0de52.gpg",
+            "size": 9775781
+          },
+          {
+            "id": 645654080,
+            "name": "commit-00000000.gpg",
+            "size": 2397
+          }
+        ]
+      },
+      "new_encrypted_asset_bytes": 9793648,
+      "unchanged_primary_writer": true,
+      "CPU_or_AI_calls": 0,
+      "source_collection_requests": 0,
+      "new_originals_copied": 0,
+      "primary_cutover": "NOT_RUN_SEPARATE_APPROVAL",
+      "free_guard": {
+        "status": "PASS_PUBLIC_STANDARD_LINUX_AND_CACHE_BELOW_FREE_BOUND",
+        "repository": "irewon1-lgtm/bottleneck-control-tower",
+        "runner": "ubuntu-24.04",
+        "active_cache_bytes": 2506483167,
+        "reserved_bytes": 3221225472,
+        "free_cache_allowance_bytes": 10737418240,
+        "safety_bound_bytes": 8589934592,
+        "additional_artifact_uploads": false,
+        "minutes_remaining": "N/A_PUBLIC_STANDARD_RUNNER_MINUTES_FREE",
+        "account_billing_permission": "NOT_REQUIRED_FOR_PUBLIC_STANDARD_COMPUTE; not proof of total account bill",
+        "basis": "https://docs.github.com/en/billing/concepts/product-billing/github-actions",
+        "checked_at": "2026-10-16T00:40:57.813761+00:00"
+      },
+      "objective_version": "bct-objective-1",
+      "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+    },
+    "implementation_CI": {
+      "SHA": "b020a4a07330293dc10c900b7083f22fe999361c",
+      "Stage0_run": 38830844628,
+      "Stage0": "success",
+      "pytest_pass": 1652,
+      "pytest_skip": 1,
+      "pytest_seconds": 104.94,
+      "dashboard_run": 38830844203,
+      "dashboard": "success",
+      "JS_pass": 34
+    },
+    "storage_verdicts": {
+      "secondary_archive_transport": "PASS",
+      "current_audited_fact_state_lossless_restore": "PASS_42601_VERSIONED_OBSERVATIONS_8_TABLE_HASHES",
+      "non_sensitive_upload_interrupt_and_download_corruption_recovery": "PASS",
+      "legacy_Git_return": "PASS_UNCHANGED_PARENT_AND_SQLITE_HASH",
+      "existing_original_CPU_DB_or_article_backup_migrated": "NOT_RUN_PRESERVED_IN_ORIGINAL_LOCATION",
+      "R2_connection_restore": "NOT_RUN_ACCOUNT_SUBSCRIPTION_AND_SCOPED_CREDENTIALS_NEEDED",
+      "primary_backend_cutover": "NOT_RUN_SEPARATE_APPROVAL",
+      "multiyear_unbounded_free_operation": "NOT_PROVEN_FINITE_CAPACITY_AND_EXISTING_CAPSULE_LIMITS",
+      "existing_primary_Git_space_exhaustion_solved": "NO_PRIMARY_WRITER_STILL_USES_OLD_GIT_BACKEND"
+    },
+    "actual_sizes": {
+      "Git_history_before_bytes": 62864528,
+      "Git_history_after_bytes": 62864528,
+      "Git_limit_unchanged_bytes": 67108864,
+      "Git_remaining_bytes": 4244336,
+      "encrypted_release_assets_total_bytes": 9793648,
+      "all_archive_pilot_budget_bytes": 67108864,
+      "archive_pilot_remaining_bytes": 57315216,
+      "private_trial_assets": 6,
+      "private_shadow_assets": 2,
+      "shadow_full_blob_encrypted_bytes": 9775781,
+      "shadow_manifest_encrypted_bytes": 2397
+    },
+    "growth_math": {
+      "not_observed_automatic_rate_or_retention_guarantee": true,
+      "formula": "year =2190*delta +ceil(2190/32)*full_checkpoint +2190*manifest; assumes a real change every scheduled cycle and constant checkpoint size",
+      "scenarios": [
+        {
+          "label": "Last_Q2_patch_sample_and_constant_current_full_size",
+          "written_changes_per_day_assumption": 6,
+          "full_checkpoint_bytes_constant_assumption": 9775781,
+          "delta_bytes_per_change_assumption": 95707,
+          "manifest_bytes_per_change_assumption": 2400,
+          "checkpoints_per_year": 69,
+          "additional_bytes_per_year": 889383219,
+          "R2_10GB_full_year_storage_ceiling_upper_bound_years_if_no_other_usage": 11.232735381754487
+        },
+        {
+          "label": "Half_MiB_per_change_and_constant16MiB_checkpoint_assumption",
+          "written_changes_per_day_assumption": 6,
+          "full_checkpoint_bytes_constant_assumption": 16777216,
+          "delta_bytes_per_change_assumption": 524288,
+          "manifest_bytes_per_change_assumption": 2400,
+          "checkpoints_per_year": 69,
+          "additional_bytes_per_year": 2311074624,
+          "R2_10GB_full_year_storage_ceiling_upper_bound_years_if_no_other_usage": 4.322753687074364
+        }
+      ],
+      "all_older_generations_kept": true,
+      "no_implicit_retention_deletion": true,
+      "monthly_R2_average_daily_peak_and_other_account_usage_still_apply": true,
+      "unknowns": [
+        "Actual ingestion/change rate while CPU remains OFF",
+        "Growth of full checkpoint size",
+        "Other R2 account usage",
+        "Runtime dataset partition policy beyond16MiB gzip/512MiB SQLite"
+      ],
+      "pilot_budget_is_not_a_multiyear_production_capacity_claim": true
+    },
+    "usage": {
+      "new_AI_Groq_calls": 0,
+      "new_AI_tokens": 0,
+      "new_source_collection_calls": 0,
+      "CPU_reinference_windows": 0,
+      "new_models_installed": 0,
+      "new_accounts_or_subscriptions": 0,
+      "new_Secrets_or_changed_auth": 0,
+      "paid_API_cost": 0,
+      "GitHub_timing_run_duration_ms": 142000,
+      "GitHub_timing_ubuntu_billable_ms": 0,
+      "account_wide_invoice_not_inspected": true
+    },
+    "next_action": "Keep existing writer unchanged. Review staged secondary archive evidence and approve any primary migration separately. If choosing R2, owner must review subscription/billing, private bucket and least-privilege S3 credentials; no signup/cards/Secrets were created. Before any years-long rollout, measure real change rate and approve bounded dataset partitions while retaining every historical archive.",
+    "R2_local_binding_presence_only": {
+      "CLOUDFLARE_ACCOUNT_ID": false,
+      "CLOUDFLARE_API_TOKEN": false,
+      "R2_ACCESS_KEY_ID": false,
+      "R2_SECRET_ACCESS_KEY": false
+    },
+    "protected_original_source_DB_hashes_unchanged": {
+      "var/v4/cross-industry/ledger/v4.sqlite3": "0234453d685a49640ad4e0ba1f955ade631ebd45a9aa7e1a8a719fb99b8f0a1c",
+      "var/v4/supply-linkage/ledger/v4.sqlite3": "8116eca6dfbf1e65cb605e1aab9b1af0d472a665bf7087899ccb23818d023bc8"
+    }
   }
 }
