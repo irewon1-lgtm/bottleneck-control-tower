@@ -387,10 +387,21 @@ def official():
  recover_run=os.environ.get('OFFICIAL_RESULT_RUN','')
  if recover_run not in {'','38855145291'}:raise ValueError('OFFICIAL_RESULT_RUN_NOT_REVIEWED')
  initialize(official_result=bool(recover_run));ledger=Ledger(R/'ledger')
- from v4_official_sources import collect
+ from v4_official_sources import collect,next_daily_windows
  from bct.v4.official_sources import KIND,save,q2_review_inputs
  with ledger.worker():
-  result=collect(ledger,json.loads(REG.read_text()),R/'global-sources',network=True)
+  registry=json.loads(REG.read_text());new_windows=next_daily_windows(registry,ledger=ledger)
+  result=collect(ledger,registry,R/'global-sources',network=True)
+  result['new_source_only_windows']=[j['id']for j in new_windows]
+  from v4_official_discovery import run as automatic_run
+  result['automatic_research']=automatic_run(ledger,R/'global-sources/captures',R/'automatic-discovery',network=True)
+  # Consume the source-driven relation queue with the existing executor. The
+  # supplier discovery above already performs bounded I/O; this pass restores
+  # queue cursors without reissuing its requests or loading a CPU model.
+  from v4_quantitative_relations import run as relation_run,ROOT as RELROOT
+  relation_run(research_ledger=R/'ledger',network=False)
+  from bct.v4.quantitative_counterpart import save_relations
+  save_relations(ledger,json.loads((RELROOT/'automatic-queue.json').read_text()))
   records=[json.loads(p)for p, in ledger.db.execute('SELECT payload FROM events WHERE kind=?',(KIND,))]
   handoff=q2_review_inputs(records);marker='OFFICIAL_Q2_REVIEW_INPUTS:'+sha(handoff)
   with ledger.db:
@@ -405,6 +416,79 @@ def official():
  (R/'q2-report.json').write_text(json.dumps({'official_source_expansion':result,'new_process_dedup':True,'originals_in_capsule':False,'Q3_pairs':0,'new_S2':0,'new_S3':0}))
  print('BCT_OFFICIAL_SOURCE_REPORT_JSON='+json.dumps(result),flush=True)
  return 75 if any(p['status']=='BATCH_LIMIT_PENDING'for p in result['pages'])else 0
+
+
+def official_discovery():
+ """Append the actual locally replayed source batch to current monthly state.
+
+ No original bodies are copied; native hash/locator verification was executed
+ in the recorded development batch. This runner checks all upstream IDs and
+ strict schemas, preserves the baseline, then verifies a fresh-process no-op.
+ """
+ initialize();ledger=Ledger(R/'ledger')
+ from bct.v4.official_sources import save as facts_save
+ from bct.v4.procurement_review import save as reviews_save
+ from bct.v4.official_discovery import save as automatic_save,save_cursors,typed_routes
+ from bct.v4.quantitative_counterpart import save_relations
+ from bct.objective_lock import stamp_export,require_objective
+ folder=official_input_packet()
+ fact_packets=[json.loads((folder/name).read_text())for name in ['CONTRACT_PRODUCT_FACTS.json','OFFICIAL_AUTO_FACTS.json']]
+ review=json.loads((folder/'CONTRACT_REVIEW_INPUTS.json').read_text())
+ report=json.loads((folder/'OFFICIAL_AUTO_RESULTS.json').read_text())
+ for packet in fact_packets:require_objective(packet)
+ with ledger.worker():
+  added=facts_save(ledger,[r for p in fact_packets for r in p['facts']])
+  regression=reviews_save(ledger,review)
+  automatic=automatic_save(ledger,report)
+  cursors=save_cursors(ledger,json.loads((folder/'OFFICIAL_AUTO_CURSORS.json').read_text()))
+  queue=save_relations(ledger,stamp_export({'tasks':report['counterparts']['relation_tasks']}))
+ ledger.close();before=file_sha(R/'ledger/v4.sqlite3')
+ import subprocess
+ code="import json;from pathlib import Path;from bct.v4.store import Ledger;from bct.v4.official_sources import save as fs;from bct.v4.procurement_review import save as rs;from bct.v4.official_discovery import save as auto,save_cursors;from bct.v4.quantitative_counterpart import save_relations;from bct.objective_lock import stamp_export;L=Ledger('var/v4/quantitative/q1-source-work/ledger');P=Path('var/v4/quantitative/q1-source-work/official-input');assert all(fs(L,json.loads((P/n).read_text())['facts'])['added']==0 for n in ['CONTRACT_PRODUCT_FACTS.json','OFFICIAL_AUTO_FACTS.json']);assert rs(L,json.loads((P/'CONTRACT_REVIEW_INPUTS.json').read_text()))['added_review_batches']==0;r=json.loads((P/'OFFICIAL_AUTO_RESULTS.json').read_text());assert auto(L,r)['added']==0;assert save_cursors(L,json.loads((P/'OFFICIAL_AUTO_CURSORS.json').read_text()))['added']==0;assert save_relations(L,stamp_export({'tasks':r['counterparts']['relation_tasks']}))['added']==0;L.close()"
+ child=subprocess.run([sys.executable,'-c',code],capture_output=True,text=True,timeout=120)
+ if child.returncode:raise ValueError('OFFICIAL_DISCOVERY_RESTART_DEDUP_FAILED:'+child.stderr[-500:])
+ if file_sha(R/'ledger/v4.sqlite3')!=before:raise ValueError('OFFICIAL_DISCOVERY_RESTART_HASH_CHANGED')
+ routes=typed_routes([json.loads(p)for p, in sqlite3.connect((R/'ledger/v4.sqlite3').resolve().as_uri()+'?mode=ro',uri=True).execute("SELECT payload FROM events WHERE kind='QUANTITATIVE_OFFICIAL_FACT'")])
+ receipt={'summary':report['summary'],'Q3':report['Q3'],'added_facts':added,'regression_only':regression,'automatic':automatic,'queue':queue,'cursors':cursors,'typed_routes':routes,'new_process_dedup':True,'sqlite_sha256':before,'source_HTTP_calls_here':0,'native_originals_rechecked_here':False,'AI_calls':0,'CPU_windows':0}
+ (R/'q2-report.json').write_text(json.dumps(receipt))
+ print('BCT_OFFICIAL_DISCOVERY_STORE_JSON='+json.dumps(receipt),flush=True)
+ finish()
+
+
+def official_input_packet():
+ """Reuse the existing one-use Q1 encrypted handoff; no new account Secret.
+
+ The original native bodies never enter this packet. Full typed research facts
+ are not committed in plaintext to public Git or posted as public artifacts.
+ """
+ import tempfile,subprocess
+ from v4_quantitative_private import gpg,ROOT as KEYROOT
+ from bct.v4 import private_state as state
+ from bct.objective_lock import require_objective
+ descriptor=json.loads(Path('docs/v4/quantitative/OFFICIAL_AUTO_TRANSPORT.json').read_text());require_objective(descriptor)
+ keyrun=os.environ.get('OFFICIAL_INPUT_KEY_RUN','')
+ if keyrun!=descriptor['key_run']or not re.fullmatch(r'\d{5,20}',keyrun):raise ValueError('OFFICIAL_INPUT_KEY_RUN')
+ run=subprocess.run(['gh','api',f'repos/{state.PUBLIC_REPO}/actions/runs/{keyrun}'],capture_output=True,text=True,timeout=25)
+ if run.returncode:raise ValueError('OFFICIAL_INPUT_KEY_RUN_LOOKUP')
+ info=json.loads(run.stdout)
+ if info.get('head_sha')!='ae08119c733d2a2f399dbce19d587051a3b7a9ba'or info.get('head_branch')!='codex/bct-v4-integration'or info.get('event')!='workflow_dispatch'or info.get('conclusion')!='success'or info.get('path')!='.github/workflows/v4-cpu-private-research.yml':raise ValueError('OFFICIAL_INPUT_UNTRUSTED_PREPARE')
+ path=Path('docs/v4/quantitative/official-research-input.gpg')
+ if path.stat().st_size>state.MAX_TRANSPORT or file_sha(path)!=descriptor['encrypted_sha256']:raise ValueError('OFFICIAL_INPUT_CIPHERTEXT_HASH')
+ secret=state._gpg((KEYROOT/'wrapped-key.gpg').read_bytes(),os.environ['BCT_V4_STATE_PASSPHRASE'],decrypt=True)
+ with tempfile.TemporaryDirectory(prefix='bct-official-handoff-')as home:
+  os.chmod(home,0o700);gpg(home,'--import',data=secret)
+  plaintext=gpg(home,'--max-output',str(16*1024*1024),'--decrypt',data=path.read_bytes())
+ if sha(plaintext)!=descriptor['plaintext_sha256']:raise ValueError('OFFICIAL_INPUT_PLAINTEXT_HASH')
+ packet=json.loads(plaintext);require_objective(packet)
+ if packet['format']!='bct-official-research-handoff-1'or packet['key_run']!=keyrun:raise ValueError('OFFICIAL_INPUT_ENVELOPE')
+ allowed={'CONTRACT_PRODUCT_FACTS.json','CONTRACT_REVIEW_INPUTS.json','OFFICIAL_AUTO_FACTS.json','OFFICIAL_AUTO_RESULTS.json','OFFICIAL_AUTO_CURSORS.json'}
+ if set(packet['files'])!=allowed:raise ValueError('OFFICIAL_INPUT_UNREVIEWED_FILES')
+ folder=R/'official-input';folder.mkdir()
+ for name,value in packet['files'].items():
+  require_objective(value)
+  if sha(value)!=descriptor['file_sha256'][name]:raise ValueError('OFFICIAL_INPUT_FILE_HASH')
+  (folder/name).write_text(json.dumps(value))
+ return folder
 
 
 def publish():
@@ -455,7 +539,7 @@ def official_state_read():
  print('BCT_OFFICIAL_STATE_READ_JSON='+json.dumps({'storage':cursor,'checkpoint_kind':manifest['kind'],'previous_manifest_sha256':manifest['previous_manifest_sha256'],'tables':manifest['proof']['tables'],'remote_restore_verified':True,'sqlite_sha256':file_sha(R/'state-read/v4.sqlite3'),'official_record_versions':len(rows),'by_source':{s:sum(r['source_id']==s for r in rows)for s in sorted({r['source_id']for r in rows})},'Q1_numeric':numeric,'Q1_physical':physical,'Q2':{k:v for k,v in handoff.items()if k!='review_inputs'},'originals_restored':False,'source_HTTP_requests':0,'writes':0,'AI_calls':0,'CPU_windows':0,'code_SHA':os.environ['GITHUB_SHA']}),flush=True)
 
 if __name__=='__main__':
- parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality','verify','recover','counterparts','relations','official','official_state_read']);a=parser.parse_args()
+ parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality','verify','recover','counterparts','relations','official','official_state_read','official_discovery']);a=parser.parse_args()
  if a.action=='official':raise SystemExit(official())
  if a.action=='quality':raise SystemExit(quality())
  if a.action in {'process','trade'}:raise SystemExit(process(only_trade=a.action=='trade'))

@@ -5,9 +5,11 @@ No schedule, AI, model loading, private writer token, or candidate registration.
 Uses the existing public transport, Ledger and private monthly publisher.
 """
 import argparse
+from copy import deepcopy
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta, date
 import json
+import re
 from pathlib import Path
 import time
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
@@ -53,12 +55,16 @@ class Capture:
         self.network = network; self.calls = 0; self.max_calls = max_calls
         self.started = time.monotonic(); self.seconds = seconds
         self.index = {}; self.held_hosts = set(); self.invalid_receipts = set()
+        self.denials = {}; self.successful_api_paths = set()
         for p in self.root.glob('*.json'):
             try: m = json.loads(p.read_text())
             except (ValueError, UnicodeError): self.invalid_receipts.add(p.stem); continue
             if 'url' not in m: continue
             self.index[canonical(m['url'])+('|'+m['transport_contract'] if m.get('transport_contract') else '')] = p
-            if m.get('status') in (401, 403, 429): self.held_hosts.add(urlsplit(m['url']).hostname)
+            u = urlsplit(m['url'])
+            if m.get('status') in (401, 403, 429):
+                self.held_hosts.add(u.hostname); self.denials.setdefault(u.hostname, []).append((m['status'], u.path))
+            if m.get('status') == 200 and u.path == '/api/1.0/ocdsReleasePackages': self.successful_api_paths.add((u.hostname, u.path))
 
     def get(self, source, url):
         fmt.safe_url(source, url); key = canonical(url)
@@ -77,7 +83,13 @@ class Capture:
             return raw.read_bytes(), m
         if not self.network: return None, {'status': 'NOT_FETCHED_OFFLINE', 'url': url}
         if self.calls >= self.max_calls or time.monotonic()-self.started >= self.seconds: return None, {'status': 'BATCH_LIMIT_PENDING', 'url': url}
-        if urlsplit(url).hostname in self.held_hosts: return None, {'status': 'HOST_QUARANTINED', 'url': url}
+        u = urlsplit(url)
+        # This documented public API already returned200 on the same host.
+        # A different /Notice HTML403 is not a denial of this API. Actual API
+        #401/403/429 and all identical denied requests remain quarantined.
+        separately_proven_api = (source == 'find_tender' and (u.hostname, u.path) in self.successful_api_paths
+            and all(status == 403 and path.startswith('/Notice/') for status, path in self.denials.get(u.hostname, [])))
+        if u.hostname in self.held_hosts and not separately_proven_api: return None, {'status': 'HOST_QUARANTINED', 'url': url}
         # Journal BEFORE the call: a killed call cannot be silently retried.
         p = self.root/((sha([url, contract]) if contract else sha(url.encode()))+'.json')
         m = {'url': url, 'purpose': 'DATA', 'status': 'INTERRUPTED_NO_AUTO_RETRY', 'acquired_at': now()}
@@ -100,6 +112,7 @@ class Capture:
             safe_reason = str(exc) if isinstance(exc, ValueError) and str(exc) in {'SOURCE_CACHE_HASH_MISMATCH', 'OFFICIAL_SOURCE_URL_NOT_REVIEWED', 'NESO_RESOURCE_REDIRECT_IDENTITY', 'response exceeds bounded 4MB capture'} else type(exc).__name__
             m.update(status=status or 'TRANSPORT_OR_SIZE_FAILURE', error_type=safe_reason, retry=False)
             if status in (401, 403, 429): self.held_hosts.add(urlsplit(url).hostname)
+            if status in (401, 403, 429): self.denials.setdefault(u.hostname, []).append((status, u.path))
             retry_after = getattr(exc, 'headers', {}).get('Retry-After') if getattr(exc, 'headers', None) else None
             if retry_after and retry_after.isdecimal(): m['retry_after_seconds'] = int(retry_after)
             raw = None
@@ -134,8 +147,50 @@ def parse(raw, receipt, job):
     try: checked = sum(fmt.recheck(row, native) for row in records)
     finally:
         if job['format'] == 'XLSX': native.close()
-    if not records: raise ValueError('NO_SOURCE_RECORDS_NOT_A_COLLECTION_PASS')
+    if not records:
+        if job['source_id'] in {'find_tender', 'contracts_finder'} and job['format'] == 'JSON' and native.get('releases') == [] and not nxt:
+            extra['empty_validated_not_collection_pass'] = True
+        else: raise ValueError('NO_SOURCE_RECORDS_NOT_A_COLLECTION_PASS')
     return records, nxt, checked, extra
+
+
+def next_daily_windows(registry, *, through=None, ledger=None):
+    """Append one next CLOSED day per existing supported OCDS source.
+
+    No company/product list, no reset of old jobs or pagination cursors. Repeated
+    invocations do not create a duplicate window. Q1's original fixed scope is
+    preserved as history; Q5 schedules are not activated here.
+    """
+    through = date.fromisoformat(through) if through else datetime.now(timezone.utc).date()-timedelta(days=1)
+    jobs = registry['global_sources']['collection_jobs']; new = []
+    for source, start_key, end_key in [('find_tender', 'updatedFrom', 'updatedTo'), ('contracts_finder', 'publishedFrom', 'publishedTo')]:
+        prior = [j for j in jobs if j['source_id'] == source and end_key in dict(parse_qsl(urlsplit(j['url']).query))]
+        if not prior: continue
+        if ledger is not None:
+            recovered = {json.loads(p)['policy']['job_id'] for p, in ledger.db.execute(
+                "SELECT payload FROM events WHERE kind='QUANTITATIVE_VALIDATION' AND json_extract(payload,'$.policy.source_id')=? AND json_extract(payload,'$.policy.job_id') LIKE 'official-daily-%'", (source,))}
+            template = prior[-1]
+            for jid in sorted(recovered):
+                day_text = jid.removeprefix('official-daily-'+source+'-')
+                if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', day_text) or date.fromisoformat(day_text) > through or any(j['id'] == jid for j in jobs): continue
+                row = deepcopy(template); u = urlsplit(row['url']); query = dict(parse_qsl(u.query))
+                for k in (start_key, end_key): query[k] = day_text+query[k][10:]
+                row.update(id=jid, url=urlunsplit((u.scheme, u.netloc, u.path, urlencode(query), '')))
+                for k in ['source_review_annotations', 'pilot_raw_sha256']: row.pop(k, None)
+                jobs.append(row); prior.append(row)
+        latest = max(prior, key=lambda j: dict(parse_qsl(urlsplit(j['url']).query))[end_key])
+        u = urlsplit(latest['url']); query = dict(parse_qsl(u.query)); old = query[end_key][:10]
+        day = date.fromisoformat(old)+timedelta(days=1)
+        if day > through: continue
+        row = deepcopy(latest); row['id'] = 'official-daily-'+source+'-'+day.isoformat()
+        if any(j['id'] == row['id'] for j in jobs): continue
+        for k in (start_key, end_key): query[k] = day.isoformat()+query[k][10:]
+        row['url'] = urlunsplit((u.scheme, u.netloc, u.path, urlencode(query), ''))
+        for k in ['source_review_annotations', 'pilot_raw_sha256']: row.pop(k, None)
+        row.update(frozen_at=now(), parent_job=latest['id'], input_policy='NEXT_CLOSED_DAY_SOURCE_ONLY_NO_TARGET_LIST')
+        new.append(row)
+    jobs.extend(new)
+    return new
 
 
 def _state(ledger, job_id, page):
@@ -148,16 +203,20 @@ def collect(ledger, registry, root, *, network=False):
     require_objective(registry)
     jobs = registry['global_sources']['collection_jobs']
     transport = Capture(Path(root)/'captures', network=network)
-    current = {j['id']: j['url'] for j in jobs}; stopped = set(); report = []
+    current = {j['id']: j['url'] for j in jobs}; stopped = set(); report = []; numbers = {}
+    for job in jobs:
+        prior_rows = [json.loads(p)['policy'] for p, in ledger.db.execute(
+            "SELECT payload FROM events WHERE kind='QUANTITATIVE_VALIDATION' AND json_extract(payload,'$.policy.job_id')=? ORDER BY json_extract(payload,'$.policy.page'),seq", (job['id'],))]
+        report.extend(prior_rows)
+        if prior_rows:
+            last = prior_rows[-1]; current[job['id']] = last.get('next_url'); numbers[job['id']] = last['page']+1
+            if not current[job['id']] or last['status'] == 'BLOCKED': stopped.add(job['id'])
+        else: numbers[job['id']] = 1
     # Round-robin across source types: one industry's cursor cannot block others.
-    for page in range(1, max(j['max_pages'] for j in jobs)+1):
+    for slot in range(max(j['max_pages'] for j in jobs)):
         for job in jobs:
-            if job['id'] in stopped or page > job['max_pages']: continue
-            prior = _state(ledger, job['id'], page)
-            if prior:
-                report.append(prior); current[job['id']] = prior.get('next_url')
-                if not current[job['id']]: stopped.add(job['id'])
-                continue
+            if job['id'] in stopped or slot >= job['max_pages']: continue
+            page = numbers[job['id']]
             url = current[job['id']]
             if not url: stopped.add(job['id']); continue
             try: raw, receipt = transport.get(job['source_id'], url)
@@ -177,13 +236,23 @@ def collect(ledger, registry, root, *, network=False):
                         for k, v in a.items():
                             if k not in {'page', 'offset', 'cursor', 'format'} and b.get(k) != v: raise ValueError('PAGINATION_SCOPE_CHANGED')
                     stored = fmt.save(ledger, records) if job['archive_facts'] else {'added': 0}
+                    automatic = None
+                    if records and job['archive_facts'] and job['source_id'] in {'find_tender', 'contracts_finder'}:
+                        from bct.v4.official_discovery import enqueue
+                        automatic = enqueue(ledger, json.loads(raw), {'source_id': job['source_id'], 'url': url,
+                            'sha256': sha(raw), 'acquired_at': receipt.get('acquired_at') or datetime.fromtimestamp(receipt['at'], timezone.utc).isoformat()})
                     policy.update(status='FACTS_STORED' if job['archive_facts'] else 'PARSE_VALIDATED_RIGHTS_HOLD', records=len(records), stored=stored['added'], exact_fields_checked=checked, next_url=nxt, source_hash=sha(raw), tables=extra, native_source_in_remote_capsule=False, proof_scope='SCALAR_VALUES_AND_LOCATORS_NOT_INDEPENDENT_EVENT_MEANING', limits=job['semantic_limits'])
+                    if automatic is not None: policy['automatic_research_queue'] = automatic
+                    if extra.get('empty_validated_not_collection_pass'): policy['status'] = 'EMPTY_VALIDATED_NO_NEW_FACTS'
                 except Exception as exc:
                     policy.update(status='BLOCKED', reason=type(exc).__name__+':'+str(exc)[:180], retry=False)
             with ledger.db:
                 ledger.event('QUANTITATIVE_VALIDATION', {'reason': PREFIX+sha([job['id'], page]), 'originals_modified': False, 'policy': policy})
             report.append(policy); current[job['id']] = policy.get('next_url')
+            numbers[job['id']] += 1
             if not current[job['id']]: stopped.add(job['id'])
+            elif slot+1 == job['max_pages']:
+                report.append({'job_id': job['id'], 'page': numbers[job['id']], 'status': 'BATCH_LIMIT_PENDING', 'next_url': current[job['id']]})
     all_records = [json.loads(p) for p, in ledger.db.execute('SELECT payload FROM events WHERE kind=?', (fmt.KIND,))]
     by = {}
     for source in sorted({r['source_id'] for r in all_records}):

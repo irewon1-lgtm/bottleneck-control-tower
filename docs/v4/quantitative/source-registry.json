@@ -6378,6 +6378,30 @@
         "transport": "existing_Q1_SourceClient_20MB",
         "semantic_limits": "Full fiscal CSV read and SHA verified; only fixed publication window archived. Contract amount vs total value vs amendment distinct, never summed. Award != signed order; dateEnd != customer need/firm delivery. Personal contact/address/description columns excluded.",
         "pilot_raw_sha256": "3486af9555741df1febb709a6448a5650fdd3170732a7b537820659c6f378da9"
+      },
+      {
+        "id": "official-daily-find_tender-2026-10-15",
+        "source_id": "find_tender",
+        "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-10-15T00%3A00%3A00&updatedTo=2026-10-15T23%3A59%3A59&limit=100",
+        "format": "JSON",
+        "max_pages": 6,
+        "archive_facts": true,
+        "frozen_at": "2026-10-16T10:25:17.099756+00:00",
+        "semantic_limits": "Release tags, lots, awards/contracts remain separate. Framework, amendments and amounts are not physical orders. Contract period is not firm delivery.",
+        "parent_job": "global-2026-10-16-ft_data",
+        "input_policy": "NEXT_CLOSED_DAY_SOURCE_ONLY_NO_TARGET_LIST"
+      },
+      {
+        "id": "official-daily-contracts_finder-2026-10-15",
+        "source_id": "contracts_finder",
+        "url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-15T00%3A00%3A00&publishedTo=2026-10-15T23%3A59%3A59&limit=100",
+        "format": "JSON",
+        "max_pages": 4,
+        "archive_facts": true,
+        "frozen_at": "2026-10-16T10:25:17.099840+00:00",
+        "semantic_limits": "Open OCDS notices may include services/frameworks and modifications; amount is not order quantity. Same OCID is one procurement lineage.",
+        "parent_job": "global-2026-10-16-cf_data",
+        "input_policy": "NEXT_CLOSED_DAY_SOURCE_ONLY_NO_TARGET_LIST"
       }
     ],
     "limits": {
@@ -6402,6 +6426,19 @@
     "actual_source_groups_archived": 12,
     "source_groups_with_parsed_data_including_rights_hold": 13,
     "original_fixed8_numeric_observations": 38046,
-    "native_originals_in_capsule": false
+    "native_originals_in_capsule": false,
+    "automatic_discovery": {
+      "code": "src/bct/v4/official_discovery.py",
+      "tool": "tools/v4_official_discovery.py",
+      "evidence": "docs/v4/quantitative/OFFICIAL_AUTO_RESULTS.json",
+      "closed_day_native_feeds": [
+        "find_tender",
+        "contracts_finder"
+      ],
+      "Q3_pairs": 0,
+      "S2": 0,
+      "S3": 0,
+      "status": "PARTIAL_DEVELOPMENT_ONLY_NOT_SCHEDULED"
+    }
   }
 }

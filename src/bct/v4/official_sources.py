@@ -33,6 +33,9 @@ HOSTS = {
     'korea_pps': {'apis.data.go.kr'},
     'doe_haleu': {'www.energy.gov'}, 'chips': {'www.nist.gov'},
     'canadabuys': {'canadabuys.canada.ca'},
+    'issuer_amarisoft': {'amarisoft.com', 'www.amarisoft.com'},
+    'issuer_ettus': {'www.ettus.com'},
+    'issuer_vescent': {'vescent.com'},
 }
 FIELDS = set('source_id url source_hash acquired_at native_id logical_id id format record_kind source_lineage published_at publication_basis first_publication_verified claims unknowns research_only s_stage qualified_supply independence evidence_scope'.split())
 CLAIMS = set('notice_id ocid release_tags status procurement_category classification_code classification_scheme product_label buyer_id buyer_name supplier_id supplier_name contract_id award_id award_date signed_date period_start period_end delivery_date item_quantity item_unit amount currency framework_amendment facility_id facility_type project_id project_status geography transmission_owner connection_customer summer_net_MW winter_net_MW connected_MW capacity_change_MW cumulative_MW planned_service_date application_date lei legal_name legal_jurisdiction entity_status registration_last_update publication_date publication_type project_country project_name notice_type notice_status trade_quantity trade_unit_code trade_net_weight_kg trade_value_USD trade_period commodity_code reporter_code partner_code flow_code is_estimated is_aggregate statistic_value statistic_unit statistic_period statistic_product statistic_country statistic_type generation_type dataset_update legal_form parent_lei'.split())
@@ -42,10 +45,14 @@ CLAIMS.update({'lot_id', 'lot_status'})
 CLAIMS.add('reported_item_quantity_literal')
 CLAIMS.update({'material_specification_literal', 'program_funding_literal', 'investment_literal', 'facility_region_literal', 'technology_literal', 'program_duration_literal', 'procurement_eligibility_literal', 'conditional_allocation_literal', 'counterevidence_literal', 'regulatory_condition_literal'})
 CLAIMS.update({'amendment_number', 'amendment_date', 'instrument_type', 'reported_total_contract_value'})
+CLAIMS.update({'reported_lead_time_literal', 'reported_stock_literal'})
 KINDS = {'PROCUREMENT_TENDER', 'PROCUREMENT_AWARD', 'PROCUREMENT_CONTRACT',
          'PROCUREMENT_NOTICE', 'LEGAL_ENTITY', 'CONNECTION_PROJECT',
          'REGULATORY_DOCUMENT', 'TRADE_STATISTIC', 'PRODUCTION_STATISTIC'}
 KINDS.add('PROGRAM_CONTEXT_NOT_QUALIFIED_SUPPLY')
+KINDS.add('PRODUCT_SPECIFICATION_NOT_QUALIFIED_CAPACITY')
+KINDS.add('PROCUREMENT_PRODUCT_SOURCE_REVIEW')
+KINDS.add('PROCUREMENT_AUTOMATIC_OBJECT')
 SENSITIVE = re.compile(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|gh[pousr]_[A-Za-z0-9]{20,}|Bearer\s+\S+', re.I)
 MW_FIELDS = {'summer_net_MW', 'winter_net_MW', 'connected_MW', 'capacity_change_MW', 'cumulative_MW', 'reported_project_MW'}
 NUMERIC = MW_FIELDS | {'amount', 'reported_total_contract_value', 'item_quantity', 'trade_quantity', 'trade_net_weight_kg', 'trade_value_USD', 'statistic_value'}

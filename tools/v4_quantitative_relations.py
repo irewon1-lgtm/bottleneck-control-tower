@@ -128,13 +128,31 @@ def inventory():
     return seeds,tasks,docs,raws,protected,rejected
 
 
-def run(*,network=False,next_round=False,discover=False,official=False):
-    ROOT.mkdir(parents=True,exist_ok=True);path=ROOT/'queue.json'
+def run(*,network=False,next_round=False,discover=False,official=False,research_ledger=None):
+    ROOT.mkdir(parents=True,exist_ok=True);path=ROOT/('automatic-queue.json' if research_ledger else 'queue.json')
     parents={t['task_id']:t['id']for t in json.loads(Path('docs/v4/quantitative/relation-tasks.json').read_text())['tasks']}
-    seeds,tasks,docs,raws,protected,rejected=inventory()
+    if research_ledger and not all(Path(p).exists()for p in ['var/v4/cross-industry/ledger/v4.sqlite3','var/v4/supply-linkage/ledger/v4.sqlite3']):
+        seeds,tasks,docs,raws,protected,rejected=[],[],{},{},{},[]
+    else:seeds,tasks,docs,raws,protected,rejected=inventory()
+    if research_ledger:
+        from types import SimpleNamespace
+        source=Path(research_ledger)
+        if source.is_dir():source=source/'v4.sqlite3'
+        with sqlite3.connect(source.resolve().as_uri()+'?mode=ro',uri=True)as db:
+            tasks=[t for t in q.latest_relations(SimpleNamespace(db=db))['tasks']if 'automatic_stored_search'in t['scope']]
+        # The source-driven queue is the input. Legacy reviewed cases remain
+        # regression data and never become automatic TARGET nominations here.
+        seeds=[{'id':t['seed_id'],'event_key':t['event_key']}for t in {x['seed_id']:x for x in tasks}.values()]
+        parents={t['task_id']:t['id']for t in tasks};rejected=[]
     old=json.loads(path.read_text())if path.exists()else None
     if old:
         previous={r['task_id']:r for r in old['tasks']}
+        if research_ledger:
+            for task in tasks:
+                p=previous.get(task['task_id'])
+                if p:
+                    used={x['url']for x in p['urls']}
+                    p['urls'] += [x for x in task['urls']if x['url']not in used and not used.add(x['url'])]
         tasks=[{**r,**{k:previous[r['task_id']][k]for k in ['urls','cursor','checked_sources','search_state','reason']}}
                if r['task_id']in previous else r for r in tasks]
         for task in tasks:
@@ -356,5 +374,5 @@ def run(*,network=False,next_round=False,discover=False,official=False):
 
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('--network',action='store_true');parser.add_argument('--next-round',action='store_true');parser.add_argument('--discover',action='store_true');parser.add_argument('--official-discover',action='store_true')
-    args=parser.parse_args();run(network=args.network,next_round=args.next_round,discover=args.discover,official=args.official_discover)
+    parser=argparse.ArgumentParser();parser.add_argument('--network',action='store_true');parser.add_argument('--next-round',action='store_true');parser.add_argument('--discover',action='store_true');parser.add_argument('--official-discover',action='store_true');parser.add_argument('--research-ledger')
+    args=parser.parse_args();run(network=args.network,next_round=args.next_round,discover=args.discover,official=args.official_discover,research_ledger=args.research_ledger)
