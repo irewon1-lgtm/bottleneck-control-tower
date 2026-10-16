@@ -435,3 +435,53 @@ def test_multi_document_publication_failure_keeps_both_originals():
         t.write_many({PATH:{'results':{},'summary':{'completed':1}},'future-tracking.json':{'reviews':{'r':1}}},expected)
     assert remote.head=='c0' and t.read(PATH).document=={'results':{}}
     assert t.read('future-tracking.json').document=={'reviews':{}}
+
+@pytest.mark.parametrize('failure', ['missing', 'service'])
+def test_immutable_contents_visibility_retry_does_not_repeat_publication(monkeypatch, failure):
+    remote = GitRemote({})
+    original = remote.request
+    delayed = []
+    sleeps = []
+    monkeypatch.setattr(storage.time, 'sleep', sleeps.append)
+    def request(method, suffix, payload=None):
+        if method == 'GET' and suffix.startswith('/contents/') and delayed:
+            delayed.pop()
+            if failure == 'missing':
+                raise FileNotFoundError('GitHub GET object unavailable: /contents/future-candidates.json')
+            raise storage.GitHubRequestError({'category': 'GITHUB_SERVICE_ERROR', 'status': 500,
+                'method': 'GET', 'endpoint': '/contents/future-candidates.json'})
+        value = original(method, suffix, payload)
+        if method == 'PATCH':
+            delayed.append(True)
+        return value
+    transport = storage.GitHubTransport('owner/repo', 'test', 'test-token', requester=request)
+    prior = transport.read(PATH)
+    document = {'results': {'new': {'id': 'new'}}}
+    transport.write(PATH, document, prior.sha)
+    assert transport.read_at(PATH, transport.last_commit).document == document
+    assert sum(method == 'PATCH' for method, _ in remote.calls) == 1
+    assert sleeps == [1]
+
+
+def test_persistent_immutable_contents_failure_stays_failed_with_one_ref_move(monkeypatch):
+    remote = GitRemote({})
+    original = remote.request
+    lookups = []
+    broken = [True]
+    sleeps = []
+    monkeypatch.setattr(storage.time, 'sleep', sleeps.append)
+    def request(method, suffix, payload=None):
+        if method == 'GET' and suffix.startswith('/contents/') and '?ref=c1' in suffix and broken[0]:
+            lookups.append(suffix)
+            raise FileNotFoundError('GitHub GET object unavailable: /contents/future-candidates.json')
+        return original(method, suffix, payload)
+    transport = storage.GitHubTransport('owner/repo', 'test', 'test-token', requester=request)
+    prior = transport.read(PATH)
+    document = {'results': {'new': {'id': 'new'}}}
+    with pytest.raises(FileNotFoundError):
+        transport.write(PATH, document, prior.sha)
+    assert remote.head == transport.last_commit == 'c1'
+    assert len(lookups) == 3 and sleeps == [1, 2]
+    assert sum(method == 'PATCH' for method, _ in remote.calls) == 1
+    broken[0] = False
+    assert transport.read_at(PATH, 'c1').document == document
