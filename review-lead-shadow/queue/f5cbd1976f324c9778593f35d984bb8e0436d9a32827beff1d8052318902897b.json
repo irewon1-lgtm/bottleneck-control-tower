@@ -1,0 +1,506 @@
+{
+  "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+  "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+  "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+  "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+  "applies_from": "2026-10-05T15:24:06.650413+00:00",
+  "document_id": "cd80fca6-5042-4336-aed3-699e310a7e8b",
+  "body_sha256": "8628cb0e520e10c6e7b44bdc22ff6a9c3fc21b84952f29b0c881da762f77de08",
+  "published_at": "2026-10-23T13:03:36+00:00",
+  "acquired_at": "2026-10-23T14:44:07.814108+00:00",
+  "available_at": "2026-10-23T14:44:07.814108+00:00",
+  "intake_started_at": "2026-10-23T14:49:36.437557+00:00",
+  "intake_recorded_at": "2026-10-23T14:49:37.154670+00:00",
+  "first_review_recorded_at": "UNKNOWN",
+  "mode": "PROSPECTIVE_REVIEW",
+  "status": "HOLD",
+  "automatic_extraction": {
+    "version": "BCT_PRECURSOR_V2_SHADOW_2",
+    "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+    "events": [
+      {
+        "event_id": "9d99619063836ede6e8de828e9b4533323eef81de3754dbad33a83792b9f1fd1",
+        "document_id": "cd80fca6-5042-4336-aed3-699e310a7e8b",
+        "role": "SUPPLY",
+        "kind": "READINESS_OR_QUANTITY",
+        "reference": {
+          "document_id": "cd80fca6-5042-4336-aed3-699e310a7e8b",
+          "body_sha256": "8628cb0e520e10c6e7b44bdc22ff6a9c3fc21b84952f29b0c881da762f77de08",
+          "locator": {
+            "start": 6317,
+            "end": 6414
+          },
+          "quote": "The costs—both financial and spatial—of these racks grow exponentially as their capacity expands."
+        },
+        "fields": {},
+        "context_references": [
+          {
+            "document_id": "cd80fca6-5042-4336-aed3-699e310a7e8b",
+            "body_sha256": "8628cb0e520e10c6e7b44bdc22ff6a9c3fc21b84952f29b0c881da762f77de08",
+            "locator": {
+              "start": 6317,
+              "end": 6414
+            },
+            "quote": "The costs—both financial and spatial—of these racks grow exponentially as their capacity expands."
+          }
+        ],
+        "direct_origin": true,
+        "facts": {},
+        "period": null
+      }
+    ],
+    "facts_verified_semantically": false
+  },
+  "candidate_TARGET": "UNKNOWN — deterministic scope suggestions only",
+  "candidate_scope_suggestions": [
+    {
+      "event_id": "9d99619063836ede6e8de828e9b4533323eef81de3754dbad33a83792b9f1fd1",
+      "fields": {},
+      "reference": {
+        "document_id": "cd80fca6-5042-4336-aed3-699e310a7e8b",
+        "body_sha256": "8628cb0e520e10c6e7b44bdc22ff6a9c3fc21b84952f29b0c881da762f77de08",
+        "locator": {
+          "start": 6317,
+          "end": 6414
+        },
+        "quote": "The costs—both financial and spatial—of these racks grow exponentially as their capacity expands."
+      },
+      "verified_same_TARGET": false
+    }
+  ],
+  "review_reason": "SEMANTIC_REVIEW_REQUIRED",
+  "semantic_review_method": "PENDING_AI_OR_MANUAL",
+  "annotation_method": null,
+  "annotator": null,
+  "annotated_at": null,
+  "source_document": {
+    "document_id": "cd80fca6-5042-4336-aed3-699e310a7e8b",
+    "origin_url": "https://www.powermag.com/why-flat-performance-matters-more-than-peak-efficiency-in-data-center-design/",
+    "collected_at": "2026-10-23T14:35:25.761054+00:00",
+    "origin_id": "https://www.powermag.com/why-flat-performance-matters-more-than-peak-efficiency-in-data-center-design/",
+    "canonical_url": "https://www.powermag.com/why-flat-performance-matters-more-than-peak-efficiency-in-data-center-design/",
+    "origin_publisher": "POWER Magazine",
+    "published_at": "2026-10-23T13:03:36+00:00",
+    "published_at_raw": "2026-10-23T13:03:36+00:00",
+    "publication_precision": "TIMESTAMP",
+    "acquired_at": "2026-10-23T14:44:07.814108+00:00",
+    "available_at": "2026-10-23T14:44:07.814108+00:00",
+    "body": "Artificial intelligence (AI) is reshaping the power requirements of modern data centers. At this point in the timeline of AI’s continued evolution, this statement should not be controversial. The deployment of increasingly large GPU clusters for training and inference purposes, such as NVIDIA’s 72-GPU Vera Rubin model , is causing rack power densities to climb from tens to hundreds of kilowatts (kW), with some next-generation designs projected to exceed one megawatt (MW) per rack.\nThis creates much more power demand than traditional enterprise computing infrastructure was designed to support. Workloads that behave very differently than conventional applications are forcing operators to reevaluate their long-standing assumptions about power delivery and efficiency. What were once straightforward design decisions have become more complex in the face of unpredictable power densities and utilization patterns.\nOne such assumption concerns the role of efficiency in power system design. For years, developers have been focused on designing systems for peak efficiency, where systems operate optimally under truly ideal conditions. But as evolving AI workloads inject uncertainty into the equation, developers must reconsider whether these traditional efficiency-based models accurately reflect how data center infrastructure actually operates—or if they’re designing around unrealistic “ideal” standards.\nThe answer has implications that extend beyond energy consumption to cooling requirements, material usage, infrastructure costs, and data centers’ overall ability to scale alongside AI demand.\nAI Has Rewritten the Power Delivery Playbook\nThe power architectures used in many of today’s data centers were largely developed around predictable computing workloads. Traditional enterprise applications, web hosting environments, and business systems all tend to operate within relatively stable utilization ranges, which means power infrastructure could be optimized around expected load. AI workloads, however, behave quite differently than their steadier predecessors.\nLarge-scale AI training work relies on thousands of GPUs operating in parallel, often processing data in synchronized bursts. Utilization fluctuates rapidly during these training cycles, and can swing from roughly 30% utilization to full utilization in milliseconds as GPUs move between computation, communication, and memory-access operations. These shifts generate significant fluctuations in power demand across servers, racks, and even entire data center facilities—and they only become more pronounced as rack densities increase.\nThis combination of high power density and dynamic load behavior creates challenges that span the entire power chain. Power supplies, converters, distribution equipment, and cooling systems must all respond to rapid changes in demand while maintaining stable operation. As a result, developers must adopt a fundamental shift in the ways they evaluate and design power systems for data centers. The challenge isn’t to simply deliver more power, but to do so efficiently and reliably across fluctuating operating conditions.\nWhy Peak Efficiency Can Be a Misleading Target\nHistorically, power conversion systems have been designed and evaluated around the concept of peak efficiency, or the maximum efficiency achieved at a specific operating point. This approach provided a useful benchmark for relatively stable workloads, as peak efficiency could offer a pretty reasonable indication of the system’s real-world performance.\nThe same cannot be said for today’s evolving AI workloads. Their training and inference processes cause utilization to fluctuate dramatically, rarely leaving systems in any single, steady-state condition. Rather, they move through a range of load levels and often spend more time operating at partial loads than under peak efficiency conditions.\nThis is an important distinction to make, as efficiency curves are very rarely flat. Many power conversion systems achieve their highest efficiency within a relatively narrow operating window, with performance declining as loads move either above or below that specific range. While this difference may sound minor, even a one- or two-percentage-point drop in efficiency can translate into substantial energy losses when deployed across hundreds or even thousands of GPU racks.\nThese losses affect more than just energy consumption: wasted power becomes heat, which in turn increases both cooling requirements and operational costs across the data center. The higher rack densities climb, the greater the consequences of this inefficiency become.\nTo address this challenge, developers are beginning to place greater emphasis on efficiency across the full operating range of power systems, rather than at a single peak operating point. For AI workloads, consistently high performance at mid-load conditions may be a more meaningful measure of efficiency than the peak value.\nTraditional Architectures Struggle to Scale\nAnother core challenge in modern data center infrastructure is related to the boundaries of traditional hardware infrastructure. As AI workloads increase, they expose the physical limitations of many data centers’ legacy rack power architectures, which were designed to distribute power at relatively low voltages.\nLegacy architecture, traditionally rooted in a 48 to 54-volt (V) DC busbar with further conversion at the server level, has been more than effective for supporting conventional computing workloads. But as rack power requirements grow, 54 VDC models are no longer adequate. The reason is straightforward: lower voltages require higher currents to deliver the same amount of power. As rack densities push toward hundreds of kW and beyond, current levels rise dramatically. This leads to increases in resistive losses throughout the distribution system, requiring operators to deploy larger bus bars, extra cabling, and more robust connectors—all of which increase material costs, reduce available space, and make thermal management more difficult.\nRack-level limitations only become more pronounced at megawatt-scale designs. According to some industry projections, a 1 MW rack operating with a 48 to 54V architecture will require roughly 200 kilograms (kg) of copper for adequate power distribution. The costs—both financial and spatial—of these racks grow exponentially as their capacity expands. Ultimately, operators must find a way to mitigate these costs while maintaining efficiency and supporting greater power density.\nPairing High-Voltage Distribution With Flat-Load Efficiency\nTo address the joint challenges of uncertain workloads and increased power density, data center operators are beginning to consider two complementary strategies:\nAdopting higher-voltage power distribution architectures.\nMaintaining flatter efficiency profiles.\nThe case for higher-voltage distribution is pretty simple. Delivering more power to racks at higher voltages reduces the amount of current flowing through the system, helping alleviate many of the limitations of low-voltage architectures. Rather than relying on traditional 48 to 54V architectures, data centers can implement ±400V or 800V DC models that reduce copper requirements, lower resistive losses, and support much higher rack-level power densities.\nWhile higher voltages address part of the density challenge, power must still be converted and delivered efficiently across fluctuating workloads. This is where flat-load efficiency becomes crucial. Rather than optimizing performance around a single “peak” operating point, designers must focus on maintaining high efficiency across the load ranges where AI workloads actually operate. By shifting from a peak-centric model to a flat, high-load efficiency one, developers can help ensure:\nReduced energy losses during fluctuating workloads.\nLower heat generation and cooling demand.\nMore predictable power-system performance as utilization rates change.\nImproved ability to scale as rack power levels continue to rise.\nThese approaches are most effective when implemented in tandem. Higher-voltage architectures help address the challenge of delivering ever-increasing amounts of power to AI data center infrastructure, while flat-efficiency power conversion helps ensure that power is being used effectively across the standard operating conditions of AI workloads.\nIt’s important to note that neither approach is without its own trade-offs. High-voltage racks introduce new requirements for safety, insulation, connections, and facility design, and retrofitting existing data center infrastructure can be expensive and complex. Still, as AI workloads continue to push power demands higher, it’s even more crucial that developers consider these kinds of new approaches to power distribution and efficiency.\nDesigning for the Real World\nThe assumptions we’ve long held around data center power delivery and efficiency no longer hold true in the face of AI. Between workloads characterized by rapid utilization swings and steadily increasing rack power densities, AI workloads do not operate under the same stable conditions that shaped much of today’s power architecture models. And as a result, former metrics and design considerations are becoming less-effective indicators of real-world performance.\nWhile peak efficiency will remain an important benchmark, it’s no longer sufficient on its own. Maintaining consistent high efficiency in the flat load range of AI workloads will have a greater impact on energy consumption, thermal management needs, operating costs, and long-term scalability than achieving the highest possible efficiency at a peak operating point.\nAt the same time, low-voltage distribution architectures are not capable of supporting today’s growing rack densities. Adopting higher-voltage models helps forge a path that accounts for future AI infrastructure while reducing current losses and material demands. When combined, these architectural and efficiency models represent a greater shift toward designing power systems for how AI actually behaves, rather than how it’s expected to behave under ideal conditions.\n— Philip Zuk is senior vice president and general manager, AI and Datacenter, with OmniOn Power .\nTagged in:\n800V DC\nAI workloads\nflat-load efficiency\nGPU clusters\nhigh-voltage DC\nOmniOn Power\npower conversion\nrack density",
+    "body_sha256": "8628cb0e520e10c6e7b44bdc22ff6a9c3fc21b84952f29b0c881da762f77de08",
+    "version": "8628cb0e520e10c6e7b44bdc22ff6a9c3fc21b84952f29b0c881da762f77de08",
+    "raw_sha256": "63a15db2255b9e8f878526de507e22363589d363205df07ab8bce9e4c72f0ac1",
+    "checks": {
+      "http_success": true,
+      "original_identity": true,
+      "publisher_observed": true,
+      "attribution_consistent": true,
+      "original_publication": true,
+      "available_at_recorded": true,
+      "full_accessible_body": true,
+      "not_republication": true,
+      "body_hash_matches": true,
+      "publication_before_acquisition": true
+    },
+    "provenance": "PASS",
+    "provenance_verified": true,
+    "provenance_blockers": [],
+    "body_status": "FULL",
+    "raw_path": "var/new-precursors/raw/63a15db2255b9e8f878526de507e22363589d363205df07ab8bce9e4c72f0ac1.html",
+    "status": "CAPTURED",
+    "scope_reader_version": "source-scope-reader-4",
+    "scope_read_mode": "LIVE_FRESH",
+    "excluded_page_regions": [],
+    "retained_collection_events": [
+      {
+        "event_id": "d935d790743c703369b330f5fef08f4fefe66bf17603d34646dc4818d41ba261",
+        "document_id": "cd80fca6-5042-4336-aed3-699e310a7e8b",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 192,
+          "end": 485
+        },
+        "source_quote": "The deployment of increasingly large GPU clusters for training and inference purposes, such as NVIDIA’s 72-GPU Vera Rubin model , is causing rack power densities to climb from tens to hundreds of kilowatts (kW), with some next-generation designs projected to exceed one megawatt (MW) per rack.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": true,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "9bca5fa76c78aa3d5d90b4da2be77d39141e990447ad62d2663b64f3e48d77b3",
+        "document_id": "cd80fca6-5042-4336-aed3-699e310a7e8b",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 4162,
+          "end": 4362
+        },
+        "source_quote": "While this difference may sound minor, even a one- or two-percentage-point drop in efficiency can translate into substantial energy losses when deployed across hundreds or even thousands of GPU racks.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "49bb8f527114a20b117b64c7491933c76701a264217e76686973d43cd0f5497e",
+        "document_id": "cd80fca6-5042-4336-aed3-699e310a7e8b",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 5789,
+          "end": 6063
+        },
+        "source_quote": "This leads to increases in resistive losses throughout the distribution system, requiring operators to deploy larger bus bars, extra cabling, and more robust connectors—all of which increase material costs, reduce available space, and make thermal management more difficult.",
+        "scope": {
+          "product": {
+            "value": "connectors",
+            "locator": {
+              "start": 5947,
+              "end": 5957
+            },
+            "reference": {
+              "document_id": "cd80fca6-5042-4336-aed3-699e310a7e8b",
+              "body_sha256": "8628cb0e520e10c6e7b44bdc22ff6a9c3fc21b84952f29b0c881da762f77de08",
+              "origin_id": "https://www.powermag.com/why-flat-performance-matters-more-than-peak-efficiency-in-data-center-design/",
+              "locator": {
+                "start": 5947,
+                "end": 5957
+              },
+              "source_quote": "connectors",
+              "origin_url": "https://www.powermag.com/why-flat-performance-matters-more-than-peak-efficiency-in-data-center-design/",
+              "origin_publisher": "POWER Magazine",
+              "published_at": "2026-10-23T13:03:36+00:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-23T14:44:07.814108+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            },
+            "support_references": []
+          }
+        },
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": true,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "precursor_events": [
+      {
+        "event_id": "d935d790743c703369b330f5fef08f4fefe66bf17603d34646dc4818d41ba261",
+        "document_id": "cd80fca6-5042-4336-aed3-699e310a7e8b",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 192,
+          "end": 485
+        },
+        "source_quote": "The deployment of increasingly large GPU clusters for training and inference purposes, such as NVIDIA’s 72-GPU Vera Rubin model , is causing rack power densities to climb from tens to hundreds of kilowatts (kW), with some next-generation designs projected to exceed one megawatt (MW) per rack.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": true,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "9bca5fa76c78aa3d5d90b4da2be77d39141e990447ad62d2663b64f3e48d77b3",
+        "document_id": "cd80fca6-5042-4336-aed3-699e310a7e8b",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 4162,
+          "end": 4362
+        },
+        "source_quote": "While this difference may sound minor, even a one- or two-percentage-point drop in efficiency can translate into substantial energy losses when deployed across hundreds or even thousands of GPU racks.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "49bb8f527114a20b117b64c7491933c76701a264217e76686973d43cd0f5497e",
+        "document_id": "cd80fca6-5042-4336-aed3-699e310a7e8b",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 5789,
+          "end": 6063
+        },
+        "source_quote": "This leads to increases in resistive losses throughout the distribution system, requiring operators to deploy larger bus bars, extra cabling, and more robust connectors—all of which increase material costs, reduce available space, and make thermal management more difficult.",
+        "scope": {
+          "product": {
+            "value": "connectors",
+            "locator": {
+              "start": 5947,
+              "end": 5957
+            },
+            "reference": {
+              "document_id": "cd80fca6-5042-4336-aed3-699e310a7e8b",
+              "body_sha256": "8628cb0e520e10c6e7b44bdc22ff6a9c3fc21b84952f29b0c881da762f77de08",
+              "origin_id": "https://www.powermag.com/why-flat-performance-matters-more-than-peak-efficiency-in-data-center-design/",
+              "locator": {
+                "start": 5947,
+                "end": 5957
+              },
+              "source_quote": "connectors",
+              "origin_url": "https://www.powermag.com/why-flat-performance-matters-more-than-peak-efficiency-in-data-center-design/",
+              "origin_publisher": "POWER Magazine",
+              "published_at": "2026-10-23T13:03:36+00:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-10-23T14:44:07.814108+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            },
+            "support_references": []
+          }
+        },
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": true,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "objective_version": "bct-objective-1",
+    "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  },
+  "EARLY_success": false,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "record_sha256": "5df35199b5e3f775dc10fa70a75e575cbb883ffd64d15498608a619f3da2e379"
+}
