@@ -1,0 +1,302 @@
+{
+  "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+  "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+  "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+  "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+  "applies_from": "2026-10-05T15:24:06.650413+00:00",
+  "document_id": "f6f2029e-d900-4c17-975b-1e7dc8e30d5f",
+  "body_sha256": "82ee8a119e754d1631c0425f376985e1687b48077636c5186bd89073581c5191",
+  "published_at": "2026-10-28T20:29:32+00:00",
+  "acquired_at": "2026-10-28T22:19:50.875842+00:00",
+  "available_at": "2026-10-28T22:19:50.875842+00:00",
+  "intake_started_at": "2026-10-28T22:33:26.254205+00:00",
+  "intake_recorded_at": "2026-10-28T22:33:26.541860+00:00",
+  "first_review_recorded_at": "UNKNOWN",
+  "mode": "PROSPECTIVE_REVIEW",
+  "status": "HOLD",
+  "automatic_extraction": {
+    "version": "BCT_PRECURSOR_V2_SHADOW_2",
+    "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+    "events": [],
+    "facts_verified_semantically": false
+  },
+  "candidate_TARGET": "UNKNOWN — deterministic scope suggestions only",
+  "candidate_scope_suggestions": [],
+  "review_reason": "NO_EXTRACTED_CHANGE_SEMANTICS_UNREVIEWED",
+  "semantic_review_method": "PENDING_AI_OR_MANUAL",
+  "annotation_method": null,
+  "annotator": null,
+  "annotated_at": null,
+  "source_document": {
+    "document_id": "f6f2029e-d900-4c17-975b-1e7dc8e30d5f",
+    "origin_url": "https://www.hpcwire.com/2026/10/28/julich-gets-sparse-computing-boost-from-sparxity-accelerators/",
+    "collected_at": "2026-10-28T22:16:23.145438+00:00",
+    "origin_id": "https://www.hpcwire.com/2026/10/28/julich-gets-sparse-computing-boost-from-sparxity-accelerators/#article",
+    "canonical_url": "https://www.hpcwire.com/2026/10/28/julich-gets-sparse-computing-boost-from-sparxity-accelerators/",
+    "origin_publisher": "HPCwire",
+    "published_at": "2026-10-28T20:29:32+00:00",
+    "published_at_raw": "2026-10-28T20:29:32+00:00",
+    "publication_precision": "TIMESTAMP",
+    "acquired_at": "2026-10-28T22:19:50.875842+00:00",
+    "available_at": "2026-10-28T22:19:50.875842+00:00",
+    "body": "While GPUs have powered the AI boom and are widely used to accelerate HPC workloads, they’re not the best fit for every computing challenge. Sparse workloads, in particular, represent a big mismatch with GPU capabilities. That’s one reason why the Jülich Supercomputing Center (JSC) today announced that it has tapped Sparxity (formerly SpiNNcloud) to provide neuromorphic systems to accelerate sparse machine learning workloads.\nSparxity is a spinoff from a neuromorphic computing research project that spanned the University of Dresden and University of Manchester. The company, which was founded as SpiNNcloud in 2021, originally sought to build a neuromorphic chip for accelerating spiking neural network (SNNs).\nJUBIS installed at JSC (Image courtesy Sparxity)\nOver time, the company focused its efforts on accelerating a broader range of sparse computing workloads. According to Sparxity CEO and Founder Hector Gonzalez, that encompasses two main areas, including sparse machine learning workloads that are common in the traditional HPC community as well as accelerating the AI inference involving mixture of experts (MoE) models.\nThe company has developed a neuromorphic chip, dubbed the SpiNNaker2, which includes 152 processing cores. Each computing board contains 48 chips, or 7,296 cores per board. The JUBIS system being deployed at JSC contains 90 boards across several racks, representing 656,640 SpiNNaker2 cores in the multi-million-dollar deployment.\nThe JUBIS system will be installed in proximity to the Jupiter Booster, Europe’s first exascale supercomputer, and it’s designed to take over and run sparse machine learning workloads, such as sparse solvers and sparse optimizers, that won’t be good match to the Jupiter Booster or other JSC systems.\n“Sparse machine learning represents one of the biggest opportunities to fundamentally improve the efficiency of AI,” said Dr. Guido Trensch of the Simulation and Data Lab Neuroscience at JSC. “By adopting Sparxity, we’re able to complement our globally unique HPC infrastructure with a fundamentally new approach, opening up new research opportunities so that we can further develop advancements in neuroscience.”\nSparxity developed its chip and its systems specifically to maximize computing efficiency for sparse workloads, Gonzalaz said.\nSpinnaker2 boards (Image courtesy Sparxity)\n“Essentially we have our systems architecture to enable event-based communication and computation,” he told HPCwire in an interview this week. “You have many, many low power cores that are highly interconnected inside every chip that we have. You have like a network on chip that basically allows you to connect chips to chips, and it allows you to scale like a very large-scale toroidal network, where you have many low power cores that talk to each other in real time and also exchange information in a very event-based or energy proportional approach.”\nGPUs were designed to excel at dense workloads, where the matrices or tensors have relatively few elements with a value of zero. This is comparable to an image where most of the pixels contain some color, as opposed to being blank or dark. When the data is sparse–that is, when the image has a lot of blank or dark pixels–the GPU does not process the data faster. Instead of chugging through dense matrix-matrix multiplication, which the GPU is good at, the processor is asked to essentially process much skinnier scalars.\nHPC experts Jack Dongarra, Satoshi Matsuoaka, and Torsten Hoefler touched on this earlier this year in their paper “Do We Still Need GPUs? Rethinking AI and Scientific Computing on Matrix-Enhanced CPUs .”\n“Scientific computing is broader than dense matrix multiplication,” Dongarra, Matsuoka, and Hoefler wrote. “Many important applications involve sparse matrices, graph-like data structures, adaptive meshes, particles, multiscale coupling, irregular memory access, global reductions, and communication across distributed systems.”\nThis is the same challenge that Gonzales and Sparxity are tackling with its Spinnaker2 chip and systems. In addition to providing a much more efficient way to process sparse machine learning workloads, such as finite element analysis, the chips also excel at running some of the newer AI models.\nMOE models are increasingly sparse (Image courtesy Sparxity)\nWhen the AI boom first took off, the LLMs were designed to take advantage of GPU’s sweet spot, which was dense matrix-matrix multiplication. AI models with hundreds of billions and then trillions of activated parameters represented a dense workload that was a good match to GPUs.\nBut as the AI boom wore on, the community introduced mixture of experts (MOE) models. Instead of one humongous LLM with all of its parameters activated, MOEs have a combination of smaller LLMs, and only the parameters that are needed to answer a given problem are activated. So instead of dense workloads, the workload became much sparser, which is one of the reasons why GPUs are in less demand for AI inference and why CPUs are in demand (although there are other reasons, such as CPUs being better at the general compute needed for inference, KV cache calculations, tool calling, etc.)\nThe MOE trend has continued, and today many of the top foundation models from the US and China are becoming sparser. However, that’s creating a mismatch with the largely GPU-based systems that AI has so far relied on, Gonzalez says.\n“There are a bunch of scaling laws that actually dictate the desire of going to this extreme level of sparsity,” Gonzalez said. “The more you increase the number of experts that are very small, the more you jump into these different performance curves, which are very attractive at larger parameter counts, because essentially you are getting into very intelligent models that have strong expressivity characteristics.\nIn addition to sparsity, another factor is granularity, which refers to how small the expert is. With a larger number of experts, the size of each expert gets smaller (assuming the same size LLM). The next generation of Sparxity’s hardware will focus more on optimizing computing for granularity, Gonzalez said.\n“We basically are positioning ourselves in a very complementary angle, basically designing systems that are good at dealing with the sparse workloads,” he said. “We have already this strong traction into HPC workloads, and we are actually leaning a bit more into the mainstream space.”\nSparxity today has dozens of deployed systems at 30 customers around the world, Gonzalez said. Sandia National Laboratories is one of its HPC customers in the U.S.\nThe CEO also commented on the new name for the company. “Behind the new name is first showing the commitment around sparse workloads,” he said. “It’s also tying our roots on the neuromorphic side of things without actually bringing alongside the association with neuromorphic computing things, but rather more positioning into the strategic commitment that the company is doing. As I mentioned, like the our commitment is around sparse workloads.",
+    "body_sha256": "82ee8a119e754d1631c0425f376985e1687b48077636c5186bd89073581c5191",
+    "version": "82ee8a119e754d1631c0425f376985e1687b48077636c5186bd89073581c5191",
+    "raw_sha256": "7d3da8e7db823e3fa916de6897e7dbdf9dfdc25fa2b4506d6e94b66459358a21",
+    "checks": {
+      "http_success": true,
+      "original_identity": true,
+      "publisher_observed": true,
+      "attribution_consistent": true,
+      "original_publication": true,
+      "available_at_recorded": true,
+      "full_accessible_body": true,
+      "not_republication": true,
+      "body_hash_matches": true,
+      "publication_before_acquisition": true
+    },
+    "provenance": "PASS",
+    "provenance_verified": true,
+    "provenance_blockers": [],
+    "body_status": "FULL",
+    "raw_path": "var/new-precursors/raw/7d3da8e7db823e3fa916de6897e7dbdf9dfdc25fa2b4506d6e94b66459358a21.html",
+    "status": "CAPTURED",
+    "scope_reader_version": "source-scope-reader-4",
+    "scope_read_mode": "LIVE_FRESH",
+    "excluded_page_regions": [],
+    "retained_collection_events": [
+      {
+        "event_id": "1a1682c3d6a1979393f47243d93d9be36a08769bdf576a3acaef4100ddf5a284",
+        "document_id": "f6f2029e-d900-4c17-975b-1e7dc8e30d5f",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 1310,
+          "end": 1467
+        },
+        "source_quote": "The JUBIS system being deployed at JSC contains 90 boards across several racks, representing 656,640 SpiNNaker2 cores in the multi-million-dollar deployment.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "d5d3be7ff39ca980dfd994596733149840146011f2bd706251ba64590851585a",
+        "document_id": "f6f2029e-d900-4c17-975b-1e7dc8e30d5f",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 6443,
+          "end": 6537
+        },
+        "source_quote": "Sparxity today has dozens of deployed systems at 30 customers around the world, Gonzalez said.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "precursor_events": [
+      {
+        "event_id": "1a1682c3d6a1979393f47243d93d9be36a08769bdf576a3acaef4100ddf5a284",
+        "document_id": "f6f2029e-d900-4c17-975b-1e7dc8e30d5f",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 1310,
+          "end": 1467
+        },
+        "source_quote": "The JUBIS system being deployed at JSC contains 90 boards across several racks, representing 656,640 SpiNNaker2 cores in the multi-million-dollar deployment.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "d5d3be7ff39ca980dfd994596733149840146011f2bd706251ba64590851585a",
+        "document_id": "f6f2029e-d900-4c17-975b-1e7dc8e30d5f",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 6443,
+          "end": 6537
+        },
+        "source_quote": "Sparxity today has dozens of deployed systems at 30 customers around the world, Gonzalez said.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "objective_version": "bct-objective-1",
+    "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  },
+  "EARLY_success": false,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "record_sha256": "ec5e06542ce8791f3ed90ca423baa483de464cc77f6280af18777a1575038da4"
+}
