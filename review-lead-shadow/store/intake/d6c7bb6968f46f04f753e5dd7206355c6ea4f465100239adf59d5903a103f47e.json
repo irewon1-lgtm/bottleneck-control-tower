@@ -1,0 +1,318 @@
+{
+  "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+  "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+  "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+  "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+  "applies_from": "2026-10-05T15:24:06.650413+00:00",
+  "document_id": "c9640451-c9db-4c00-8e82-f6c841064cf4",
+  "body_sha256": "2e497f06fe610b4d3a11a8991fcd545b36756777af50dd181ba08b52d683ca01",
+  "origin_id": "https://www.hpcwire.com/2026/10/29/nist-details-how-to-prepare-for-post-quantum-cryptography/#article",
+  "origin_url": "https://www.hpcwire.com/2026/10/29/nist-details-how-to-prepare-for-post-quantum-cryptography/",
+  "provenance_verified": true,
+  "automatic_extraction": {
+    "version": "BCT_PRECURSOR_V2_SHADOW_2",
+    "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+    "events": [
+      {
+        "event_id": "8e6c365a54ee83bdbafc060967e3447059d2ca161f9d7eb3890b2cfbc25f8fad",
+        "document_id": "c9640451-c9db-4c00-8e82-f6c841064cf4",
+        "role": "DEMAND",
+        "kind": "REQUIREMENT",
+        "reference": {
+          "document_id": "c9640451-c9db-4c00-8e82-f6c841064cf4",
+          "body_sha256": "2e497f06fe610b4d3a11a8991fcd545b36756777af50dd181ba08b52d683ca01",
+          "locator": {
+            "start": 2094,
+            "end": 2277
+          },
+          "quote": "Under Executive Order 14412, federal high-value assets and high-impact systems have until 2030 to transition their key-establishment mechanisms, and until 2031 for digital signatures."
+        },
+        "fields": {},
+        "context_references": [
+          {
+            "document_id": "c9640451-c9db-4c00-8e82-f6c841064cf4",
+            "body_sha256": "2e497f06fe610b4d3a11a8991fcd545b36756777af50dd181ba08b52d683ca01",
+            "locator": {
+              "start": 2094,
+              "end": 2277
+            },
+            "quote": "Under Executive Order 14412, federal high-value assets and high-impact systems have until 2030 to transition their key-establishment mechanisms, and until 2031 for digital signatures."
+          }
+        ],
+        "direct_origin": true,
+        "facts": {},
+        "period": null
+      }
+    ],
+    "facts_verified_semantically": false
+  },
+  "semantic_review": {
+    "status": "PENDING",
+    "annotation_method": null,
+    "annotator": null
+  },
+  "final_status": "HOLD",
+  "reason": "SEMANTIC_REVIEW_REQUIRED",
+  "formal_TARGET_id": null,
+  "EARLY_success": false,
+  "review_id": null,
+  "intake_version": "BCT_REVIEW_INTAKE_1",
+  "annotation_sha256": null,
+  "mode": "PROSPECTIVE_REVIEW",
+  "recorded_at": "2026-10-29T17:00:02.736479+00:00",
+  "source_document": {
+    "document_id": "c9640451-c9db-4c00-8e82-f6c841064cf4",
+    "origin_url": "https://www.hpcwire.com/2026/10/29/nist-details-how-to-prepare-for-post-quantum-cryptography/",
+    "collected_at": "2026-10-29T16:33:28.230445+00:00",
+    "origin_id": "https://www.hpcwire.com/2026/10/29/nist-details-how-to-prepare-for-post-quantum-cryptography/#article",
+    "canonical_url": "https://www.hpcwire.com/2026/10/29/nist-details-how-to-prepare-for-post-quantum-cryptography/",
+    "origin_publisher": "HPCwire",
+    "published_at": "2026-10-29T14:13:12+00:00",
+    "published_at_raw": "2026-10-29T14:13:12+00:00",
+    "publication_precision": "TIMESTAMP",
+    "acquired_at": "2026-10-29T16:37:54.575861+00:00",
+    "available_at": "2026-10-29T16:37:54.575861+00:00",
+    "body": "Quantum computers aren’t powerful enough yet to break the encryption we use today. But researchers expect that to change at some point. And when it does, some of the encryption used by banks, governments, businesses, and pretty much every other organization could be at risk. The problem is that replacing encryption across thousands of systems takes time. In some cases, years.\nThat’s what the National Institute of Standards and Technology (NIST) is trying to help with. On October 27, the agency released a new report, Transition to Post-Quantum Cryptography Standards (NIST IR 8547). It identifies which cryptographic algorithms are vulnerable to quantum attacks and provides guidance on how and when organizations should replace them. NIST has already developed new standards designed to withstand these attacks. Getting organizations to actually use them is the next challenge.\nBack in August 2024, NIST released its first three post-quantum cryptography standards. As HPCwire reported at the time , these included FIPS 203 (ML-KEM) for key establishment and two digital signature standards, FIPS 204 (ML-DSA) and FIPS 205 (SLH-DSA).\nEven then, NIST’s Dustin Moody warned HPCwire that the transition wouldn’t be easy. Organizations would need to figure out where their existing cryptography was being used, work with technology vendors, and plan for a lengthy process. NIST followed up with draft guidance in November 2024. The latest report builds on that work, with more specific direction on what needs to be replaced and when.\n(Shutterstock/Jack_the_sparow)\nThe new report doesn’t treat every cryptographic algorithm the same way. Some will eventually have to be phased out, while others may still be used, but at the organization’s own risk. NIST’s Dustin Moody explained that it depends on where and how these algorithms are being used. Replacing encryption in one system might be fairly straightforward. In another, it could be a much bigger job.\nThe federal government had already set 2035 as a target for moving to post-quantum cryptography. But some systems now have less time. Under Executive Order 14412, federal high-value assets and high-impact systems have until 2030 to transition their key-establishment mechanisms, and until 2031 for digital signatures. These deadlines don’t apply to every business, although companies supplying technology and services to federal agencies could find themselves having to make changes too.\nWhat’s interesting is that nobody knows exactly when quantum computers will become powerful enough to break today’s widely used encryption. It could still be years away. But there’s another problem. Attackers could be collecting encrypted data right now, even if they can’t read it yet. The idea is to hold onto that information until quantum computers become capable of decrypting it. It’s a threat known as “harvest now, decrypt later.”\nFor some information, that might not matter much. But think about government secrets, medical records, or sensitive business data that needs to stay private for decades. Even if it’s encrypted today, that protection might not hold up forever.\nAlso, it’s not as though organizations can just install an update and be done with it. Encryption is used in all sorts of places, from everyday applications to older equipment that may have been running for years.\nSome systems will be easier to update than others. There are vendors to work with, compatibility issues to sort out, and testing to be done. That’s a lot of work, especially for large organizations that may not even have a complete picture of where their existing cryptography is being used.\n(Shutterstock/Corona-Borealis-Studio)\nOrganizations don’t have to replace everything at once. Moody suggests starting with the most sensitive information, especially data that needs to stay protected for many years. Moving to FIPS 203 for key establishment could be a good place to start. But there’s only so much an organization can do on its own. It also depends on the software and hardware it uses, and whether the companies providing them are ready. NIST says the entire cryptographic supply chain needs to be considered.\nThe report also discusses something called hybrid cryptography. Basically, it means using conventional cryptographic methods alongside the newer post-quantum ones. That way, organizations aren’t relying entirely on one method. There is a downside, though. Using both can require more computing resources and make things more complicated.\nNIST is also working on the practical side through its National Cybersecurity Center of Excellence (NCCoE). The center has a project to help organizations figure out where they’re using vulnerable cryptography, what needs attention first, and how to make it easier to change algorithms in the future. This last part is known as crypto-agility.\nNIST released the standards two years ago. It now has a roadmap for moving to them. Whether organizations can make those changes in time is still an open question.",
+    "body_sha256": "2e497f06fe610b4d3a11a8991fcd545b36756777af50dd181ba08b52d683ca01",
+    "version": "2e497f06fe610b4d3a11a8991fcd545b36756777af50dd181ba08b52d683ca01",
+    "raw_sha256": "1eac15b8a0d2fc4bb18c77ff83e10894bb7e5deae0ce836ef9f5b2c7d67cdad6",
+    "checks": {
+      "http_success": true,
+      "original_identity": true,
+      "publisher_observed": true,
+      "attribution_consistent": true,
+      "original_publication": true,
+      "available_at_recorded": true,
+      "full_accessible_body": true,
+      "not_republication": true,
+      "body_hash_matches": true,
+      "publication_before_acquisition": true
+    },
+    "provenance": "PASS",
+    "provenance_verified": true,
+    "provenance_blockers": [],
+    "body_status": "FULL",
+    "raw_path": "var/new-precursors/raw/1eac15b8a0d2fc4bb18c77ff83e10894bb7e5deae0ce836ef9f5b2c7d67cdad6.html",
+    "status": "CAPTURED",
+    "scope_reader_version": "source-scope-reader-4",
+    "scope_read_mode": "LIVE_FRESH",
+    "excluded_page_regions": [],
+    "retained_collection_events": [
+      {
+        "event_id": "1ffbe761d2ecc367ab86d798ee926c13d07827511716c8f7c725638e5ea05670",
+        "document_id": "c9640451-c9db-4c00-8e82-f6c841064cf4",
+        "kind": "ORDER",
+        "event_types": [
+          "ORDER"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 2094,
+          "end": 2277
+        },
+        "source_quote": "Under Executive Order 14412, federal high-value assets and high-impact systems have until 2030 to transition their key-establishment mechanisms, and until 2031 for digital signatures.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [
+            {
+              "text": "2030",
+              "precision": "YEAR",
+              "start": "2030-01-01",
+              "end": "2030-12-31",
+              "fact_kind": "UNATTRIBUTED_PERIOD",
+              "reference": {
+                "document_id": "c9640451-c9db-4c00-8e82-f6c841064cf4",
+                "body_sha256": "2e497f06fe610b4d3a11a8991fcd545b36756777af50dd181ba08b52d683ca01",
+                "origin_id": "https://www.hpcwire.com/2026/10/29/nist-details-how-to-prepare-for-post-quantum-cryptography/#article",
+                "locator": {
+                  "start": 2184,
+                  "end": 2188
+                },
+                "source_quote": "2030",
+                "origin_url": "https://www.hpcwire.com/2026/10/29/nist-details-how-to-prepare-for-post-quantum-cryptography/",
+                "origin_publisher": "HPCwire",
+                "published_at": "2026-10-29T14:13:12+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-29T16:37:54.575861+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            },
+            {
+              "text": "2031",
+              "precision": "YEAR",
+              "start": "2031-01-01",
+              "end": "2031-12-31",
+              "fact_kind": "UNATTRIBUTED_PERIOD",
+              "reference": {
+                "document_id": "c9640451-c9db-4c00-8e82-f6c841064cf4",
+                "body_sha256": "2e497f06fe610b4d3a11a8991fcd545b36756777af50dd181ba08b52d683ca01",
+                "origin_id": "https://www.hpcwire.com/2026/10/29/nist-details-how-to-prepare-for-post-quantum-cryptography/#article",
+                "locator": {
+                  "start": 2249,
+                  "end": 2253
+                },
+                "source_quote": "2031",
+                "origin_url": "https://www.hpcwire.com/2026/10/29/nist-details-how-to-prepare-for-post-quantum-cryptography/",
+                "origin_publisher": "HPCwire",
+                "published_at": "2026-10-29T14:13:12+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-29T16:37:54.575861+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY"
+          ]
+        }
+      }
+    ],
+    "precursor_events": [
+      {
+        "event_id": "1ffbe761d2ecc367ab86d798ee926c13d07827511716c8f7c725638e5ea05670",
+        "document_id": "c9640451-c9db-4c00-8e82-f6c841064cf4",
+        "kind": "ORDER",
+        "event_types": [
+          "ORDER"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 2094,
+          "end": 2277
+        },
+        "source_quote": "Under Executive Order 14412, federal high-value assets and high-impact systems have until 2030 to transition their key-establishment mechanisms, and until 2031 for digital signatures.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [
+            {
+              "text": "2030",
+              "precision": "YEAR",
+              "start": "2030-01-01",
+              "end": "2030-12-31",
+              "fact_kind": "UNATTRIBUTED_PERIOD",
+              "reference": {
+                "document_id": "c9640451-c9db-4c00-8e82-f6c841064cf4",
+                "body_sha256": "2e497f06fe610b4d3a11a8991fcd545b36756777af50dd181ba08b52d683ca01",
+                "origin_id": "https://www.hpcwire.com/2026/10/29/nist-details-how-to-prepare-for-post-quantum-cryptography/#article",
+                "locator": {
+                  "start": 2184,
+                  "end": 2188
+                },
+                "source_quote": "2030",
+                "origin_url": "https://www.hpcwire.com/2026/10/29/nist-details-how-to-prepare-for-post-quantum-cryptography/",
+                "origin_publisher": "HPCwire",
+                "published_at": "2026-10-29T14:13:12+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-29T16:37:54.575861+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            },
+            {
+              "text": "2031",
+              "precision": "YEAR",
+              "start": "2031-01-01",
+              "end": "2031-12-31",
+              "fact_kind": "UNATTRIBUTED_PERIOD",
+              "reference": {
+                "document_id": "c9640451-c9db-4c00-8e82-f6c841064cf4",
+                "body_sha256": "2e497f06fe610b4d3a11a8991fcd545b36756777af50dd181ba08b52d683ca01",
+                "origin_id": "https://www.hpcwire.com/2026/10/29/nist-details-how-to-prepare-for-post-quantum-cryptography/#article",
+                "locator": {
+                  "start": 2249,
+                  "end": 2253
+                },
+                "source_quote": "2031",
+                "origin_url": "https://www.hpcwire.com/2026/10/29/nist-details-how-to-prepare-for-post-quantum-cryptography/",
+                "origin_publisher": "HPCwire",
+                "published_at": "2026-10-29T14:13:12+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-10-29T16:37:54.575861+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY"
+          ]
+        }
+      }
+    ],
+    "objective_version": "bct-objective-1",
+    "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  },
+  "T": "UNKNOWN",
+  "T_scope": "UNKNOWN",
+  "strict_candidate_first_met_at": "UNKNOWN",
+  "leading_detection_success": false,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "record_sha256": "cd5da2be9d251de2b529b9338474dd27dc88fabca0ab9e2c9fbebd04ccbe0ed1"
+}
