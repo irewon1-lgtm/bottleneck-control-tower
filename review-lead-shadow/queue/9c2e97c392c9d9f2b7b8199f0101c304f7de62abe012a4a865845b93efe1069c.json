@@ -1,0 +1,1324 @@
+{
+  "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+  "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+  "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+  "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+  "applies_from": "2026-10-05T15:24:06.650413+00:00",
+  "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+  "body_sha256": "4fb064d57606dff4ae014a45955c7136309976c59ded564e244f35ee09a9ae65",
+  "published_at": "2026-10-29T17:51:56+00:00",
+  "acquired_at": "2026-10-29T19:25:33.459337+00:00",
+  "available_at": "2026-10-29T19:25:33.459337+00:00",
+  "intake_started_at": "2026-10-29T19:36:05.777404+00:00",
+  "intake_recorded_at": "2026-10-29T19:36:06.683954+00:00",
+  "first_review_recorded_at": "UNKNOWN",
+  "mode": "PROSPECTIVE_REVIEW",
+  "status": "HOLD",
+  "automatic_extraction": {
+    "version": "BCT_PRECURSOR_V2_SHADOW_2",
+    "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+    "events": [],
+    "facts_verified_semantically": false
+  },
+  "candidate_TARGET": "UNKNOWN — deterministic scope suggestions only",
+  "candidate_scope_suggestions": [],
+  "review_reason": "NO_EXTRACTED_CHANGE_SEMANTICS_UNREVIEWED",
+  "semantic_review_method": "PENDING_AI_OR_MANUAL",
+  "annotation_method": null,
+  "annotator": null,
+  "annotated_at": null,
+  "source_document": {
+    "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+    "origin_url": "https://www.hpcwire.com/2026/10/29/ai-and-medicine-whos-the-doctor/",
+    "collected_at": "2026-10-29T19:22:33.976994+00:00",
+    "origin_id": "https://www.hpcwire.com/2026/10/29/ai-and-medicine-whos-the-doctor/#article",
+    "canonical_url": "https://www.hpcwire.com/2026/10/29/ai-and-medicine-whos-the-doctor/",
+    "origin_publisher": "HPCwire",
+    "published_at": "2026-10-29T17:51:56+00:00",
+    "published_at_raw": "2026-10-29T17:51:56+00:00",
+    "publication_precision": "TIMESTAMP",
+    "acquired_at": "2026-10-29T19:25:33.459337+00:00",
+    "available_at": "2026-10-29T19:25:33.459337+00:00",
+    "body": "Editor’s note: AI’s growing role in medicine raises a question that goes beyond whether computers can answer medical questions: how can these technologies improve clinical decisions while preserving patient safety, scientific rigor, and professional accountability? High-performance computing has supported medical research for decades. Today’s AI creates additional opportunities to integrate information, accelerate investigation, and support physicians—but its contribution must be demonstrated in the setting where it will be used.\nFor a physician-scientist’s research and development perspective, HPCwire contributor Steve Conway conducted a three-part interview with Frederick H. Hausheer, MD and Fellow of the American College of Physicians (FACP), a medical oncologist and clinical pharmacologist who heads Hausheer BioMed, an oncology and pharmaceutical-industry research and development consulting firm. His career includes computational drug-discovery work at the National Cancer Institute and Johns Hopkins, faculty appointments at the Johns Hopkins Oncology Center and the University of Missouri–Columbia Department of Medicine , and leadership of BioNumerik Pharmaceuticals as founder and CEO.\nHis biography includes more than 200 scientific and medical publications, inventor or co-inventor status on more than 400 issued patents, and membership on the Americas committee of the HPC-AI Leadership Organization. In 1997, he received the Silicon Graphics/Cray Research Information Technology Leadership Award for Breakthrough Science for mechanism-based drug discovery, part of the Computerworld Smithsonian Awards program.\nPART 1 OF 3: AI POTENTIAL BENEFITS; ADAPTING SAFETY AND QUALITY CONTROLS FOR AI USE\nFredrick Hausheer, M.D.\nHPCwire: Fred, can you talk about some of the beneficial and potentially beneficial uses for AI in medicine, including your field of oncology medicine and drug discovery and development?\nDr. Hausheer: There are substantial opportunities, but it is important to distinguish an impressive computational result from a tangible improvement in medical outcomes. In my opinion, the most important domains for evaluating medical AI—not limited to oncology—include earlier and more accurate diagnosis, better selection of diagnostic tests and treatments, improved patient outcomes, fewer avoidable adverse effects and drug interactions, and more effective use of physicians’ and patients’ time. Producing an answer quickly is useful only to the extent that the answer is sufficiently accurate, relevant, and actionable for the decision being made.\nOne should distinguish three levels of evidence: a model performs well on a defined task; clinicians using it make better diagnostic and therapeutic decisions; and its use results in improved outcomes for patients. Evidence supporting one proposition does not automatically establish the next.\nHPCwire: AI, broadly defined, isn’t new to medicine. In the early 1990s—more than 30 years ago—George Mason University Hospital (Washington, DC) began regularly using a supercomputer to detect early signs of breast cancer, microcalcifications, with better-than-human accuracy. Recently, we’ve seen reports not only about AI outperforming human radiologists, but there are also reports about AI diagnosing illnesses better than human doctors. How significant is this?\nDr. Hausheer: AI and high-performance computing are not new to medical research. At the National Cancer Institute in 1986, we considered possible AI applications in high-performance computing, and I recall these possibilities were being considered by senior pharmaceutical executives and NCI researchers. Of course, AI was in its infancy at that point for actual application. What matters today is that claims about medical AI are evaluated objectively and reported in relation to the specific task studied. AI model performance, decision improvement, and patient benefit are different evidentiary claims for evaluation. The September 30, 2026 joint physician-organizations statement, subsequently reported by the American Society of Clinical Oncology (ASCO) AI in Oncology section, raises a concern about broad claims of AI superiority over physicians. In my opinion, a properly demonstrated advantage on a particular task should be acknowledged without turning it into an unsupported conclusion about the whole practice of medicine.\nHPCwire: In medicine, how much can AI systems eventually be entrusted to do?\nDr. Hausheer: The authority entrusted to an AI system should depend on specific prior performance, quality and safety evidence for its specific function, likelihood and clinical consequences of error or deviation, and the controls governing its use—not on computational capability alone. In oncology, one can envision systems that integrate the heterogeneous information distributed across a patient’s history, physical examination, pathology, imaging, laboratory and molecular testing, and previous treatments, together with the current standards of care. But the problem-solving task is not simply retrieving and organizing these records. It is identifying, collating, matching and fitting, and interpreting the information in relation to the patient’s disease and the available therapeutic evidence.\nHPCwire: Can you give some examples or scenarios to illustrate these domains?\nDr. Hausheer: Sure, one can consider a hypothetical patient whose cancer has progressed after several treatments. A useful AI system would reconstruct the sequence of therapies; distinguish progression from treatment delays, interruptions, or discontinuation because of toxicity; and identify the tumor’s documented molecular findings and documented or suspected resistance mechanisms. It could then organize potential treatment options according to the supporting evidence, explaining the potential risks, benefits, and limitations of each. Similarity to a previously treated patient population can inform a treatment hypothesis, but this information by itself does not establish the expected benefit for a particular patient.\nSo, in this example the system should identify missing information and explain which additional tests could change the treatment decision. Rather than generating an indiscriminate testing panel, it could prioritize a laboratory and molecular-testing strategy according to the question each test addresses, its expected clinical contribution, and the consequences of delaying treatment.\nHPCwire: Anything else?\n( Bishop Iuliia/Shutterstock)\nDr. Hausheer: The options should distinguish among FDA-approved uses, evidence-supported off-label uses of approved drugs, and investigational treatments. Off-label use of treatment is not automatically investigational, and neither an off-label nor an investigational use should be presented as FDA-approved for that setting. Eligibility, access, evidence, and uncertainty should be described for each option. This is a more demanding task than answering a medical examination question. It is closer to the problem clinicians and patients face in practice. In my opinion, a more comprehensive AI approach could be implemented with appropriate safeguards and quality management in place.\nHPCwire: What if anything does the American Society of Clinical Oncology say about this?\nDr. Hausheer: ASCO describes the function of its Guidelines Assistant as helping clinicians discover and navigate relevant guidelines and their sources, not as an autonomous treatment selector. That distinction determines what one should validate: retrieval of the appropriate source, accurate representation of its qualifications, and clear identification of its scope and limitations. An AI system proposing patient-specific treatment would require validation of that additional function. Performance should be tracked by task and system version. A favorable cumulative average should not obscure recent deterioration or a serious recurring error. Evidence supporting a treatment recommendation in a guideline is distinct from evidence that using the AI tool improves clinical decisions or patient outcomes. The latter requires evaluation of the tool and quality of outcomes and impact in its intended workflow.\nHPCwire: Those sounds like guardrails that would also make sense in AI use. How did your perspective on this come about?\nDr. Hausheer: The emphasis on scientifically sound validation and quality controls reflects my experience with high-performance computing beginning in 1986 at the National Cancer Institute’s Advanced Scientific Computing Laboratory. That work integrated quantum chemistry, statistical mechanics, molecular dynamics, free-energy perturbation calculations, experimental and clinical pharmacology, pharmaceutical chemistry, and tumor biology. It continued in my role as CEO of BioNumerik Pharmaceuticals, using Cray and Silicon Graphics systems. HPCwire reported our 1997 Smithsonian-Computerworld award and in 2001 described BioNumerik’s use of computational predictions followed by laboratory testing. We engaged robust scientific methodology, including multiple levels of validation testing for the physics-based computational models and experimental testing.\nHPCwire: This predated generative AI.\nDr. Hausheer: These methods were not today’s generative AI. Nevertheless, the general scientific approach remains relevant to AI: formulate a mechanistically informed hypothesis, make a prediction using a physics-based model, test it experimentally, and allow the result to guide the next step. Differences between predictions and observations should be quantified using pre-specified measures, with uncertainty in both the simulation and the experiment taken into account.\nHPCwire: You’ve stood out for using HPC in a first-principles approach to anti-cancer drug discovery and development. Is AI compatible with this approach?\nDr. Hausheer: In my opinion, integrating first-principles physics-based simulation with modern AI and experimental science offers an important opportunity for drug research and development. The objective is better medicines and better patient outcomes—not substituting computational confidence for evidence.\nSafety, FDA guidance, and pharmaceutical quality systems\nSteve Conway is an HPCwire contributor\nHPCwire: Medicine and clinical research are highly regulated, highly personal fields. What are your thoughts on AI safety in medicine?\nDr. Hausheer: The familiar medical principle, primum non nocere —first, do no harm—provides an appropriate starting point. Treatment need not be risk-free for its expected benefits to justify its risks. For an AI application, foreseeable hazards should be identified before deployment, preventable harm should be reduced through effective controls, and remaining risks should be assessed and monitored. Safety must be defined in relation to the particular medical application, the decision it influences, and the consequences of error. Established scientific and medical principles used in pharmaceutical development can be adapted to strengthen the safety and quality of AI operation and use.\nHPCwire: Can you give a concrete example of what humans, or humans and their AI helpers, can do in practice to help ensure safe, effective medical treatment?\nDr. Hausheer: These practices exist in medicine today and need to remain in the AI-assisted era. Here’s one example. A scheduling assistant and a system influencing cancer-treatment selection or dosing require controls proportionate to their particular risks. Before deployment, one should pre-specify the intended users, patient population, permitted functions, material risks, and circumstances requiring clinical escalation. Safety monitoring and risk controls should be embedded in the deployed system and its workflow. They should address harmful omissions, such as delaying effective treatment, as well as inappropriate actions.\nHPCwire: So, what is the physician’s unique role in an era of AI-assisted medicine?\nDr. Hausheer: A practical approach is to keep the treating physician’s clinical expertise and accountable oversight at the center of a patient-facing decision-support application. Human clinicians, clinical pharmacologists, pharmacists, statisticians, laboratory and diagnostic specialists, quality specialists, patients, and engineers should contribute to defining the intended decision, material risks, and acceptance criteria before testing begins. Their respective responsibilities should be documented, including authority to engage the AI system, restrict its use, investigate a safety signal, and require corrective action.\nThese are proposed operational safeguards, not additional requirements specified in the joint statement . The FDA/EMA principles for drug development already address multidisciplinary expertise, human–AI interaction, and lifecycle quality management. In my opinion, AI developers would benefit from adapting these established approaches.\nFrom Regulatory Framework to Operational Safeguards\nHPCwire: In the U.S., the Food and Drug Administration (FDA) has primary responsibility for overseeing the efficacy and safety of drugs. The European Medicines Agency (EMA) is the nearest equivalent in the EU, and there are similar agencies elsewhere in the world. What does the FDA have to say about AI safety and drugs?\nDr. Hausheer: The FDA’s January 2025 draft AI guidance proposes seven steps: define the question; specify the context of use; assess model risk; prepare a credibility-assessment plan; execute it; document results and deviations; and determine whether the model is adequate for that use. Model risk combines the output’s influence on the decision with the consequences of a wrong decision. The guidance addresses AI-generated information or data intended to support regulatory decisions about drug and biologic safety, effectiveness, or quality. As of this review, the FDA continues to identify it as draft guidance, not for implementation. No assumption should be made about whether or when it will be finalized.\nHPCwire: Can you give an example of how this draft guidance might work in practice?\n(gguy/Shutterstock)\nDr. Hausheer: Sure. One of FDA’s hypothetical examples considers an AI model that would be the sole determinant of whether a participant receives outpatient rather than 24-hour inpatient monitoring after a drug associated with a potentially life-threatening reaction. The critical error would be classifying a participant as low risk when inpatient observation is needed. In this example, both model influence and the consequences of an incorrect decision are high risk. Overall accuracy alone would therefore be inadequate to characterize the risk. This is a hypothetical clinical and regulatory illustration, not an endorsed deployment.\nHPCwire: Are there established standards in use today?\nDr. Hausheer: Yes. The pharmaceutical industry already has a scientifically grounded operational foundation for this approach. The International Council for Harmonisation (ICH) E6 Good Clinical Practice (GCP) guideline provides the framework for human clinical trials; E6(R2) formalized its structured approach to risk-based quality management. The FDA’s related September 2025 E6(R3) guidance addresses quality management in section 3.10; risk identification, evaluation, control, communication, review, and reporting in sections 3.10.1.1–3.10.1.6; quality assurance, quality control, and monitoring in section 3.11; and computerized systems in section 4.3.\nThese provisions connect risks to responsibilities, processes, procedures, and evidence that controls remain effective. The focus is on factors critical to participant protection and the reliability of trial results, rather than every process carrying equal risk. FDA lists its earlier E6(R2) guidance, issued in March 2018, as withdrawn in April 2026. Its September 2025 E6(R3) guidance remains final guidance; the withdrawal did not concern E6(R3) or abandon GCP.\nHPCwire: How might a company using AI in the healthcare industry implement safety standards?\nDr. Hausheer: In a company like this, a quality management system, or QMS, would provide the overall structure for accountable leadership, qualified personnel, development and release procedures, supplier oversight, controlled documentation, training, and independent quality assurance throughout development, deployment, and continuing use.\nRisk management would operate within that QMS. An application-specific quality management plan would define what must work reliably and the relevant acceptance criteria. A risk management plan would identify how those functions could fail and how failures would be prevented, detected, and mitigated. Responsibility for accepting and reviewing residual risk should also be assigned to qualified personnel.\nHPCwire: That sounds like applying existing clinical medicine standards in a new AI context.\nDr. Hausheer: Yes. We do not take a drug into the clinic without prior formal testing for safety and other qualities it has for intended use. The same paradigm should be applied to AI systems—they should be tested for safety, errors and intended use quality prior to release and public use.\nFor each important risk, one could document the initiating condition, potential error, possible patient consequence and its severity, likelihood of occurrence, detectability, existing safeguards, additional controls, responsible owner, and residual risk after control implementation. Uncertainty in those assessments should be recorded rather than concealed by an apparently precise score.\nThe same process should consider whether a safeguard introduces a different hazard. For example, a poorly designed blocking rule could prevent an unsafe recommendation but also delay urgently needed care. In addition to ICH E6 (R2) and (R3) quality risk management and controls, the ICH Q9(R1), Quality Risk Management standard recognizes that controls may introduce new risks and that uncertainty and subjectivity must be addressed in risk assessment.\nHPCwire: Are these practices formally described anywhere?\nDr. Hausheer: Yes. In January 2026 FDA and EMA (European Medicines Agency) jointly published Guiding Principles of Good AI Practice in Drug Development .\nIn paraphrase, its ten principles cover:\n( TippaPatt/Shutterstock)\nHuman-centered values: align development and use with ethical and patient-centered purposes.\nProportionate oversight: match validation, risk mitigation, and oversight to the context of use and identified risk.\nRelevant standards: apply appropriate scientific, technical, cybersecurity, and regulatory standards.\nA defined role: specify the system’s purpose, scope, and context.\nMultidisciplinary input: integrate clinical and technical expertise throughout development and use.\nDocumented data stewardship: preserve provenance, traceability, privacy, and appropriate governance.\nSound development methods: use suitable data and defensible model and software engineering.\nWhole-system evaluation: assess the complete system, including human–AI interactions, with fit-for-use data and measures appropriate to its context of use.\nContinuing lifecycle oversight: monitor, reassess, and address problems after deployment.\nUnderstandable information: explain intended use, performance, limitations, and changes to users.\nIn my opinion, these principles provide a strong basis for adapting and applying pharmaceutical quality management and control disciplines to AI systems for medical use. The practical question is how an AI company translates them into a functioning control system for a particular application.\nHPCwire: What does control mean in this context?\nDr. Hausheer: A “control” in a quality risk management system is a specific measure intended to reduce the likelihood of an error, improve its detection, and/or reduce its adverse consequences. Controls may be comprised of several elements, including instructions, warnings, procedures, technical restrictions, and monitoring. An instruction tells someone what to do. A warning draws attention to a condition. A procedure specifies steps, responsibilities, and escalation. A technical restriction prevents a defined action unless specified conditions are met. These are possible elements of what comprises a control in a system to monitor, mitigate or prevent certain risks, not mandatory components of every individual control. Their effectiveness in monitoring, detecting, mitigating and/or preventing risks as a part of defined control system must be demonstrated in the intended workflow.\nHPCwire: Can you give an example?\nDr. Hausheer: One example would be an instruction, such as “check the following laboratory results before recommending a dose.” A message that a required result is missing is a warning. A procedure requiring verification by an authorized clinician or pharmacist defines a human process. A software gate that prevents finalization of the AI-generated recommendation until the decision-critical information is verified is a technical control. A coordinated risk-control system records whether these measures operate as intended and provides a clinically appropriate fallback when the AI function should not or cannot be used.\nHPCwire: Would a prompt that a single one of these risks exists force a shutdown of the whole process?\nDr. Hausheer: Great question. I think the general answer for most situations is not necessarily. A minor issue may warrant issuing a warning; an unresolved decision-critical risk may require blocking the affected recommendation or function from proceeding until its resolution, while a systemic failure would likely justify broader suspension. These responses should be predefined and proportionate to risk. A prompt alone should not be treated as equivalent to an enforced software restriction. One could place deterministic identity, unit, permission, and calculation checks outside the generative model, while using the model to organize and interpret the clinical information. Those components would still require validation. The point is not to assume that one technology is infallible, but one should aim to avoid making every safety measure depend on the same potentially erroneous output, including incomplete or erroneous inputs.\nWhat happens when the doctor disagrees with AI?\nHPCwire: With the physician and AI both making recommendations, they may disagree. How should this be handled?\nDr. Hausheer: One should validate how the AI system handles disagreement. Suppose the AI model recommends a treatment while the physician identifies a possible contraindication or a missing clinical fact. The appropriate response is not automatic acceptance of the model, nor automatic rejection of its contribution. A defined adjudication process could verify the underlying information, retrieve the applicable evidence, establish whether the disagreement changes the benefit–risk assessment, and obtain specialist review when the consequences warrant it. The clinically responsible team should retain authority to act through a documented safe pathway.\nFor a decision-support application, one could test scenarios in which both assessments are appropriate, or where the physician is correct and the model is incorrect, the reverse is true, or both are incorrect. Shared-input failures deserve a separate challenge: the physician and model may agree because both rely on the same erroneous information. The objective is to determine whether the combined process detects an error, avoids introducing a new error, and reaches a medically justified decision.\nAgreement, acceptance, and user confidence are not substitutes for independent objective evidence of correctness. A high override rate could indicate defective AI functioning, inadequate training, poor integration, or a mismatch with intended use. A low rate could reflect reliable assistance or uncritical acceptance. Investigation should determine which explanation applies and guide corrective and preventive action.\nHPCwire: How could we deal with bad input in drug dosing?\nDr. Hausheer: Suppose a hypothetical AI system proposes a drug dose using an erroneous or outdated renal-function result. To deal with this, one could require verification of patient identity, specimen and result-availability times, measurement units, provenance, and the drug-specific method used to interpret organ function. The system could compare serial results, flag abrupt unexplained changes, identify incompatible units, and distinguish a laboratory reference interval from a clinical threshold for treatment selection or dosing. “Within the laboratory’s normal range” should not automatically be translated into “safe for this drug and dose.”\nHPCwire: If an AI system spots a problem, how do you prevent the AI from trying to fix the problem on its own?\nDr. Hausheer: One could enforce permissions that prevent the AI from altering source records or executing treatment changes without authorized review. The AI system should also flag missing information, detectable errors, or internal inconsistencies within its validated capabilities. However, an apparently plausible but incorrect result may not be distinguishable from a correct one without independent evidence. An AI system cannot be assumed to detect every mislabeled specimen, analytic error, or falsely reassuring result. Its appropriate response to a discrepancy should be to flag uncertainty and request source data verification or repeat testing—not silently replace the reported value with one the AI model considers more plausible.\nFor a high-risk recommendation, an unresolved discrepancy could prevent release of the AI-generated dosing advice and trigger timely clinical review proportionate to the risk. That should not automatically stop all care: an authorized clinician should retain a defined pathway to assess the patient using verified information and conventional methods. Validation should deliberately challenge the workflow with predefined test cases containing stale data, wrong-patient records, unit conversions, conflicting results, and/or missing inputs. The evidence should show both that unsafe outputs are detected and intercepted and that necessary care is not unreasonably hindered.\nStay tuned for part 2, coming soon.",
+    "body_sha256": "4fb064d57606dff4ae014a45955c7136309976c59ded564e244f35ee09a9ae65",
+    "version": "4fb064d57606dff4ae014a45955c7136309976c59ded564e244f35ee09a9ae65",
+    "raw_sha256": "8608a0cba1d02a3d775bb1f8e6187d6b7cd838d8e18bd3d22b218698109ce178",
+    "checks": {
+      "http_success": true,
+      "original_identity": true,
+      "publisher_observed": true,
+      "attribution_consistent": true,
+      "original_publication": true,
+      "available_at_recorded": true,
+      "full_accessible_body": true,
+      "not_republication": true,
+      "body_hash_matches": true,
+      "publication_before_acquisition": true
+    },
+    "provenance": "PASS",
+    "provenance_verified": true,
+    "provenance_blockers": [],
+    "body_status": "FULL",
+    "raw_path": "var/new-precursors/raw/8608a0cba1d02a3d775bb1f8e6187d6b7cd838d8e18bd3d22b218698109ce178.html",
+    "status": "CAPTURED",
+    "scope_reader_version": "source-scope-reader-4",
+    "scope_read_mode": "LIVE_FRESH",
+    "excluded_page_regions": [],
+    "retained_collection_events": [
+      {
+        "event_id": "21ff3d3375b709a93d131f20c3848e937d541246008c42b07c17d67783c45f7c",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 337,
+          "end": 535
+        },
+        "source_quote": "Today’s AI creates additional opportunities to integrate information, accelerate investigation, and support physicians—but its contribution must be demonstrated in the setting where it will be used.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "additional",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": true,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {
+          "basis": {
+            "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+            "locator": {
+              "start": 337,
+              "end": 535
+            },
+            "source_quote": "Today’s AI creates additional opportunities to integrate information, accelerate investigation, and support physicians—but its contribution must be demonstrated in the setting where it will be used."
+          }
+        },
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "26c101fd58f6593f70cfabe25cbd66d74c88e314dd2c206812dfb69bbefd6d16",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 6507,
+          "end": 6661
+        },
+        "source_quote": "Dr. Hausheer: The options should distinguish among FDA-approved uses, evidence-supported off-label uses of approved drugs, and investigational treatments.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "0f485492f009a36422f493b15eb6c2db0f61cc7f22c77ba99bc6a22a57d27257",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 6662,
+          "end": 6832
+        },
+        "source_quote": "Off-label use of treatment is not automatically investigational, and neither an off-label nor an investigational use should be presented as FDA-approved for that setting.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "ac577e8a68bc40cfb6d63f2631a65f58147c9d298a67c5c2cb67446be21436b7",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 10587,
+          "end": 10786
+        },
+        "source_quote": "For an AI application, foreseeable hazards should be identified before deployment, preventable harm should be reduced through effective controls, and remaining risks should be assessed and monitored.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "613412d966f52739d42752b5440655b2c1f780470d7b4ff43edf055ebbffc145",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 11496,
+          "end": 11663
+        },
+        "source_quote": "Before deployment, one should pre-specify the intended users, patient population, permitted functions, material risks, and circumstances requiring clinical escalation.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "2e7251c8fdd96ccb75861af7c505bfa2c703131fe6c0e4aecc91eba9f55991aa",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 11664,
+          "end": 11759
+        },
+        "source_quote": "Safety monitoring and risk controls should be embedded in the deployed system and its workflow.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "3ae97d2614854f4ab5dbe6f7cb99701ad964983e87b030b5d00232fb8f2e05ef",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 12407,
+          "end": 12585
+        },
+        "source_quote": "Their respective responsibilities should be documented, including authority to engage the AI system, restrict its use, investigate a safety signal, and require corrective action.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "ed5a10a789b56f2659bae8f2efcb00c08f23cb26024e5c35fa9fc17683c471e3",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 14665,
+          "end": 14753
+        },
+        "source_quote": "This is a hypothetical clinical and regulatory illustration, not an endorsed deployment.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "2baf83859051b287d27028b1cd4d63bca4369d8f5f4b5dc00a0a92978eb84a56",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 16027,
+          "end": 16368
+        },
+        "source_quote": "Dr. Hausheer: In a company like this, a quality management system, or QMS, would provide the overall structure for accountable leadership, qualified personnel, development and release procedures, supplier oversight, controlled documentation, training, and independent quality assurance throughout development, deployment, and continuing use.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "0b54246fa3c437da37e628070016784dfc5728a5ed0b43373fa446d23ec493b0",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 19108,
+          "end": 19197
+        },
+        "source_quote": "Continuing lifecycle oversight: monitor, reassess, and address problems after deployment.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "fca126a9d0555281dd47e49371ac1008cb38082a542fac52bad743466cbabb6e",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 23868,
+          "end": 23968
+        },
+        "source_quote": "Investigation should determine which explanation applies and guide corrective and preventive action.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "precursor_events": [
+      {
+        "event_id": "21ff3d3375b709a93d131f20c3848e937d541246008c42b07c17d67783c45f7c",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 337,
+          "end": 535
+        },
+        "source_quote": "Today’s AI creates additional opportunities to integrate information, accelerate investigation, and support physicians—but its contribution must be demonstrated in the setting where it will be used.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "additional",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": true,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {
+          "basis": {
+            "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+            "locator": {
+              "start": 337,
+              "end": 535
+            },
+            "source_quote": "Today’s AI creates additional opportunities to integrate information, accelerate investigation, and support physicians—but its contribution must be demonstrated in the setting where it will be used."
+          }
+        },
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "26c101fd58f6593f70cfabe25cbd66d74c88e314dd2c206812dfb69bbefd6d16",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 6507,
+          "end": 6661
+        },
+        "source_quote": "Dr. Hausheer: The options should distinguish among FDA-approved uses, evidence-supported off-label uses of approved drugs, and investigational treatments.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "0f485492f009a36422f493b15eb6c2db0f61cc7f22c77ba99bc6a22a57d27257",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 6662,
+          "end": 6832
+        },
+        "source_quote": "Off-label use of treatment is not automatically investigational, and neither an off-label nor an investigational use should be presented as FDA-approved for that setting.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "ac577e8a68bc40cfb6d63f2631a65f58147c9d298a67c5c2cb67446be21436b7",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 10587,
+          "end": 10786
+        },
+        "source_quote": "For an AI application, foreseeable hazards should be identified before deployment, preventable harm should be reduced through effective controls, and remaining risks should be assessed and monitored.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "613412d966f52739d42752b5440655b2c1f780470d7b4ff43edf055ebbffc145",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 11496,
+          "end": 11663
+        },
+        "source_quote": "Before deployment, one should pre-specify the intended users, patient population, permitted functions, material risks, and circumstances requiring clinical escalation.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "2e7251c8fdd96ccb75861af7c505bfa2c703131fe6c0e4aecc91eba9f55991aa",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 11664,
+          "end": 11759
+        },
+        "source_quote": "Safety monitoring and risk controls should be embedded in the deployed system and its workflow.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "3ae97d2614854f4ab5dbe6f7cb99701ad964983e87b030b5d00232fb8f2e05ef",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 12407,
+          "end": 12585
+        },
+        "source_quote": "Their respective responsibilities should be documented, including authority to engage the AI system, restrict its use, investigate a safety signal, and require corrective action.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "ed5a10a789b56f2659bae8f2efcb00c08f23cb26024e5c35fa9fc17683c471e3",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 14665,
+          "end": 14753
+        },
+        "source_quote": "This is a hypothetical clinical and regulatory illustration, not an endorsed deployment.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "2baf83859051b287d27028b1cd4d63bca4369d8f5f4b5dc00a0a92978eb84a56",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 16027,
+          "end": 16368
+        },
+        "source_quote": "Dr. Hausheer: In a company like this, a quality management system, or QMS, would provide the overall structure for accountable leadership, qualified personnel, development and release procedures, supplier oversight, controlled documentation, training, and independent quality assurance throughout development, deployment, and continuing use.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "0b54246fa3c437da37e628070016784dfc5728a5ed0b43373fa446d23ec493b0",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 19108,
+          "end": 19197
+        },
+        "source_quote": "Continuing lifecycle oversight: monitor, reassess, and address problems after deployment.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "fca126a9d0555281dd47e49371ac1008cb38082a542fac52bad743466cbabb6e",
+        "document_id": "b322e35d-6fa0-414e-8912-82ea005f0158",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 23868,
+          "end": 23968
+        },
+        "source_quote": "Investigation should determine which explanation applies and guide corrective and preventive action.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-4",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "objective_version": "bct-objective-1",
+    "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  },
+  "EARLY_success": false,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "record_sha256": "8e2798bc5eff7f7019ee2c11cc97c87c74a4cf5eabf914f27c2a53a741211403"
+}
