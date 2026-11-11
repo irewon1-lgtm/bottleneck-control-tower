@@ -179,11 +179,15 @@ def test_original_frozen_UI_copy_and_evidence_files_are_preserved():
     # The authorized full-pipeline repair also evolves the current RSS AI and
     # review workflows. Their original 23a0615 bytes retain the sealed hashes;
     # current behavior is covered by RSS AI and review-artifact workflow tests.
+    # The operating-recovery request also repairs the expired fixed230 restore
+    # route; preserve these sealed workflow bytes, and test its current path
+    # with test_recovery_fixed230_workflow instead of changing this manifest.
     evolved = {"src/bct/v4/dashboard_web/app.js": "app.js",
                "src/bct/v4/dashboard_web/style.css": "style.css",
                ".github/workflows/rss-ai.yml": "rss-ai.yml",
                ".github/workflows/review-lead-shadow.yml": "review-lead-shadow.yml",
-               ".github/workflows/bct-isolated-review.yml": "bct-isolated-review.yml"}
+               ".github/workflows/bct-isolated-review.yml": "bct-isolated-review.yml",
+               ".github/workflows/bct-recovery.yml": "bct-recovery.yml"}
     for name, expected in manifest["protected_files"].items():
         path = ROOT / "docs/v4/dashboard/frozen-assets" / evolved[name] if name in evolved else ROOT / name
         assert sha(path.read_bytes()) == expected, name
