@@ -57,6 +57,7 @@ jobs:
         run: |
           python - <<'PY'
           import json
+          import os
           import sqlite3
           from collections import Counter
           from datetime import datetime, timezone
@@ -102,6 +103,8 @@ jobs:
                           if r[0] not in prior_ids]
           Path('new-document-manifest.json').write_text(json.dumps({
               'format': 'bct-new-rss-delta-v1', 'collection_started_at': collection_started_at,
+              'run_id': int(os.environ['GITHUB_RUN_ID']),
+              'run_attempt': int(os.environ['GITHUB_RUN_ATTEMPT']),
               'preexisting_document_ids': sorted(prior_ids),
               'preexisting_urls': sorted({r[1] for r in initial_rows}),
               'documents': new_rows}, ensure_ascii=False, indent=2) + '\n')
@@ -120,6 +123,17 @@ jobs:
               json.dumps(summary, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           print(json.dumps({k: v for k, v in summary.items() if k != 'feeds'}), flush=True)
           PY
+      - name: Require complete RSS delivery files before publishing canonical state
+        run: |
+          test -s rss-live-result.json
+          test -s new-document-manifest.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rss-live-result-${{ github.run_attempt }}
+          path: |
+            rss-live-result.json
+            new-document-manifest.json
+          if-no-files-found: error
       - name: Publish verified database and one prior snapshot to data branch
         shell: bash
         run: |
@@ -149,14 +163,6 @@ jobs:
             -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
             commit -m "Persist RSS database from run ${{ github.run_id }}"
           git -C "$RUNNER_TEMP/rss-data" push origin HEAD:refs/heads/data
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: rss-live-result
-          path: |
-            rss-live-result.json
-            new-document-manifest.json
-          if-no-files-found: warn
 
   live-snapshot:
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.live_snapshot_only }}
