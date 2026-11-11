@@ -26,6 +26,9 @@ MAX_RECOVERY_EXPANDED = 512 * 1024**2
 MAX_AUTOMATIC_COPY = 512 * 1024**2
 DISK_RESERVE = 2 * 1024**3
 IDENTITY_FIELDS = ('artifact_id', 'run_id', 'head_sha', 'name', 'bytes', 'sha256')
+FIXED230_FILES = 460
+FIXED230_BYTES = 41784646
+FIXED230_FILE_MAP = 'a489b7f008fa80bf3729d1563a29c7e60effd4da011ba9fa54abed010689e566'
 
 
 def instant(value):
@@ -45,6 +48,44 @@ def expiry(metadata, *, now=None):
 def digest(path):
     with Path(path).open('rb') as source:
         return hashlib.file_digest(source, 'sha256').hexdigest()
+
+
+def compact_inventory(root):
+    """Bind every literal file to the already verified original corpus map."""
+    root = Path(root)
+    if root.is_symlink() or not root.is_dir(): raise ValueError('FIXED230_COMPACT_DIRECTORY')
+    files = {}; size = 0
+    for path in root.rglob('*'):
+        if path.is_symlink(): raise ValueError('FIXED230_COMPACT_SYMLINK')
+        if path.is_dir(): continue
+        relative = path.relative_to(root).as_posix()
+        if not path.is_file() or relative.split('/')[0] not in ('documents', 'raw'):
+            raise ValueError('FIXED230_COMPACT_FOREIGN_FILE')
+        size += path.stat().st_size
+        if size > FIXED230_BYTES or len(files) >= FIXED230_FILES: raise ValueError('FIXED230_COMPACT_BOUND')
+        files[relative] = digest(path)
+    identity = hashlib.sha256(json.dumps(files, sort_keys=True, ensure_ascii=False,
+                                        separators=(',', ':')).encode()).hexdigest()
+    if (len(files) != FIXED230_FILES or size != FIXED230_BYTES or identity != FIXED230_FILE_MAP):
+        raise ValueError('FIXED230_COMPACT_GOLDEN_FILE_MAP_BINDING')
+    return {'files': len(files), 'bytes': size, 'file_map_sha256': identity}
+
+
+def carry_compact(source, destination):
+    """Retain authenticated input before any Gate; never relabel it as proof."""
+    source, destination = Path(source), Path(destination)
+    if not source.exists(): return {'status': 'ABSENT_COLD_RECEIVE_STILL_REQUIRED'}
+    proof = compact_inventory(source)
+    if destination.exists() or destination.is_symlink(): raise ValueError('ARCHIVE_DESTINATION_EXISTS')
+    if shutil.disk_usage(destination.parent).free < proof['bytes'] + DISK_RESERVE:
+        raise ValueError('FIXED230_COMPACT_DISK_RESERVE')
+    try:
+        shutil.copytree(source, destination)
+        compact_inventory(destination)
+    except BaseException:
+        if destination.exists(): shutil.rmtree(destination)
+        raise
+    return {'status': 'PASS_EXACT_COMPACT_INPUT_CARRIED', **proof, 'release_proof_renewed': False}
 
 
 def validate_entries(entries):
@@ -69,6 +110,8 @@ def resume_origin(request, release):
         raise ValueError('ARCHIVE_RESUME_ORIGIN_OR_ROLLBACK')
     partial = request.get('resume_input_only', False)
     if type(partial) is not bool: raise ValueError('ARCHIVE_RESUME_INPUT_ONLY_BOOLEAN')
+    if request.get('fixed230_file_map_sha256', FIXED230_FILE_MAP) != FIXED230_FILE_MAP:
+        raise ValueError('FIXED230_COMPACT_REQUEST_GOLDEN_FILE_MAP')
     if partial:
         if identity <= active: raise ValueError('ARCHIVE_PARTIAL_INPUT_MUST_BE_NEWER')
     elif (identity != active or entry['head_sha'] != release['validated_code_sha']
@@ -287,6 +330,10 @@ def restore(api, entry, request, destination, *, preserved_id=None):
         checkpoint = json.loads((staging / 'checkpoint.json').read_text())
         if (str(checkpoint['run_id']) != str(entry['run_id']) or checkpoint.get('code_sha') != entry['head_sha']):
             raise ValueError('ARCHIVE_CHECKPOINT_RUN_IDENTITY')
+        if request.get('fixed230_file_map_sha256'):
+            if request['fixed230_file_map_sha256'] != FIXED230_FILE_MAP:
+                raise ValueError('FIXED230_COMPACT_REQUEST_GOLDEN_FILE_MAP')
+            compact_inventory(staging/'fixed-precursor-qa')
         staging.rename(destination)
     return {'status': 'PASS_AUTHENTICATED_RESUME_INPUT', 'original_run_id': entry['run_id'],
             'original_sha256': entry['sha256'], 'transport': source, 'restore': proof,
@@ -347,6 +394,12 @@ def prepare_receipts(api, run_id, expected_sha, root, destination, *, partial=Fa
         if any(not (checkpoint_root/n).is_file() for n in names):
             raise ValueError('ARCHIVE_NEW_GATE_DROPPED_PRIOR_ROOT_STATE')
         pins = {n: digest(checkpoint_root/n) for n in sorted(names)}
+        corpus = checkpoint_root/'fixed-precursor-qa'
+        compact = compact_inventory(corpus) if corpus.exists() else None
+        if compact is None and (not partial or previous.get('fixed230_file_map_sha256')):
+            raise ValueError('FIXED230_COMPACT_CHECKPOINT_REQUIRED')
+        for name in ('fixed230-copy.json', 'fixed230-input-transport.json'):
+            if (checkpoint_root/name).is_file(): pins[name] = digest(checkpoint_root/name)
         proof = verify_restored(checkpoint_root, pins)
         entry = {'artifact_id': artifact['id'], 'run_id': run_id, 'head_sha': expected_sha,
                  'name': artifact['name'], 'bytes': artifact['size_in_bytes'], 'sha256': release['artifact_sha256']}
@@ -355,6 +408,7 @@ def prepare_receipts(api, run_id, expected_sha, root, destination, *, partial=Fa
                    'resume_cache_inventory_sha256': proof['cache_inventory_sha256'],
                    'reason': ('Continue the latest authenticated partial checkpoint without claiming release proof.' if partial else
                               'Continue the latest actual successful Gate checkpoint, preserving completed readings, source journals and history.')}
+        if compact: updated['fixed230_file_map_sha256'] = compact['file_map_sha256']
         resume_origin(updated, active if partial else release)
         destination.mkdir()
         try:
@@ -365,6 +419,7 @@ def prepare_receipts(api, run_id, expected_sha, root, destination, *, partial=Fa
     return {'status': 'PREPARED_PARTIAL_RESUME_INPUT_NOT_RELEASE_PROOF' if partial else
                       'PREPARED_FROM_ACTUAL_CURRENT_CODE_GATE_SUCCESS', 'verification': validation,
             'resume_run_id': run_id, 'verified_root_files': len(pins), 'cache': proof,
+            'compact_fixed230_input': compact,
             'source_journals_and_completed_readings_rolled_forward': True,
             'release_receipt_prepared': not partial, 'Git_refs_written': 0}
 

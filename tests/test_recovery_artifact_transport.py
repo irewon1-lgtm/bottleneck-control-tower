@@ -236,6 +236,44 @@ def test_wrapper_and_inner_space_checked_before_any_download(tmp_path, monkeypat
     assert not (tmp_path/'input.zip').exists()
 
 
+def compact_fixture(tmp_path, monkeypatch):
+    module = helper(); source = tmp_path/'compact'; source.mkdir()
+    files = {'documents/synthetic.json': b'{"fixture":"SYNTHETIC_ONLY"}', 'raw/synthetic.html': b'SYNTHETIC_ONLY'}
+    for name, raw in files.items():
+        path=source/name; path.parent.mkdir(exist_ok=True); path.write_bytes(raw)
+    monkeypatch.setattr(module,'FIXED230_FILES',len(files))
+    monkeypatch.setattr(module,'FIXED230_BYTES',sum(len(raw) for raw in files.values()))
+    monkeypatch.setattr(module,'FIXED230_FILE_MAP',hashlib.sha256(json.dumps(
+        {name:hashlib.sha256(raw).hexdigest() for name,raw in files.items()},
+        sort_keys=True,ensure_ascii=False,separators=(',', ':')).encode()).hexdigest())
+    return module,source
+
+
+def test_compact_input_is_verified_and_carried_before_later_gate_failures(tmp_path, monkeypatch):
+    module,source=compact_fixture(tmp_path,monkeypatch); destination=tmp_path/'carried'
+    proof=module.carry_compact(source,destination)
+    assert proof['files']==2 and not proof['release_proof_renewed']
+    assert (destination/'raw/synthetic.html').read_bytes()==(source/'raw/synthetic.html').read_bytes()
+    with pytest.raises(ValueError,match='DESTINATION_EXISTS'):module.carry_compact(source,destination)
+    assert module.carry_compact(tmp_path/'absent',tmp_path/'unused')['status']=='ABSENT_COLD_RECEIVE_STILL_REQUIRED'
+
+
+@pytest.mark.parametrize('failure',['changed_source','corrupt_copy','disk'])
+def test_compact_copy_rejects_changed_bytes_or_missing_reserve_without_partial_output(tmp_path,monkeypatch,failure):
+    module,source=compact_fixture(tmp_path,monkeypatch); destination=tmp_path/'carried'
+    if failure=='changed_source':(source/'raw/synthetic.html').write_bytes(b'WRONG')
+    elif failure=='disk':
+        monkeypatch.setattr(module.shutil,'disk_usage',lambda path:SimpleNamespace(free=module.DISK_RESERVE))
+    else:
+        original=module.shutil.copytree
+        def corrupt(src,dst):
+            original(src,dst); (dst/'raw/synthetic.html').write_bytes(b'WRONG')
+        monkeypatch.setattr(module,'shutil',SimpleNamespace(copytree=corrupt,
+            disk_usage=shutil.disk_usage,rmtree=shutil.rmtree))
+    with pytest.raises(ValueError):module.carry_compact(source,destination)
+    assert not destination.exists()
+
+
 def test_maintenance_hook_never_runs_storage_gates_and_never_expands_large_history():
     root = Path(__file__).parents[1]
     workflow = yaml.safe_load((root/'.github/workflows/bct-recovery.yml').read_text())
@@ -253,7 +291,7 @@ def test_maintenance_hook_never_runs_storage_gates_and_never_expands_large_histo
     assert upload['with']['compression-level'] == 0 and upload['with']['retention-days'] == 90
 
 
-def gate_fixture(tmp_path, module, monkeypatch, *, partial=False, wrong_head=False):
+def gate_fixture(tmp_path, module, monkeypatch, *, partial=False, wrong_head=False, missing_capsule=False):
     root = tmp_path/'checkout'; (root/'src').mkdir(parents=True); (root/'.github/scripts').mkdir(parents=True)
     (root/'config').mkdir(); (root/'src/engine.py').write_text('preserved_engine = 1\n')
     actual = Path(__file__).parents[1]/'.github/scripts/bct_release_guard.py'
@@ -266,10 +304,22 @@ def gate_fixture(tmp_path, module, monkeypatch, *, partial=False, wrong_head=Fal
     code = 'a'*40; run_id = 20
     checkpoint = {'run_id': str(run_id), 'code_sha': 'b'*40 if wrong_head else code,
                   'status': 'FAIL' if partial else 'PASS', **{'gate'+str(i): 'PASS' for i in range(7)}}
+    # Tiny authored stand-in for the production41.8MB corpus. Production
+    # constants remain literal and cannot be overridden through the CLI.
+    capsule = {'documents/synthetic.json': b'{"fixture":"SYNTHETIC_ONLY"}', 'raw/synthetic.html': b'SYNTHETIC_ONLY'}
+    monkeypatch.setattr(module, 'FIXED230_FILES', len(capsule))
+    monkeypatch.setattr(module, 'FIXED230_BYTES', sum(len(raw) for raw in capsule.values()))
+    monkeypatch.setattr(module, 'FIXED230_FILE_MAP', hashlib.sha256(json.dumps(
+        {name:hashlib.sha256(raw).hexdigest() for name,raw in capsule.items()},
+        sort_keys=True,ensure_ascii=False,separators=(',', ':')).encode()).hexdigest())
     payload = io.BytesIO()
     with zipfile.ZipFile(payload, 'w') as saved:
         saved.writestr('checkpoint.json', json.dumps(checkpoint))
         saved.writestr('source-recovery-attempts.jsonl', '')
+        if not missing_capsule:
+            for name,raw in capsule.items(): saved.writestr('fixed-precursor-qa/'+name,raw)
+        saved.writestr('fixed230-copy.json', '{"fixture":"SYNTHETIC_ONLY"}')
+        saved.writestr('fixed230-input-transport.json', '{"fixture":"SYNTHETIC_ONLY"}')
         if not partial:
             saved.writestr('e2e-recovery.json', '{"status":"PASS"}')
             saved.writestr('e2e-original-230/operating-report.json', '{"mode":"SYNTHETIC_FIXTURE"}')
@@ -316,6 +366,8 @@ def test_genuine_success_rolls_release_and_latest_journal_pins_forward_together(
     assert request['resume_archive']['head_sha'] == code
     assert request['resume_file_sha256']['checkpoint.json'] != previous['resume_file_sha256']['checkpoint.json']
     assert request['reader_batch_limit'] == 50 and request['resume_input_only'] is False
+    assert request['fixed230_file_map_sha256']==module.FIXED230_FILE_MAP
+    assert {'fixed230-copy.json','fixed230-input-transport.json'}<=request['resume_file_sha256'].keys()
     assert result['release_receipt_prepared'] and result['source_journals_and_completed_readings_rolled_forward']
     assert module.resume_origin(request, release) == request['resume_archive']
     assert json.loads((root/'config/bct-operating-release.json').read_text()) == active
@@ -345,3 +397,16 @@ def test_wrong_payload_head_or_unsuccessful_run_cannot_prepare_genuine_receipt(t
     with pytest.raises(ValueError, match='CHECKPOINT_NOT_PASS'):
         module.prepare_receipts(partial_api, 20, partial_code, partial_root, tmp_path/'wrongpartial', partial=True)
     assert not (tmp_path/'wrongpartial').exists()
+
+
+def test_genuine_receipt_cannot_drop_required_compact_corpus(tmp_path,monkeypatch):
+    module=helper(); root,api,code,_,_=gate_fixture(tmp_path,module,monkeypatch,missing_capsule=True)
+    with pytest.raises(ValueError,match='COMPACT_CHECKPOINT_REQUIRED'):
+        module.prepare_receipts(api,20,code,root,tmp_path/'missing')
+    assert not (tmp_path/'missing').exists()
+    root,api,code,_,_=gate_fixture(tmp_path/'partial',module,monkeypatch,missing_capsule=True,partial=True)
+    path=root/'.github/bct-recovery-request.json';previous=json.loads(path.read_text())
+    path.write_text(json.dumps({**previous,'fixed230_file_map_sha256':module.FIXED230_FILE_MAP}))
+    with pytest.raises(ValueError,match='COMPACT_CHECKPOINT_REQUIRED'):
+        module.prepare_receipts(api,20,code,root,tmp_path/'dropped',partial=True)
+    assert not (tmp_path/'dropped').exists()
