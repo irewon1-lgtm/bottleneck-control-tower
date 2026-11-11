@@ -182,12 +182,18 @@ def test_original_frozen_UI_copy_and_evidence_files_are_preserved():
     # The operating-recovery request also repairs the expired fixed230 restore
     # route; preserve these sealed workflow bytes, and test its current path
     # with test_recovery_fixed230_workflow instead of changing this manifest.
+    # Approved full automation recovery evolves these delivery/deployment
+    # workflows. Retain their original exact bytes; focused current workflow
+    # tests verify the new handoff contracts without editing the old manifest.
     evolved = {"src/bct/v4/dashboard_web/app.js": "app.js",
                "src/bct/v4/dashboard_web/style.css": "style.css",
                ".github/workflows/rss-ai.yml": "rss-ai.yml",
                ".github/workflows/review-lead-shadow.yml": "review-lead-shadow.yml",
                ".github/workflows/bct-isolated-review.yml": "bct-isolated-review.yml",
-               ".github/workflows/bct-recovery.yml": "bct-recovery.yml"}
+               ".github/workflows/bct-recovery.yml": "bct-recovery.yml",
+               ".github/workflows/rss-live-check.yml": "rss-live-check.yml",
+               ".github/workflows/precursor-acquisition.yml": "precursor-acquisition.yml",
+               ".github/workflows/ui-pages.yml": "ui-pages.yml"}
     for name, expected in manifest["protected_files"].items():
         path = ROOT / "docs/v4/dashboard/frozen-assets" / evolved[name] if name in evolved else ROOT / name
         assert sha(path.read_bytes()) == expected, name
