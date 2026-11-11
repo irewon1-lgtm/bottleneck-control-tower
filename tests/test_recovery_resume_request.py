@@ -12,8 +12,17 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_default_resume_request_has_authenticated_same_release_inputs():
     request = json.loads((ROOT / '.github/bct-recovery-request.json').read_text())
     release = json.loads((ROOT / 'config/bct-operating-release.json').read_text())
-    # Never resume an unavailable older request while citing a newer release.
-    assert str(request['resume_run_id']) == str(release['gate_run_id'])
+    archive = request['resume_archive']
+    assert str(request['resume_run_id']) == str(archive['run_id'])
+    # Successful receipt publication rolls the latest checkpoint forward too.
+    # A strictly newer failed checkpoint is input-only, never a release proof.
+    if request.get('resume_input_only', False):
+        assert archive['run_id'] > release['gate_run_id']
+    else:
+        assert archive['run_id'] == release['gate_run_id']
+        assert archive['head_sha'] == release['validated_code_sha']
+        assert archive['artifact_id'] == release['artifact_id']
+        assert archive['sha256'] == release['artifact_sha256']
     pins = request['resume_file_sha256']
     assert {'checkpoint.json', 'source-recovery-attempts.jsonl',
             'source-recovery-versions.json', 'recovery-preservation-seal.json',
