@@ -169,51 +169,55 @@ def receive_run(run, artifact=None):
 
 def catch_up(cursor, research=None, collection=None):
     newest = previous_id = None; complete = False; pending_producer = False
-    for page in range(1, 6):
-        entries = api(f'actions/artifacts?per_page=100&page={page}')['artifacts']
-        for artifact in entries:
-            artifact_id = artifact.get('id')
-            if type(artifact_id) is not int or artifact_id < 1 or (previous_id and artifact_id >= previous_id):
-                raise ValueError('PUBLIC_TRANSPORT_INVENTORY_ORDER')
-            previous_id = artifact_id
-            created = datetime.fromisoformat(artifact['created_at'].replace('Z', '+00:00'))
-            if created.tzinfo is None:
-                raise ValueError('PUBLIC_TRANSPORT_INVENTORY_TIME')
-            if newest is None:
-                newest = stamp_export({'format': 'bct-public-transport-cursor-1', 'artifact_id': artifact_id,
-                                       'artifact_created_at': artifact['created_at'], 'pending_reason': 'NONE'})
-            if (cursor and cursor['artifact_id'] is not None and artifact_id <= cursor['artifact_id']) or (not cursor or cursor['artifact_id'] is None) and created < PUBLIC_FORMAT_CUTOVER:
+    error_reason = None
+    try:
+        for page in range(1, 6):
+            entries = api(f'actions/artifacts?per_page=100&page={page}')['artifacts']
+            for artifact in entries:
+                artifact_id = artifact.get('id')
+                if type(artifact_id) is not int or artifact_id < 1 or (previous_id and artifact_id >= previous_id):
+                    raise ValueError('PUBLIC_TRANSPORT_INVENTORY_ORDER')
+                previous_id = artifact_id
+                created = datetime.fromisoformat(artifact['created_at'].replace('Z', '+00:00'))
+                if created.tzinfo is None:
+                    raise ValueError('PUBLIC_TRANSPORT_INVENTORY_TIME')
+                if newest is None:
+                    newest = stamp_export({'format': 'bct-public-transport-cursor-1', 'artifact_id': artifact_id,
+                                           'artifact_created_at': artifact['created_at'], 'pending_reason': 'NONE'})
+                if (cursor and cursor['artifact_id'] is not None and artifact_id <= cursor['artifact_id']) or (not cursor or cursor['artifact_id'] is None) and created < PUBLIC_FORMAT_CUTOVER:
+                    complete = True
+                    break
+                match = re.fullmatch(r'(bct-public-research|bct-public-acquisition)-([1-9][0-9]*)', artifact.get('name', ''))
+                if not match or artifact.get('expired') is not False:
+                    continue
+                run = api('actions/runs/' + str(artifact['workflow_run']['id']))
+                if run.get('run_attempt') != int(match[2]):
+                    continue  # A prior attempt's artifact cannot attest a rerun.
+                if run.get('status') != 'completed':
+                    pending_producer = True
+                    continue
+                wanted = CPU_WORKFLOW if match[1] == 'bct-public-research' else '.github/workflows/precursor-acquisition.yml'
+                if run.get('path') != wanted:
+                    raise ValueError('PUBLIC_TRANSPORT_WORKFLOW_MISMATCH')
+                candidate, acquisition = receive_run(run, artifact)
+                if candidate:
+                    if research is None or candidate['generation']['ack_sequence'] > research['generation']['ack_sequence']:
+                        if research: require_not_older(candidate['generation'], research['generation'])
+                        research = candidate
+                    elif candidate['generation']['ack_sequence'] == research['generation']['ack_sequence']:
+                        require_not_older(candidate['generation'], research['generation'])
+                        if candidate != research:
+                            raise ValueError('PUBLIC_DATA_GENERATION_EQUIVOCATION')
+                    elif candidate['generation']['lineage_root'] != research['generation']['lineage_root']:
+                        raise ValueError('PUBLIC_DATA_GENERATION_LINEAGE_CHANGED')
+                if acquisition and (collection is None or _collection_order(acquisition) > _collection_order(collection)):
+                    collection = acquisition
+            if complete or len(entries) < 100:
                 complete = True
                 break
-            match = re.fullmatch(r'(bct-public-research|bct-public-acquisition)-([1-9][0-9]*)', artifact.get('name', ''))
-            if not match or artifact.get('expired') is not False:
-                continue
-            run = api('actions/runs/' + str(artifact['workflow_run']['id']))
-            if run.get('run_attempt') != int(match[2]):
-                continue  # A prior attempt's artifact cannot attest a rerun.
-            if run.get('status') != 'completed':
-                pending_producer = True
-                continue
-            wanted = CPU_WORKFLOW if match[1] == 'bct-public-research' else '.github/workflows/precursor-acquisition.yml'
-            if run.get('path') != wanted:
-                raise ValueError('PUBLIC_TRANSPORT_WORKFLOW_MISMATCH')
-            candidate, acquisition = receive_run(run, artifact)
-            if candidate:
-                if research is None or candidate['generation']['ack_sequence'] > research['generation']['ack_sequence']:
-                    if research: require_not_older(candidate['generation'], research['generation'])
-                    research = candidate
-                elif candidate['generation']['ack_sequence'] == research['generation']['ack_sequence']:
-                    require_not_older(candidate['generation'], research['generation'])
-                    if candidate != research:
-                        raise ValueError('PUBLIC_DATA_GENERATION_EQUIVOCATION')
-                elif candidate['generation']['lineage_root'] != research['generation']['lineage_root']:
-                    raise ValueError('PUBLIC_DATA_GENERATION_LINEAGE_CHANGED')
-            if acquisition and (collection is None or _collection_order(acquisition) > _collection_order(collection)):
-                collection = acquisition
-        if complete or len(entries) < 100:
-            complete = True
-            break
-    reason = 'SCAN_BOUND' if not complete else 'PRODUCER_IN_PROGRESS' if pending_producer else 'NONE'
+    except (ValueError, OSError, subprocess.TimeoutExpired) as error:
+        error_reason = transport_error_reason(error)
+    reason = error_reason or ('SCAN_BOUND' if not complete else 'PRODUCER_IN_PROGRESS' if pending_producer else 'NONE')
     if reason != 'NONE':
         # An independently verified current receipt remains useful even when
         # historical catch-up is bounded. Hold the cursor so later events retry.
@@ -224,6 +228,12 @@ def catch_up(cursor, research=None, collection=None):
         newest = cursor
         newest = {**newest, 'pending_reason': 'NONE'}
     return research, collection, newest, reason
+
+
+def transport_error_reason(error):
+    unavailable = isinstance(error, (OSError, subprocess.TimeoutExpired)) or str(error) in {
+        'PAGES_PUBLIC_METADATA_UNAVAILABLE', 'PAGES_PUBLIC_ARTIFACT_DOWNLOAD'}
+    return 'TRANSPORT_UNAVAILABLE' if unavailable else 'TRANSPORT_INVALID'
 
 
 def pending_cursor(cursor, reason):
@@ -244,9 +254,7 @@ def sync(trigger_id=None):
         except (ValueError, OSError, subprocess.TimeoutExpired) as error:
             # Exact-trigger validation above remains fail closed. A separate
             # historical catch-up problem cannot discard this verified result.
-            unavailable = isinstance(error, (OSError, subprocess.TimeoutExpired)) or str(error) in {
-                'PAGES_PUBLIC_METADATA_UNAVAILABLE', 'PAGES_PUBLIC_ARTIFACT_DOWNLOAD'}
-            cursor = pending_cursor(current.get('cursor'), 'TRANSPORT_UNAVAILABLE' if unavailable else 'TRANSPORT_INVALID')
+            cursor = pending_cursor(current.get('cursor'), transport_error_reason(error))
     # Old artifacts are harmless once a newer receipt is durable. They must
     # never roll it back, and missing/expired artifacts never erase that state.
     if research and current['research'] and research['generation']['ack_sequence'] < current['research']['generation']['ack_sequence']:

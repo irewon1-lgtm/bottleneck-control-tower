@@ -235,3 +235,18 @@ def test_historical_transport_error_cannot_discard_verified_current_ack(tmp_path
     result = tool.sync(103)
     assert result['research'] == public and result['cursor']['artifact_id'] is None
     assert result['catchup_pending_reason'] == reason
+
+
+def test_valid_catchup_before_an_older_bad_artifact_is_retained(tmp_path, monkeypatch):
+    tool = module(); public = project(tmp_path / 'fixture'); run = producer()
+    entries = [{'id': i, 'created_at': '2026-11-11T12:00:00Z', 'name': 'bct-public-research-1',
+                'expired': False, 'workflow_run': {'id': 103}} for i in (900, 899)]
+    def metadata(path):
+        if path.startswith('actions/artifacts?'): return {'artifacts': entries}
+        if path == 'actions/runs/103': return run
+        return {'jobs': [{'name': 'publish', 'conclusion': 'success'}]}
+    monkeypatch.setattr(tool, 'api', metadata)
+    monkeypatch.setattr(tool, 'artifact_bytes', lambda a: archive(public) if a['id'] == 900 else
+                        (_ for _ in ()).throw(OSError('older artifact 410')))
+    research, collection, cursor, reason = tool.catch_up(None)
+    assert research == public and cursor['artifact_id'] is None and reason == 'TRANSPORT_UNAVAILABLE'
