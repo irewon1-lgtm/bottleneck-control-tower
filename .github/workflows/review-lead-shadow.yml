@@ -79,7 +79,7 @@ jobs:
       - name: Catch up ACK-bound public read evidence on every REVIEW event
         if: always()
         env:
-          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
           PYTHONPATH: processor/src
           UPSTREAM_RUN_ID: ${{ github.event.workflow_run.id }}
         run: |
