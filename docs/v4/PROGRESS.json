@@ -7792,19 +7792,20 @@
       "full_automation_recovery": {
         "task_id": "BCT_V4_AUTOMATION_FULL_RECOVERY_20261111",
         "authorization": "FULL_RECOVERY_AUTHORIZATION.json",
-        "status": "FINAL_MAIN_F_GATES_RUNNING_FROM_VERIFIED_PARTIAL_INPUT",
+        "status": "ACTUAL_F_GATES_PASS_RELEASE_MERGED_NEW_CPU_RUNNING",
         "base_main": "e31743a91ab3604421ec7c35796dfda8f63dd51f",
         "base_development": "a6f511760c6e5a4b10b0f1d51ac77c73b40e5589",
         "Q_plan_id": "BCT-V4-Q-1.0",
         "no_new_master_plan": true,
-        "next_action": "Observe actual F Gates; only authenticated valid saved E readings may resume, no same-version repeated model work. A complete actual F run alone may create final release+resume metadata PR. Then latest private bridge and manual first GLiNER reading, new-process remote restore, real REVIEW receipts, public generation/Pages same-session transition. Owner Variables403 and scheduled stability remain separate.",
-        "current_main": "66b790f2737a350950e2f609def51af3b18acf45",
+        "next_action": "Finish actual new GLiNER windows until one entire new document is analyzed; verify new private ACK+newprocess restore+REVIEW and public data Pages. Operating Future guard already PASS; overall job running. Scheduled Variables remain externally403 and OFF.",
+        "current_main": "07c525118a141f5d96cb56e30b8b9779809682ec",
         "merged_PRs": [
           45,
           46,
           47,
           48,
-          49
+          49,
+          50
         ],
         "main_CI": 43031885912,
         "code_dependencies_currently_integrated": [
@@ -7813,13 +7814,13 @@
         ],
         "model_inferences_new": 0,
         "real_Gates_current_code": {
-          "status": "RUNNING_NOT_PASS",
+          "status": "PASS_ACTUAL_ALL_REQUIRED_GATES",
           "run_id": 43045049058,
-          "full_pipeline": false,
-          "resume_input_only": true,
-          "input_run_id": 43032067823,
-          "prior_saved_Qwen_calls": 31,
-          "no_new_release_receipt": true
+          "validated_code_sha": "66b790f2737a350950e2f609def51af3b18acf45",
+          "required_Gates": "0-6 PASS",
+          "artifact_id": 13870728991,
+          "evidence": "FINAL_GATES_F.json",
+          "full_clean_status": "BLOCKED_SEPARATE_HIGHER_CRITERIA"
         },
         "Variables_access": "HTTP403_EXISTING_INTEGRATION_NO_OWNER_BROWSER_TOOL",
         "Variables_access_evidence": "FULL_RECOVERY_VARIABLE_ACCESS.json",
@@ -7849,7 +7850,7 @@
           "readback": "PASS_19_ROOT_PINS_3280_CACHE_FILES",
           "proof_renewed": false
         },
-        "pending_PR": 48,
+        "pending_PR": null,
         "preintegration_schedule": "PREINTEGRATION_SCHEDULED_CHAIN.json",
         "main_regression": {
           "Python_pass": 1137,
@@ -7894,7 +7895,26 @@
           "fix_main_HOLDOUT_skip": 1,
           "operating_retry": "NOT_RUN"
         },
-        "safe_inert_skip_proof": "C3_ACTUAL_INERT_SKIP_43033762241.json"
+        "safe_inert_skip_proof": "C3_ACTUAL_INERT_SKIP_43033762241.json",
+        "release_receipt": "RELEASED_MAIN_GUARD.json",
+        "actual_bridge": {
+          "status": "PASS_8_TABLES_41_PRIOR_COMPLETED_KEYS_PRESERVED",
+          "run_id": 43057825355,
+          "evidence": "ACTUAL_C4_BRIDGE_RECOVERY.json",
+          "new_CPU_windows": 0
+        },
+        "actual_new_CPU_run": {
+          "run_id": 43057947172,
+          "status": "RUNNING_NOT_PASS",
+          "acquisition_run_id": 43032565649,
+          "scheduled": false
+        },
+        "observed_Repository_Variables": {
+          "source_run": 43057825355,
+          "code_sha": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+          "enabled": "false",
+          "matches_C4": false
+        }
       }
     }
   }
