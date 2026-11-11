@@ -421,7 +421,7 @@ def freeze(root,batch,result,stats,store,activation,*,new_document_ids=None,veri
     return {'state':run.get('state',run.get('engine_state')),'frozen':len(first),'first_records':first}
 
 
-def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,request_limit=100):
+def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,request_limit=100,source_handoff=None):
     """Every URL is attempted once; errors stay durable and never drain old corpus."""
     if not 1<=request_limit<=100:raise ValueError('request limit must be 1..100')
     with lock(root):
@@ -502,6 +502,9 @@ def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,
         # offsets. The graph revalidates every original attribute and edge.
         new_ids.update(d.get('document_id') for r in requests for d in r['captures'] if d.get('status')=='CAPTURED' and d.get('document_id') not in prior_document_ids)
         graph=evidence_graph.analyze(live_docs,mode='LIVE',new_document_ids=new_ids)
+        source_versions=None
+        if source_handoff is not None:
+            source_versions=source_handoff(graph,new_ids|{row['document_id'] for row in rows.values()})
         verified_gap_ids={candidate['target_id'] for candidate in graph['protected_result']['candidates']}
         # Both reader routes must satisfy the same source-bound TARGET/time
         # review before writing. The old engine's raw preflight is retained as
@@ -526,6 +529,7 @@ def cycle(root,manifest,*,search_endpoint=None,live_store=None,direct_urls=None,
         summary['gap_verified_early_preflight']=len(verified_gap_ids)
         summary['unverified_legacy_preflight']=len({candidate['target_id'] for candidate in result['candidates']}-verified_gap_ids)
         summary['graph_live_execution']=graph_execution
+        if source_versions is not None:summary['cpu_graph_source_versions']=source_versions
         summary=stamp_export(summary)
         put(receipt,summary)
         put(root/'evaluations'/(forecast_discovery.digest(summary)+'.json'),{'summary':summary,'batch':batch,'result':result,'evidence_graph':graph})
