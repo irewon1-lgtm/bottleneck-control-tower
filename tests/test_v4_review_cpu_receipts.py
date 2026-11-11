@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 
 import pytest
 
@@ -65,7 +66,7 @@ def test_duplicate_survives_new_process_and_new_snapshot_generation(tmp_path, mo
     newer['generation']['private_commit'] = '8' * 40
     newer = seal(newer)
     path = tmp_path / 'public.json'; path.write_text(json.dumps(newer))
-    run = subprocess.run([os.environ.get('PYTHON', '/workspace/bottleneck-control-tower/.venv/bin/python'),
+    run = subprocess.run([sys.executable,
                           '-m', 'bct.v4.review_cpu_receipts', '--snapshot', str(path), '--state', str(root)],
                          env={**os.environ, 'PYTHONPATH': str(Path('src').resolve())}, capture_output=True, text=True)
     assert run.returncode == 0, run.stderr
