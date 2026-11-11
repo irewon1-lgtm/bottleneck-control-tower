@@ -74,7 +74,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ needs.source.outputs.code_sha }}
+          # Public Git writes execute only this reviewed immutable core.
+          # Read-only exports below may use the latest verified dashboard.
+          ref: '7afb1a25590ff604fd6293d237877f456b7f62b0'
           persist-credentials: false
       - name: Preserve validated public receipts on the existing data branch
         env:
