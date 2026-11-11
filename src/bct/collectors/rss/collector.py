@@ -1,5 +1,6 @@
 """RSS/Atom metadata intake; article bodies are not downloaded."""
 import hashlib
+import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
@@ -53,6 +54,46 @@ def _date(value: str | None) -> str | None:
     return parsed.astimezone(timezone.utc).isoformat()
 
 
+def _valid_empty_feed(root) -> bool:
+    """Recognize an empty channel, rather than an incomplete/error document.
+
+    Only zero-entry inputs use these container checks. Existing nonempty
+    feeds retain their entry validation and intake behavior.
+    """
+    def required(parent, name):
+        values = parent.findall(name)
+        if len(values) != 1:
+            raise ValueError('missing or duplicate feed metadata')
+        return values[0]
+
+    try:
+        # Misplaced or incorrectly namespaced entries are malformed, not an
+        # empty feed merely because the expected direct-child path found none.
+        if any(element.tag.rsplit('}', 1)[-1] in ('item', 'entry') for element in root.iter()):
+            return False
+        if root.tag == 'rss' and root.get('version') == '2.0':
+            channel = required(root, 'channel')
+            title = ''.join(required(channel, 'title').itertext()).strip()
+            link = (required(channel, 'link').text or '').strip()
+            required(channel, 'description')  # Empty description text is valid.
+            parts = urlsplit(link)
+            return bool(title and len(title) <= 2000 and len(link) <= 2000
+                        and parts.scheme.lower() in ('http', 'https') and parts.hostname
+                        and not parts.username and not parts.password)
+        if root.tag == ATOM + 'feed':
+            title = ''.join(required(root, ATOM + 'title').itertext()).strip()
+            identity = (required(root, ATOM + 'id').text or '').strip()
+            updated = (required(root, ATOM + 'updated').text or '').strip()
+            if (not title or len(title) > 2000 or not identity or len(identity) > 2000
+                    or re.search(r'\s', identity) or not urlsplit(identity).scheme
+                    or not re.fullmatch(r'\d{4}-\d{2}-\d{2}[Tt]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:[Zz]|[+-]\d{2}:\d{2})', updated)):
+                return False
+            return datetime.fromisoformat(updated.upper().replace('Z', '+00:00')).tzinfo is not None
+    except ValueError:
+        return False
+    return False
+
+
 def parse_feed(payload: bytes, limit: int) -> list[RSSItem]:
     if type(limit) is not int or not 1 <= limit <= 10:
         raise ValueError("limit must be 1..10")
@@ -74,7 +115,9 @@ def parse_feed(payload: bytes, limit: int) -> list[RSSItem]:
     else:
         raise MalformedRecord("unsupported feed format")
     if not entries:
-        raise MalformedRecord("feed has no entries")
+        if _valid_empty_feed(root):
+            return []
+        raise MalformedRecord("invalid empty feed metadata")
     output = []
     for entry in entries[:limit]:
         ns = "{http://purl.org/rss/1.0/}" if root.tag.endswith("}RDF") else ""
