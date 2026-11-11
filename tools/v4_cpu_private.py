@@ -58,7 +58,7 @@ def main():
         manual=op.github_manual_context(a.manual_acquisition_run) if a.manual_acquisition_run else None
         context=None if manual else op.github_schedule_context()
         schedule=op.verified_manual_input(manual) if manual else op.verified_schedule(context)
-        private.verify_predecessor(json.loads((a.checkpoint/'parent.json').read_text()))
+        predecessor=private.verify_predecessor(json.loads((a.checkpoint/'parent.json').read_text()))
         if op.checkpoint_storage_audit(a.checkpoint,policy,scope='private')['status']!='PASS_PRIVATE_STORAGE_REVIEW':
             raise ValueError('PRIVATE_ARCHIVAL_REVIEW_BLOCKED')
         op.restore(a.checkpoint,a.root)
@@ -88,6 +88,7 @@ def main():
                 extractor=CPUExtractor(a.runtime),schedule_context=context,manual_context=manual,persistence_required=True,
                 analysis_context={'cache':a.cache,'manifest':manifest,'per_body':input_receipt.get('analysis_contexts',{})},
                 upstream={'new_URLs':sum(x['status']!='ALREADY_IMPORTED'for x in imports),
+                          'bridge_predecessor_proof':predecessor,
                           'new_body_documents':sum(x['status']=='QUEUED'for x in imports),
                           'input_holds':input_receipt.get('input_holds',[]),
                           'isolated_prior_input_holds':input_receipt.get('isolated_prior_input_holds',0)})

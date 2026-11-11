@@ -11,6 +11,7 @@ import re
 import sqlite3
 import subprocess
 import tempfile
+import time
 from urllib.error import HTTPError
 from urllib.request import Request,urlopen
 
@@ -132,24 +133,97 @@ def verify_predecessor(parent,*,read=None):
 
     Git CAS would refuse its later write, but would be too late to avoid duplicate
     CPU work. This public read-only run check happens BEFORE loading the model.
-    Cache eviction or a newer failed run requires explicit private-state recovery.
+    Only fully proved inert MAIN automatic skips may intervene. Diagnostics,
+    actual failures, incomplete metadata and stale publishers still fail closed.
     """
     if parent.get('producer_job')!='publish':raise ValueError('STATE_BRIDGE_NOT_FROM_PUBLISHER')
     workflow=os.environ.get('GITHUB_WORKFLOW_REF','').split('@')[0].split('/')[-1]
     if not workflow.endswith(('.yml','.yaml')):raise ValueError('STATE_WORKFLOW_IDENTITY_MISSING')
+    deadline=time.monotonic()+45
     if read is None:
         def read(path):
-            p=subprocess.run(['gh','api',path],capture_output=True,text=True,timeout=25)
+            remaining=deadline-time.monotonic()
+            if remaining<=0:raise ValueError('STATE_PREDECESSOR_PROOF_BUDGET_EXHAUSTED')
+            try:p=subprocess.run(['gh','api',path],capture_output=True,text=True,timeout=min(10,remaining))
+            except subprocess.TimeoutExpired:raise ValueError('STATE_PREDECESSOR_METADATA_BLOCKED') from None
             if p.returncode:raise ValueError('STATE_PREDECESSOR_METADATA_BLOCKED')
             return json.loads(p.stdout)
-    result=read(f'repos/{PUBLIC_REPO}/actions/workflows/{workflow}/runs?per_page=5')
+    def request(path):
+        if time.monotonic()>=deadline:raise ValueError('STATE_PREDECESSOR_PROOF_BUDGET_EXHAUSTED')
+        result=read(path)
+        if not isinstance(result,dict):raise ValueError('STATE_PREDECESSOR_METADATA_BLOCKED')
+        return result
+    result=request(f'repos/{PUBLIC_REPO}/actions/workflows/{workflow}/runs?per_page=100')
+    records=result.get('workflow_runs')
+    if (not isinstance(records,list) or len(records)>100
+            or any(not isinstance(r,dict) or type(r.get('id')) is not int or r['id']<1 for r in records)):
+        raise ValueError('STATE_PREDECESSOR_METADATA_BLOCKED')
     current=int(os.environ.get('GITHUB_RUN_ID','0'))
-    previous=next((r for r in result.get('workflow_runs',[])if int(r['id'])<current),None)
-    if (not previous or previous.get('conclusion')!='success' or previous.get('status')!='completed'
-            or str(previous['id'])!=str(parent.get('producer_run_id'))
-            or str(previous.get('run_attempt'))!=str(parent.get('producer_attempt'))):
-        raise ValueError('STATE_BRIDGE_STALE_OR_PREVIOUS_PUBLICATION_UNCONFIRMED')
-    return {'previous_publisher_run':previous['id'],'verified_before_CPU':True}
+    past=sorted((r for r in records if r['id']<current),key=lambda r:r['id'],reverse=True)
+    if len({r['id'] for r in past})!=len(past):raise ValueError('STATE_PREDECESSOR_METADATA_BLOCKED')
+    ignored=[]
+    for previous in past:
+        if (previous.get('conclusion')=='success' and previous.get('status')=='completed'
+                and str(previous['id'])==str(parent.get('producer_run_id'))
+                and str(previous.get('run_attempt'))==str(parent.get('producer_attempt'))):
+            return {'previous_publisher_run':previous['id'],'verified_before_CPU':True,'ignored_inert_automatic_runs':ignored}
+        if str(previous['id'])==str(parent.get('producer_run_id')):
+            raise ValueError('STATE_BRIDGE_STALE_OR_PREVIOUS_PUBLICATION_UNCONFIRMED')
+        ignored.append(_inert_automatic_proof(previous,workflow,request))
+    raise ValueError('STATE_BRIDGE_STALE_OR_PREVIOUS_PUBLICATION_UNCONFIRMED')
+
+
+def _inert_automatic_proof(run,workflow,read):
+    """Authenticated API identity and every actual job must prove no execution."""
+    from .store import sha
+    def reject():raise ValueError('STATE_BRIDGE_STALE_OR_PREVIOUS_PUBLICATION_UNCONFIRMED_INERT_RUN_NOT_PROVEN')
+    if (run.get('event')!='workflow_run' or run.get('head_branch')!='main'
+            or run.get('status')!='completed' or run.get('conclusion')!='skipped'
+            or type(run.get('run_attempt')) is not int or run['run_attempt']<1
+            or type(run.get('workflow_id')) is not int or run['workflow_id']<1
+            or run.get('path')!='.github/workflows/'+workflow
+            or not isinstance(run.get('name'),str) or not run['name']
+            or not isinstance(run.get('head_sha'),str) or not re.fullmatch('[0-9a-f]{40}',run['head_sha'])):reject()
+    repository=run.get('repository',{});head_repository=run.get('head_repository',{})
+    if (not isinstance(repository,dict) or not isinstance(head_repository,dict)
+            or repository.get('full_name')!=PUBLIC_REPO or head_repository.get('full_name')!=PUBLIC_REPO
+            or type(repository.get('id')) is not int or repository['id']<1
+            or type(head_repository.get('id')) is not int
+            or repository['id']!=head_repository.get('id')):reject()
+    fields=('id','run_attempt','workflow_id','path','name','head_sha','head_branch','event','status','conclusion')
+    def identity_of(value):
+        result={k:value.get(k) for k in fields}
+        for name in ('repository','head_repository'):
+            repo=value.get(name)
+            result[name]={k:repo.get(k) for k in ('id','full_name')} if isinstance(repo,dict) else None
+        return result
+    identity=identity_of(run)
+    prefix=f'repos/{PUBLIC_REPO}/actions/runs/{run["id"]}'
+    attempt=read(prefix+f'/attempts/{run["run_attempt"]}')
+    if identity_of(attempt)!=identity:reject()
+    result=read(prefix+f'/attempts/{run["run_attempt"]}/jobs?per_page=100')
+    jobs=result.get('jobs');count=result.get('total_count')
+    if not isinstance(jobs,list) or type(count) is not int or not 2<=count<=100 or count!=len(jobs):reject()
+    known={'research','publish','runtime-verify','source-transport-verify','official-state-read','monthly-storage-trial',
+           'archive-storage-trial','q1-key','q1-publish','q1-connectivity','q1-source-prior','q1-source-process','q1-source-publish'}
+    names=set();ids=set()
+    for job in jobs:
+        if (not isinstance(job,dict) or type(job.get('id')) is not int or job['id']<1 or job['id'] in ids
+                or job.get('name') not in known or job['name'] in names
+                or type(job.get('run_id')) is not int or type(job.get('run_attempt')) is not int
+                or job.get('run_id')!=run['id'] or job.get('run_attempt')!=run['run_attempt']
+                or job.get('head_sha')!=run['head_sha'] or job.get('head_branch')!='main'
+                or job.get('workflow_name')!=run['name'] or job.get('run_url')!='https://api.github.com/'+prefix
+                or job.get('status')!='completed' or job.get('conclusion')!='skipped' or job.get('steps')!=[]
+                or (job.get('runner_id') is not None and type(job['runner_id']) is not int)
+                or job.get('runner_id') not in (None,0) or job.get('runner_name') not in (None,'')):reject()
+        names.add(job['name']);ids.add(job['id'])
+    if not {'research','publish'}.issubset(names):reject()
+    # A rerun cannot hide execution behind an earlier skipped attempt.
+    latest=read(prefix)
+    if identity_of(latest)!=identity:reject()
+    return {'run_id':run['id'],'run_attempt':run['run_attempt'],'jobs':count,
+            'evidence_sha256':sha([identity,attempt,result,latest])}
 
 
 def prepare_public_bridge(repo,snapshot,destination):
