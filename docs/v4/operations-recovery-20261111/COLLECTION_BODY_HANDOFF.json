@@ -1,0 +1,138 @@
+{
+  "task_id": "BCT_V4_AUTOMATION_FULL_RECOVERY_20261111",
+  "component": "COLLECTION_BODY_PRODUCT_SOURCE_HANDOFF",
+  "component_base_sha": "a6f511760c6e5a4b10b0f1d51ac77c73b40e5589",
+  "isolated_worktree": "/tmp/bct-collection-product-inspect",
+  "commits": [
+    "b60de498e16b56ab1428a4fdeae49f7a06f56ea1",
+    "c34b6106ea883d48fdc8d898e95db1034b353e09"
+  ],
+  "status": "PASS_LOCAL_COMPONENT_PENDING_MAIN_AND_ACTUAL_NEW_RUN",
+  "actual_version_inspection": [
+    {
+      "path": "tools/v4_cpu_private.py",
+      "CPU_pin_sha256": "9c743b6a02a8c5647d7cbbbf3b8dd4dad269398951b2e187b831c0fe910bd9be",
+      "component_base_sha256": "9c743b6a02a8c5647d7cbbbf3b8dd4dad269398951b2e187b831c0fe910bd9be",
+      "same_at_CPU_pin": true
+    },
+    {
+      "path": "src/bct/v4/cpu_automation.py",
+      "CPU_pin_sha256": "a1146f8946f8012748ded73eea58e8ededb9ea23a78a426fe072e37df982290f",
+      "component_base_sha256": "a1146f8946f8012748ded73eea58e8ededb9ea23a78a426fe072e37df982290f",
+      "same_at_CPU_pin": true
+    },
+    {
+      "path": "src/bct/v4/cross_industry.py",
+      "CPU_pin_sha256": "2ba1906c5b0e93023f35485eb0d915a9514ae3832e5bcc595fc7651d22b1d8b3",
+      "component_base_sha256": "2ba1906c5b0e93023f35485eb0d915a9514ae3832e5bcc595fc7651d22b1d8b3",
+      "same_at_CPU_pin": true
+    },
+    {
+      "path": "src/bct/v4/adapters.py",
+      "CPU_pin_sha256": "c6217442c9038a2926e9b4281867fcd00d082212bad2a77c30800626d3279852",
+      "component_base_sha256": "c6217442c9038a2926e9b4281867fcd00d082212bad2a77c30800626d3279852",
+      "same_at_CPU_pin": true
+    },
+    {
+      "path": "src/bct/precursor_scope_reader.py",
+      "CPU_pin_sha256": "4c2b45e5c33d851c49d2eb9945e021b0ea7d2949a36f62d4731a6576369369fa",
+      "component_base_sha256": "0b0dcfdd17eb2a5b892789a8b446425f7f4283808f2b4538fe152a7236212aea",
+      "same_at_CPU_pin": false
+    }
+  ],
+  "routes": {
+    "acquisition": "new_precursor_cycle.run -> precursor_collection.cycle/capture/structure -> precursor_scope_reader version5 -> existing evidence_graph",
+    "CPU_pin": "v4_cpu_private.process -> cpu_automation.ingest_delta/enqueue/work -> cross_industry.reading_result -> evidence_path.analyze; scope_reader is not called here",
+    "CPU_semantic_followup": "Separate CPU/graph agents own current-reader semantic hook and newly verified execution pin; this component does not claim their runtime result."
+  },
+  "preserved_actual_sources": {
+    "gzip_sha256": "49b3a551b4f68d6270aded7d1a9f1b3440bc34ea01159a234137c01f7c2b8b6a",
+    "SQLite_sha256": "a21227317a8d24225b54541e7a250138359b21793a64a19778db2abf3d0c4d29",
+    "body_hashes_verified": 7,
+    "cases": [
+      {
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "body_sha256": "46e75f874054d889f57961091c4add7f55f4da0831094cd498ae1115382f0557",
+        "raw_sha256": "28b2dd91686df201b73e63097b8e215ca7133f6d20d13c406751c21c35d637c0",
+        "product": "FOX-XP",
+        "product_locator": {
+          "start": 1049,
+          "end": 1055
+        },
+        "consumed_development_regression_not_new_discovery": true
+      },
+      {
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "body_sha256": "d8e72ad2ab877464236d72e31492b28ec44fce0152c2b734cb64d3f1443a09e9",
+        "raw_sha256": "29be7aee1fa47634c7f35013aacb9b9b4ac4b652b3005fffe5980de5f4b297ae",
+        "product": "Sonoma",
+        "product_locator": {
+          "start": 894,
+          "end": 900
+        },
+        "consumed_development_regression_not_new_discovery": true
+      }
+    ]
+  },
+  "confirmed_repairs": [
+    "Public summaries omitted existing seed-attempt/outcome counts and dropped earlier-batch verified-new counts.",
+    "Acquisition unpacked historical evaluations; boundedrestore now preserves every non-evaluation source/control member.",
+    "Whole cache delivery is replaced by small attempt-bound CPU bundle with exact source hashes and literals.",
+    "New root plus old qualified counterpart/relief/attribute originals must travel together; readonly GRAPH_CONTEXT carries existing graph dependencies.",
+    "Required RSS delta artifact must precede canonical CAS publication, preventing consumed-but-undelivered new IDs.",
+    "RSS/acquisition/CPU/public artifact names and manifests bind exact attempts, refusing earlier-retry bytes.",
+    "SEC source verification needs its original hash-addressed supplemental native JSON, also carried."
+  ],
+  "contracts": {
+    "full_acquisition_state": "All regular safe non-evaluations members retained byte-exact, including activation/cycles/requests/pending/seed-queue/source-holds/documents/captures/raw. Historical evaluation ZIP remains referenced by immutable artifact/run/digest; no historical QA claimed.",
+    "CPU_delta": "bct-cpu-source-delta-1; literal rss-manifest plus derived cpu-manifest; all matching versions retained; malformed metadata and missing raw retain downstream source holds; GRAPH_CONTEXT is readonly, never a new CPU root.",
+    "resource_failure": "EXACT_SOURCE_RECOVERY_REQUIRED with exact compact-cache artifact ID/digest/run/attempt and required graph source versions; consumers must block before ingest, never return fake pair0/semantic HOLD.",
+    "public": "bct-public-acquisition-1; strict stdlib validator, objective/run/SHA/RSS/attempt/time binding, fixed counter codes, seed outcomes explicitly not HTTP requests, unmeasured HTTP/pending null, no source URLs/body/freeform errors."
+  },
+  "local_verification": {
+    "new_helpers_red_before_implementation": 8,
+    "public_counts_red_before_implementation": 6,
+    "RSS_durability_red_before_fix": 2,
+    "old_qualified_counterpart_positive": "PASS_SAME_ROOT_CANDIDATE_AS_FULL_STATE_AND_UNRELATED_OLD_PAIR_EXCLUDED",
+    "actual_FOX_Sonoma_versions_locators": "PASS_FULL_VS_DELTA_IDENTICAL_INPUT_IMPORT_OUTCOME",
+    "failed_capture_cutover_no_refetch": "PASS",
+    "related_command": "PYTHONPATH=src /workspace/bottleneck-control-tower/.venv/bin/python -m pytest -q tests/test_acquisition_sources.py tests/test_acquisition_public_counts.py tests/test_rss_delivery_contract.py tests/test_precursor_collection.py tests/test_cpu_source_transport.py tests/test_cpu_source_transport_compat.py tests/test_precursor_order_binding.py",
+    "related_passed": 110,
+    "related_failed": 0,
+    "extended_passed": 97,
+    "extended_failed": [
+      {
+        "test": "tests/test_v4_post_ui.py::test_original_frozen_UI_copy_and_evidence_files_are_preserved",
+        "reason": "Authorized RSS/acquisition workflow evolution; root owns retaining exact old sealed bytes in existing evolved-assets mapping, golden manifest unchanged."
+      }
+    ],
+    "independent_review": "Expanded55 producer/public/RSS/collection tests passed; no Important/Critical findings, cross-consumer attempt naming handed to CPU/REVIEW owners."
+  },
+  "resource_bounds": {
+    "restore_expanded_bytes": 4294967296,
+    "delta_total_bytes": 134217728,
+    "metadata_scan_bytes": 134217728,
+    "disk_reserve_bytes": 2147483648,
+    "restore_command_seconds": 300,
+    "delta_command_seconds": 120,
+    "legacy_actual_source_working_set_bytes": 2402577107,
+    "new_compact_source_ZIP_size": "NOT_RUN_MEASURE_ON_ACTUAL_ACQUISITION_RUN",
+    "acquisition_full_source_cache_still_required_for_unchanged_existing_graph": true
+  },
+  "unchanged": {
+    "Objective_Lock": true,
+    "graph_comparison_criteria": true,
+    "frozen_gold_or_HOLDOUT": true,
+    "RSS_schedule_and_feed_selection": true,
+    "model_name_revision_and_limits": true,
+    "original_source_bytes": true,
+    "CPU_engine_files_by_this_component": true
+  },
+  "new_model_inferences": 0,
+  "publisher_HTTP_requests": 0,
+  "production_DB_or_ref_writes": 0,
+  "actual_new_operational_document_chain": "NOT_RUN_PARENT_CONTROLLED",
+  "independent_accuracy": "BLOCKED_UNCHANGED",
+  "Q6_seven_days": "NOT_STARTED_BY_COMPONENT",
+  "next_action": "Root integrates all producer/CPU/REVIEW/public counterparts plus sealed-original mapping, verifies final combined code, then executes actual scheduled/new input source->CPU->durable->UI chain."
+}
