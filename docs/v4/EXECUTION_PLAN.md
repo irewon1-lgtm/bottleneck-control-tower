@@ -496,3 +496,19 @@ BCT-V4-Q-1.0의 Q1/Q2 범위에서 기존202개 미방문 항목을 원본 href�
 | 6 개발 반영 | 최신 개발 HEAD 재확인 후 최소 코드·시험·근거 commit/push | 기존 병행 변경 보존, CI 결과/URL 확인 | main/CPU pin/운영 DB는 임의 변경하지 않음 |
 
 종료: 승인 범위 내 재현 가능한 결함 수정과 관련 시험·개발 push를 완료하고, 권한/암호/필수 게이트 미충족 구간은 정확한 BLOCKED와 재개 조건을 남긴다. 실제 7일 운영 및 미래 12~36개월 독립 예측 성능은 이 기능 검증으로 완료 처리하지 않는다.
+
+
+## 2026-11-11 운영 복구 재개 — BCT_V4_OPERATIONS_RECOVERY_20261111
+
+인계42ee0a6의 코드/시험을 재사용한다. 진행은 PROGRESS.json.quantitative_plan.operations_recovery_20261111만 사용하며 Q1~Q7 기준·Objective Lock·S gate·원문/HOLDOUT을 유지한다.
+
+| 순서 | 실행/입력 | 실제 통과 조건 | 경계 |
+|---|---|---|---|
+| P0 릴리스 | exact main과 최소 운영 후보, 기존 Gates0~6와 만료 전 증거 보존 | 정확한 SHA/run/artifact/digest 및 실제 gate 실행 일치 | 파일 제외 완화/과거 PASS 변경 금지; 운영 큐 영향 사전 확인 |
+| P0 CPU | 기존 pin221fa92b, 기존 settings 진단과 승인 runtime/bridge 복원 | 실제 새 문서 판독·검증·비공개 ACK·새 프로세스 복원 | 모델 대체/설치 fallback/설정 무조건 ON 금지 |
+| P0 최신 DB | 기존 Secret이 전달되는 approved official-state-read Actions | 실제 최신 generation·암호문 hash·8테이블·새 프로세스·이전세대 보존 | 원본/DB 무변경, 비밀값 출력 금지 |
+| P1 자료/검토 | 14개 실패 피드 및 bounded REVIEW의 실제 Actions 시험 | 공식 대체 feed 확인·제한 복원·HOLD/중복/검토 기록 보존 | source-bound 없는 쌍 승격 금지 |
+| P2 운영 후보 | 최신 main 위의 최소 패치·회귀·원복 명세·PR | 검토 가능한 PR과 정확한 승인 지점 | main merge/직접 변경은 사용자 승인 후 |
+| P2 왕복/UI | 선행 조건 충족 시 새 실제 자료; 아니면 명시적 REPLAY | 수집→원문→판독→저장→새 프로세스→검토→수급 검토 건수 | 예약/수동/재생/선행 성능 별도; 오래된 데이터 갱신 PASS 금지 |
+
+각 단계는 새 운영 증거 또는 조건이 같은 기존 유효 증거로 판정한다. 한 권한/원본이 막히면 그 의존성만 BLOCKED로 두고 독립 복구는 계속한다.

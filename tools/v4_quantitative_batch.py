@@ -581,8 +581,18 @@ def official_state_read():
  if file_sha(R/'state-read/v4.sqlite3')!=cursor['sqlite_sha256']:raise ValueError('OFFICIAL_STATE_CHANGED_DURING_READ')
  print('BCT_OFFICIAL_STATE_READ_JSON='+json.dumps({'storage':cursor,'checkpoint_kind':manifest['kind'],'previous_manifest_sha256':manifest['previous_manifest_sha256'],'tables':manifest['proof']['tables'],'remote_restore_verified':True,'sqlite_sha256':file_sha(R/'state-read/v4.sqlite3'),'official_record_versions':len(rows),'by_source':{s:sum(r['source_id']==s for r in rows)for s in sorted({r['source_id']for r in rows})},'Q1_numeric':numeric,'Q1_physical':physical,'Q2':{k:v for k,v in handoff.items()if k!='review_inputs'},'originals_restored':False,'source_HTTP_requests':0,'writes':0,'AI_calls':0,'CPU_windows':0,'code_SHA':os.environ['GITHUB_SHA']}),flush=True)
 
+def official_restore_audit():
+ """Continue the successful read in a new process; compare prior history only."""
+ from bct.v4.cpu_operations import github_guard
+ from bct.v4.monthly_storage import Monthly
+ from bct.v4.restore_audit import audit_checkpoint
+ github_guard()
+ monthly=Monthly(os.environ['BCT_V4_PRIVATE_STATE_TOKEN'],os.environ['BCT_V4_STATE_PASSPHRASE'])
+ receipt=audit_checkpoint(monthly,R/'prior',R/'state-read/v4.sqlite3',R/'restore-audit')
+ print('BCT_OFFICIAL_RESTORE_AUDIT_JSON='+json.dumps({**receipt,'code_SHA':os.environ['GITHUB_SHA']}),flush=True)
+
 if __name__=='__main__':
- parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality','verify','recover','counterparts','relations','official','official_state_read','official_discovery','official_bidirectional']);a=parser.parse_args()
+ parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','process','finish','publish','targets','trade','storage','quality','verify','recover','counterparts','relations','official','official_state_read','official_restore_audit','official_discovery','official_bidirectional']);a=parser.parse_args()
  if a.action=='official':raise SystemExit(official())
  if a.action=='quality':raise SystemExit(quality())
  if a.action in {'process','trade'}:raise SystemExit(process(only_trade=a.action=='trade'))

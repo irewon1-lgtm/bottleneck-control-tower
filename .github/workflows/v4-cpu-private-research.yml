@@ -52,6 +52,12 @@ jobs:
           BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
           BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
         run: timeout 120 python -u tools/v4_quantitative_batch.py official_state_read
+      - name: Verify fresh-process restore and immediately previous generation without remote writes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+          BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+        run: timeout 120 python -u tools/v4_quantitative_batch.py official_restore_audit
   monthly-storage-trial:
     if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'monthly-storage-trial' }}
     runs-on: ubuntu-24.04
