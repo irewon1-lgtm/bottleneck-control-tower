@@ -5,87 +5,161 @@ on:
     branches: [main]
     paths: ['.github/workflows/ui-pages.yml']
   workflow_run:
-    workflows: ['V4 dashboard release gate']
+    workflows: ['V4 dashboard release gate', 'V4 CPU private research consumer', 'New precursor evidence acquisition', 'RSS live environment check', 'REVIEW_LEAD SHADOW intake']
     types: [completed]
-    branches: [codex/bct-v4-integration]
+    branches: [main, codex/bct-v4-integration]
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
+# Serialize deployments. The public data job also shares the existing canonical
+# writer lock; a new Pages event must not cancel an in-flight data CAS.
 concurrency:
   group: bct-readonly-pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  build:
+  source:
     if: >-
-      ${{ github.event_name != 'workflow_run' ||
-          (github.event.workflow_run.conclusion == 'success' &&
-           github.event.workflow_run.head_branch == 'codex/bct-v4-integration' &&
-           github.event.workflow_run.head_repository.full_name == github.repository &&
-           github.event.workflow_run.event == 'push') }}
+      ${{ github.ref == 'refs/heads/main' && (github.event_name != 'workflow_run' ||
+          (github.event.workflow_run.head_repository.full_name == github.repository &&
+           ((github.event.workflow_run.head_branch == 'main' &&
+             github.event.workflow_run.event != 'pull_request') ||
+            (github.event.workflow_run.head_branch == 'codex/bct-v4-integration' &&
+             github.event.workflow_run.event == 'push' &&
+             github.event.workflow_run.conclusion == 'success')))) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 3
+    permissions:
+      contents: read
+      actions: read
     outputs:
-      publish: ${{ steps.source.outputs.publish }}
+      code_sha: ${{ steps.source.outputs.code_sha }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: codex/bct-v4-integration
-          persist-credentials: false
-      - name: Only export the latest successfully verified V4 source
+      - name: Resolve immutable successfully verified V4 code
         id: source
         env:
-          EVENT: ${{ github.event_name }}
-          VERIFIED_SHA: ${{ github.event.workflow_run.head_sha }}
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
         shell: bash
         run: |
           set -euo pipefail
-          actual="$(git rev-parse HEAD)"
-          echo "BCT_CODE_SHA=$actual" >> "$GITHUB_ENV"
-          if [[ "$EVENT" == 'workflow_run' && "$actual" != "$VERIFIED_SHA" ]]; then
-            echo 'Stale verification result, skip without altering deployed site.'
-            echo 'publish=no' >> "$GITHUB_OUTPUT"
-          else
-            echo 'publish=yes' >> "$GITHUB_OUTPUT"
-          fi
+          gh api "repos/$REPOSITORY/actions/workflows/v4-dashboard-release-gate.yml/runs?branch=codex%2Fbct-v4-integration&event=push&status=success&per_page=1" > "$RUNNER_TEMP/verified.json"
+          python - <<'PY'
+          import json, os, re
+          runs = json.load(open(os.environ['RUNNER_TEMP'] + '/verified.json'))['workflow_runs']
+          if not runs:
+              raise SystemExit('PAGES_VERIFIED_SOURCE_UNAVAILABLE')
+          run = runs[0]
+          if (run['conclusion'] != 'success' or run['event'] != 'push'
+                  or run['head_branch'] != 'codex/bct-v4-integration'
+                  or run['head_repository']['full_name'] != os.environ['REPOSITORY']
+                  or not re.fullmatch('[0-9a-f]{40}', run['head_sha'])):
+              raise SystemExit('PAGES_VERIFIED_SOURCE_INVALID')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write('code_sha=' + run['head_sha'] + '\n')
+          PY
+
+  sync-public:
+    needs: source
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      actions: read
+    concurrency:
+      group: rss-canonical-data
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Public Git writes execute only this reviewed immutable core.
+          # Read-only exports below may use the latest verified dashboard.
+          ref: '7afb1a25590ff604fd6293d237877f456b7f62b0'
+          persist-credentials: false
+      - name: Preserve validated public receipts on the existing data branch
+        env:
+          PYTHONPATH: src
+          GH_TOKEN: ${{ github.token }}
+          TRIGGER_ID: ${{ github.event.workflow_run.id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          args=()
+          if [[ -n "$TRIGGER_ID" ]]; then args+=(--trigger-id "$TRIGGER_ID"); fi
+          python tools/v4_pages_research_input.py sync "${args[@]}"
+
+  build:
+    needs: [source, sync-public]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+      pages: read
+    outputs:
+      manifest: ${{ steps.manifest.outputs.value }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.source.outputs.code_sha }}
+          persist-credentials: false
       - uses: actions/setup-python@v5
-        if: steps.source.outputs.publish == 'yes'
         with:
           python-version: '3.12'
       - uses: actions/setup-node@v4
-        if: steps.source.outputs.publish == 'yes'
         with:
           node-version: '24'
-      - name: Build public static research and verify all evidence
-        if: steps.source.outputs.publish == 'yes'
+      - name: Read durable public generations and build existing research UI
         env:
           PYTHONPATH: src
+          GH_TOKEN: ${{ github.token }}
+          BCT_CODE_SHA: ${{ needs.source.outputs.code_sha }}
+        shell: bash
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check -e .
-          python tools/v4_dashboard_static_export.py --commit "$BCT_CODE_SHA"
+          python tools/v4_pages_research_input.py prepare --path var/v4/pages-input
+          python tools/v4_dashboard_static_export.py --commit "$BCT_CODE_SHA" --public-input var/v4/pages-input
           python tools/v4_dashboard_static_check.py
           node --check var/v4/pages-site/app.js
+      - name: Bind deployment to the built public generation
+        id: manifest
+        run: |
+          python - <<'PY'
+          import json, os
+          value = json.load(open('var/v4/pages-site/build-manifest.json'))
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write('value=' + json.dumps(value, separators=(',', ':')) + '\n')
+          PY
       - uses: actions/configure-pages@v5
-        if: steps.source.outputs.publish == 'yes'
       - uses: actions/upload-pages-artifact@v4
-        if: steps.source.outputs.publish == 'yes'
         with:
           path: var/v4/pages-site
 
   deploy:
-    needs: build
-    if: needs.build.outputs.publish == 'yes'
+    needs: [source, build]
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.source.outputs.code_sha }}
+          persist-credentials: false
+      - name: Refuse an older research or collection generation
+        env:
+          PYTHONPATH: src
+          GH_TOKEN: ${{ github.token }}
+          BCT_PAGES_MANIFEST: ${{ needs.build.outputs.manifest }}
+        run: python tools/v4_pages_research_input.py guard --manifest-env BCT_PAGES_MANIFEST
       - name: Publish verified static pages
         uses: actions/deploy-pages@v4
         id: deployment

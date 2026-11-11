@@ -14,6 +14,9 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.event != 'pull_request' }}
     runs-on: ubuntu-latest
     timeout-minutes: 55
+    env:
+      RSS_RUN_ID: ${{ github.event.workflow_run.id }}
+      RSS_RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -27,17 +30,25 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p var/rss-delta var/new-precursors
-          gh run download "$RSS_RUN_ID" --name rss-live-result --dir var/rss-delta
+          mkdir -p var/rss-delta
+          gh run download "$RSS_RUN_ID" --name "rss-live-result-$RSS_RUN_ATTEMPT" --dir var/rss-delta
           test -f var/rss-delta/new-document-manifest.json
+          python - <<'PY'
+          import json,os
+          manifest=json.load(open('var/rss-delta/new-document-manifest.json'))
+          assert type(manifest.get('run_id'))is int and manifest['run_id']==int(os.environ['RSS_RUN_ID'])
+          assert type(manifest.get('run_attempt'))is int and manifest['run_attempt']==int(os.environ['RSS_RUN_ATTEMPT'])
+          PY
           data_sha=$(git ls-remote origin refs/heads/data | cut -f1)
           test -n "$data_sha"
           echo "BASE_DATA_SHA=$data_sha" >> "$GITHUB_ENV"
-          git fetch --no-tags origin data
+          git fetch --no-tags --depth=1 origin data
           if git cat-file -e "$data_sha:precursor-index.json" 2>/dev/null; then
             git show "$data_sha:precursor-index.json" > var/prior-precursor-index.json
             prior_run=$(python -c 'import json; v=json.load(open("var/prior-precursor-index.json"))["cache_run_id"]; assert str(v).isdigit(); print(v)')
-            gh run download "$prior_run" --name precursor-private-cache --dir var/new-precursors
+            prior_attempt=$(python -c 'import json; v=json.load(open("var/prior-precursor-index.json")).get("cache_run_attempt",0); assert type(v)is int and v>=0; print(v)')
+            timeout 300 python .github/scripts/acquisition_sources.py restore \
+              --run-id "$prior_run" --run-attempt "$prior_attempt" --destination var/new-precursors
             test -f var/new-precursors/activation.json
           fi
       - name: Restore the existing LIVE session byte for byte
@@ -62,15 +73,43 @@ jobs:
           PRECURSOR_MANIFEST: var/rss-delta/new-document-manifest.json
           PRECURSOR_STATE: var/new-precursors
           PRECURSOR_SUMMARY: var/precursor-index.json
+          PRECURSOR_NEW_DOCUMENT_FILES: var/new-acquisition-document-files.json
+          PRECURSOR_GRAPH_SOURCES: var/new-acquisition-graph-sources.json
+          PRECURSOR_PUBLIC_RECEIPT: var/public-acquisition
           PRECURSOR_SEARCH_ENDPOINT: ${{ vars.BCT_PRECURSOR_SEARCH_ENDPOINT }}
           BCT_EXISTING_LIVE_STORE: /workspace/bct-live-state/live-state/bct-live-20261004T120019Z-e74254ee4bca/store
         run: python .github/scripts/new_precursor_cycle.py
       - uses: actions/upload-artifact@v4
         id: private_cache
         with:
-          name: precursor-private-cache
-          path: var/new-precursors/
+          name: precursor-private-cache-${{ github.run_attempt }}
+          path: |
+            var/new-precursors/
+            !var/new-precursors/evaluations/**
           include-hidden-files: true
+          retention-days: 30
+          if-no-files-found: error
+      - name: Package exact current CPU inputs without rewriting RSS or source versions
+        run: |
+          timeout 120 python .github/scripts/acquisition_sources.py delta \
+            --cache var/new-precursors --rss-manifest var/rss-delta/new-document-manifest.json \
+            --new-document-files var/new-acquisition-document-files.json \
+            --graph-sources var/new-acquisition-graph-sources.json \
+            --rss-run-id "$RSS_RUN_ID" --rss-run-attempt "$RSS_RUN_ATTEMPT" \
+            --acquisition-run-id "$GITHUB_RUN_ID" --acquisition-run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --head-sha "$GITHUB_SHA" --destination var/precursor-cpu-delta \
+            --fallback-artifact-id "${{ steps.private_cache.outputs.artifact-id }}" \
+            --fallback-artifact-digest "${{ steps.private_cache.outputs.artifact-digest }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: precursor-cpu-delta-${{ github.run_attempt }}
+          path: var/precursor-cpu-delta/
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bct-public-acquisition-${{ github.run_attempt }}
+          path: var/public-acquisition/
           retention-days: 30
           if-no-files-found: error
       - name: Persist aggregate index without rewriting canonical database or LIVE state
