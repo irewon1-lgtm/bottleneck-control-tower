@@ -39,8 +39,8 @@ concurrency:
   cancel-in-progress: false
 env:
   PYTHONPATH: src
-  CPU_CODE_SHA: ef97984cba025fed4d3208cec9deb5dd42f062fd
-  EXPECTED_CPU_CODE_SHA: ef97984cba025fed4d3208cec9deb5dd42f062fd
+  CPU_CODE_SHA: e06c522b6d2960052810641a0b2a6ec650ea4a0e
+  EXPECTED_CPU_CODE_SHA: e06c522b6d2960052810641a0b2a6ec650ea4a0e
 jobs:
   source-transport-verify:
     if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'source-transport-verify' }}
@@ -204,7 +204,7 @@ jobs:
           timeout 120 python -u tools/v4_release_archive_trial.py verify-shadow
           timeout 120 python -u tools/v4_release_archive_trial.py rollback
   research:
-    if: ${{ github.ref == 'refs/heads/main' && ((vars.BCT_V4_CPU_CODE_SHA == 'ef97984cba025fed4d3208cec9deb5dd42f062fd' && github.event_name == 'workflow_run' && vars.BCT_V4_CPU_RESEARCH_ENABLED == 'true' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success') || (github.event_name == 'workflow_dispatch' && inputs.purpose == 'manual-research')) }}
+    if: ${{ github.ref == 'refs/heads/main' && ((vars.BCT_V4_CPU_CODE_SHA == 'e06c522b6d2960052810641a0b2a6ec650ea4a0e' && github.event_name == 'workflow_run' && vars.BCT_V4_CPU_RESEARCH_ENABLED == 'true' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success') || (github.event_name == 'workflow_dispatch' && inputs.purpose == 'manual-research')) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
