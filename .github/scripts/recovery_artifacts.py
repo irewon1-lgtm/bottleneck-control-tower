@@ -302,7 +302,7 @@ def preserve(api, entry, destination):
 
 def extract_recovery(original, staging):
     with zipfile.ZipFile(original) as saved:
-        entries = saved.infolist(); names = [e.filename for e in entries]
+        entries = saved.infolist(); names = [PurePosixPath(e.filename).as_posix() for e in entries]
         expanded = sum(e.file_size for e in entries)
         if len(entries) > 50000 or len(set(names)) != len(names) or expanded > MAX_RECOVERY_EXPANDED:
             raise ValueError('ARCHIVE_EXPANDED_LIMIT')
