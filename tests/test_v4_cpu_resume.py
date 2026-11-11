@@ -228,4 +228,26 @@ def test_source_locator_withheld_by_exact_hash_without_losing_cpu_checkpoint(tmp
         capture_output=True,text=True,timeout=30)
     assert child.returncode==0,child.stderr
     assert json.loads(child.stdout)==source
+    r.export_state(tmp_path/'restarted/v4.sqlite3',tmp_path/'exported-again')
+    again=q.open_queue(tmp_path/'exported-again')
+    assert r.audit(again)['CPU_windows_preserved']==1
+    assert q.events(again,'CROSS_COMMON_EVIDENCE')[0]['sources'][0]==source
+    again.close()
     with pytest.raises(ValueError,match='RESUME_URL_NOT_CLEAN'):r.url(locator)
+
+
+@pytest.mark.parametrize('bad',[
+    {'origin_id_sha256':'wrong','origin_id_withheld':True},
+    {'origin_id_sha256':'a'*64,'origin_id_withheld':False},
+    {'origin_id_sha256':'a'*64},
+    {'origin_id_sha256':'a'*64,'origin_id_withheld':True,'origin_id':'https://official.example/ambiguous'},
+])
+def test_source_locator_hash_pair_is_validated_before_reexport(tmp_path,bad):
+    make_source(tmp_path)
+    ledger=q.open_queue(tmp_path/'original')
+    row=deepcopy(q.events(ledger,'CROSS_COMMON_EVIDENCE')[0]);row['sources'][0].pop('origin_id',None)
+    row['sources'][0].update(bad)
+    with ledger.db:ledger.event('CROSS_COMMON_EVIDENCE',row)
+    ledger.close()
+    with pytest.raises(ValueError,match='RESUME_SOURCE_LOCATOR_HASH_INVALID'):
+        r.export_state(tmp_path/'original/v4.sqlite3',tmp_path/'separated')

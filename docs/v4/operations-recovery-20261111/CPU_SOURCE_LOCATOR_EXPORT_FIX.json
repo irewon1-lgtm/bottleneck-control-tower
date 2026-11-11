@@ -45,8 +45,11 @@
   "regressions": {
     "new_fragment_query_userinfo_cases_before_fix": "3 FAIL_RESUME_URL_NOT_CLEAN",
     "after_fix": "3 PASS",
-    "focused_suite": "92 PASS",
+    "focused_suite": "96 PASS",
     "actual_six_metadata_before_fix": "FAIL_RESUME_URL_NOT_CLEAN_AFTER_132_STUB_RECEIPTS",
-    "actual_six_metadata_after_fix": "PASS_132_STUB_RECEIPTS_PRESERVED_AND_FRESH_PROCESS_RESTORED"
-  }
+    "actual_six_metadata_after_fix": "PASS_132_STUB_RECEIPTS_PRESERVED_AND_FRESH_PROCESS_RESTORED",
+    "idempotent_reexport": "3 BEFORE_FAIL_HASH_DROPPED; AFTER_PASS_HASH_FLAG_EXACTLY_PRESERVED",
+    "malformed_hash_flag_raw_ambiguity": "4 REJECTED"
+  },
+  "safe_hash_pair_preserved_on_future_exports": true
 }

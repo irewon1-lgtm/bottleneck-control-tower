@@ -226,6 +226,13 @@ def export_state(source, destination, *, legacy=None):
                             try:safe[k]=url(v)
                             except ValueError:safe.update({k+'_sha256':sha(v),k+'_withheld':True})
                         else:safe[k]=v
+                    for k in ('url','origin_id'):
+                        digest=source_entry.get(k+'_sha256');withheld=source_entry.get(k+'_withheld')
+                        if digest is None and withheld is None:continue
+                        if (k in source_entry or withheld is not True or not isinstance(digest,str)
+                                or not re.fullmatch('[0-9a-f]{64}',digest)):
+                            raise ValueError('RESUME_SOURCE_LOCATOR_HASH_INVALID')
+                        safe.update({k+'_sha256':digest,k+'_withheld':True})
                     detached.append(safe)
                 r['sources']=detached
                 emit('CROSS_COMMON_EVIDENCE',r)
