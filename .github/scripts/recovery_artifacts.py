@@ -23,6 +23,7 @@ REPOSITORY = 'irewon1-lgtm/bottleneck-control-tower'
 MAX_ARCHIVE = 6 * 1024**3
 MAX_WRAPPER_OVERHEAD = 2 * 1024**2
 MAX_RECOVERY_EXPANDED = 512 * 1024**2
+MAX_AUTOMATIC_COPY = 512 * 1024**2
 DISK_RESERVE = 2 * 1024**3
 IDENTITY_FIELDS = ('artifact_id', 'run_id', 'head_sha', 'name', 'bytes', 'sha256')
 
@@ -376,10 +377,12 @@ def inspect(api, entries, release, key, *, requested=False):
             original = original_metadata(api, entry); available = copies(api, entry)
             state = expiry(original) if original else {'status': 'MISSING'}
             copy_state = expiry(available[0]) if available else {'status': 'MISSING'}
-            due = (requested and name == key or state['status'] != 'AVAILABLE') and copy_state.get('days_remaining', 0) <= 14
+            needed = (requested and name == key or state['status'] != 'AVAILABLE') and copy_state.get('days_remaining', 0) <= 14
+            automatic = name == 'recovery' and entry['bytes'] <= MAX_AUTOMATIC_COPY
+            due = needed and (requested and name == key or automatic)
             report['archives'][name] = {'original': state, 'preserved_copy_metadata': copy_state,
-                'copy_bytes_read_in_inspection': False, 'preservation_due': due,
-                'artifact_name': copy_name(entry), 'automatic_copy_allowed': name == 'recovery',
+                'copy_bytes_read_in_inspection': False, 'preservation_due': due, 'preservation_needed': needed,
+                'artifact_name': copy_name(entry), 'automatic_copy_allowed': automatic,
                 'original_bytes': entry['bytes']}
         except (ValueError, KeyError, TypeError):
             report['archives'][name] = {'status': 'BLOCKED_METADATA_BINDING_OR_ACCESS', 'preservation_due': False}
