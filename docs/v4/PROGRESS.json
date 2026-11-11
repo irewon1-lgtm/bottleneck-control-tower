@@ -7792,20 +7792,22 @@
       "full_automation_recovery": {
         "task_id": "BCT_V4_AUTOMATION_FULL_RECOVERY_20261111",
         "authorization": "FULL_RECOVERY_AUTHORIZATION.json",
-        "status": "ACTUAL_F_GATES_PASS_RELEASE_MERGED_NEW_CPU_RUNNING",
+        "status": "MANUAL_NEW_DOCUMENT_ROUND_TRIP_PASS_FINAL_I_GATES_PENDING",
         "base_main": "e31743a91ab3604421ec7c35796dfda8f63dd51f",
         "base_development": "a6f511760c6e5a4b10b0f1d51ac77c73b40e5589",
         "Q_plan_id": "BCT-V4-Q-1.0",
         "no_new_master_plan": true,
-        "next_action": "Finish actual new GLiNER windows until one entire new document is analyzed; verify new private ACK+newprocess restore+REVIEW and public data Pages. Operating Future guard already PASS; overall job running. Scheduled Variables remain externally403 and OFF.",
-        "current_main": "07c525118a141f5d96cb56e30b8b9779809682ec",
+        "next_action": "No further GLiNER/model rereading. Wait existing Future43057867924 terminal within its75min timeout, exactimmutableproductionhead/workerlock/Fseal preservation. Then actual I Gates0–6 withsupported1-sourceDRAIN, truthfulIreceipt PR andmainJguard. Finalreport remainsPARTIAL for Variables403/scheduledOFF/7daysNOT_STARTED and forecastquality. Sourceholds/reviewPENDING/unread5 maintained.",
+        "current_main": "5c66cd8ef5ec47046024027d52e0e8b755d1f012",
         "merged_PRs": [
           45,
           46,
           47,
           48,
           49,
-          50
+          50,
+          51,
+          52
         ],
         "main_CI": 43031885912,
         "code_dependencies_currently_integrated": [
@@ -7814,27 +7816,25 @@
         ],
         "model_inferences_new": 0,
         "real_Gates_current_code": {
-          "status": "PASS_ACTUAL_ALL_REQUIRED_GATES",
-          "run_id": 43045049058,
-          "validated_code_sha": "66b790f2737a350950e2f609def51af3b18acf45",
-          "required_Gates": "0-6 PASS",
-          "artifact_id": 13870728991,
-          "evidence": "FINAL_GATES_F.json",
-          "full_clean_status": "BLOCKED_SEPARATE_HIGHER_CRITERIA"
+          "status": "NOT_RUN_WAITING_FUTURE_PRODUCTION_WRITER",
+          "main_SHA": "5c66cd8ef5ec47046024027d52e0e8b755d1f012",
+          "reader_batch_limit": 1,
+          "resume_run_id": 43045049058
         },
         "Variables_access": "HTTP403_EXISTING_INTEGRATION_NO_OWNER_BROWSER_TOOL",
         "Variables_access_evidence": "FULL_RECOVERY_VARIABLE_ACCESS.json",
         "browser_baseline": "FULL_RECOVERY_BROWSER_BASELINE.json",
         "completion": {
-          "code": "IN_PROGRESS",
-          "automatic_operations": "BLOCKED_CONDITIONS_PENDING",
+          "code": "PROCESSING_PASS_FINAL_OPERATING_RELEASE_VALIDATION_PENDING",
+          "automatic_operations": "BLOCKED_REPOSITORY_VARIABLES_OFF_HTTP403",
           "prediction_performance": "BLOCKED"
         },
-        "processing_code_SHA": "e06c522b6d2960052810641a0b2a6ec650ea4a0e",
+        "processing_code_SHA": "6e788d18cf85fdb834b451bb35585a8b58925301",
         "workflow_integration_SHA": "b2616e29328e94ab6114754e335517a41a923e85",
         "processing_CI": {
-          "run_id": 43043675313,
-          "Python_pass": 2174,
+          "run_id": 43062798371,
+          "status": "SUCCESS",
+          "Python_pass": 2210,
           "Python_HOLDOUT_skip": 1,
           "JavaScript_pass": 34
         },
@@ -7857,7 +7857,7 @@
           "Python_HOLDOUT_skip": 1,
           "JavaScript_pass": 34
         },
-        "main_code_freeze": "FINAL_MAIN_CODE_FREEZE_F.json",
+        "main_code_freeze": "FINAL_MAIN_CODE_FREEZE_I.json",
         "pre_Gate_refs": "FINAL_PRE_GATE_REFS_F.json",
         "manual_RSS_new_input": {
           "run_id": 43032161571,
@@ -7904,16 +7904,73 @@
           "new_CPU_windows": 0
         },
         "actual_new_CPU_run": {
-          "run_id": 43057947172,
-          "status": "RUNNING_NOT_PASS",
-          "acquisition_run_id": 43032565649,
-          "scheduled": false
+          "run_id": 43064155117,
+          "status": "PASS_MANUAL_ACTUAL_NEW_DOCUMENT",
+          "scheduled": false,
+          "new_source_documents_touched": 6,
+          "complete_new_documents": 1,
+          "new_successful_windows_total": 72,
+          "new_characters_total": 21463,
+          "partial_documents": 5,
+          "pending_windows": 60,
+          "evidence": "C6_ACTUAL_NEW_DOCUMENT_ROUND_TRIP.json"
         },
         "observed_Repository_Variables": {
           "source_run": 43057825355,
           "code_sha": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
           "enabled": "false",
           "matches_C4": false
+        },
+        "prior_F_real_Gates": {
+          "status": "PASS_ACTUAL_ALL_REQUIRED_GATES",
+          "run_id": 43045049058,
+          "validated_code_sha": "66b790f2737a350950e2f609def51af3b18acf45",
+          "required_Gates": "0-6 PASS",
+          "artifact_id": 13870728991,
+          "evidence": "FINAL_GATES_F.json",
+          "full_clean_status": "BLOCKED_SEPARATE_HIGHER_CRITERIA"
+        },
+        "C5_minimal_fix": "CPU_SOURCE_LOCATOR_EXPORT_FIX.json",
+        "runtime_parity": "C5_RUNTIME_PARITY.json",
+        "sealed_result_recovery": {
+          "status": "PASS_ACTUAL_PRIVATE_ACK_8_TABLE_NEW_PROCESS",
+          "run_id": 43063536538,
+          "original_read_run_id": 43060982183,
+          "restored_windows": 24,
+          "restored_characters": 4114,
+          "new_model_calls": 0,
+          "evidence": "C6_ACTUAL_SEALED_RESULT_RECOVERY.json"
+        },
+        "current_private_ACK": {
+          "run_id": 43064155117,
+          "commit": "20db8addf53958b38ec2f5a44ee41d1abfca1c4d",
+          "sqlite_sha256": "cc9ba41642bc8d010c9795c0b9dd724202bb33ad4121f4bbae848c901d19656b",
+          "restored_tables": 8,
+          "original_41_completed_keys_deduplicated": 41,
+          "new_full_completed_key": 1,
+          "historical_reviews_preserved": 20
+        },
+        "actual_REVIEW": {
+          "run_id": 43064438463,
+          "status": "PASS_DELIVERY_AND_PERSISTED_HOLD",
+          "versioned_CPU_receipts": 18,
+          "unique_documents": 6,
+          "semantic_completions": 0,
+          "evidence": "C6_REVIEW_PAGES_ACTUAL.json"
+        },
+        "actual_research_Pages": {
+          "run_id": 43064438487,
+          "status": "PASS_DATA_EVENT_SAME_GENERATION",
+          "ack_sequence": 20,
+          "PC_mobile_same_context": "PASS",
+          "evidence": "C6_BROWSER_SAME_CONTEXT.json"
+        },
+        "Variables_write": {
+          "http_status": 403,
+          "message": "Resource not accessible by integration",
+          "expected_CODE_SHA": "6e788d18cf85fdb834b451bb35585a8b58925301",
+          "enabled_observed": "false",
+          "evidence": "C6_REPOSITORY_VARIABLE_WRITE.json"
         }
       }
     }

@@ -1,0 +1,30 @@
+{
+  "task_id": "BCT_V4_AUTOMATION_FULL_RECOVERY_20261111",
+  "status": "PASS_STDLIB_VALIDATION_DEVELOPMENT_NOT_YET_OPERATING_RECOVERY",
+  "fix_commit": "ff29b9a0ef131b0b32ac050f36d45dc494661811",
+  "actual_failure_run": 43060982183,
+  "first_failed_boundary": "private publish checkpoint source-free audit imports CPU_ANALYSIS_RESULT validator",
+  "error": "ModuleNotFoundError: yaml",
+  "root_cause": "Receipt schema validation imported optional processing/collection modules at module load in the intentional stdlib-only publisher.",
+  "fix": "Move only analysis imports into analysis functions; keep receipt validator/schema/criteria unchanged; reuse existing model constants.",
+  "root_focused_tests": {
+    "passed": 22,
+    "failed": 0
+  },
+  "independent_broader_focused_tests": {
+    "passed": 59,
+    "failed": 0
+  },
+  "minimal_environment": "python -I -S; 13 thirdparty/model imports blocked; checkpoint audit+fresh restore+invalidreceipt rejections PASS",
+  "preserved_sealed_result": {
+    "run_id": 43060982183,
+    "cache_id": 10365971981,
+    "key": "v4-cpu-private-result-43060982183-1",
+    "successful_windows": 24,
+    "actual_chars": 4114,
+    "private_ACK": "NOT_CREATED_PENDING_AUTHENTICATED_RECOVERY"
+  },
+  "new_model_calls_in_fix_tests": 0,
+  "packages_installed": 0,
+  "receipt_validation_criteria_changed": false
+}
