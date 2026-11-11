@@ -177,7 +177,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python .github/scripts/bct_restore_operating_state.py \
+          timeout 300 python .github/scripts/bct_restore_operating_state.py \
             --output "$RUNNER_TEMP/operating-recovery-state"
       - name: Publish candidate sidecar only
         if: github.ref == 'refs/heads/main'
