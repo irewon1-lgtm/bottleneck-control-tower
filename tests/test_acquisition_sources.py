@@ -194,7 +194,8 @@ def test_preserved_actual_order_source_versions_and_locators_survive_delta(tmp_p
     assert states[0]==states[1]
 
 
-def test_new_root_delta_keeps_exact_old_counterpart_and_not_unrelated_old_pairs(tmp_path):
+@pytest.mark.parametrize('reverse_restored', [False, True])
+def test_new_root_delta_keeps_exact_old_counterpart_and_not_unrelated_old_pairs(tmp_path, reverse_restored):
     from bct import precursor_collection as collection,precursor_evidence_graph as graph
     from test_precursor_evidence_graph import pair,ASOF
     module=helper();buyer,supply=pair();other_buyer,other_supply=pair(contract='OTHER-99')
@@ -221,7 +222,11 @@ def test_new_root_delta_keeps_exact_old_counterpart_and_not_unrelated_old_pairs(
     assert next(row for row in bound['documents']if row['document_id']==supply['document_id'])['source_kind']=='GRAPH_CONTEXT'
     derived=json.loads((dest/'cpu-manifest.json').read_text())
     assert [row['document_id']for row in derived['documents']]==[buyer['document_id']]
-    restored=[json.loads(path.read_text())for path in (dest/'documents').glob('*.json')]
+    restored=[json.loads(path.read_text())for path in sorted((dest/'documents').glob('*.json'),reverse=reverse_restored)]
+    # Exact serialized undirected-link proofs follow graph input order. Preserve
+    # the original order for this byte-for-byte candidate transport comparison.
+    source_order={document['document_id']:i for i,document in enumerate(documents)}
+    restored.sort(key=lambda document:source_order[document['document_id']])
     result=graph.analyze(restored,mode='SYNTHETIC',now=ASOF)
     rooted=next(row for row in full['protected_result']['candidates']if row['target_id']==result['protected_result']['candidates'][0]['target_id'])
     assert result['protected_result']['candidates'][0]==rooted
