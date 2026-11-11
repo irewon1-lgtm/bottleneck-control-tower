@@ -14,7 +14,7 @@ from .public_research import validate_snapshot
 FORMAT = 'bct-classic-review-cpu-read-1'
 SOURCE_FIELDS = ('document_id', 'body_sha256', 'raw_sha256', 'source_version')
 READ_FIELDS = ('read_state', 'review_state', 'reason_code', 'missing_fields',
-               'source_verification', 'window_counts', 'model', 'revision')
+               'source_verification', 'window_counts', 'model', 'revision', 'model_read_producer')
 HASH_FIELDS = ('analysis_sha256', 'window_binding_sha256', 'derived_reuse_binding_sha256')
 
 
@@ -64,14 +64,19 @@ def append_snapshot(public, root):
         before = snapshot(root)
         for trace in rows.values():
             source = {field: trace[field] for field in SOURCE_FIELDS}
-            read = {field: trace[field] for field in READ_FIELDS}
+            read = {field: trace.get(field) for field in READ_FIELDS}
             read['missing_fields'] = sorted(set(read['missing_fields']))
             for field in HASH_FIELDS:
                 if field in trace:
                     read[field] = trace[field]
             binding = queue_binding(root, source)
             # Snapshot/run/ACK clocks are provenance, never duplicate identity.
-            semantic = {'format': FORMAT, 'source': source, 'read': read,
+            semantic_read = dict(read)
+            # Unknown attribution remains unknown without creating a second
+            # receipt for an identical legacy result or rewriting the old one.
+            if semantic_read.get('model_read_producer') is None:
+                semantic_read.pop('model_read_producer', None)
+            semantic = {'format': FORMAT, 'source': source, 'read': semantic_read,
                         'queue_binding': binding, 'execution_sha': public['generation']['execution_sha']}
             identity = review.digest(semantic)
             path = root / 'cpu-read-receipts' / (identity + '.json')

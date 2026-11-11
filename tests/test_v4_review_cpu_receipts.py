@@ -167,3 +167,38 @@ def test_actual_capture_loader_queue_can_be_linked_without_source_recopy(tmp_pat
     append(seal(public), root)
     assert receipts(root)[0]['queue_binding']['status'] == 'EXACT_QUEUE_VERSION'
     assert shadow.snapshot(cache) == before
+
+
+def test_source_model_read_producer_is_preserved_separately_from_ack_writer(tmp_path, monkeypatch):
+    root, public = prepared(tmp_path, monkeypatch)
+    original = {'run_id': 91, 'run_attempt': 2, 'execution_sha': '3' * 40, 'workflow_sha': '4' * 40}
+    public['trace'][0]['model_read_producer'] = original
+    append(seal(public), root)
+    saved, = receipts(root)
+    assert saved['read']['model_read_producer'] == original
+    assert saved['generation']['producer_run_id'] != original['run_id']
+    assert saved['snapshot_last_read_batch']['consumer_run_id'] != original['run_id']
+    assert saved['semantic_review']['status'] == 'PENDING'
+
+
+def test_legacy_and_unknown_model_read_producer_remain_null_and_deduplicate(tmp_path, monkeypatch):
+    root, public = prepared(tmp_path, monkeypatch)
+    public['trace'][0].pop('model_read_producer', None)
+    append(seal(public), root)
+    saved, = receipts(root)
+    assert saved['read']['model_read_producer'] is None
+    public['trace'][0]['model_read_producer'] = None
+    assert append(seal(public), root)['duplicate'] == 1
+    assert len(receipts(root)) == 1
+
+
+def test_pre_attribution_receipt_is_not_relabelled_or_duplicated(tmp_path, monkeypatch):
+    from bct.v4 import review_cpu_receipts as module
+    root, public = prepared(tmp_path, monkeypatch)
+    with monkeypatch.context() as before:
+        before.setattr(module, 'READ_FIELDS', tuple(key for key in module.READ_FIELDS if key != 'model_read_producer'))
+        append(public, root)
+    path = next((root / 'cpu-read-receipts').glob('*.json')); original = path.read_bytes()
+    assert 'model_read_producer' not in receipts(root)[0]['read']
+    assert append(public, root)['duplicate'] == 1
+    assert path.read_bytes() == original and len(receipts(root)) == 1
