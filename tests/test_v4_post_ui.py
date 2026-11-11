@@ -190,6 +190,7 @@ def test_original_frozen_UI_copy_and_evidence_files_are_preserved():
                ".github/workflows/review-lead-shadow.yml": "review-lead-shadow.yml",
                ".github/workflows/bct-isolated-review.yml": "bct-isolated-review.yml",
                ".github/workflows/bct-recovery.yml": "bct-recovery.yml",
+               ".github/workflows/future-bottleneck.yml": "future-bottleneck.yml",
                ".github/workflows/rss-live-check.yml": "rss-live-check.yml",
                ".github/workflows/precursor-acquisition.yml": "precursor-acquisition.yml",
                ".github/workflows/ui-pages.yml": "ui-pages.yml"}
