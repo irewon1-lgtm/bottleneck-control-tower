@@ -243,7 +243,7 @@
     }
   ],
   "scope": "Private-state storage/permission separation only, free CPU research. No public main/data runtime write token; no operating changes, new model/cache/RSS/oldCPU reprocessing, AI or automatic S2/S3/LIVE. Actual activation conditional on owner setup, verified exclusive permission and source archival rights.",
-  "updated_at": "2026-11-11T08:00:38.667138+00:00",
+  "updated_at": "2026-11-11T10:06:15.719437+00:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
@@ -7553,7 +7553,7 @@
     },
     "operations_recovery_20261111": {
       "task_id": "BCT_V4_OPERATIONS_RECOVERY_20261111",
-      "status": "IN_PROGRESS",
+      "status": "APPROVED_MAIN_MERGED_GATE_CORPUS_RESTORE_AND_OWNER_VARIABLES_PENDING",
       "started_at": "2026-11-11T08:35:56.899025+00:00",
       "base_development_sha": "42ee0a6ee6b0ed21228a0409aa64e973359bf65f",
       "base_main_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
@@ -7568,8 +7568,8 @@
       },
       "reused_verification": "09cbdf2 executable hashes unchanged; actual prior1828Python+GitHubJS34/CI/Page proofs reused, not rerun",
       "evidence_root": "docs/v4/operations-recovery-20261111",
-      "next_action": "Run bounded CPU transport with restored runtime and exact fixed230 candidate source QA. Update main PR44 minimal orchestration patch; user main approval and Variables owner access remain required before scheduled new CPU reading.",
-      "main_promotion": "USER_APPROVAL_REQUIRED_AFTER_REVIEWABLE_PR_AND_EVIDENCE",
+      "next_action": "PR44 approved and normally merged to e31743a. Prepare minimal separate main PR for expired fixed230 artifact restoration; retain exact original fingerprint and Gate checks. Review real Gate1/5 effects and rollback before full dispatch. Owner variable response and actual new scheduled CPU/persistence/restore remain pending; no operational PASS.",
+      "main_promotion": "PR44_EXPLICITLY_USER_APPROVED_AND_MERGED_NORMAL_MERGE",
       "Q6_7day": "NOT_STARTED",
       "latest_monthly_baseline": {
         "status": "PASS_ACTUAL_LATEST_GENERATION_READ",
@@ -7610,21 +7610,34 @@
           "model_file_count": 9,
           "model_file_bytes": 845067152,
           "locked_packages": 71,
-          "source_transport": "DEVELOPMENT_PATCH_VERIFIED_PENDING_REAL_ACTIONS",
+          "source_transport": "PASS_ACTIONS_42995363348",
           "variables_unchanged": true,
-          "new_CPU_readings": 0
+          "new_CPU_readings": 0,
+          "fresh_bridge_run": 42997763985,
+          "fresh_bridge_completed_at": "2026-11-11T09:45:21Z",
+          "fresh_bridge_cache_id": 10346946351,
+          "source_input_bytes": 2402577107,
+          "source_receive_seconds": 98,
+          "private_checkpoint_bytes_unchanged": true
         },
         "new_model_selection": false
       },
-      "updated_at": "2026-11-11T09:25:45.765507+00:00",
+      "updated_at": "2026-11-11T10:05:37.613655+00:00",
       "main_candidate": {
-        "commit": "018f5bb1aa9d27e2891b9902155cb14107f9b019",
+        "commit": "164019bed86c2e5db660911813ab428c061c768a",
         "pr": "https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/44",
-        "draft": true,
+        "draft": false,
         "base_main": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
-        "merged": false,
-        "operating_gate_0_6": "NOT_RUN_FOR_CANDIDATE",
-        "code_regression": "1000PythonPASS_1SKIP_34JavaScriptPASS"
+        "merged": true,
+        "operating_gate_0_6": "NOT_RUN_FOR_ACTUAL_MAIN_EXPIRED_FIXED230_RESTORE_BLOCKER",
+        "code_regression": "1013PythonPASS_1SKIP_34JavaScriptPASS",
+        "files": 17,
+        "CI_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42996830589",
+        "user_approval": "EXPLICIT_USER_APPROVAL_PR44_MAIN_MERGE",
+        "actual_main_sha": "e31743a91ab3604421ec7c35796dfda8f63dd51f",
+        "merged_at": "2026-11-11T09:54:46Z",
+        "main_CI_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42999153532",
+        "main_CI_result": "PASS"
       },
       "RSS": {
         "repaired_official_feeds": 2,
@@ -7651,13 +7664,29 @@
         "real_operating_state_writes": 0
       },
       "fixed230": {
-        "status": "EXACT_ORIGINAL_HASHES_RECOVERED_QA_PENDING",
+        "status": "PASS_ACTUAL_CANDIDATE_SOURCE_QA",
         "source_artifact_id": 13821760877,
         "documents": 230,
         "native_raw_bytes": 38607847,
         "input_fingerprint": "acd344732f2f087b42767bfe32d9f16d96da6de49a766d6fc73f3c0ed298f9ec",
-        "unmodified_originals": true
-      }
+        "unmodified_originals": true,
+        "QA_run_id": 42995363348,
+        "QA_candidate": "018f5bb1aa9d27e2891b9902155cb14107f9b019",
+        "current_candidate_core_hashes_match": true,
+        "literal_copy_files": 460,
+        "literal_copy_bytes": 41784646,
+        "after_events": 682,
+        "complete_TARGETs": 0,
+        "independent_pairs": 0,
+        "QA_seconds": 94,
+        "full_Gates0_6_revalidated": false
+      },
+      "completion": {
+        "development_repairs": "PASS",
+        "operating_automation": "BLOCKED",
+        "future_bottleneck_prediction_performance": "BLOCKED"
+      },
+      "evidence_report": "docs/v4/operations-recovery-20261111/REPORT.md"
     }
   }
 }

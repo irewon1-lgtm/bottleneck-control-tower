@@ -1,0 +1,197 @@
+{
+  "task_id": "BCT_V4_OPERATIONS_RECOVERY_20261111",
+  "status": "PASS_ACTUAL_BOUNDED_CPU_SOURCE_TRANSPORT_AND_EXACT230_SOURCE_QA_COMPONENT",
+  "run_id": 42995363348,
+  "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42995363348",
+  "head_sha": "fbbc4d0a3a62a3a6352eb2dcb3c2f7ba4a9505a3",
+  "job_id": 130438010372,
+  "conclusion": "success",
+  "started_at": "2026-11-11T09:27:48Z",
+  "completed_at": "2026-11-11T09:31:31Z",
+  "steps": [
+    {
+      "name": "Verify saved input transport with the runtime present; no schedule or CPU execution",
+      "conclusion": "success",
+      "started_at": "2026-11-11T09:28:12Z",
+      "completed_at": "2026-11-11T09:29:50Z"
+    },
+    {
+      "name": "Copy the exact preserved fixed corpus without rewriting source originals",
+      "conclusion": "success",
+      "started_at": "2026-11-11T09:29:50Z",
+      "completed_at": "2026-11-11T09:29:51Z"
+    },
+    {
+      "name": "Run only candidate Gate6 source QA offline; no model, HTTP, LIVE or DB writes",
+      "conclusion": "success",
+      "started_at": "2026-11-11T09:29:51Z",
+      "completed_at": "2026-11-11T09:31:25Z"
+    },
+    {
+      "name": "Preserve numeric and hash source verification receipts only",
+      "conclusion": "success",
+      "started_at": "2026-11-11T09:31:25Z",
+      "completed_at": "2026-11-11T09:31:26Z"
+    }
+  ],
+  "job_wall_seconds": 223,
+  "transport_step_wall_seconds": 98,
+  "QA_step_wall_seconds": 94,
+  "source_command_limit_seconds": 300,
+  "job_limit_minutes": 10,
+  "numeric_hash_receipts_from_job_log": {
+    "transport": {
+      "CPU_engine_changed": false,
+      "DB_writes": 0,
+      "RSS_manifest_sha256": "65aa1e71528bc0b2e156ba83ad4ff7d76ecf3c30536a1ffb0b72601f2abe0446",
+      "RSS_run_id": 42939431146,
+      "acquisition_head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+      "acquisition_run_id": 42939818925,
+      "all_source_versions_preserved": true,
+      "artifact_digest": "sha256:949e95d2efda7a3fd3e7a124eb0d6569b56b54dcd1a3d5fd7f053dc75b8dfb72",
+      "artifact_id": 13821760877,
+      "compressed_archive_removed": true,
+      "compressed_bytes": 4598165007,
+      "disk_reserve_bytes": 2147483648,
+      "evaluations_expanded": false,
+      "expanded_bytes": 2402577107,
+      "expanded_bytes_by_family": {
+        "captures": 74468504,
+        "documents": 53926084,
+        "raw": 2274182519
+      },
+      "expanded_limit": 3221225472,
+      "free_disk_bytes_after_cleanup": 86765174784,
+      "free_disk_bytes_before_download": 89208590336,
+      "free_disk_bytes_before_extract": 84610408448,
+      "new_CPU_inferences": 0,
+      "runtime_cache_present": true,
+      "selected_member_counts": {
+        "captures": 8008,
+        "documents": 2948,
+        "raw": 7046
+      },
+      "source_HTTP_requests": 0,
+      "source_metadata_rewritten": false,
+      "status": "PASS_BOUNDED_CPU_INPUT_TRANSPORT"
+    },
+    "fixed230": {
+      "status": "PASS_EXACT_FIXED230_LITERAL_COPY",
+      "source_input_sha256": "acd344732f2f087b42767bfe32d9f16d96da6de49a766d6fc73f3c0ed298f9ec",
+      "documents": 230,
+      "body_hashes_verified": 230,
+      "raw_hashes_verified": 230,
+      "copied_files": 460,
+      "copied_bytes": 41784646,
+      "copy_limit_bytes": 67108864,
+      "metadata_scan_bytes": 53926084,
+      "copied_file_hash_map_sha256": "a489b7f008fa80bf3729d1563a29c7e60effd4da011ba9fa54abed010689e566",
+      "source_originals_modified": false,
+      "activation_copied": false,
+      "QA_executed": false,
+      "HTTP_requests": 0,
+      "LIVE_writes": 0
+    },
+    "source_QA_operating_wrapper": {
+      "state": "PASS",
+      "module": ".github/scripts/new_precursor_cycle.py",
+      "scope_reader_version": "source-scope-reader-5",
+      "backfill_qa_documents": 230,
+      "external_requests": 0,
+      "new_live_early_candidates": 0,
+      "live_write_count": 0,
+      "cache_original_unchanged": true
+    }
+  },
+  "small_numeric_only_artifact": {
+    "id": 13843583056,
+    "bytes": 3449,
+    "expected_files": [
+      "cpu-source-transport.json",
+      "fixed230-copy.json",
+      "cpu-source-gate6-qa.json"
+    ],
+    "local_download": "SDK_AND_REST_SIGNED_REDIRECT_HTTP403; no repeated source-archive download; exact transport/copy/wrapper result recovered from successful job logs"
+  },
+  "main_candidate_local_validation": {
+    "candidate_commit": "164019bed86c2e5db660911813ab428c061c768a",
+    "parent": "018f5bb1aa9d27e2891b9902155cb14107f9b019",
+    "files": [
+      ".github/scripts/receive_cpu_sources.py",
+      ".github/workflows/v4-cpu-private-research.yml",
+      "tests/test_cpu_source_transport.py"
+    ],
+    "python_tests": {
+      "tests": 1014,
+      "failures": 0,
+      "errors": 0,
+      "skipped": [
+        {
+          "name": "test_D_real_pre_public_holdout",
+          "class": "tests.test_forecast_discovery",
+          "message": "BLOCKED: independent frozen real pre-public holdout and archived precursor facts unavailable"
+        }
+      ]
+    },
+    "javascript": {
+      "passed": 34,
+      "failed": 0
+    },
+    "source_core_changed": false,
+    "pushes": 0,
+    "production_main_changes": false,
+    "Gate6_source_QA_reuse_binding": {
+      "actual_QA_run": 42995363348,
+      "QA_checkout": "018f5bb1aa9d27e2891b9902155cb14107f9b019",
+      "candidate_commit": "164019bed86c2e5db660911813ab428c061c768a",
+      "same_source_and_QA_file_hashes": {
+        "tools/precursor_operating_qa.py": "f96ea5ba171a96394dba9167937f028b7cf963e62b7d636779fbc32dddf25c8a",
+        "tools/precursor_backfill_qa.py": "8f9a2637ed3eba762a01962157fe48d1366394f2fca6457186038e18fb4812db",
+        ".github/scripts/new_precursor_cycle.py": "99c8ac90fa02180aa9ff0599423bbb04091c11207a412bf43feb3bf8d01f1b17",
+        "src/bct/precursor_collection.py": "18f4285a43f4ecc18a199adfb44951f52b9320c2cd44bccd4726cfd969f18ac9",
+        "src/bct/precursor_scope_reader.py": "0b0dcfdd17eb2a5b892789a8b446425f7f4283808f2b4538fe152a7236212aea",
+        "src/bct/precursor_evidence_graph.py": "eedbb82645c91d5ea9d47f29350934f86f4284523bfc81c049426b8164cc0bee",
+        "src/bct/precursor_v2.py": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9"
+      },
+      "core_unchanged": true,
+      "full_Gates0_through6_result_claimed": false,
+      "actual_QA_result": "PASS_EXISTING_OPERATING_WRAPPER230_SOURCE_COMPONENT_NOT_FULL_GATES"
+    }
+  },
+  "scope_limits": {
+    "source_quality_component_only": true,
+    "all_Gates0_to6_claimed_PASS": false,
+    "new_CPU_model_inferences": 0,
+    "source_HTTP_refetch": 0,
+    "LIVE_writes": 0,
+    "Secrets_or_variables_changed": false,
+    "execution_code_pin_changed": false,
+    "production_main_updated": false,
+    "first_scheduled_new_CPU_reading": "NOT_RUN",
+    "independent_holdout": "BLOCKED_UNCHANGED"
+  },
+  "next_action": "PR44 explicitly approved and merged normally to main e31743a. Main CI PASS. Await owner existingVariables CODE_SHA221fa+ENABLEDtrue; verify true scheduled processing and private persistence. Prior bridge freshness observation retained; later consumer runs can stale it. Newmain fullGates remain NOT_RUN.",
+  "subsequent_final_bridge_refresh": 42997763985,
+  "full_receipts_requery": {
+    "status": "PASS",
+    "method": "Connected GitHub artifact download; no source/QA rerun",
+    "artifact_id": 13843583056,
+    "ZIP_bytes": 3449,
+    "ZIP_sha256": "ea8269cd39629aca2ff6283b676a6dbeb506fcbf1135117a45d32747fd234c9f",
+    "API_digest_matched": true,
+    "CRC_passed": true,
+    "files": [
+      "cpu-source-transport.json",
+      "fixed230-copy.json",
+      "cpu-source-gate6-qa.json"
+    ]
+  },
+  "main_promotion_current": {
+    "approved_PR": 44,
+    "merged": true,
+    "main_sha": "e31743a91ab3604421ec7c35796dfda8f63dd51f",
+    "merged_at": "2026-11-11T09:54:46Z",
+    "variables_owner_reply": "PENDING",
+    "actual_new_scheduled_CPU_reading": "NOT_RUN"
+  }
+}

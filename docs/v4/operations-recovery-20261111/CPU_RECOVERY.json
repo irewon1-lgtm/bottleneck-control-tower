@@ -5,7 +5,7 @@
   "development_start_sha": "42ee0a6ee6b0ed21228a0409aa64e973359bf65f",
   "main_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
   "plan_id": "BCT-V4-Q-1.0",
-  "result": "PASS_RUNTIME_AND_BRIDGE_BUT_CPU_SOURCE_TRANSPORT_UNBOUNDED_AND_VARIABLES_GATE_FALSE",
+  "result": "PASS_RUNTIME_SOURCE_TRANSPORT_AND_FINAL_BRIDGE_OBSERVED_MAIN_APPROVAL_MERGE_PENDING_VARIABLES_OFF_SCHEDULE_NOT_RUN",
   "current_cpu_pin_unchanged": "221fa92b1cbff8950716ec373eac793ca340c873",
   "actual_settings_diagnostic": {
     "run_id": 42988176131,
@@ -356,12 +356,15 @@
           "size_in_bytes": 1058256865
         }
       ]
-    }
+    },
+    "fresh_for_future_scheduled_CPU_after_latest_manual_verification": false,
+    "freshness_reason": "Latest consumer verification run42995363348 no longer matches prior bridge producer42990897783 required by pinned verify_predecessor; do not bypass.",
+    "superseded_for_freshness_by_final_refresh": 42997763985
   },
   "owner_UI": {
     "variables_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/settings/variables/actions",
     "path": "Settings -> Secrets and variables -> Actions -> Variables",
-    "current_action": "Do not activate yet: runtime/bridge PASS but existing main CPU source step expands51GBfullZIP and must be replaced by reviewed bounded source-family transport through PR44; then verify actual disk/source inputs and existing variable gate. No schedule/manual-process bypass.",
+    "current_action": "Keep ENABLED=false until user approves PR44 main update and it is merged with reviewed checks. After main update and latest bridge/predecessor match, owner may edit only existing Variables CODE_SHA221fa92… and ENABLEDtrue. No variable write attempted here.",
     "conditional_after_existing_runtime_and_bridge_verified": {
       "BCT_V4_CPU_CODE_SHA": "221fa92b1cbff8950716ec373eac793ca340c873",
       "BCT_V4_CPU_RESEARCH_ENABLED": "true",
@@ -381,8 +384,10 @@
     "bridge_recover_after_runtime_prerequisites_only": {
       "branch": "main",
       "purpose": "bridge-recover",
-      "already_executed_successfully": 42990897783,
-      "repeat_only_if_proven_stale_again": true
+      "already_executed_successfully": 42997763985,
+      "repeat_only_if_proven_stale_again": true,
+      "fresh_at_utc": "2026-11-11T09:45:21Z",
+      "later_consumer_run_can_invalidate_freshness": true
     },
     "missing_prerequisite_without_button_workaround": "Initial binary archive search found none; exact approved seed rematerialization and runtime verification subsequently passed. Remaining observed blockers are stale CODE_SHA and ENABLED=false. No arbitrary/new model or alternate pin was selected."
   },
@@ -396,23 +401,25 @@
     "runtime_seed_cache_available": true,
     "runtime_offline_health_verified": true,
     "durable_CPU_checkpoint_and_encrypted_bridge_restored": true,
-    "current_input_eligibility_and_verified_schedule_chain": "NOT_RUN_IN_THIS_RECOVERY"
+    "current_input_eligibility_and_verified_schedule_chain": "NOT_RUN_IN_THIS_RECOVERY",
+    "source_input_transport_dev_verified": true,
+    "first_scheduled_new_CPU_reading": "NOT_RUN"
   },
   "usage": {
-    "workflow_dispatches": 4,
+    "workflow_dispatches": 6,
     "model_installs": 1,
     "model_downloads": 9,
     "runtime_installs": 1,
     "external_AI_calls": 0,
     "paid_API_calls": 0,
     "source_fetches": 0,
-    "private_state_mutations": 2,
+    "private_state_mutations": 4,
     "pin_changes": 0,
     "enabled_changes": 0,
     "normal_Secrets_changed": 0,
     "approved_existing_model_seed_rematerializations": 1,
     "arbitrary_new_models": 0,
-    "private_state_metadata_ACK_commits": 2,
+    "private_state_metadata_ACK_commits": 4,
     "private_SQL_fact_rewrites": 0
   },
   "verification_reuse": {
@@ -777,7 +784,7 @@
     }
   },
   "CPU_source_transport_blocker": {
-    "status": "HELPERS_REVIEWED_COMMITTED_WIRING_DEVELOPMENT_TESTS_PASS_ACTUAL_TRANSPORT_PENDING",
+    "status": "ACTUAL_DEV_SOURCE_TRANSPORT_AND_EXACT230_SOURCE_QA_PASS_PRODUCTION_MAIN_UPDATE_PENDING",
     "discovered_after_runtime_recovery": true,
     "old_command": "timeout120 gh run download ACQUISITION_RUN --name precursor-private-cache --dir var/v4/cpu-private/source",
     "actual_saved_artifact_run": 42939818925,
@@ -813,11 +820,202 @@
     "independent_Important_finding": "TOCTOU/dangling destination deletion reproduced2FAIL then fixed with created-ownership cleanup+symlink guards; same2PASS and independent15PASS recheck.",
     "verified_RSS_step_fix": "Unchanged pinned verified_schedule writesGITHUB_ENV; RSSdownload now runs in followingstep whereverifiedRSS_RUNisavailable. No manual/synthetic schedulecontext.",
     "CPU_engine_and_publish_unchanged": true,
-    "production_orchestration_PR": "44_NOT_MERGED",
-    "actual_transport_and_Gate6_source_component_QA": "PENDING_AFTER_DEV_PUSH",
+    "production_orchestration_PR": "44_APPROVED_MERGED_MAIN_e31743a",
+    "actual_transport_and_Gate6_source_component_QA": "PASS_SOURCE_COMPONENT_ONLY",
     "planned_dev_job_purpose": "source-transport-verify",
     "source_command_timeout_seconds": 300,
     "whole_job_timeout_minutes": 10,
-    "actual_runtime_cache_present_disk_proof": "PENDING_ACTUAL_JOB"
+    "actual_runtime_cache_present_disk_proof": {
+      "CPU_engine_changed": false,
+      "DB_writes": 0,
+      "RSS_manifest_sha256": "65aa1e71528bc0b2e156ba83ad4ff7d76ecf3c30536a1ffb0b72601f2abe0446",
+      "RSS_run_id": 42939431146,
+      "acquisition_head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+      "acquisition_run_id": 42939818925,
+      "all_source_versions_preserved": true,
+      "artifact_digest": "sha256:949e95d2efda7a3fd3e7a124eb0d6569b56b54dcd1a3d5fd7f053dc75b8dfb72",
+      "artifact_id": 13821760877,
+      "compressed_archive_removed": true,
+      "compressed_bytes": 4598165007,
+      "disk_reserve_bytes": 2147483648,
+      "evaluations_expanded": false,
+      "expanded_bytes": 2402577107,
+      "expanded_bytes_by_family": {
+        "captures": 74468504,
+        "documents": 53926084,
+        "raw": 2274182519
+      },
+      "expanded_limit": 3221225472,
+      "free_disk_bytes_after_cleanup": 86765174784,
+      "free_disk_bytes_before_download": 89208590336,
+      "free_disk_bytes_before_extract": 84610408448,
+      "new_CPU_inferences": 0,
+      "runtime_cache_present": true,
+      "selected_member_counts": {
+        "captures": 8008,
+        "documents": 2948,
+        "raw": 7046
+      },
+      "source_HTTP_requests": 0,
+      "source_metadata_rewritten": false,
+      "status": "PASS_BOUNDED_CPU_INPUT_TRANSPORT"
+    },
+    "actual_run": 42995363348,
+    "actual_proof_path": "docs/v4/operations-recovery-20261111/CPU_INPUT_TRANSPORT.json",
+    "actual_selected_source_bytes": 2402577107,
+    "main_candidate_commit": "164019bed86c2e5db660911813ab428c061c768a",
+    "main_candidate_full_python_passed": 1013,
+    "main_candidate_existing_independent_holdout_skipped": 1,
+    "main_candidate_JS_passed": 34,
+    "production_main_updated": false
+  },
+  "final_bridge_freshness_refresh": {
+    "task_id": "BCT_V4_OPERATIONS_RECOVERY_20261111",
+    "status": "PASS_FINAL_DURABLE_BRIDGE_FRESHNESS_REFRESH_OBSERVED_NOT_PERMANENT_READINESS",
+    "reason": "Source-transport verification42995363348 ran after prior bridge producer42990897783, so pinned verify_predecessor would reject the older bridge. All planned manual consumer proofs completed; this authorized refresh changes only checkpoint/ACK history and encrypted handoff cache.",
+    "run_id": 42997763985,
+    "run_attempt": 1,
+    "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42997763985",
+    "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+    "purpose": "bridge-recover",
+    "job_id": 130446023157,
+    "conclusion": "success",
+    "completed_at_utc": "2026-11-11T09:45:21Z",
+    "observed_at_utc": "2026-11-11T09:46:52.830677+00:00",
+    "execution_code_SHA": "221fa92b1cbff8950716ec373eac793ca340c873",
+    "before_private_head": "f42c11aefa357a271bd8a8726c4e6fddaa55366a",
+    "after_private_head": "b20f3e4ecd3e2b9f2bf0222d5f56199d1965decc",
+    "appended_metadata_commits": [
+      {
+        "sha": "b20f3e4ecd3e2b9f2bf0222d5f56199d1965decc",
+        "parents": [
+          "8d6144e2a9f7581c3a908ecd3899657064209509"
+        ]
+      },
+      {
+        "sha": "8d6144e2a9f7581c3a908ecd3899657064209509",
+        "parents": [
+          "f42c11aefa357a271bd8a8726c4e6fddaa55366a"
+        ]
+      }
+    ],
+    "checkpoint_blobs_before": {
+      "checkpoint.json": "752f243961f9660d03112fcd2be0c7b7209ddc29",
+      "checkpoint.sqlite3.gz": "21fe7855dfa50a363fb2e843b14078b83286929f"
+    },
+    "checkpoint_blobs_after": {
+      "checkpoint.json": "752f243961f9660d03112fcd2be0c7b7209ddc29",
+      "checkpoint.sqlite3.gz": "21fe7855dfa50a363fb2e843b14078b83286929f"
+    },
+    "checkpoint_bytes_unchanged": true,
+    "SQL_fact_rewrites": 0,
+    "source_originals_copied": 0,
+    "new_CPU_windows": 0,
+    "new_CPU_model_loads": 0,
+    "fresh_remote_new_process_eight_table_restore": true,
+    "markers": {
+      "BCT_DURABLE_BRIDGE_RECOVERY_JSON": {
+        "status": "PASS_RECOVERED_FROM_PRIVATE_NOT_OLD_CACHE",
+        "parent": "f42c11aefa357a271bd8a8726c4e6fddaa55366a",
+        "restored": {
+          "restored": true,
+          "tables": 8,
+          "sqlite_sha256": "dc2434510ec58e247c838353ad7c8d95f7f127161431ec55e4db1849f80fa7db"
+        },
+        "model_loads": 0,
+        "originals_modified": false
+      },
+      "BCT_RESEARCH_RESUME_JSON": {
+        "status": "PASS_ACTUAL_PRIVATE_RESEARCH_RESTART",
+        "fixed_code_SHA": "221fa92b1cbff8950716ec373eac793ca340c873",
+        "configured_code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+        "configured_code_matches": false,
+        "configured_enabled": "false",
+        "remote_commit": "b20f3e4ecd3e2b9f2bf0222d5f56199d1965decc",
+        "remote_restore": {
+          "restored": true,
+          "tables": 8,
+          "sqlite_sha256": "dc2434510ec58e247c838353ad7c8d95f7f127161431ec55e4db1849f80fa7db"
+        },
+        "state": {
+          "status": "PASS_SOURCE_SEPARATED_SCHEMA",
+          "original_DB_fully_restored": false,
+          "format": "bct-source-separated-cpu-1",
+          "detached_sources": 41,
+          "completed_body_keys": 41,
+          "CPU_windows_preserved": 1277,
+          "CPU_spans_preserved": 4905,
+          "CPU_product_proposals_preserved": 1326,
+          "surfaces_withheld": 0,
+          "historical_reviews_preserved": 20,
+          "failed_windows_quarantined": 0,
+          "pending_source_replay": 1277,
+          "partial_documents": 0,
+          "awaiting_source_windows": 0,
+          "unread_nonwhitespace_characters": 0,
+          "raw_bodies_present": 0,
+          "automatic_stage_promotion": false
+        },
+        "deduplicated_historical_bodies": 41,
+        "original_source_rows_copied": 0,
+        "model_loads": 0,
+        "new_CPU_windows": 0,
+        "seven_day_start": null,
+        "original_DB_fully_restored": false
+      }
+    },
+    "fresh_main_bridge_cache": {
+      "id": 10346946351,
+      "key": "v4-cpu-private-bridge-42997763985-1",
+      "ref": "refs/heads/main",
+      "size_in_bytes": 993916,
+      "created_at": "2026-11-11T09:45:18.563379Z"
+    },
+    "latest_consumer_runs_at_observation": [
+      {
+        "conclusion": "success",
+        "createdAt": "2026-11-11T09:44:54Z",
+        "databaseId": 42997763985,
+        "event": "workflow_dispatch",
+        "headSha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "status": "completed",
+        "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42997763985"
+      },
+      {
+        "conclusion": "success",
+        "createdAt": "2026-11-11T09:27:44Z",
+        "databaseId": 42995363348,
+        "event": "workflow_dispatch",
+        "headSha": "fbbc4d0a3a62a3a6352eb2dcb3c2f7ba4a9505a3",
+        "status": "completed",
+        "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42995363348"
+      },
+      {
+        "conclusion": "skipped",
+        "createdAt": "2026-11-11T09:26:21Z",
+        "databaseId": 42995175645,
+        "event": "workflow_run",
+        "headSha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "status": "completed",
+        "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42995175645"
+      }
+    ],
+    "bridge_producer_matches_latest_consumer_at_observation": true,
+    "future_freshness_not_guaranteed": true,
+    "freshness_resume_rule": "If a later natural upstream or manual consumer run appears before the next scheduled CPU run, keep safe failure; use existing main purpose bridge-recover after confirming stale predecessor. Never bypass verify_predecessor or reinitialize DB.",
+    "owner_condition": "Keep ENABLED=false until user approves PR44 main update and it is merged with reviewed checks. After main update and latest bridge/predecessor match, owner may edit only existing Variables CODE_SHA221fa92… and ENABLEDtrue. No variable write attempted here.",
+    "S_gate_AI_adoption_or_lead_success_changes": false,
+    "first_actual_scheduled_CPU_reading": "NOT_RUN",
+    "seven_day_start": null,
+    "new_dispatches_for_this_refresh": 1,
+    "settings_diagnostic_dispatches_for_this_refresh": 0
+  },
+  "main_promotion_current": {
+    "approved_PR": 44,
+    "merged": true,
+    "main_sha": "e31743a91ab3604421ec7c35796dfda8f63dd51f",
+    "merged_at": "2026-11-11T09:54:46Z",
+    "variables_owner_reply": "PENDING",
+    "actual_new_scheduled_CPU_reading": "NOT_RUN"
   }
 }

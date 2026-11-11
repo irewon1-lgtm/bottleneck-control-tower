@@ -1,0 +1,53 @@
+{
+  "candidate_commit": "164019bed86c2e5db660911813ab428c061c768a",
+  "parent": "018f5bb1aa9d27e2891b9902155cb14107f9b019",
+  "files": [
+    ".github/scripts/receive_cpu_sources.py",
+    ".github/workflows/v4-cpu-private-research.yml",
+    "tests/test_cpu_source_transport.py"
+  ],
+  "python_tests": {
+    "tests": 1014,
+    "failures": 0,
+    "errors": 0,
+    "skipped": [
+      {
+        "name": "test_D_real_pre_public_holdout",
+        "class": "tests.test_forecast_discovery",
+        "message": "BLOCKED: independent frozen real pre-public holdout and archived precursor facts unavailable"
+      }
+    ]
+  },
+  "javascript": {
+    "passed": 34,
+    "failed": 0
+  },
+  "source_core_changed": false,
+  "pushes": 0,
+  "production_main_changes": true,
+  "Gate6_source_QA_reuse_binding": {
+    "actual_QA_run": 42995363348,
+    "QA_checkout": "018f5bb1aa9d27e2891b9902155cb14107f9b019",
+    "candidate_commit": "164019bed86c2e5db660911813ab428c061c768a",
+    "same_source_and_QA_file_hashes": {
+      "tools/precursor_operating_qa.py": "f96ea5ba171a96394dba9167937f028b7cf963e62b7d636779fbc32dddf25c8a",
+      "tools/precursor_backfill_qa.py": "8f9a2637ed3eba762a01962157fe48d1366394f2fca6457186038e18fb4812db",
+      ".github/scripts/new_precursor_cycle.py": "99c8ac90fa02180aa9ff0599423bbb04091c11207a412bf43feb3bf8d01f1b17",
+      "src/bct/precursor_collection.py": "18f4285a43f4ecc18a199adfb44951f52b9320c2cd44bccd4726cfd969f18ac9",
+      "src/bct/precursor_scope_reader.py": "0b0dcfdd17eb2a5b892789a8b446425f7f4283808f2b4538fe152a7236212aea",
+      "src/bct/precursor_evidence_graph.py": "eedbb82645c91d5ea9d47f29350934f86f4284523bfc81c049426b8164cc0bee",
+      "src/bct/precursor_v2.py": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9"
+    },
+    "core_unchanged": true,
+    "full_Gates0_through6_result_claimed": false,
+    "actual_QA_result": "PASS_EXISTING_OPERATING_WRAPPER230_SOURCE_COMPONENT_NOT_FULL_GATES"
+  },
+  "pushed_branch": "codex/bct-v4-ops-release-candidate-20261111",
+  "pull_request": "https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/44",
+  "merged": true,
+  "user_approval": "PR44 main 반영 승인",
+  "actual_main_sha": "e31743a91ab3604421ec7c35796dfda8f63dd51f",
+  "merged_at": "2026-11-11T09:54:46Z",
+  "main_CI_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42999153532",
+  "main_CI_result": "success"
+}

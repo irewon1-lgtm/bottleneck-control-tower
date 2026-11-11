@@ -50,3 +50,16 @@ Clean main baseline: **942 passed, 1 existing holdout skip**. Five extraction/gr
 Ruff F checks, compileall, the existing 47-file recovery mypy scope and wheel build passed. After the configuration/feed-only follow-up, **19 recovery/guard/RSS tests passed** in 0.77s. The stale manifest test failed first. Diff checks passed. Quality tools were installed only into an isolated `/tmp` dependency directory; no model package/runtime was installed.
 
 No new current-tree Gates 0–6 PASS, actual model call, external AI request, paid endpoint, operating write, main mutation or push is claimed. One isolated local candidate commit was created with parent authorization. Next actions are the parent draft PR and bounded source/runtime/impact evidence; actual release receipt and main merge remain separate approval/application steps after valid evidence exists.
+
+
+## 최종 운영 후보와 회수한 원문 QA
+
+현재 PR은 [#44](https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/44), 후보 `164019bed86c2e5db660911813ab428c061c768a`다. 최초018f 뒤3파일의 CPU 입력 전달만 추가했다. 실제 RSS_RUN의 step 경계와 기존51GB ZIP 전체 확장 문제를 보수했고, CPU 실행221fa·processor·publisher는 그대로다.17파일/1,115추가·24삭제; broad V4 merge가 아니다. 새 후보1,013Python PASS·기존holdout1SKIP·JS34PASS 및 push/PR CI PASS. 코드와 검사 파일의 source core 해시는018f와 동일하다.
+
+실제42995363348은 exact230 corpus를 최신 캐시에서 회수해 기존 후보 source QA를 실행하고 PASS했다. 따라서 위 fixed230 입력 접근 BLOCKED는 이 경로에서 해소됐다. 이는 새 전체 Gate0~6 실행 영수증을 대신하지 않는다.
+
+별도 GLiNER 승인 seed/runtime/bridge 복구는 실제 완료됐다. 위 Stage5의 다른 Qwen 실행환경·운영 쓰기 영향은 그 복구로 대신 검증한 것이 아니다. 현재 전체 Gate 재실행은 정확한 main 승인/반영과 Gate1/5 영향 검토 전이라 미실행이다. Guard/파일 제외/기존 release receipt는 바꾸지 않았다.
+
+## PR44 승인 및 실제 main
+
+사용자 응답 “PR #44 main 반영 승인”에 따라 2026-11-11 18:54:46 KST에 일반 병합했다. 실제 main SHA는 `e31743a91ab3604421ec7c35796dfda8f63dd51f`; push CI42999153532 PASS다. 전체 Gate PASS는 아직 아니다. 새 main workflow의 고정230 다운로드가 만료된 run37790294699를 참조하므로, 동일 fingerprint를 검증한 기존 원문 복원 경로로 최소 보수할 별도 PR을 준비한다. 그 전에 운영 쓰기를 포함하는 알려진 실패 Gate를 실행하지 않는다.

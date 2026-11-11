@@ -1,0 +1,141 @@
+{
+  "task_id": "BCT_V4_OPERATIONS_RECOVERY_20261111",
+  "status": "PASS_FINAL_DURABLE_BRIDGE_FRESHNESS_REFRESH_OBSERVED_NOT_PERMANENT_READINESS",
+  "reason": "Source-transport verification42995363348 ran after prior bridge producer42990897783, so pinned verify_predecessor would reject the older bridge. All planned manual consumer proofs completed; this authorized refresh changes only checkpoint/ACK history and encrypted handoff cache.",
+  "run_id": 42997763985,
+  "run_attempt": 1,
+  "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42997763985",
+  "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+  "purpose": "bridge-recover",
+  "job_id": 130446023157,
+  "conclusion": "success",
+  "completed_at_utc": "2026-11-11T09:45:21Z",
+  "observed_at_utc": "2026-11-11T09:46:52.830677+00:00",
+  "execution_code_SHA": "221fa92b1cbff8950716ec373eac793ca340c873",
+  "before_private_head": "f42c11aefa357a271bd8a8726c4e6fddaa55366a",
+  "after_private_head": "b20f3e4ecd3e2b9f2bf0222d5f56199d1965decc",
+  "appended_metadata_commits": [
+    {
+      "sha": "b20f3e4ecd3e2b9f2bf0222d5f56199d1965decc",
+      "parents": [
+        "8d6144e2a9f7581c3a908ecd3899657064209509"
+      ]
+    },
+    {
+      "sha": "8d6144e2a9f7581c3a908ecd3899657064209509",
+      "parents": [
+        "f42c11aefa357a271bd8a8726c4e6fddaa55366a"
+      ]
+    }
+  ],
+  "checkpoint_blobs_before": {
+    "checkpoint.json": "752f243961f9660d03112fcd2be0c7b7209ddc29",
+    "checkpoint.sqlite3.gz": "21fe7855dfa50a363fb2e843b14078b83286929f"
+  },
+  "checkpoint_blobs_after": {
+    "checkpoint.json": "752f243961f9660d03112fcd2be0c7b7209ddc29",
+    "checkpoint.sqlite3.gz": "21fe7855dfa50a363fb2e843b14078b83286929f"
+  },
+  "checkpoint_bytes_unchanged": true,
+  "SQL_fact_rewrites": 0,
+  "source_originals_copied": 0,
+  "new_CPU_windows": 0,
+  "new_CPU_model_loads": 0,
+  "fresh_remote_new_process_eight_table_restore": true,
+  "markers": {
+    "BCT_DURABLE_BRIDGE_RECOVERY_JSON": {
+      "status": "PASS_RECOVERED_FROM_PRIVATE_NOT_OLD_CACHE",
+      "parent": "f42c11aefa357a271bd8a8726c4e6fddaa55366a",
+      "restored": {
+        "restored": true,
+        "tables": 8,
+        "sqlite_sha256": "dc2434510ec58e247c838353ad7c8d95f7f127161431ec55e4db1849f80fa7db"
+      },
+      "model_loads": 0,
+      "originals_modified": false
+    },
+    "BCT_RESEARCH_RESUME_JSON": {
+      "status": "PASS_ACTUAL_PRIVATE_RESEARCH_RESTART",
+      "fixed_code_SHA": "221fa92b1cbff8950716ec373eac793ca340c873",
+      "configured_code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+      "configured_code_matches": false,
+      "configured_enabled": "false",
+      "remote_commit": "b20f3e4ecd3e2b9f2bf0222d5f56199d1965decc",
+      "remote_restore": {
+        "restored": true,
+        "tables": 8,
+        "sqlite_sha256": "dc2434510ec58e247c838353ad7c8d95f7f127161431ec55e4db1849f80fa7db"
+      },
+      "state": {
+        "status": "PASS_SOURCE_SEPARATED_SCHEMA",
+        "original_DB_fully_restored": false,
+        "format": "bct-source-separated-cpu-1",
+        "detached_sources": 41,
+        "completed_body_keys": 41,
+        "CPU_windows_preserved": 1277,
+        "CPU_spans_preserved": 4905,
+        "CPU_product_proposals_preserved": 1326,
+        "surfaces_withheld": 0,
+        "historical_reviews_preserved": 20,
+        "failed_windows_quarantined": 0,
+        "pending_source_replay": 1277,
+        "partial_documents": 0,
+        "awaiting_source_windows": 0,
+        "unread_nonwhitespace_characters": 0,
+        "raw_bodies_present": 0,
+        "automatic_stage_promotion": false
+      },
+      "deduplicated_historical_bodies": 41,
+      "original_source_rows_copied": 0,
+      "model_loads": 0,
+      "new_CPU_windows": 0,
+      "seven_day_start": null,
+      "original_DB_fully_restored": false
+    }
+  },
+  "fresh_main_bridge_cache": {
+    "id": 10346946351,
+    "key": "v4-cpu-private-bridge-42997763985-1",
+    "ref": "refs/heads/main",
+    "size_in_bytes": 993916,
+    "created_at": "2026-11-11T09:45:18.563379Z"
+  },
+  "latest_consumer_runs_at_observation": [
+    {
+      "conclusion": "success",
+      "createdAt": "2026-11-11T09:44:54Z",
+      "databaseId": 42997763985,
+      "event": "workflow_dispatch",
+      "headSha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+      "status": "completed",
+      "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42997763985"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-11-11T09:27:44Z",
+      "databaseId": 42995363348,
+      "event": "workflow_dispatch",
+      "headSha": "fbbc4d0a3a62a3a6352eb2dcb3c2f7ba4a9505a3",
+      "status": "completed",
+      "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42995363348"
+    },
+    {
+      "conclusion": "skipped",
+      "createdAt": "2026-11-11T09:26:21Z",
+      "databaseId": 42995175645,
+      "event": "workflow_run",
+      "headSha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+      "status": "completed",
+      "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42995175645"
+    }
+  ],
+  "bridge_producer_matches_latest_consumer_at_observation": true,
+  "future_freshness_not_guaranteed": true,
+  "freshness_resume_rule": "If a later natural upstream or manual consumer run appears before the next scheduled CPU run, keep safe failure; use existing main purpose bridge-recover after confirming stale predecessor. Never bypass verify_predecessor or reinitialize DB.",
+  "owner_condition": "Keep ENABLED=false until user approves PR44 main update and it is merged with reviewed checks. After main update and latest bridge/predecessor match, owner may edit only existing Variables CODE_SHA221fa92… and ENABLEDtrue. No variable write attempted here.",
+  "S_gate_AI_adoption_or_lead_success_changes": false,
+  "first_actual_scheduled_CPU_reading": "NOT_RUN",
+  "seven_day_start": null,
+  "new_dispatches_for_this_refresh": 1,
+  "settings_diagnostic_dispatches_for_this_refresh": 0
+}
