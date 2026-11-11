@@ -1,0 +1,98 @@
+{
+  "format": "bct-source-stage-handoff-count-proof-1",
+  "task": "BCT_V4_AUTOMATION_FULL_RECOVERY_ULTRA_20261111",
+  "observed_at_UTC": "2026-11-11T14:07:36.157193+00:00",
+  "repository": "irewon1-lgtm/bottleneck-control-tower",
+  "code_sha": "933a29638c06d72d4cf4c17d843cfec2978066d2",
+  "RSS_run_id": 43032161571,
+  "RSS_run_attempt": 1,
+  "acquisition_run_id": 43032565649,
+  "acquisition_run_attempt": 1,
+  "status": "RESOLVED_EXACT_FROZEN_FILTER_REPLAY",
+  "counts": {
+    "RSS_new_article_rows": 18,
+    "RSS_unique_new_URLs": 18,
+    "completed_corpus_URL_exclusions": 2,
+    "completed_corpus_document_ID_exclusions": 0,
+    "preexisting_document_ID_exclusions_after_completed_filter": 0,
+    "URL_dictionary_dedup_exclusions_after_completed_filter": 0,
+    "eligible_new_seed_outcomes": 16,
+    "CAPTURED": 6,
+    "PROVENANCE_BLOCKED": 10,
+    "unexplained_records": 0,
+    "actual_body_HTTP_requests": null,
+    "body_pending": null
+  },
+  "frozen_filter_proof": {
+    "method": "DETERMINISTIC_REPLAY_OF_EXACT_COMMITTED_FILTER_AND_LITERAL_RSS_MANIFEST",
+    "path": ".github/scripts/new_precursor_cycle.py",
+    "function": "run",
+    "filter": "document_id not in completed.document_ids AND url not in completed.urls",
+    "per_record_skip_reason_logged_in_actual_stdout": false,
+    "excluded_records": [
+      {
+        "document_id": "ec0c17a4-13b2-4e9b-ba0b-786ba6f7257c",
+        "URL_sha256": "8b0d4ffbc19c74e67c0190021182e34b4834ec00bdeb58f3fb5c019f36e9f693",
+        "reason": "PREVIOUSLY_COMPLETED_CORPUS_EXCLUDED_BY_FROZEN_POLICY",
+        "document_id_in_completed_exclusions": false,
+        "URL_in_completed_exclusions": true
+      },
+      {
+        "document_id": "8a8df30e-fb40-4490-83ea-eb905ee768ed",
+        "URL_sha256": "c0ad88337fe70f180f9c571a6d3082604a174c12517078549c5e400b5ef9ea07",
+        "reason": "PREVIOUSLY_COMPLETED_CORPUS_EXCLUDED_BY_FROZEN_POLICY",
+        "document_id_in_completed_exclusions": false,
+        "URL_in_completed_exclusions": true
+      }
+    ],
+    "config_path": "config/precursor-completed-exclusions.json",
+    "config_sha256": "af689fcf5480daf0c9ef702ef2e169656f1b57378328e541c36640cdbe4b0958",
+    "config_document_ID_count": 2808,
+    "config_URL_count": 2808,
+    "code_file_sha256": {
+      ".github/scripts/new_precursor_cycle.py": "111dc5a21efab0d90a441d8708437a3f24566f855efc2a230e66d15e4148eff1",
+      "src/bct/precursor_collection.py": "17a94efc3c98c620b0a7dee63dca77e5a4839a303f0a1d39148340619a580b3c",
+      "config/precursor-completed-exclusions.json": "af689fcf5480daf0c9ef702ef2e169656f1b57378328e541c36640cdbe4b0958"
+    },
+    "original_body_version_of_excluded_URLs_rechecked": false,
+    "excluded_records_claimed_new_model_read": false
+  },
+  "artifact_proof": {
+    "transport": "GitHub connector download_workflow_artifact; bounded local materialization of returned metadata ZIP references",
+    "RSS": {
+      "artifact_id": 13860384933,
+      "name": "rss-live-result-1",
+      "ZIP_bytes": 535682,
+      "ZIP_sha256": "2230276661698a8c07112218c6001dd88e324298c6488b4ed7cea313a448ec00",
+      "manifest_member": "new-document-manifest.json",
+      "manifest_bytes": 1728932,
+      "manifest_sha256": "8c62c6de4ed052b33de4dac39126a102f7d6c5c18db1dc2b0cee91fb26000535",
+      "run_ID_and_attempt_match": true
+    },
+    "public_acquisition": {
+      "artifact_id": 13861577490,
+      "name": "bct-public-acquisition-1",
+      "ZIP_bytes": 1049,
+      "ZIP_sha256": "4b09867a1bfdf6402b3a18aaf5c27f772b36f602792e7d2b0e2f032692ba63ee",
+      "snapshot_bytes": 1219,
+      "snapshot_sha256": "9197554498869f48402c167bd40d91ffbf820ca4a76043be1998faaf07635789",
+      "member_manifest_bytes_and_SHA256_match": true,
+      "strict_public_acquisition_schema_valid": true,
+      "RSS_manifest_SHA256_matches_literal_artifact": true,
+      "run_attempt_head_and_objective_match": true
+    }
+  },
+  "privacy_and_limits": {
+    "original_URLs_published": false,
+    "original_bodies_downloaded": false,
+    "large_private_source_cache_downloaded": false,
+    "original_source_HTTP_requests": 0,
+    "body_HTTP_count_inferred_from_seed_count": false,
+    "capture_status_individual_identity_mapping_for_other16": "NOT_INSPECTED_IN_LARGE_PRIVATE_CACHE",
+    "accuracy_or_body_version_verification_claimed_for_excluded_records": false,
+    "production_or_operational_writes": 0,
+    "workflow_dispatches": 0
+  },
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+}

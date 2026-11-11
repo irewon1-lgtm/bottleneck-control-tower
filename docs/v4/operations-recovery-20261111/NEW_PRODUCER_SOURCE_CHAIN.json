@@ -507,7 +507,7 @@
     "body_HTTP_request_count": null,
     "body_pending_count": null,
     "seed_attempt_units": "DURABLE_SEED_CAPTURE_OUTCOMES_NOT_HTTP_REQUESTS",
-    "RSS_new_articles_vs_seed_attempts_note": "RSS reports 18 new articles and acquisition reports 16 new seed outcomes. The logs alone do not establish the classification of the other 2; no pending or failed count is inferred by subtraction.",
+    "RSS_new_articles_vs_seed_attempts_note": "Resolved by exact committed-filter replay over the literal RSS manifest: 18 new RSS rows minus 2 matches in the frozen completed-corpus URL exclusion set yields 16 seed outcomes (6 CAPTURED and 10 PROVENANCE_BLOCKED). The excluded original body versions were not re-fetched or verified.",
     "seed_status_scope": "New seed outcomes: CAPTURED 6 and PROVENANCE_BLOCKED 10. The separately reported unverified_source_holds 1 belongs to the public acquisition receipt scope and is not added to those seed outcomes.",
     "source_originals_or_archives_downloaded_by_inspector": false,
     "additional_original_source_HTTP_requests_by_inspector": 0,
@@ -516,7 +516,8 @@
     "artifact_digest_evidence": "GitHub Actions artifact metadata plus source-free producer stdout receipts; source ZIPs were not downloaded.",
     "peak_runner_disk_and_memory_independently_measured": false,
     "legacy_archive_note": "This first new producer restored the old 4,689,051,547-byte archive once. It excluded 216 evaluation members and expanded 2,445,513,478 bytes of source and control state. Future acquisition can use the new 500,746,000-byte compact cache. CPU consumers can use the separate 1,310,662-byte current-source delta; actual consumer transport and reading are a later stage.",
-    "actual_accuracy_or_7_day_operating_success_claimed": false
+    "actual_accuracy_or_7_day_operating_success_claimed": false,
+    "stage_count_followup_evidence": "STAGE_HANDOFF_COUNTS.json"
   },
   "objective_version": "bct-objective-1",
   "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
