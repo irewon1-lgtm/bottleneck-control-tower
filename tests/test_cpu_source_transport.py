@@ -2,6 +2,7 @@
 import importlib.util
 import hashlib
 import json
+import re
 from pathlib import Path
 import stat
 import zipfile
@@ -116,20 +117,22 @@ def test_download_cleanup_never_removes_a_path_this_call_did_not_create(tmp_path
     else: assert path.is_symlink()
 
 
-def test_workflow_separates_immutable_input_helper_and_unchanged_cpu_execution_pin():
+def test_workflow_uses_reviewed_execution_pin_for_small_input_helper_and_cpu():
     workflow = yaml.load((ROOT / '.github/workflows/v4-cpu-private-research.yml').read_text(), Loader=yaml.BaseLoader)
-    assert workflow['env']['CPU_CODE_SHA'] == '221fa92b1cbff8950716ec373eac793ca340c873'
+    assert re.fullmatch('[0-9a-f]{40}',workflow['env']['CPU_CODE_SHA'])
+    assert workflow['env']['CPU_CODE_SHA']==workflow['env']['EXPECTED_CPU_CODE_SHA']
     steps = workflow['jobs']['research']['steps']
-    checkout = next(s for s in steps if s.get('with', {}).get('path') == '.bct-input-transport')
-    assert checkout['with']['ref'] == '7d9188608a66520115727ff5daa30d13190f4958'
+    checkout = next(s for s in steps if s.get('uses') == 'actions/checkout@v4')
+    assert checkout['with']['ref'] == '${{ env.CPU_CODE_SHA }}'
     assert checkout['with']['persist-credentials'] == 'false'
-    assert checkout['with']['sparse-checkout'] == '/.github/scripts/receive_cpu_sources.py'
-    verify = next(s for s in steps if s.get('name', '').startswith('Verify original scheduled RSS'))
-    receive = next(s for s in steps if 'receive_cpu_sources.py' in s.get('run', ''))
+    verify = next(s for s in steps if s.get('name', '').startswith('Verify actual upstream identity'))
+    receive = next(s for s in steps if 'receive_cpu_delta.py' in s.get('run', ''))
     assert steps.index(verify) < steps.index(receive)
     assert 'verified_schedule' in verify['run'] and 'gh run download' not in verify['run']
-    assert 'timeout 300 python .bct-input-transport/' in receive['run']
+    assert 'timeout 300 python .github/scripts/receive_cpu_delta.py' in receive['run']
     assert '--expected-head "$ACQUISITION_HEAD"' in receive['run']
     assert 'gh run download "$ACQUISITION_RUN"' not in receive['run']
     process = next(s for s in steps if s.get('name', '').startswith('Consume approved'))
-    assert process['run'].strip() == 'timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_private.py process --checkpoint var/v4/cpu-private/prior --output var/v4/cpu-private/observation.json'
+    assert 'timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_private.py process --checkpoint var/v4/cpu-private/prior' in process['run']
+    assert '--input-receipt var/v4/cpu-private/input-receipt.json' in process['run']
+    assert '--manual-acquisition-run "$ACQUISITION_RUN"' in process['run']

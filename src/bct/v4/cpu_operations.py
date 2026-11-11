@@ -47,6 +47,15 @@ def github_guard():
     return free_guard(api('repos/'+repo),api('repos/'+repo+'/actions/cache/usage'),runtime=hosted)
 
 
+def verify_execution_pin(expected):
+    import re
+    if (not isinstance(expected,str) or not re.fullmatch('[0-9a-f]{40}',expected)
+            or os.environ.get('CPU_CODE_SHA',expected)!=expected):raise ValueError('CPU_EXECUTION_PIN_INVALID')
+    result=subprocess.run(['git','-C',str(Path(__file__).resolve().parents[3]),'rev-parse','HEAD'],capture_output=True,text=True,timeout=10)
+    if result.returncode or result.stdout.strip()!=expected:raise ValueError('CPU_EXECUTION_PIN_MISMATCH')
+    return expected
+
+
 def model_files(root,manifest):
     model=Path(root)/'models/gliner2-base-v1'
     for entry in manifest['files']:
@@ -126,7 +135,7 @@ def restore(source,root):
     return {'restored':True,'tables':len(p['tables']),'sqlite_sha256':p['sqlite_sha256']}
 
 
-def observe(ledger,*,trigger,scheduled_for=None,upstream=None,execute=False,extractor=None,schedule_context=None,persistence_required=False):
+def observe(ledger,*,trigger,scheduled_for=None,upstream=None,execute=False,extractor=None,schedule_context=None,manual_context=None,persistence_required=False,analysis_context=None):
     """One bounded 120-second-supervised command uses the existing queue.
 
     This preflight does not certify a scheduler. Only independently verified
@@ -135,36 +144,58 @@ def observe(ledger,*,trigger,scheduled_for=None,upstream=None,execute=False,extr
     """
     from .cpu_automation import state,work
     scheduled=verified_schedule(schedule_context) if schedule_context is not None else {'verified':False}
+    manual=verified_manual_input(manual_context) if manual_context is not None else None
+    if manual and scheduled['verified']:raise ValueError('MANUAL_INPUT_CANNOT_BE_SCHEDULED')
     before=state(ledger);start=time.monotonic();cc=time.process_time();at=now()
     with ledger.worker():
-        result=work(ledger,extractor=extractor,max_windows=24,seconds=45)if execute else None
+        result=work(ledger,extractor=extractor,max_windows=24,seconds=45,analysis_context=analysis_context)if execute else None
         after=state(ledger)
         prior=[json.loads(p)for p, in ledger.db.execute("SELECT payload FROM events WHERE kind='CPU_OPERATION_OBSERVATION'")]
         payload={'version':'bct-cpu-operation-observation-1','started_at':at,'finished_at':now(),
+            'consumer_run_id':int(os.environ['GITHUB_RUN_ID']) if os.environ.get('GITHUB_RUN_ID','').isdigit() else None,
+            'consumer_attempt':int(os.environ['GITHUB_RUN_ATTEMPT']) if os.environ.get('GITHUB_RUN_ATTEMPT','').isdigit() else None,
             'trigger':trigger,'scheduled_for':scheduled_for,'scheduled_execution_verified':scheduled['verified'],
+            'scheduled':scheduled['verified'],'execution_mode':'MANUAL_ACTUAL_INPUT' if manual else 'VERIFIED_SCHEDULE' if scheduled['verified'] else 'LOCAL_DIAGNOSTIC',
+            'manual_input_proof':manual,
             'schedule_proof':scheduled,
             'seven_day_start':None,'seven_day_status':'NOT_RUN_NO_VERIFIED_SCHEDULED_CPU_SUCCESS',
             'upstream':upstream or {},'new_URLs':(upstream or {}).get('new_URLs',0),'new_body_documents':(upstream or {}).get('new_body_documents',0),
             'CPU_documents_processed':len({c['document_id']for c in after['coverage']if c['read_characters']>next((d['read_characters']for d in before['coverage']if d['document_id']==c['document_id']),0)}),
             'new_CPU_windows':0 if result is None else result['new_windows'],
+            'analysis_attempts':0 if result is None else result.get('analysis_attempts',0),
+            'new_analysis_results':0 if result is None else result.get('new_analysis_results',0),
+            'analysis_runtime_failures':0 if result is None else result.get('analysis_runtime_failures',0),
+            'analysis_errors':0 if result is None else result.get('analysis_errors',0),
+            'complete_analyzed_new_CPU_documents':0 if result is None else result.get('complete_analyzed_new_CPU_documents',0),
             'successful_new_CPU_windows':(after['completed_windows']-after['failed_windows'])-(before['completed_windows']-before['failed_windows']),
             'actually_read_new_characters':after['actually_read_characters']-before['actually_read_characters'],
-            'CPU_pending':after['pending_windows'],'review_pending_windows':after['completed_windows']-after['failed_windows'],
+            'CPU_pending':after['total_pending_windows'],'review_pending_windows':after['completed_windows']-after['failed_windows'],
             'isolated_errors':after['failed_windows']+after['isolated_imports'],
-            'backlog_change':after['pending_windows']-before['pending_windows'],
+            'backlog_change':after['total_pending_windows']-before['total_pending_windows'],
             'wall_seconds':time.monotonic()-start,'CPU_seconds':time.process_time()-cc,
             'peak_RSS_KiB':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
             'queue':after,'model_loaded_by_queue':bool(result and result.get('model_loaded',result['new_windows']>0)),
             'prior_observations':len(prior),'API_calls':0,'API_tokens':0,'API_cost_KRW':0,
             'candidate_registration':False,'AI_adoption':'FAIL_UNCHANGED','lead_performance':'BLOCKED_UNCHANGED'}
         payload['private_persistence_required']=persistence_required
+        payload['analysis_status']='ERROR_PROGRESS_PRESERVED' if payload['analysis_errors'] else 'ANALYZED_READ' if payload['complete_analyzed_new_CPU_documents'] else 'NO_COMPLETE_NEW_ANALYZED_READ'
+        payload['status']=('FAIL_ANALYSIS_PROGRESS_PRESERVED' if payload['analysis_errors'] else
+            'PASS_ACTUAL_CPU_ANALYZED' if payload['complete_analyzed_new_CPU_documents'] else
+            'PARTIAL_OR_CONTEXT_PENDING_PROGRESS_SAVED' if payload['new_CPU_windows'] else
+            'ANALYSIS_ONLY_REUSED_NO_NEW_CPU_READ' if payload['new_analysis_results'] else
+            'NO_READ_INPUT_HELD' if payload['isolated_errors'] or (upstream or {}).get('isolated_prior_input_holds') else 'NO_NEW_CPU_INPUT')
         if persistence_required:payload['seven_day_status']='NOT_STARTED_PENDING_PRIVATE_PERSISTENCE'
-        if not persistence_required and scheduled['verified'] and payload['actually_read_new_characters']>0 and payload['successful_new_CPU_windows']>0:
-            previous=[r['finished_at']for r in prior if not r.get('private_persistence_required') and r.get('scheduled_execution_verified') and r.get('actually_read_new_characters',0)>0 and r.get('successful_new_CPU_windows',0)>0]
+        if not persistence_required and eligible_observation(payload):
+            previous=[r['finished_at']for r in prior if not r.get('private_persistence_required') and eligible_observation(r)]
             payload['seven_day_start']=min(previous)if previous else payload['finished_at']
             payload['seven_day_status']='OBSERVING_NOT_COMPLETED_REQUIRES7REAL_DAYS_AND_CONTINUITY_REVIEW'
         with ledger.db:ledger.event('CPU_OPERATION_OBSERVATION',payload)
     return payload
+
+
+def eligible_observation(value):
+    return (value.get('scheduled_execution_verified') is True and value.get('successful_new_CPU_windows',0)>0
+            and value.get('actually_read_new_characters',0)>0 and value.get('complete_analyzed_new_CPU_documents',0)>0)
 
 
 def verified_schedule(context):
@@ -177,14 +208,17 @@ def verified_schedule(context):
     event=context['event'];acq=context['acquisition_run'];rss=context['rss_run']
     parent=event.get('workflow_run',{})
     ids=set(re.findall(r'\bRSS_RUN_ID:\s*(\d+)\b',context['acquisition_job_log']))
+    attempts=set(re.findall(r'\bRSS_RUN_ATTEMPT:\s*(\d+)\b',context['acquisition_job_log']))
     if (context.get('event_name')!='workflow_run' or parent.get('id')!=acq.get('id')
+            or parent.get('run_attempt')!=acq.get('run_attempt') or type(acq.get('run_attempt')) is not int
             or acq.get('name')!='New precursor evidence acquisition' or acq.get('event')!='workflow_run'
             or acq.get('head_branch')!='main' or acq.get('conclusion')!='success'
             or rss.get('name')!='RSS live environment check' or rss.get('event')!='schedule'
             or rss.get('head_branch')!='main' or rss.get('conclusion')!='success'
-            or ids!={str(rss.get('id'))}):
+            or ids!={str(rss.get('id'))} or (attempts!={str(rss.get('run_attempt'))} and not (not attempts and rss.get('run_attempt')==1))):
         raise ValueError('SCHEDULE_CHAIN_NOT_VERIFIED')
-    return {'verified':True,'RSS_run_id':rss['id'],'acquisition_run_id':acq['id'],
+    return {'verified':True,'RSS_run_id':rss['id'],'RSS_run_attempt':rss['run_attempt'],
+            'acquisition_run_id':acq['id'],'acquisition_run_attempt':acq['run_attempt'],
             'RSS_actual_created_at':rss['created_at'],'nominal_cron_slot':None,
             'configured_UTC_slots':['02:00','06:00','10:00','14:00','18:00','22:00'],
             'acquisition_job_log_sha256':sha(context['acquisition_job_log'].encode()),
@@ -193,7 +227,7 @@ def verified_schedule(context):
 
 def observation_summary(db):
     rows=[json.loads(p)for p, in db.execute("SELECT payload FROM events WHERE kind='CPU_OPERATION_OBSERVATION' ORDER BY seq")]
-    starts=[r['finished_at']for r in rows if not r.get('private_persistence_required') and r.get('scheduled_execution_verified') and r.get('actually_read_new_characters',0)>0 and r.get('successful_new_CPU_windows',0)>0]
+    starts=[r['finished_at']for r in rows if not r.get('private_persistence_required') and eligible_observation(r)]
     return {'observations':len(rows),'latest':rows[-1]if rows else None,
         'first_verified_scheduled_CPU_success':min(starts)if starts else None,
         'seven_day_status':'NOT_RUN'if not starts else'OBSERVING_REQUIRES_CONTINUITY_REVIEW',
@@ -213,13 +247,65 @@ def github_schedule_context():
         p=subprocess.run(args,capture_output=True,text=True,timeout=25)
         if p.returncode: raise ValueError('SCHEDULE_EVIDENCE_ACCESS_BLOCKED')
         return p.stdout
-    acq=json.loads(command(['gh','api',f'repos/{repo}/actions/runs/{parent}']))
-    log=command(['gh','run','view',str(parent),'--repo',repo,'--log'])
+    attempt=event['workflow_run'].get('run_attempt')
+    if type(attempt) is not int or attempt<1:raise ValueError('UPSTREAM_RUN_ATTEMPT_MISSING')
+    acq=json.loads(command(['gh','api',f'repos/{repo}/actions/runs/{parent}/attempts/{attempt}']))
+    log=command(['gh','run','view',str(parent),'--attempt',str(attempt),'--repo',repo,'--log'])
     ids=set(re.findall(r'\bRSS_RUN_ID:\s*(\d+)\b',log))
     if len(ids)!=1: raise ValueError('RSS_PARENT_LOG_BINDING_MISSING_OR_AMBIGUOUS')
-    rss_id=next(iter(ids));rss=json.loads(command(['gh','api',f'repos/{repo}/actions/runs/{rss_id}']))
+    rss_id=next(iter(ids));attempts=set(re.findall(r'\bRSS_RUN_ATTEMPT:\s*(\d+)\b',log))
+    if len(attempts)>1:raise ValueError('RSS_PARENT_ATTEMPT_AMBIGUOUS')
+    suffix=f'/attempts/{next(iter(attempts))}' if attempts else ''
+    rss=json.loads(command(['gh','api',f'repos/{repo}/actions/runs/{rss_id}'+suffix]))
     context={'event_name':'workflow_run','event':event,'acquisition_run':acq,'rss_run':rss,'acquisition_job_log':log}
     verified_schedule(context)
+    return context
+
+
+def verified_manual_input(context):
+    """Explicit actual input execution does not impersonate a scheduled chain."""
+    import re
+    event=context['event'];acq=context['acquisition_run'];rss=context['rss_run']
+    ids=set(re.findall(r'\bRSS_RUN_ID:\s*(\d+)\b',context['acquisition_job_log']))
+    attempts=set(re.findall(r'\bRSS_RUN_ATTEMPT:\s*(\d+)\b',context['acquisition_job_log']))
+    if (context.get('event_name')!='workflow_dispatch' or event.get('inputs',{}).get('purpose')!='manual-research'
+            or str(event.get('inputs',{}).get('acquisition_run'))!=str(acq.get('id'))
+            or acq.get('name')!='New precursor evidence acquisition' or acq.get('event')!='workflow_run'
+            or acq.get('head_branch')!='main' or acq.get('conclusion')!='success'
+            or rss.get('name')!='RSS live environment check' or rss.get('event') not in ('schedule','workflow_dispatch')
+            or rss.get('head_branch')!='main' or rss.get('conclusion')!='success' or ids!={str(rss.get('id'))}
+            or type(acq.get('run_attempt')) is not int or acq['run_attempt']<1
+            or (attempts!={str(rss.get('run_attempt'))} and not (not attempts and rss.get('run_attempt')==1))):
+        raise ValueError('MANUAL_ACTUAL_INPUT_CHAIN_NOT_VERIFIED')
+    return {'verified':True,'scheduled':False,'RSS_run_id':rss['id'],'RSS_run_attempt':rss['run_attempt'],
+            'acquisition_run_id':acq['id'],'acquisition_run_attempt':acq['run_attempt'],
+            'acquisition_head_sha':acq['head_sha'],'RSS_actual_created_at':rss['created_at'],
+            'acquisition_job_log_sha256':sha(context['acquisition_job_log'].encode()),'seven_day_start':None}
+
+
+def github_manual_context(acquisition_run):
+    import re
+    if (os.environ.get('GITHUB_EVENT_NAME')!='workflow_dispatch' or os.environ.get('GITHUB_REF')!='refs/heads/main'
+            or os.environ.get('GITHUB_REPOSITORY')!='irewon1-lgtm/bottleneck-control-tower'
+            or type(acquisition_run) is not int or acquisition_run<=0):
+        raise ValueError('NOT_AN_APPROVED_MANUAL_ACTUAL_INPUT_TRIGGER')
+    event=json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text());repo=os.environ['GITHUB_REPOSITORY']
+    def command(args):
+        process=subprocess.run(args,capture_output=True,text=True,timeout=25)
+        if process.returncode:raise ValueError('MANUAL_INPUT_EVIDENCE_ACCESS_BLOCKED')
+        return process.stdout
+    acq=json.loads(command(['gh','api',f'repos/{repo}/actions/runs/{acquisition_run}']))
+    attempt=acq.get('run_attempt')
+    if type(attempt) is not int or attempt<1:raise ValueError('UPSTREAM_RUN_ATTEMPT_MISSING')
+    log=command(['gh','run','view',str(acquisition_run),'--attempt',str(attempt),'--repo',repo,'--log'])
+    ids=set(re.findall(r'\bRSS_RUN_ID:\s*(\d+)\b',log))
+    if len(ids)!=1:raise ValueError('RSS_PARENT_LOG_BINDING_MISSING_OR_AMBIGUOUS')
+    attempts=set(re.findall(r'\bRSS_RUN_ATTEMPT:\s*(\d+)\b',log))
+    if len(attempts)>1:raise ValueError('RSS_PARENT_ATTEMPT_AMBIGUOUS')
+    suffix=f'/attempts/{next(iter(attempts))}' if attempts else ''
+    rss=json.loads(command(['gh','api',f'repos/{repo}/actions/runs/{next(iter(ids))}'+suffix]))
+    context={'event_name':'workflow_dispatch','event':event,'acquisition_run':acq,'rss_run':rss,'acquisition_job_log':log}
+    verified_manual_input(context)
     return context
 
 

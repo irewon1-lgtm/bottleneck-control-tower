@@ -58,12 +58,14 @@ def checked(command, *, environment):
     return process.stdout
 
 
-def verify(code_root, runtime):
+def verify(code_root, runtime, *, expected_code_pin=PIN):
     code_root, runtime = Path(code_root).resolve(), Path(runtime).resolve()
     if sys.version_info[:3] != (3, 12, 15) or sys.platform != 'linux' or platform.machine() != 'x86_64':
         raise ValueError('RUNTIME_PYTHON_OR_PLATFORM_MISMATCH')
     environment = health_environment(os.environ, code_root)
-    if checked(['git', '-C', str(code_root), 'rev-parse', 'HEAD'], environment=environment).strip() != PIN:
+    if not isinstance(expected_code_pin,str) or not re.fullmatch('[0-9a-f]{40}',expected_code_pin):
+        raise ValueError('RUNTIME_EXPECTED_EXECUTION_PIN_INVALID')
+    if checked(['git', '-C', str(code_root), 'rev-parse', 'HEAD'], environment=environment).strip() != expected_code_pin:
         raise ValueError('RUNTIME_EXECUTION_CODE_PIN_MISMATCH')
     lock = code_root / 'scripts/v4/requirements.lock'
     manifest_path = code_root / 'docs/v4/cpu-automation/preflight/model-manifest.json'
@@ -86,6 +88,7 @@ def verify(code_root, runtime):
         raise ValueError('RUNTIME_PAYLOAD_3GIB_LIMIT')
     # Only load/eval the pinned local model. No extract/read/queue/DB operation.
     child_code = ('import json,sys;from pathlib import Path;'
+                  'from bct.v4 import cpu_automation,cpu_resume,cpu_review,public_research;'
                   'from bct.v4.cpu_operations import runtime_probe;'
                   'print("BCT_OFFLINE_HEALTH="+json.dumps(runtime_probe(Path(sys.argv[1]),'
                   'json.loads(Path(sys.argv[2]).read_text()),load=True)))')
@@ -95,12 +98,14 @@ def verify(code_root, runtime):
               if line.startswith('BCT_OFFLINE_HEALTH=')]
     if len(health) != 1 or not health[0]['model_load_health_probe'] or health[0]['new_CPU_inferences'] != 0:
         raise ValueError('RUNTIME_OFFLINE_HEALTH_PROOF_INVALID')
-    return {'status': 'PASS_SAME_APPROVED_SEED_RUNTIME_VERIFIED', 'execution_code_SHA': PIN,
+    return {'status': 'PASS_SAME_APPROVED_SEED_RUNTIME_VERIFIED', 'execution_code_SHA': expected_code_pin,
+            'approved_seed_execution_code_SHA':PIN,
             'python': platform.python_version(), 'platform': 'Linux-X64', 'lock_sha256': LOCK_SHA,
             'manifest_sha256': MANIFEST_SHA, 'packages': packages, 'pip_check': 'PASS',
             'model': manifest['model'], 'revision': manifest['revision'], 'model_files': files,
             'model_file_bytes': sum(item['bytes'] for item in files), 'runtime_payload_bytes': payload,
             'offline_health': health[0], 'new_CPU_inferences': 0, 'DB_writes': 0,
+            'pipeline_imports_verified':['cpu_automation','cpu_resume','cpu_review','public_research'],
             'model_downloads': 0, 'runtime_installs': 0, 'private_credentials_passed': False,
             'CPU_enabled_changed': False, 'old_runtime_binary_identity': 'NOT_CLAIMED'}
 
@@ -109,5 +114,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--code-root', type=Path, required=True)
     parser.add_argument('--runtime', type=Path, default=Path('.v4-cpu-runtime'))
+    parser.add_argument('--expected-code-pin',default=PIN,help='Reviewed immutable execution SHA; model and lock hashes stay fixed')
     args = parser.parse_args()
-    print('BCT_RUNTIME_VERIFY_JSON=' + json.dumps(verify(args.code_root, args.runtime), sort_keys=True))
+    print('BCT_RUNTIME_VERIFY_JSON=' + json.dumps(verify(args.code_root, args.runtime,expected_code_pin=args.expected_code_pin), sort_keys=True))

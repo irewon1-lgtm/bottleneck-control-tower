@@ -19,10 +19,27 @@ def test_deployed_consumer_requires_exact_configured_code_and_explicit_enable():
     assert 'BCT_V4_PRIVATE_STATE_TOKEN'not in json.dumps(w['jobs']['research'])
     text=path.read_text()
     assert 'verify-scope'not in text
-    # The authorized manual source-transport verification uploads only three
-    # numeric/hash receipts; the scheduled CPU/DB publisher never uploads data.
-    for name in ('research','publish'):
-        assert 'upload-artifact'not in json.dumps(w['jobs'][name])
+    assert 'upload-artifact'not in json.dumps(w['jobs']['research'])
+    publisher=w['jobs']['publish']['steps']
+    uploads=[s for s in publisher if s.get('uses','').startswith('actions/upload-artifact')]
+    assert len(uploads)==1
+    upload=uploads[0]
+    assert upload['with']['name']=='bct-public-research-${{ github.run_attempt }}'
+    assert upload['with']['path'].splitlines()==['var/v4/cpu-private/public/snapshot.json','var/v4/cpu-private/public/manifest.json']
+    restore=next(s for s in publisher if s.get('name','').startswith('New-process remote research restore'))
+    project=next(s for s in publisher if s.get('name','').startswith('Project acknowledged research'))
+    assert publisher.index(restore)<publisher.index(project)<publisher.index(upload)
+    assert 'inputs.purpose' in project['if'] and "inputs.purpose == 'manual-research'" in project['if']
+    assert 'runtime-verify' not in project['if'] and 'source-transport-verify' not in project['if']
+    assert "inputs.purpose == 'recover-public'" in project['if']
+    assert 'args=(--recover)' in project['run']
+    for step in publisher:
+        if 'v4_cpu_private.py publish' in step.get('run',''):
+            assert 'recover-public' not in step['if']
+    forward=next(s for s in publisher if 'v4_cpu_private.py prepare-public-bridge' in s.get('run',''))
+    seal=next(s for s in publisher if 'v4_cpu_private.py seal' in s.get('run',''))
+    assert publisher.index(upload)<publisher.index(forward)<publisher.index(seal)
+    assert 'always()' not in forward['if']
     # The approved manual official-format job needs the existing lightweight
     # XLSX/core dependencies. The scheduled CPU path must still never install
     # anything. Check the actual execution boundary, not an unrelated job's text.

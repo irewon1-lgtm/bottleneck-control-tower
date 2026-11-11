@@ -58,4 +58,5 @@ def test_runtime_job_only_restores_approved_cache_and_has_no_secrets_or_inferenc
     cache = next(s for s in job['steps'] if s.get('uses') == 'actions/cache/restore@v4')
     assert cache['with']['fail-on-cache-miss'] == 'true'
     checkouts = [s['with'] for s in job['steps'] if s.get('uses') == 'actions/checkout@v4']
-    assert any(s.get('ref') == '221fa92b1cbff8950716ec373eac793ca340c873' for s in checkouts)
+    assert any(s.get('ref') == '${{ env.CPU_CODE_SHA }}' for s in checkouts)
+    assert '--expected-code-pin "$CPU_CODE_SHA"' in job['steps'][-1]['run']

@@ -121,9 +121,9 @@ def test_main_cache_seed_is_manual_readonly_pinned_and_never_consumes_data():
 
 
 def schedule_context():
-    acq={'id':2,'name':'New precursor evidence acquisition','event':'workflow_run','head_branch':'main','conclusion':'success'}
-    rss={'id':1,'name':'RSS live environment check','event':'schedule','head_branch':'main','conclusion':'success','created_at':'2026-10-15T00:09:10Z'}
-    return {'event_name':'workflow_run','event':{'workflow_run':{'id':2}},'acquisition_run':acq,
+    acq={'id':2,'run_attempt':1,'head_sha':'a'*40,'name':'New precursor evidence acquisition','event':'workflow_run','head_branch':'main','conclusion':'success'}
+    rss={'id':1,'run_attempt':1,'name':'RSS live environment check','event':'schedule','head_branch':'main','conclusion':'success','created_at':'2026-10-15T00:09:10Z'}
+    return {'event_name':'workflow_run','event':{'workflow_run':{'id':2,'run_attempt':1}},'acquisition_run':acq,
             'rss_run':rss,'acquisition_job_log':'    RSS_RUN_ID: 1\n'}
 
 
@@ -249,7 +249,9 @@ def test_only_verified_scheduled_actual_read_opens_observation_never_completes_i
             return {'status':'PASS','model':MODEL,'revision':MODEL_REVISION,'selected_windows':windows,'spans':[]}
     l=open_queue(tmp_path)
     with l.worker():enqueue(l,d,raw,{'synthetic':True})
-    r=op.observe(l,trigger='SYNTHETIC_SCHEDULE_PROOF_TEST',execute=True,extractor=SyntheticOnly(),schedule_context=schedule_context(),persistence_required=private_persistence)
+    from test_v4_cpu_analysis_pipeline import bound_context
+    r=op.observe(l,trigger='SYNTHETIC_SCHEDULE_PROOF_TEST',execute=True,extractor=SyntheticOnly(),schedule_context=schedule_context(),
+        persistence_required=private_persistence,analysis_context=bound_context(tmp_path/'context',d,raw))
     assert r['actually_read_new_characters']==len(body)
     summary=op.observation_summary(l.db)
     if private_persistence:

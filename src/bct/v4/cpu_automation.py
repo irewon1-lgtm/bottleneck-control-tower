@@ -4,6 +4,7 @@ Append-only per-window commits, one worker, no AI client, no LIVE/firsts writes.
 """
 from datetime import datetime
 import json
+import os
 from pathlib import Path
 import re
 import sqlite3
@@ -69,12 +70,12 @@ def body_key(doc):
     return sha([doc['origin_url'], doc['body_sha256'], MODEL, MODEL_REVISION, VERSION])
 
 
-def enqueue(ledger, doc, raw, upstream):
+def enqueue(ledger, doc, raw, upstream, *, analysis_replay=False):
     if sha(raw) != doc['raw_sha256'] or sha(doc['body'].encode()) != doc['body_sha256']:
         raise ValueError('NATIVE_OR_BODY_HASH_MISMATCH')
     from .cpu_resume import completed,planned_read
-    if completed(ledger,doc):return 'UNCHANGED_BODY_COMPLETED_SOURCE_SEPARATED'
-    if planned_read(ledger,doc):return 'UNCHANGED_WINDOWS_UNREAD_CONTEXT_HELD'
+    if completed(ledger,doc) and not analysis_replay:return 'UNCHANGED_BODY_COMPLETED_SOURCE_SEPARATED'
+    if planned_read(ledger,doc) and not analysis_replay:return 'UNCHANGED_WINDOWS_UNREAD_CONTEXT_HELD'
     if not doc.get('published_at') or doc.get('provenance') != 'PASS' or doc.get('provenance_verified') is not True:
         raise ValueError('SOURCE_PUBLICATION_OR_PROVENANCE_HELD')
     pub = datetime.fromisoformat(doc['published_at'].replace('Z','+00:00'))
@@ -98,7 +99,8 @@ def enqueue(ledger, doc, raw, upstream):
         raise ValueError('DOCUMENT_ID_COLLISION')
     windows, held = plan(doc)
     key = body_key(doc)
-    known = any(x['body_key']==key for x in events(ledger, 'CPU_QUEUE_DOCUMENT'))
+    known = any(x['body_key']==key and (not analysis_replay or x['document_id']==doc['document_id'])
+                for x in events(ledger, 'CPU_QUEUE_DOCUMENT'))
     new_version = not ledger.db.execute('SELECT 1 FROM documents WHERE id=?',(doc['document_id'],)).fetchone()
     if new_version: ledger.capture(doc, raw)
     if known:
@@ -114,7 +116,7 @@ def enqueue(ledger, doc, raw, upstream):
     return 'QUEUED'
 
 
-def ingest_delta(ledger, manifest, cache, *, upstream_run_id, reconsider_held=False,storage_policy=None,source_separated=False):
+def ingest_delta(ledger, manifest, cache, *, upstream_run_id, reconsider_held=False,storage_policy=None,source_separated=False,input_artifacts=None):
     """Read only existing canonical delta + native cache; never fetch RSS/URLs."""
     if manifest.get('format') != 'bct-new-rss-delta-v1': raise ValueError('RSS_DELTA_CONTRACT')
     cache = Path(cache).resolve()
@@ -150,8 +152,17 @@ def ingest_delta(ledger, manifest, cache, *, upstream_run_id, reconsider_held=Fa
             if len(hits)!=1: raise ValueError('UPSTREAM_VERSION_AMBIGUOUS')
             p,doc = hits[0]
             receipt['cache_document_sha256'] = sha(p.read_bytes())
+            receipt.update(body_sha256=doc.get('body_sha256'),raw_sha256=doc.get('raw_sha256'))
             from .cpu_resume import completed,transient_allowed,planned_read
-            if completed(ledger,doc) or planned_read(ledger,doc):
+            from .cpu_resume import latest_sources
+            original=latest_sources(ledger).get(body_key(doc))
+            if source_separated and original and not original['complete']:
+                if any(original.get(k)!=doc.get(k) for k in ('document_id','raw_sha256')):
+                    raise ValueError('SOURCE_VERSION_HOLD_PENDING_EXACT_NATIVE_REQUIRED')
+                if not any(r['body_key']==body_key(doc) for r in events(ledger,'CPU_QUEUE_DOCUMENT')):
+                    raise ValueError('SOURCE_VERSION_HOLD_PRIOR_RECEIPTS_NOT_REHYDRATED')
+            reuse_version=completed(ledger,doc) and (not original or any(original.get(k)!=doc.get(k) for k in ('document_id','raw_sha256')))
+            if not reuse_version and (completed(ledger,doc) or planned_read(ledger,doc)):
                 receipt['status']='UNCHANGED_BODY_COMPLETED_SOURCE_SEPARATED'if completed(ledger,doc)else 'UNCHANGED_WINDOWS_UNREAD_CONTEXT_HELD'
                 with ledger.db:ledger.event('CPU_QUEUE_IMPORT',receipt)
                 states.append(receipt);continue
@@ -162,6 +173,9 @@ def ingest_delta(ledger, manifest, cache, *, upstream_run_id, reconsider_held=Fa
                         and review.get('private_archival')=='PERMITTED' and review.get('privacy_review')=='CLEARED'
                         and review.get('rights_basis') and review.get('reviewed_by'))):
                     raise ValueError('PRIVATE_ARCHIVAL_OR_PRIVACY_UNREVIEWED')
+            if source_separated:
+                from .cpu_resume import url
+                url(doc['origin_url'])  # Reject a nonexportable source before reading it.
             if previous and changed: receipt['reconsidered_after_new_cache_evidence'] = True
             # Raw path from an artifact may refer to its old runner. Resolve
             # only a basename below raw/, never follow arbitrary artifact paths.
@@ -169,9 +183,21 @@ def ingest_delta(ledger, manifest, cache, *, upstream_run_id, reconsider_held=Fa
             if not filename.startswith(doc['raw_sha256']+'.'): raise ValueError('RAW_PATH_HASH_IDENTITY')
             rawpath = (cache/'raw'/filename).resolve()
             if not rawpath.is_relative_to(cache/'raw'): raise ValueError('RAW_PATH_ESCAPE')
-            receipt['status'] = enqueue(ledger, doc, rawpath.read_bytes(),
-                {'run_id':str(upstream_run_id),'manifest_item_sha256':sha(item),
-                 'cache_document_sha256':sha(p.read_bytes())})
+            artifact=(input_artifacts or {}).get(p.name)
+            if input_artifacts is not None and artifact is None:
+                raise ValueError('CPU_INPUT_ARTIFACT_DESCRIPTOR_MISSING')
+            if artifact is not None:
+                from .cpu_resume import validate_input_artifact
+                validate_input_artifact(artifact)
+                if artifact['metadata_sha256']!=receipt['cache_document_sha256']:
+                    raise ValueError('CPU_INPUT_ARTIFACT_METADATA_MISMATCH')
+            upstream={'run_id':str(upstream_run_id),'manifest_item_sha256':sha(item),
+                 'cache_document_sha256':sha(p.read_bytes()),
+                 **({'input_artifact':artifact} if artifact else {})}
+            if reuse_version:
+                from .cpu_resume import reuse_completed_version
+                receipt['status']=reuse_completed_version(ledger,doc,rawpath.read_bytes(),upstream)
+            else:receipt['status'] = enqueue(ledger, doc, rawpath.read_bytes(),upstream)
         except (ValueError,KeyError,TypeError,OSError,APIError) as exc:
             receipt.update(status='HELD_ISOLATED', reason=str(exc) if isinstance(exc,ValueError) else type(exc).__name__)
         with ledger.db: ledger.event('CPU_QUEUE_IMPORT',receipt)
@@ -228,7 +254,13 @@ def state(ledger):
             'held_ranges':item['held_ranges']})
     from .cpu_resume import summary as resume_summary
     detached=resume_summary(ledger)
+    from .cpu_resume import latest_sources,rows
+    terminal=set(completed)|{r['key'] for r in rows(ledger.db,'CPU_RESUME_WINDOW')+rows(ledger.db,'CPU_RESUME_FAILURE')}
+    pending_keys={t['key'] for t in pending}
+    withheld={t['key'] for source in latest_sources(ledger).values() if source['body_key'] not in legacy
+              for t in source['tasks'] if t['key'] not in terminal and t['key'] not in pending_keys}
     return {'documents':len(docs),'tasks':len(tasks),'pending_windows':len(pending),
+        'withheld_pending_windows':len(withheld),'total_pending_windows':len(pending)+len(withheld),
         'completed_windows':len(tasks)-len(pending),
         'coverage':coverage_rows,
         'actually_read_characters':sum(c['read_characters'] for c in coverage_rows),
@@ -243,7 +275,7 @@ def state(ledger):
         'scheduled':'NOT_RUN_DISABLED','AI_reader':'DISABLED','candidate_promotion':'DISABLED','LIVE_registration':'DISABLED'}
 
 
-def work(ledger, *, extractor=None, max_windows=24, seconds=45):
+def work(ledger, *, extractor=None, max_windows=24, seconds=45,analysis_context=None):
     if type(max_windows) is not int or not 1<=max_windows<=24 or not 1<=seconds<=60:
         raise ValueError('CPU_BUDGET_WINDOW24_SECONDS60')
     start,cpu_start = time.monotonic(),time.process_time()
@@ -251,6 +283,7 @@ def work(ledger, *, extractor=None, max_windows=24, seconds=45):
     legacy = {x['body_key'] for x in events(ledger,'CPU_QUEUE_LEGACY_COMPLETE')}
     queues = [[t for t in d['tasks'] if t['key'] not in done] for d in events(ledger,'CPU_QUEUE_DOCUMENT') if d['body_key'] not in legacy]
     tasks = [q[i] for i in range(max(map(len,queues),default=0)) for q in queues if i<len(q)]
+    producer=inference_producer() if tasks else None
     # Lazy CPUExtractor: no data/only cached windows -> no model initialization.
     extractor = extractor or CPUExtractor('var/v4/repair/cpu/runtime')
     outputs = []
@@ -276,6 +309,7 @@ def work(ledger, *, extractor=None, max_windows=24, seconds=45):
                       'actually_read_characters':len(task['window']['text']) if input_read else 0,'at':now()}
             if reading is not None: output['CPU_original_rejected_by_validation'] = reading
         output.update(wall_seconds=time.monotonic()-clock,cpu_seconds=time.process_time()-cc)
+        if producer is not None:output['inference_producer']=producer
         # One atomic commit for receipt + raw reading + common UI records.
         with ledger.db:
             ledger.event('CPU_QUEUE_WINDOW_RESULT',output)
@@ -287,15 +321,94 @@ def work(ledger, *, extractor=None, max_windows=24, seconds=45):
                 for record in result['records']:
                     ledger.event('CROSS_COMMON_EVIDENCE',common_evidence(record,doc,'CPU_QUEUE_DISCOVERY_NOT_VALIDATED_FACT'))
             outputs.append(output)
+    # Analysis is a separate transaction after model receipts have committed.
+    # Retry missing/failed analysis from exact source and saved windows, even if
+    # every model task was already complete. A parser bug must never erase a
+    # successful model read or cause completed windows to run again.
+    analysis = analyze_queued(ledger, new_body_keys={o['body_key'] for o in outputs if o['status']=='REVIEW_PENDING'},analysis_context=analysis_context)
     # Checkpoint committed windows only. Interruption after an attempt can re-run
     # only that uncommitted local CPU window; never completed windows or an API.
     after = state(ledger)
-    if not outputs: return {'new_windows':0,'model_loaded':False,'before':before,'after':after,'API_calls':0}
+    if not outputs: return {'new_windows':0,'model_loaded':False,'before':before,'after':after,'API_calls':0,**analysis}
     run_id = 'cpu-queue-'+sha([o['key'] for o in outputs])
     result = stamp_export({'version':VERSION,'run_id':run_id,'scope':'RESEARCH_ONLY_NO_LIVE',
         'new_windows':len(outputs),'actually_read_characters':sum(o['actually_read_characters'] for o in outputs),
         'CPU_reading':{'windows':len(outputs)},'before':before,'after':after,
         'wall_seconds':time.monotonic()-start,'CPU_seconds':time.process_time()-cpu_start,
         'API_calls':0,'API_tokens':0,'API_cost_KRW':0,'candidates':[],
-        'validated_events':0,'S1':0,'S2':0,'S3':0,'promotion_enabled':False})
+        'validated_events':0,'S1':0,'S2':0,'S3':0,'promotion_enabled':False,**analysis})
     return ledger.save_run(run_id,result,'RESEARCH_CPU')
+
+
+def inference_producer():
+    """Only a verified Actions execution may attribute newly read windows."""
+    if os.environ.get('GITHUB_ACTIONS')!='true' or os.environ.get('GITHUB_REPOSITORY')!='irewon1-lgtm/bottleneck-control-tower':return None
+    from .cpu_operations import verify_execution_pin
+    from .cpu_resume import validate_inference_producer
+    result={'run_id':int(os.environ['GITHUB_RUN_ID']),'run_attempt':int(os.environ['GITHUB_RUN_ATTEMPT']),
+        'execution_sha':verify_execution_pin(os.environ.get('EXPECTED_CPU_CODE_SHA')),'workflow_sha':os.environ['GITHUB_WORKFLOW_SHA']}
+    validate_inference_producer(result)
+    return result
+
+
+def analyze_queued(ledger, *, new_body_keys=(),analysis_context=None):
+    """Reuse committed reads; an analysis failure is an error, never a HOLD."""
+    counts = {'analysis_attempts':0,'new_analysis_results':0,'analysis_runtime_failures':0,
+              'analysis_errors':0,'complete_analyzed_new_CPU_documents':0}
+    documents = {item['document_id']:item for item in events(ledger,'CPU_QUEUE_DOCUMENT')}
+    for did, item in documents.items():
+        doc = json.loads(ledger.db.execute('SELECT payload FROM documents WHERE id=?',(did,)).fetchone()[0])
+        counts['analysis_attempts'] += 1
+        try:
+            from .cpu_review import record_analysis
+            context_options={}
+            if analysis_context:
+                cache=Path(analysis_context['cache']);manifest=analysis_context['manifest']
+                prior=analysis_context.get('per_body',{}).get(item['body_key'])
+                if prior and all(prior.get(k)==doc.get(k) for k in ('document_id','body_sha256','raw_sha256')):
+                    artifact=item.get('upstream',{}).get('input_artifact',{})
+                    if any(prior.get(k)!=artifact.get(k) for k in ('artifact_id','digest','acquisition_run_attempt')):
+                        raise ValueError('CPU_HISTORICAL_CONTEXT_ARTIFACT_MISMATCH')
+                    if not re.fullmatch('historical/[0-9]+',prior['cache_path']):raise ValueError('CPU_HISTORICAL_CONTEXT_PATH')
+                    bound=(cache/prior['cache_path']).resolve()
+                    if not bound.is_relative_to(cache.resolve()):raise ValueError('CPU_HISTORICAL_CONTEXT_ESCAPE')
+                    metadata=(bound/'manifest.json').read_bytes()
+                    if sha(metadata)!=prior['manifest_sha256']:raise ValueError('CPU_HISTORICAL_CONTEXT_MANIFEST_HASH')
+                    cache=bound;manifest=json.loads(metadata)
+                context_options={'cache':cache,'input_manifest':manifest}
+            with ledger.db:
+                receipt = record_analysis(ledger, doc,**context_options)
+            counts['new_analysis_results'] += receipt.get('delivery') == 'NEW_ANALYSIS'
+            counts['analysis_errors'] += receipt.get('review_state') == 'FAILED'
+            counts['complete_analyzed_new_CPU_documents'] += (item['body_key'] in new_body_keys
+                and receipt.get('read_state')=='READ_COMPLETE' and receipt.get('target_review_performed') is True
+                and receipt.get('review_state') in ('READ_EVIDENCE_HOLD','NO_VALIDATED_EVENT','RESEARCH_FORECAST_REVIEW'))
+        except Exception as error:
+            from .cpu_resume import analysis_code_fingerprint
+            results = [r for r in events(ledger,'CPU_QUEUE_WINDOW_RESULT')
+                       if r.get('body_key') == item['body_key'] and r.get('document_id')==did]
+            successful=[r for r in results if r['status']=='REVIEW_PENDING']
+            producer=successful[0].get('inference_producer') if successful else None
+            if not producer or any(r.get('inference_producer')!=producer for r in successful):producer=None
+            failure = {'format':'bct-cpu-analysis-failure-1', 'document_id':did,
+                'body_sha256':doc['body_sha256'],'raw_sha256':doc['raw_sha256'],
+                'source_version':doc['body_sha256'],'body_key':item['body_key'],
+                'analysis_code_sha256':analysis_code_fingerprint(),
+                'model_read_producer':producer,
+                'window_result_sha256':sorted(sha(r) for r in results),
+                'CPU_windows_total':len(item['tasks']),
+                'CPU_windows_success':sum(r['status']=='REVIEW_PENDING' for r in results),
+                'CPU_windows_failed':sum(r['status']=='FAILED_ISOLATED' for r in results),
+                'CPU_windows_unread':len(item['tasks'])-len(results),
+                'model':MODEL if any(r['status']=='REVIEW_PENDING' for r in results) else None,
+                'revision':MODEL_REVISION if any(r['status']=='REVIEW_PENDING' for r in results) else None,
+                'reason_code':'ANALYSIS_RUNTIME_FAILED','error_class':type(error).__name__ if type(error).__name__ in
+                    {'ValueError','KeyError','TypeError','AttributeError','RuntimeError','ImportError','ModuleNotFoundError','OSError','AssertionError'} else 'Exception',
+                'review_state':'FAILED','at':now()}
+            failure['id'] = 'cpu-analysis-failure-'+sha({k:v for k,v in failure.items() if k != 'at'})
+            with ledger.db:
+                if not any(r['id'] == failure['id'] for r in events(ledger,'CPU_ANALYSIS_FAILURE')):
+                    ledger.event('CPU_ANALYSIS_FAILURE',failure)
+            counts['analysis_runtime_failures'] += 1
+            counts['analysis_errors'] += 1
+    return counts

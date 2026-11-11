@@ -152,6 +152,45 @@ def verify_predecessor(parent,*,read=None):
     return {'previous_publisher_run':previous['id'],'verified_before_CPU':True}
 
 
+def prepare_public_bridge(repo,snapshot,destination):
+    """Forward the same ACK after public-only recovery; no CAS or new reading."""
+    from .public_research import validate_snapshot
+    from . import cpu_resume as resume
+    public=validate_snapshot(json.loads(Path(snapshot).read_text()))
+    generation=public['generation'];repo=Path(repo);destination=Path(destination)
+    if destination.exists() or destination.is_symlink():raise ValueError('PUBLIC_BRIDGE_DESTINATION_EXISTS')
+    def git(*args):
+        process=subprocess.run(['git','-C',str(repo),*args],capture_output=True,timeout=25)
+        if process.returncode:raise ValueError('PUBLIC_BRIDGE_ACK_READ_FAILED')
+        return process.stdout
+    if (git('config','--get','remote.origin.url').decode().strip()!=PRIVATE_URL
+            or git('rev-parse','FETCH_HEAD').decode().strip()!=generation['private_commit']):
+        raise ValueError('PUBLIC_BRIDGE_FETCHED_ACK_MISMATCH')
+    commit=generation['private_commit'];ack=json.loads(git('show',commit+':private-persistence.json'))
+    if (ack.get('sqlite_sha256')!=generation['sqlite_sha256'] or ack.get('checkpoint_commit')!=generation['checkpoint_commit']
+            or git('rev-list','--parents','-n','1',commit).decode().split()!=[commit,ack['checkpoint_commit']]):
+        raise ValueError('PUBLIC_BRIDGE_ACK_HASH_OR_PARENT_MISMATCH')
+    identities={'publisher_run_id':'producer_run_id','publisher_attempt':'producer_attempt',
+                'publisher_workflow_sha':'workflow_sha','publisher_execution_sha':'execution_sha'}
+    if any(ack.get(field)!=generation[target] for field,target in identities.items()):
+        raise ValueError('PUBLIC_BRIDGE_ORIGINAL_PRODUCER_MISMATCH')
+    with tempfile.TemporaryDirectory(prefix='bct-public-bridge-') as temporary:
+        root=Path(temporary);packet=root/'checkpoint';packet.mkdir()
+        names=('checkpoint.json','checkpoint.sqlite3.gz')
+        for name in names:(packet/name).write_bytes(git('show',commit+':'+name))
+        restored=op.restore(packet,root/'restored')
+        if restored['sqlite_sha256']!=generation['sqlite_sha256']:raise ValueError('PUBLIC_BRIDGE_SQLITE_MISMATCH')
+        ledger=resume.Ledger(root/'restored')
+        try:resume.audit(ledger)
+        finally:ledger.close()
+        destination.mkdir(parents=True,exist_ok=False)
+        for name in names:
+            with (destination/name).open('xb') as output:output.write((packet/name).read_bytes())
+    return {'status':'PASS_EXISTING_ACK_HANDOFF_REFRESH_NO_NEW_RESEARCH','commit':commit,
+        'sqlite_sha256':restored['sqlite_sha256'],'restored_tables':restored['tables'],
+        'new_CPU_windows':0,'model_loads':0,'private_CAS_writes':0,'new_ACKs':0,'original_public_generation_unchanged':True}
+
+
 def publish(repo,source,expected_parent,token,policy,*,api=github_api,verified_scope=None):
     """Writer job only. No credential in Git URLs, argv, files, outputs or logs."""
     review=op.checkpoint_storage_audit(source,policy,scope='private')
@@ -197,14 +236,19 @@ def publish(repo,source,expected_parent,token,policy,*,api=github_api,verified_s
         names=git('ls-tree','--name-only',expected_parent).decode().splitlines()
         if 'private-persistence.json'in names:previous=json.loads(git('show',expected_parent+':private-persistence.json'))
     first=previous.get('seven_day_start')
-    if (observation.get('scheduled_execution_verified')is True
-            and observation.get('successful_new_CPU_windows',0)>0
-            and observation.get('actually_read_new_characters',0)>0):
+    if op.eligible_observation(observation):
         first=first or now()
     receipt={'version':'bct-private-persistence-1','checkpoint_commit':result['commit'],
              'sqlite_sha256':restored['sqlite_sha256'],'remote_restored_at':now(),
              'seven_day_start':first,'seven_day_status':'OBSERVING_NOT_COMPLETED'if first else 'NOT_STARTED',
              'new_validated_windows':observation.get('successful_new_CPU_windows',0),
+             'complete_analyzed_new_CPU_documents':observation.get('complete_analyzed_new_CPU_documents',0),
+             'analysis_status':observation.get('analysis_status','NO_COMPLETE_NEW_ANALYZED_READ'),
+             'analysis_errors':observation.get('analysis_errors',0),
+             'publisher_run_id':int(os.environ['GITHUB_RUN_ID']) if os.environ.get('GITHUB_RUN_ID','').isdigit() else None,
+             'publisher_attempt':int(os.environ['GITHUB_RUN_ATTEMPT']) if os.environ.get('GITHUB_RUN_ATTEMPT','').isdigit() else None,
+             'publisher_workflow_sha':os.environ.get('GITHUB_WORKFLOW_SHA'),
+             'publisher_execution_sha':os.environ.get('CPU_CODE_SHA'),
              'API_calls':0,'LIVE_registration':False}
     # A small receipt commit ACKs the already restored DB; identical compressed
     # DB blobs deduplicate in Git. No second model run or full DB copy is made.

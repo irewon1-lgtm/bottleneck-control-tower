@@ -20,7 +20,8 @@ MODEL = 'fastino/gliner2-base-v1'
 REVISION = 'f9634218e53580c56edf0de97ca1a7d3f1c2354e'
 LABELS = {'product','specification','industry','subindustry','location','customer','supplier','quantity','date'}
 SAFE_KINDS = {'CPU_RESUME_SOURCE','CPU_RESUME_WINDOW','CPU_RESUME_REVIEW','CPU_RESUME_RUN',
-              'CPU_RESUME_MANIFEST','CPU_RESUME_FAILURE','CPU_QUEUE_LEGACY_COMPLETE','CPU_QUEUE_IMPORT','CROSS_COMMON_EVIDENCE','CPU_OPERATION_OBSERVATION'}
+              'CPU_RESUME_MANIFEST','CPU_RESUME_FAILURE','CPU_QUEUE_LEGACY_COMPLETE','CPU_QUEUE_IMPORT','CROSS_COMMON_EVIDENCE','CPU_OPERATION_OBSERVATION',
+              'CPU_ANALYSIS_RESULT','CPU_ANALYSIS_FAILURE','CPU_INPUT_REUSE_BINDING'}
 
 
 def rows(db, kind):
@@ -88,13 +89,16 @@ def summarize_window(row, doc):
         spans.append({'label':span['label'],'surface':value,'surface_sha256':sha(span['text'].encode()),
             'surface_withheld':value is None,'confidence':span.get('confidence'),**bounds(locator),
             'semantic_status':span.get('semantic_status','UNKNOWN')})
-    return {'key':row['key'],'document_id':doc['document_id'],'body_key':key(doc),
+    result={'key':row['key'],'document_id':doc['document_id'],'body_key':key(doc),
         'source_body_sha256':doc['body_sha256'],'model':MODEL,'revision':REVISION,
         'window':{**bounds(w),'input_sha256':sha(w['text'].encode())},
         'original_record_sha256':sha(row),'original_status':row['status'],
         'actually_read_characters':row.get('actually_read_characters',row.get('actually_model_read_characters',0)),
         'input_sha256':cpu.get('input_sha256'),'CPU_spans':spans,
         'source_validation':'SOURCE_VERIFICATION_PENDING','was_located_before_separation':True}
+    if row.get('inference_producer') is not None:
+        validate_inference_producer(row['inference_producer']);result['inference_producer']=row['inference_producer']
+    return result
 
 
 def source_record(doc, tasks, completed):
@@ -122,7 +126,7 @@ def export_state(source, destination, *, legacy=None):
             raise ValueError('RESUME_SOURCE_NOT_CPU_QUEUE')
         # Retain earlier detached history, never repeatedly infer from it.
         preserved=[(k,json.loads(p))for k,p in db.execute('SELECT kind,payload FROM events ORDER BY seq')
-                   if k in SAFE_KINDS and (k.startswith('CPU_RESUME_') or k in ('CPU_QUEUE_LEGACY_COMPLETE','CPU_OPERATION_OBSERVATION'))]
+                   if k in SAFE_KINDS and (k.startswith('CPU_RESUME_') or k in ('CPU_QUEUE_LEGACY_COMPLETE','CPU_OPERATION_OBSERVATION','CPU_ANALYSIS_RESULT','CPU_ANALYSIS_FAILURE','CPU_INPUT_REUSE_BINDING'))]
         docs={k:json.loads(p)for k,p in db.execute('SELECT id,payload FROM documents')}
         queued=rows(db,'CPU_QUEUE_DOCUMENT');results=rows(db,'CPU_QUEUE_WINDOW_RESULT')
         imports=rows(db,'CPU_QUEUE_IMPORT')
@@ -178,6 +182,10 @@ def export_state(source, destination, *, legacy=None):
             completed_keys={v['body_key']for k,v in preserved if k=='CPU_QUEUE_LEGACY_COMPLETE'}
             for item in queued:
                 doc=docs[item['document_id']];record=source_record(doc,item['tasks'],done)
+                artifact=item.get('upstream',{}).get('input_artifact')
+                if artifact is not None:
+                    validate_input_artifact(artifact)
+                    record['input_artifact']=artifact
                 emit('CPU_RESUME_SOURCE',record)
                 if record['complete'] and record['body_key'] not in completed_keys:
                     emit('CPU_QUEUE_LEGACY_COMPLETE',{'body_key':record['body_key'],'document_id':doc['document_id'],
@@ -193,7 +201,7 @@ def export_state(source, destination, *, legacy=None):
                     'window':{**bounds(row['window']),'input_sha256':sha(row['window']['text'].encode())},
                     'source_validation':'HELD_PREVIOUS_FAILURE_NO_AUTOMATIC_RETRY'})
             for r in imports:
-                receipt={k:r[k]for k in ('item_key','document_id','upstream_run_id','at','status','cache_document_sha256','storage_review_sha256')if k in r}
+                receipt={k:r[k]for k in ('item_key','document_id','body_sha256','raw_sha256','upstream_run_id','at','status','cache_document_sha256','storage_review_sha256')if k in r}
                 if r.get('url'):
                     try:receipt['url']=url(r['url'])
                     except ValueError:receipt.update(url_sha256=sha(r['url']),url_withheld=True)
@@ -281,7 +289,7 @@ def transient_allowed(doc, policy):
         and r.get('privacy_review')=='CLEARED' and bool(r.get('rights_basis')) and bool(r.get('reviewed_by')))
 
 
-def hydrate(ledger, cache, policy):
+def hydrate(ledger, cache, policy, *, retry_analysis=False,analysis_document_ids=None,analysis_body_keys=(),input_artifacts=None,blocked_body_keys=()):
     """Only partial sources need input again; exact hashes or safe hold, no fetch."""
     from . import cpu_automation as q
     cache=Path(cache).resolve();result=[]
@@ -290,14 +298,19 @@ def hydrate(ledger, cache, policy):
     old={r['key']:r for r in rows(ledger.db,'CPU_RESUME_WINDOW')}
     failures={r['key']:r for r in rows(ledger.db,'CPU_RESUME_FAILURE')}
     for bk,source in known.items():
-        if bk in complete:continue
-        if source['tasks'] and all(t['key']in old or t['key']in failures for t in source['tasks']):
+        if bk in blocked_body_keys:
+            result.append({'document_id':source['document_id'],'status':'HELD_SOURCE_INPUT_BUNDLE_UNAVAILABLE'});continue
+        if bk in complete and not retry_analysis:continue
+        if (bk in complete and analysis_document_ids is not None
+                and source['document_id'] not in analysis_document_ids and bk not in analysis_body_keys):continue
+        if not retry_analysis and source['tasks'] and all(t['key']in old or t['key']in failures for t in source['tasks']):
             result.append({'document_id':source['document_id'],'status':'HELD_UNREAD_CONTEXT_NOT_REPROCESSED'});continue
-        candidates=[]
+        candidates=[];artifacts={}
         for p in (cache/'documents').glob('*.json'):
             try:
                 d=json.loads(p.read_text())
-                if d.get('document_id')==source['document_id'] and d.get('body_sha256')==source['body_sha256']:candidates.append(d)
+                if d.get('document_id')==source['document_id'] and d.get('body_sha256')==source['body_sha256']:
+                    candidates.append(d);artifacts[d.get('raw_sha256')]=(input_artifacts or {}).get(p.name)
             except (ValueError,OSError):continue
         if len(candidates)!=1:
             result.append({'document_id':source['document_id'],'status':'HELD_SOURCE_MISSING_OR_AMBIGUOUS'});continue
@@ -321,7 +334,13 @@ def hydrate(ledger, cache, policy):
                 for s in r.get('CPU_spans',[]):
                     if sha(d['body'][s['start']:s['end']].encode())!=s['surface_sha256']:
                         raise ValueError('RESUME_SPAN_HASH_MISMATCH')
-            q.enqueue(ledger,d,rawpath.read_bytes(),{'resume':'SOURCE_REHYDRATED_BY_EXACT_HASH'})
+            artifact=artifacts.get(d['raw_sha256']) or source.get('input_artifact')
+            if artifact:
+                validate_input_artifact(artifact)
+                if source.get('input_artifact') and any(artifact.get(k)!=v for k,v in source['input_artifact'].items()):
+                    raise ValueError('RESUME_INPUT_ARTIFACT_IDENTITY_CHANGED')
+            q.enqueue(ledger,d,rawpath.read_bytes(),{'resume':'SOURCE_REHYDRATED_BY_EXACT_HASH',
+                **({'input_artifact':artifact} if artifact else {})},analysis_replay=retry_analysis)
             item=next(v for v in q.events(ledger,'CPU_QUEUE_DOCUMENT')if v['body_key']==bk)
             present={v['key']for v in q.events(ledger,'CPU_QUEUE_WINDOW_RESULT')}
             with ledger.db:
@@ -344,11 +363,153 @@ def hydrate(ledger, cache, policy):
                     ledger.event('CPU_QUEUE_WINDOW_RESULT',{**task,'status':'REVIEW_PENDING',
                         'actually_read_characters':r['actually_read_characters'],
                         'CPU':{'model':MODEL,'revision':REVISION,'spans':spans},
-                        'restored_receipt_not_new_inference':True})
+                        'restored_receipt_not_new_inference':True,
+                        **({'inference_producer':r['inference_producer']} if r.get('inference_producer') else {}),
+                        'original_record_sha256':r['original_record_sha256'],
+                        'verified_window_input_sha256':r['window']['input_sha256']})
             result.append({'document_id':source['document_id'],'status':'SOURCE_REHYDRATED_NO_COMPLETED_WINDOW_RERUN'})
         except (OSError,ValueError,KeyError,q.APIError):
             result.append({'document_id':source['document_id'],'status':'HELD_SOURCE_REHYDRATION_FAILED'})
     return result
+
+
+def reuse_completed_version(ledger,doc,raw,upstream):
+    """Reuse proven identical model inputs, keeping original native identity.
+
+    This completed-only route cannot restore a newer native version in place of
+    an old pending source. It never appends a model attempt or changes done keys.
+    """
+    from . import cpu_automation as q
+    bk=key(doc);source=latest_sources(ledger).get(bk)
+    if not completed(ledger,doc) or not source or not source['complete']:
+        raise ValueError('SOURCE_VERSION_HOLD_COMPLETE_RECEIPTS_UNAVAILABLE')
+    old={r['key']:r for r in rows(ledger.db,'CPU_RESUME_WINDOW')}
+    original=next((r for r in rows(ledger.db,'CPU_RESUME_SOURCE') if r['body_key']==bk),source)
+    windows,held=q.plan(doc)
+    if held or {sha([bk,w]) for w in windows}!={t['key'] for t in source['tasks']}:
+        raise ValueError('SOURCE_VERSION_HOLD_MODEL_INPUT_PLAN_CHANGED')
+    proofs=[]
+    for task in source['tasks']:
+        receipt=old.get(task['key'])
+        if (not receipt or receipt.get('model')!=MODEL or receipt.get('revision')!=REVISION
+                or receipt.get('document_id')!=original['document_id']
+                or receipt.get('source_body_sha256')!=doc['body_sha256']):
+            raise ValueError('SOURCE_VERSION_HOLD_INCOMPLETE_MODEL_RECEIPTS')
+        a,b=task['window']['start'],task['window']['end'];input_sha=sha(doc['body'][a:b].encode())
+        if input_sha!=task['window']['input_sha256'] or input_sha!=receipt['window']['input_sha256']:
+            raise ValueError('SOURCE_VERSION_HOLD_MODEL_INPUT_HASH_CHANGED')
+        for span in receipt['CPU_spans']:
+            if sha(doc['body'][span['start']:span['end']].encode())!=span['surface_sha256']:
+                raise ValueError('SOURCE_VERSION_HOLD_MODEL_SPAN_HASH_CHANGED')
+        proofs.append({'key':task['key'],'input_sha256':input_sha,'original_record_sha256':receipt['original_record_sha256']})
+    binding={'format':'bct-cpu-input-reuse-1','original_document_id':original['document_id'],
+        'original_raw_sha256':original['raw_sha256'],'document_id':doc['document_id'],'raw_sha256':doc['raw_sha256'],
+        'body_sha256':doc['body_sha256'],'body_key':bk,'model':MODEL,'revision':REVISION,
+        'windows':proofs,'reason_code':'EXACT_COMPLETED_BODY_MODEL_INPUTS_REUSED','new_CPU_windows':0,'model_loads':0}
+    binding['id']='cpu-input-reuse-'+sha(binding);validate_reuse_binding(binding)
+    # enqueue revalidates new native→body, provenance, rights/checks and identity.
+    # On an ID collision it leaves the old original untouched and fails closed.
+    q.enqueue(ledger,doc,raw,upstream,analysis_replay=True)
+    queued=next(r for r in q.events(ledger,'CPU_QUEUE_DOCUMENT') if r['body_key']==bk and r['document_id']==doc['document_id'])
+    with ledger.db:
+        if not any(r['id']==binding['id'] for r in rows(ledger.db,'CPU_INPUT_REUSE_BINDING')):
+            ledger.event('CPU_INPUT_REUSE_BINDING',binding)
+        present={(r['document_id'],r['key']) for r in q.events(ledger,'CPU_QUEUE_WINDOW_RESULT')}
+        for task in queued['tasks']:
+            if (doc['document_id'],task['key']) in present:continue
+            r=old[task['key']]
+            spans=[{'text':doc['body'][s['start']:s['end']],'label':s['label'],'locator':bounds(s),
+                'confidence':s.get('confidence'),'document_id':doc['document_id'],'body_sha256':doc['body_sha256']}
+                for s in r['CPU_spans']]
+            ledger.event('CPU_QUEUE_WINDOW_RESULT',{**task,'status':'REVIEW_PENDING','CPU':{'model':MODEL,'revision':REVISION,'spans':spans},
+                'actually_read_characters':r['actually_read_characters'],'restored_receipt_not_new_inference':True,
+                **({'inference_producer':r['inference_producer']} if r.get('inference_producer') else {}),
+                'original_record_sha256':r['original_record_sha256'],'verified_window_input_sha256':r['window']['input_sha256'],
+                'derived_reuse_binding_sha256':sha(binding)})
+    return 'SOURCE_VERSION_ANALYSIS_ONLY_IDENTICAL_MODEL_INPUT_REUSED'
+
+
+def validate_reuse_binding(value):
+    allowed={'format','id','original_document_id','original_raw_sha256','document_id','raw_sha256','body_sha256','body_key',
+             'model','revision','windows','reason_code','new_CPU_windows','model_loads'}
+    if (set(value)!=allowed or value['format']!='bct-cpu-input-reuse-1' or value['model']!=MODEL or value['revision']!=REVISION
+            or value['reason_code']!='EXACT_COMPLETED_BODY_MODEL_INPUTS_REUSED' or value['new_CPU_windows']!=0 or value['model_loads']!=0
+            or value['id']!='cpu-input-reuse-'+sha({k:v for k,v in value.items() if k!='id'})):
+        raise ValueError('CPU_INPUT_REUSE_SCHEMA')
+    for field in ('document_id','original_document_id'):
+        if not isinstance(value[field],str) or not re.fullmatch('[A-Za-z0-9_.:-]{1,200}',value[field]):raise ValueError('CPU_INPUT_REUSE_DOCUMENT_ID')
+    for field in ('original_raw_sha256','raw_sha256','body_sha256','body_key'):
+        if not re.fullmatch('[0-9a-f]{64}',value[field]):raise ValueError('CPU_INPUT_REUSE_HASH')
+    if not value['windows']:raise ValueError('CPU_INPUT_REUSE_EMPTY_PROOF')
+    for window in value['windows']:
+        if set(window)!={'key','input_sha256','original_record_sha256'} or any(not re.fullmatch('[0-9a-f]{64}',v) for v in window.values()):
+            raise ValueError('CPU_INPUT_REUSE_WINDOW_HASH')
+    return True
+
+
+def validate_input_artifact(value):
+    allowed={'artifact_id','digest','acquisition_run_id','acquisition_run_attempt','head_sha','document_member','native_member','metadata_sha256'}
+    if not isinstance(value,dict) or set(value) not in (allowed,allowed|{'manifest_sha256'}):
+        raise ValueError('CPU_INPUT_ARTIFACT_SCHEMA')
+    if any(type(value[k]) is not int or value[k]<=0 for k in ('artifact_id','acquisition_run_id','acquisition_run_attempt')):
+        raise ValueError('CPU_INPUT_ARTIFACT_ID')
+    for field,length in (('digest',64),('head_sha',40),('metadata_sha256',64)):
+        if not isinstance(value[field],str) or not re.fullmatch('[0-9a-f]{'+str(length)+'}',value[field]):
+            raise ValueError('CPU_INPUT_ARTIFACT_HASH')
+    if 'manifest_sha256' in value and not re.fullmatch('[0-9a-f]{64}',value['manifest_sha256']):raise ValueError('CPU_INPUT_MANIFEST_HASH')
+    for field,prefix in (('document_member','documents/'),('native_member','raw/')):
+        member=value[field]
+        if member is None and field=='native_member':continue
+        if (not isinstance(member,str) or not member.startswith(prefix) or '\\' in member
+                or len(Path(member).parts)!=2 or Path(member).name in ('','.','..')):
+            raise ValueError('CPU_INPUT_ARTIFACT_MEMBER')
+    return True
+
+
+def validate_analysis_failure(value):
+    required={'format','document_id','body_sha256','raw_sha256','source_version','body_key','window_result_sha256',
+              'reason_code','error_class','review_state','at','id','CPU_windows_total','CPU_windows_success','CPU_windows_failed','CPU_windows_unread','model','revision','analysis_code_sha256','model_read_producer'}
+    if (set(value)!=required or value['format']!='bct-cpu-analysis-failure-1' or value['reason_code']!='ANALYSIS_RUNTIME_FAILED'
+            or value['review_state']!='FAILED' or value['source_version']!=value['body_sha256']):
+        raise ValueError('CPU_ANALYSIS_FAILURE_SCHEMA')
+    if not isinstance(value['document_id'],str) or not re.fullmatch('[A-Za-z0-9_.:-]{1,200}',value['document_id']):
+        raise ValueError('CPU_ANALYSIS_FAILURE_DOCUMENT_ID')
+    for field in ('body_sha256','raw_sha256','body_key','analysis_code_sha256'):
+        if not isinstance(value[field],str) or not re.fullmatch('[0-9a-f]{64}',value[field]):
+            raise ValueError('CPU_ANALYSIS_FAILURE_HASH')
+    if any(not isinstance(h,str) or not re.fullmatch('[0-9a-f]{64}',h) for h in value['window_result_sha256']):
+        raise ValueError('CPU_ANALYSIS_FAILURE_WINDOW_HASH')
+    counts=[value[k] for k in ('CPU_windows_total','CPU_windows_success','CPU_windows_failed','CPU_windows_unread')]
+    if any(type(c) is not int or c<0 for c in counts) or counts[0]!=sum(counts[1:]):
+        raise ValueError('CPU_ANALYSIS_FAILURE_WINDOW_COUNTS')
+    if (value['model'],value['revision'])!=((MODEL,REVISION) if counts[1] else (None,None)):
+        raise ValueError('CPU_ANALYSIS_FAILURE_MODEL_PROOF')
+    if value['model_read_producer'] is not None:
+        validate_inference_producer(value['model_read_producer'])
+        if not counts[1]:raise ValueError('CPU_ANALYSIS_FAILURE_NO_VALID_READ_PRODUCER')
+    if value['error_class'] not in {'ValueError','KeyError','TypeError','AttributeError','RuntimeError','ImportError','ModuleNotFoundError','OSError','AssertionError','Exception'}:
+        raise ValueError('CPU_ANALYSIS_FAILURE_CLASS')
+    if value['id']!='cpu-analysis-failure-'+sha({k:v for k,v in value.items() if k not in ('at','id')}):
+        raise ValueError('CPU_ANALYSIS_FAILURE_ID')
+    return True
+
+
+def analysis_code_fingerprint():
+    root=Path(__file__).resolve().parents[1]
+    paths={'cpu_review':'v4/cpu_review.py','collection':'precursor_collection.py','scope_reader':'precursor_scope_reader.py',
+           'graph':'precursor_evidence_graph.py','forecast':'forecast_discovery.py','official_adapter':'v4/official_discovery.py',
+           'cpu_automation':'v4/cpu_automation.py','cpu_resume':'v4/cpu_resume.py'}
+    return sha({name:file_sha(root/path) for name,path in paths.items() if (root/path).is_file()})
+
+
+def validate_inference_producer(value):
+    if not isinstance(value,dict) or set(value)!={'run_id','run_attempt','execution_sha','workflow_sha'}:
+        raise ValueError('CPU_INFERENCE_PRODUCER_SCHEMA')
+    if any(type(value[k]) is not int or value[k]<1 for k in ('run_id','run_attempt')):
+        raise ValueError('CPU_INFERENCE_PRODUCER_ID')
+    if any(not isinstance(value[k],str) or not re.fullmatch('[0-9a-f]{40}',value[k]) for k in ('execution_sha','workflow_sha')):
+        raise ValueError('CPU_INFERENCE_PRODUCER_SHA')
+    return True
 
 
 def audit(ledger):
@@ -372,5 +533,12 @@ def audit(ledger):
             for item in value:walk(item)
     for kind,payload in ledger.db.execute('SELECT kind,payload FROM events'):
         if kind not in SAFE_KINDS:raise ValueError('UNKNOWN_SOURCE_SEPARATED_EVENT')
-        walk(json.loads(payload))
+        value=json.loads(payload);walk(value)
+        if kind=='CPU_ANALYSIS_RESULT':
+            from .cpu_review import validate_receipt
+            validate_receipt(value)
+        if kind=='CPU_ANALYSIS_FAILURE':validate_analysis_failure(value)
+        if kind=='CPU_INPUT_REUSE_BINDING':validate_reuse_binding(value)
+        if kind=='CPU_RESUME_SOURCE' and 'input_artifact' in value:validate_input_artifact(value['input_artifact'])
+        if kind=='CPU_RESUME_WINDOW' and value.get('inference_producer') is not None:validate_inference_producer(value['inference_producer'])
     return {'status':'PASS_SOURCE_SEPARATED_SCHEMA','original_DB_fully_restored':False,**summary(ledger)}

@@ -170,7 +170,8 @@ def test_private_git_uses_existing_CAS_and_restores_remote_before_clock_ack(tmp_
     # Synthetic acknowledged read tests storage timing, NOT actual discovery.
     l=open_queue(tmp_path/'queue')
     with l.db:l.event('CPU_OPERATION_OBSERVATION',{'scheduled_execution_verified':True,
-        'successful_new_CPU_windows':1,'actually_read_new_characters':12,'private_persistence_required':True})
+        'successful_new_CPU_windows':1,'actually_read_new_characters':12,'private_persistence_required':True,
+        'complete_analyzed_new_CPU_documents':1,'analysis_status':'ANALYZED_READ'})
     op.checkpoint(l,tmp_path/'second');l.close()
     second=private.publish(repo,tmp_path/'second',first['commit'],'SYNTHETIC_NOT_A_KEY',{},api=fake_scope_api([]))
     assert second['persistence_receipt']['seven_day_start']
