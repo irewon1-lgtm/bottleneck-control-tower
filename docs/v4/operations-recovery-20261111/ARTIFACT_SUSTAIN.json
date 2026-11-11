@@ -1,0 +1,362 @@
+{
+  "task": "BCT_V4_AUTOMATION_FULL_RECOVERY_20261111",
+  "status": "ACTUAL_CHECKPOINT_PRESERVATION_PASS_FINAL_MAIN_GATES_RUNNING",
+  "candidate": {
+    "base_main": "63b0f9650d53e164f72a2e0dde3c42d09d930b67",
+    "commits": [
+      "15594cf9fb07ee28a65935c48c58e477eb8f9cb9",
+      "bc144a4e1c547e68400415d8da2f365fb225443f",
+      "e6f179078c69df1b103b920f6ac2a9e840650814"
+    ],
+    "head": "e6f179078c69df1b103b920f6ac2a9e840650814",
+    "tree": "a57170f4ec79ca58ae298233015847b4167f1ab2",
+    "branch": "fix/bct-release-input-sustain-20261111",
+    "worktree": "/tmp/bct-operations-recovery-20261111/release-sustain",
+    "pushed_by_this_agent": false
+  },
+  "artifact_health": {
+    "format": "bct-artifact-health-1",
+    "archives": {
+      "legacy-source": {
+        "original": {
+          "status": "AVAILABLE",
+          "expires_at": "2026-12-11T01:48:44Z",
+          "days_remaining": 29.506
+        },
+        "preserved_copy_metadata": {
+          "status": "MISSING"
+        },
+        "copy_bytes_read_in_inspection": false,
+        "preservation_due": false,
+        "preservation_needed": false,
+        "artifact_name": "bct-preserved-input-949e95d2efda7a3fd3e7a124eb0d6569b56b54dcd1a3d5fd7f053dc75b8dfb72",
+        "automatic_copy_allowed": false,
+        "original_bytes": 4598165007
+      },
+      "rss": {
+        "original": {
+          "status": "AVAILABLE",
+          "expires_at": "2027-02-09T01:30:22Z",
+          "days_remaining": 89.493
+        },
+        "preserved_copy_metadata": {
+          "status": "MISSING"
+        },
+        "copy_bytes_read_in_inspection": false,
+        "preservation_due": false,
+        "preservation_needed": false,
+        "artifact_name": "bct-preserved-input-006124e204a8315e68e9a8abbd39cbca8eacc523e09d89318fbe1d830e2f403a",
+        "automatic_copy_allowed": false,
+        "original_bytes": 527551
+      },
+      "recovery": {
+        "original": {
+          "status": "EXPIRES_SOON",
+          "expires_at": "2026-11-12T01:47:21Z",
+          "days_remaining": 0.505
+        },
+        "preserved_copy_metadata": {
+          "status": "AVAILABLE",
+          "expires_at": "2027-02-09T12:25:34Z",
+          "days_remaining": 89.948
+        },
+        "copy_bytes_read_in_inspection": false,
+        "preservation_due": false,
+        "preservation_needed": false,
+        "artifact_name": "bct-preserved-input-00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a",
+        "automatic_copy_allowed": true,
+        "original_bytes": 45073105
+      }
+    },
+    "new_gate_execution": false,
+    "proof_renewal_procedure": "Run real current-code Gates0-6, verify required steps/artifact, then truthful receipt-only PR; copying cannot renew proof.",
+    "recorded_release_artifact": {
+      "status": "EXPIRES_SOON",
+      "expires_at": "2026-11-12T01:47:21Z",
+      "days_remaining": 0.505,
+      "current_code_Gates_revalidated": false,
+      "actual_Gates_and_receipt_renewal_due": true
+    },
+    "preservation_due": false,
+    "artifact_name": "bct-preserved-input-00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a"
+  },
+  "protected_refs_read_only": {
+    "format": "bct-protected-ref-read-only-1",
+    "refs": {
+      "main": "63b0f9650d53e164f72a2e0dde3c42d09d930b67",
+      "data": "064ab2d22b78cbf377e09f1c2b80cd1fe00fa9c7",
+      "future-bottleneck-data": "8730f5cdec9c7f6eb624df1c6d40a76b2b5d1bfe",
+      "ops/recovery-20261010": "a461cc7787d588a28c8d17a7a94ae81c9f0bdf9c",
+      "review-lead-shadow-state": "9ce910b1cec545b21167f5f47c010198c9281696"
+    },
+    "Git_refs_written": 0,
+    "immutable_root_blobs": {
+      "data": {
+        "canonical.previous.sqlite3": "d65985765283dd8c5fd23f7af6bc6ede25e4f26a",
+        "canonical.sqlite3": "4d398e033167293932f346c929f068b7f6eb54d9",
+        "precursor-index.json": "14d523a5e9d9c2bb851d25e3a741c16f3d482f74",
+        "state.json": "0e2a47bf067cf33ebb53641d65cf6f41d377ed41"
+      },
+      "future-bottleneck-data": {
+        "future-candidates.json": "faf0b378a33a629145eb1f7218d58369280fe87e",
+        "future-candidates.ui.json.gz": "58833591b1c316bea964c23ba618a7a9d4ab1877",
+        "future-tracking.json": "adbec29fe290ff6a131c792861e564a15577c989",
+        "future-tracking.ui.json.gz": "b5ddf4fde2071993b5514468e65f97f6598fb572"
+      }
+    },
+    "inspected_at_utc": "2026-11-11T12:06:00.150731+00:00"
+  },
+  "actual_old_proof_negative": {
+    "status": "PASS_FAIL_CLOSED_UNCHANGED_GUARD",
+    "reason": "validated code/test file set changed or missing",
+    "run_id": 38331945733,
+    "new_gate_execution": false,
+    "Git_refs_written": 0
+  },
+  "validation": {
+    "focused": "49 passed in1.42s",
+    "python_before_explicit_auto_size_guard": "1085 passed, 1 existing prediction holdout skipped in 25.91s",
+    "final_python": "1096 passed, 1 existing prediction holdout skipped in 25.95s",
+    "javascript": "34 passed",
+    "ruff": "all F checks src/.github/scripts PASS",
+    "syntax": "compileall src/.github/scripts PASS",
+    "required_mypy": "47 source files PASS",
+    "wheel": "normal isolated build PASS; initial no-isolation environment lacked setuptools, no source failure",
+    "independent_review": "review_patch: no new Important/Critical findings; independent48 focused tests PASS for compact continuation follow-up; earlier31 PASS for origin/updater",
+    "guard_script_sha256": "a7736a4260c27fa1c98c60488d9c3f449b8b2b1d7a5409de200cc12bd6d51b87",
+    "qwen_config_sha256": "4cadb760e479a457ba94f98a978b6f04933432ba5d53ec8d14fccca02607ee9c"
+  },
+  "preservation_contract": {
+    "copy_service": "existing standard public Actions artifact service",
+    "automatic_compressed_limit_bytes": 536870912,
+    "explicit_compressed_limit_bytes": 6442450944,
+    "checkpoint_expanded_limit_bytes": 536870912,
+    "disk_reserve_bytes": 2147483648,
+    "copy_wrapper_requires_original_zip_sha256": true,
+    "original_run_id_unchanged": true,
+    "wrapper_producer_main_and_trusted_workflow_required": true,
+    "new_gate_execution": false,
+    "release_proof_renewed": false,
+    "remote_restore_available_claimed": true,
+    "actual_runner_readback_required_before_ready": true,
+    "normal_existing_gate_steps_and_criteria_unchanged": true,
+    "actual_runner_readback": "PASS43020215888:19pins3280files, original00ac retained; no new Gate proof"
+  },
+  "continuation_contract": {
+    "successful_resume": "latest successful actual main Gate run and release receipt advance together; journal/root-state pins and complete cache inventory recalculated from authenticated checkpoint",
+    "partial_resume": "strictly newer completed unsuccessful run may be explicit input-only; never writes a release receipt; prior source/reading journals retained; no old E2E relabeled as fresh proof",
+    "genuine_receipt_prepare_command": "PYTHONPATH=src python .github/scripts/recovery_artifacts.py prepare-receipts --gate-run-id RUN --expected-code-sha FROZEN_MAIN_SHA --destination EMPTY_RECEIPT_DIR --output EMPTY_RESULT_JSON",
+    "receipt_publication": "root reviews exact two local metadata outputs, opens/merges truthful receipt-only PR after unchanged verifier passes; this helper never pushes or edits refs"
+  },
+  "stable_source_retry": {
+    "old_origin_code": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+    "old_and_current_actual_relevant_code_sha256": "fbfe906ecb5faf05a460ee7e8f4f555983ec3b978cea43d9df407beca8385f30",
+    "comparison": "SAME",
+    "retry_errors": false,
+    "missing_prior_code": "UNKNOWN, does not authorize error retry",
+    "source_HTTP_requests_for_this_fix": 0
+  },
+  "private_state_reused_not_replayed": {
+    "CPU": {
+      "receipt": "CPU_FINAL_BRIDGE.json",
+      "run": 42997763985,
+      "head": "b20f3e4ecd3e2b9f2bf0222d5f56199d1965decc",
+      "SQL_sha256": "dc2434510ec58e247c838353ad7c8d95f7f127161431ec55e4db1849f80fa7db",
+      "owner_confirmed_no_later_write": true
+    },
+    "quantitative": {
+      "receipt": "DB_RESTORE.json",
+      "actual_restore_run": 42989791426,
+      "monthly_generation": 6,
+      "manifest_sha256": "f939433f6366438abb64b6a4c89f8305b6b91727ecce4362384c03b6e6a908fe",
+      "SQL_sha256": "06bef86b0667c7d7170dc1521c7646324824edd76085eb61c1cb7913381e2093"
+    }
+  },
+  "remaining_limits": [
+    "Actual preservation-only43020215888 passed on main7ab and verified wrapper13854217801,19pins/3280files. This is input availability, never Gate proof. This agent dispatched no workflows or operating writes.",
+    "Mandatory compact230 first-checkpoint/bootstrap proof is still pending in actual final main933a296 Gate run43032067823; prior retained artifacts contain receipts, not460 corpus bytes. Do not claim compact runtime readiness before actual output/map/readback.",
+    "Bounded input copying never renews release proof. Real Gates0-6 and truthful latest-resume+release receipt are still required; final root-controlled real run is in progress. No automatic heavy proof-renewal/merge claim.",
+    "Use root FINAL_PRE_GATE_REFS13:45:48 as authoritative baseline. Authorized concurrent RSS43032161571 may add legitimate data; any later compensation must preserve those inputs/readings/history and append at fresh CAS head."
+  ],
+  "compact_fixed230": {
+    "status": "CODE_AND_SYNTHETIC_FAULT_TESTS_PASS_REAL_CHECKPOINT_BOOTSTRAP_PENDING",
+    "immutable_verifier_commit": "7d9188608a66520115727ff5daa30d13190f4958",
+    "fingerprint": "acd344732f2f087b42767bfe32d9f16d96da6de49a766d6fc73f3c0ed298f9ec",
+    "file_map_sha256": "a489b7f008fa80bf3729d1563a29c7e60effd4da011ba9fa54abed010689e566",
+    "files": 460,
+    "bytes": 41784646,
+    "documents": 230,
+    "body_hashes": 230,
+    "native_hashes": 230,
+    "actual_existing_copy_verification_run": 42995363348,
+    "existing_actual_receipt_artifact": 13843583056,
+    "existing_actual_receipt_sha256": "ea8269cd39629aca2ff6283b676a6dbeb506fcbf1135117a45d32747fd234c9f",
+    "existing_receipt_contains_source_bytes": false,
+    "first_fresh_gate": "Existing approved cold source-only receive once, exact immutable copy and golden-map check; store460 source files in its authenticated recovery checkpoint.",
+    "later_gate": "Authenticated resumed compact corpus, exact immutable native/body verification and golden file-map check;0 RSS/legacy API/download calls.",
+    "partial_continuation": "Early complete golden-map literal carry with reserve/readback before any Gate; source and reader journals retain prior compact input and numeric receipts through later failure. Successful updater refuses missing corpus, and later partial updater may not drop it.",
+    "expiry_maintenance": "Existing recovery-checkpoint preservation automatically copies the compact corpus as input when due, subject to512MiB bound; original logical run/SHA remains unchanged.",
+    "actual_fresh_gate_and_runner_capsule_replay_executed_by_this_agent": false
+  },
+  "actual_preservation_by_root": {
+    "task_id": "BCT_V4_AUTOMATION_FULL_RECOVERY_20261111",
+    "run_id": 43020215888,
+    "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43020215888",
+    "head_sha": "7ab99db41fe901c95c09df318c412a1f7a7a121d",
+    "purpose": "preserve_resume_only",
+    "preservation_job_id": 130521251070,
+    "preservation_job": "success",
+    "storage_gate_job": "skipped",
+    "new_gate_execution": false,
+    "new_model_inferences": 0,
+    "operating_git_ref_writes": 0,
+    "preserved_artifact": {
+      "id": 13854217801,
+      "bytes": 45073952,
+      "digest": "sha256:6712804dc804cd2efb65a1d75b9b1e0e0ef7fa7b5036349a8ff3dd00eaeefdb3",
+      "expires_at": "2027-02-09T12:25:34Z"
+    },
+    "actual_logged_receipts": [
+      {
+        "archives": {
+          "legacy-source": {
+            "artifact_name": "bct-preserved-input-949e95d2efda7a3fd3e7a124eb0d6569b56b54dcd1a3d5fd7f053dc75b8dfb72",
+            "automatic_copy_allowed": false,
+            "copy_bytes_read_in_inspection": false,
+            "original": {
+              "days_remaining": 29.558,
+              "expires_at": "2026-12-11T01:48:44Z",
+              "status": "AVAILABLE"
+            },
+            "original_bytes": 4598165007,
+            "preservation_due": false,
+            "preservation_needed": false,
+            "preserved_copy_metadata": {
+              "status": "MISSING"
+            }
+          },
+          "recovery": {
+            "artifact_name": "bct-preserved-input-00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a",
+            "automatic_copy_allowed": true,
+            "copy_bytes_read_in_inspection": false,
+            "original": {
+              "days_remaining": 0.557,
+              "expires_at": "2026-11-12T01:47:21Z",
+              "status": "EXPIRES_SOON"
+            },
+            "original_bytes": 45073105,
+            "preservation_due": true,
+            "preservation_needed": true,
+            "preserved_copy_metadata": {
+              "status": "MISSING"
+            }
+          },
+          "rss": {
+            "artifact_name": "bct-preserved-input-006124e204a8315e68e9a8abbd39cbca8eacc523e09d89318fbe1d830e2f403a",
+            "automatic_copy_allowed": false,
+            "copy_bytes_read_in_inspection": false,
+            "original": {
+              "days_remaining": 89.545,
+              "expires_at": "2027-02-09T01:30:22Z",
+              "status": "AVAILABLE"
+            },
+            "original_bytes": 527551,
+            "preservation_due": false,
+            "preservation_needed": false,
+            "preserved_copy_metadata": {
+              "status": "MISSING"
+            }
+          }
+        },
+        "artifact_name": "bct-preserved-input-00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a",
+        "format": "bct-artifact-health-1",
+        "new_gate_execution": false,
+        "preservation_due": true,
+        "proof_renewal_procedure": "Run real current-code Gates0-6, verify required steps/artifact, then truthful receipt-only PR; copying cannot renew proof.",
+        "recorded_release_artifact": {
+          "actual_Gates_and_receipt_renewal_due": true,
+          "current_code_Gates_revalidated": false,
+          "days_remaining": 0.557,
+          "expires_at": "2026-11-12T01:47:21Z",
+          "status": "EXPIRES_SOON"
+        }
+      },
+      {
+        "evaluations_expanded": false,
+        "format": "bct-input-preservation-1",
+        "new_gate_execution": false,
+        "original": {
+          "artifact_id": 11783493914,
+          "bytes": 45073105,
+          "head_sha": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+          "name": "bct-recovery-checkpoint-38331945733",
+          "run_id": 38331945733,
+          "sha256": "00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a"
+        },
+        "original_sha256_verified": true,
+        "release_proof_renewed": false,
+        "source_originals_modified": false,
+        "transport": {
+          "artifact_id": 11783493914,
+          "source": "original"
+        }
+      },
+      {
+        "new_gate_execution": false,
+        "original_run_id": 38331945733,
+        "original_sha256": "00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a",
+        "release_proof_renewed": false,
+        "restore": {
+          "cache_inventory_sha256": "61254209fc5697fdd3e2789806214ee15cd01d564386ce75eb4bc7acdda2ed5a",
+          "status": "PASS",
+          "verified_cache_files": {
+            "private-evidence-cache": 77,
+            "private-evidence-raw": 1467,
+            "private-native-claim": 51,
+            "private-source-cache": 1677,
+            "private-source-html": 8
+          },
+          "verified_pinned_files": {
+            "checkpoint.json": "6bf4b59f2880dbf398bd13bef863c3ac41c3240841c9eac1dd3f2fbdb84b7d42",
+            "e2e-original-230/operating-report.json": "2c0a1f1e0d0d6397e0f242f5c2c939952f8feb1ec2af98300f706fda9aeb6e73",
+            "e2e-recovery.json": "5aff83ca2e9b7066a4aab7b916091d7df5afba87b1ddc6a14a9cfaacf43bfe0c",
+            "evidence-recovery-observations.json": "e9a287f0a3e9d0d3286f48e69f414ca9e9b98e36b31e31cd33501764cb69071f",
+            "evidence-recovery-searches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+            "evidence-recovery-versions.json": "d41acd074251ba30a7a86c2dff553a2c49e31bb85d764102d6065e9fdb4c3d86",
+            "local-reader-probe.json": "7643f8d37dafead5e6e75db599b32bf80c3a2f8b5aa5e7fcca7c5c222cc643bc",
+            "local-reader-setup.json": "574e1d79174ca3c8618f6e914297a1faa3fd29ce63f6af76233ae84addb6475e",
+            "native-claim-history.json": "289cb89b3657d8299c20b215d4ca34addcacc53c18d29d432f8c5681d1b0ac2f",
+            "native-claim-recovery.json": "ca5158288848a25360df7d6331e1d050f2cf5eb5d24ae95187283ee4b1f6e908",
+            "operating-engine-checkpoint.json": "267b6dc5b8cd6155e07b0b5c29a4492fb4ed029c5b9dd24fa420c937e4e19e1e",
+            "operating-publication-history.json": "120222a5dea8dc5f8c52a9d95e104d98ad7c2313948237dedadd9281e23b698d",
+            "operating-publication-request.json": "f1e3f230abc15d67b0726a90cb82b820f9266364c871cb45833fc1a4cce81468",
+            "private-local-reader-execution.jsonl": "edff576a0c81e4faa3d37b252412cc5efaa6812bea7d617d0dcc92de5b35b40c",
+            "queue-recovery-versions.json": "3c65ce65228d97941cc32d1c4d446e7dbcb351f50578ebc3716b17a1560c6527",
+            "recovery-preservation-seal.json": "9652c4e6b0eb0cbc6dd96c7073adea442e1493eec18c1262a0d6dd0b9ba1d5e7",
+            "source-audit.json": "e6a4b5a82de89e2ef19767084bc6ac59ff1a84775014f04826633330ca60b3be",
+            "source-recovery-attempts.jsonl": "4174ba376e293aa5bb0b6e8321378c443521cbbf9b81639463cc75ac80cb5938",
+            "source-recovery-versions.json": "48ca512d00fde4068991288023eac6097682cd83df090fd02013c47e47cede10"
+          }
+        },
+        "status": "PASS_AUTHENTICATED_RESUME_INPUT",
+        "transport": {
+          "artifact_id": 13854217801,
+          "producer_run_id": 43020215888,
+          "source": "preserved"
+        }
+      }
+    ],
+    "actual_guard_rejection": {
+      "status": "EXPECTED_BLOCK",
+      "reason": "Gates 0\u20136 include a failed, skipped, or missing actual execution",
+      "no_release_receipt_modified": true
+    }
+  },
+  "integration": {
+    "PR": 47,
+    "merge_SHA": "7ab99db41fe901c95c09df318c412a1f7a7a121d",
+    "final_main_SHA": "933a29638c06d72d4cf4c17d843cfec2978066d2",
+    "actual_Gate_run": 43032067823,
+    "actual_Gate_result": "PENDING"
+  }
+}

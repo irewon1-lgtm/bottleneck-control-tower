@@ -1,0 +1,339 @@
+{
+  "task": "BCT_V4_AUTOMATION_FULL_RECOVERY_20261111",
+  "prepared_at_utc": "2026-11-11T13:46:01.833192+00:00",
+  "status": "REAL_GATE_DISPATCHED_BY_ROOT_RESULT_PENDING",
+  "root_is_single_main_merger_and_operating_writer": true,
+  "this_agent_Gate_dispatches": 0,
+  "this_agent_operating_writes": 0,
+  "candidate_context": {
+    "initial_origin_main": "7ab99db41fe901c95c09df318c412a1f7a7a121d",
+    "main_connect_worktree": "/tmp/bct-automation-full-recovery-20261111/main-connect",
+    "source_chain_PR": 48,
+    "source_chain_head": "c51fb14",
+    "required_restore_commit": "be232a25d22c0a3945db7902b2e98b68344943e8",
+    "restore_tree_on_7ab": "613b87609118f71ae611c0ea3b81371ed1ae5906",
+    "final_frozen_main_SHA": "933a29638c06d72d4cf4c17d843cfec2978066d2",
+    "restore_validation": {
+      "full_python": "1104 passed,1 existing holdout skip in28.78s",
+      "focused": "40 passed",
+      "mypy_changed_script": "PASS",
+      "RuffF_diff": "PASS",
+      "independent_review": "46 focused PASS; no Important/Critical finding"
+    },
+    "guarded_files": 261,
+    "guarded_file_set_sha256": "02eefa0b55116e777c3aecc62f41330cae98f13087d52741e12b112dda802944",
+    "PR48_merged": true,
+    "required_restore_commit_integrated": true
+  },
+  "artifact_health_read_only": {
+    "format": "bct-artifact-health-1",
+    "archives": {
+      "legacy-source": {
+        "original": {
+          "status": "AVAILABLE",
+          "expires_at": "2026-12-11T01:48:44Z",
+          "days_remaining": 29.506
+        },
+        "preserved_copy_metadata": {
+          "status": "MISSING"
+        },
+        "copy_bytes_read_in_inspection": false,
+        "preservation_due": false,
+        "preservation_needed": false,
+        "artifact_name": "bct-preserved-input-949e95d2efda7a3fd3e7a124eb0d6569b56b54dcd1a3d5fd7f053dc75b8dfb72",
+        "automatic_copy_allowed": false,
+        "original_bytes": 4598165007
+      },
+      "rss": {
+        "original": {
+          "status": "AVAILABLE",
+          "expires_at": "2027-02-09T01:30:22Z",
+          "days_remaining": 89.493
+        },
+        "preserved_copy_metadata": {
+          "status": "MISSING"
+        },
+        "copy_bytes_read_in_inspection": false,
+        "preservation_due": false,
+        "preservation_needed": false,
+        "artifact_name": "bct-preserved-input-006124e204a8315e68e9a8abbd39cbca8eacc523e09d89318fbe1d830e2f403a",
+        "automatic_copy_allowed": false,
+        "original_bytes": 527551
+      },
+      "recovery": {
+        "original": {
+          "status": "EXPIRES_SOON",
+          "expires_at": "2026-11-12T01:47:21Z",
+          "days_remaining": 0.505
+        },
+        "preserved_copy_metadata": {
+          "status": "AVAILABLE",
+          "expires_at": "2027-02-09T12:25:34Z",
+          "days_remaining": 89.948
+        },
+        "copy_bytes_read_in_inspection": false,
+        "preservation_due": false,
+        "preservation_needed": false,
+        "artifact_name": "bct-preserved-input-00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a",
+        "automatic_copy_allowed": true,
+        "original_bytes": 45073105
+      }
+    },
+    "new_gate_execution": false,
+    "proof_renewal_procedure": "Run real current-code Gates0-6, verify required steps/artifact, then truthful receipt-only PR; copying cannot renew proof.",
+    "recorded_release_artifact": {
+      "status": "EXPIRES_SOON",
+      "expires_at": "2026-11-12T01:47:21Z",
+      "days_remaining": 0.505,
+      "current_code_Gates_revalidated": false,
+      "actual_Gates_and_receipt_renewal_due": true
+    },
+    "preservation_due": false,
+    "artifact_name": "bct-preserved-input-00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a"
+  },
+  "preserved_input_actual_runner": {
+    "run_id": 43020215888,
+    "head_sha": "7ab99db41fe901c95c09df318c412a1f7a7a121d",
+    "preservation_job": "success",
+    "storage_Gates": "skipped",
+    "artifact": {
+      "id": 13854217801,
+      "bytes": 45073952,
+      "digest": "sha256:6712804dc804cd2efb65a1d75b9b1e0e0ef7fa7b5036349a8ff3dd00eaeefdb3",
+      "expires_at": "2027-02-09T12:25:34Z"
+    },
+    "original_run_id": 38331945733,
+    "original_sha256": "00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a",
+    "verified_root_pins": 19,
+    "verified_cache_files": 3280,
+    "fresh_Gate_proof": false
+  },
+  "mandatory_before_root_dispatch": [
+    "Merge source-chain PR48 and focused operating restore commit, include all already reviewed main repairs, verify final exact main SHA CI, freeze code/test/workflow/config/JS tree. Initial7ab is not final candidate proof.",
+    "Refresh immutable main/data/future-data/review/evaluation/private-head snapshot immediately before dispatch and retain both authoritative JSON roots at one future-data commit. Current DATA4b401 differs from old064 backup; do not assert old SQLite snapshot remains latest.",
+    "Use existing digest-pinned resume383 input; do not replace its logical run/artifact ID with preservation-run43020215888 or wrapper13854217801. PR47 verifies original or preserved transport transparently.",
+    "Confirm no competing Future worker RUNNING claim and no active operating writer; retain existing CAS/concurrency protections. The13:40 latest50-run read contained only a branch test, not a global permanent writer lock.",
+    "Recheck saved legacy/RSS artifacts unexpired before first cold fixed230 bootstrap; previous artifacts contain receipts only. Existing bounded receive downloads original4.598GB once, source-only extraction, no49GB evaluations expansion. Successful new checkpoint must retain exact460 files/41784646B with golden map.",
+    "Keep full_pipeline=false, preserve_resume_only=false, request configured full_pipeline absent/false, batch bounds unchanged, standard public runner, existing same-Qwen/llama revisions and file hashes. Keep native-claim probe isolated."
+  ],
+  "root_dispatch_command_current_shipped_resume": "gh workflow run bct-recovery.yml --repo irewon1-lgtm/bottleneck-control-tower --ref main -f preserve_resume_only=false -f full_pipeline=false -f archive_key=recovery -f resume_run_id=38331945733",
+  "gate_effects": {
+    "0_1": "Read immutable public baseline and SQLite; create isolated storage/fault/interleaving probe branches; preserve/conditionally restore trusted same-source judgments; atomically publish production future candidate/queue projection.",
+    "2_4": "Actual official/source access and evidence checks; stable source adapter identity avoids receipt-only reattempts of identical technical ERROR. No fabricated source coverage.",
+    "stage5": "Restore/build same pinned Qwen and llama, verify existing qualification/read receipts, execute only existing bounded new DRAIN <=50 calls/30min loop; no paid API/new model. Actual calls can fail; do not convert deadline or partial work to PASS.",
+    "5": "Verify native result/source/extent/history; CAS-publish both authoritative roots, both UI projections and content shards, preserving old histories/targets/prediction ledger; native claim fault probe isolated. No automatic compensating rollback after a later failure.",
+    "6": "Actual source traces plus unchanged whole regression/quality checks and immutable exact230 QA; frozen prediction hashes/allowed independent holdout skip unchanged. Gates0-6 PASS is not Stage7/FULL, seven-day operation or independent prediction-performance PASS."
+  },
+  "post_gate_checks": [
+    "Require actual run head==FINAL_FROZEN_MAIN_SHA, branch main, completed success, storage job and all eight unchanged REQUIRED step names success (none skipped).",
+    "Require checkpoint run/code match actual run/head, statusPASS and gate0..gate6 PASS; inspect actual source/model call counters, preservation checks, atomic before/published generation commits and exact compact230 receipt/map.",
+    "Snapshot new production immutable heads/paired roots again. Gate0/5 may have published legitimate changes even if later Gate failed. Preserve failures and partial source/reader journals; never replay completed same-hash readings merely to obtain a green status.",
+    "Prepare truthful receipt using local-only PR47 command from a clean checkout containing exactly frozen validated code. It validates unchanged guard plus actual artifact and requires compact corpus; then rolls active proof and all latest source/reading/cache pins together.",
+    "Review/merge only produced config/bct-operating-release.json and .github/bct-recovery-request.json; receipt files are outside code_path, so code identity stays unchanged. Any other guarded file change invalidates frozen proof.",
+    "After receipt merge, actual preservation-only readback of the latest checkpoint can prove compact corpus transport on a fresh runner without redoing Gates, QA or Qwen reads. Existing automatic input expiry maintenance can subsequently retain that capsule; genuine Gate-proof renewal remains actual Gates+truthful receipt, no automatic heavy merge.",
+    "Concurrent authorized RSS43032161571 may legitimately advance data/canonical after the pre-Gate snapshot; distinguish its writes from recovery effects and preserve both generations. Do not claim data head is unchanged solely because Gate scripts do not write it."
+  ],
+  "post_gate_receipt_command": "PYTHONPATH=src timeout 300 /workspace/bottleneck-control-tower/.venv/bin/python .github/scripts/recovery_artifacts.py prepare-receipts --root . --gate-run-id 43032067823 --expected-code-sha 933a29638c06d72d4cf4c17d843cfec2978066d2 --destination /tmp/bct-automation-full-recovery-20261111/receipt-43032067823 --output /tmp/bct-automation-full-recovery-20261111/receipt-43032067823.json",
+  "automatic_downstream_after_valid_receipt": {
+    "receipt_merge_itself_matches_Future_push_paths": false,
+    "restore_fix_merge_matches_Future_push_paths": true,
+    "pre_receipt_Future": "still fails unchanged release guard; subsequent preserve observer is input-only",
+    "next_triggers": [
+      "successful main RSS workflow_run",
+      "10:45/22:45UTC Future schedule",
+      "manual Future dispatch",
+      "bct-operating-publication repository_dispatch"
+    ],
+    "existing_write_scope": [
+      "candidate collection patches; existing bounded extra300-document passes and targeted recovery",
+      "same pinned Qwen automatic worker limit5/max_input_chars12000/600s per inference",
+      "atomic authoritative candidate/tracking +UI/shard queue publication"
+    ],
+    "private_GLiNER_ENABLED_false_disables_separate_Qwen_future_worker": false,
+    "Gate_full_pipeline_false_emits_Stage7_publication_dispatch": false,
+    "automatic_restore_rule": "active successful request/archive must equal release run/head/artifact/digest; explicit newer failed Gate input is refused before metadata"
+  },
+  "rollback_limit": "No blind reset to old branch heads/SQLite or deletion of legitimate new readings/inputs. Inspect immutable before/published/current generations. If compensation is needed, prepare a preserving owned change atop fresh current head and CAS append it; stale parent stops the operation. Old snapshot is evidence, not permission to erase concurrent history.",
+  "known_manual_proof_renewal_constraint": "Input copies and compact corpus upkeep are bounded automatic. Real Gate-proof renewal still requires root-controlled same-code Gates and a truthful receipt PR. Do not claim fully automatic sustainable proof PASS.",
+  "root_dispatch_reported_at_utc": "2026-11-11T13:46:00Z",
+  "historical_preparation_snapshot": {
+    "format": "bct-final-gate-prepare-read-only-1",
+    "refs": {
+      "main": "7ab99db41fe901c95c09df318c412a1f7a7a121d",
+      "codex/bct-v4-integration": "ee22188c2e43b6ad995ccbbbc385361e7c3ca054",
+      "data": "4b401f2b6af0084c856a8d7acb6bf2f829b2d872",
+      "future-bottleneck-data": "8730f5cdec9c7f6eb624df1c6d40a76b2b5d1bfe",
+      "ops/recovery-20261010": "a461cc7787d588a28c8d17a7a94ae81c9f0bdf9c",
+      "review-lead-shadow-state": "9ce910b1cec545b21167f5f47c010198c9281696"
+    },
+    "immutable_roots": {
+      "data": {
+        "commit": "4b401f2b6af0084c856a8d7acb6bf2f829b2d872",
+        "tree": "1d245fd46cd0d44f4010b2dd27dbbfeeec638ae0",
+        "entries": [
+          {
+            "path": "canonical.previous.sqlite3",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "4d398e033167293932f346c929f068b7f6eb54d9"
+          },
+          {
+            "path": "canonical.sqlite3",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "f77578938e886b698ba8b79f8b4437028737ced1"
+          },
+          {
+            "path": "precursor-index.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "19f7ee00f1ea839ebf4554a7ab21a95a76f206b8"
+          },
+          {
+            "path": "state.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "4e3a8aaed8ef52796c2b8442727e22a4770cb890"
+          }
+        ]
+      },
+      "future-bottleneck-data": {
+        "commit": "8730f5cdec9c7f6eb624df1c6d40a76b2b5d1bfe",
+        "tree": "f14a58acd99ad42bd2d83ba3c9223ba592620ee7",
+        "entries": [
+          {
+            "path": "backlog-recovery",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "bde800d83615d1dc979a43ae34bdd736f0819255"
+          },
+          {
+            "path": "future-candidates.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "faf0b378a33a629145eb1f7218d58369280fe87e"
+          },
+          {
+            "path": "future-candidates.shards",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "1cab5347284d999f322508663ac2c6e85e0c1665"
+          },
+          {
+            "path": "future-candidates.ui.json.gz",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "58833591b1c316bea964c23ba618a7a9d4ab1877"
+          },
+          {
+            "path": "future-tracking.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "adbec29fe290ff6a131c792861e564a15577c989"
+          },
+          {
+            "path": "future-tracking.ui.json.gz",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "b5ddf4fde2071993b5514468e65f97f6598fb572"
+          },
+          {
+            "path": "official-precursors",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "b52694c6794a512acca3eb3c324266426b5513cf"
+          }
+        ]
+      },
+      "review-lead-shadow-state": {
+        "commit": "9ce910b1cec545b21167f5f47c010198c9281696",
+        "tree": "bf4ee7dd8517d6195e80928030075872e0a997e6",
+        "entries": [
+          {
+            "path": "review-lead-shadow",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "8b9f2eb291171372ca2b9cdc667ac017bdfc4f9d"
+          }
+        ]
+      }
+    },
+    "Git_refs_written": 0,
+    "downloaded_source_bytes": 0,
+    "observed_at_utc": "2026-11-11T13:32:48.009306+00:00"
+  },
+  "production_snapshot": {
+    "observed_at": "2026-11-11T13:45:48.686935+00:00",
+    "task_id": "BCT_V4_AUTOMATION_FULL_RECOVERY_20261111",
+    "phase": "IMMEDIATELY_BEFORE_ACTUAL_FINAL_MAIN_GATES",
+    "refs": {
+      "main": {
+        "SHA": "933a29638c06d72d4cf4c17d843cfec2978066d2",
+        "tree_SHA": "729a20d1e8c6cb2a3b2dacc346b42a2899029d84",
+        "root_blobs": {
+          ".gitignore": "2c2ee4998e6affdb3b1f622cd804ae77a5a0f96a",
+          "BCT_OBJECTIVE_LOCK.md": "3ed008d67a9635498db7ee55f2a7d365f60ca388",
+          "README.md": "82cb588320afe490901b517c06f9fc50719265e7",
+          "alembic.ini": "e9c18da20beba12720bccd05de8a43bf82d6cafc",
+          "config.example.yaml": "dd482eca9be797c577406a9eb85d2d21056e4668",
+          "pyproject.toml": "4bb86ea32f7490b6a53e3394f9d0da69c3a613fe",
+          "rss_feeds.yaml": "ad69fe0873bcdc572ae4d6e32909a1e2d3f37fbe"
+        }
+      },
+      "data": {
+        "SHA": "4b401f2b6af0084c856a8d7acb6bf2f829b2d872",
+        "tree_SHA": "1d245fd46cd0d44f4010b2dd27dbbfeeec638ae0",
+        "root_blobs": {
+          "canonical.previous.sqlite3": "4d398e033167293932f346c929f068b7f6eb54d9",
+          "canonical.sqlite3": "f77578938e886b698ba8b79f8b4437028737ced1",
+          "precursor-index.json": "19f7ee00f1ea839ebf4554a7ab21a95a76f206b8",
+          "state.json": "4e3a8aaed8ef52796c2b8442727e22a4770cb890"
+        }
+      },
+      "future-bottleneck-data": {
+        "SHA": "8730f5cdec9c7f6eb624df1c6d40a76b2b5d1bfe",
+        "tree_SHA": "f14a58acd99ad42bd2d83ba3c9223ba592620ee7",
+        "root_blobs": {
+          "future-candidates.json": "faf0b378a33a629145eb1f7218d58369280fe87e",
+          "future-candidates.ui.json.gz": "58833591b1c316bea964c23ba618a7a9d4ab1877",
+          "future-tracking.json": "adbec29fe290ff6a131c792861e564a15577c989",
+          "future-tracking.ui.json.gz": "b5ddf4fde2071993b5514468e65f97f6598fb572"
+        }
+      },
+      "review-lead-shadow-state": {
+        "SHA": "528ae7d4402402ca6828aa9467bf841c62fb71a8",
+        "tree_SHA": "e80b19b1037720be4a4205cbc99a50efa670a0b0",
+        "root_blobs": {}
+      },
+      "live-state": {
+        "SHA": "21e1be03b522d81a20d95e79694617967d8a608a",
+        "tree_SHA": "735ac390f8d3b9b30af7e12fabd4e690d1c39815",
+        "root_blobs": {
+          "RESTORE.md": "feeec29617bbfaf494822aae463669834765c297"
+        }
+      }
+    },
+    "private_monthly_baseline": {
+      "generation": 6,
+      "verified_readonly_run": 42989791426,
+      "not_requeried_in_this_public_snapshot": true
+    },
+    "private_CPU_baseline": {
+      "latest_verified_ACK_run": 42997763985,
+      "commit": "b20f3e4ecd3e2b9f2bf0222d5f56199d1965decc",
+      "will_restore_current_remote_before_CPU_write": true
+    },
+    "writes": 0
+  },
+  "root_observation_only_run_not_Gates": 43031947496,
+  "local_receipt_transport_fallback": {
+    "status": "OPTIONAL_CONNECTOR_BYTES_TRANSPORT_ONLY_NO_MAIN_CHANGE",
+    "reason": "Local gh artifact signed-blob download can403 despite successful read-only API; do not retry same knownfailed route.",
+    "route": "Root may download the actual fresh Gate artifact through the supported GitHub connector and retrieve its local binary using the returned approved reference.",
+    "binding": "Validate actual artifact ID/size/SHA before use; local temporary gh shim intercepts only the exact artifactZIP argv, streams those exact bytes, delegates actual metadata to the real absolute gh binary.",
+    "unchanged_validation": "Original helper verifies downloaded size+SHA again, unchanged real guard, run/main/head/required Gate steps, matching payload, full pin/inventory and compact golden corpus. No claim is accepted from a local label.",
+    "existing_runner_prepare_receipts_job_available": false
+  },
+  "actual_root_gate_run_id": 43032067823,
+  "concurrent_authorized_RSS_run_id": 43032161571
+}
