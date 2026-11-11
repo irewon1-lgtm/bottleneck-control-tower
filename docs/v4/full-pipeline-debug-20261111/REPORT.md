@@ -17,7 +17,7 @@ Objective Lock, 12~36개월 범위, 최초 발견 원장, 기존 정답/HOLDOUT,
 | 연구 DB 저장·복원 | BLOCKED | 최신 월별 generation6는 암호화; 현재 셸에 기존 암호 미전달 | PASS / BLOCKED | 기존 Git 정량/CPU 체크포인트 8테이블 및 새 프로세스 복원 PASS. 최신 generation6 복원·재계수 BLOCKED; 빈 DB 대체 없음 |
 | REVIEW_LEAD | FAIL / SKIPPED | 전체 캐시 ZIP의 evaluations 압축 해제로 디스크 고갈; 일부 provenance/입력 없음 | PASS / NOT_RUN | 필요한 capture/raw만 제한 복원하도록 수정. 실제 저장 자료 REPLAY 1건 HOLD·기존 6,046파일 보존. 수정 후 운영 실행 NOT_RUN; 신규 의미 검토 완료 0 |
 | 최종 후보 판정 | BLOCKED | 실제 적격 독립 수급 근거 미완성; 운영 본문 경로도 검증에서 중단 | PASS / BLOCKED | 보류·차단 기능 회귀 PASS. 실제 독립쌍 0, 신규 적격 S2/S3 0/0. 기능시험을 미래 예측 성공으로 세지 않음 |
-| 대시보드 갱신 | PASS / BLOCKED | Pages는 개발 코드의 검증된 정적 연구 스냅샷 사용; 최신 RSS/암호화 연구 상태 자동 결합 없음 | PASS / BLOCKED | 배포 코드 23a0615·HTTP200·1,703 상세·브라우저 검증. 표시 연구 시점 10월14일. 이번 개발 export/CI는 별도 기록; 실시간 연구 갱신 아님 |
+| 대시보드 갱신 | PASS / BLOCKED | Pages는 개발 코드의 검증된 정적 연구 스냅샷 사용; 최신 RSS/암호화 연구 상태 자동 결합 없음 | PASS / BLOCKED | 수정 전 배포 23a0615, 이번 실제 배포 09cbdf2·HTTP200·1,703 상세·새 전체 진행 기록 확인. 표시 연구 시점은 10월14일 유지; 실시간 연구 DB 갱신 아님 |
 
 ## 실제 자동 실행과 단계 처리량
 
@@ -67,4 +67,15 @@ Python 전체 회귀 **1,828 PASS·1 SKIPPED**, JavaScript **5 PASS**. SKIPPED�
 - 복원·검토·배포: [STORAGE_DASHBOARD.md](STORAGE_DASHBOARD.md), [STORAGE_DASHBOARD.json](STORAGE_DASHBOARD.json). [기존 감사](https://github.com/irewon1-lgtm/bottleneck-control-tower/tree/2aaaa91f17ea1c29eb7a36c4cd26783e405610b9/docs/v4/audits/zero-pair-20261017)의 ROOT_CAUSE_REPORT/STAGE_LOSS/CASE_EVIDENCE/MINIMAL_FIX_SPEC를 실제 코드와 대조했다.
 - 실제 실패: [본문](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42944587807), [CPU skip](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42942892160), [최신 RSS](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42939431146), [최신 선행자료](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42939818925), [최신 REVIEW](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42942892140), [배포 화면](https://irewon1-lgtm.github.io/bottleneck-control-tower/).
 
-**코드 기능 정상화:** 확인된 6개 범위 개발 시험 PASS, 구조화 실근거 전달/전체 추출 정확도 BLOCKED. **실제 예약 자동 운영 정상화:** BLOCKED. **미래 병목 예측 성능 입증:** BLOCKED. 첫 실제 예약 신규 판독·검증·영속 저장 이후의 Q6 7일과 Q4 독립 선행성은 시작/완료 처리하지 않았다. 개발 커밋·CI URL은 실제 push 후 최종 응답 및 진행 원장의 검증 기록으로 연결한다.
+**코드 기능 정상화:** 확인된 6개 범위 개발 시험 PASS, 구조화 실근거 전달/전체 추출 정확도 BLOCKED. **실제 예약 자동 운영 정상화:** BLOCKED. **미래 병목 예측 성능 입증:** BLOCKED. 첫 실제 예약 신규 판독·검증·영속 저장 이후의 Q6 7일과 Q4 독립 선행성은 시작/완료 처리하지 않았다. 개발 코드 커밋은 `09cbdf297c7e3a7398cd9296d9d83483fc641e08`이다. 아래 GitHub 실제 반영 기록과 진행 원장으로 연결한다.
+
+
+## 실제 GitHub 반영/배포 기록
+
+`23a0615f → 09cbdf297c7e3a7398cd9296d9d83483fc641e08`을 `codex/bct-v4-integration`에 일반 fast-forward push했다. 병행 변경은 없었고 main `28d0b8c6` 및 운영 데이터 ref는 수정하지 않았다. 뒤따르는 기록 커밋은 이 결과와 기존 진행 원장만 반영하며 실행 코드는 바꾸지 않는다.
+
+- [Stage0 전체 CI 42983011577](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42983011577): SUCCESS. 실제 로그 Python 1,828 PASS·1 SKIPPED; GitHub Node 결과 34 PASS·0 FAIL(로컬 Node는 5개 파일 PASS로 집계). 조건부 과거 fixed230 복원/QA는 해당 브랜치 조건 밖이라 SKIPPED이며 최신 원문 검증으로 세지 않는다.
+- [대시보드 검증 42983011670](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42983011670): SUCCESS. Push용 verify job 통과; 수동 전용 readonly-release-revalidation job은 SKIPPED. 운영 Gates0~6 재검증 PASS가 아니다.
+- [실제 Pages 연쇄 배포 42983201374](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42983201374): build/deploy SUCCESS. 배포 manifest의 코드 `09cbdf2`, 실제 dashboard JSON 해시 일치, 1,703 상세, 새 전체 진행 기록을 HTTP200으로 재조회했다. 기존 연구 `data_at=2026-10-14T23:16:13.592709+00:00`은 그대로다.
+
+상세 SHA·job·manifest·HTTP/hash 근거: [GITHUB_DELIVERY.json](GITHUB_DELIVERY.json). 위 3회는 이번 push 후 새로 실행된 검증/정적 배포다. 앞의 259회/135회 집계는 수정 전 조사창의 자동 실행이며 이 3회를 중복 합산하지 않는다.

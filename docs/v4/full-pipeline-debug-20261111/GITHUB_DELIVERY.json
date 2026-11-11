@@ -1,0 +1,278 @@
+{
+  "task_id": "BCT_V4_FULL_PIPELINE_DEBUG_20261111",
+  "code_commit": "09cbdf297c7e3a7398cd9296d9d83483fc641e08",
+  "target_branch": "codex/bct-v4-integration",
+  "main_unchanged": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+  "push_mode": "FAST_FORWARD_NO_FORCE",
+  "ci": [
+    {
+      "conclusion": "success",
+      "createdAt": "2026-11-11T07:55:16Z",
+      "databaseId": 42983011670,
+      "event": "push",
+      "headSha": "09cbdf297c7e3a7398cd9296d9d83483fc641e08",
+      "status": "completed",
+      "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42983011670",
+      "workflowName": "V4 dashboard release gate"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-11-11T07:55:16Z",
+      "databaseId": 42983011577,
+      "event": "push",
+      "headSha": "09cbdf297c7e3a7398cd9296d9d83483fc641e08",
+      "status": "completed",
+      "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42983011577",
+      "workflowName": "Stage 0 tests"
+    }
+  ],
+  "pages": {
+    "conclusion": "success",
+    "databaseId": 42983201374,
+    "jobs": [
+      {
+        "completedAt": "2026-11-11T07:58:02Z",
+        "conclusion": "success",
+        "databaseId": 130398194700,
+        "name": "build",
+        "startedAt": "2026-11-11T07:56:54Z",
+        "status": "completed",
+        "steps": [
+          {
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Only export the latest successfully verified V4 source",
+            "number": 3,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Run actions/setup-python@v5",
+            "number": 4,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Run actions/setup-node@v4",
+            "number": 5,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Build public static research and verify all evidence",
+            "number": 6,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Run actions/configure-pages@v5",
+            "number": 7,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Run actions/upload-pages-artifact@v4",
+            "number": 8,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@v4",
+            "number": 14,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Post Run actions/setup-python@v5",
+            "number": 15,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 16,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 17,
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42983201374/job/130398194700"
+      },
+      {
+        "completedAt": "2026-11-11T07:58:15Z",
+        "conclusion": "success",
+        "databaseId": 130398652235,
+        "name": "deploy",
+        "startedAt": "2026-11-11T07:58:06Z",
+        "status": "completed",
+        "steps": [
+          {
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Publish verified static pages",
+            "number": 2,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 3,
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42983201374/job/130398652235"
+      }
+    ],
+    "status": "completed",
+    "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42983201374"
+  },
+  "actual_CI_log_summary": [
+    "2026-11-11T07:58:00.0635875Z 1828 passed, 1 skipped in 141.13s (0:02:21)",
+    "2026-11-11T07:58:01.2312318Z # tests 34",
+    "2026-11-11T07:58:01.2312775Z # pass 34",
+    "2026-11-11T07:58:01.2313006Z # fail 0"
+  ],
+  "pages_live": {
+    "checked_at": "2026-11-11T07:59:46.580490+00:00",
+    "urls": {
+      "build-manifest.json": {
+        "HTTP": 200,
+        "sha256": "0c1464e07dfba25f2e65a8aa2a6a1707fb38a2c267c0964abc972701feebf91c",
+        "bytes": 385
+      },
+      "api/dashboard.json": {
+        "HTTP": 200,
+        "sha256": "90b9ccbf2910075d23a983efda6c7128b108e08cb9526fdab4d71165218d62a6",
+        "bytes": 1755910
+      },
+      "api/progress.json": {
+        "HTTP": 200,
+        "sha256": "a40aca37551ad2d04f277cc03eb1b534cc20fae8ad27be7d5e323faf0bcd9ca6",
+        "bytes": 273329
+      }
+    },
+    "manifest": {
+      "source_branch": "codex/bct-v4-integration",
+      "code_commit": "09cbdf297c7e3a7398cd9296d9d83483fc641e08",
+      "generated_at": "2026-11-11T07:57:07.511492+00:00",
+      "data_at": "2026-10-14T23:16:13.592709+00:00",
+      "dashboard_sha256": "90b9ccbf2910075d23a983efda6c7128b108e08cb9526fdab4d71165218d62a6",
+      "evidence_count": 1703,
+      "evidence_bytes": 5044684,
+      "site_type": "PUBLIC_STATIC_READ_ONLY",
+      "new_ai_calls": 0
+    },
+    "dashboard": {
+      "data_at": "2026-10-14T23:16:13.592709+00:00",
+      "code_commit": "09cbdf297c7e3a7398cd9296d9d83483fc641e08",
+      "counts": {
+        "evidence": 511,
+        "reviewed": 23,
+        "structured": 211,
+        "discovery": 277,
+        "discovered_urls": 403,
+        "source_attempts": 128,
+        "source_success": 118,
+        "source_errors": 10,
+        "article_attempts": 343,
+        "captured": 315,
+        "body_status": {
+          "FULL": 148,
+          "UNAVAILABLE": 80,
+          "PARTIAL": 87
+        },
+        "body_nonempty": 235,
+        "article_errors": 28,
+        "pending": 2,
+        "quarantined": 80,
+        "s1_signals": 14,
+        "future_candidates": {
+          "S1": 0,
+          "S2": 0,
+          "S3": 0
+        }
+      }
+    },
+    "progress_full_pipeline_record": {
+      "task_id": "BCT_V4_FULL_PIPELINE_DEBUG_20261111",
+      "status": "DEVELOPMENT_VERIFIED_OPERATION_BLOCKED",
+      "started_at": "2026-11-11T07:34:08.724180+00:00",
+      "code_base": "23a0615f1a10f2b938cb2b5401706a1995b4d4f2",
+      "main_at_start": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+      "evidence_root": "docs/v4/full-pipeline-debug-20261111",
+      "scope": "Existing pipeline diagnosis/minimal repair; Q1-Q7 criteria and existing state preserved",
+      "next_action": "Commit/push verified development changes; check CI. Operating release requires exact-tree Gates0-6, intact corpus, existing approved CPU/runtime/bridge recovery and owner variable inspection. No activation or main promotion performed.",
+      "operational_limits": [
+        "Repository Variables read HTTP403",
+        "No main promotion or operational DB mutation",
+        "No new models, keys or paid API"
+      ],
+      "finished_development_at": "2026-11-11T07:53:22.745951+00:00",
+      "fixed_defect_families": 6,
+      "verification": {
+        "python_passed": 1828,
+        "python_skipped": 1,
+        "javascript_passed": 5,
+        "independent_review": "NO_REMAINING_CRITICAL_OR_IMPORTANT",
+        "actual_replay_sources": 1,
+        "real_independent_pairs_verified": 0,
+        "new_qualified_S2": 0,
+        "new_qualified_S3": 0
+      },
+      "seven_day": {
+        "runs": 259,
+        "success": 153,
+        "failure": 60,
+        "skipped": 45,
+        "cancelled": 1,
+        "effective_workflow_types": 4,
+        "effective_executions": 135,
+        "rss_new_rows_successful_runs": 1521,
+        "rss_duplicates_successful_runs": 43633,
+        "precursor_new_verified_documents": 492,
+        "cpu_new_readings": 0,
+        "ai_new_readings": 0,
+        "review_intake_executions": 39,
+        "review_HOLD_records": 578,
+        "review_provenance_skips": 703,
+        "semantic_review_completions": 0
+      },
+      "completion": {
+        "code_scoped_repairs": "PASS",
+        "whole_pipeline_code_and_quality": "BLOCKED",
+        "scheduled_operation": "BLOCKED",
+        "future_bottleneck_prediction_performance": "BLOCKED"
+      },
+      "evidence": [
+        "docs/v4/full-pipeline-debug-20261111/REPORT.md",
+        "docs/v4/full-pipeline-debug-20261111/VALIDATION.json"
+      ],
+      "github_delivery": {
+        "status": "PENDING_PUSH",
+        "base_remote_sha": "23a0615f1a10f2b938cb2b5401706a1995b4d4f2"
+      },
+      "previous_plan_sha256": "70dfdd45d41a575dc02740a1558a7d4d09cbd9f4e549d161d147abd9c9ee210e"
+    }
+  },
+  "scope": "Source code commit verified; following documentation receipt changes no executable files or data. Live research data remains Oct14; operating Future/CPU recovery not performed."
+}
