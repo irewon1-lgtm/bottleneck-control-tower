@@ -1,25 +1,20 @@
-"""Restore the newest completed recovery artifact using its GitHub SHA256.
+"""Restore the authenticated current resume input, including preserved copies.
 
-The authenticated request is limited to api.github.com. Artifact redirects
-are followed with a new unauthenticated request; tokens never reach blob hosts.
-An invalid newest checkpoint fails closed rather than silently selecting stale
-source classifications from an older successful run.
+The release/request origin stays exact. Input restore never renews Gate proof,
+selects an unrelated historical branch, or writes an operating Git ref.
 """
 import argparse
 from datetime import datetime, timezone
-import hashlib
 import json
 import os
 from pathlib import Path, PurePosixPath
-import re
 import stat
 from typing import Any
 from urllib.error import HTTPError
-from urllib.parse import urlparse
-from urllib.request import HTTPRedirectHandler, Request, build_opener, urlopen
+from urllib.request import HTTPRedirectHandler
 import zipfile
 
-from bct.recovery_restore import verify_restored, LATEST_ROOT_STATE
+import recovery_artifacts as transport
 
 
 class NoRedirect(HTTPRedirectHandler):
@@ -46,79 +41,34 @@ def unpack(archive, destination):
         bundle.extractall(destination)
 
 
+def restore_current(root, output, *, api=None):
+    root, output = Path(root), Path(output)
+    request = json.loads((root/'.github/bct-recovery-request.json').read_text())
+    release = json.loads((root/'config/bct-operating-release.json').read_text())
+    origin = transport.resume_origin(request, release)
+    if request.get('resume_input_only', False):
+        raise ValueError('OPERATING_RESTORE_SUCCESSFUL_RELEASE_INPUT_REQUIRED')
+    api = api or transport.API()
+    repository = api.read('')
+    if not repository or repository.get('private') is not False or repository.get('visibility') != 'public':
+        raise ValueError('ARCHIVE_PUBLIC_STANDARD_ACTIONS_REQUIRED')
+    result = transport.restore(api, origin, request, output)
+    receipt = {**result['restore'], 'artifact_id': origin['artifact_id'],
+        'artifact_sha256': origin['sha256'], 'artifact_run_id': origin['run_id'],
+        'transport': result['transport'], 'actual_execution': True,
+        'new_gate_execution': False, 'release_proof_renewed': False,
+        'observed_at': datetime.now(timezone.utc).isoformat()}
+    (output/'operating-state-restore.json').write_text(json.dumps(receipt, indent=2)+'\n')
+    return receipt
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
-    repository = os.environ['GITHUB_REPOSITORY']
-    if repository != 'irewon1-lgtm/bottleneck-control-tower':
+    if os.environ['GITHUB_REPOSITORY'] != transport.REPOSITORY:
         raise ValueError('unexpected production repository')
-    prefix = 'https://api.github.com/repos/'+repository
-    headers = {'Authorization': 'Bearer '+os.environ['GITHUB_TOKEN'],
-               'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'}
-    def api(suffix):
-        with urlopen(Request(prefix+suffix, headers=headers), timeout=30) as response:
-            return json.load(response)
-    selected = None
-    for page in range(1, 11):
-        runs = api('/actions/runs?branch=ops%2Frecovery-20261010&per_page=100&page='+str(page))['workflow_runs']
-        for run in runs:
-            if run['status'] == 'completed' and run['path'] == '.github/workflows/bct-recovery.yml':
-                selected = run
-                break
-        if selected or len(runs) < 100:
-            break
-    if not selected:
-        raise RuntimeError('completed recovery checkpoint unavailable')
-    artifacts = api('/actions/runs/'+str(selected['id'])+'/artifacts')['artifacts']
-    selected_artifacts = [a for a in artifacts if a['name'] == 'bct-recovery-checkpoint-'+str(selected['id'])]
-    if len(selected_artifacts) != 1 or selected_artifacts[0]['expired']:
-        raise RuntimeError('newest completed recovery artifact missing or expired')
-    artifact = selected_artifacts[0]
-    expected = artifact.get('digest', '')
-    if not re.fullmatch(r'sha256:[0-9a-f]{64}', expected):
-        raise ValueError('GitHub artifact digest required before restore')
-    try:
-        # Do not forward the Authorization header on the redirect.
-        build_opener(NoRedirect).open(Request(prefix+'/actions/artifacts/'+str(artifact['id'])+'/zip',
-                                              headers=headers), timeout=30)
-    except HTTPError as exc:
-        if exc.code not in (301, 302, 303, 307, 308):
-            raise
-        location = exc.headers['Location']
-    else:
-        raise RuntimeError('expected signed artifact redirect')
-    parsed = urlparse(location)
-    if (parsed.scheme != 'https' or not parsed.hostname
-            or not parsed.hostname.endswith(('.blob.core.windows.net', '.actions.githubusercontent.com'))):
-        raise ValueError('unexpected artifact download host')
-    archive = args.output.parent/'operating-recovery-artifact.zip'
-    archive.parent.mkdir(parents=True, exist_ok=True)
-    digest = hashlib.sha256()
-    size = 0
-    with urlopen(location, timeout=30) as response, archive.open('wb') as stream:
-        while chunk := response.read(1024*1024):
-            size += len(chunk)
-            if size > 512*1024**2:
-                raise ValueError('artifact download bound exceeded')
-            stream.write(chunk)
-            digest.update(chunk)
-    if 'sha256:'+digest.hexdigest() != expected:
-        raise ValueError('downloaded artifact SHA256 differs from GitHub metadata')
-    unpack(archive, args.output)
-    checkpoint = json.loads((args.output/'checkpoint.json').read_text())
-    if str(checkpoint['run_id']) != str(selected['id']):
-        raise ValueError('artifact checkpoint execution identity differs')
-    required = ('checkpoint.json', 'source-recovery-attempts.jsonl',
-                'source-recovery-versions.json', 'recovery-preservation-seal.json')
-    pins = {name: hashlib.sha256((args.output/name).read_bytes()).hexdigest() for name in required}
-    pins.update({name: hashlib.sha256((args.output/name).read_bytes()).hexdigest()
-                 for name in LATEST_ROOT_STATE if (args.output/name).exists()})
-    receipt = verify_restored(args.output, pins)
-    receipt.update(artifact_id=artifact['id'], artifact_sha256=digest.hexdigest(),
-        artifact_run_id=selected['id'], actual_execution=True,
-        observed_at=datetime.now(timezone.utc).isoformat())
-    (args.output/'operating-state-restore.json').write_text(json.dumps(receipt, indent=2)+'\n')
+    receipt = restore_current(Path('.'), args.output)
     print(json.dumps({k: receipt[k] for k in ('status', 'artifact_id', 'artifact_run_id', 'cache_inventory_sha256')}))
 
 
