@@ -35,6 +35,13 @@ REASON_CODES = {'CPU_NOT_READ', 'CPU_READ_INCOMPLETE', 'CPU_WINDOW_VALIDATION_FA
 MAX_GRAPH_CONTEXT_BYTES = 128 * 1024**2
 
 
+def _known_producer(value):
+    return (isinstance(value, dict) and set(value) == {'run_id', 'run_attempt', 'execution_sha', 'workflow_sha'}
+            and all(type(value[k]) is int and value[k] > 0 for k in ('run_id', 'run_attempt'))
+            and all(isinstance(value[k], str) and re.fullmatch('[0-9a-f]{40}', value[k])
+                    for k in ('execution_sha', 'workflow_sha')))
+
+
 def load_graph_context(cache, manifest, doc):
     """Load exact producer-selected graph dependencies; never choose a top three.
 
@@ -171,7 +178,7 @@ def analyze_document(doc, queued, results, *, raw, as_of=None, related_documents
     tasks = queued.get('tasks', []); keys = {t['key'] for t in tasks}
     matching = [r for r in results if r.get('key') in keys]
     rows = {r['key']: r for r in matching}
-    valid = []; failures = []; cpu_values = []; restored = 0
+    valid = []; failures = []; cpu_values = []; producers = []; restored = 0
     body = doc.get('body', '')
     for task in tasks:
         row = rows.get(task['key'])
@@ -179,6 +186,7 @@ def analyze_document(doc, queued, results, *, raw, as_of=None, related_documents
         try:
             cpu, old = _valid_window(doc, task, row)
             valid.append(task['window']); cpu_values.append(cpu); restored += old
+            producers.append(row.get('inference_producer'))
         except (ValueError, KeyError, TypeError, AttributeError): failures.append(task['key'])
     cov = coverage(body, valid)
     unread_nonwhite = sum(len(re.sub(r'\s', '', body[r['start']:r['end']])) for r in cov['unread_ranges'])
@@ -189,6 +197,8 @@ def analyze_document(doc, queued, results, *, raw, as_of=None, related_documents
     result = {'format': FORMAT, 'document_id': doc['document_id'], 'body_sha256': doc['body_sha256'],
               'raw_sha256': doc.get('raw_sha256'), 'source_version': doc.get('version') or doc['body_sha256'],
               'model': MODEL, 'revision': MODEL_REVISION, 'body_key': queued['body_key'],
+              'model_read_producer': deepcopy(producers[0]) if producers and all(
+                  _known_producer(p) and p == producers[0] for p in producers) else None,
               'window_keys': sorted(keys), 'window_result_sha256': sorted(sha(r) for r in matching),
               'CPU_windows_total': len(tasks), 'CPU_windows_success': len(valid), 'CPU_windows_failed': len(failures),
               'CPU_windows_unread': pending, 'restored_success_windows': restored,
@@ -292,7 +302,8 @@ def validate_receipt(value):
         'strict_forecast_candidate_count', 'CPU_advisory_product_count', 'CPU_rejected_span_count', 'event_traces',
         'pair_traces', 'semantic_review_status', 'forecast_mode', 'analysis_implementation_sha256', 'dependency_sha256',
         'scope_reader_version', 'evaluated_at', 'S2', 'S3', 'LIVE_writes', 'input_binding_sha256', 'analysis_error_type',
-        'objective_version', 'objective_sha256', 'delivery', 'graph_context', 'derived_reuse_binding_sha256'}
+        'objective_version', 'objective_sha256', 'delivery', 'graph_context', 'derived_reuse_binding_sha256',
+        'model_read_producer'}
     if set(value)-allowed: raise ValueError('CPU_ANALYSIS_FIELDS_NOT_ALLOWED')
     if value.get('id') != 'cpu-analysis-'+sha({k: v for k, v in value.items() if k not in ('id', 'evaluated_at', 'delivery')}):
         raise ValueError('CPU_ANALYSIS_RECEIPT_HASH_MISMATCH')
@@ -303,6 +314,8 @@ def validate_receipt(value):
     if value.get('model') != MODEL or value.get('revision') != MODEL_REVISION or value.get('S2') != 0 or value.get('S3') != 0:
         raise ValueError('CPU_ANALYSIS_PROMOTION_FORBIDDEN')
     if value.get('semantic_review_status') != 'PENDING_ATTRIBUTED_REVIEW': raise ValueError('CPU_ENTITY_IS_NOT_SEMANTIC_COMPLETION')
+    if value.get('model_read_producer') is not None and not _known_producer(value['model_read_producer']):
+        raise ValueError('CPU_ANALYSIS_MODEL_PRODUCER_INVALID')
     counts = [value[k] for k in ('CPU_windows_total', 'CPU_windows_success', 'CPU_windows_failed', 'CPU_windows_unread')]
     if any(type(n) is not int or n < 0 for n in counts) or counts[0] != sum(counts[1:]):
         raise ValueError('CPU_ANALYSIS_WINDOW_COUNTS_INVALID')

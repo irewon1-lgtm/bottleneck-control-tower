@@ -151,6 +151,42 @@ def test_restored_exact_window_is_not_a_new_inference():
     assert result['review_state'] == 'READ_EVIDENCE_HOLD'
 
 
+@pytest.mark.parametrize('variant', ['same', 'legacy', 'mixed', 'invalid', 'restored'])
+def test_model_read_producer_is_known_only_when_every_success_agrees(variant):
+    module = analyzer(); d, raw = source(doc('First paragraph.\nSecond paragraph.'))
+    cut = d['body'].index('\n')
+    windows = [{'start': 0, 'end': cut, 'text': d['body'][:cut]},
+               {'start': cut+1, 'end': len(d['body']), 'text': d['body'][cut+1:]}]
+    planned, results = receipts(d, windows)
+    producer = {'run_id': 123, 'run_attempt': 2, 'execution_sha': 'a'*40, 'workflow_sha': 'b'*40}
+    for row in results: row['inference_producer'] = deepcopy(producer)
+    if variant == 'legacy': results[1].pop('inference_producer')
+    elif variant == 'mixed': results[1]['inference_producer']['run_id'] = 124
+    elif variant == 'invalid': results[1]['inference_producer']['run_attempt'] = True
+    elif variant == 'restored':
+        for row in results: row['restored_receipt_not_new_inference'] = True
+    result = module.analyze_document(d, planned, results, raw=raw, as_of=AS_OF)
+    assert result['model_read_producer'] == (producer if variant in ('same', 'restored') else None)
+    if variant == 'restored': assert result['new_inference_windows'] == 0
+
+
+def test_model_read_producer_validator_is_strict_but_legacy_optional():
+    module = analyzer(); d, raw = source(); planned, results = receipts(d)
+    value = module.analyze_document(d, planned, results, raw=raw, as_of=AS_OF)
+    for producer in [None, {'run_id': 1, 'run_attempt': 1, 'execution_sha': 'a'*40, 'workflow_sha': 'b'*40}]:
+        candidate = {**value, 'model_read_producer': producer}
+        candidate['id'] = 'cpu-analysis-'+sha({k: v for k, v in candidate.items() if k not in ('id', 'evaluated_at')})
+        assert module.validate_receipt(candidate)
+    legacy = {k: v for k, v in value.items() if k != 'model_read_producer'}
+    legacy['id'] = 'cpu-analysis-'+sha({k: v for k, v in legacy.items() if k not in ('id', 'evaluated_at')})
+    assert module.validate_receipt(legacy)
+    for invalid in [{'run_id': True}, {'run_id': 1, 'run_attempt': 0, 'execution_sha': 'a'*40, 'workflow_sha': 'b'*40},
+                    {'run_id': 1, 'run_attempt': 1, 'execution_sha': 'bad', 'workflow_sha': 'b'*40}]:
+        candidate = {**value, 'model_read_producer': invalid}
+        candidate['id'] = 'cpu-analysis-'+sha({k: v for k, v in candidate.items() if k not in ('id', 'evaluated_at')})
+        with pytest.raises(ValueError, match='PRODUCER'): module.validate_receipt(candidate)
+
+
 def test_analysis_is_immutable_source_free_deduplicated_and_readable_after_restart(tmp_path):
     module = analyzer(); d, raw = source(); ledger = queue.open_queue(tmp_path/'queue')
     with ledger.worker():
