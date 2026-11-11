@@ -78,6 +78,24 @@ def test_public_projection_is_generation_bound_and_does_not_export_private_text(
     assert public['trace'][0]['model'] is None  # absent metadata is never invented
 
 
+def test_trace_bound_retains_latest_update_of_an_older_source(tmp_path):
+    from bct.v4.public_research import build_snapshot
+    path, ack, proof, producer = input_state(tmp_path)
+    ledger = Ledger(path.parent)
+    original = json.loads(ledger.db.execute("SELECT payload FROM events WHERE kind='CPU_ANALYSIS_RESULT'").fetchone()[0])
+    with ledger.db:
+        for index in range(100):
+            ledger.event('CPU_ANALYSIS_RESULT', {**original, 'document_id': 'v4doc-' + format(index, '016x')})
+        ledger.event('CPU_ANALYSIS_RESULT', {**original, 'reason_code': 'GRAPH_CONTEXT_VERSION_MISMATCH',
+                                           'review_state': 'GRAPH_CONTEXT_PENDING'})
+    ledger.close(); ack['persistence_receipt']['sqlite_sha256'] = proof['sqlite_sha256'] = file_sha(path)
+    with sqlite3.connect(path.as_uri() + '?mode=ro', uri=True) as db:
+        public = build_snapshot(db, ack, proof, producer)
+    assert public['analysis']['trace_total'] == 101 and public['analysis']['trace_truncated']
+    assert public['trace'][-1]['document_id'] == DOC
+    assert public['trace'][-1]['reason_code'] == 'GRAPH_CONTEXT_VERSION_MISMATCH'
+
+
 def test_bootstrap_does_not_relabel_old_research_as_today(tmp_path):
     public = project(tmp_path, observation=False)
     assert public['clocks']['persisted_at'] == '2026-11-11T12:01:00+00:00'
