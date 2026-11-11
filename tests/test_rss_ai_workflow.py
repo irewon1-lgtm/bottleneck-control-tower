@@ -1,8 +1,10 @@
 import importlib.util
 import json
 import os
+import shutil
 import sqlite3
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -32,11 +34,21 @@ def test_workflow_is_separate_and_uses_existing_write_lock():
     restore = next(s for s in steps if s.get('name') == 'Restore existing verified database')
     assert 'if' not in restore
     assert steps.index(restore) < steps.index(check) < steps.index(ai)
-    publish = steps[-1]['run']
+    publish_step = next(s for s in steps if s.get('id') == 'ai_save')
+    publish = publish_step['run']
     assert '"$current_sha" != "$BASE_DATA_SHA"' in publish
     assert '--force' not in publish
     assert 'rss_state.py save' in publish
-    assert steps[-1]['if'] == "steps.ai_config.outputs.enabled == 'true' && env.AI_PROCESSED != '0'"
+    assert 'rss_state.py load' in publish
+    assert 'ai-verified.sqlite3' in publish
+    assert publish_step['if'] == "steps.ai_config.outputs.enabled == 'true' && env.AI_PROCESSED != '0'"
+    report = next(s for s in steps if s.get('name') == 'Report actual AI outcome')
+    assert report['if'] == 'always()'
+    assert report['env']['AI_ANNOTATION_OUTCOME'] == '${{ steps.ai_annotation.outcome }}'
+    assert report['env']['AI_SAVE_OUTCOME'] == '${{ steps.ai_save.outcome }}'
+    artifact = next(s for s in steps if s.get('uses') == 'actions/upload-artifact@v4')
+    assert artifact['if'] == 'always()'
+    assert artifact['with']['path'] == '${{ runner.temp }}/rss-ai-outcome.json'
 
 
 @pytest.mark.parametrize('key', ['', 'synthetic-key-do-not-log'])
@@ -150,4 +162,63 @@ def test_workflow_persists_article_errors_without_logging_key(monkeypatch, tmp_p
     output = capsys.readouterr().out
     assert json.loads(output) == {'processed': 20, 'success': 0, 'error': 20}
     assert key not in output
-    assert env_file.read_text() == 'AI_PROCESSED=20\n'
+    assert env_file.read_text() == 'AI_PROCESSED=20\nAI_SUCCESS=0\nAI_ERROR=20\n'
+
+
+@pytest.mark.parametrize('conflict', [False, True])
+def test_real_local_git_publication_verifies_saved_ai_rows_and_refuses_conflict(setup, tmp_path, conflict):
+    """Run the publication shell against a disposable local origin, with no provider."""
+    settings, sf = setup
+    runner, remote = tmp_path / 'runner', tmp_path / 'origin.git'
+    runner.mkdir()
+    def git(*args):
+        return subprocess.run(['git', *args], cwd=runner, check=True,
+                              capture_output=True, text=True).stdout.strip()
+    subprocess.run(['git', 'init', '--bare', str(remote)], check=True, capture_output=True)
+    git('init')
+    git('config', 'user.email', 'offline@example.invalid')
+    git('config', 'user.name', 'Offline test')
+    git('remote', 'add', 'origin', str(remote))
+    spec = importlib.util.spec_from_file_location('publish_state', ROOT / '.github/scripts/rss_state.py')
+    state = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(state)
+    feeds = tmp_path / 'feeds.yaml'
+    feeds.write_text('feeds:\n  news: https://news.example.org/feed\n')
+    with sf.begin() as db:
+        db.add(RadarItem(id='saved-ai', source='news.example.org', external_id='saved-ai',
+                        title='Steel shortage', url='https://news.example.org/1', source_type='NEWS'))
+    state.save(settings.db_path, runner, 'seed')
+    script_dir = runner / '.github/scripts'
+    script_dir.mkdir(parents=True)
+    shutil.copy2(ROOT / '.github/scripts/rss_state.py', script_dir)
+    git('add', 'canonical.sqlite3', 'canonical.previous.sqlite3', 'state.json', '.github')
+    git('commit', '-m', 'Offline data seed')
+    base = git('rev-parse', 'HEAD')
+    git('push', 'origin', 'HEAD:refs/heads/data')
+    value = dict.fromkeys(FIELDS, 'UNRESOLVED')
+    value.update(SIGNAL_DIRECTION='PRESSURE', SIGNAL_TYPE='SHORTAGE')
+    assert run(settings, feeds, model='test-model', reviewer=lambda *a, **kw: value)['success'] == 1
+    live = runner / 'var/canonical/canonical.sqlite3'
+    live.parent.mkdir(parents=True)
+    shutil.copy2(settings.db_path, live)
+    if conflict:
+        (runner / 'other-writer.txt').write_text('preserve concurrent writer')
+        git('add', 'other-writer.txt')
+        git('commit', '-m', 'Concurrent writer')
+        git('push', 'origin', 'HEAD:refs/heads/data')
+    remote_before = git('ls-remote', 'origin', 'refs/heads/data').split()[0]
+    publish = next(s['run'] for s in WORKFLOW['jobs']['annotate']['steps']
+                   if s.get('id') == 'ai_save').replace('${{ github.run_id }}', 'offline-1')
+    env = {**os.environ, 'PATH': str(Path(sys.executable).parent) + os.pathsep + os.environ['PATH'],
+           'BASE_DATA_SHA': base, 'RUNNER_TEMP': str(tmp_path / 'temp')}
+    result = subprocess.run(['bash', '-c', publish], cwd=runner, env=env, capture_output=True, text=True)
+    if conflict:
+        assert result.returncode != 0 and 'refusing to overwrite' in result.stderr
+        assert git('ls-remote', 'origin', 'refs/heads/data').split()[0] == remote_before
+        assert not (tmp_path / 'temp/ai-verified.sqlite3').exists()
+    else:
+        assert result.returncode == 0, result.stderr
+        with sqlite3.connect(tmp_path / 'temp/ai-verified.sqlite3') as db:
+            assert db.execute('SELECT status FROM rss_ai_reviews').fetchall() == [('OK',)]
+            assert db.execute('SELECT count(*) FROM radar_items').fetchone()[0] == 1
+        assert run(settings, feeds, model='test-model', reviewer=lambda *a, **kw: value)['processed'] == 0

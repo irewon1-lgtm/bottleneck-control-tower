@@ -42,6 +42,14 @@ jobs:
         with:
           ref: ${{ env.CPU_CODE_SHA }}
           persist-credentials: false
+      - name: Receive only the reviewed source transport helper, separate from the CPU engine
+        uses: actions/checkout@v4
+        with:
+          ref: 7d9188608a66520115727ff5daa30d13190f4958
+          path: .bct-input-transport
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /.github/scripts/receive_cpu_sources.py
       - uses: actions/setup-python@v5
         id: python
         with:
@@ -70,8 +78,6 @@ jobs:
       - name: Authenticate and restore private input; missing/corrupt stops
         run: timeout 120 python tools/v4_cpu_private.py unseal --packet var/v4/cpu-private/bridge/state.gpg --checkpoint var/v4/cpu-private/prior
       - name: Verify original scheduled RSS and receive existing data only
-        env:
-          ACQUISITION_RUN: ${{ github.event.workflow_run.id }}
         run: |
           timeout 120 python - <<'PYCODE'
           from bct.v4.cpu_operations import github_schedule_context,verified_schedule
@@ -79,8 +85,20 @@ jobs:
           proof=verified_schedule(github_schedule_context())
           with open(os.environ['GITHUB_ENV'],'a')as out:out.write('RSS_RUN='+str(proof['RSS_run_id'])+'\n')
           PYCODE
+      - name: Receive the verified RSS delta and bounded saved CPU source inputs
+        env:
+          ACQUISITION_RUN: ${{ github.event.workflow_run.id }}
+          ACQUISITION_HEAD: ${{ github.event.workflow_run.head_sha }}
+          BCT_V4_STATE_PASSPHRASE: ''
+        run: |
+          set -euo pipefail
           timeout 120 gh run download "$RSS_RUN" --name rss-live-result --dir var/v4/cpu-private/rss
-          timeout 120 gh run download "$ACQUISITION_RUN" --name precursor-private-cache --dir var/v4/cpu-private/source
+          # The 10-minute job still caps receive + pinned processing; source
+          # download/hash/extraction has a separate finite 300-second budget.
+          timeout 300 python .bct-input-transport/.github/scripts/receive_cpu_sources.py \
+            --run-id "$ACQUISITION_RUN" --expected-head "$ACQUISITION_HEAD" \
+            --rss-run-id "$RSS_RUN" --rss-manifest var/v4/cpu-private/rss/new-document-manifest.json \
+            --destination var/v4/cpu-private/source
       - name: Consume approved new windows with the existing bounded CPU queue
         run: timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_private.py process --checkpoint var/v4/cpu-private/prior --output var/v4/cpu-private/observation.json
       - name: Seal output; only ciphertext crosses jobs
