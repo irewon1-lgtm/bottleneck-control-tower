@@ -801,7 +801,7 @@ def q3_input(events, facts, *, as_of, documents=()):
     strict_batch = evaluated['protected_batch']
     # Only the graph's source-backed, qualified total/unallocated supply enters
     # the unchanged strict forecast engine. EARLY != qualified supply gap.
-    selected = []; graph_pair_blocks = []
+    selected = []; graph_pair_blocks = []; selected_pairs = []
     for pair in evaluated['pairs']:
         if pair.get('engine_state') != 'FORWARDED_TO_UNCHANGED_EARLY_ENGINE': continue
         members = [s for s in strict_batch['signals'] if s['event_id'] in {pair['demand_event'], pair['supply_event']}]
@@ -820,10 +820,20 @@ def q3_input(events, facts, *, as_of, documents=()):
         # earliest supplier readiness is the conservative gap comparison.
         selected.extend([{**demand, 'period': period, 'need_date': need['end']},
                          {**supply, 'period': period, 'available_date': ready['start']}])
+        selected_pairs.append({k: pair[k] for k in ('target_id', 'demand_event', 'supply_event')})
     strict_result = forecast.discover(stamp_export({'documents': list(documents), 'signals': selected}), now=as_of, mode='BACKFILL')
     return {'eligible_pairs': len(selected)//2, 'reasons': dict(reasons), 'strict_engine_state': strict_result['state'],
             'structured_precheck_eligible_pairs': len(eligible), 'structured_pair_blocks': structured_blocks,
+            'strict_pair_diagnostics': selected_pairs,
+            'strict_candidate_diagnostics': [{'target_id': candidate['target_id'], 'reason': candidate['reason'],
+                'event_ids': [s['event_id'] for s in candidate['evidence']]} for candidate in strict_result['candidates']],
+            'graph_complete_event_ids': sorted({eid for observation in evaluated['observations']
+                if len(observation['resolved_fields']) == len(graph.FIELDS) for eid in observation.get('event_ids', [])}),
             'graph_blocked_events': evaluated['blocked'], 'graph_pair_blocks': graph_pair_blocks,
+            'graph_pair_diagnostics': [{k: pair.get(k) for k in ('target_id', 'demand_event', 'supply_event', 'engine_state')}
+                                       | {'comparison_state': pair['comparison']['state'],
+                                          'comparison_reason': pair['comparison'].get('reason')}
+                                       for pair in evaluated['pairs']],
             'strict_engine_candidates': len(strict_result['candidates']), 'formal_Q3_complete': False,
             'graph_independent_pairs': evaluated['independent_pairs'], 'graph_complete_target_events': evaluated['complete_target_events'],
             'graph_forwarded_signals': len(strict_batch['signals']),
