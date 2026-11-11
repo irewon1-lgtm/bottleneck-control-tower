@@ -21,6 +21,7 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install -e .
       - name: Restore existing verified database
+        id: ai_restore
         shell: bash
         run: |
           set -euo pipefail
@@ -48,6 +49,7 @@ jobs:
             echo 'AI annotation skipped: OPENAI_API_KEY is not configured.' >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Annotate up to 20 unprocessed signal articles
+        id: ai_annotation
         if: steps.ai_config.outputs.enabled == 'true'
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -72,10 +74,12 @@ jobs:
               raise SystemExit('AI batch failed; database publication skipped') from None
           print(json.dumps({k: result[k] for k in ('processed', 'success', 'error')}))
           # Per-article ERROR is terminal and must still be persisted.
-          Path(os.environ['GITHUB_ENV']).open('a').write(
-              'AI_PROCESSED=' + str(result['processed']) + '\n')
+          with Path(os.environ['GITHUB_ENV']).open('a') as env:
+              for name in ('processed', 'success', 'error'):
+                  env.write('AI_' + name.upper() + '=' + str(result[name]) + '\n')
           PY
       - name: Persist AI results in existing data branch
+        id: ai_save
         if: steps.ai_config.outputs.enabled == 'true' && env.AI_PROCESSED != '0'
         shell: bash
         run: |
@@ -95,3 +99,28 @@ jobs:
             -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
             commit -m 'Persist AI annotations from run ${{ github.run_id }}'
           git -C "$RUNNER_TEMP/ai-data" push origin HEAD:refs/heads/data
+          saved_sha=$(git -C "$RUNNER_TEMP/ai-data" rev-parse HEAD)
+          test "$(git ls-remote origin refs/heads/data | cut -f1)" = "$saved_sha"
+          git fetch --no-tags origin "$saved_sha"
+          mkdir -p "$RUNNER_TEMP/ai-saved"
+          for name in canonical.sqlite3 canonical.previous.sqlite3 state.json; do
+            git show "$saved_sha:$name" > "$RUNNER_TEMP/ai-saved/$name"
+          done
+          python .github/scripts/rss_state.py load \
+            "$RUNNER_TEMP/ai-saved" "$RUNNER_TEMP/ai-verified.sqlite3"
+      - name: Report actual AI outcome
+        if: always()
+        env:
+          AI_RESTORE_OUTCOME: ${{ steps.ai_restore.outcome }}
+          AI_CONFIG_OUTCOME: ${{ steps.ai_config.outcome }}
+          AI_ENABLED: ${{ steps.ai_config.outputs.enabled }}
+          AI_ANNOTATION_OUTCOME: ${{ steps.ai_annotation.outcome }}
+          AI_SAVE_OUTCOME: ${{ steps.ai_save.outcome }}
+        run: python .github/scripts/rss_ai_outcome.py --output "$RUNNER_TEMP/rss-ai-outcome.json"
+      - name: Preserve AI outcome receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rss-ai-outcome-${{ github.run_id }}
+          path: ${{ runner.temp }}/rss-ai-outcome.json
+          if-no-files-found: error

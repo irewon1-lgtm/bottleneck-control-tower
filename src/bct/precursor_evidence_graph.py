@@ -181,9 +181,18 @@ def analyze(documents,*,mode='BACKFILL',now=None,new_document_ids=None):
     for d in documents:
         for e in d.get('precursor_events',[]):
             o=obs.get(e['event_id'])
-            if not o:continue
+            if not o:
+                blocked.append({'event_id':e['event_id'],'document_id':d['document_id'],'observation_id':None,
+                                'reason':'GRAPH_OBSERVATION_NOT_BOUND','first_blocker':'GRAPH_OBSERVATION_NOT_BOUND',
+                                'missing_fields':list(FIELDS),'secondary_missing_fields':[]});continue
             fields=o['resolved_fields'];scope={k:norm(f['value']) for k,f in fields.items()}
-            if len(scope)!=len(FIELDS):continue
+            if len(scope)!=len(FIELDS):
+                missing=[k for k in FIELDS if k not in scope]
+                reasons={k:o['unknowns'][k] for k in missing}
+                blocked.append({'event_id':e['event_id'],'document_id':d['document_id'],'observation_id':o['observation_id'],
+                                'reason':'INCOMPLETE_TARGET_SCOPE','first_blocker':reasons[missing[0]],
+                                'missing_fields':missing,'secondary_missing_fields':missing[1:],
+                                'missing_field_reasons':reasons});continue
             supporting={r['document_id'] for f in fields.values() for r in [f['reference'],*f.get('support_references',[])]}
             supporting.update(r['document_id'] for p in o['relationship_proofs'] for r in p['references'])
             invalid=[]
