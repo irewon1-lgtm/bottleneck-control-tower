@@ -512,3 +512,9 @@ BCT-V4-Q-1.0의 Q1/Q2 범위에서 기존202개 미방문 항목을 원본 href�
 | P2 왕복/UI | 선행 조건 충족 시 새 실제 자료; 아니면 명시적 REPLAY | 수집→원문→판독→저장→새 프로세스→검토→수급 검토 건수 | 예약/수동/재생/선행 성능 별도; 오래된 데이터 갱신 PASS 금지 |
 
 각 단계는 새 운영 증거 또는 조건이 같은 기존 유효 증거로 판정한다. 한 권한/원본이 막히면 그 의존성만 BLOCKED로 두고 독립 복구는 계속한다.
+
+### 2026-11-11 운영 완전 연결 — 기존 복구의 일괄 승인 후속
+
+작업 ID `BCT_V4_AUTOMATION_FULL_RECOVERY_20261111`. 사용자가 첨부 지시문 적용과 “승인 실행해”를 명시했다. 기존 operations-recovery 원장·증거 경로를 계속 쓰고 새 마스터 계획은 만들지 않는다. 이 관련 복구 범위의 PR45·46/최소 후속/진짜 receipt PR 일반 병합, 같은 고정 모델 복원, 기존 Gates0~6 운영 CAS 효과와 조건 충족 후 CPU 활성화·공개 허용 스냅샷/기존 Pages 연결을 일괄 승인했다. 권한 우회·새 모델/유료·검증 기준 변경·자료 삭제는 승인하지 않았다. 승인 원문 해시/범위는 operations-recovery-20261111/FULL_RECOVERY_AUTHORIZATION.json에 기록한다.
+
+기존 유효 시험을 재사용하고, 판독/검토 전달·영속 저장/세대 고정 공개 스냅샷의 확인된 결함만 먼저 통합한다. 회귀시험 후 최종 운영 코드/실행pin/helper를 동결하고 full_pipeline=false의 실제 필수 Gate를 실행한다. 진짜 성공한 SHA/run/artifact/digest로만 영수증을 게시한다. 최신 bridge와 실제 Variables/런타임 조건이 맞으면 제한된 신규 LIVE 왕복과 실제 예약 연쇄를 별도 검증한다. CPU advisory 엔티티·접수HOLD·판독 후HOLD·의미 검토 완료·독립 수급 성능을 구분한다. 신규 결과의 원격 새 프로세스 복원과 같은 generation의 기존 Pages 실제JSON/화면을 확인한다. 한 권한이 막히면 해당 구간만 BLOCKED로 유지한다. Q1/Q2 PARTIAL/Q3 BLOCKED/Q6 미시작·Objective와 동결 평가 기준은 보존한다.
