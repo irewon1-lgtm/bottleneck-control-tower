@@ -1,0 +1,523 @@
+{
+  "format": "bct-new-producer-source-chain-observation-1",
+  "task": "BCT_V4_AUTOMATION_FULL_RECOVERY_ULTRA_20261111",
+  "observed_at_UTC": "2026-11-11T13:58:51.438732+00:00",
+  "repository": "irewon1-lgtm/bottleneck-control-tower",
+  "classification": "ACTUAL_MANUAL_RSS_TO_NEW_ATTEMPT_BOUND_SOURCE_PRODUCER_SUCCESS",
+  "code_sha": "933a29638c06d72d4cf4c17d843cfec2978066d2",
+  "runs": {
+    "RSS": {
+      "id": 43032161571,
+      "run_attempt": 1,
+      "name": "RSS live environment check",
+      "path": ".github/workflows/rss-live-check.yml",
+      "event": "workflow_dispatch",
+      "head_sha": "933a29638c06d72d4cf4c17d843cfec2978066d2",
+      "head_branch": "main",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-11T13:46:27Z",
+      "run_started_at": "2026-11-11T13:46:27Z",
+      "updated_at": "2026-11-11T13:49:03Z",
+      "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43032161571",
+      "artifacts": [
+        {
+          "id": 13860384933,
+          "name": "rss-live-result-1",
+          "size_in_bytes": 535682,
+          "digest": "sha256:2230276661698a8c07112218c6001dd88e324298c6488b4ed7cea313a448ec00",
+          "expired": false,
+          "created_at": "2026-11-11T13:48:50Z",
+          "expires_at": "2027-02-09T13:46:28Z",
+          "workflow_run": {
+            "id": 43032161571,
+            "repository_id": 1396803513,
+            "head_repository_id": 1396803513,
+            "head_branch": "main",
+            "head_sha": "933a29638c06d72d4cf4c17d843cfec2978066d2"
+          }
+        }
+      ],
+      "artifact_count": 1,
+      "jobs": [
+        {
+          "name": "collect",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:46:30Z",
+              "completed_at": "2026-11-11T13:46:31Z"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:46:31Z",
+              "completed_at": "2026-11-11T13:46:32Z"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:46:32Z",
+              "completed_at": "2026-11-11T13:46:32Z"
+            },
+            {
+              "number": 4,
+              "name": "Run python -m pip install -e .",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:46:33Z",
+              "completed_at": "2026-11-11T13:46:39Z"
+            },
+            {
+              "number": 5,
+              "name": "Restore last verified database from data branch",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:46:39Z",
+              "completed_at": "2026-11-11T13:46:44Z"
+            },
+            {
+              "number": 6,
+              "name": "Run full test suite",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:46:44Z",
+              "completed_at": "2026-11-11T13:47:30Z"
+            },
+            {
+              "number": 7,
+              "name": "Collect configured feeds in serial batches",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:47:30Z",
+              "completed_at": "2026-11-11T13:48:49Z"
+            },
+            {
+              "number": 8,
+              "name": "Require complete RSS delivery files before publishing canonical state",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:48:49Z",
+              "completed_at": "2026-11-11T13:48:49Z"
+            },
+            {
+              "number": 9,
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:48:49Z",
+              "completed_at": "2026-11-11T13:48:50Z"
+            },
+            {
+              "number": 10,
+              "name": "Publish verified database and one prior snapshot to data branch",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:48:50Z",
+              "completed_at": "2026-11-11T13:49:00Z"
+            },
+            {
+              "number": 19,
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:49:00Z",
+              "completed_at": "2026-11-11T13:49:00Z"
+            },
+            {
+              "number": 20,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:49:00Z",
+              "completed_at": "2026-11-11T13:49:00Z"
+            },
+            {
+              "number": 21,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:49:00Z",
+              "completed_at": "2026-11-11T13:49:00Z"
+            }
+          ]
+        },
+        {
+          "name": "live-snapshot",
+          "status": "completed",
+          "conclusion": "skipped",
+          "steps": []
+        }
+      ]
+    },
+    "ACQUISITION": {
+      "id": 43032565649,
+      "run_attempt": 1,
+      "name": "New precursor evidence acquisition",
+      "path": ".github/workflows/precursor-acquisition.yml",
+      "event": "workflow_run",
+      "head_sha": "933a29638c06d72d4cf4c17d843cfec2978066d2",
+      "head_branch": "main",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-11T13:49:05Z",
+      "run_started_at": "2026-11-11T13:49:05Z",
+      "updated_at": "2026-11-11T13:56:47Z",
+      "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43032565649",
+      "artifacts": [
+        {
+          "id": 13861692428,
+          "name": "precursor-private-cache-1",
+          "size_in_bytes": 500746000,
+          "digest": "sha256:dd98ea9891e7227f5c2aa016890df801a9a508763eb2c2b31df6f7dbdb2e2abb",
+          "expired": false,
+          "created_at": "2026-11-11T13:56:40Z",
+          "expires_at": "2026-12-11T13:55:53Z",
+          "workflow_run": {
+            "id": 43032565649,
+            "repository_id": 1396803513,
+            "head_repository_id": 1396803513,
+            "head_branch": "main",
+            "head_sha": "933a29638c06d72d4cf4c17d843cfec2978066d2"
+          }
+        },
+        {
+          "id": 13861577490,
+          "name": "bct-public-acquisition-1",
+          "size_in_bytes": 1049,
+          "digest": "sha256:4b09867a1bfdf6402b3a18aaf5c27f772b36f602792e7d2b0e2f032692ba63ee",
+          "expired": false,
+          "created_at": "2026-11-11T13:56:43Z",
+          "expires_at": "2026-12-11T13:56:42Z",
+          "workflow_run": {
+            "id": 43032565649,
+            "repository_id": 1396803513,
+            "head_repository_id": 1396803513,
+            "head_branch": "main",
+            "head_sha": "933a29638c06d72d4cf4c17d843cfec2978066d2"
+          }
+        },
+        {
+          "id": 13861572513,
+          "name": "precursor-cpu-delta-1",
+          "size_in_bytes": 1310662,
+          "digest": "sha256:10d2fa55dc913e1b1e972c790355681f13a8e0c3883123aa8763a46e8ede172f",
+          "expired": false,
+          "created_at": "2026-11-11T13:56:42Z",
+          "expires_at": "2026-12-11T13:56:41Z",
+          "workflow_run": {
+            "id": 43032565649,
+            "repository_id": 1396803513,
+            "head_repository_id": 1396803513,
+            "head_branch": "main",
+            "head_sha": "933a29638c06d72d4cf4c17d843cfec2978066d2"
+          }
+        }
+      ],
+      "artifact_count": 3,
+      "jobs": [
+        {
+          "name": "acquire",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:49:21Z",
+              "completed_at": "2026-11-11T13:49:21Z"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:49:21Z",
+              "completed_at": "2026-11-11T13:49:23Z"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:49:23Z",
+              "completed_at": "2026-11-11T13:49:23Z"
+            },
+            {
+              "number": 4,
+              "name": "Run python -m pip install -e .",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:49:23Z",
+              "completed_at": "2026-11-11T13:49:28Z"
+            },
+            {
+              "number": 5,
+              "name": "Restore new-only private evidence state and receive RSS delta",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:49:28Z",
+              "completed_at": "2026-11-11T13:50:59Z"
+            },
+            {
+              "number": 6,
+              "name": "Restore the existing LIVE session byte for byte",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:50:59Z",
+              "completed_at": "2026-11-11T13:51:00Z"
+            },
+            {
+              "number": 7,
+              "name": "Acquire new precursor scope and independent opposite-side evidence",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:51:00Z",
+              "completed_at": "2026-11-11T13:55:51Z"
+            },
+            {
+              "number": 8,
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:55:51Z",
+              "completed_at": "2026-11-11T13:56:41Z"
+            },
+            {
+              "number": 9,
+              "name": "Package exact current CPU inputs without rewriting RSS or source versions",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:56:41Z",
+              "completed_at": "2026-11-11T13:56:41Z"
+            },
+            {
+              "number": 10,
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:56:41Z",
+              "completed_at": "2026-11-11T13:56:42Z"
+            },
+            {
+              "number": 11,
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:56:42Z",
+              "completed_at": "2026-11-11T13:56:43Z"
+            },
+            {
+              "number": 12,
+              "name": "Persist aggregate index without rewriting canonical database or LIVE state",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:56:43Z",
+              "completed_at": "2026-11-11T13:56:44Z"
+            },
+            {
+              "number": 13,
+              "name": "Persist only newly appended LIVE records with compare and swap",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:56:44Z",
+              "completed_at": "2026-11-11T13:56:44Z"
+            },
+            {
+              "number": 25,
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:56:44Z",
+              "completed_at": "2026-11-11T13:56:45Z"
+            },
+            {
+              "number": 26,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:56:45Z",
+              "completed_at": "2026-11-11T13:56:45Z"
+            },
+            {
+              "number": 27,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-11T13:56:45Z",
+              "completed_at": "2026-11-11T13:56:45Z"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "code_file_sha256": {
+    ".github/workflows/rss-live-check.yml": "79e4c12668e54a54342497914ba8c89820a835210dffef6f408879fc39202d23",
+    ".github/workflows/precursor-acquisition.yml": "f279ba6687f2e107ca1a98b84016b9209890a02624e059b2533a76e7009c5474",
+    ".github/scripts/acquisition_sources.py": "9fe12813de0f7ba0589bd17a1cd16531a0a765465715b0c88a6584492010f3a6",
+    ".github/scripts/new_precursor_cycle.py": "111dc5a21efab0d90a441d8708437a3f24566f855efc2a230e66d15e4148eff1",
+    "src/bct/precursor_collection.py": "17a94efc3c98c620b0a7dee63dca77e5a4839a303f0a1d39148340619a580b3c"
+  },
+  "log_provenance": {
+    "RSS": {
+      "run_id": 43032161571,
+      "bytes": 59294,
+      "sha256": "d2a9e5c0eed75dfceae93b7dbd956d3ccc30c2df159e5dd8ec8df78128d3a4d5",
+      "original_log_content_published": false
+    },
+    "ACQUISITION": {
+      "run_id": 43032565649,
+      "bytes": 73951,
+      "sha256": "d7bb689704786b6f35e30c228da1f027973dc16bc2015bdd728841e286b14f4e",
+      "original_log_content_published": false
+    }
+  },
+  "RSS_reported": {
+    "registered": 125,
+    "initial_articles": 10047,
+    "final_articles": 10065,
+    "successful_feeds": 114,
+    "failed_feeds": 11,
+    "new_articles": 18,
+    "duplicate_articles": 1085,
+    "error_types": {
+      "HTTPError": 7,
+      "URLError": 4
+    },
+    "completed_at_utc": "2026-11-11T13:48:49.435815+00:00"
+  },
+  "acquisition_reported": {
+    "format": "bct-new-precursor-collection-v1",
+    "cache_run_id": "43032565649",
+    "cache_run_attempt": 1,
+    "completed_at": "2026-11-11T13:55:51.806299+00:00",
+    "engine_hashes": {
+      "precursor_discovery.py": "614e841938daf41e34d7e31b97ec636f06f2997c8b7b4252926dd135e5bc2639",
+      "early_forecast.py": "51d90d2265baec516d20383579816c5155e46c69599a8e7b281d329843d17675",
+      "forecast_discovery.py": "f6bf9bf94a43949dd82bd55e2acb5b63f944158309679127e49427469c061c37",
+      "prospective.py": "6ca939e378ffb02323feecb869aa1aac0e9f7b56ec5cbc92689233e30d65a153"
+    },
+    "new_verified_documents": 6,
+    "scope_complete_events": 0,
+    "independent_pair_count": 0,
+    "common_window_pair_count": 0,
+    "synthesized_targets": 0,
+    "early_preflight": 0,
+    "live_execution_state": "NO_EARLY_CANDIDATE",
+    "early_frozen": 0,
+    "baseline_reprocessed": 0,
+    "scope_reader_version": "source-scope-reader-5",
+    "backfill_qa_documents": 233,
+    "additional_bodies_acquired": 0,
+    "valid_additional_primary_documents": 0,
+    "source_integrity_state": "PARTIAL_HOLD",
+    "unverified_source_holds": 1,
+    "evidence_graph": {
+      "version": "source-evidence-graph-2",
+      "complete_target_events": 0,
+      "independent_pairs": 0,
+      "comparable_period_pairs": 0,
+      "reference_checks": 185165
+    },
+    "graph_early_preflight": 0,
+    "graph_early_frozen": 0,
+    "unique_early_preflight": 0,
+    "gap_verified_early_preflight": 0,
+    "unverified_legacy_preflight": 0,
+    "new_seed_attempts": 16,
+    "new_seed_statuses": {
+      "CAPTURED": 6,
+      "PROVENANCE_BLOCKED": 10
+    }
+  },
+  "source_manifest_and_restore_receipts_reported": [
+    {
+      "all_source_and_control_files_preserved": true,
+      "archive_artifact_id": 13861131923,
+      "archive_bytes": 4689051547,
+      "archive_digest": "sha256:b63ee17212582623f363a9ab25ddb372b2c4726820713077050105423f64fcb6",
+      "evaluations_expanded": false,
+      "expanded_bytes": 2445513478,
+      "expanded_limit": 4294967296,
+      "members": 18732,
+      "original_archive_immutable_reference_preserved": true,
+      "prior_head_sha": "7ab99db41fe901c95c09df318c412a1f7a7a121d",
+      "prior_run_attempt": 1,
+      "prior_run_id": 43025842520,
+      "skipped_evaluation_members": 216,
+      "source_HTTP_requests": 0,
+      "status": "PASS_LITERAL_ACQUISITION_STATE"
+    },
+    {
+      "bytes": 4384278,
+      "documents": 6,
+      "files": 31,
+      "limit": 134217728,
+      "manifest_sha256": "8e9659b6fe9e94adc84e661cd9c7dd3d9023a6d140f8d495b1d11911ad2db86a",
+      "new_CPU_inferences": 0,
+      "source_HTTP_requests": 0,
+      "source_kinds": {
+        "RSS": 6
+      },
+      "source_metadata_rewritten": false,
+      "status": "PASS_LITERAL_CPU_SOURCE_DELTA"
+    }
+  ],
+  "actual_delivery_proof": {
+    "RSS_run_id": 43032161571,
+    "RSS_run_attempt": 1,
+    "acquisition_run_id": 43032565649,
+    "acquisition_run_attempt": 1,
+    "RSS_upload_completed_at": "2026-11-11T13:48:50Z",
+    "canonical_publish_started_at": "2026-11-11T13:48:50Z",
+    "required_RSS_artifact_uploaded_before_canonical_publication": true,
+    "acquisition_log_upstream_RSS_ID_matches": true,
+    "CPU_source_artifact_id": 13861572513,
+    "CPU_source_artifact_digest": "sha256:10d2fa55dc913e1b1e972c790355681f13a8e0c3883123aa8763a46e8ede172f",
+    "CPU_source_artifact_compressed_bytes": 1310662,
+    "CPU_source_manifest_sha256_reported": "8e9659b6fe9e94adc84e661cd9c7dd3d9023a6d140f8d495b1d11911ad2db86a",
+    "CPU_source_manifest_documents_reported": 6,
+    "CPU_source_manifest_files_reported": 31,
+    "CPU_source_manifest_expanded_bytes_reported": 4384278,
+    "CPU_source_limit_bytes": 134217728,
+    "compact_private_cache_artifact_id": 13861692428,
+    "compact_private_cache_compressed_bytes": 500746000,
+    "legacy_evaluations_expanded": false,
+    "source_and_control_files_preserved_reported": true
+  },
+  "limits_and_next_stage": {
+    "this_RSS_event": "workflow_dispatch",
+    "actual_scheduled_new_CPU_observation_claimed": false,
+    "actual_CPU_inferences_in_producer": 0,
+    "CPU_model_read_and_ACK_not_part_of_this_producer_evidence": true,
+    "CPU_manual_dispatch_performed_by_inspector": false,
+    "Gate_run_id_reference_only": 43032067823,
+    "body_HTTP_request_count": null,
+    "body_pending_count": null,
+    "seed_attempt_units": "DURABLE_SEED_CAPTURE_OUTCOMES_NOT_HTTP_REQUESTS",
+    "RSS_new_articles_vs_seed_attempts_note": "RSS reports 18 new articles and acquisition reports 16 new seed outcomes. The logs alone do not establish the classification of the other 2; no pending or failed count is inferred by subtraction.",
+    "seed_status_scope": "New seed outcomes: CAPTURED 6 and PROVENANCE_BLOCKED 10. The separately reported unverified_source_holds 1 belongs to the public acquisition receipt scope and is not added to those seed outcomes.",
+    "source_originals_or_archives_downloaded_by_inspector": false,
+    "additional_original_source_HTTP_requests_by_inspector": 0,
+    "source_archive_expanded_bytes_by_inspector": 0,
+    "artifact_digest_locally_recomputed_by_inspector": false,
+    "artifact_digest_evidence": "GitHub Actions artifact metadata plus source-free producer stdout receipts; source ZIPs were not downloaded.",
+    "peak_runner_disk_and_memory_independently_measured": false,
+    "legacy_archive_note": "This first new producer restored the old 4,689,051,547-byte archive once. It excluded 216 evaluation members and expanded 2,445,513,478 bytes of source and control state. Future acquisition can use the new 500,746,000-byte compact cache. CPU consumers can use the separate 1,310,662-byte current-source delta; actual consumer transport and reading are a later stage.",
+    "actual_accuracy_or_7_day_operating_success_claimed": false
+  },
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+}
