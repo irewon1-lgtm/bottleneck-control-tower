@@ -65,3 +65,14 @@ def test_public_writer_refuses_foreign_private_repository(tmp_path):
     with pytest.raises(ValueError, match='REPOSITORY'):
         writer.emit(repo, published, tmp_path / 'public', producer)
     assert not (tmp_path / 'public').exists()
+
+
+def test_recover_public_reuses_exact_existing_ack_generation_and_snapshot(tmp_path):
+    repo, published, producer, _, result = private_ack(tmp_path)
+    writer.emit(repo, published, tmp_path / 'first', producer)
+    retry = {**producer, 'run_id': 999, 'run_attempt': 2, 'workflow_sha': '0' * 40}
+    writer.emit(repo, None, tmp_path / 'recovered', retry)
+    assert (tmp_path / 'first/snapshot.json').read_bytes() == (tmp_path / 'recovered/snapshot.json').read_bytes()
+    manifest = json.loads((tmp_path / 'recovered/manifest.json').read_text())
+    assert manifest['transport_run_id'] == 999 and manifest['transport_attempt'] == 2
+    assert manifest['generation']['producer_run_id'] == 103

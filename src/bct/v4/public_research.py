@@ -27,7 +27,7 @@ REASONS.update({'CPU_NOT_READ', 'CPU_READ_INCOMPLETE', 'CPU_WINDOW_VALIDATION_FA
                 'NO_SOURCE_BOUND_EVENT_IN_READ_SCOPE', 'CPU_ENTITY_VALIDATION_REVIEW_PENDING',
                 'CPU_ENTITY_ONLY_SEMANTICS_PENDING', 'TARGET_FIELDS_UNKNOWN', 'QUALIFIED_SUPPLY_SCOPE_UNKNOWN',
                 'INDEPENDENT_COUNTERPART_NOT_VERIFIED', 'FORECAST_INPUT_NOT_ELIGIBLE',
-                'EXISTING_STRICT_FORECAST_CANDIDATE_RESEARCH_ONLY', 'ANALYSIS_DEPENDENCY_FAILED'})
+                'EXISTING_STRICT_FORECAST_CANDIDATE_RESEARCH_ONLY', 'ANALYSIS_DEPENDENCY_FAILED', 'ANALYSIS_RUNTIME_FAILED'})
 ISSUES = {'UPSTREAM_BODY_NOT_AVAILABLE_NO_REFETCH', 'UPSTREAM_VERSION_AMBIGUOUS',
           'PRIVATE_ARCHIVAL_OR_PRIVACY_UNREVIEWED', 'SOURCE_PUBLICATION_OR_PROVENANCE_HELD',
           'NATIVE_OR_BODY_HASH_MISMATCH', 'NATIVE_TO_BODY_MISMATCH', 'OTHER_SOURCE_HOLD'}
@@ -36,7 +36,7 @@ COUNT_FIELDS = {'new_CPU_documents', 'new_CPU_windows', 'successful_new_CPU_wind
                 'review_pending_windows', 'preserved_windows', 'completed_body_keys',
                 'independent_pairs', 'analysis_runtime_failures', 'complete_analyzed_new_CPU_documents'}
 ROOT_FIELDS = {'format', 'objective_version', 'objective_sha256', 'generation', 'clocks',
-               'counts', 'analysis', 'trace', 'source_issues', 'proof', 'snapshot_sha256'}
+               'counts', 'analysis', 'trace', 'source_issues', 'proof', 'snapshot_sha256', 'last_read_batch'}
 GENERATION_FIELDS = {'private_commit', 'checkpoint_commit', 'sqlite_sha256', 'producer_run_id',
                      'producer_attempt', 'workflow_sha', 'execution_sha', 'RSS_run_id', 'acquisition_run_id',
                      'lineage_root', 'ack_sequence'}
@@ -115,6 +115,10 @@ def validate_snapshot(public):
     exact(public['counts'], COUNT_FIELDS)
     for key, value in public['counts'].items():
         number(value, nullable=key == 'independent_pairs')
+    exact(public['last_read_batch'], {'consumer_run_id', 'consumer_attempt', 'RSS_run_id', 'acquisition_run_id',
+                                     'new_CPU_documents', 'new_CPU_windows', 'successful_new_CPU_windows', 'new_CPU_characters'})
+    for key, value in public['last_read_batch'].items():
+        number(value, nullable=key in ('consumer_run_id', 'consumer_attempt', 'RSS_run_id', 'acquisition_run_id'))
     exact(public['analysis'], {'states', 'trace_total', 'trace_truncated', 'status'})
     if public['analysis']['status'] not in ('ERROR_PROGRESS_PRESERVED', 'ANALYZED_READ', 'NO_COMPLETE_NEW_ANALYZED_READ'):
         raise ValueError('PUBLIC_RESEARCH_ANALYSIS_STATUS')
@@ -146,9 +150,10 @@ def validate_snapshot(public):
                 or set(row['missing_fields']) - MISSING):
             raise ValueError('PUBLIC_RESEARCH_TRACE_STATUS')
         exact(row['window_counts'], {'total', 'success', 'failed', 'unread'})
+        unknown = all(value is None for value in row['window_counts'].values())
         for count in row['window_counts'].values():
-            number(count)
-        if row['window_counts']['total'] != sum(row['window_counts'][key] for key in ('success', 'failed', 'unread')):
+            number(count, nullable=unknown and row['reason_code'] == 'ANALYSIS_RUNTIME_FAILED')
+        if not unknown and row['window_counts']['total'] != sum(row['window_counts'][key] for key in ('success', 'failed', 'unread')):
             raise ValueError('PUBLIC_RESEARCH_TRACE_WINDOW_COUNTS')
     if not isinstance(public['source_issues'], list) or len(public['source_issues']) > len(ISSUES):
         raise ValueError('PUBLIC_RESEARCH_SOURCE_ISSUES')
@@ -173,6 +178,10 @@ def build_snapshot(db, acknowledgment, restored, producer):
             or restored.get('tables') != 8 or receipt.get('version') != 'bct-private-persistence-1'
             or receipt.get('sqlite_sha256') != restored.get('sqlite_sha256')):
         raise ValueError('PUBLIC_RESEARCH_GENERATION_NOT_RESTORED')
+    producer = {**producer, 'run_id': receipt.get('publisher_run_id'),
+                'run_attempt': receipt.get('publisher_attempt'),
+                'workflow_sha': receipt.get('publisher_workflow_sha'),
+                'execution_sha': receipt.get('publisher_execution_sha')}
     databases = db.execute('PRAGMA database_list').fetchall()
     database = next((Path(row[2]) for row in databases if row[1] == 'main' and row[2]), None)
     if database is None or file_sha(database) != receipt['sqlite_sha256']:
@@ -185,7 +194,11 @@ def build_snapshot(db, acknowledgment, restored, producer):
                     and row.get('actually_read_new_characters', 0) > 0]
     schedule = latest.get('schedule_proof', {})
     analyses = {}
-    for record in events(db, 'CPU_ANALYSIS_RESULT'):
+    for kind, payload in db.execute("SELECT kind,payload FROM events WHERE kind IN ('CPU_ANALYSIS_RESULT','CPU_ANALYSIS_FAILURE') ORDER BY seq"):
+        record = json.loads(payload)
+        if kind == 'CPU_ANALYSIS_FAILURE':
+            record = {**record, 'read_state': record.get('read_state', 'FAILED'),
+                      'source_validation': 'NOT_VERIFIED', 'missing_fields': [], 'strict_pair_count': None}
         analyses[(record['document_id'], record['body_sha256'])] = record
     trace = []
     for record in analyses.values():
@@ -197,7 +210,7 @@ def build_snapshot(db, acknowledgment, restored, producer):
                                                 for field in record.get('missing_fields', [])}),
                       'source_verification': record.get('source_validation', 'NOT_VERIFIED'),
                       'read_state': record['read_state'],
-                      'window_counts': {name: record['CPU_windows_' + field] for name, field in
+                      'window_counts': {name: record.get('CPU_windows_' + field) for name, field in
                                         [('total', 'total'), ('success', 'success'), ('failed', 'failed'), ('unread', 'unread')]}})
     imports = {row['item_key']: row for row in events(db, 'CPU_QUEUE_IMPORT')}
     issues = Counter(row.get('reason') if row.get('reason') in ISSUES else 'OTHER_SOURCE_HOLD'
@@ -205,6 +218,13 @@ def build_snapshot(db, acknowledgment, restored, producer):
     pair_counts = [row.get('strict_pair_count') for row in analyses.values()]
     # A per-document positive count is not a deduplicated global pair count.
     pairs = 0 if pair_counts and all(value == 0 for value in pair_counts) else None
+    this_producer = (latest.get('consumer_run_id'), latest.get('consumer_attempt')) == (producer['run_id'], producer['run_attempt'])
+    last_read = actual_reads[-1] if actual_reads else {}
+    def batch(row):
+        return {'new_CPU_documents': row.get('CPU_documents_processed', 0), 'new_CPU_windows': row.get('new_CPU_windows', 0),
+                'successful_new_CPU_windows': row.get('successful_new_CPU_windows', 0),
+                'new_CPU_characters': row.get('actually_read_new_characters', 0)}
+    current_counts = batch(latest) if this_producer else batch({})
     public = seal({'format': FORMAT,
         'generation': {'private_commit': acknowledgment['commit'], 'checkpoint_commit': receipt['checkpoint_commit'],
                        'sqlite_sha256': receipt['sqlite_sha256'], 'producer_run_id': producer['run_id'],
@@ -215,17 +235,18 @@ def build_snapshot(db, acknowledgment, restored, producer):
         'clocks': {'last_collection_at': schedule.get('RSS_actual_created_at'),
                    'last_read_at': actual_reads[-1]['finished_at'] if actual_reads else None,
                    'persisted_at': receipt['remote_restored_at'], 'data_at': latest.get('finished_at')},
-        'counts': {'new_CPU_documents': latest.get('CPU_documents_processed', 0),
-                   'new_CPU_windows': latest.get('new_CPU_windows', 0),
-                   'successful_new_CPU_windows': latest.get('successful_new_CPU_windows', 0),
-                   'new_CPU_characters': latest.get('actually_read_new_characters', 0),
+        'counts': {**current_counts,
                    'pending_windows': latest.get('CPU_pending', 0),
                    'failed_windows': latest.get('queue', {}).get('failed_windows', 0),
                    'held_inputs': sum(issues.values()), 'review_pending_windows': latest.get('review_pending_windows', 0),
                    'preserved_windows': len({row['key'] for row in events(db, 'CPU_RESUME_WINDOW')}),
                    'completed_body_keys': len({row['body_key'] for row in events(db, 'CPU_QUEUE_LEGACY_COMPLETE')}),
                    'independent_pairs': pairs, 'analysis_runtime_failures': latest.get('analysis_runtime_failures', 0),
-                   'complete_analyzed_new_CPU_documents': latest.get('complete_analyzed_new_CPU_documents', 0)},
+                   'complete_analyzed_new_CPU_documents': latest.get('complete_analyzed_new_CPU_documents', 0) if this_producer else 0},
+        'last_read_batch': {**batch(last_read), 'consumer_run_id': last_read.get('consumer_run_id'),
+                            'consumer_attempt': last_read.get('consumer_attempt'),
+                            'RSS_run_id': last_read.get('schedule_proof', {}).get('RSS_run_id'),
+                            'acquisition_run_id': last_read.get('schedule_proof', {}).get('acquisition_run_id')},
         'analysis': {'states': dict(Counter(row['review_state'] for row in analyses.values())),
                      'trace_total': len(trace), 'trace_truncated': len(trace) > 100,
                      'status': latest.get('analysis_status', 'NO_COMPLETE_NEW_ANALYZED_READ')},

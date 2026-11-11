@@ -30,6 +30,7 @@ def input_state(tmp_path, *, observation=True):
         if observation:
             ledger.event('CPU_OPERATION_OBSERVATION', {
                 'finished_at': '2026-11-11T12:00:00+00:00',
+                'consumer_run_id': 103, 'consumer_attempt': 1,
                 'CPU_documents_processed': 1, 'new_CPU_windows': 2,
                 'successful_new_CPU_windows': 2, 'actually_read_new_characters': 520,
                 'CPU_pending': 3, 'review_pending_windows': 2,
@@ -46,6 +47,8 @@ def input_state(tmp_path, *, observation=True):
     proof = {'restored': True, 'tables': 8, 'sqlite_sha256': file_sha(path)}
     producer = {'run_id': 103, 'run_attempt': 1, 'workflow_sha': 'e' * 40,
                 'execution_sha': 'f' * 40, 'lineage_root': '1' * 40, 'ack_sequence': 4}
+    acknowledgment['persistence_receipt'].update(publisher_run_id=103, publisher_attempt=1,
+        publisher_workflow_sha='e' * 40, publisher_execution_sha='f' * 40)
     return path, acknowledgment, proof, producer
 
 
@@ -139,3 +142,32 @@ def test_hash_mismatch_is_a_per_source_hold_not_a_failed_publication(tmp_path):
     assert held['source_version'] != held['body_sha256']
     assert held['reason_code'] == 'SOURCE_VERSION_OR_HASH_MISMATCH'
     assert held['read_state'] == 'UNREAD' and held['window_counts']['unread'] == 1
+
+
+def test_recovery_ack_preserves_last_read_but_does_not_claim_old_inference_again(tmp_path):
+    from bct.v4.public_research import build_snapshot
+    path, ack, proof, producer = input_state(tmp_path)
+    producer = {**producer, 'run_id': 104}
+    ack['persistence_receipt']['publisher_run_id'] = 104
+    with sqlite3.connect(path.as_uri() + '?mode=ro', uri=True) as db:
+        public = build_snapshot(db, ack, proof, producer)
+    assert public['counts']['new_CPU_windows'] == 0
+    assert public['last_read_batch']['new_CPU_windows'] == 2
+    assert public['last_read_batch']['consumer_run_id'] == 103
+    assert public['generation']['producer_run_id'] == 104
+
+
+def test_analysis_exception_has_per_source_failed_pointer_and_never_becomes_hold(tmp_path):
+    from bct.v4.public_research import build_snapshot
+    path, ack, proof, producer = input_state(tmp_path)
+    ledger = Ledger(path.parent)
+    with ledger.db:
+        ledger.event('CPU_ANALYSIS_FAILURE', {'document_id': DOC, 'body_sha256': 'a' * 64,
+            'raw_sha256': 'b' * 64, 'source_version': 'a' * 64,
+            'reason_code': 'ANALYSIS_RUNTIME_FAILED', 'review_state': 'FAILED'})
+    ledger.close(); ack['persistence_receipt']['sqlite_sha256'] = proof['sqlite_sha256'] = file_sha(path)
+    with sqlite3.connect(path.as_uri() + '?mode=ro', uri=True) as db:
+        public = build_snapshot(db, ack, proof, producer)
+    assert public['analysis']['states'] == {'FAILED': 1}
+    assert public['trace'][0]['reason_code'] == 'ANALYSIS_RUNTIME_FAILED'
+    assert public['trace'][0]['window_counts']['total'] is None

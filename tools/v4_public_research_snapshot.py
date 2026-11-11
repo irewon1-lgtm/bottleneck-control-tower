@@ -1,70 +1,88 @@
-"""Project the freshly fetched private ACK in a separate, credential-free process."""
+"""Project fetched private ACK objects in a separate credential-free interpreter."""
 import argparse
 import json
 import os
 from pathlib import Path
 import re
+import sqlite3
 import subprocess
 import sys
 import tempfile
 
-from bct.v4.public_research import encoded, validate_snapshot
 from bct.objective_lock import stamp_export
-from bct.v4.store import file_sha
+from bct.v4.public_research import build_snapshot, encoded, validate_snapshot
 from bct.v4.private_state import PRIVATE_URL
+from bct.v4.store import file_sha
 
 
-def emit(private_git, published, output, producer):
-    private_git, output = Path(private_git), Path(output)
-    if output.exists():
-        raise ValueError('PUBLIC_RESEARCH_OUTPUT_EXISTS')
-    result = json.loads(Path(published).read_text())
-    commit = result.get('commit', '')
-    if not re.fullmatch('[0-9a-f]{40}', commit) or result.get('remote_restore_verified') is not True:
-        raise ValueError('PUBLIC_RESEARCH_ACK_REQUIRED')
-
+def private_reader(repository):
+    repository = Path(repository).resolve()
     def git(*args):
-        process = subprocess.run(['git', '-C', str(private_git), *args], capture_output=True, timeout=25)
+        process = subprocess.run(['git', '-C', str(repository), *args], capture_output=True, timeout=25)
         if process.returncode:
             raise ValueError('PUBLIC_RESEARCH_PRIVATE_ACK_READ_FAILED')
         return process.stdout
-
     if git('config', '--get', 'remote.origin.url').decode().strip() != PRIVATE_URL:
         raise ValueError('PUBLIC_RESEARCH_REPOSITORY_MISMATCH')
-    if git('rev-parse', 'FETCH_HEAD').decode().strip() != commit:
+    return git
+
+
+def read_ack(repository, expected_commit=None):
+    git = private_reader(repository)
+    commit = git('rev-parse', 'FETCH_HEAD').decode().strip()
+    if not re.fullmatch('[0-9a-f]{40}', commit) or (expected_commit and expected_commit != commit):
         raise ValueError('PUBLIC_RESEARCH_FETCHED_GENERATION_CHANGED')
-    acknowledgment = json.loads(git('show', commit + ':private-persistence.json'))
-    if acknowledgment != result.get('persistence_receipt'):
-        raise ValueError('PUBLIC_RESEARCH_ACK_RECEIPT_MISMATCH')
-    parents = git('rev-list', '--parents', '-n', '1', commit).decode().split()
-    if parents != [commit, acknowledgment.get('checkpoint_commit')]:
+    receipt = json.loads(git('show', commit + ':private-persistence.json'))
+    if git('rev-list', '--parents', '-n', '1', commit).decode().split() != [commit, receipt.get('checkpoint_commit')]:
         raise ValueError('PUBLIC_RESEARCH_ACK_PARENT_MISMATCH')
     if git('rev-parse', '--is-shallow-repository').decode().strip() != 'false':
         raise ValueError('PUBLIC_RESEARCH_INCOMPLETE_PRIVATE_HISTORY')
     roots = git('rev-list', '--max-parents=0', '--first-parent', commit).decode().split()
     if len(roots) != 1:
         raise ValueError('PUBLIC_RESEARCH_PRIVATE_LINEAGE_AMBIGUOUS')
-    producer = {**producer, 'lineage_root': roots[0],
-                'ack_sequence': int(git('rev-list', '--first-parent', '--count', commit))}
-    with tempfile.TemporaryDirectory(prefix='bct-public-restart-') as temporary:
-        root = Path(temporary); packet = root / 'checkpoint'; packet.mkdir()
+    return {'commit': commit, 'remote_restore_verified': True, 'persistence_receipt': receipt}, {
+        'lineage_root': roots[0], 'ack_sequence': int(git('rev-list', '--first-parent', '--count', commit))}
+
+
+def project_git(repository, expected, output):
+    """Executed by the child; independently read immutable durable Git objects."""
+    if any(os.environ.get(key) for key in ('BCT_V4_PRIVATE_STATE_TOKEN', 'BCT_V4_STATE_PASSPHRASE', 'GH_TOKEN', 'GITHUB_TOKEN')):
+        raise ValueError('PUBLIC_RESEARCH_CREDENTIAL_REACHED_CHILD')
+    from bct.v4.cpu_operations import restore
+    result, lineage = read_ack(repository, expected['commit'])
+    if result['persistence_receipt'] != expected['persistence_receipt']:
+        raise ValueError('PUBLIC_RESEARCH_ACK_RECEIPT_MISMATCH')
+    git = private_reader(repository)
+    with tempfile.TemporaryDirectory(prefix='bct-public-git-restore-') as temporary:
+        root = Path(temporary); checkpoint = root / 'checkpoint'; checkpoint.mkdir()
         for name in ('checkpoint.json', 'checkpoint.sqlite3.gz'):
-            (packet / name).write_bytes(git('show', commit + ':' + name))
-        (root / 'publisher.json').write_bytes(encoded(result))
-        (root / 'producer.json').write_bytes(encoded(producer))
-        code = '''import json,sqlite3,sys
-from pathlib import Path
-from bct.v4.cpu_operations import restore
-from bct.v4.public_research import build_snapshot,encoded
-r=Path(sys.argv[1]);proof=restore(r/'checkpoint',r/'restored')
-with sqlite3.connect((r/'restored/v4.sqlite3').as_uri()+'?mode=ro',uri=True)as db:
- public=build_snapshot(db,json.loads((r/'publisher.json').read_text()),proof,json.loads((r/'producer.json').read_text()))
-with (r/'snapshot.json').open('xb')as out:out.write(encoded(public)+b'\\n')
-'''
+            (checkpoint / name).write_bytes(git('show', result['commit'] + ':' + name))
+        proof = restore(checkpoint, root / 'restored')
+        with sqlite3.connect((root / 'restored/v4.sqlite3').as_uri() + '?mode=ro', uri=True) as db:
+            public = build_snapshot(db, result, proof, lineage)
+        with Path(output).open('xb') as out:
+            out.write(encoded(public) + b'\n')
+
+
+def emit(private_git, published, output, transport):
+    output = Path(output)
+    if output.exists() or output.is_symlink():
+        raise ValueError('PUBLIC_RESEARCH_OUTPUT_EXISTS')
+    published = json.loads(Path(published).read_text()) if published is not None else None
+    expected, _ = read_ack(private_git, published.get('commit') if published else None)
+    if published is not None:
+        if (published.get('remote_restore_verified') is not True or published.get('commit') != expected['commit']):
+            raise ValueError('PUBLIC_RESEARCH_FETCHED_GENERATION_CHANGED')
+        if published.get('persistence_receipt') != expected['persistence_receipt']:
+            raise ValueError('PUBLIC_RESEARCH_ACK_RECEIPT_MISMATCH')
+    with tempfile.TemporaryDirectory(prefix='bct-public-restart-') as temporary:
+        root = Path(temporary); expected_path = root / 'expected.json'
+        expected_path.write_bytes(encoded(expected))
         removed = {'BCT_V4_PRIVATE_STATE_TOKEN', 'BCT_V4_STATE_PASSPHRASE', 'GH_TOKEN', 'GITHUB_TOKEN'}
         environment = {key: value for key, value in os.environ.items() if key not in removed}
-        child = subprocess.run([sys.executable, '-c', code, str(root)], env=environment,
-                               capture_output=True, timeout=120)
+        child = subprocess.run([sys.executable, str(Path(__file__).resolve()), '--child-project',
+            '--private-git', str(Path(private_git).resolve()), '--expected', str(expected_path),
+            '--output', str(root / 'snapshot.json')], env=environment, capture_output=True, timeout=120)
         if child.returncode:
             raise ValueError('PUBLIC_RESEARCH_NEW_PROCESS_PROJECTION_FAILED')
         raw = (root / 'snapshot.json').read_bytes()
@@ -76,7 +94,8 @@ with (r/'snapshot.json').open('xb')as out:out.write(encoded(public)+b'\\n')
             out.write(raw)
     manifest = stamp_export({'format': 'bct-public-research-artifact-1',
         'file_sha256': file_sha(output / 'snapshot.json'), 'snapshot_sha256': public['snapshot_sha256'],
-        'generation': public['generation']})
+        'generation': public['generation'], 'transport_run_id': transport['run_id'],
+        'transport_attempt': transport['run_attempt'], 'transport_workflow_sha': transport['workflow_sha']})
     with (output / 'manifest.json').open('xb') as out:
         out.write(encoded(manifest) + b'\n')
     return {'status': 'PASS_PUBLIC_GENERATION_AFTER_REMOTE_ACK_NEW_PROCESS',
@@ -87,11 +106,19 @@ with (r/'snapshot.json').open('xb')as out:out.write(encoded(public)+b'\\n')
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--private-git', type=Path, required=True)
-    parser.add_argument('--published', type=Path, required=True)
+    parser.add_argument('--published', type=Path)
+    parser.add_argument('--recover', action='store_true')
+    parser.add_argument('--child-project', action='store_true')
+    parser.add_argument('--expected', type=Path)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--workflow-sha', required=True)
-    parser.add_argument('--execution-sha', required=True)
+    parser.add_argument('--workflow-sha')
+    parser.add_argument('--execution-sha')
     args = parser.parse_args()
-    source = {'run_id': int(os.environ['GITHUB_RUN_ID']), 'run_attempt': int(os.environ['GITHUB_RUN_ATTEMPT']),
-              'workflow_sha': args.workflow_sha, 'execution_sha': args.execution_sha}
-    print('BCT_PUBLIC_RESEARCH_JSON=' + json.dumps(emit(args.private_git, args.published, args.output, source)))
+    if args.child_project:
+        project_git(args.private_git, json.loads(args.expected.read_text()), args.output)
+    else:
+        if not args.workflow_sha or (args.published is None) != args.recover:
+            raise ValueError('PUBLIC_RESEARCH_EXPLICIT_PUBLICATION_OR_RECOVERY_REQUIRED')
+        transport = {'run_id': int(os.environ['GITHUB_RUN_ID']), 'run_attempt': int(os.environ['GITHUB_RUN_ATTEMPT']),
+                     'workflow_sha': args.workflow_sha}
+        print('BCT_PUBLIC_RESEARCH_JSON=' + json.dumps(emit(args.private_git, args.published, args.output, transport)))
