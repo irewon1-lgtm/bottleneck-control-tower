@@ -182,7 +182,8 @@ def test_original_frozen_UI_copy_and_evidence_files_are_preserved():
     evolved = {"src/bct/v4/dashboard_web/app.js": "app.js",
                "src/bct/v4/dashboard_web/style.css": "style.css",
                ".github/workflows/rss-ai.yml": "rss-ai.yml",
-               ".github/workflows/review-lead-shadow.yml": "review-lead-shadow.yml"}
+               ".github/workflows/review-lead-shadow.yml": "review-lead-shadow.yml",
+               ".github/workflows/bct-isolated-review.yml": "bct-isolated-review.yml"}
     for name, expected in manifest["protected_files"].items():
         path = ROOT / "docs/v4/dashboard/frozen-assets" / evolved[name] if name in evolved else ROOT / name
         assert sha(path.read_bytes()) == expected, name

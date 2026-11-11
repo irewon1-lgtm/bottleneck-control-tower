@@ -1,0 +1,1240 @@
+{
+  "task_id": "BCT_V4_OPERATIONS_RECOVERY_20261111",
+  "phase": "P1_RSS_FAILED_SOURCE_RECOVERY",
+  "created_at_utc": "2026-11-11T08:42:33.270192+00:00",
+  "baseline_dev_sha": "42ee0a6ee6b0ed21228a0409aa64e973359bf65f",
+  "scope": "THE_PREVIOUS_RUN_14_FAILED_FEEDS_ONLY",
+  "status": "PARTIAL_2_RECOVERED_12_BLOCKED",
+  "registered_feed_names": 125,
+  "feed_names_and_order_preserved": true,
+  "previously_working111_URLs_unchanged": true,
+  "previously_working111_not_refetched": true,
+  "original_configured_feed_attempts": 14,
+  "new_declared_RSS_candidates_tested": 2,
+  "successful_candidate_feeds": 2,
+  "remaining_blocked_feeds": 12,
+  "logical_initial_GET_requests": 14,
+  "logical_discovery_GET_requests": 21,
+  "redirect_network_transactions": "NOT_SEPARATELY_COUNTED",
+  "same_failed_URL_retries": 0,
+  "modified_feed_URLs": {
+    "DOE Fossil techlines": {
+      "old": "https://energy.gov/fe/techlines?view=rss",
+      "new": "https://www.energy.gov/rss/hgeo/2282977"
+    },
+    "DOE Fossil blog": {
+      "old": "https://energy.gov/fe/blog?view=rss",
+      "new": "https://www.energy.gov/rss/hgeo/2283029"
+    }
+  },
+  "config_sha256_after": "009f889bc1d7cc967904af83164eb36b8362fcc86803182f30f901ab4f91d229",
+  "parser_and_collector_unchanged": true,
+  "parser_and_collector_sha256": "71d63088a54328d598b332e074b7da2cd10fe83fe7e1d32a5ab294004f433c18",
+  "tests": {
+    "command": ".venv/bin/python -m pytest -q tests/test_rss_collector.py tests/test_rss_ai_workflow.py tests/test_rss_cycle_families.py tests/test_rss_state_workflow.py",
+    "passed": 17,
+    "failed": 0
+  },
+  "temporary_collector_proof": {
+    "source_data_commit": "f1ea8b650a36388487efb8690b6c3a0635db1a0e",
+    "source_data_state": {
+      "previous_radar_items": 9914,
+      "previous_sha256": "0dd55e415fd6e5def8856d8c56649319253ddb5a0667735f13931db215e71fc8",
+      "radar_items": 9921,
+      "run_id": "42939431146",
+      "sha256": "116745656127534880b2253b175e3adad335ffd5a46b4d19d2e9c4da1e300dc7"
+    },
+    "source_db_sha256_before": "116745656127534880b2253b175e3adad335ffd5a46b4d19d2e9c4da1e300dc7",
+    "source_db_sha256_after": "116745656127534880b2253b175e3adad335ffd5a46b4d19d2e9c4da1e300dc7",
+    "source_db_bytes": 56107008,
+    "source_db_matches_remote_state_before_and_after": true,
+    "initial_articles": 9921,
+    "final_articles": 9941,
+    "new_articles": 20,
+    "updated_articles": 0,
+    "first_replay_duplicates": 0,
+    "second_replay_duplicates": 20,
+    "production_DB_writes": 0,
+    "public_DB_uploads": 0,
+    "additional_network_requests_during_replay": 0,
+    "old_rows_preserved_in_temporary_copy": {
+      "radar_items": {
+        "old_rows": 9921,
+        "old_rows_unchanged": true
+      },
+      "rss_ai_reviews": {
+        "old_rows": 9,
+        "old_rows_unchanged": true
+      }
+    }
+  },
+  "feeds": [
+    {
+      "feed": "ESA Space News",
+      "prior_receipt_status": "failed",
+      "prior_receipt_error": "HTTPError: HTTP Error 404: Not Found",
+      "original_transport": {
+        "name": "ESA Space News",
+        "url": "https://www.esa.int/rssfeed/Our_Activities/Space_News",
+        "requested_at_utc": "2026-11-11T08:36:02.241975+00:00",
+        "attempts": 1,
+        "timeout_seconds": 12,
+        "max_bytes": 2000000,
+        "status": 404,
+        "final_url": "https://www.esa.int/rssfeed/Our_Activities/Space_News",
+        "content_type": "text/html; charset=UTF-8",
+        "byte_count": 148943,
+        "sha256": "9a376c25e02ab065be680a4020d83fd724ad713653f5500555c3e5d3e0e23aa1",
+        "error": "HTTPError: HTTP Error 404: Not Found"
+      },
+      "configuration_changed": false,
+      "collector_original_captured_replay": {
+        "feed": "ESA Space News",
+        "url": "https://www.esa.int/rssfeed/Our_Activities/Space_News",
+        "captured_replay": true,
+        "additional_network_requests": 0,
+        "run_id": "006f64c7-41a6-4859-b2d4-727c756b8f85",
+        "status": "failed",
+        "saved": 0,
+        "duplicates": 0,
+        "failed": 1,
+        "error": "HTTPError: HTTP Error 404: HTTPError: HTTP Error 404: Not Found",
+        "updated": 0
+      },
+      "current_failure_class": "OFFICIAL_ENDPOINT_HTTP_404",
+      "recovery_status": "BLOCKED",
+      "reason": "Official RSS directory still advertises legacy feed paths; category pages expose no replacement RSS/Atom link. No guessed endpoint or broad-news substitution.",
+      "discovery_evidence": [
+        "ESA RSS directory",
+        "ESA operations directorate",
+        "ESA space transportation"
+      ]
+    },
+    {
+      "feed": "ESA Launchers",
+      "prior_receipt_status": "failed",
+      "prior_receipt_error": "HTTPError: HTTP Error 404: Not Found",
+      "original_transport": {
+        "name": "ESA Launchers",
+        "url": "https://www.esa.int/rssfeed/Our_Activities/Launchers",
+        "requested_at_utc": "2026-11-11T08:36:02.251665+00:00",
+        "attempts": 1,
+        "timeout_seconds": 12,
+        "max_bytes": 2000000,
+        "status": 404,
+        "final_url": "https://www.esa.int/rssfeed/Our_Activities/Launchers",
+        "content_type": "text/html; charset=UTF-8",
+        "byte_count": 148943,
+        "sha256": "08c3275fbaed1e14d39e4dbaa6114319823faccbf1c7b92902f47394d9b24430",
+        "error": "HTTPError: HTTP Error 404: Not Found"
+      },
+      "configuration_changed": false,
+      "collector_original_captured_replay": {
+        "feed": "ESA Launchers",
+        "url": "https://www.esa.int/rssfeed/Our_Activities/Launchers",
+        "captured_replay": true,
+        "additional_network_requests": 0,
+        "run_id": "a037adf6-c20b-47f4-b9e0-73a1ae4b6261",
+        "status": "failed",
+        "saved": 0,
+        "duplicates": 0,
+        "failed": 1,
+        "error": "HTTPError: HTTP Error 404: HTTPError: HTTP Error 404: Not Found",
+        "updated": 0
+      },
+      "current_failure_class": "OFFICIAL_ENDPOINT_HTTP_404",
+      "recovery_status": "BLOCKED",
+      "reason": "Official RSS directory still advertises legacy feed paths; category pages expose no replacement RSS/Atom link. No guessed endpoint or broad-news substitution.",
+      "discovery_evidence": [
+        "ESA RSS directory",
+        "ESA operations directorate",
+        "ESA space transportation"
+      ]
+    },
+    {
+      "feed": "ESA Navigation",
+      "prior_receipt_status": "failed",
+      "prior_receipt_error": "HTTPError: HTTP Error 404: Not Found",
+      "original_transport": {
+        "name": "ESA Navigation",
+        "url": "https://www.esa.int/rssfeed/Our_Activities/Navigation",
+        "requested_at_utc": "2026-11-11T08:36:02.252467+00:00",
+        "attempts": 1,
+        "timeout_seconds": 12,
+        "max_bytes": 2000000,
+        "status": 404,
+        "final_url": "https://www.esa.int/rssfeed/Our_Activities/Navigation",
+        "content_type": "text/html; charset=UTF-8",
+        "byte_count": 148943,
+        "sha256": "9312c54e22871136a033b309eafb62e1a9c72d4e97fe5c3098b7b345d98a2dd3",
+        "error": "HTTPError: HTTP Error 404: Not Found"
+      },
+      "configuration_changed": false,
+      "collector_original_captured_replay": {
+        "feed": "ESA Navigation",
+        "url": "https://www.esa.int/rssfeed/Our_Activities/Navigation",
+        "captured_replay": true,
+        "additional_network_requests": 0,
+        "run_id": "2919ec41-ab3c-4ab1-ba75-c74829f3f44d",
+        "status": "failed",
+        "saved": 0,
+        "duplicates": 0,
+        "failed": 1,
+        "error": "HTTPError: HTTP Error 404: HTTPError: HTTP Error 404: Not Found",
+        "updated": 0
+      },
+      "current_failure_class": "OFFICIAL_ENDPOINT_HTTP_404",
+      "recovery_status": "BLOCKED",
+      "reason": "Official RSS directory still advertises legacy feed paths; category pages expose no replacement RSS/Atom link. No guessed endpoint or broad-news substitution.",
+      "discovery_evidence": [
+        "ESA RSS directory",
+        "ESA operations directorate",
+        "ESA space transportation"
+      ]
+    },
+    {
+      "feed": "ESA Space Engineering Technology",
+      "prior_receipt_status": "failed",
+      "prior_receipt_error": "HTTPError: HTTP Error 404: Not Found",
+      "original_transport": {
+        "name": "ESA Space Engineering Technology",
+        "url": "https://www.esa.int/rssfeed/Our_Activities/Space_Engineering_Technology",
+        "requested_at_utc": "2026-11-11T08:36:02.253370+00:00",
+        "attempts": 1,
+        "timeout_seconds": 12,
+        "max_bytes": 2000000,
+        "status": 404,
+        "final_url": "https://www.esa.int/rssfeed/Our_Activities/Space_Engineering_Technology",
+        "content_type": "text/html; charset=UTF-8",
+        "byte_count": 148943,
+        "sha256": "f1c5da3f2dc60bd54f0d99570688a3e12d146d2cfa8091dd35ac6ddccb0aed1b",
+        "error": "HTTPError: HTTP Error 404: Not Found"
+      },
+      "configuration_changed": false,
+      "collector_original_captured_replay": {
+        "feed": "ESA Space Engineering Technology",
+        "url": "https://www.esa.int/rssfeed/Our_Activities/Space_Engineering_Technology",
+        "captured_replay": true,
+        "additional_network_requests": 0,
+        "run_id": "9e941006-fbe9-4b43-bb25-1d9a8bc2e6d7",
+        "status": "failed",
+        "saved": 0,
+        "duplicates": 0,
+        "failed": 1,
+        "error": "HTTPError: HTTP Error 404: HTTPError: HTTP Error 404: Not Found",
+        "updated": 0
+      },
+      "current_failure_class": "OFFICIAL_ENDPOINT_HTTP_404",
+      "recovery_status": "BLOCKED",
+      "reason": "Official RSS directory still advertises legacy feed paths; category pages expose no replacement RSS/Atom link. No guessed endpoint or broad-news substitution.",
+      "discovery_evidence": [
+        "ESA RSS directory",
+        "ESA operations directorate",
+        "ESA space transportation"
+      ]
+    },
+    {
+      "feed": "ESA Telecommunications Integrated Applications",
+      "prior_receipt_status": "failed",
+      "prior_receipt_error": "HTTPError: HTTP Error 404: Not Found",
+      "original_transport": {
+        "name": "ESA Telecommunications Integrated Applications",
+        "url": "https://www.esa.int/rssfeed/Our_Activities/Telecommunications_Integrated_Applications",
+        "requested_at_utc": "2026-11-11T08:36:03.133204+00:00",
+        "attempts": 1,
+        "timeout_seconds": 12,
+        "max_bytes": 2000000,
+        "status": 404,
+        "final_url": "https://www.esa.int/rssfeed/Our_Activities/Telecommunications_Integrated_Applications",
+        "content_type": "text/html; charset=UTF-8",
+        "byte_count": 148943,
+        "sha256": "640d4706a996b8667b3aafc0c385917b0e4d3a77f3ff420ecc24e110250d8d93",
+        "error": "HTTPError: HTTP Error 404: Not Found"
+      },
+      "configuration_changed": false,
+      "collector_original_captured_replay": {
+        "feed": "ESA Telecommunications Integrated Applications",
+        "url": "https://www.esa.int/rssfeed/Our_Activities/Telecommunications_Integrated_Applications",
+        "captured_replay": true,
+        "additional_network_requests": 0,
+        "run_id": "a3110cfa-37ee-4901-acaf-0196f7046f3a",
+        "status": "failed",
+        "saved": 0,
+        "duplicates": 0,
+        "failed": 1,
+        "error": "HTTPError: HTTP Error 404: HTTPError: HTTP Error 404: Not Found",
+        "updated": 0
+      },
+      "current_failure_class": "OFFICIAL_ENDPOINT_HTTP_404",
+      "recovery_status": "BLOCKED",
+      "reason": "Official RSS directory still advertises legacy feed paths; category pages expose no replacement RSS/Atom link. No guessed endpoint or broad-news substitution.",
+      "discovery_evidence": [
+        "ESA RSS directory",
+        "ESA operations directorate",
+        "ESA space transportation"
+      ]
+    },
+    {
+      "feed": "ESA Space Science",
+      "prior_receipt_status": "failed",
+      "prior_receipt_error": "HTTPError: HTTP Error 404: Not Found",
+      "original_transport": {
+        "name": "ESA Space Science",
+        "url": "https://www.esa.int/rssfeed/Our_Activities/Space_Science",
+        "requested_at_utc": "2026-11-11T08:36:03.328753+00:00",
+        "attempts": 1,
+        "timeout_seconds": 12,
+        "max_bytes": 2000000,
+        "status": 404,
+        "final_url": "https://www.esa.int/rssfeed/Our_Activities/Space_Science",
+        "content_type": "text/html; charset=UTF-8",
+        "byte_count": 148943,
+        "sha256": "d7af9f9c1f4237eb1b39fa623b6cd0ca71859ed6627bd2393f7afdcf77913ee7",
+        "error": "HTTPError: HTTP Error 404: Not Found"
+      },
+      "configuration_changed": false,
+      "collector_original_captured_replay": {
+        "feed": "ESA Space Science",
+        "url": "https://www.esa.int/rssfeed/Our_Activities/Space_Science",
+        "captured_replay": true,
+        "additional_network_requests": 0,
+        "run_id": "f22a06e9-be8e-40fd-9d99-6b4c64b078ee",
+        "status": "failed",
+        "saved": 0,
+        "duplicates": 0,
+        "failed": 1,
+        "error": "HTTPError: HTTP Error 404: HTTPError: HTTP Error 404: Not Found",
+        "updated": 0
+      },
+      "current_failure_class": "OFFICIAL_ENDPOINT_HTTP_404",
+      "recovery_status": "BLOCKED",
+      "reason": "Official RSS directory still advertises legacy feed paths; category pages expose no replacement RSS/Atom link. No guessed endpoint or broad-news substitution.",
+      "discovery_evidence": [
+        "ESA RSS directory",
+        "ESA operations directorate",
+        "ESA space transportation"
+      ]
+    },
+    {
+      "feed": "ESA Operations",
+      "prior_receipt_status": "failed",
+      "prior_receipt_error": "HTTPError: HTTP Error 404: Not Found",
+      "original_transport": {
+        "name": "ESA Operations",
+        "url": "https://www.esa.int/rssfeed/Our_Activities/Operations",
+        "requested_at_utc": "2026-11-11T08:36:03.540433+00:00",
+        "attempts": 1,
+        "timeout_seconds": 12,
+        "max_bytes": 2000000,
+        "status": 404,
+        "final_url": "https://www.esa.int/rssfeed/Our_Activities/Operations",
+        "content_type": "text/html; charset=UTF-8",
+        "byte_count": 148943,
+        "sha256": "ebdf0c4f57f63cc0a7f72f016f696e18eea014dd3f73ae3c7d5d83f8ec8dcdec",
+        "error": "HTTPError: HTTP Error 404: Not Found"
+      },
+      "configuration_changed": false,
+      "collector_original_captured_replay": {
+        "feed": "ESA Operations",
+        "url": "https://www.esa.int/rssfeed/Our_Activities/Operations",
+        "captured_replay": true,
+        "additional_network_requests": 0,
+        "run_id": "2765d0ab-cf50-4633-b458-c5a8ad0798cc",
+        "status": "failed",
+        "saved": 0,
+        "duplicates": 0,
+        "failed": 1,
+        "error": "HTTPError: HTTP Error 404: HTTPError: HTTP Error 404: Not Found",
+        "updated": 0
+      },
+      "current_failure_class": "OFFICIAL_ENDPOINT_HTTP_404",
+      "recovery_status": "BLOCKED",
+      "reason": "Official RSS directory still advertises legacy feed paths; category pages expose no replacement RSS/Atom link. No guessed endpoint or broad-news substitution.",
+      "discovery_evidence": [
+        "ESA RSS directory",
+        "ESA operations directorate",
+        "ESA space transportation"
+      ]
+    },
+    {
+      "feed": "DOE Carbon Capture",
+      "prior_receipt_status": "failed",
+      "prior_receipt_error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1011)>",
+      "original_transport": {
+        "name": "DOE Carbon Capture",
+        "url": "https://energy.gov/fe/carbon-capture-storage-news?view=rss",
+        "requested_at_utc": "2026-11-11T08:36:03.746194+00:00",
+        "attempts": 1,
+        "timeout_seconds": 12,
+        "max_bytes": 2000000,
+        "status": 200,
+        "final_url": "https://www.energy.gov/hgeo/listings/carbon-capture-and-storage-news?view=rss",
+        "content_type": "text/html; charset=utf-8",
+        "http_date": "Wed, 11 Nov 2026 08:36:04 GMT",
+        "last_modified": "Wed, 11 Nov 2026 08:36:03 GMT",
+        "byte_count": 115277,
+        "sha256": "03d4456783a622932baac8988d135e47b57c7ee0492ddade23cc6af6be60942e",
+        "feed_parse": "FAIL",
+        "parse_error": "MalformedRecord: feed DTD is not allowed"
+      },
+      "configuration_changed": false,
+      "collector_original_captured_replay": {
+        "feed": "DOE Carbon Capture",
+        "url": "https://energy.gov/fe/carbon-capture-storage-news?view=rss",
+        "captured_replay": true,
+        "additional_network_requests": 0,
+        "run_id": "83c7fc05-5485-40d4-9c8e-ce0e2ff890c6",
+        "status": "failed",
+        "saved": 0,
+        "duplicates": 0,
+        "failed": 1,
+        "error": "MalformedRecord: feed DTD is not allowed",
+        "updated": 0
+      },
+      "current_failure_class": "OFFICIAL_URL_REDIRECT_TO_HTML_NOT_RSS",
+      "official_scope_evidence": {
+        "redirected_official_page": "https://www.energy.gov/hgeo/listings/carbon-capture-and-storage-news?view=rss",
+        "listing_sha256": "03d4456783a622932baac8988d135e47b57c7ee0492ddade23cc6af6be60942e",
+        "listing_title": "Carbon Capture and Storage News | Department of Energy Lock",
+        "explicit_rss_links": []
+      },
+      "recovery_status": "BLOCKED",
+      "reason": "Official redirected category listing is HTML and exposes no RSS feed anchor or typed RSS/Atom alternate link; no all-news substitute or guessed endpoint was used."
+    },
+    {
+      "feed": "USGS Minerals News",
+      "prior_receipt_status": "failed",
+      "prior_receipt_error": "MalformedRecord: feed has no entries",
+      "original_transport": {
+        "name": "USGS Minerals News",
+        "url": "https://www.usgs.gov/news/minerals/feed",
+        "requested_at_utc": "2026-11-11T08:36:03.941956+00:00",
+        "attempts": 1,
+        "timeout_seconds": 12,
+        "max_bytes": 2000000,
+        "status": 200,
+        "final_url": "https://www.usgs.gov/news/minerals/feed",
+        "content_type": "application/rss+xml; charset=utf-8",
+        "http_date": "Wed, 11 Nov 2026 08:36:04 GMT",
+        "last_modified": "Wed, 11 Nov 2026 08:36:04 GMT",
+        "byte_count": 643,
+        "sha256": "148ee2cbd14f29c4c40d809dfe336a200fc73a2297f1ed035e07e050a5473c0c",
+        "feed_parse": "FAIL",
+        "parse_error": "MalformedRecord: feed has no entries"
+      },
+      "configuration_changed": false,
+      "collector_original_captured_replay": {
+        "feed": "USGS Minerals News",
+        "url": "https://www.usgs.gov/news/minerals/feed",
+        "captured_replay": true,
+        "additional_network_requests": 0,
+        "run_id": "ac2be33e-9245-4f6a-bca3-a7f2333406d5",
+        "status": "failed",
+        "saved": 0,
+        "duplicates": 0,
+        "failed": 1,
+        "error": "MalformedRecord: feed has no entries",
+        "updated": 0
+      },
+      "current_failure_class": "VALID_RSS_WITH_ZERO_ENTRIES",
+      "recovery_status": "BLOCKED",
+      "reason": "Existing minerals channel is well-formed XML but empty. Official search discovered /news/all/feed with entries; All News was rejected because it broadens the minerals feed.",
+      "rejected_substitute": "https://www.usgs.gov/news/all/feed",
+      "discovery_evidence": [
+        "USGS news",
+        "USGS minerals directory",
+        "USGS official minerals RSS search",
+        "USGS Everything We Have redirect"
+      ]
+    },
+    {
+      "feed": "DOE Fossil techlines",
+      "prior_receipt_status": "failed",
+      "prior_receipt_error": "URLError: <urlopen error [Errno 101] Network is unreachable>",
+      "original_transport": {
+        "name": "DOE Fossil techlines",
+        "url": "https://energy.gov/fe/techlines?view=rss",
+        "requested_at_utc": "2026-11-11T08:36:04.090189+00:00",
+        "attempts": 1,
+        "timeout_seconds": 12,
+        "max_bytes": 2000000,
+        "status": 200,
+        "final_url": "https://www.energy.gov/hgeo/listings/hgeo-press-releases-and-techlines?view=rss",
+        "content_type": "text/html; charset=utf-8",
+        "http_date": "Wed, 11 Nov 2026 08:36:04 GMT",
+        "last_modified": "Wed, 11 Nov 2026 07:57:18 GMT",
+        "byte_count": 131316,
+        "sha256": "e5e03d4152c33725b2d09bc5ad10824d90eb760d102374b8da9973312961d817",
+        "feed_parse": "FAIL",
+        "parse_error": "MalformedRecord: feed DTD is not allowed"
+      },
+      "configuration_changed": true,
+      "collector_original_captured_replay": {
+        "feed": "DOE Fossil techlines",
+        "url": "https://energy.gov/fe/techlines?view=rss",
+        "captured_replay": true,
+        "additional_network_requests": 0,
+        "run_id": "b5572454-b1f5-47ea-b6d7-ec3e36a6cd21",
+        "status": "failed",
+        "saved": 0,
+        "duplicates": 0,
+        "failed": 1,
+        "error": "MalformedRecord: feed DTD is not allowed",
+        "updated": 0
+      },
+      "current_failure_class": "OFFICIAL_URL_REDIRECT_TO_HTML_NOT_RSS",
+      "official_scope_evidence": {
+        "redirected_official_page": "https://www.energy.gov/hgeo/listings/hgeo-press-releases-and-techlines?view=rss",
+        "listing_sha256": "e5e03d4152c33725b2d09bc5ad10824d90eb760d102374b8da9973312961d817",
+        "listing_title": "HGEO Press Releases and Techlines | Department of Energy Lock",
+        "explicit_rss_links": [
+          {
+            "href": "/rss/hgeo/2282977",
+            "text": "RSS feed"
+          }
+        ]
+      },
+      "recovery_status": "PASS",
+      "replacement_url": "https://www.energy.gov/rss/hgeo/2282977",
+      "reason": "The configured original redirects to the named office category listing; that same captured listing explicitly links this RSS feed. Feed channel title and link match that listing.",
+      "replacement_transport": {
+        "requested_url": "https://www.energy.gov/rss/hgeo/2282977",
+        "final_url": "https://www.energy.gov/rss/hgeo/2282977",
+        "status": 200,
+        "content_type": "application/rss+xml; charset=utf-8",
+        "checked_at": "2026-11-11T08:37:02.917253+00:00",
+        "response_date": "Wed, 11 Nov 2026 08:37:03 GMT",
+        "last_modified": "Wed, 11 Nov 2026 08:02:03 GMT",
+        "sha256": "fd86f1f0e24daa55cab13624970862f0864f3531e572bedf2b02ae060dd46818",
+        "bytes": 7976,
+        "channel": {
+          "title": "HGEO Press Releases and Techlines",
+          "link": "https://www.energy.gov/hgeo/listings/hgeo-press-releases-and-techlines",
+          "description": "HGEO Press Releases and Techlines",
+          "language": "en"
+        },
+        "entry_count": 10
+      },
+      "parsed_entries": 10,
+      "source_dates_present": 10,
+      "first_collector_replay": {
+        "run_id": "77c6527a-f607-41ee-82c5-3c5bcb9d09bc",
+        "status": "succeeded",
+        "saved": 10,
+        "duplicates": 0,
+        "failed": 0,
+        "error": null,
+        "updated": 0
+      },
+      "second_collector_replay": {
+        "run_id": "2db20e3b-ee17-4a09-beb0-ce8f40dc9103",
+        "status": "succeeded",
+        "saved": 0,
+        "duplicates": 10,
+        "failed": 0,
+        "error": null,
+        "updated": 0
+      },
+      "stored_rows_verified": [
+        {
+          "source": "www.energy.gov",
+          "external_id": "49b42e2dac36ebc517a1321e54dce8d857d22fc4898088585c53bf144db5d88d",
+          "url": "https://www.energy.gov/hgeo/opr/articles/energy-department-awards-contracts-northeast-home-heating-oil-reserve",
+          "published_at": "2026-11-04T05:00:00+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "cc92b35637194305296bf59b55cddc3541f099e1e3b9da7b9911f2bf2d5d6bc4",
+          "url": "https://www.energy.gov/hgeo/opr/articles/energy-department-awards-contracts-strategic-petroleum-reserve-part-president",
+          "published_at": "2026-10-29T20:00:00+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "bf9a167d2c5a60be8411d80b9a0359d1abb31cd3ca90294ce6415b90193e6245",
+          "url": "https://www.energy.gov/hgeo/articles/hydrocarbons-and-geothermal-energy-office-recognizes-over-100-million-us-coal-export",
+          "published_at": "2026-10-26T16:00:00+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "d9326bbabcad1357bdf6d5406448c4ea4174bb0909efe01967e98bb34235e7c1",
+          "url": "https://www.energy.gov/articles/energy-department-authorizes-strategic-petroleum-reserve-exchange-support-fuel-supply",
+          "published_at": "2026-10-23T14:00:32+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "fd42fdf1e260a67ac2a7450a88b22617d8df2dd2f257a7c2e30cb4f4f39b8694",
+          "url": "https://www.energy.gov/articles/energy-department-use-defense-production-act-funding-restart-american-refinery-and-expand",
+          "published_at": "2026-10-23T01:37:00+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "b37ea0eaebc8c1a765801508988c3401ce688d0a5a0c4135ebff4274094f5a37",
+          "url": "https://www.energy.gov/articles/energy-department-authorizes-exchange-northeast-home-heating-oil-reserve",
+          "published_at": "2026-10-21T13:33:00+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "3104f4007111b75ba7bd6c57d88bf000171af1a3e070efaae2c84576b30e5f54",
+          "url": "https://www.energy.gov/articles/energy-department-advances-constitution-pipeline-project-42-million-defense-production-act",
+          "published_at": "2026-10-19T14:33:00+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "41ae7c8791574c09982f54106503209c025ed04377df7afe01556d97573aef7b",
+          "url": "https://www.energy.gov/hgeo/articles/hydrocarbons-and-geothermal-energy-office-executes-first-ever-license-trig",
+          "published_at": "2026-10-16T17:30:00+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "ea8163a62ba907f5985a4492e959f0521cd205dcab3f66f3b415df8aea3e883a",
+          "url": "https://www.energy.gov/hgeo/articles/energy-department-invests-over-11-million-strengthen-americas-energy-workforce",
+          "published_at": "2026-10-15T14:00:00+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "7c875c93daea77e40c222e529b2ebf81922723ff0c0a8e6d7bd5f222a34a1ab2",
+          "url": "https://www.energy.gov/hgeo/articles/energy-department-awards-498-million-advance-methane-hydrate-production-research",
+          "published_at": "2026-10-14T16:00:00+00:00",
+          "stored_exact_date": true
+        }
+      ]
+    },
+    {
+      "feed": "DOE Fossil clean coal news",
+      "prior_receipt_status": "failed",
+      "prior_receipt_error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1011)>",
+      "original_transport": {
+        "name": "DOE Fossil clean coal news",
+        "url": "https://energy.gov/fe/clean-coal-news?view=rss",
+        "requested_at_utc": "2026-11-11T08:36:04.728140+00:00",
+        "attempts": 1,
+        "timeout_seconds": 12,
+        "max_bytes": 2000000,
+        "status": 200,
+        "final_url": "https://www.energy.gov/hgeo/listings/fecm-press-releases-and-techlines?view=rss",
+        "content_type": "text/html; charset=utf-8",
+        "http_date": "Wed, 11 Nov 2026 08:36:06 GMT",
+        "last_modified": "Wed, 11 Nov 2026 08:36:04 GMT",
+        "byte_count": 115343,
+        "sha256": "e12ddd3a7febfb2053675ca2f1e8819399183ffcff1661ff33affe74ddde0826",
+        "feed_parse": "FAIL",
+        "parse_error": "MalformedRecord: feed DTD is not allowed"
+      },
+      "configuration_changed": false,
+      "collector_original_captured_replay": {
+        "feed": "DOE Fossil clean coal news",
+        "url": "https://energy.gov/fe/clean-coal-news?view=rss",
+        "captured_replay": true,
+        "additional_network_requests": 0,
+        "run_id": "e3488d86-9dde-4511-9a1f-67c7f911a4d1",
+        "status": "failed",
+        "saved": 0,
+        "duplicates": 0,
+        "failed": 1,
+        "error": "MalformedRecord: feed DTD is not allowed",
+        "updated": 0
+      },
+      "current_failure_class": "OFFICIAL_URL_REDIRECT_TO_HTML_NOT_RSS",
+      "official_scope_evidence": {
+        "redirected_official_page": "https://www.energy.gov/hgeo/listings/fecm-press-releases-and-techlines?view=rss",
+        "listing_sha256": "e12ddd3a7febfb2053675ca2f1e8819399183ffcff1661ff33affe74ddde0826",
+        "listing_title": "FECM Press Releases and Techlines | Department of Energy Lock",
+        "explicit_rss_links": []
+      },
+      "recovery_status": "BLOCKED",
+      "reason": "Official redirected category listing is HTML and exposes no RSS feed anchor or typed RSS/Atom alternate link; no all-news substitute or guessed endpoint was used."
+    },
+    {
+      "feed": "DOE Fossil oil natural gas news",
+      "prior_receipt_status": "failed",
+      "prior_receipt_error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1011)>",
+      "original_transport": {
+        "name": "DOE Fossil oil natural gas news",
+        "url": "https://energy.gov/fe/oil-natural-gas-news?view=rss",
+        "requested_at_utc": "2026-11-11T08:36:04.751095+00:00",
+        "attempts": 1,
+        "timeout_seconds": 12,
+        "max_bytes": 2000000,
+        "status": 200,
+        "final_url": "https://www.energy.gov/hgeo/listings/office-resource-sustainability-news?view=rss",
+        "content_type": "text/html; charset=utf-8",
+        "http_date": "Wed, 11 Nov 2026 08:36:06 GMT",
+        "last_modified": "Wed, 11 Nov 2026 08:36:04 GMT",
+        "byte_count": 129904,
+        "sha256": "a08cef9b949cd7239958d7c30414fec759422977934b48c28bb3c3d0487eba5c",
+        "feed_parse": "FAIL",
+        "parse_error": "MalformedRecord: feed DTD is not allowed"
+      },
+      "configuration_changed": false,
+      "collector_original_captured_replay": {
+        "feed": "DOE Fossil oil natural gas news",
+        "url": "https://energy.gov/fe/oil-natural-gas-news?view=rss",
+        "captured_replay": true,
+        "additional_network_requests": 0,
+        "run_id": "d94cf0e8-aeb5-4ea8-a01c-58c2929a9a22",
+        "status": "failed",
+        "saved": 0,
+        "duplicates": 0,
+        "failed": 1,
+        "error": "MalformedRecord: feed DTD is not allowed",
+        "updated": 0
+      },
+      "current_failure_class": "OFFICIAL_URL_REDIRECT_TO_HTML_NOT_RSS",
+      "official_scope_evidence": {
+        "redirected_official_page": "https://www.energy.gov/hgeo/listings/office-resource-sustainability-news?view=rss",
+        "listing_sha256": "a08cef9b949cd7239958d7c30414fec759422977934b48c28bb3c3d0487eba5c",
+        "listing_title": "Office of Resource Sustainability News | Department of Energy Lock",
+        "explicit_rss_links": []
+      },
+      "recovery_status": "BLOCKED",
+      "reason": "Official redirected category listing is HTML and exposes no RSS feed anchor or typed RSS/Atom alternate link; no all-news substitute or guessed endpoint was used."
+    },
+    {
+      "feed": "DOE Fossil petroleum reserves news",
+      "prior_receipt_status": "failed",
+      "prior_receipt_error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1011)>",
+      "original_transport": {
+        "name": "DOE Fossil petroleum reserves news",
+        "url": "https://energy.gov/fe/petroleum-reserves-news?view=rss",
+        "requested_at_utc": "2026-11-11T08:36:04.782143+00:00",
+        "attempts": 1,
+        "timeout_seconds": 12,
+        "max_bytes": 2000000,
+        "status": 200,
+        "final_url": "https://www.energy.gov/hgeo/opr/listings/petroleum-reserves-news?view=rss",
+        "content_type": "text/html; charset=utf-8",
+        "http_date": "Wed, 11 Nov 2026 08:36:05 GMT",
+        "last_modified": "Wed, 11 Nov 2026 08:36:04 GMT",
+        "byte_count": 128487,
+        "sha256": "078b4c2677b285531da60921fafe3e5127176d0ccd659f5bca887eabde8c1a5e",
+        "feed_parse": "FAIL",
+        "parse_error": "MalformedRecord: feed DTD is not allowed"
+      },
+      "configuration_changed": false,
+      "collector_original_captured_replay": {
+        "feed": "DOE Fossil petroleum reserves news",
+        "url": "https://energy.gov/fe/petroleum-reserves-news?view=rss",
+        "captured_replay": true,
+        "additional_network_requests": 0,
+        "run_id": "5df2f8d1-7b47-47d0-8b5a-9f850228c71d",
+        "status": "failed",
+        "saved": 0,
+        "duplicates": 0,
+        "failed": 1,
+        "error": "MalformedRecord: feed DTD is not allowed",
+        "updated": 0
+      },
+      "current_failure_class": "OFFICIAL_URL_REDIRECT_TO_HTML_NOT_RSS",
+      "official_scope_evidence": {
+        "redirected_official_page": "https://www.energy.gov/hgeo/opr/listings/petroleum-reserves-news?view=rss",
+        "listing_sha256": "078b4c2677b285531da60921fafe3e5127176d0ccd659f5bca887eabde8c1a5e",
+        "listing_title": "Petroleum Reserves News | Department of Energy Lock",
+        "explicit_rss_links": []
+      },
+      "recovery_status": "BLOCKED",
+      "reason": "Official redirected category listing is HTML and exposes no RSS feed anchor or typed RSS/Atom alternate link; no all-news substitute or guessed endpoint was used."
+    },
+    {
+      "feed": "DOE Fossil blog",
+      "prior_receipt_status": "failed",
+      "prior_receipt_error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1011)>",
+      "original_transport": {
+        "name": "DOE Fossil blog",
+        "url": "https://energy.gov/fe/blog?view=rss",
+        "requested_at_utc": "2026-11-11T08:36:04.921872+00:00",
+        "attempts": 1,
+        "timeout_seconds": 12,
+        "max_bytes": 2000000,
+        "status": 200,
+        "final_url": "https://www.energy.gov/hgeo/listings/hgeo-blog?view=rss",
+        "content_type": "text/html; charset=utf-8",
+        "http_date": "Wed, 11 Nov 2026 08:36:06 GMT",
+        "last_modified": "Wed, 11 Nov 2026 08:36:04 GMT",
+        "byte_count": 128811,
+        "sha256": "7f45e9eaec573860938b392006b1781f5aaf5cc3ef1123550353bb9ef75e6966",
+        "feed_parse": "FAIL",
+        "parse_error": "MalformedRecord: feed DTD is not allowed"
+      },
+      "configuration_changed": true,
+      "collector_original_captured_replay": {
+        "feed": "DOE Fossil blog",
+        "url": "https://energy.gov/fe/blog?view=rss",
+        "captured_replay": true,
+        "additional_network_requests": 0,
+        "run_id": "2e6a56f4-da8f-4271-bff3-32f5751da89c",
+        "status": "failed",
+        "saved": 0,
+        "duplicates": 0,
+        "failed": 1,
+        "error": "MalformedRecord: feed DTD is not allowed",
+        "updated": 0
+      },
+      "current_failure_class": "OFFICIAL_URL_REDIRECT_TO_HTML_NOT_RSS",
+      "official_scope_evidence": {
+        "redirected_official_page": "https://www.energy.gov/hgeo/listings/hgeo-blog?view=rss",
+        "listing_sha256": "7f45e9eaec573860938b392006b1781f5aaf5cc3ef1123550353bb9ef75e6966",
+        "listing_title": "HGEO Blog | Department of Energy Lock",
+        "explicit_rss_links": [
+          {
+            "href": "/rss/hgeo/2283029",
+            "text": "RSS feed"
+          }
+        ]
+      },
+      "recovery_status": "PASS",
+      "replacement_url": "https://www.energy.gov/rss/hgeo/2283029",
+      "reason": "The configured original redirects to the named office category listing; that same captured listing explicitly links this RSS feed. Feed channel title and link match that listing.",
+      "replacement_transport": {
+        "requested_url": "https://www.energy.gov/rss/hgeo/2283029",
+        "final_url": "https://www.energy.gov/rss/hgeo/2283029",
+        "status": 200,
+        "content_type": "application/rss+xml; charset=utf-8",
+        "checked_at": "2026-11-11T08:37:46.011967+00:00",
+        "response_date": "Wed, 11 Nov 2026 08:37:46 GMT",
+        "last_modified": "Wed, 11 Nov 2026 08:37:45 GMT",
+        "sha256": "a7aa4e8bec465fe6b6684f2db1e2f100c2a1d420b47c33769f2f5ce488618c60",
+        "bytes": 7752,
+        "channel": {
+          "title": "HGEO Blog",
+          "link": "https://www.energy.gov/hgeo/listings/hgeo-blog",
+          "description": "HGEO Blog",
+          "language": "en"
+        },
+        "entry_count": 10
+      },
+      "parsed_entries": 10,
+      "source_dates_present": 10,
+      "first_collector_replay": {
+        "run_id": "a79dbedf-6fde-4c03-a5ad-9f12c1478720",
+        "status": "succeeded",
+        "saved": 10,
+        "duplicates": 0,
+        "failed": 0,
+        "error": null,
+        "updated": 0
+      },
+      "second_collector_replay": {
+        "run_id": "a3c825e5-e790-4768-b67d-5b3adc1b2c9b",
+        "status": "succeeded",
+        "saved": 0,
+        "duplicates": 10,
+        "failed": 0,
+        "error": null,
+        "updated": 0
+      },
+      "stored_rows_verified": [
+        {
+          "source": "www.energy.gov",
+          "external_id": "ef19b31a2edcc87cfe25d4ec5165439377f0afe0418b817836f009ab0500a632",
+          "url": "https://www.energy.gov/hgeo/articles/us-natural-gas-supplying-energy-world-august-2026-summary",
+          "published_at": "2026-10-29T20:16:57+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "e01628bc0c6c56900b1ba85c08db7b8d402b6cd4e5797a67f66f80d71fe45f4e",
+          "url": "https://www.energy.gov/hgeo/articles/hgeo-building-americas-energy-future-classroom",
+          "published_at": "2026-10-21T09:00:00+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "5de627be656e71e7bcd18fc5343777cd51148b355c9ea4b19364b13f98d5f3c1",
+          "url": "https://www.energy.gov/hgeo/articles/us-natural-gas-supplying-energy-world-july-2026-summary",
+          "published_at": "2026-10-07T15:11:12+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "386bf888ca2aa066341734a57cf688ef9951e737c1fe58f67857e1091e40caa0",
+          "url": "https://www.energy.gov/hgeo/articles/resources-relationships-america-ready-power-indo-pacific",
+          "published_at": "2026-09-14T14:00:00+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "ae6c79334791287c6aac31b2df51c1abcb82cddf523a2bf7043809b2404a6d72",
+          "url": "https://www.energy.gov/hgeo/articles/new-geothermal-center-excellence-ready-heat",
+          "published_at": "2026-09-03T14:10:00+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "ef8057d0051202aa2731076db6b7f60b412871ad11a0c939e036c1a869c9a5c7",
+          "url": "https://www.energy.gov/hgeo/articles/us-natural-gas-supplying-energy-world-june-2026-summary",
+          "published_at": "2026-09-01T18:10:07+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "f328eb8f52584bfe5db6cc876247cb5e463d5afa53d5168da0f6f1102210fa85",
+          "url": "https://www.energy.gov/hgeo/articles/npc-report-charts-path-unlock-americas-subsurface-energy-resources",
+          "published_at": "2026-08-31T17:38:29+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "7f4c0096cdeb1bce88472e062ecfb2ac5b617d332310c90f0a3603cea39518df",
+          "url": "https://www.energy.gov/hgeo/articles/hgeo-sees-american-energy-action-across-utah",
+          "published_at": "2026-08-26T14:26:24+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "20bf41548b036b4db52a93f450c9b374f231189158d2148a47f5f3e0df8cbbd1",
+          "url": "https://www.energy.gov/hgeo/articles/new-national-coal-council-reports-reinforce-hgeos-coal-research-priorities",
+          "published_at": "2026-07-30T19:04:44+00:00",
+          "stored_exact_date": true
+        },
+        {
+          "source": "www.energy.gov",
+          "external_id": "be7ef7abe04140d8b14ab47d012ed6ede181d6a4ed1a573cf9eaeb6803a1b950",
+          "url": "https://www.energy.gov/hgeo/articles/us-natural-gas-supplying-energy-world-may-2026-summary-1",
+          "published_at": "2026-07-28T16:47:50+00:00",
+          "stored_exact_date": true
+        }
+      ]
+    }
+  ],
+  "discovery_requests": [
+    {
+      "name": "ESA official RSS directory",
+      "url": "https://www.esa.int/Services/RSS_Feeds",
+      "requested_at_utc": "2026-11-11T08:36:17.627107+00:00",
+      "attempts": 1,
+      "timeout_seconds": 12,
+      "max_bytes": 2000000,
+      "status": 200,
+      "final_url": "https://www.esa.int/articles/about-us/directorates/resources-and-services/rss-feeds",
+      "content_type": "text/html; charset=UTF-8",
+      "http_date": "Wed, 11 Nov 2026 08:36:18 GMT",
+      "last_modified": null,
+      "byte_count": 174224,
+      "sha256": "f7d3b7b77a499e51bd80bd38896eee20c51f4eb4136551b968976fd88b38abee",
+      "feed_parse": "FAIL",
+      "parse_error": "MalformedRecord: feed DTD is not allowed",
+      "explicit_feed_links": [
+        "http://www.esa.int/rssfeed/Our_Activities/Human_Spaceflight",
+        "http://www.esa.int/rssfeed/Our_Activities/Launchers",
+        "http://www.esa.int/rssfeed/Our_Activities/Observing_the_Earth",
+        "http://www.esa.int/rssfeed/Our_Activities/Space_News"
+      ],
+      "directory_explanation": "Official subscription directory advertises the old Space News and Launchers paths already observed404; other failed legacy categories are not listed."
+    },
+    {
+      "name": "USGS official news directory",
+      "url": "https://www.usgs.gov/news",
+      "requested_at_utc": "2026-11-11T08:36:17.627894+00:00",
+      "attempts": 1,
+      "timeout_seconds": 12,
+      "max_bytes": 2000000,
+      "status": 200,
+      "final_url": "https://www.usgs.gov/news",
+      "content_type": "text/html; charset=utf-8",
+      "http_date": "Wed, 11 Nov 2026 08:36:19 GMT",
+      "last_modified": "Wed, 11 Nov 2026 08:36:18 GMT",
+      "byte_count": 100067,
+      "sha256": "63844dad0a26f57ec1ca196c27581a42cd0c27ccd9639b9629480d5cd62995d1",
+      "feed_parse": "FAIL",
+      "parse_error": "MalformedRecord: feed DTD is not allowed"
+    },
+    {
+      "name": "USGS official minerals directory",
+      "url": "https://www.usgs.gov/science/science-explorer/minerals",
+      "requested_at_utc": "2026-11-11T08:37:24.684798+00:00",
+      "attempts": 1,
+      "timeout_seconds": 12,
+      "max_bytes": 2000000,
+      "status": 200,
+      "final_url": "https://www.usgs.gov/science/science-explorer/minerals",
+      "content_type": "text/html; charset=utf-8",
+      "http_date": "Wed, 11 Nov 2026 08:37:26 GMT",
+      "last_modified": "Wed, 11 Nov 2026 08:37:25 GMT",
+      "byte_count": 124282,
+      "sha256": "71115cb0685e50935bcbc3251e0554f9e173dc268e2a2705a2c6ee8c63dfd619",
+      "feed_parse": "FAIL",
+      "parse_error": "MalformedRecord: feed DTD is not allowed"
+    },
+    {
+      "name": "ESA official operations directorate",
+      "url": "https://www.esa.int/directorates/about-us/directorates/operations",
+      "requested_at_utc": "2026-11-11T08:37:24.685807+00:00",
+      "attempts": 1,
+      "timeout_seconds": 12,
+      "max_bytes": 2000000,
+      "status": 200,
+      "final_url": "https://www.esa.int/directorates/about-us/directorates/operations",
+      "content_type": "text/html; charset=UTF-8",
+      "http_date": "Wed, 11 Nov 2026 08:37:25 GMT",
+      "last_modified": null,
+      "byte_count": 216576,
+      "sha256": "f2f9c501800c3cf55d60b9b0c5a89eed6ca26f36446874fb8b9d06ae67b98e27",
+      "feed_parse": "FAIL",
+      "parse_error": "MalformedRecord: feed DTD is not allowed"
+    },
+    {
+      "name": "ESA official space transportation",
+      "url": "https://www.esa.int/what-we-do/space-transportation",
+      "requested_at_utc": "2026-11-11T08:37:24.686449+00:00",
+      "attempts": 1,
+      "timeout_seconds": 12,
+      "max_bytes": 2000000,
+      "status": 200,
+      "final_url": "https://www.esa.int/what-we-do/space-transportation",
+      "content_type": "text/html; charset=UTF-8",
+      "http_date": "Wed, 11 Nov 2026 08:37:25 GMT",
+      "last_modified": null,
+      "byte_count": 194083,
+      "sha256": "38b80b12dbee3e7755049826b3932e2fa269640fd39c9014a2ea221ab0a14c5c",
+      "feed_parse": "FAIL",
+      "parse_error": "MalformedRecord: feed DTD is not allowed"
+    },
+    {
+      "name": "USGS official search minerals RSS",
+      "url": "https://www.usgs.gov/search?keywords=minerals+rss",
+      "requested_at_utc": "2026-11-11T08:38:27.863658+00:00",
+      "attempts": 1,
+      "timeout_seconds": 12,
+      "max_bytes": 2000000,
+      "status": 200,
+      "final_url": "https://www.usgs.gov/search?keywords=minerals+rss",
+      "content_type": "text/html; charset=utf-8",
+      "http_date": "Wed, 11 Nov 2026 08:38:29 GMT",
+      "last_modified": "Wed, 11 Nov 2026 08:38:28 GMT",
+      "byte_count": 87597,
+      "sha256": "8cbb7f62a67d21e890447efbff900432f0b4a02306c36aaf71da5008a269c628",
+      "feed_parse": "FAIL",
+      "parse_error": "MalformedRecord: feed DTD is not allowed"
+    },
+    {
+      "name": "USGS official RSS directory discovered through search",
+      "url": "https://www.usgs.gov/social-media/usgs-news-everything-weve-got-1",
+      "requested_at_utc": "2026-11-11T08:39:30.540383+00:00",
+      "attempts": 1,
+      "timeout_seconds": 12,
+      "max_bytes": 2000000,
+      "status": 200,
+      "final_url": "https://www.usgs.gov/news/all/feed",
+      "content_type": "application/rss+xml; charset=utf-8",
+      "http_date": "Wed, 11 Nov 2026 08:39:32 GMT",
+      "last_modified": "Wed, 11 Nov 2026 08:39:32 GMT",
+      "byte_count": 26502,
+      "sha256": "81cd16075db9ebf81321cf64ac8047518b28131606af289b9ed8a70fbe8e3f7c",
+      "feed_parse": "PASS",
+      "entry_count_parsed": 10
+    },
+    {
+      "requested_url": "https://www.energy.gov/",
+      "discovered_from": null,
+      "checked_at": "2026-11-11T08:35:51.113367+00:00",
+      "status": 200,
+      "final_url": "https://www.energy.gov/",
+      "content_type": "text/html; charset=utf-8",
+      "response_date": "Wed, 11 Nov 2026 06:30:31 GMT",
+      "last_modified": "Wed, 11 Nov 2026 05:29:17 GMT",
+      "sha256": "7c5cd5bffcc0acffec98b9ae4ce841151dfd7c9efeaa3beb1ddff174e583fa3e",
+      "bytes": 130838,
+      "attempts": 1
+    },
+    {
+      "requested_url": "https://www.energy.gov/hgeo/hydrocarbons-and-geothermal-energy-office",
+      "discovered_from": "https://www.energy.gov/",
+      "checked_at": "2026-11-11T08:36:11.069859+00:00",
+      "status": 200,
+      "final_url": "https://www.energy.gov/hgeo/hydrocarbons-and-geothermal-energy-office",
+      "content_type": "text/html; charset=utf-8",
+      "response_date": "Wed, 11 Nov 2026 06:46:27 GMT",
+      "last_modified": "Wed, 11 Nov 2026 01:05:30 GMT",
+      "sha256": "8790f2c9002660c5478a27057ac07d463ecbeba37d244796abe38eaa4f680ec9",
+      "bytes": 174413,
+      "attempts": 1
+    },
+    {
+      "requested_url": "https://www.energy.gov/newsroom",
+      "discovered_from": "https://www.energy.gov/",
+      "checked_at": "2026-11-11T08:36:11.125758+00:00",
+      "status": 200,
+      "final_url": "https://www.energy.gov/newsroom",
+      "content_type": "text/html; charset=utf-8",
+      "response_date": "Wed, 11 Nov 2026 06:29:58 GMT",
+      "last_modified": "Wed, 11 Nov 2026 06:04:13 GMT",
+      "sha256": "514ecb138d382ae6c77e4a0b30948238fd19d15e5bbcf4be5da443e70726d9d1",
+      "bytes": 146913,
+      "attempts": 1
+    },
+    {
+      "requested_url": "https://www.energy.gov/topics/strategic-petroleum-reserve-spr",
+      "discovered_from": "https://www.energy.gov/",
+      "checked_at": "2026-11-11T08:36:11.173328+00:00",
+      "status": 200,
+      "final_url": "https://www.energy.gov/topics/strategic-petroleum-reserve-spr",
+      "content_type": "text/html; charset=utf-8",
+      "response_date": "Wed, 11 Nov 2026 07:50:22 GMT",
+      "last_modified": "Wed, 11 Nov 2026 04:02:30 GMT",
+      "sha256": "46688c074effb9630bfbd0d332676eadf86e889961714fb1a5cddd0e2a34b5ad",
+      "bytes": 134958,
+      "attempts": 1
+    },
+    {
+      "requested_url": "https://www.energy.gov/hgeo/office-coal",
+      "discovered_from": "https://www.energy.gov/hgeo/hydrocarbons-and-geothermal-energy-office",
+      "checked_at": "2026-11-11T08:36:30.850924+00:00",
+      "status": 200,
+      "final_url": "https://www.energy.gov/hgeo/office-coal",
+      "content_type": "text/html; charset=utf-8",
+      "response_date": "Wed, 11 Nov 2026 08:36:30 GMT",
+      "last_modified": "Wed, 11 Nov 2026 08:35:01 GMT",
+      "sha256": "1c851da00b90aafc479dc62ab4d07748f0c86f0ed69275a4553c90199d204674",
+      "bytes": 143287,
+      "attempts": 1
+    },
+    {
+      "requested_url": "https://www.energy.gov/hgeo/office-oil-and-gas",
+      "discovered_from": "https://www.energy.gov/hgeo/hydrocarbons-and-geothermal-energy-office",
+      "checked_at": "2026-11-11T08:36:30.973870+00:00",
+      "status": 200,
+      "final_url": "https://www.energy.gov/hgeo/office-oil-and-gas",
+      "content_type": "text/html; charset=utf-8",
+      "response_date": "Wed, 11 Nov 2026 08:36:33 GMT",
+      "last_modified": "Wed, 11 Nov 2026 08:36:30 GMT",
+      "sha256": "c361a5df47515f46db93762823090d3b1b718f7d7892ac38b96ae5cffe6199f2",
+      "bytes": 137455,
+      "attempts": 1
+    },
+    {
+      "requested_url": "https://www.energy.gov/hgeo/opr/strategic-petroleum-reserve",
+      "discovered_from": "https://www.energy.gov/hgeo/hydrocarbons-and-geothermal-energy-office",
+      "checked_at": "2026-11-11T08:36:33.190288+00:00",
+      "status": 200,
+      "final_url": "https://www.energy.gov/hgeo/opr/strategic-petroleum-reserve",
+      "content_type": "text/html; charset=utf-8",
+      "response_date": "Wed, 11 Nov 2026 08:36:33 GMT",
+      "last_modified": "Wed, 11 Nov 2026 06:38:10 GMT",
+      "sha256": "26d3ea96305c73da30b9605c1a643d70036cfe6f758144c564683332edb9d00c",
+      "bytes": 150472,
+      "attempts": 1
+    },
+    {
+      "requested_url": "https://www.energy.gov/hgeo/listings/hgeo-press-releases-and-techlines",
+      "discovered_from": "https://www.energy.gov/hgeo/hydrocarbons-and-geothermal-energy-office",
+      "checked_at": "2026-11-11T08:36:33.399754+00:00",
+      "status": 200,
+      "final_url": "https://www.energy.gov/hgeo/listings/hgeo-press-releases-and-techlines",
+      "content_type": "text/html; charset=utf-8",
+      "response_date": "Wed, 11 Nov 2026 08:36:33 GMT",
+      "last_modified": "Wed, 11 Nov 2026 08:04:57 GMT",
+      "sha256": "d0c84acffc4a9048aa3b2b87ae8af76c99d113ff81be62c854fd8be7b83464eb",
+      "bytes": 131139,
+      "attempts": 1
+    },
+    {
+      "requested_url": "https://www.energy.gov/hgeo/newsroom",
+      "discovered_from": "https://www.energy.gov/hgeo/hydrocarbons-and-geothermal-energy-office",
+      "checked_at": "2026-11-11T08:36:33.602166+00:00",
+      "status": 200,
+      "final_url": "https://www.energy.gov/hgeo/newsroom",
+      "content_type": "text/html; charset=utf-8",
+      "response_date": "Wed, 11 Nov 2026 08:36:35 GMT",
+      "last_modified": "Wed, 11 Nov 2026 08:36:32 GMT",
+      "sha256": "e4d7a5ee0bfc0e5bc3949fa051cdacc9b701c9c5551e2ff6f4135e6afaaea1c2",
+      "bytes": 126972,
+      "attempts": 1
+    },
+    {
+      "requested_url": "https://www.energy.gov/rss/hgeo/2282977",
+      "discovered_from": "https://www.energy.gov/hgeo/listings/hgeo-press-releases-and-techlines",
+      "checked_at": "2026-11-11T08:37:02.917253+00:00",
+      "status": 200,
+      "final_url": "https://www.energy.gov/rss/hgeo/2282977",
+      "content_type": "application/rss+xml; charset=utf-8",
+      "response_date": "Wed, 11 Nov 2026 08:37:03 GMT",
+      "last_modified": "Wed, 11 Nov 2026 08:02:03 GMT",
+      "sha256": "fd86f1f0e24daa55cab13624970862f0864f3531e572bedf2b02ae060dd46818",
+      "bytes": 7976,
+      "entry_count": 10,
+      "channel": {
+        "title": "HGEO Press Releases and Techlines",
+        "link": "https://www.energy.gov/hgeo/listings/hgeo-press-releases-and-techlines",
+        "description": "HGEO Press Releases and Techlines",
+        "language": "en"
+      },
+      "attempts": 1
+    },
+    {
+      "requested_url": "https://www.energy.gov/hgeo/listings/hgeo-blog",
+      "discovered_from": "https://www.energy.gov/hgeo/newsroom",
+      "checked_at": "2026-11-11T08:37:03.333247+00:00",
+      "status": 200,
+      "final_url": "https://www.energy.gov/hgeo/listings/hgeo-blog",
+      "content_type": "text/html; charset=utf-8",
+      "response_date": "Wed, 11 Nov 2026 08:37:04 GMT",
+      "last_modified": "Wed, 11 Nov 2026 08:37:02 GMT",
+      "sha256": "fbf820f8cf151202e85ca3e4f639b7bf0714a87166c9cda0e9a24cefae20c9ec",
+      "bytes": 128634,
+      "attempts": 1
+    },
+    {
+      "requested_url": "https://www.energy.gov/collection/filter/819896",
+      "discovered_from": "https://www.energy.gov/hgeo/hydrocarbons-and-geothermal-energy-office",
+      "checked_at": "2026-11-11T08:37:04.426488+00:00",
+      "status": 200,
+      "final_url": "https://www.energy.gov/collection/filter/819896",
+      "content_type": "text/html; charset=utf-8",
+      "response_date": "Wed, 11 Nov 2026 08:37:04 GMT",
+      "last_modified": "Wed, 11 Nov 2026 08:21:05 GMT",
+      "sha256": "f68f42205faf56241f56c32e0b6acc18f7e5747dc0dccbe23ec63aef1d6debaf",
+      "bytes": 126098,
+      "attempts": 1
+    },
+    {
+      "requested_url": "https://netl.doe.gov/centers-of-excellence/coal",
+      "discovered_from": "https://www.energy.gov/hgeo/office-coal",
+      "checked_at": "2026-11-11T08:37:04.675586+00:00",
+      "status": 200,
+      "final_url": "https://netl.doe.gov/centers-of-excellence/coal",
+      "content_type": "text/html; charset=UTF-8",
+      "response_date": "Wed, 11 Nov 2026 08:37:04 GMT",
+      "last_modified": "Wed, 11 Nov 2026 08:37:04 GMT",
+      "sha256": "19d3c16f641fe436f80f929c2554436148d4fea7b094138cd2513946b0626add",
+      "bytes": 51326,
+      "attempts": 1
+    },
+    {
+      "requested_url": "https://www.energy.gov/rss/hgeo/2283029",
+      "discovered_from": "https://www.energy.gov/hgeo/listings/hgeo-blog",
+      "checked_at": "2026-11-11T08:37:46.011967+00:00",
+      "status": 200,
+      "final_url": "https://www.energy.gov/rss/hgeo/2283029",
+      "content_type": "application/rss+xml; charset=utf-8",
+      "response_date": "Wed, 11 Nov 2026 08:37:46 GMT",
+      "last_modified": "Wed, 11 Nov 2026 08:37:45 GMT",
+      "sha256": "a7aa4e8bec465fe6b6684f2db1e2f100c2a1d420b47c33769f2f5ce488618c60",
+      "bytes": 7752,
+      "entry_count": 10,
+      "channel": {
+        "title": "HGEO Blog",
+        "link": "https://www.energy.gov/hgeo/listings/hgeo-blog",
+        "description": "HGEO Blog",
+        "language": "en"
+      },
+      "attempts": 1
+    }
+  ],
+  "source_body_storage": "Only existing data copy and fetched response bodies under /tmp; no source body committed in these receipts.",
+  "full125_current_network_success": "NOT_RUN; working111 reused only as unchanged configuration and historical receipt, not a fresh125-feed success claim.",
+  "new_AI_calls": 0,
+  "new_model_calls": 0,
+  "paid_API_calls": 0,
+  "schedules_changed_by_subtask": 0,
+  "production_DB_writes": 0,
+  "production_deployment": "NOT_RUN_PARENT_CONTROLLED"
+}

@@ -36,7 +36,11 @@ The existing reader lacked an actual separate-interpreter restart and an explici
 - Restores the immediately previous generation through the existing authenticated archive reader, verifies the parent-manifest link, and compares exact metadata and ordered prior event rows against the new-process current database.
 - Checks that the remote head and asset inventory remain unchanged and refuses existing output directories, stale inputs, corrupt prior generations or a downgrade to the old Git state.
 
-Remote execution of this new phase is **pending the reviewed development push**. Four new fixture tests passed; 28 related archive, monthly, private-state and workflow tests passed. No storage stress or model work was run. One initial corrupt-prior fixture failed because its unpinned wall clock selected a full checkpoint; pinning that fixture's simulated publication time exposed the intended delta corruption and all four cases then passed. This was a fixture timing correction, not a relaxation of production checks.
+**The extended proof passed in actual Actions**, [run 42989791426](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42989791426), job `130419573071`, on exact reviewed development SHA `ab2cc04a13af13903fe980e2532a073f2a4ad7aa`. Its current-state reader took **72 seconds** and its separately bounded restart/history proof took **62 seconds**; both stayed below their own 120-second limits. All publisher/research jobs were skipped.
+
+The new Python process (PID 2262, with account credentials removed) restored generation 6 with the same SQLite hash and all eight tables. Generation **5** also restored successfully, SQLite SHA256 `6b43a0dcc5c3ecd0de2a981540835498d5e532fc4dd8a369ce2ef25ed8c72e46`; its manifest hash equals generation 6's recorded parent. Exact comparison preserved **all 60,049 previous events and metadata** in the **60,071 current events**. The full base plus both page deltas have validated ciphertext/plaintext hashes recorded in the JSON evidence. The run verified unchanged remote head/asset inventory, and an independent post-run API inventory still matched all 14 original assets exactly.
+
+Four new fixture tests passed; 28 related archive, monthly, private-state and workflow tests passed. No storage stress or model work was run. One initial corrupt-prior fixture failed because its unpinned wall clock selected a full checkpoint; pinning that fixture's simulated publication time exposed the intended delta corruption and all four cases then passed. This was a fixture timing correction, not a relaxation of production checks.
 
 Commands:
 
@@ -46,4 +50,4 @@ gh api --method POST repos/irewon1-lgtm/bottleneck-control-tower/actions/workflo
 .venv/bin/python -m pytest -q tests/test_v4_monthly_storage.py tests/test_v4_release_archive.py tests/test_v4_quantitative_private.py tests/test_v4_cpu_research_workflow.py
 ```
 
-The dispatch input is only `ref=codex/bct-v4-integration`, `purpose=official-state-read`. Compact nonsecret job receipts and exact results are stored in [DB_RESTORE.json](DB_RESTORE.json). Main `28d0b8c6`, CPU pin/enable settings, schedules, private refs and all original data are preserved. Q1/Q2 remain PARTIAL; independent Q3 pairs and LIVE firsts remain zero.
+Each dispatch input was only `ref=codex/bct-v4-integration`, `purpose=official-state-read`: one baseline execution and one execution after the reviewed proof extension. Compact nonsecret job receipts and exact results are stored in [DB_RESTORE.json](DB_RESTORE.json). No unchanged failure was retried. Main `28d0b8c6`, CPU pin/enable settings, schedules, private refs and all original data are preserved by this work. Q1/Q2 remain PARTIAL; independent Q3 pairs and LIVE firsts remain zero.

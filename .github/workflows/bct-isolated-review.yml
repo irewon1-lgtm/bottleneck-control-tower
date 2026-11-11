@@ -4,11 +4,17 @@ on:
     branches: [fix/bct-storage-linked-verification-20261012]
     paths: [.github/scripts/review_shadow_frozen.py, tests/test_review_frozen_transport.py, .github/workflows/review-lead-shadow.yml]
   workflow_dispatch:
+    inputs:
+      bounded_current_replay:
+        description: Replay the pinned current saved source into a temporary copy of REVIEW state on development only
+        type: boolean
+        default: false
 permissions:
   contents: read
   actions: read
 jobs:
   review:
+    if: ${{ !inputs.bounded_current_replay }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -59,3 +65,35 @@ jobs:
           path: ${{ runner.temp }}/bct-review-verified.json
           retention-days: 30
           if-no-files-found: warn
+  bounded_saved_source:
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' &&
+          github.ref == 'refs/heads/codex/bct-v4-integration' &&
+          inputs.bounded_current_replay }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e '.[test]'
+      - name: Verify bounded transport and frozen intake guards
+        run: python -m pytest -q tests/test_review_artifact.py tests/test_review_bounded_verification.py tests/test_review_frozen_transport.py tests/test_review_shadow.py tests/test_review_intake.py
+      - name: Replay pinned real sources into copied review state
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          python .github/scripts/verify_bounded_review.py run
+          --workspace "$RUNNER_TEMP/bct-bounded-review"
+          --output "$RUNNER_TEMP/review-bounded-verification.json"
+      - name: Preserve numeric and hash receipt only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-bounded-verification-${{ github.run_id }}
+          path: ${{ runner.temp }}/review-bounded-verification.json
+          retention-days: 7
+          if-no-files-found: error

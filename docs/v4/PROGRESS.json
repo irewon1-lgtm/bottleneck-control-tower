@@ -7580,7 +7580,16 @@
         "tables": 8,
         "Q1_numeric": 38046,
         "Q1_physical": 21916,
-        "new_process_and_previous_generation": "PENDING_ACTUAL_VERIFICATION",
+        "new_process_and_previous_generation": {
+          "status": "PASS",
+          "run_id": 42989791426,
+          "code_sha": "ab2cc04a13af13903fe980e2532a073f2a4ad7aa",
+          "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42989791426",
+          "previous_generation": 5,
+          "prior_event_rows_preserved": 60049,
+          "current_event_rows": 60071,
+          "remote_assets_and_refs_unchanged": true
+        },
         "remote_writes": 0
       },
       "CPU_settings": {
@@ -7588,10 +7597,37 @@
         "actual_code_variable": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
         "required_unchanged_pin": "221fa92b1cbff8950716ec373eac793ca340c873",
         "enabled": "false",
-        "runtime": "APPROVED_EXISTING_SEED_RECOVERY_IN_PROGRESS",
+        "runtime": {
+          "status": "SAME_APPROVED_SEED_RESTORED_VERIFICATION_PENDING",
+          "seed_run": 42989488936,
+          "cache_id": 10344400333,
+          "model_revision": "f9634218e53580c56edf0de97ca1a7d3f1c2354e",
+          "changed_CPU_pin": false,
+          "CPU_new_document_readings": 0
+        },
         "new_model_selection": false
       },
-      "updated_at": "2026-11-11T08:45:01.829548+00:00"
+      "updated_at": "2026-11-11T08:53:35.400404+00:00",
+      "main_candidate": {
+        "commit": "018f5bb1aa9d27e2891b9902155cb14107f9b019",
+        "pr": "https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/44",
+        "draft": true,
+        "base_main": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "merged": false,
+        "operating_gate_0_6": "NOT_RUN_FOR_CANDIDATE",
+        "code_regression": "1000PythonPASS_1SKIP_34JavaScriptPASS"
+      },
+      "RSS": {
+        "repaired_official_feeds": 2,
+        "remaining_individual_BLOCKED": 12,
+        "temporary_current_DB_new_rows": 20,
+        "repeat_duplicates": 20,
+        "production_DB_writes": 0
+      },
+      "review": {
+        "status": "PENDING_ACTUAL_BOUNDED_ACTIONS_REPLAY",
+        "real_operating_state_writes": 0
+      }
     }
   }
 }

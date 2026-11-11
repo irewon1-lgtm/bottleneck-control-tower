@@ -11,7 +11,7 @@ on:
     inputs:
       purpose:
         type: choice
-        options: [seed, recovery-check, bridge-recover, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart, q2-relations, official-sources, official-discovery, official-bidirectional, official-state-read, archive-storage-trial, monthly-storage-trial]
+        options: [seed, recovery-check, bridge-recover, runtime-verify, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart, q2-relations, official-sources, official-discovery, official-bidirectional, official-state-read, archive-storage-trial, monthly-storage-trial]
         default: seed
       q1_key_run:
         type: string
@@ -37,6 +37,40 @@ env:
   CPU_CODE_SHA: 221fa92b1cbff8950716ec373eac793ca340c873
   EXPECTED_CPU_CODE_SHA: 221fa92b1cbff8950716ec373eac793ca340c873
 jobs:
+  runtime-verify:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'runtime-verify' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 221fa92b1cbff8950716ec373eac793ca340c873
+          path: pinned-cpu
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Require standard free runner and existing cache budget without installation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONPATH: pinned-cpu/src
+        run: timeout 120 python pinned-cpu/tools/v4_cpu_preflight.py guard --output var/v4/runtime-verify/free.json
+      - uses: actions/cache/restore@v4
+        with:
+          key: v4-cpu-runtime-${{ runner.os }}-${{ runner.arch }}-3.12.15-fff880f684241e7320bcb1f19eecf3f5ad9a32f15f730cc2351aae63c13bda10
+          fail-on-cache-miss: true
+          path: |
+            .v4-cpu-env
+            .v4-cpu-runtime
+      - name: Verify locked packages and offline model health using pinned execution code without reading
+        env:
+          HF_HUB_OFFLINE: '1'
+          TRANSFORMERS_OFFLINE: '1'
+        run: timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_runtime_verify.py --code-root pinned-cpu
   official-state-read:
     if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'official-state-read' }}
     runs-on: ubuntu-24.04

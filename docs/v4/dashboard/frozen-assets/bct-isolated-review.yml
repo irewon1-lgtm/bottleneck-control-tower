@@ -1,0 +1,61 @@
+name: BCT isolated frozen REVIEW validation
+on:
+  push:
+    branches: [fix/bct-storage-linked-verification-20261012]
+    paths: [.github/scripts/review_shadow_frozen.py, tests/test_review_frozen_transport.py, .github/workflows/review-lead-shadow.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e '.[test]'
+      - run: python -m pytest -q tests/test_review_frozen_transport.py tests/test_review_shadow.py tests/test_review_intake.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: precursor-private-cache
+          run-id: 38256308740
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/bct-review-source
+      - name: Verify real new handoff using exact historical review state
+        run: |
+          mkdir -p "$RUNNER_TEMP/bct-review-original"
+          git fetch --no-tags --depth=1 origin 1e0fb94a635e3b6ad066dbd2cfa0d4eacc16780a
+          git archive 1e0fb94a635e3b6ad066dbd2cfa0d4eacc16780a | tar -x -C "$RUNNER_TEMP/bct-review-original"
+          python - <<'PY'
+          import json,os,hashlib
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])
+          state=root/'bct-review-original/review-lead-shadow'
+          before={str(p.relative_to(state)):hashlib.sha256(p.read_bytes()).hexdigest() for p in state.rglob('*') if p.is_file() and p.name!='summary.md'}
+          (root/'bct-review-before.json').write_text(json.dumps(before))
+          (root/'bct-review-delta.json').write_text(json.dumps({'collection_started_at':'2026-10-12T13:31:49Z','documents':[]}))
+          PY
+          python -m bct.review_shadow handoff --delta "$RUNNER_TEMP/bct-review-delta.json" --cache "$RUNNER_TEMP/bct-review-source" --output "$RUNNER_TEMP/bct-review-handoff"
+          python .github/scripts/review_shadow_frozen.py --input "$RUNNER_TEMP/bct-review-handoff/input.json" --state "$RUNNER_TEMP/bct-review-original/review-lead-shadow"
+          python - <<'PY'
+          import json,os,hashlib
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP']);state=root/'bct-review-original/review-lead-shadow'
+          before=json.loads((root/'bct-review-before.json').read_text())
+          assert all((state/p).is_file() and hashlib.sha256((state/p).read_bytes()).hexdigest()==h for p,h in before.items())
+          docs=json.loads((root/'bct-review-handoff/input.json').read_text())['documents']
+          assert len(docs)==33, 'actual new verified source handoff differs'
+          receipt={'status':'PASS','new_verified_documents':len(docs),'old_files_preserved':len(before),'production_writes':0,'EARLY_success':False}
+          (root/'bct-review-verified.json').write_text(json.dumps(receipt,indent=2))
+          print(json.dumps(receipt))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-isolated-review-${{ github.run_id }}
+          path: ${{ runner.temp }}/bct-review-verified.json
+          retention-days: 30
+          if-no-files-found: warn

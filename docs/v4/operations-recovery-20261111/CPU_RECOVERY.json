@@ -1,0 +1,449 @@
+{
+  "task_id": "BCT_V4_OPERATIONS_RECOVERY_20261111",
+  "scope": "P0 CPU variable gate and approved runtime recovery",
+  "observed_at_utc": "2026-11-11T08:38:24.690913+00:00",
+  "development_start_sha": "42ee0a6ee6b0ed21228a0409aa64e973359bf65f",
+  "main_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+  "plan_id": "BCT-V4-Q-1.0",
+  "result": "SAME_APPROVED_SEED_CACHE_RESTORED_RUNTIME_HEALTH_PENDING_VARIABLES_GATE_FALSE",
+  "current_cpu_pin_unchanged": "221fa92b1cbff8950716ec373eac793ca340c873",
+  "actual_settings_diagnostic": {
+    "run_id": 42988176131,
+    "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42988176131",
+    "conclusion": "success",
+    "job_id": 130414286091,
+    "started_at": "2026-11-11T08:34:59Z",
+    "completed_at": "2026-11-11T08:35:16Z",
+    "immutable_tools_checkout": "289c4e23bc78a6c45105076306f1f4b9577de06a",
+    "inputs": {
+      "remote_roundtrip": false,
+      "auth_denials_only": true
+    },
+    "reviewed_actions": {
+      "model_install_or_load": false,
+      "private_read_or_write": false,
+      "operating_ref_changes": false,
+      "probe_type": "POST already-existing public refs; cannot update an existing ref; both returned403",
+      "settings_modified": false
+    },
+    "markers": {
+      "BCT_SETTINGS_OBSERVED_JSON": {
+        "private_token_present": true,
+        "private_token_header_format_valid": true,
+        "handoff_secret_present": true,
+        "handoff_secret_exactly_64": true,
+        "handoff_secret_format_valid": true,
+        "code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+        "code_SHA_matches_tested_handoff": true,
+        "enabled_variable": "false",
+        "CPU_reading_performed": false,
+        "settings_modified": false
+      },
+      "BCT_PRIVATE_SCOPE_JSON": {
+        "status": "DIAGNOSTIC_ONLY",
+        "authentication": {
+          "prior_run": "38694400014",
+          "HTTP": 200,
+          "authenticated": true
+        },
+        "public_existing_ref_creation_HTTP": {
+          "main": 403,
+          "data": 403
+        },
+        "public_write_denied": true,
+        "requests": [
+          {
+            "method": "POST",
+            "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/refs",
+            "HTTP": 403
+          },
+          {
+            "method": "POST",
+            "endpoint": "repos/irewon1-lgtm/bottleneck-control-tower/git/refs",
+            "HTTP": 403
+          }
+        ],
+        "private_repo_failed_GET_repeated": false,
+        "source_DB_uploaded": false
+      }
+    },
+    "diagnostic_legacy_comparison_warning": "code_SHA_matches_tested_handoff compares against old da7cb9b hardcode, not the current required221fa92 pin. Current-pin match computed separately below."
+  },
+  "concrete_research_gate": {
+    "configured_code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6",
+    "required_code_SHA": "221fa92b1cbff8950716ec373eac793ca340c873",
+    "configured_code_SHA_matches_current_pin": false,
+    "configured_enabled": "false",
+    "configured_enabled_is_true": false,
+    "overall_conjunction": false,
+    "known_false_terms": [
+      "vars.BCT_V4_CPU_CODE_SHA == current pinned221fa92",
+      "vars.BCT_V4_CPU_RESEARCH_ENABLED == true"
+    ],
+    "other_terms_not_substituted": "Research also requires main, workflow_run, main upstream branch and upstream success. Two independently verified false variable terms suffice to prove the conjunction false.",
+    "prior_window_run_count": 43,
+    "prior_window_skipped_count": 43,
+    "previous_variables_API403_reused": {
+      "message": "Resource not accessible by integration",
+      "documentation_url": "https://docs.github.com/rest/actions/variables#list-repository-variables",
+      "status": "403"
+    },
+    "variables_API_calls_this_task": 0,
+    "variables_write_attempts_this_task": 0
+  },
+  "runtime_recovery": {
+    "current_actions_cache_inventory": {
+      "total_count": 0,
+      "actions_caches": []
+    },
+    "previous_main_seed_run": 38682772423,
+    "previous_main_seed_conclusion": "success",
+    "previous_main_cache_id": 8975651992,
+    "previous_main_cache_bytes": 1058839680,
+    "expected_cache_key": "v4-cpu-runtime-Linux-X64-3.12.15-fff880f684241e7320bcb1f19eecf3f5ad9a32f15f730cc2351aae63c13bda10",
+    "runtime_key_hash_files": {
+      "scripts/v4/requirements.lock": "99aa48b5c7381c3c451769f8fbb8b21ef4f745a8e7b7c5dbdb15deb0312a8bb9",
+      "docs/v4/cpu-automation/preflight/model-manifest.json": "5588cb168c4dcdac419b2a1ea269c2d5bbcc94d18e760949d2ac48b2bc43384b"
+    },
+    "same_lock_and_manifest_at_seed_pin_and_dev": true,
+    "model": {
+      "model": "fastino/gliner2-base-v1",
+      "revision": "f9634218e53580c56edf0de97ca1a7d3f1c2354e",
+      "weights_license": "apache-2.0",
+      "files": [
+        {
+          "path": "README.md",
+          "sha256": "ec5c9215186974ec78e851af8894a5d433e1205a33f8e1dca3f49a70a159c30a"
+        },
+        {
+          "path": "added_tokens.json",
+          "sha256": "3c274ca559be8b7b18febf616724ec05f8a8abccd428bd2744608f45f7a0b067"
+        },
+        {
+          "path": "config.json",
+          "sha256": "33d8aa009deed4b5435d162e08b5a720b252a0084e59d30d366b37da8c0193c5"
+        },
+        {
+          "path": "encoder_config/config.json",
+          "sha256": "9840a4db70bc007e6b65d336ebe2bddc53bc2ce210dc5757e50d5bb17122f7cd"
+        },
+        {
+          "path": "model.safetensors",
+          "sha256": "845fc4bd93c525b86124c58ab4f56c9eacf8587953086b14c501fab25957c007"
+        },
+        {
+          "path": "special_tokens_map.json",
+          "sha256": "84ea70143f533d7e99b393d87f20010887a9ac2cba955828ef313886e4e83f4f"
+        },
+        {
+          "path": "spm.model",
+          "sha256": "c679fbf93643d19aab7ee10c0b99e460bdbc02fedf34b92b05af343b4af586fd"
+        },
+        {
+          "path": "tokenizer.json",
+          "sha256": "1b7fbabfb4c690bed84c6793bfecae9b8dfe205751b04f9ffd1e76a1e7df9c16"
+        },
+        {
+          "path": "tokenizer_config.json",
+          "sha256": "4e6c6a8d26478b670692916266438485403b0c54af31fd1a12bab8a465d062e9"
+        }
+      ],
+      "upstream_lfs_checksums": {
+        "model.safetensors": "845fc4bd93c525b86124c58ab4f56c9eacf8587953086b14c501fab25957c007",
+        "spm.model": "c679fbf93643d19aab7ee10c0b99e460bdbc02fedf34b92b05af343b4af586fd"
+      },
+      "prepared_at": "2026-10-14T04:17:53.449698+00:00"
+    },
+    "previous_verified_model_bytes": 845068741,
+    "main_seed_run_current_artifacts": {
+      "total_count": 0,
+      "artifacts": []
+    },
+    "preflight_run_current_artifacts": {
+      "total_count": 0,
+      "artifacts": []
+    },
+    "local_search": {
+      "searched_roots": [
+        "/workspace",
+        "/tmp",
+        "/home/agent/.cache/huggingface",
+        "/home/agent/.cache/huggingface"
+      ],
+      "runtime_model_candidates": []
+    },
+    "local_packages": {
+      "python_version": "3.12.14",
+      "packages": {
+        "gliner2": null,
+        "torch": null,
+        "transformers": null,
+        "safetensors": null,
+        "huggingface-hub": null
+      }
+    },
+    "current_private_CPU_tree_contains_only": [
+      "checkpoint.json",
+      "checkpoint.sqlite3.gz",
+      "private-persistence.json"
+    ],
+    "cache_disappearance_exact_time_and_cause": "UNKNOWN",
+    "archive_on_owner_other_machine": "UNKNOWN_NOT_SEARCHED",
+    "seed_dispatch_not_attempted_initial_assessment": {
+      "dispatched": false,
+      "reason": "On cache miss v4-cpu-main-cache-seed creates venv, pip installs locked dependencies and downloads nine model files. Current inventory0 means this is installation/bootstrap, not reuse of a saved runtime.",
+      "forbidden_steps": [
+        "python -m venv .v4-cpu-env",
+        "pip install -r scripts/v4/requirements.lock",
+        "bootstrap-model"
+      ]
+    }
+  },
+  "bridge_recovery": {
+    "dispatched": false,
+    "reason": "Existing bridge-recover restores durable CPU checkpoint, then creates a private CAS/ACK commit and encrypted bridge cache. It cannot reconstruct missing runtime. Do not mutate private state merely to refresh an unusable bridge while runtime prerequisite is missing.",
+    "existing_source_separated_CPU_checkpoint_preserved": true,
+    "latest_official_generation6_restore": "Owned independently by storage agent; not a substitute for CPU runtime or CPU branch checkpoint."
+  },
+  "owner_UI": {
+    "variables_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/settings/variables/actions",
+    "path": "Settings -> Secrets and variables -> Actions -> Variables",
+    "current_action": "Keep ENABLED=false; same approved seed was rematerialized once successfully. Runtime package/health verifier is prepared; wait for actual runtime-verify PASS before bridge/CAS recovery or variable activation.",
+    "conditional_after_existing_runtime_and_bridge_verified": {
+      "BCT_V4_CPU_CODE_SHA": "221fa92b1cbff8950716ec373eac793ca340c873",
+      "BCT_V4_CPU_RESEARCH_ENABLED": "true"
+    },
+    "settings_diagnostic_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/workflows/v4-cpu-private-settings-check.yml",
+    "diagnostic_button_values": {
+      "branch": "main",
+      "remote_roundtrip": false,
+      "auth_denials_only": true
+    },
+    "diagnostic_already_run_do_not_repeat": 42988176131,
+    "CPU_workflow_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/workflows/v4-cpu-private-research.yml",
+    "bridge_recover_after_runtime_prerequisites_only": {
+      "branch": "main",
+      "purpose": "bridge-recover"
+    },
+    "missing_prerequisite_without_button_workaround": "Locate an already approved existing Linux-X64 Python3.12.15 runtime archive containing both .v4-cpu-env and .v4-cpu-runtime. No such copy was found in current Actions cache/artifacts or searched local roots. Manifest/requirements text alone cannot restore the missing binary payload."
+  },
+  "throughput": {
+    "new_CPU_windows": 0,
+    "new_CPU_characters": 0,
+    "runtime_restored": false,
+    "actual_scheduled_CPU_reading": "NOT_RUN",
+    "seven_day_started": false,
+    "first_success_requires": "Actual scheduled new reading + exact-position validation + private persistence + fresh remote restore/ACK; settings diagnostic success is not CPU PASS.",
+    "runtime_seed_cache_available": true
+  },
+  "usage": {
+    "workflow_dispatches": 2,
+    "model_installs": 1,
+    "model_downloads": 9,
+    "runtime_installs": 1,
+    "external_AI_calls": 0,
+    "paid_API_calls": 0,
+    "source_fetches": 0,
+    "private_state_mutations": 0,
+    "pin_changes": 0,
+    "enabled_changes": 0,
+    "normal_Secrets_changed": 0,
+    "approved_existing_model_seed_rematerializations": 1,
+    "arbitrary_new_models": 0
+  },
+  "verification_reuse": {
+    "previous_suite": "docs/v4/full-pipeline-debug-20261111/VALIDATION.json",
+    "previous_python_passed": 1828,
+    "previous_independent_holdout_skipped": 1,
+    "unaffected_CPU_settings_seed_lock_manifest_files_unchanged_vs42ee0a6": true,
+    "new_broad_regression_runs": 0,
+    "actual_new_evidence": "Main GitHub diagnostic42988176131, fresh cache/artifact inventories, scoped local runtime/package inventory, locked file/hash comparison."
+  },
+  "approved_seed_reassessment": {
+    "status": "APPROVED_SEED_EXECUTED_SUCCESSFULLY_RUNTIME_VERIFICATION_PENDING",
+    "specific_authorization_under_review": "Root judged specific user authorization to recover from approved seed covers exact existing model/revision/nine hashes and71 lockedversions; no arbitrary model or pin changes.",
+    "immutable_seed_checkout": "6dea292a2ba712c1c4039f1d4ab3ab81c896a6b2",
+    "identity": {
+      "functions": {
+        "src/bct/v4/cpu_operations.py::free_guard": {
+          "ast_sha256_by_ref": {
+            "6dea292a2ba712c1c4039f1d4ab3ab81c896a6b2": "c75011ab1cea246097ed05efacf8d5d2ab9500a7f65a81c43864426255448dc1",
+            "221fa92b1cbff8950716ec373eac793ca340c873": "c75011ab1cea246097ed05efacf8d5d2ab9500a7f65a81c43864426255448dc1",
+            "HEAD": "c75011ab1cea246097ed05efacf8d5d2ab9500a7f65a81c43864426255448dc1"
+          },
+          "identical": true
+        },
+        "src/bct/v4/cpu_operations.py::github_guard": {
+          "ast_sha256_by_ref": {
+            "6dea292a2ba712c1c4039f1d4ab3ab81c896a6b2": "a7691d27cb8a2047e2652f7680a19184c15139a53191bef40262e7008d14c1d1",
+            "221fa92b1cbff8950716ec373eac793ca340c873": "a7691d27cb8a2047e2652f7680a19184c15139a53191bef40262e7008d14c1d1",
+            "HEAD": "a7691d27cb8a2047e2652f7680a19184c15139a53191bef40262e7008d14c1d1"
+          },
+          "identical": true
+        },
+        "src/bct/v4/cpu_operations.py::model_files": {
+          "ast_sha256_by_ref": {
+            "6dea292a2ba712c1c4039f1d4ab3ab81c896a6b2": "fbec7367e0afbcea01601304479512d6f1e132cedd92a4ceac312a612d9488f4",
+            "221fa92b1cbff8950716ec373eac793ca340c873": "fbec7367e0afbcea01601304479512d6f1e132cedd92a4ceac312a612d9488f4",
+            "HEAD": "fbec7367e0afbcea01601304479512d6f1e132cedd92a4ceac312a612d9488f4"
+          },
+          "identical": true
+        },
+        "src/bct/v4/cpu_operations.py::bootstrap_model": {
+          "ast_sha256_by_ref": {
+            "6dea292a2ba712c1c4039f1d4ab3ab81c896a6b2": "b74cb8291471c81689cbd1b17f0cb916b3c06ba3b7d40be6d187c5ab928ccb67",
+            "221fa92b1cbff8950716ec373eac793ca340c873": "b74cb8291471c81689cbd1b17f0cb916b3c06ba3b7d40be6d187c5ab928ccb67",
+            "HEAD": "b74cb8291471c81689cbd1b17f0cb916b3c06ba3b7d40be6d187c5ab928ccb67"
+          },
+          "identical": true
+        },
+        "src/bct/v4/cpu_operations.py::runtime_probe": {
+          "ast_sha256_by_ref": {
+            "6dea292a2ba712c1c4039f1d4ab3ab81c896a6b2": "de033755877f484542ff1dd3eaea699b9c872c4fcd1d504c4a277d226324bfbf",
+            "221fa92b1cbff8950716ec373eac793ca340c873": "de033755877f484542ff1dd3eaea699b9c872c4fcd1d504c4a277d226324bfbf",
+            "HEAD": "de033755877f484542ff1dd3eaea699b9c872c4fcd1d504c4a277d226324bfbf"
+          },
+          "identical": true
+        },
+        "src/bct/v4/adapters.py::CPUExtractor": {
+          "ast_sha256_by_ref": {
+            "6dea292a2ba712c1c4039f1d4ab3ab81c896a6b2": "a16078daec83fcd0956f0a422467ac6de751260a70ed509a873304454f13c2b8",
+            "221fa92b1cbff8950716ec373eac793ca340c873": "a16078daec83fcd0956f0a422467ac6de751260a70ed509a873304454f13c2b8",
+            "HEAD": "a16078daec83fcd0956f0a422467ac6de751260a70ed509a873304454f13c2b8"
+          },
+          "identical": true
+        }
+      },
+      "requirements_count": 71,
+      "all_requirement_versions_exactly_pinned": true
+    },
+    "model_reproducibility": "All nine model files checked against immutable manifest SHA256; fixed model/revision/license assertion. Identical model files are enforceable.",
+    "environment_reproducibility": "71 named requirements are exact==version pins with same lock file. Same package/version configuration can be checked. Whole prior venv byte identity is not provable from the available evidence.",
+    "mutable_or_unproven_parts": [
+      "Requirements contain no wheel hashes or --require-hashes.",
+      "pip still resolves transitive dependencies and may select platform wheels or source distributions; build isolation dependencies are not hash-locked.",
+      "PyPI default index plus PyTorch extra index resolve package artifacts at execution time; no prior installed-distribution RECORD/wheel manifest retained.",
+      "ubuntu-24.04 hosted runner image and actions major tags can change; Python3.12.15 pins a version rather than an old interpreter build hash.",
+      "Current seed probe verifies model file hashes and total payload only, not installed distribution equality, pip check or model load health."
+    ],
+    "minimum_acceptance_for_operational_claim": [
+      "Use unchanged seed checkout, Python3.12.15, lock, selected model/revision/nine hashes; never relax a failed pin or select another package/model.",
+      "Record complete installed package/version inventory and ensure every lock entry matches, additional distributions are explained/held, and pip check passes.",
+      "Verify all model hashes and payload<3GiB under existing public-standard/free-cache guard.",
+      "Distinguish recovered pinned configuration from byte-identical historical runtime; do not claim original binary restoration.",
+      "Keep CPU disabled until runtime and latest durable CPU checkpoint/bridge checks are complete."
+    ],
+    "new_dispatches": 1,
+    "new_installs": 1,
+    "initial_assessment_correction": "Initial absence-of-binary report treated seed materialization as forbidden categorically. Technical review distinguishes approved same-model/pinned seed recovery from arbitrary new-model installation; final execution authorization is being assessed by root against the specific user instruction."
+  },
+  "approved_seed_rematerialization": {
+    "status": "PASS_SAME_APPROVED_SEED_REMATERIALIZATION_NOT_BIT_IDENTICAL_BINARY_CLAIM",
+    "run_id": 42989488936,
+    "job_id": 130418587606,
+    "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42989488936",
+    "conclusion": "success",
+    "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+    "immutable_checkout": "6dea292a2ba712c1c4039f1d4ab3ab81c896a6b2",
+    "dispatches": 1,
+    "safe_receipts": [
+      {
+        "action": "guard",
+        "output": "var/v4/cpu-main-seed/free.json",
+        "result": {
+          "status": "PASS_PUBLIC_STANDARD_LINUX_AND_CACHE_BELOW_FREE_BOUND",
+          "repository": "irewon1-lgtm/bottleneck-control-tower",
+          "runner": "ubuntu-24.04",
+          "active_cache_bytes": 0,
+          "reserved_bytes": 3221225472,
+          "free_cache_allowance_bytes": 10737418240,
+          "safety_bound_bytes": 8589934592,
+          "additional_artifact_uploads": false,
+          "minutes_remaining": "N/A_PUBLIC_STANDARD_RUNNER_MINUTES_FREE",
+          "account_billing_permission": "NOT_REQUIRED_FOR_PUBLIC_STANDARD_COMPUTE; not proof of total account bill",
+          "basis": "https://docs.github.com/en/billing/concepts/product-billing/github-actions",
+          "checked_at": "2026-11-11T08:45:14.001532+00:00"
+        }
+      },
+      {
+        "action": "bootstrap-model",
+        "output": "var/v4/cpu-main-seed/model.json",
+        "result": {
+          "downloaded_files": 9,
+          "verified_bytes": 845068741,
+          "model": "fastino/gliner2-base-v1",
+          "revision": "f9634218e53580c56edf0de97ca1a7d3f1c2354e"
+        }
+      },
+      {
+        "action": "probe-model",
+        "output": "var/v4/cpu-main-seed/verified.json",
+        "result": {
+          "at": "2026-11-11T08:46:02.427741+00:00",
+          "model_bytes": 845068741,
+          "model_load_health_probe": false,
+          "new_CPU_inferences": 0,
+          "CPU_threads": null,
+          "wall_seconds": 0.438021200999998,
+          "CPU_seconds": 0.437983901,
+          "process_peak_RSS_KiB": 23176,
+          "host_memory_bytes": 16760336384,
+          "host_CPU_logical": 4,
+          "network_model_downloads": 0,
+          "meaning": "Health probe only; never a read of completed1210/67windows"
+        }
+      }
+    ],
+    "runtime_payload_bytes": 2025505375,
+    "cache_inventory": {
+      "total_count": 1,
+      "actions_caches": [
+        {
+          "id": 10344400333,
+          "ref": "refs/heads/main",
+          "key": "v4-cpu-runtime-Linux-X64-3.12.15-fff880f684241e7320bcb1f19eecf3f5ad9a32f15f730cc2351aae63c13bda10",
+          "version": "b5485c3010bcdf8ad0e6f8cac951e9452062bc1f557b6f862cf45139b6d66b85",
+          "last_accessed_at": "2026-11-11T08:46:32.207445Z",
+          "created_at": "2026-11-11T08:46:32.207445Z",
+          "size_in_bytes": 1058256865
+        }
+      ]
+    },
+    "approved_model_files_downloaded": 9,
+    "verified_model_tree_bytes_includes_generated_manifest": 845068741,
+    "exact_pip_download_body_bytes": "UNKNOWN_NOT_CAPTURED_BY_EXISTING_SEED_LOG",
+    "model_file_bytes": "PENDING_FILE_SIZE_PROOF_FROM_RUNTIME_VERIFY",
+    "CPU_windows": 0,
+    "DB_writes": 0,
+    "enabled_changes": 0,
+    "health_and_package_equality": "PENDING_RUNTIME_VERIFY_DISPATCH",
+    "old_runtime_binary_identity": "NOT_CLAIMED"
+  },
+  "runtime_verifier_development": {
+    "status": "LOCAL_TESTS_PASS_GITHUB_EXECUTION_PENDING",
+    "tool": "tools/v4_cpu_runtime_verify.py",
+    "workflow": "existing v4-cpu-private-research.yml runtime-verify purpose/job",
+    "secrets_in_health_step": false,
+    "code_checkout_for_offline_health": "221fa92b1cbff8950716ec373eac793ca340c873",
+    "new_model_inferences": 0,
+    "strict_locked_distribution_count": 71,
+    "checks": [
+      "Python3.12.15/Linux-X64",
+      "fail-on-cache-miss true",
+      "unchanged lock+manifest SHA256",
+      "pip freeze --all exact71version set with no extras",
+      "pip check",
+      "all9modelSHA256/filebytes",
+      "runtimepayload below3GiB",
+      "fresh offline load/eval health via immutable execution code; no extraction/reading"
+    ],
+    "tests": {
+      "tests": 9,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0
+    },
+    "test_command": ".venv/bin/python -m pytest tests/test_v4_cpu_runtime_verify.py tests/test_v4_cpu_research_workflow.py tests/test_v4_restore_audit.py -q",
+    "runtime_dispatches": 0
+  }
+}
