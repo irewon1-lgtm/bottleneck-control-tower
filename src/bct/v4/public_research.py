@@ -47,7 +47,7 @@ CLOCK_FIELDS = {'last_collection_at', 'last_read_at', 'persisted_at', 'data_at'}
 TRACE_FIELDS = {'document_id', 'body_sha256', 'raw_sha256', 'source_version', 'review_state',
                 'reason_code', 'missing_fields', 'source_verification', 'read_state', 'window_counts',
                 'model', 'revision', 'analysis_sha256'}
-TRACE_FIELDS.update({'window_binding_sha256', 'derived_reuse_binding_sha256'})
+TRACE_FIELDS.update({'window_binding_sha256', 'derived_reuse_binding_sha256', 'model_read_producer'})
 APPROVED_MODEL = ('fastino/gliner2-base-v1', 'f9634218e53580c56edf0de97ca1a7d3f1c2354e')
 
 
@@ -142,13 +142,23 @@ def validate_snapshot(public):
             or public['analysis']['trace_truncated'] != (total > 100)):
         raise ValueError('PUBLIC_RESEARCH_ANALYSIS_TRACE')
     for row in public['trace']:
-        exact(row, TRACE_FIELDS); document_id(row['document_id'])
+        exact(row, TRACE_FIELDS if 'model_read_producer' in row else TRACE_FIELDS - {'model_read_producer'})
+        document_id(row['document_id'])
         for key in ('body_sha256', 'raw_sha256', 'source_version', 'analysis_sha256'):
             hexadecimal(row[key], 64)
         for key in ('window_binding_sha256', 'derived_reuse_binding_sha256'):
             if row[key] is not None: hexadecimal(row[key], 64)
         if (row['model'], row['revision']) not in ((None, None), APPROVED_MODEL):
             raise ValueError('PUBLIC_RESEARCH_MODEL')
+        read_producer = row.get('model_read_producer')
+        if read_producer is not None:
+            exact(read_producer, {'run_id', 'run_attempt', 'execution_sha', 'workflow_sha'})
+            for key in ('run_id', 'run_attempt'):
+                number(read_producer[key])
+                if read_producer[key] < 1:
+                    raise ValueError('PUBLIC_RESEARCH_MODEL_READ_PRODUCER')
+            for key in ('execution_sha', 'workflow_sha'):
+                hexadecimal(read_producer[key], 40)
         mismatch = row['source_version'] != row['body_sha256']
         if ((mismatch and not (row['review_state'] == 'SOURCE_VERIFICATION_PENDING'
                               and row['reason_code'] == 'SOURCE_VERSION_OR_HASH_MISMATCH'))
@@ -223,6 +233,7 @@ def build_snapshot(db, acknowledgment, restored, producer):
                                                 for field in record.get('missing_fields', [])}),
                       'source_verification': record.get('source_validation', 'NOT_VERIFIED'),
                       'model': record.get('model'), 'revision': record.get('revision'),
+                      'model_read_producer': record.get('model_read_producer'),
                       'analysis_sha256': record['_public_analysis_sha256'],
                       'window_binding_sha256': (digest({key: record.get(key) for key in ('window_keys', 'window_result_sha256')})
                                                 if 'window_keys' in record or 'window_result_sha256' in record else None),
