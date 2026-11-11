@@ -86,7 +86,7 @@ def _valid_empty_feed(root) -> bool:
             updated = (required(root, ATOM + 'updated').text or '').strip()
             if (not title or len(title) > 2000 or not identity or len(identity) > 2000
                     or re.search(r'\s', identity) or not urlsplit(identity).scheme
-                    or not re.fullmatch(r'\d{4}-\d{2}-\d{2}[Tt]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:[Zz]|[+-]\d{2}:\d{2})', updated)):
+                    or not re.fullmatch(r'\d{4}-\d{2}-\d{2}[Tt]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:[Zz]|[+-](?:[01]\d|2[0-3]):[0-5]\d)', updated)):
                 return False
             return datetime.fromisoformat(updated.upper().replace('Z', '+00:00')).tzinfo is not None
     except ValueError:
