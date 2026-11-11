@@ -129,13 +129,58 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python .github/scripts/bct_queue_recovery.py
-      - name: Restore original 230-source regression corpus
-        uses: actions/download-artifact@v4
+      - name: Check out reviewed immutable fixed230 input helpers
+        uses: actions/checkout@v4
         with:
-          name: precursor-private-cache
-          run-id: 37790294699
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path: ${{ runner.temp }}/bct-recovery/fixed-precursor-qa
+          ref: 7d9188608a66520115727ff5daa30d13190f4958
+          path: .bct-fixed230-input
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/scripts/receive_cpu_sources.py
+            /.github/scripts/copy_fixed230.py
+      - name: Restore original 230-source regression corpus
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/bct-recovery"
+          timeout 120 gh api repos/irewon1-lgtm/bottleneck-control-tower/actions/runs/42939818925/artifacts?per_page=100 > "$RUNNER_TEMP/bct-fixed230-source-artifacts.json"
+          timeout 120 gh api repos/irewon1-lgtm/bottleneck-control-tower/actions/runs/42939431146/artifacts?per_page=100 > "$RUNNER_TEMP/bct-fixed230-rss-artifacts.json"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])
+          approved=[('source','precursor-private-cache',13821760877,4598165007,'sha256:949e95d2efda7a3fd3e7a124eb0d6569b56b54dcd1a3d5fd7f053dc75b8dfb72'),
+                    ('rss','rss-live-result',13820246103,527551,'sha256:006124e204a8315e68e9a8abbd39cbca8eacc523e09d89318fbe1d830e2f403a')]
+          for kind,name,identity,size,digest in approved:
+              matches=[a for a in json.loads((root/('bct-fixed230-'+kind+'-artifacts.json')).read_text())['artifacts'] if a.get('name')==name]
+              if len(matches)!=1 or any(matches[0].get(k)!=v for k,v in {'id':identity,'size_in_bytes':size,'digest':digest,'expired':False}.items()):
+                  raise ValueError('FIXED230_APPROVED_ARTIFACT_BINDING')
+          PY
+          timeout 120 gh run download 42939431146 --name rss-live-result --dir "$RUNNER_TEMP/bct-fixed230-rss"
+          python - <<'PY'
+          import hashlib,os
+          from pathlib import Path
+          source=Path(os.environ['RUNNER_TEMP'])/'bct-fixed230-rss/new-document-manifest.json'
+          if hashlib.sha256(source.read_bytes()).hexdigest()!='65aa1e71528bc0b2e156ba83ad4ff7d76ecf3c30536a1ffb0b72601f2abe0446':
+              raise ValueError('FIXED230_APPROVED_RSS_MANIFEST_BINDING')
+          PY
+          timeout 300 python .bct-fixed230-input/.github/scripts/receive_cpu_sources.py \
+            --run-id 42939818925 --expected-head 28d0b8c648c0218ab2e74a1fa04ca8d63e659933 \
+            --rss-run-id 42939431146 --rss-manifest "$RUNNER_TEMP/bct-fixed230-rss/new-document-manifest.json" \
+            --destination "$RUNNER_TEMP/bct-fixed230-source" --receipt "$RUNNER_TEMP/bct-recovery/fixed230-input-transport.json"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          proof=json.loads((Path(os.environ['RUNNER_TEMP'])/'bct-recovery/fixed230-input-transport.json').read_text())
+          if (proof.get('status')!='PASS_BOUNDED_CPU_INPUT_TRANSPORT' or proof.get('artifact_id')!=13821760877
+                  or proof.get('artifact_digest')!='sha256:949e95d2efda7a3fd3e7a124eb0d6569b56b54dcd1a3d5fd7f053dc75b8dfb72'):
+              raise ValueError('FIXED230_APPROVED_SOURCE_RECEIPT_BINDING')
+          PY
+          timeout 60 python .bct-fixed230-input/.github/scripts/copy_fixed230.py \
+            --cache "$RUNNER_TEMP/bct-fixed230-source" --destination "$RUNNER_TEMP/bct-recovery/fixed-precursor-qa" \
+            --receipt "$RUNNER_TEMP/bct-recovery/fixed230-copy.json"
       - name: Gate 6 real source E2E and required whole regressions
         if: steps.request.outputs.full_pipeline != 'true'
         env:
@@ -170,6 +215,8 @@ jobs:
             ${{ runner.temp }}/bct-recovery/e2e-*.json
             ${{ runner.temp }}/bct-recovery/e2e-*.xml
             ${{ runner.temp }}/bct-recovery/e2e-original-230/operating-report.json
+            ${{ runner.temp }}/bct-recovery/fixed230-input-transport.json
+            ${{ runner.temp }}/bct-recovery/fixed230-copy.json
             ${{ runner.temp }}/bct-recovery/*.log
             ${{ runner.temp }}/bct-recovery/source-audit.json
             ${{ runner.temp }}/bct-recovery/source-recovery-*.json*
