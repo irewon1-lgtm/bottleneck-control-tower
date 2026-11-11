@@ -1,19 +1,18 @@
 {
   "format": "bct-current-rss-source-blockers-1",
   "task": "BCT_V4_AUTOMATION_FULL_RECOVERY_ULTRA_20261111",
-  "observed_at_UTC": "2026-11-11T15:21:05.483831+00:00",
+  "observed_at_UTC": "2026-11-11T18:06:09.428327+00:00",
   "repository": "irewon1-lgtm/bottleneck-control-tower",
-  "RSS_run_id": 43032161571,
+  "RSS_run_id": 43069839035,
   "RSS_run_attempt": 1,
-  "code_sha": "933a29638c06d72d4cf4c17d843cfec2978066d2",
-  "receipt_completed_at_UTC": "2026-11-11T13:48:49.435815+00:00",
+  "code_sha": "5c66cd8ef5ec47046024027d52e0e8b755d1f012",
   "registered_feeds": 125,
   "successful_feed_receipts": 114,
   "remaining_failed_feed_count": 11,
   "current_blockers_by_reason": {
     "HTTP_NOT_FOUND": 7,
-    "NETWORK_UNREACHABLE": 3,
-    "TLS_CONNECTION_CLOSED_EOF": 1
+    "NETWORK_UNREACHABLE": 1,
+    "TLS_CONNECTION_CLOSED_EOF": 3
   },
   "failed_feeds": [
     {
@@ -28,7 +27,7 @@
       "HTTP_status_evidence": "REPORTED_IN_SAVED_EXCEPTION",
       "exception_type": "HTTPError",
       "reason_code": "HTTP_NOT_FOUND",
-      "reason": "Not Found",
+      "reason": "HTTP Error 404: Not Found",
       "errno": null,
       "last_reported_exception": "HTTPError: HTTP Error 404: Not Found",
       "saved": 0,
@@ -46,7 +45,7 @@
       "HTTP_status_evidence": "REPORTED_IN_SAVED_EXCEPTION",
       "exception_type": "HTTPError",
       "reason_code": "HTTP_NOT_FOUND",
-      "reason": "Not Found",
+      "reason": "HTTP Error 404: Not Found",
       "errno": null,
       "last_reported_exception": "HTTPError: HTTP Error 404: Not Found",
       "saved": 0,
@@ -64,7 +63,7 @@
       "HTTP_status_evidence": "REPORTED_IN_SAVED_EXCEPTION",
       "exception_type": "HTTPError",
       "reason_code": "HTTP_NOT_FOUND",
-      "reason": "Not Found",
+      "reason": "HTTP Error 404: Not Found",
       "errno": null,
       "last_reported_exception": "HTTPError: HTTP Error 404: Not Found",
       "saved": 0,
@@ -82,7 +81,7 @@
       "HTTP_status_evidence": "REPORTED_IN_SAVED_EXCEPTION",
       "exception_type": "HTTPError",
       "reason_code": "HTTP_NOT_FOUND",
-      "reason": "Not Found",
+      "reason": "HTTP Error 404: Not Found",
       "errno": null,
       "last_reported_exception": "HTTPError: HTTP Error 404: Not Found",
       "saved": 0,
@@ -100,7 +99,7 @@
       "HTTP_status_evidence": "REPORTED_IN_SAVED_EXCEPTION",
       "exception_type": "HTTPError",
       "reason_code": "HTTP_NOT_FOUND",
-      "reason": "Not Found",
+      "reason": "HTTP Error 404: Not Found",
       "errno": null,
       "last_reported_exception": "HTTPError: HTTP Error 404: Not Found",
       "saved": 0,
@@ -118,7 +117,7 @@
       "HTTP_status_evidence": "REPORTED_IN_SAVED_EXCEPTION",
       "exception_type": "HTTPError",
       "reason_code": "HTTP_NOT_FOUND",
-      "reason": "Not Found",
+      "reason": "HTTP Error 404: Not Found",
       "errno": null,
       "last_reported_exception": "HTTPError: HTTP Error 404: Not Found",
       "saved": 0,
@@ -136,7 +135,7 @@
       "HTTP_status_evidence": "REPORTED_IN_SAVED_EXCEPTION",
       "exception_type": "HTTPError",
       "reason_code": "HTTP_NOT_FOUND",
-      "reason": "Not Found",
+      "reason": "HTTP Error 404: Not Found",
       "errno": null,
       "last_reported_exception": "HTTPError: HTTP Error 404: Not Found",
       "saved": 0,
@@ -154,8 +153,7 @@
       "HTTP_status_evidence": "UNKNOWN_NOT_REPORTED_FOR_URLERROR",
       "exception_type": "URLError",
       "reason_code": "TLS_CONNECTION_CLOSED_EOF",
-      "reason": "TLS/SSL connection has been closed (EOF) (_ssl.c:1011)",
-      "errno": null,
+      "reason": "TLS/SSL connection closed EOF",
       "last_reported_exception": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1011)>",
       "saved": 0,
       "duplicates": 0
@@ -189,10 +187,9 @@
       "HTTP_status": null,
       "HTTP_status_evidence": "UNKNOWN_NOT_REPORTED_FOR_URLERROR",
       "exception_type": "URLError",
-      "reason_code": "NETWORK_UNREACHABLE",
-      "reason": "Network is unreachable",
-      "errno": 101,
-      "last_reported_exception": "URLError: <urlopen error [Errno 101] Network is unreachable>",
+      "reason_code": "TLS_CONNECTION_CLOSED_EOF",
+      "reason": "TLS/SSL connection closed EOF",
+      "last_reported_exception": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1011)>",
       "saved": 0,
       "duplicates": 0
     },
@@ -207,10 +204,9 @@
       "HTTP_status": null,
       "HTTP_status_evidence": "UNKNOWN_NOT_REPORTED_FOR_URLERROR",
       "exception_type": "URLError",
-      "reason_code": "NETWORK_UNREACHABLE",
-      "reason": "Network is unreachable",
-      "errno": 101,
-      "last_reported_exception": "URLError: <urlopen error [Errno 101] Network is unreachable>",
+      "reason_code": "TLS_CONNECTION_CLOSED_EOF",
+      "reason": "TLS/SSL connection closed EOF",
+      "last_reported_exception": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1011)>",
       "saved": 0,
       "duplicates": 0
     }
@@ -256,15 +252,10 @@
     "remaining_failed_names_equal_prior_minus_three": true
   },
   "exact_saved_input_provenance": {
-    "RSS_artifact_id": 13860384933,
-    "RSS_artifact_name": "rss-live-result-1",
-    "ZIP_bytes": 535682,
-    "ZIP_SHA256": "2230276661698a8c07112218c6001dd88e324298c6488b4ed7cea313a448ec00",
-    "member": "rss-live-result.json",
-    "member_bytes": 21522,
-    "member_SHA256": "0f8259e415afa63d07a351413d2f7b979a00e6a21e11ae86e06a659c8c171838",
-    "config_SHA256": "009f889bc1d7cc967904af83164eb36b8362fcc86803182f30f901ab4f91d229",
-    "collector_feed_id_definition": "sha256(UTF8 configured feed URL), matching RSSCollector.run"
+    "id": 13878056131,
+    "bytes": 541436,
+    "SHA256": "35eae937f0f909568106e387569950170f328287b736068d1d3e51d801d0d48d",
+    "new_document_manifest_SHA256": "dc22cbb7d9627a4667c21be633da1ba89c691c7e1f2c043ad71f7586e015e964"
   },
   "interpretation_limits": {
     "diagnostic_is_last_surfaced_exception_only": true,
@@ -282,5 +273,12 @@
     "production_writes_or_dispatches": 0
   },
   "objective_version": "bct-objective-1",
-  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "prior_observation_preserved_at": "https://github.com/irewon1-lgtm/bottleneck-control-tower/blob/2571a1375d00a98d19304b4492d1dcdaf5f7f689/docs/v4/operations-recovery-20261111/CURRENT_RSS_SOURCE_BLOCKERS.json",
+  "prior_observation_reason_counts": {
+    "HTTP_NOT_FOUND": 7,
+    "NETWORK_UNREACHABLE": 3,
+    "TLS_CONNECTION_CLOSED_EOF": 1
+  },
+  "workflow_completed_at_UTC": "2026-11-11T17:39:11Z"
 }

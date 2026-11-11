@@ -1,143 +1,203 @@
-# BCT V4 운영 복구 결과
+# BCT V4 자동화 전체 복구 — 최신 결과
 
-작업 ID `BCT_V4_OPERATIONS_RECOVERY_20261111`. 인계 `42ee0a6ee6b0ed21228a0409aa64e973359bf65f`에서 이어 진행했다. 계획 `BCT-V4-Q-1.0`, Objective Lock, Q1~Q7 기준, HOLDOUT·정답·최초 발견·승격 기준은 보존했다. 이전 여섯 수정의 실행 파일 해시와 유효한 시험을 재사용했고, 이번에는 미실행 운영 복원·전달 경로에 실제 Actions를 실행했다.
+작업 `BCT_V4_AUTOMATION_FULL_RECOVERY_20261111`, 계획 `BCT-V4-Q-1.0`. Objective Lock, Q1~Q7, 원문·최초 발견·정답·HOLDOUT·승격 기준을 유지했다. 새 모델·유료 API·새 토큰은 사용하지 않았다. 확인된 운영 결함을 수정·시험·개발 브랜치에 push했고 PR45~53을 일반 병합했다. 최신 main의 실제 Gate와 릴리스 영수증도 연결했다. 원문·기존 DB를 초기화하거나 검증 조건을 완화하지 않았다.
 
-**최신 암호화 DB, 승인 CPU runtime/bridge, 제한 REVIEW 전달, 고정230 원문 QA는 실제 실행으로 확인했다. 사용자 승인에 따라 [PR #44](https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/44)를 일반 병합했고 실제 main은 `e31743a91ab3604421ec7c35796dfda8f63dd51f`다.** 병합 시각은 2026-11-11 18:54:46 KST이며 [새 main CI](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42999153532)도 PASS다. 새 main의 전체 Gates0~6·소유자 변수 활성화·최초 신규 예약 판독/저장은 아직 완료하지 않았다.
+최종 보고서 관측: **2026-11-12T03:14:27.975891+09:00**. 최종 증거 커밋: **2571a1375d00a98d19304b4492d1dcdaf5f7f689 (실행 증거 커밋; 최종 보고서 HEAD와 실제 실행 pin은 구분)**.
 
-| 기능 | 기존 상태 | 복구 결과 | 실제 운영 검증 |
+## A. 운영 자동화 판정과 기능별 상태
+
+**전체 판정은 PARTIAL이다. 실제 신규 문서 1개의 수동 수집→CPU 완독→비공개 저장·새 프로세스 복원→REVIEW 전달→공개 Pages 반영은 PASS다.** 최신 main `5082723`의 Gate0~6·릴리스 영수증·262파일 guard·CI는 PASS다. 예약 CPU 변수 쓰기는 실제 GitHub403으로 거부되어 기존 설정/false가 남았다. 최신 예약 수집은79신규 기사→40검증 본문까지 진행됐지만 CPU는 SKIPPED다. 앞선 수동 자료군의 나머지5문서는 부분 판독 상태다. 의미 검토 완료·독립 수급쌍·예측 성능·7일 연속 운영은 입증되지 않았다.
+
+| 기능 | 이전 상태 | 최신 판정 | 실제 실행 근거와 남은 범위 |
 |---|---|---|---|
-| 운영 릴리스 Gate0~6 | FAIL | BLOCKED | 복원 요청의 잘못된 run/누락 해시를 수정. 과거 증거 ZIP 무결성 보존, 현재 후보 품질·230원문 QA PASS. 전체 새 Gate 실행/새 영수증은 미완료 |
-| CPU 자동 실행 | SKIPPED | BLOCKED | 기존 승인 seed·runtime·bridge 복원 PASS. 마지막 관측 두 변수는 옛 SHA/false; 예약 신규 판독 0. 입력 캐시·RSS_RUN 전달 결함 수정은 승인된 main에 반영 |
-| 최신 연구 DB 복원 | BLOCKED | PASS | 실제 generation6 암호/해시/8테이블/새 프로세스 복원·generation5 보존·원격 무변경 검증 |
-| RSS 수집 | PARTIAL | PASS / BLOCKED | 공식 대체 RSS2개 수정, 임시 최신 DB에 신규20→재처리 중복20. 나머지11개 BLOCKED·정상 빈 피드1개 NO_NEW_INPUT; XML 판별 수정은 PR46 승인 대기 |
-| 공식 원문 확보 | PARTIAL | PASS / BLOCKED | 저장 실제 창의 출처검증2·보류3, 고정230 원본 확인/QA. 모든 공식 출처의 최신 갱신 완료가 아님 |
-| 제품·사건 판독 | PARTIAL | PASS / NOT_RUN | 기존 일반 장비·주문 추출 보수 보존, 230원문 결정론적 QA 실행. 신규 CPU 문서 판독은 NOT_RUN |
-| 수요·공급 연결 | BLOCKED | BLOCKED | 실제 적격 독립쌍0 유지. scalar→source-bound 계약 부재 및 공급풀 미확인을 억지 보충하지 않음 |
-| REVIEW_LEAD | 운영 미검증 | PASS / NOT_RUN | 실제 Actions 제한 복원·과거 상태 복사본 HOLD2·중복2·새 프로세스·기존 파일 보존 PASS. 의미 검토 완료0. 가장 최근 구main 자동 실행은 신규9HOLD 저장; 변경 후 운영 쓰기는 NOT_RUN |
-| 연구 결과 저장·복원 | PARTIAL | PASS / NOT_RUN | 실제 기존 연구/CPU 상태 복원·동일 DB bridge 회복 PASS. 신규 CPU 연구 결과의 영속 저장은 NOT_RUN |
-| 대시보드 데이터 갱신 | BLOCKED | PASS / BLOCKED | 새 코드·진행 영수증의 기존 Pages 연쇄 export 검증. 본문 연구 스냅샷10월14일은 그대로이며 최신 연구 데이터 갱신 PASS로 세지 않음 |
-| 실제 전체 왕복 | NOT_RUN | BLOCKED | 수동/REPLAY 단계별 실증은 완료. 신규 자동 수집→CPU→새 비공개 결과→검토의 한 LIVE 왕복은 미실행 |
+| 운영 릴리스 Gate0~6 | FAIL | PASS | 최신 I43067179780 필수8단계 전부 실제 PASS. PR53 일반 병합 뒤 main5082723의 unchanged guard262파일·CI43072919702 PASS |
+| CPU 자동 실행 | SKIPPED | 수동 PASS / 예약 BLOCKED | C6 수동 신규 판독·저장·복원 성공. 자동 CPU44회는 최신 7일 창에서 모두 SKIPPED. 기존 CODE_SHA/ENABLED=false와 실제 변수 PATCH403이 남음 |
+| 최신 연구 DB 복원 | BLOCKED | PASS | generation6 암호·manifest·14자산·8테이블·새 프로세스 복원 PASS. 사실 전용 capsule이며 원래 전체 본문 DB 복원으로 주장하지 않음 |
+| RSS 수집 | PARTIAL | PARTIAL | 최신 실제 예약79신규/1026중복,125피드 중114성공·11실패. 수동18/1085 및 이전 legacy79/1024와 구분. 정상 빈 USGS는 NO_NEW_INPUT |
+| 공식 원문 확보 | PARTIAL | PARTIAL | 최신 예약79 seed 중40 CAPTURED·31출처보류·6 HTTP403·2 TIMEOUT. 수동 자료군의 검증6본문과 별도 집계. HTTP transaction 총수/pending은 UNKNOWN |
+| 제품·사건 판독 | PARTIAL | PARTIAL | 고유6문서 중1완독·5부분,72성공창. 제품 제안163개와 span417개는 확인된 제품·완성 사건 수가 아님 |
+| 수요·공급 연결 | BLOCKED | BLOCKED | 완독 사례에서 적격 독립쌍0. 미완독 문서 전체는 UNKNOWN/public null. 신규 적격 S2/S3각0, TARGET 필드 보충·승격 없음 |
+| REVIEW_LEAD | 전달 미검증 | 전달 PASS / 의미 검토 PENDING | 실제 REVIEW43064438463 PASS,18버전별 판독 영수증/고유6문서 복원·해시 확인. 의미 검토 전부 PENDING·완료0 |
+| 연구 결과 저장·복원 | PARTIAL | 수동 PASS | 비공개 ACK20·SQLite cc9ba416… 새 프로세스8테이블 복원. 기존41완료 키를 보존하고 신규 완독 키1개 추가→42. 실패 후 암호화된24창도 재판독0으로 회복 |
+| 대시보드 데이터 갱신 | BLOCKED | PASS | 실제 Pages43064438487 배포, 공개 generation20·snapshot·dashboard 해시 일치. 동일 PC/모바일 V5 문맥에서 이전 ACK14→새 ACK20 전환 관찰 |
+| 실제 전체 왕복 | NOT_RUN | 수동 신규1건 PASS / 예약 미입증 | 정확한 문서·본문 버전·CPU 창·private ACK·REVIEW·실제 화면이 연결됨. 예약 전체 왕복과 7일 시작은 NOT_STARTED |
 
-## 실제로 복구한 항목과 근거
+판독이 완료된 문서도 근거가 부족하면 HOLD로 남는다. 이번 완독은 `READ_COMPLETE`이면서 `READ_EVIDENCE_HOLD`다. 이를 의미 검토 완료, 완성 TARGET 또는 예측 성공으로 바꾸지 않았다.
 
-### 최신 generation6
+## B. 실제 신규 문서 1개의 전체 왕복
 
-기존 Secret이 전달되는 기존 `official-state-read` Actions 문맥을 사용했다. 새 암호·토큰을 만들거나 값을 출력하지 않았다. 초기 실제 복원 [42988130440](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42988130440)에 이어, 읽기 전용 새 프로세스/이전 세대 검증을 보강한 [42989791426](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42989791426)을 정확한 개발 SHA `ab2cc04a13af13903fe980e2532a073f2a4ad7aa`에서 실행했다.
+추적 문서는 `270bbad5-f286-4b2a-8947-7894ee0b2cb1`이다. RSS43032161571(실제 수동)→acquisition43032565649(실제 workflow_run)의 신규6개 원문 중 하나이며, producer main은 `933a29638c06d72d4cf4c17d843cfec2978066d2`다.
 
-- 실제 최신 월별 generation6, 14자산/38,084,522바이트의 암호문·평문/manifest 해시 확인.
-- SQLite **8테이블**, **42,601 정량 버전 / 38,046 숫자 관측 / 21,916 물리량 관측** 재계수. 숫자 행을 수급 사건으로 세지 않았다.
-- 새 Python PID2262에서 계정 자격증명을 제거하고 동일 SQLite 해시로 재복원.
-- generation5의 **60,049 사건 행과 metadata 전체가 generation6의 60,071행에 보존**됨을 검증.
-- 복원 조회의 전후 원격 head·14자산·기존 DB 무변경. 읽기72초/검증62초, 각각120초 이내.
+| 연결 항목 | 실제 값 |
+|---|---|
+| Body SHA256·source version |`3515cd52456dbeff0cc3bd7445019527b2be17be7fa80a1dd504ec3112bc3d6e` |
+| Native raw SHA256 |`7b55987303f90028af724ada5682588652f1696c09d79cf89c387ab298106542` |
+| 원문·창 |본문2381자, 실제 계획·판독 창2372자.10/10창 성공, 실패0·미판독0. 빠진9자는 문단 개행 |
+| 실행 코드 |C6 `6e788d18cf85fdb834b451bb35585a8b58925301`; workflow main I `5c66cd8ef5ec47046024027d52e0e8b755d1f012` |
+| 실제 신규 CPU 실행 |43063708462,43064155117 모두 SUCCESS. 앞선 C5의24창은43063536538에서 정확히 회복했고 새 판독으로 다시 세지 않음 |
+| 판독 결과 |`READ_COMPLETE / READ_EVIDENCE_HOLD`, 이유 `TARGET_FIELDS_UNKNOWN`. product/specification/region/customer_group/supply_pool 다섯 필드 모두 확인되지 않아 HOLD |
+| 창·분석 바인딩 |window SHA256 `433a9a588de4a04c6bdbf12d767da6a344072152391c54f47eb2781e6a756a35`; analysis SHA256 `6a057ee478e8140f42d2f6946180efbe7da9602536ae48c3fe6e22c24a94706d` |
+| 비공개 저장 |ACK20, private commit `20db8addf53958b38ec2f5a44ee41d1abfca1c4d`, checkpoint `bc4585c54d8da30a0635fb609a2a6ea927c0765f` |
+| SQLite 새 프로세스 복원 |SHA256 `cc9ba41642bc8d010c9795c0b9dd724202bb33ad4121f4bbae848c901d19656b`,8테이블. 기존41완료 키 보존·중복 제외, 신규1추가→42완료 키 |
+| 실제 REVIEW |43064438463 PASS. REVIEW branch `ffbd019e4794650d6d58e3beecba41877baa58dc`에서18영수증을 새 프로세스로 복원·해시 확인. 대상의 정확한 원문·창·queue 버전·HOLD 포인터 연결; 의미 검토는 PENDING |
+| 실제 공개 버전 |generation20, snapshot SHA256 `be43e03166f5bed707a404175a4ae475f41b606564f346b68b31ad16f5edb8e3` |
+| 실제 Pages·화면 |Pages43064438487 PASS. dashboard SHA256 `2cc5e97633ddc5df8226b74fc7e95db91ba83fdb9ea478041810b5d8ebfc646f`; manifest·snapshot·research generation 일치. V5의 지속 PC/모바일 문맥에서 이전 ACK14→generation20 전환과 대상10/10 HOLD를 관찰 |
 
-이는 사실 전용 capsule 복원이다. 원래 본문·인용 전체가 복원됐다는 뜻이 아니다. 이후 별도 승인 CPU bridge 회복은 동일 DB bytes를 유지한 metadata/ACK append이며, 위 읽기 전용 시험과 분리한다. 상세: [DB_RESTORE.md](DB_RESTORE.md), [DB_RESTORE.json](DB_RESTORE.json).
+공개 generation의 RSS_run_id/acquisition_run_id는 실제 schema에서 null인 채 보존했다. 위 수집 계보는 실제 acquisition/원문 해시·CPU 입력 증거로 연결하며, null 필드를 임의로 채워 같은 연결로 꾸미지 않았다. 중간 generation18 화면은 관찰하지 않았고, 실제로 관찰한20에 누적72창이 포함됨을 검증했다. dashboard SHA2cc5…는 V5가 완독/HOLD 전환을 관찰한 시점의 고정 증거다. 이후 code·collection 갱신으로 dashboard byte 해시는 달라지므로, 최신 상태는 LATEST_SCHEDULED_SOURCE_WAVE의8개 해시·generation 대조로 연구20/be43… 유지까지 확인했다.
 
-### 승인 CPU 실행환경과 bridge
+모델은 기존 승인 `fastino/gliner2-base-v1`, revision `f9634218e53580c56edf0de97ca1a7d3f1c2354e`다. 승인된9파일 해시·71개 의존성을 재사용했고 신규 설치·유료 API 호출0이다. 상세: [C6_ACTUAL_NEW_DOCUMENT_ROUND_TRIP.json](C6_ACTUAL_NEW_DOCUMENT_ROUND_TRIP.json), [C6_REVIEW_PAGES_ACTUAL.json](C6_REVIEW_PAGES_ACTUAL.json), [C6_BROWSER_SAME_CONTEXT.json](C6_BROWSER_SAME_CONTEXT.json).
 
-[설정 진단42988176131](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42988176131)에서 실제로 `BCT_V4_CPU_CODE_SHA=da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6`, `BCT_V4_CPU_RESEARCH_ENABLED=false`를 확인했다. 따라서 현재 pin 비교와 활성화 조건이 모두 false다. 기존 Secret/전용 토큰 전달은 유효했다. 진단의 옛 `code_SHA_matches_tested_handoff=true`는 da7과 비교하는 필드여서 현재221fa 일치로 오해하지 않았다.
+## C. 실제 처리량 — 자료군과 단위를 분리한 집계
 
-이번 지시가 승인 seed 복구를 포함하므로, 기존 `6dea292` seed와 동일한 모델/revision/9파일 해시/71개 고정 의존성을 확인한 뒤 [42989488936](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42989488936)에서 **동일 승인 seed를 재구성**했다. 다른 모델 선택이나 실행 pin 변경은 없다. 패키지 wheel 전체의 과거 bit identity는 주장하지 않는다.
+| 단계·단위 | 실제 수치 | 해석 |
+|---|---:|---|
+| 이전 예약 수집 자료군 |RSS79신규/1024중복→17신규 검증 원문 |43025401279→43025842520, 이전 legacy producer. 현재18/6 계보와 합산하지 않음 |
+| 현재 실제 수동 RSS |18신규 기사·18고유URL/1085중복 |43032161571, canonical10047→10065. 수동 event이며 예약으로 바꾸지 않음 |
+| 수집→seed 제외 |기존 완료 corpus URL2개 |동결 필터와 literal RSS manifest의 정확한 재생으로18−2=16을 설명. 제외된 원문의 현재 버전은 재요청·재검증하지 않음 |
+| 신규 seed 결과 |16=CAPTURED6+PROVENANCE_BLOCKED10 |지속된 seed 처리 결과 수. HTTP transaction 수가 아님 |
+| 신규 원문·출처 검증 |6문서 |native/body/version 해시 정확히 확인. 별도 acquisition unverified_source_holds1은 다른 범위이므로10과 합산하지 않음 |
+| 실제 본문 HTTP 요청 /본문 pending |UNKNOWN /UNKNOWN |공개 receipt null.18URL·16seed·6capture 또는 retry 설정으로 추정하지 않음 |
+| 별도 추가 원문 경로 |추가본문0/추가 유효 primary0 |6seed capture와 다른 단계 |
+| 신규 CPU 고유 문서 |6개 참여:완독1·부분5 |각 실행의6 touched를 합산해18문서로 세지 않음 |
+| 신규 CPU 고유 성공 창 |72 |C5회복24+C6신규24+24. 같은24창의 회복·복원·REVIEW 전달을 새 판독으로 중복 계산하지 않음 |
+| 실제 신규 판독 문자 |21,463자 |고유 성공창의 실제 판독 누적. 원문 전체 길이나 제안 수와 다른 단위 |
+| 아직 미판독 |60창/공백 제외10,274자 |새 프로세스 복원 상태의 실제 잔여 수치.5부분 문서를 완료로 처리하지 않음 |
+| CPU span /제품 제안 |417 /163 |원문 연결 span과 **제품 제안** 수. 확인된 제품·독립 사건 수가 아님 |
+| CPU 판독·분석 영수증 |18버전별 기록/고유6문서 |서로 다른 판독 버전 기록.18개의 고유 문서나 의미 검토 완료가 아님 |
+| 의미 검토 완료 |0 |전부 semantic PENDING.완독 대상의 evidence HOLD는 정확히 보존 |
+| 완독 대상 적격 독립쌍 |0 |대상에 근거 없는 TARGET 필드를 보충하지 않음 |
+| 부분·미판독 전체 독립쌍 |UNKNOWN/public null |공개 null을0으로 덮지 않음 |
+| 신규 적격 S2/S3 |0 /0 |승격·독립 선행 성공 주장 없음 |
 
-[runtime 검증42990702742](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42990702742): Python3.12.15/Linux-X64, 정확한71개 버전/추가 패키지0/pip check, 모델9파일 **845,067,152바이트**·고정 SHA, payload **2,025,505,375바이트<3GiB**, immutable 실행 코드 `221fa92b1cbff8950716ec373eac793ca340c873`의 오프라인 로드 PASS. 로드8.08초·peak2,126,776KiB·신규 추론0이다.
+실행별 신규 창/문자는 원 C5연구43060982183의24/4114, C6신규43063708462의24/8020,43064155117의24/9329다. 합계는72/21,463이며, 마지막 공개 배치의 `new_CPU_windows=24`/`new_CPU_characters=9329`와 구분한다. 공개 보존 창은 기존1277+신규72=1349이고, 완료 본문 키는41→42다.
 
-[bridge 회복42990897783](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42990897783)은 기존 private checkpoint를 읽어 같은 DB/완료 키를 CAS·ACK와 암호화 전달 캐시로 회복했다. DB/압축 checkpoint Git blob IDs와 SQLite `dc243451…`가 전후 동일하고 **1,277창/41완료 키/20검토**를 보존했다. metadata/ACK 두 커밋은 새 연구 사실로 세지 않는다. runtime cache `10344400333`의 압축 크기는1,058,256,865바이트다.
+첫 C4실패43057947172는 source export 전에 모델을 로드했지만 최종 관측·암호화 결과를 남기지 못했다. 그때의 추론·성공 창 수는 **UNKNOWN**이며0으로 쓰거나 보존된 판독으로 더하지 않는다. 실제 C5연구43060982183은24창을 암호화했지만 publisher가 yaml import로 실패했다. 정확한 ciphertext cache10365971981을43063536538에서 회복해 ACK·새 프로세스 복원 PASS를 얻었고, 회복의 신규 판독·모델 로드0을 확인했다. 실패 이력을 지우지 않았다.
 
-최종 [bridge freshness 회복42997763985](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42997763985)은09:45:21UTC에 완료됐다. 기존 checkpoint blob/SQLite/41완료 키를 그대로 유지하면서 ACK/history 두 커밋을 추가했고 최신 bridge cache10346946351(993,916바이트)을 생성했다. 그 관측 시점에 latest consumer와 producer가 일치했다. [CPU_FINAL_BRIDGE.json](CPU_FINAL_BRIDGE.json)에 근거를 남겼다.
+현재 수동 자료군 입력의 transport는1,310,662바이트 ZIP/4,384,278바이트 확장으로6개 native source를 전달했다. 전체 source/control cache는500,746,000바이트 압축으로 줄었으며 원래4.69GB archive 참조와 source/control 이력을 보존했다. 이를 모델 추론량으로 세지 않았다.
 
-후속 수동 consumer 검증이 predecessor 문맥을 바꾸므로, 활성화 전 마지막 bridge freshness 회복이 별도로 필요하다. 성공한 키·모델·인증을 무작정 다시 시험하는 것이 아니라 기존 `verify_predecessor` 계약을 유지하는 절차다. 현재 변수는 변경하지 않았고 신규 CPU 문서/문자/창은 모두0, 첫 예약 성공·7일 시작은 미완료다. 상세: [CPU_RECOVERY.md](CPU_RECOVERY.md), [CPU_RECOVERY.json](CPU_RECOVERY.json).
+### 실제 최근 7일 Actions 수치
 
-### 발견한 CPU 입력 결함의 최소 보수
+정확한 생성 시각 창은 **2026-11-04 18:00:41 UTC~2026-11-11 18:00:41 UTC**, KST **11월5일03:00:41~11월12일03:00:41**다. 5페이지·499고유 run을 읽었으며 GitHub total499와 같아 잘림이 없다. 고정 시점 metadata 통계이며 이후 실행의 미래 결과를 추정하지 않는다.
 
-원래 workflow는 `GITHUB_ENV`에 쓴 `RSS_RUN`을 같은 step에서 읽었다. 다음 step에서만 적용되는 값을 읽으므로 전달이 성립하지 않았다. 검증 Python과 다운로드를 이웃 step으로 분리했고, 기존 `verified_schedule`과 실행 pin은 유지했다.
+| 범위 | 전체 | SUCCESS | FAILURE | SKIPPED | CANCELLED | 대기 중 |
+|---|---:|---:|---:|---:|---:|---:|
+| 모든 branch/event |499|345|83|54|16|1|
+| main 모든 event |371|240|64|54|12|1|
+| main 자동 event |339|213|60|54|11|1|
+| main schedule만 |85|69|15|0|0|1|
+| main 수동 workflow_dispatch |17|14|3|0|0|0|
 
-또한 전체 캐시의 실제 확장 크기는 **51,460,031,534바이트**, 그중 evaluations가 **49,054,341,364바이트**였다. 원래 CPU가 불필요한 이력까지 풀었다. 새 stdlib helper는 기존 문서·raw·capture 버전 **2,402,577,107바이트**만 그대로 복원하고, ZIP digest·경로·중복·symlink·디스크·3GiB 입력/6GiB ZIP/2GiB reserve를 검증한다. 과거 미완료 source와 malformed/missing/ambiguous 처리는 기존221fa 처리기가 계속 판단한다. 날짜 필터로 과거 미완료 입력을 버리지 않는다. 전용 helper는 검토된 immutable `7d9188608a66520115727ff5daa30d13190f4958`에서 별도 sparse checkout하고 CPU 코드에는 섞지 않는다.
+자동 event는 schedule/workflow_run/repository_dispatch다. 성공한 자동 workflow 이름은 **7종**, 녹색 SUCCESS는213회다. CI/PR 시험 성공을 기능 성공으로 더하지 않았고, **7종 녹색을7기능의 실제 분석 성공으로 바꾸지 않는다.** AI annotation14SUCCESS는 실제 유료 API 판독이 아니며, preservation-only recovery와 read-only observer도 분석 성공과 다르다.
 
-실제 [42995363348](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42995363348)에서 runtime을 복원한 상태로 **4,598,165,007바이트 ZIP→2.40GB 입력**을98초에 복원했다. 전후 free disk를 기록했고, 시작89,208,590,336바이트·정리 후86,765,174,784바이트였다. source 의미/DB 쓰기/추론은0이다. 상세: [CPU_INPUT_TRANSPORT.json](CPU_INPUT_TRANSPORT.json), [cpu-source-transport.json](cpu-source-transport.json).
+| main 자동 workflow | 전체 | 성공/실패/SKIPPED/CANCELLED/대기 |
+|---|---:|---|
+| RSS live environment check |42|41/1/0/0/0|
+| New precursor evidence acquisition |43|41/0/1/1/0|
+| REVIEW_LEAD SHADOW intake |55|50/3/2/0/0|
+| Read-only BCT Pages |64|48/0/6/10/0|
+| V4 CPU private research consumer |44|0/0/44/0/0|
+| Future bottleneck body candidates |57|0/56/1/0/0|
+| RSS AI annotation |15|14/0/0/0/1|
+| BCT read-only evaluation observer |14|14/0/0/0/0|
+| BCT recovery storage gates |5|5/0/0/0/0|
 
-### 실제 REVIEW 및 고정230 원문 QA
+대기1회는 RSS AI annotation43072823646이며 RSS live 신규 수집 실행과 다르다. 최신 실제 RSS 예약은43069839035(17:36:44UTC 생성)다. 수동 Future G의 성공과 I Gate 성공은 자동 성공 수에 소급 합산하지 않았다.
 
-[REVIEW42990692268](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42990692268): 같은 실제 ZIP에서5capture+5raw **1,074,585바이트**만 복원했다. 출처검증 문서2건/보류3건이었다. 현재 상태 복사본은 중복2건, 정확한 직전 상태 `76ba081f…`의 별도 **PRE_INTAKE_REPLAY**는 새 HOLD2건→재실행 중복2건이었다. 의미 검토 완료0·alerts0이다. 원래 파일6,046/6,040개와 두 새 프로세스 복원을 확인했으며 운영 review ref는 바뀌지 않았다. 복사본 재생을 운영 신규 검토로 세지 않았다.
+자동60FAIL·54SKIPPED의 정확한 해당 시도 job/step을 확인했다. 기존112건의 분류를 재사용하고 새2건만 추가 조회했으며, 기간 밖으로 나간 과거1건은 제외했다.
 
-동시에 사라진 옛 artifact 대신 최신 캐시 안에서 **정확한 고정230**을 찾았다. fingerprint `acd344732f2f087b42767bfe32d9f16d96da6de49a766d6fc73f3c0ed298f9ec`,230본문/230raw 해시가 일치했다. 새 [42995363348](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42995363348)은 literal460파일 **41,784,646바이트**를 복사해 기존 운영 QA를 후보018f에서94초 실행했다. 후보164019b와 해당 QA/수집/추출/그래프7파일 해시가 같아 이 구성요소의 결과를 재사용한다. 원문 수정·HTTP·LIVE 쓰기는0이다.
+| 실패/보류 분류 | 건수 | 확인한 원인과 범위 |
+|---|---:|---|
+| Future 릴리스 검증 실패 |56|56건 모두 첫 guard 단계 실패를 확인했다. 세 역사 head의 대표 로그는 `validated code/test file set changed or missing`, 새 I43070231522의 실제 로그는 `main operating code differs from actually validated code`였다. 선별 대표 로그를 근거로 모든56개 예외 문자열을 전수 조회했다고 주장하지 않는다. 새 I 실패는 PR53 영수증 연결 전 기록이며 현재 J guard PASS와 구분 |
+| RSS 원격 게시 실패 |1|42128685872 Git push에서 GitHub가 `fatal error in commit_refs_rules`로 거부. 수집기/파서 실패가 아니며 세부 서버 원인은 UNKNOWN |
+| REVIEW 디스크 부족 |1|42502046388에서 불필요한 evaluations 이력까지 ZIP 확장하다 디스크 고갈 |
+| REVIEW public Git 실패 |2|43033762121/43033773972의 `PUBLIC_DATA_GIT_FAILED`; 별도 중복 인증 재현·수정과 실제 복구 성공 증거 연결 |
+| CPU 자동 SKIPPED |44|모든 실제 job SKIPPED. 고정 코드·enabled/main/상위 성공 guard를 확인. 현재 실행 문맥의 옛 CODE/false·PATCH403은 실제 확인했으나 과거44회 변수값을 모두 관찰했다고 주장하지 않음 |
+| 기타 자동 SKIPPED |10|Future1·Acquisition1·REVIEW2·Pages6의 진입 guard/needs 차단. 저장되지 않은 upstream payload나 개별 false predicate를 만들어내지 않음 |
 
-QA는230문서→682보존 사건, 제품 필드74·규격8·지역19·고객6·공급풀0으로, 완성 TARGET/독립쌍/후보는0이었다. 이는 TP/FP/FN 정확도 시험이 아니다. 기존 6문서·25제품 점수1/4/24는 개선됐다고 보고하지 않는다. 원래 raw/hash를 보존한3건의 기존 허용 derived-view 교정도 QA 보고서에 그대로 남겼다. 이전 FOX-XP/Sonoma의 두 사례 보수와 과거 정답/HOLDOUT은 변경하지 않았다.
+정본: [FINAL_SEVEN_DAY_ACTIONS.json](FINAL_SEVEN_DAY_ACTIONS.json), [FINAL_FAILURE_CLASSIFICATION.json](FINAL_FAILURE_CLASSIFICATION.json). 앞선02:15:22KST 통계·분류도 HISTORICAL_021522_KST 파일들에 보존했다. 7일 통계 창이 있다는 사실은 C6로7일 연속 운영했다는 뜻이 아니다.
 
-원문 QA 구성요소 PASS를 새로운 전체 Gates0~6 PASS로 바꾸지 않는다. 상세: [REVIEW_RECOVERY.md](REVIEW_RECOVERY.md), [REVIEW_ACTIONS_RECEIPT.json](REVIEW_ACTIONS_RECEIPT.json), [fixed230-copy.json](fixed230-copy.json), [cpu-source-gate6-qa.json](cpu-source-gate6-qa.json).
+### 최신 예약 수집 자료군 — 수동 완독 자료군과 분리
 
-### RSS 및 실제 처리량의 단위
+실제 예약 RSS43069839035는 **신규79/중복1026**,125피드 중114성공·11실패였고 canonical은10065→10144다. 실제 acquisition43070231555는 **40 CAPTURED /31 PROVENANCE_BLOCKED /6 HTTP403 /2 TIMEOUT**으로79 seed 결과를 구분했다. 별도 unverified_source_hold1은 다른 단위로 합산하지 않는다. 이40검증 본문은 CPU43071173782가 SKIPPED여서 새 CPU 판독0이다. 본문 HTTP transaction 수와 pending은 UNKNOWN으로 유지한다.
 
-14개 실패 피드를 각각 점검했다. ESA7개404, DOE6개는 현재 HTML로 이동, USGS1개는 유효 RSS지만0항목이었다. 공식 페이지가 명시한 DOE techlines/blog RSS2개만 수정했다. 나머지12개는 공식 대체 XML을 확인하지 못해 BLOCKED로 보존했다.125개 이름/순서와 기존 정상111개 URL은 그대로다. 최신 실제 canonical DB의 임시 복사본9,921행에서 신규20행을 저장해9,941행이 됐고 같은 캡처를 재처리한20건은 모두 중복이었다. 발표일도 원래20항목과 일치한다. 운영 DB는 쓰지 않았다. 상세: [RSS_RECOVERY.md](RSS_RECOVERY.md), [RSS_RECOVERY.json](RSS_RECOVERY.json).
+최신 실제 사이트는 collection43070231555의79URL/40본문을 표시하면서 기존 연구 generation20·snapshot be43…을 유지한다. JSON·manifest·해시 대조8개가 PASS다. 이40본문을 수동 자료군의6본문·72창·완독1건에 더해 판독 실적으로 부풀리지 않았다. 이 예약 수집→원문 확보→CPU SKIP은 현재 자동 운영 차단을 직접 보여준다. [LATEST_SCHEDULED_SOURCE_WAVE.json](LATEST_SCHEDULED_SOURCE_WAVE.json).
 
-| 별도 시험/자료군 | 입력 | 다음 단계/보류 | 성격 |
-|---|---|---|---|
-| 고친 RSS2개 | 실제 응답20항목 | 임시 DB 신규20→재처리 중복20 | 개발의 실제 요청/저장 시험; 자동 운영 갱신 아님 |
-| 저장된 운영 창 | capture5/raw5 | 출처검증2/보류3→복사본 HOLD2→중복2 | Actions REPLAY, 의미 완료0 |
-| 고정230 | 원본 metadata230/raw230 | 결정론적 사건682→완성 TARGET0→독립쌍0→후보0 | BACKFILL/소스 QA |
-| CPU runtime/bridge | 승인9파일/기존 checkpoint | 환경·8테이블·41완료 키 보존 | 실제 새 문서 판독0/새 결과 영속 저장0 |
-| 최신 월별 DB | generation6/14자산 |8테이블·새 프로세스·generation5 이력 보존 | 실제 읽기 전용 복원 |
+## D. 실제 사이트·main·Gates·운영·저장·배포 증거
 
-서로 다른 자료군을20→2→230처럼 합쳐 하나의 LIVE 왕복으로 계산하지 않는다. 실제 신규 자동 CPU 판독/저장0, 실제 검증 가능한 적격 독립 수급쌍0, 신규 적격 S2/S3 각각0이다.
+실제 사이트는 [Bottleneck Control Tower](https://irewon1-lgtm.github.io/bottleneck-control-tower/)다. 공개 generation20의 data_at은 `2026-11-11T17:03:11.149991+00:00`, 실제 build 생성은17:04:44.833363UTC다. 원래 역사 데이터 시각 `2026-10-14T23:16:13.592709+00:00`은 historical_data_at으로 보존했다. collection generation, 최신 연구 generation, 과거 이력 시각을 섞지 않았다. V5 실제 PC·모바일 동일 문맥에서 이전 ACK14→새 ACK20과 완독/HOLD를 관찰했고, 공개 snapshot·manifest·dashboard bytes 해시가 일치했다. 별도 수동 코드 push가 있어야만 연구 결과가 갱신되는 경로가 아님을 실제 workflow_run Pages로 확인했다.
 
-## Gates0~6와 운영 승인 경계
+운영 main은 일반 병합으로 관련 PR45~53을 반영했다. 최종 main J는 `5082723f515382a962184b36a31e34af17a7e07a`, 실제 검증 코드 I는 `5c66cd8ef5ec47046024027d52e0e8b755d1f012`, CPU immutable C6는 `6e788d18cf85fdb834b451bb35585a8b58925301`이다. C6 CI43062798371은 Python2210PASS·기존 독립 실자료 HOLDOUT부재1SKIP·JS34PASS, main I CI43063509313 및 최종 J CI43072919702는 SUCCESS다. 이 숫자는 코드 회귀 근거이며 예측 정확도가 아니다.
 
-현재 전체 Gate 상태는 **BLOCKED**다. 실제 새 operating SHA/run/artifact/digest의 일치 영수증은 아직 없으며 guard/파일 제외 규칙/기존 release receipt를 바꾸지 않았다.
+이전 main F `66b790f…`의 실제 Gate43045049058은 Gate0~6 전부 PASS다. artifact13870728991은58,714,110바이트/SHA256 `d926c9ffa9ed462d0ef4936ea01c97f352c977ab46451e8746d9076c0a539635`이며 실제 bytes/digest 검증을 통과했다. 그 진짜 영수증을 PR50으로 일반 병합한 G `07c525118a141f5d96cb56e30b8b9779809682ec`에서 원래 release guard가262파일을 PASS했다. guard·검증 제외·golden/HOLDOUT을 완화하지 않았다. F와 I의 `full_clean_status=BLOCKED`는 추가 FULL/독립 예측 완료 조건이며, 필수 Gate0~6 PASS와 구분한다. F 증거를 I 실행으로 날짜만 바꿔 재사용하지 않았다.
 
-| Gate | 현재 후보 전체 Gate 판정 | 확인한 부분/남은 의존성 |
-|---|---|---|
-|0 | NOT_RUN | 과거 checkpoint19파일/3,280cache 파일의 진짜 해시 복원은 PASS. 승인 후 새 main의 paired authoritative roots 검사는 별도 |
-|1 | BLOCKED | 원격 fault probe·보존 복구·운영 projection 쓰기를 포함. 정확한 대상 diff·CAS/원복 범위 검토 후 실행 |
-|2 | NOT_RUN | 이번14피드 접근 및 고정 원문 검증과 전체 Gate 실행을 구분. 같은 실패를 조건 변화 없이 반복하지 않음 |
-|3 | NOT_RUN | 실제 보존 inventory 복원은 PASS; 새 전체 Gate 문맥의 source 관측/상태 검증은 미실행 |
-|4 | NOT_RUN | 기존74개 source-version 보강/검색의 새 실행은 미실행; 과거 증거 소급 PASS 금지 |
-|5 | BLOCKED | 기존 Stage5 Qwen runtime·최대50개 신규 native 호출·candidate/tracking 원자 게시를 포함. 복원한 GLiNER runtime으로 대체하지 않음 |
-|6 | BLOCKED / PASS | 후보 회귀·품질·고정230 source 구성요소 PASS. 앞 Gate와 묶인 새 전체 Gate6·영수증은 미완료 |
+### 실제 Future G 운영과 최신 I Gate
 
-기존 artifact11783493914는 **2026-11-12 01:47:21 UTC(10:47:21 KST)** 만료다. 원본45,073,105바이트/SHA256 `00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a`·CRC·inventory를 검증해 `/tmp` 및 Git-ignored `var/v4/operations-recovery-20261111/preserved/`에 보존했다. 로컬 사본은 새 원격 릴리스 영수증이 아니며 원문을 새 공개 저장소에 복제하지 않았다.
+수동 Future43057867924는 **G에서 실제 SUCCESS**다. 같은 고정 Qwen의 native 반환5호출·완료5·유료 fallback0을 확인했다. 실제 게시 commit은 `1aad7a036182e252670085b510581f4fcf6d2af4`이고 worker lock은 IDLE로 해제됐다. 실행별 처리955는 처리 시도, body_ok455는 해당 처리 결과이며 실제 HTTP 요청 총수는 UNKNOWN이다. 최초 `new_documents_this_run=6073`은 기존 canonical backlog를 이 sidecar가 처음 발견한 수치다. 신규 RSS18 또는 신규 검증6원문에 더하지 않았다.
 
-운영 후보17파일은 새 raw DB/schema/모델을 main에 넣지 않는다. [MAIN_CANDIDATE.json](MAIN_CANDIDATE.json)에1,013Python PASS·기존 독립 holdout1SKIP·JS34PASS와 source QA 재사용 해시가 있다. [후보 PR CI](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42996830589)도 PASS다. 개발 `ab2cc04`(읽기 전용 DB proof), `bd9ee61`(피드/검증), `7d91886`(immutable helper), `fbbc4d0`(CPU 입력 전달)까지 단계별 push했다.
+보존 검증은 F의646완료 버전·1836review·3992문서를 모두 유지했고, 현재651완료·1841review·4795문서로 늘었음을 확인했다. 판단·review·failure·target 유실/변경 drift0이며 F의 이미 완료된50Qwen결과도50/50보존됐다. 이5신규 Qwen은 C6의72GLiNER창과 별도다. Future G는 수동이며 F에서 통과한 guard를 사용했으므로 최신 I 릴리스 증거가 아니다. 상세: [ACTUAL_FUTURE_G_OPERATING_RUN.json](ACTUAL_FUTURE_G_OPERATING_RUN.json), [I_PRE_GATE_PRODUCTION_PRESERVATION.json](I_PRE_GATE_PRODUCTION_PRESERVATION.json).
 
-main 반영은 사용자 승인 후 일반 merge만 사용한다. 승인된 새 main SHA를 확정한 뒤 Gates를 실행하고 진짜 run/artifact/digest를 연결한다. Gate1/5 쓰기 전에는 해당 시점의 paired root SHA와 영향 ID/필드를 고정하고 원복을 검토한다. 코드 원복은 PR의 일반 revert이며 force push/빈 DB 초기화가 아니다. 데이터 보상 게시에는 기존 CAS·보존 병합으로 동시 추가/원본/최초 발견/검토 이력을 유지해야 한다. PR44는 명시적 사용자 승인 후 일반 병합했다. main 강제 push·검증 우회·가짜 새 release receipt는0이다.
+안전한 terminal·불변 head·IDLE lock·F seal 보존 확인 뒤 최신 I의 실제 Gate43067179780을 시작했다. Gate0~6의 필수8단계가 모두 실제 SUCCESS다. 입력 root21개·전체 cache·고정230원문460파일 복원도 PASS다. reader_batch_limit1은 기존 지원 실행량 제한이며 qualification1/10/50 기준을 그대로 유지했다. I에서 새 Qwen1호출을 했고, F의 이미 완료된50자료는 재판독하지 않았다.
 
-## 소유자가 해야 하는 항목
+| 최신 릴리스 필드 | 최종 실제 검증 값 |
+|---|---|
+| I Gate43067179780 terminal·Gate0~6 |**SUCCESS,2026-11-12 02:20:21~02:49:09KST. Gate0/1·2·3·4·Stage5·Gate5·고정230복원·Gate6 전부 실제 SUCCESS** |
+| 실제 I artifact ID·크기·SHA256 |**13877912797 /60,268,206바이트 /4dae80ee05be92ef6d7987c10817067c223a7f0e62eb9b03b46f3e5c582f6afe. 실제 ZIP 바이트 독립 검증 PASS. 만료2026-12-12 02:48:59KST** |
+| 진짜 영수증 PR53·일반 병합 |**PR53, headceebce742d5b31c89c863cfad5bdbea59121a79f, CI43072575819 SUCCESS 뒤 일반 병합. 기존 metadata2파일만 변경** |
+| 최종 main J·CI·unchanged guard |**5082723f515382a962184b36a31e34af17a7e07a /CI43072919702 SUCCESS /02:57:29KST unchanged guard PASS262파일. 검증 코드 I와 관측 코드 J는 기존 규칙상 제외된 영수증 metadata2파일만 다름** |
 
-1. **운영 코드 승인 완료:** 사용자가 “PR #44 main 반영 승인”을 전달했고 일반 병합 완료. 새 main `e31743a`에서 Gate workflow가 만료된 고정230 artifact run37790294699를 여전히 참조하는 후속 차단을 발견했다. 이미 검증한 동일 원문의 복원 경로를 PR45로 보수했고 CI 통과 후 승인 요청했다. 빈 피드 분류 오류 PR46도 별도로 검증해 승인 요청했다. 이를 알면서 운영 쓰기 Gate를 먼저 실행하지 않았다. 승인 없는 merge는 실행하지 않는다.
-2. **CPU 변수:** PR 적용과 마지막 유효 bridge 확인 뒤, GitHub 저장소 **Settings → Secrets and variables → Actions → Variables**에서 기존 항목의 연필/Edit를 눌러 `BCT_V4_CPU_CODE_SHA=221fa92b1cbff8950716ec373eac793ca340c873`, `BCT_V4_CPU_RESEARCH_ENABLED=true`를 저장한다. 현재 앱의 Variables 권한은403이므로 대신 변경하지 못했다. 소유자 설정 완료 응답은 아직 없다. 실행 pin 자체·Secret은 변경하지 않는다. 승인/최신 bridge 조건 전에는false를 유지한다.
-3. 수동 consumer 진단 또는 미게시/생략 consumer 실행으로 predecessor가 달라지면, 기존 **Actions → V4 CPU private research consumer → Run workflow → main → purpose=bridge-recover**의 유효 회복이 먼저 필요하다. 다른 모델 설치나 새 키는 필요하지 않다. 첫 실제 예약의 신규 판독·검증·비공개 ACK·복원이 성공하기 전까지 운영 PASS/7일 시작으로 세지 않는다.
+실제 I ZIP과 API run·job·artifact·tree를 기존 검증기로 대조했고, 원래28d0b8c6의 guard bytes·파일 제외 규칙은 변경하지 않았다. `prepare-receipts`는 PASS262파일·21root pins·모든 cache·compact460파일을 확인했다. 최신 J의 live API guard도 PASS다. [FINAL_GATES_I.json](FINAL_GATES_I.json), [RELEASED_MAIN_J_GUARD.json](RELEASED_MAIN_J_GUARD.json). 실제 [I Gate](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43067179780), [PR53](https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/53), [J CI](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43072919702).
 
-**개발 코드 정상화:** 확인된 범위 PASS, 개발 push/PR44 승인·main 일반 병합 완료. **운영 자동화 정상화:** BLOCKED(고정230 복원 경로·조건부 변수·새 main Gate·실제 신규 예약 왕복 대기). **미래 병목 예측 성능:** BLOCKED(적격 독립 수급 근거/독립 선행 평가 부재). 실패/대기 중에도 원래 DB·원본·완료 키·검토 이력은 유지했고 빈 상태로 성공 처리하지 않았다.
+### DB·원문·실패 후 회복의 보존
 
-## 개발 CI·실제 Pages 배포 추가 증거
+월별 generation6는 실제 읽기 전용 복원42989791426에서14자산/8테이블,42,601정량 버전·38,046숫자 관측·21,916물리량 관측과 새 프로세스 복원을 확인했다. generation5의60,049사건 행이 generation6의60,071행에 보존됐고 원격 head·asset·원래 DB는 바뀌지 않았다. 이는 사실 전용 capsule 복원이며 전체 원문·인용 복원이 아니다.
 
-개발 증거 커밋 `2e86fd82edb1eeb3fb21c1afb8add7da6b890e98`의 [CI43000796112](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43000796112)는 Python1,870PASS·동결 실자료 HOLDOUT 부재1SKIP·JS34PASS다. [Pages43001061701](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43001061701)는 main workflow `e31743a`에서 해당 개발 코드를 검증·배포했다. 실제 공개 manifest/dashboard SHA와 전체 progress JSON의 PR44 승인·병합 영수증 일치를 확인했다. 본문 `data_at`은 여전히 2026-10-14T23:16:13.592709+00:00이다. 상세 [DASHBOARD_RECOVERY.md](DASHBOARD_RECOVERY.md).
+CPU 새 결과는 ACK20의 실제 SQLite8테이블·42완료 키로 새 프로세스 복원했고 기존41완료 키를 전부 포함했다. 보존 창1277→1349, span4905→5322, 제품 제안1326→1489, 과거 review20을 유지했다. 원 C5실패에서 암호화된24창은 정확한 run/attempt/cache/parent 바인딩을 확인해 재판독0으로 회복했다. 오래된 bridge ACK를 새 연구 결과로 세거나 실패한 runner의 미저장 작업을 복원했다고 주장하지 않았다. [DB_RESTORE.json](DB_RESTORE.json), [C6_ACTUAL_SEALED_RESULT_RECOVERY.json](C6_ACTUAL_SEALED_RESULT_RECOVERY.json)에 근거가 있다.
 
-최종 메타데이터 관측 창(2026-11-11 08:35:56UTC 이후, 문서 전용 마지막 push 이전)의 실제47runs는 SUCCESS42/FAIL2/SKIPPED1/진행중2다. 수동을 제외한 자동 event40회는 SUCCESS35/FAIL2/SKIPPED1/진행중2, 성공한 workflow 종류6개(CI·Pages 포함)다. 이는 CPU 실제 신규 판독이나 전체 왕복 성공 횟수가 아니다. FAIL은 body release guard42991420784와 이후 보정된 개발 보존시험43002283054, SKIPPED는 CPU42995175645다. 정확한 범위/개별 run은 [ACTIONS_OBSERVATION.json](ACTIONS_OBSERVATION.json), 엄밀한 최근7일 예약 집계는 대시보드 영수증에 분리했다.
+### 확인된 운영 결함과 수정의 범위
 
-## 후속 고정230 복원 수정 — 승인 대기
+운영 원인군은 이 작업 범위에서10종이다. 이전에 보존한 별도6개 제품/추출 수정과 중복 합산하지 않았다. 초기8종에 이번 실제 실패로 확인한 URL export·stdlib import2종이 추가됐다. 시험 개수나 commit 개수로 결함 수를 늘리지 않았다.
 
-[PR45](https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/45) `8ae9fb8716ed211a317481fbe93e8062898c91d3`는 만료된 원문 artifact 경로만 교체한다. 원문 fingerprint/기존 helper7d918/모든 Gate 조건/모델/실행 pin/릴리스 guard는 유지한다. [PR CI43002162715](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43002162715)·push CI43002046730 PASS, main 후보 전체1,020Python PASS·기존 HOLDOUT1SKIP·JS34PASS, 독립 검토 추가 차단0이다. 동일 보수는 개발 `faa90b960b1694ceffa23ce7c0cb0218cb0d54de`에 commit/push했고, 개발 환경의 관련14개 시험도 PASS다. PR45 병합과 실제 Gate 운영 쓰기는 명시적 승인 요청 상태이며 아직 실행하지 않았다. CPU 정기 실행 OFF는 별도 소유자 설정 응답 전까지 유지한다.
+| 원인군 | 수정·실행 근거 |
+|---|---|
+|1.잘못된 resume run·누락 pins/inventory·고정된 옛 origin 선택 |018f5bb1(PR44), 후속 be232a25/a3043227(PR48). 인증된 실제 archive/pins 복원과 F Gate PASS |
+|2.DOE 공식 RSS2개 이전 |bd9ee610/018f5bb1. 공식 대체2개만 반영, 실제 운영 정상 응답·기존 기사 중복 확인 |
+|3.같은 step에서 GITHUB_ENV RSS_RUN 재사용 |164019bed(PR44). 검증 ID 생성/소비 step 분리, 실제 신규 RSS→acquisition 바인딩 PASS |
+|4.CPU 평가 이력 무제한 확장·거대 입력 |7d918860/164019bed와 PR48 compact/delta. 원래49GB evaluations를 제외하고 source/control 보존, 실제 bounded transport PASS |
+|5.만료된 fixed230 artifact 참조 |8ae9fb871(PR45). 같은 fingerprint·230body/230raw 원본을 실제 F Gate에서 복원·QA PASS |
+|6.정상 빈 RSS/Atom의 malformed 오분류 |7594788f/30d678757(PR46). 저장된 USGS원문 검증·실제 NO_NEW_INPUT 정상 처리 |
+|7.REVIEW의 중복 Git authorization |6deb4f5/4f564d520(PR49). 실제 실패43033773972를 보존하고 수정 후 실제 REVIEW PASS |
+|8.무해한 자동 all-skipped CPU run의 predecessor 오염 |ef97984c/606b0f4b/C4(PR49). API로 입증된 자동 inert skip만 허용, manual/failed/unknown 차단 유지 |
+|9.원문 origin fragment와 strict export 충돌 |실제43057947172 RESUME_URL_NOT_CLEAN, C5 58817b1(PR51). strict sanitizer를 유지하면서 안전하지 않은 locator를 정확한 hash로 보존; 실제 후속 신규 판독 PASS |
+|10.stdlib publisher가 무거운 분석 의존성 yaml을 import |실제43060982183 publishFAIL, ff29b9a를 포함한 C6 6e788d18(PR52). 분석 import 분리, 정확한 ciphertext 회복·후속 실제 publish/새 프로세스 복원 PASS |
 
-이번에 코드로 보수한 결함은 원인군 기준6종이다: 복원 요청 run·해시 누락, DOE 공식 RSS2개 이전, RSS_RUN step 간 전달 실패, CPU 평가 이력 무제한 확장, 고정230 artifact 만료 참조, 정상 빈 피드를 malformed로 처리. runtime/bridge/gen6 복원 성공은 별도 복구 결과이며, 이전 디버깅6개 결함과 이6종을 혼합하지 않는다. 전체 Gate와 운영 새 판독이 성공한 것으로 집계하지 않는다.
+PR47 보존 수명·compact corpus, PR48 upload-before-publication·attempt 이름·공개 receipt·Pages 연결은 복구 능력과 무결성 보강으로 기록했다. 이전 실제 artifact 유실 사고가 입증되지 않은 부분을 별도 운영 사고로 꾸미지 않았다. fixture timing·동결 자산 매핑·host/interpreter·lint·반복 시험 수정도 추가 운영 결함으로 세지 않았다.
 
-## 최근 실제 예약 자료의 단계별 집계
+기존 SEC·Census·EIA·USGS·TED·USAspending Q1/Q2 연결기와 원래 수동 운영 경로는 보존했다. 이번 후속 복구에서 이들 전체를 새로 실수집하거나 정기 활성화하지 않았다(NOT_RUN). generation6 검산 PASS는 새 수집 PASS나 수급 사건 수가 아니며, 실제 새 판독은 위 RSS 공식 원문 계보로 별도 입증했다.
 
-이 자료군은 PR44 적용 전 [RSS42990958603](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42990958603) → [acquisition42991420695](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42991420695) → [REVIEW42995175538](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42995175538)로 이어진 실제 예약 실행이다. RSS47신규/1,037중복, canonical9,921→9,968행 저장, 125피드 중111성공/14실패다. acquisition은 신규 검증9문서/추가본문0/출처HOLD1/완성 TARGET0/독립쌍0이다. 본문 URL 총 시도와 각 상태는 공개 요약에 없고 기존 private artifact에 남으므로 47건을 모두 본문 시도로 가정하지 않는다. 기존 paired 후보/추적 원본에서도 해당 run의 상세 카운터를 찾지 못했다. 불필요한 전체 archive 재다운로드는 하지 않았다.
+## E. 남은 한계와 소유자 조치
 
-동일 REVIEW의 immutable 신규 receipt를 읽어 실제 **신규9/중복0/HOLD9/의미검토 PENDING9/완료0/alerts0**을 확인했다. 기존 제한복원 PRE_INTAKE_REPLAY의2HOLD와 다른 자료군이다. CPU42995175645는 SKIPPED라 신규 CPU판독/새 CPU결과저장0이다. 이를 한 CPU 전체왕복 PASS로 집계하지 않는다. 정확한 상태·Git blob·receipt 경로는 [LATEST_SCHEDULED_CHAIN_COUNTS.json](LATEST_SCHEDULED_CHAIN_COUNTS.json)에 보존했다.
+RSS는 여전히11개 upstream에서 막힌다.7개 ESA404와4개 DOE transport(1network-unreachable·3TLS-EOF)이며 정확한 source 이름·ID·마지막 저장 예외는 [CURRENT_RSS_SOURCE_BLOCKERS.json](CURRENT_RSS_SOURCE_BLOCKERS.json)에 있다.4개 URLError의 HTTP status·궁극 원인을 추정하지 않았고 확인되지 않은 대체 URL을 만들지 않았다. USGS정상 빈 피드는 파싱 복구이며 새로운 광물 근거 확보는 아니다.
 
-## 개발 CI 보존 시험 보정
+제품 제안163개를 검증된 제품163개로 보고하지 않는다. 완독한1문서는 다섯 TARGET 필드가 없어 evidence HOLD이며, 미완독5문서/60창/공백 제외10,274자가 남아 있다. 완독 사례 적격 독립쌍0, 부분 문서 전체는 UNKNOWN/public null이다. 신규 적격 S2/S3각0, 기존 개발 TP1/FP4/FN24는 개선됐다고 보고하지 않는다. 독립 실자료 HOLDOUT이 없어 예측 성능은 BLOCKED다. 의미 검토18버전 영수증은 전부 PENDING이며 완료0이다.
 
-개발 `faa90b9`의 [CI43002283054](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43002283054)는 과거 UI snapshot 보존 시험이 변경된 현재 bct-recovery workflow를 옛 해시와 대조하면서1건 실패했다. 기존 golden manifest를 수정하지 않고 원래 workflow bytes(SHA256 `b4f32d78070a23b12a3b03b99fa5fb6fb471693b5885574efcfebbda7215121d`)를 동결 자산에 보존한 뒤, 이 시험이 해당 원본을 계속 검증하도록 매핑했다. 현재 workflow의 실행 계약은 새7개 시험이 계속 검증한다. 개발 보정 커밋 `2159979`의 관련8개 시험 PASS이며 전체 CI 결과는 후속 기록으로 구분한다. 릴리스 guard/검증 제외 규칙/과거 정답/HOLDOUT은 변경하지 않았다.
+예약 CPU 변수 쓰기를 기존 정상 권한 경로로 실제 시도했으나 `BCT_V4_CPU_CODE_SHA` PATCH가403 `Resource not accessible by integration`으로 거절됐다. ENABLED쓰기 시도는 하지 않았으며 최근 실제 실행 로그의 설정은 옛 `da7cb9bc…`/false다. 권한을 우회하거나 새 키·토큰을 요구하지 않았다. [C6_REPOSITORY_VARIABLE_WRITE.json](C6_REPOSITORY_VARIABLE_WRITE.json)에 정확한 응답을 보존했다.
 
-## 정상 빈 피드의 분류 오류 보수
+**소유자가 해야 하는 설정은 한 번이다.** 최신 I Gate·진짜 릴리스 영수증·최종 main J guard가 모두 PASS이며(D), 저장소 **Settings → Secrets and variables → Actions → Variables**에서 기존 항목을 편집한다.
 
-저장된 실제 USGS 응답643바이트(SHA256 `148ee2cbd14f29c4c40d809dfe336a200fc73a2297f1ed035e07e050a5473c0c`)는 제목·링크·설명 등 필수 메타데이터를 갖춘 항목0개의 정상 RSS2.0이었다. 공통 파서의 무조건적 “feed has no entries” 오류를 보수해 정상 RSS/Atom 빈 응답만 기존 succeeded 상태·신규0·errorNone으로 저장한다. 공급자 하드코딩/스키마 변경/기사 생성은 없고 HTML·DTD·잘못된 XML/항목/날짜·시간대 차단은 유지한다. 단위는 **NO_NEW_INPUT**이며 광물 coverage는 미해결이다. 따라서 운송·파싱 차단은11개, 정상 빈 응답1개를 별도로 기록한다. 앞의12개 BLOCKED는 당시 최초 분류였고 원래 실제 실패 로그를 소급 변경하지 않았다.
+- `BCT_V4_CPU_CODE_SHA = 6e788d18cf85fdb834b451bb35585a8b58925301`
+- `BCT_V4_CPU_RESEARCH_ENABLED = true`
 
-개발 `7594788`·`30d678757ce1da785b1387e2a841dbd99cbbc63a`를 commit/push했다. 관련80개 시험, [최종 코드 CI43003680158](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43003680158)의 **1,919Python PASS·기존 HOLDOUT1SKIP·JS34PASS**가 확인됐다. 별도 [PR46](https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/46) `a57cda356b0de227530132f3ad6ca3a9c4fde6ff`는 새 main 후보에서1,055Python PASS·1SKIP·JS34PASS다. PR45와 파일 겹침이 없으며 main에 아직 적용하지 않았다. 상세 [EMPTY_FEED_RECOVERY.md](EMPTY_FEED_RECOVERY.md).
+개발 브랜치 최신 문서 SHA나 main J SHA를 CODE 변수에 넣지 않는다. 위 C6는 실제 버그 수정·회귀시험·신규 원문 왕복을 통과한 실행 코드이며 기존 승인 모델/seed/weights는 유지했다. 다른 모델·Secret·API key·새 토큰 변경은 필요하지 않다. RSS AI API 설정 부재로 해당 의미 판독이 SKIP된 상태도 별도로 유지하며 유료 키 추가를 소유자 조치에 포함하지 않는다.
 
-## 현재 승인 경계와 최종 코드 시험
+설정만으로 예약 성공이나7일 운영 PASS를 선언하지 않는다. 첫 실제 예약 수집→CPU→private ACK·새 프로세스 복원→REVIEW/Pages가 기준을 만족한 시점의 실제 run/시각부터7일을 센다. 현재 수동 전체 왕복 성공은 입증됐지만 예약7일 시작은 NOT_STARTED다. 입력 보존·compact cache가 있어도 진짜 Gate-proof 갱신은 동일 최신 코드의 실제 Gates·진실한 receipt PR이 필요하다. 오래된 증거 사본이나 partial checkpoint로 자동 갱신됐다고 보고하지 않는다.
 
-PR45 `8ae9fb8`와 PR46 `a57cda3` 모두 ready for review·push/PR CI PASS이며 아직 main 미반영이다. 사용자 지시8항에 따라 PR45 병합+기존 Gate 실제 운영 효과, PR46 일반 병합을 각각 구체적 범위로 승인 요청했다. 승인/응답을 시간 경과로 대체하지 않는다. 실제 Gate0~6/새 릴리스 영수증/신규 CPU 전체 왕복은 아직 미실행이다. 2026-11-11 19:25:52 KST 관측까지 19:00 이후의 새 예약 RSS run이 없었고 CPU 변수 소유자 완료 응답도 없어, 같은 조회를 무한 반복하지 않고 감시를 종료했다. 이후 새 승인·설정·상위 실행 문맥이 확인되면 해당 지점부터 재개한다.
 
-최종 실행 코드 `30d678757ce1da785b1387e2a841dbd99cbbc63a`의 실제 [CI43003680158](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43003680158)는 1,919Python PASS·독립 실자료 HOLDOUT 부재1SKIP·JS34PASS다. 보존 시험 실패43002283054는 원본 해시를 유지한2159979로 보정됐고 해당 수정까지 포함한 이 CI가 통과했다. PR46 [실제 CI43004062734](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43004062734)도 PASS다. [EMPTY_FEED_MAIN_PR.json](EMPTY_FEED_MAIN_PR.json)에 적용 범위·해시·시험을 보존했다.
+최종 완료 판정은 **개발 코드 정상화 PASS(확인된 운영 결함과 릴리스 범위)**, **실제 예약 전체 운영 BLOCKED(설정403/CPU44SKIP)**, **미래 병목 예측 성능 BLOCKED(실제 독립쌍·HOLDOUT·Q6 미입증)**로 분리한다. 배포·수동 판독 성공을 예측 성능 또는 예약 성공으로 바꾸지 않는다.
 
-**개발 코드 정상화 PASS(확인된6개 원인군·회귀·개발 push), 운영 자동화 정상화 BLOCKED(승인/Variables/새main Gate/신규 CPU 저장·복원 미실행), 미래 병목 예측 성능 BLOCKED(적격 독립쌍0·신규S2/S3각0·독립 선행 HOLDOUT 부재)**로 구분한다.
+정상본 보존: 기존 CPU41완료 키·1,277창·20검토·원래 monthly generation5/6와 frozen 평가를 유지했다. 첫 실패는 이전 private ACK를 변경하지 않았고, 이후 암호화된24창은 원래 producer/부모 CAS를 유지해 재판독 없이 회복했다. main 강제 push·기존 DB 초기화·검증 우회0이다. 현재 새 CPU 상태는42완료 키/1,349창이며 원래41키를 정확히 포함한다.
+
+릴리스 artifact 만료2026-12-12 02:48:59KST 이후에는 실제 최신 코드 Gate와 진짜 영수증 갱신이 필요하다. 자동 input 보존은 가능하지만 과거 proof의 날짜만 갱신하거나 자동 PASS시키지 않는다.
+
+기존 운영 보고서는 [증거 커밋2571a13의 원본 REPORT](https://github.com/irewon1-lgtm/bottleneck-control-tower/blob/2571a1375d00a98d19304b4492d1dcdaf5f7f689/docs/v4/operations-recovery-20261111/REPORT.md)에 보존했고, 최초 full-pipeline-debug 보고서·원래 평가·정답도 수정하지 않았다. 진행 정본은 기존 [PROGRESS.json](../PROGRESS.json)의 동일 quantitative_plan 하위다.
+
+실행 증거 링크: [C6 CI](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43062798371), [신규 CPU 완독](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43064155117), [REVIEW](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43064438463), [데이터 연쇄 Pages](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43064438487), [최신 예약 RSS](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43069839035), [원문 확보](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43070231555), [CPU 자동 SKIP](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43071173782).
