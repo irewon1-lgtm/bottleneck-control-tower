@@ -74,6 +74,8 @@ def test_public_projection_is_generation_bound_and_does_not_export_private_text(
     assert public['trace'][0]['document_id'] == DOC
     assert public['trace'][0]['source_verification'] == 'EXACT_NATIVE_AND_BODY_HASHES'
     assert public['trace'][0]['read_state'] == 'READ_COMPLETE'
+    assert len(public['trace'][0]['analysis_sha256']) == 64
+    assert public['trace'][0]['model'] is None  # absent metadata is never invented
 
 
 def test_bootstrap_does_not_relabel_old_research_as_today(tmp_path):
