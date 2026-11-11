@@ -1,0 +1,156 @@
+{
+  "task": "BCT_V4_AUTOMATION_FULL_RECOVERY_20261111",
+  "snapshot_cutoff_UTC": "2026-11-11T13:43:49Z",
+  "observation_kind": "READ_ONLY_CACHE_AND_WORKFLOW_METADATA_NO_PAYLOADS",
+  "processing_code_SHA": "7afb1a25590ff604fd6293d237877f456b7f62b0",
+  "runtime_workflow_SHA": "c6fd5771720cc9bac5ffd97fa7a8af4067542d76",
+  "runtime_verification_run": {
+    "id": 43030199072,
+    "run_attempt": 1,
+    "event": "workflow_dispatch",
+    "status": "completed",
+    "conclusion": "success",
+    "head_branch": "codex/bct-v4-integration",
+    "head_sha": "c6fd5771720cc9bac5ffd97fa7a8af4067542d76",
+    "created_at": "2026-11-11T13:33:30Z",
+    "updated_at": "2026-11-11T13:34:13Z",
+    "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43030199072"
+  },
+  "runtime_verification_jobs": [
+    {
+      "name": "runtime-verify",
+      "conclusion": "success"
+    },
+    {
+      "name": "q1-key",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "archive-storage-trial",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "q1-source-prior",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "monthly-storage-trial",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "publish",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "q1-publish",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "q1-connectivity",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "q1-source-process",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "q1-source-publish",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "research",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "official-state-read",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "source-transport-verify",
+      "conclusion": "skipped"
+    }
+  ],
+  "active_cache_usage": {
+    "full_name": "irewon1-lgtm/bottleneck-control-tower",
+    "active_caches_size_in_bytes": 1060244691,
+    "active_caches_count": 3
+  },
+  "caches": [
+    {
+      "id": 10344400333,
+      "key": "v4-cpu-runtime-Linux-X64-3.12.15-fff880f684241e7320bcb1f19eecf3f5ad9a32f15f730cc2351aae63c13bda10",
+      "ref": "refs/heads/main",
+      "version": "b5485c3010bcdf8ad0e6f8cac951e9452062bc1f557b6f862cf45139b6d66b85",
+      "size_in_bytes": 1058256865,
+      "created_at": "2026-11-11T08:46:32.207445Z",
+      "last_accessed_at": "2026-11-11T13:33:48.829883Z"
+    },
+    {
+      "id": 10346946351,
+      "key": "v4-cpu-private-bridge-42997763985-1",
+      "ref": "refs/heads/main",
+      "version": "a9051bf481b7eb85cc5eb5aa6ba359b1bad504de5a3b1ae81ab7ea524f4b898f",
+      "size_in_bytes": 993916,
+      "created_at": "2026-11-11T09:45:18.563379Z",
+      "last_accessed_at": "2026-11-11T09:45:18.563379Z"
+    },
+    {
+      "id": 10344798276,
+      "key": "v4-cpu-private-bridge-42990897783-1",
+      "ref": "refs/heads/main",
+      "version": "a9051bf481b7eb85cc5eb5aa6ba359b1bad504de5a3b1ae81ab7ea524f4b898f",
+      "size_in_bytes": 993910,
+      "created_at": "2026-11-11T08:56:01.430918Z",
+      "last_accessed_at": "2026-11-11T08:56:01.430918Z"
+    }
+  ],
+  "cache_list_complete": true,
+  "free_cache_safety": {
+    "active_cache_bytes": 1060244691,
+    "reserved_bytes": 3221225472,
+    "safety_bound_bytes": 8589934592,
+    "active_plus_reserve_bytes": 4281470163,
+    "within_8GiB_safety": true
+  },
+  "bridge_payload_integrity": "NOT_RECHECKED_METADATA_ONLY",
+  "last_verified_bridge_parent": {
+    "producer_job": "publish",
+    "producer_run_id": "42997763985",
+    "producer_attempt": "1",
+    "cache_id": 10346946351,
+    "private_commit_baseline": "b20f3e4ecd3e2b9f2bf0222d5f56199d1965decc",
+    "sqlite_sha256_baseline": "dc2434510ec58e247c838353ad7c8d95f7f127161431ec55e4db1849f80fa7db"
+  },
+  "freshness_assessment": {
+    "method": "Executed unchanged C2 verify_predecessor function against current public run metadata and last verified bridge parent; hypothetical next ID only, no workflow dispatch",
+    "guard_result": {
+      "status": "BLOCKED_BEFORE_MODEL",
+      "reason_code": "STATE_BRIDGE_STALE_OR_PREVIOUS_PUBLICATION_UNCONFIRMED"
+    },
+    "latest_predecessor_run_id": 43030199072,
+    "latest_predecessor_attempt": 1,
+    "bridge_producer_run_id": 42997763985,
+    "runtime_diagnostic_forwarded_bridge": false,
+    "also_intervening_natural_skipped_run": 43029892334,
+    "required_next_action": "After final main/Gates and all CPU manual diagnostics, run existing main purpose=bridge-recover immediately before intended actual reading; no config activation from this snapshot",
+    "after_manual_read": "A successful actual reader/publisher automatically creates its own fresh bridge; no extra bridge-recover is needed unless another same-workflow run intervenes",
+    "risk": "Any later skipped/diagnostic same-consumer workflow run invalidates immediate-predecessor freshness again; metadata snapshot is not a future-readiness guarantee"
+  },
+  "effects": {
+    "cache_payload_downloads": 0,
+    "cache_payload_bytes_downloaded": 0,
+    "seeds": 0,
+    "model_loads": 0,
+    "new_CPU_inferences": 0,
+    "private_writes": 0,
+    "Variables_writes": 0,
+    "dispatches": 0
+  },
+  "evidence_sha256": {
+    "cpu-cache-metadata-current.json": "cf091ecabbe30b53d2f33eb4043704947b94b79cc77d27cd30a92ff975c4351b",
+    "cpu-cache-usage-current.json": "d1d17cdd68bd071341f44731a65f608b5e4e061991820bac28af11c68cb37b1e",
+    "cpu-consumer-runs-current.json": "ed70620295b6cc405805cbacd01eaa4d62ff99a7076267933650fd93d54d6642",
+    "cpu-runtime-43030199072-jobs.json": "1e8df2ad9b993886f82c4988ed5a3816db6a90c5241852746a2e4ca0eaf833ad"
+  },
+  "guard_source_sha256": "62214c87ae123999444778e5c2be4a0df6b553ba405c7f03144eaa252f330f0d"
+}

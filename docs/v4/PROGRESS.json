@@ -243,7 +243,7 @@
     }
   ],
   "scope": "Private-state storage/permission separation only, free CPU research. No public main/data runtime write token; no operating changes, new model/cache/RSS/oldCPU reprocessing, AI or automatic S2/S3/LIVE. Actual activation conditional on owner setup, verified exclusive permission and source archival rights.",
-  "updated_at": "2026-11-11T11:21:51.839274+00:00",
+  "updated_at": "2026-11-11T11:53:04.712844+00:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
@@ -7622,7 +7622,7 @@
         },
         "new_model_selection": false
       },
-      "updated_at": "2026-11-11T11:21:51.839274+00:00",
+      "updated_at": "2026-11-11T11:53:04.712844+00:00",
       "main_candidate": {
         "commit": "164019bed86c2e5db660911813ab428c061c768a",
         "pr": "https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/44",
@@ -7649,7 +7649,7 @@
         "source_coverage_unresolved_for_empty_feed": true,
         "empty_feed_development_commit": "30d678757ce1da785b1387e2a841dbd99cbbc63a",
         "empty_feed_main_PR": "https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/46",
-        "empty_feed_main_applied": false,
+        "empty_feed_main_applied": true,
         "empty_feed_related_tests": 80,
         "existing_production_feed_counts_unchanged_as_historical_receipt": true
       },
@@ -7724,7 +7724,9 @@
         "independent_review": "NO_NEW_BLOCKERS",
         "approval": "EXPLICIT_BLANKET_APPROVAL_20261111",
         "actual_Gates_run": "NOT_RUN",
-        "production_writes_by_this_fix": 0
+        "production_writes_by_this_fix": 0,
+        "merged": true,
+        "actual_merge_sha": "2452d50e9ebc33090c6cb7eea8d9168e075aa54f"
       },
       "code_defect_repairs": {
         "count": 6,
@@ -7773,10 +7775,11 @@
         "javascript_passed": 34,
         "push_CI": 43003990199,
         "PR_CI": 43004062734,
-        "main_merged": false,
+        "main_merged": true,
         "approval": "EXPLICIT_BLANKET_APPROVAL_20261111",
         "CI": "PASS",
-        "draft": false
+        "draft": false,
+        "actual_merge_sha": "63b0f9650d53e164f72a2e0dde3c42d09d930b67"
       },
       "schedule_watch": {
         "cutoff_utc": "2026-11-11T10:25:52Z",
@@ -7789,12 +7792,73 @@
       "full_automation_recovery": {
         "task_id": "BCT_V4_AUTOMATION_FULL_RECOVERY_20261111",
         "authorization": "FULL_RECOVERY_AUTHORIZATION.json",
-        "status": "IN_PROGRESS_BEFORE_FINAL_CODE_FREEZE",
+        "status": "FROZEN_MAIN_ACTUAL_GATES_RUNNING",
         "base_main": "e31743a91ab3604421ec7c35796dfda8f63dd51f",
         "base_development": "a6f511760c6e5a4b10b0f1d51ac77c73b40e5589",
         "Q_plan_id": "BCT-V4-Q-1.0",
         "no_new_master_plan": true,
-        "next_action": "Integrate confirmed CPU→source-boundreview→privatepersist→allowlistedgeneration→Pages handoff fixes; reuseverifiedPR45/46/tests. Then normalmergeapprovedrelatedPRs, freezeactualmain/codepins, realGates0-6 and genuine receipt; latestbridge/config prerequisite beforeCPUenable. SeparatemanualLIVE/scheduled/7day/prediction outcomes."
+        "next_action": "Observe actual Gate outcomes on frozen main933a296; diagnose any failure before retry. Adopt genuine receipt+resume only after actual required steps. Use new small-delta producer input for manual LIVE CPU after fresh bridge; verify private restart, REVIEW, durable public generation and Pages. Owner Variables403 remains separate.",
+        "current_main": "933a29638c06d72d4cf4c17d843cfec2978066d2",
+        "merged_PRs": [
+          45,
+          46,
+          47,
+          48
+        ],
+        "main_CI": 43031885912,
+        "code_dependencies_currently_integrated": [
+          "cpu_review2c6+15b",
+          "public_snapshot_coref61"
+        ],
+        "model_inferences_new": 0,
+        "real_Gates_current_code": {
+          "status": "RUNNING_NOT_PASS",
+          "run_id": 43032067823,
+          "full_pipeline": false,
+          "preservation_only": false
+        },
+        "Variables_access": "HTTP403_EXISTING_INTEGRATION_NO_OWNER_BROWSER_TOOL",
+        "Variables_access_evidence": "FULL_RECOVERY_VARIABLE_ACCESS.json",
+        "browser_baseline": "FULL_RECOVERY_BROWSER_BASELINE.json",
+        "completion": {
+          "code": "IN_PROGRESS",
+          "automatic_operations": "BLOCKED_CONDITIONS_PENDING",
+          "prediction_performance": "BLOCKED"
+        },
+        "processing_code_SHA": "7afb1a25590ff604fd6293d237877f456b7f62b0",
+        "workflow_integration_SHA": "c6fd5771720cc9bac5ffd97fa7a8af4067542d76",
+        "processing_CI": {
+          "run_id": 43030097108,
+          "Python_pass": 2134,
+          "Python_HOLDOUT_skip": 1,
+          "JavaScript_pass": 34
+        },
+        "runtime_verification": {
+          "run_id": 43030199072,
+          "status": "PASS_SAME_APPROVED_SEED_RUNTIME_VERIFIED",
+          "new_inferences": 0,
+          "evidence": "FULL_RECOVERY_RUNTIME_C2.json"
+        },
+        "preserved_original": {
+          "run_id": 43020215888,
+          "artifact_id": 13854217801,
+          "readback": "PASS_19_ROOT_PINS_3280_CACHE_FILES",
+          "proof_renewed": false
+        },
+        "pending_PR": 48,
+        "preintegration_schedule": "PREINTEGRATION_SCHEDULED_CHAIN.json",
+        "main_regression": {
+          "Python_pass": 1137,
+          "Python_HOLDOUT_skip": 1,
+          "JavaScript_pass": 34
+        },
+        "main_code_freeze": "FINAL_MAIN_CODE_FREEZE.json",
+        "pre_Gate_refs": "FINAL_PRE_GATE_REFS.json",
+        "manual_RSS_new_input": {
+          "run_id": 43032161571,
+          "scheduled": false,
+          "status": "RUNNING"
+        }
       }
     }
   }
