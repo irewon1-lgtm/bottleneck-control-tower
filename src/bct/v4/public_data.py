@@ -96,7 +96,7 @@ def _load(git, base, path, names):
 
 
 def read_current(git):
-    git('fetch', '--no-tags', 'origin', REF)
+    git('fetch', '--no-tags', '--depth=1', 'origin', REF)
     base = git('rev-parse', 'FETCH_HEAD')
     names = set(git('ls-tree', '-r', '--name-only', base).splitlines())
     return {'commit': base, 'research': _load(git, base, RESEARCH, names),

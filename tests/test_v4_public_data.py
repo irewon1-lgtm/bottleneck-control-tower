@@ -97,3 +97,26 @@ def test_collection_order_uses_actual_utc_instant_not_iso_text():
     newer = {'collection_started_at': '2026-11-11T01:00:00+00:00', 'RSS_run_id': 3,
              'run_id': 4, 'completed_at': '2026-11-11T01:05:00+00:00'}
     assert _collection_order(older) < _collection_order(newer)
+
+
+def test_fresh_shallow_public_data_fetch_and_cas_need_only_latest_tree(tmp_path):
+    from bct.v4.public_data import persist, read_current
+    seed, bare, seedgit = repository(tmp_path)
+    for index in range(5):
+        (seed / 'canonical.sqlite3').write_text('latest canonical generation ' + str(index))
+        seedgit('add', '.'); seedgit('commit', '-m', 'Preserved canonical history')
+    seedgit('push', 'origin', 'HEAD:refs/heads/data')
+    receiver = tmp_path / 'fresh-public-receiver'
+    subprocess.run(['git', 'init', str(receiver)], check=True, capture_output=True)
+    subprocess.run(['git', '-C', str(receiver), 'remote', 'add', 'origin', bare.as_uri()], check=True)
+    def git(*args, input=None, env=None):
+        result = subprocess.run(['git', '-C', str(receiver), *args], input=input, capture_output=True,
+                                env={**os.environ, **(env or {})})
+        if result.returncode: raise ValueError('PUBLIC_DATA_GIT_FAILED')
+        return result.stdout.decode().strip()
+    before = read_current(git)
+    assert git('rev-parse', '--is-shallow-repository') == 'true'
+    assert git('rev-list', '--count', before['commit']) == '1'
+    result = persist(git, research=project(tmp_path / 'fixture'))
+    assert not result['unchanged'] and read_current(git)['research']
+    assert git('show', 'FETCH_HEAD:canonical.sqlite3') == 'latest canonical generation 4'
