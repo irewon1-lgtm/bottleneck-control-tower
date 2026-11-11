@@ -33,7 +33,7 @@ def github_api(token,method,path,data=None):
     try:
         with urlopen(req,timeout=25)as response:return response.status,json.load(response)
     except HTTPError as exc:return exc.code,{}  # Never expose headers or response text.
-    except (OSError,ValueError)as exc:
+    except (OSError,ValueError):
         raise ValueError('PRIVATE_STATE_NETWORK_OR_AUTH_TRANSPORT_FAILED')from None
 
 

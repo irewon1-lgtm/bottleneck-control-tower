@@ -1,7 +1,6 @@
 """CAS persistence for public receipts only; preserves every unowned data blob."""
 import importlib.util
 import json
-import os
 from pathlib import Path
 import tempfile
 from datetime import datetime

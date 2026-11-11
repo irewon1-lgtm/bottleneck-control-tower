@@ -1,5 +1,4 @@
 """Frozen real-source preparation and isolated acquisition safety checks."""
-import gzip
 import importlib.util
 import json
 from pathlib import Path

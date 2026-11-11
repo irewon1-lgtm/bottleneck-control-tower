@@ -3,7 +3,6 @@ import argparse
 import base64
 from datetime import datetime, timezone
 import hashlib
-import importlib.util
 import io
 import json
 import os

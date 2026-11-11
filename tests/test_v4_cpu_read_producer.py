@@ -1,10 +1,8 @@
 """Original model-run attribution survives analysis-only restoration and reuse."""
-import json
 
 import pytest
 
 from bct.v4 import cpu_automation as q,cpu_operations as op,cpu_resume as resume
-from bct.v4.store import sha
 from test_v4_cpu_automation import document,Extractor
 from test_v4_cpu_resume import cache_source
 

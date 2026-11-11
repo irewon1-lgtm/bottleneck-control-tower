@@ -7,7 +7,6 @@ from pathlib import Path
 import shutil
 
 from bct.v4 import cpu_operations as op,private_state as private
-from bct.v4.store import file_sha
 
 
 def main():
@@ -77,7 +76,7 @@ def main():
                         or manifest.get('acquisition_head_sha')!=(manual or context)['acquisition_run']['head_sha']):
                     raise ValueError('CPU_SOURCE_CHAIN_BUNDLE_MISMATCH')
                 delta=json.loads((a.rss/'new-document-manifest.json').read_text())
-                rehydrated=resume.hydrate(ledger,a.cache,policy,retry_analysis=True,
+                resume.hydrate(ledger,a.cache,policy,retry_analysis=True,
                     analysis_document_ids={item['document_id'] for item in delta['documents']},
                     analysis_body_keys=set(input_receipt.get('analysis_retry_body_keys',[])),
                     input_artifacts=input_receipt.get('input_artifacts',{}),

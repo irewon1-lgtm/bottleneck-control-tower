@@ -1,7 +1,6 @@
 """Durable public-data CAS preserves canonical state and private generation order."""
 from copy import deepcopy
 import os
-from pathlib import Path
 import subprocess
 
 import pytest

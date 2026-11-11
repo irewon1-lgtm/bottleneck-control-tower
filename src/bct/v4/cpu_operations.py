@@ -2,7 +2,7 @@
 
 No collector, new model, stage classifier, LIVE registration or scheduler.
 """
-from datetime import datetime,timezone
+from datetime import datetime as datetime, timezone as timezone
 import gzip
 import json
 import os
@@ -388,7 +388,6 @@ def publish_checkpoint(repo,source,expected_parent,*,publication_policy=None):
     Fixed ref code does NOT branch-scope a GitHub contents:write token. Server
     permissions must be separately verified before activating a writer job.
     """
-    import tempfile
     repo,source=Path(repo),Path(source)
     proof=json.loads((source/'checkpoint.json').read_text());archive=source/'checkpoint.sqlite3.gz'
     if proof['archive']!=archive.name or file_sha(archive)!=proof['archive_sha256'] or archive.stat().st_size>16*1024**2:

@@ -195,7 +195,6 @@ def test_preserved_actual_order_source_versions_and_locators_survive_delta(tmp_p
 
 
 def test_new_root_delta_keeps_exact_old_counterpart_and_not_unrelated_old_pairs(tmp_path):
-    from copy import deepcopy
     from bct import precursor_collection as collection,precursor_evidence_graph as graph
     from test_precursor_evidence_graph import pair,ASOF
     module=helper();buyer,supply=pair();other_buyer,other_supply=pair(contract='OTHER-99')

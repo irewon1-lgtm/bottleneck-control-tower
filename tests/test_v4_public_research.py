@@ -1,7 +1,6 @@
 """Public writer receipts expose current persisted processing without originals."""
 from copy import deepcopy
 import json
-from pathlib import Path
 import sqlite3
 
 import pytest

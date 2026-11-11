@@ -1,7 +1,6 @@
 """Preflight guard/storage/observations, never live prediction or7day results."""
 from pathlib import Path
 import json
-import sqlite3
 import subprocess
 import sys
 
@@ -49,7 +48,7 @@ def test_real_completed_queue_checkpoint_new_process_restore_no_model_load(tmp_p
     r=op.observe(l,trigger='SYNTHETIC_PREFLIGHT_TEST',execute=True,extractor=Forbidden())
     assert r['new_CPU_windows']==0 and not r['model_loaded_by_queue']
     assert r['seven_day_start'] is None and r['queue']['completed_windows']==67
-    proof=op.checkpoint(l,tmp_path/'checkpoint');before=op.table_digests(l.db);l.close()
+    op.checkpoint(l,tmp_path/'checkpoint');before=op.table_digests(l.db);l.close()
     command=[sys.executable,str(REPO/'tools/v4_cpu_preflight.py'),'restore','--checkpoint',str(tmp_path/'checkpoint'),'--root',str(tmp_path/'restored')]
     r=json.loads(subprocess.check_output(command,cwd=REPO))
     assert r['tables']==8

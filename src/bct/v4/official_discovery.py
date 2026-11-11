@@ -15,7 +15,7 @@ from bct.objective_lock import stamp_export, require_objective
 from . import official_sources as f, quantitative_counterpart as counterpart
 from . import quantitative_targets as q3
 from .evidence_path import TARGET
-from .procurement_review import quantity, project_changes
+from .procurement_review import quantity, project_changes as project_changes
 from .store import sha
 
 VERSION = 'bct-official-discovery-4'

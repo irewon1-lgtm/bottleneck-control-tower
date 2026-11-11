@@ -1,7 +1,5 @@
 """CPU input transport preserves source bytes and the pinned queue's holds."""
 import importlib.util
-import hashlib
-import json
 import re
 from pathlib import Path
 import stat

@@ -8,7 +8,7 @@ import zipfile
 import pytest
 
 from bct.objective_lock import stamp_export
-from bct.v4.public_research import encoded, seal
+from bct.v4.public_research import encoded
 from test_v4_public_research import project
 
 ROOT = Path(__file__).resolve().parents[1]
