@@ -118,7 +118,8 @@ def analyze_document(doc, queued, results, *, raw, as_of=None, related_documents
     native_hash = sha(bytes(raw)) if raw is not None else None
     if raw is None:
         result.update(review_state='SOURCE_VERIFICATION_PENDING', reason_code='SOURCE_ORIGINAL_NOT_AVAILABLE')
-    elif native_hash != doc.get('raw_sha256') or sha(body.encode()) != doc['body_sha256']:
+    elif (native_hash != doc.get('raw_sha256') or sha(body.encode()) != doc['body_sha256']
+          or doc.get('version', doc['body_sha256']) != doc['body_sha256']):
         result.update(review_state='SOURCE_VERIFICATION_PENDING', reason_code='SOURCE_VERSION_OR_HASH_MISMATCH')
     elif (doc.get('provenance') != 'PASS' or doc.get('provenance_verified') is not True
           or not doc.get('checks') or not all(v is True for v in doc['checks'].values())):

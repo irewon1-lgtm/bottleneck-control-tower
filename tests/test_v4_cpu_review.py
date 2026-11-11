@@ -112,6 +112,15 @@ def test_missing_native_original_keeps_source_verification_pending():
     assert result['strict_pair_count'] is None
 
 
+def test_conflicting_explicit_body_version_is_not_a_verified_source_review():
+    module = analyzer(); d, raw = source(); planned, results = receipts(d)
+    d['version'] = 'f'*64
+    result = module.analyze_document(d, planned, results, raw=raw, as_of=AS_OF)
+    assert result['review_state'] == 'SOURCE_VERIFICATION_PENDING'
+    assert result['reason_code'] == 'SOURCE_VERSION_OR_HASH_MISMATCH'
+    assert result['source_version'] == d['version'] and result['strict_pair_count'] is None
+
+
 def test_existing_timing_route_is_reached_with_explicit_independent_original():
     module = analyzer(); buyer, supplier = timing_documents(); d, raw = source(buyer)
     planned, results = receipts(d)
