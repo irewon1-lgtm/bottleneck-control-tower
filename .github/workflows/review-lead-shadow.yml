@@ -1,7 +1,7 @@
 name: REVIEW_LEAD SHADOW intake
 on:
   workflow_run:
-    workflows: [New precursor evidence acquisition]
+    workflows: [New precursor evidence acquisition, V4 CPU private research consumer]
     types: [completed]
 permissions:
   contents: write
@@ -21,48 +21,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          # The upstream source run may predate this receiver. Run reviewed
+          # receiver code from the immutable workflow commit instead.
+          ref: ${{ github.workflow_sha }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - run: python -m pip install -e .
       - name: Receive the existing saved-source artifact, not LIVE state
+        if: github.event.workflow_run.name == 'New precursor evidence acquisition'
         env:
           GH_TOKEN: ${{ github.token }}
           ACQUISITION_RUN_ID: ${{ github.event.workflow_run.id }}
-          ACQUISITION_STARTED_AT: ${{ github.event.workflow_run.created_at }}
+          ACQUISITION_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          ACQUISITION_HEAD: ${{ github.event.workflow_run.head_sha }}
         run: |
           set -euo pipefail
           mkdir -p var/review-handoff var/review-state
-          # A failed upstream run can still publish a valid verified cache.
-          # Keep SHADOW independent: read the artifact when it exists; when it
-          # does not, preserve an explicit blocked handoff without pretending
-          # the original evidence was processed.
-          artifact=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$ACQUISITION_RUN_ID/artifacts?per_page=100" \
-            --jq '.artifacts[] | select(.name == "precursor-private-cache" and .expired == false) | [.id, .size_in_bytes] | @tsv' | head -n 1)
-          read -r artifact_id artifact_size <<< "$artifact"
-          if [[ -n "$artifact_id" ]]; then
-            python -m bct.review_artifact --repository "$GITHUB_REPOSITORY" \
-              --artifact-id "$artifact_id" --expected-size "$artifact_size" \
-              --cutover "$ACQUISITION_STARTED_AT" --destination var/review-source-cache
-            echo "BCT_REVIEW_HANDOFF_AVAILABLE=true" >> "$GITHUB_ENV"
-          else
-            echo "BCT_REVIEW_HANDOFF_AVAILABLE=false" >> "$GITHUB_ENV"
-            echo "REVIEW_LEAD HOLD: verified precursor-private-cache artifact missing for upstream run $ACQUISITION_RUN_ID. Original upstream failure remains unresolved." >> "$GITHUB_STEP_SUMMARY"
-          fi
-          python - <<'PYTHON'
-          import json, os
-          from pathlib import Path
-          Path('var/review-window.json').write_text(json.dumps({
-              'collection_started_at':os.environ['ACQUISITION_STARTED_AT'],
-              'documents':[], 'source':'actual upstream workflow_run.created_at'}))
-          PYTHON
-          python -m bct.review_shadow handoff --delta var/review-window.json --cache var/review-source-cache --output var/review-handoff
-          test -f var/review-handoff/input.json
+          # Failed acquisition can still contain verified captures. Match the
+          # exact attempt and archive digest before the unchanged body loader.
+          python .github/scripts/receive_review_inputs.py source \
+            --run-id "$ACQUISITION_RUN_ID" --attempt "$ACQUISITION_ATTEMPT" --head "$ACQUISITION_HEAD"
       - name: Restore only the dedicated review state branch
         if: always()
         run: |
           set -euo pipefail
+          mkdir -p var/review-state
           review_sha=$(git ls-remote origin refs/heads/review-lead-shadow-state | cut -f1)
           echo "BASE_REVIEW_SHA=$review_sha" >> "$GITHUB_ENV"
           if [[ -n "$review_sha" ]]; then
@@ -84,16 +68,41 @@ jobs:
           python .github/scripts/review_shadow_frozen.py
           --input var/review-handoff/input.json
           --state var/review-state/review-lead-shadow
+      - name: Checkout the immutable source-free CPU receipt reader
+        if: always()
+        uses: actions/checkout@v4
+        with:
+          # Final reviewed processor pin is filled after the core freeze.
+          ref: '0000000000000000000000000000000000000000'
+          path: processor
+          persist-credentials: false
+      - name: Catch up ACK-bound public read evidence on every REVIEW event
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONPATH: processor/src
+          UPSTREAM_RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          set -euo pipefail
+          python .github/scripts/receive_review_inputs.py public --run-id "$UPSTREAM_RUN_ID" --processor-root processor
+          if [[ -f var/review-state/review-lead-shadow/shadow-activation.json ]]; then
+            shopt -s nullglob
+            for snapshot in var/review-public-inputs/*.json; do
+              python -m bct.v4.review_cpu_receipts --snapshot "$snapshot" --state var/review-state/review-lead-shadow
+            done
+          else
+            echo 'REVIEW CPU pointer pending: the separate frozen REVIEW state is not initialized.' >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Preserve append-only review state in its own branch
         if: always()
         run: python .github/scripts/persist_review_shadow.py
       - name: Preserve audit and important updates
         # An upstream failure without any source cache has no audit bytes to
         # upload. Avoid copying the same historical shadow store repeatedly.
-        if: always() && env.BCT_REVIEW_HANDOFF_AVAILABLE == 'true'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: review-lead-shadow-audit
+          name: review-lead-shadow-audit-${{ github.run_attempt }}
           path: var/review-state/review-lead-shadow/
           include-hidden-files: true
           retention-days: 30
