@@ -117,7 +117,10 @@ def test_real_restore_shell_orders_receive_before_copy_and_rechecks_digest(tmp_p
         'def argument(name): return Path(sys.argv[sys.argv.index(name)+1])\n'
         'assert argument("--cache").is_dir()\n'
         'argument("--destination").mkdir()\n'
-        'argument("--receipt").write_text("{}")\n'
+        'argument("--receipt").write_text(__import__("json").dumps({'
+        '"status":"PASS_EXACT_FIXED230_LITERAL_COPY","source_input_sha256":"acd344732f2f087b42767bfe32d9f16d96da6de49a766d6fc73f3c0ed298f9ec",'
+        '"documents":230,"body_hashes_verified":230,"raw_hashes_verified":230,"copied_files":460,"copied_bytes":41784646,'
+        '"copied_file_hash_map_sha256":"a489b7f008fa80bf3729d1563a29c7e60effd4da011ba9fa54abed010689e566"}))\n'
         'Path("copy-called").write_text("called")\n')
     runner = tmp_path / 'runner'; runner.mkdir()
     result = subprocess.run(['bash', '-c', command], cwd=tmp_path,
@@ -134,3 +137,45 @@ def test_real_restore_shell_orders_receive_before_copy_and_rechecks_digest(tmp_p
         assert (tmp_path / 'copy-called').exists()
         assert (runner / 'bct-recovery/fixed-precursor-qa').is_dir()
         assert (runner / 'bct-recovery/fixed230-copy.json').is_file()
+
+
+@pytest.mark.parametrize('changed_map', [False, True])
+@pytest.mark.parametrize('already_carried', [False, True])
+def test_compact_authenticated_resume_avoids_legacy_archive_and_rechecks_exact_file_map(tmp_path, changed_map, already_carried):
+    _, restore = restore_steps()
+    runner = tmp_path/'runner'; corpus = runner/'bct-recovery-resume/fixed-precursor-qa'; corpus.mkdir(parents=True)
+    (corpus.parent/'checkpoint.json').write_text('{"run_id":"20","code_sha":"'+ 'a'*40 +'"}')
+    if already_carried:
+        (runner/'bct-recovery/fixed-precursor-qa').mkdir(parents=True)
+        (runner/'bct-recovery/fixed230-copy.json').write_text('{"prior":"authenticated input receipt"}')
+    helpers = tmp_path/'.bct-fixed230-input/.github/scripts'; helpers.mkdir(parents=True)
+    (helpers/'copy_fixed230.py').write_text(
+        'import json,sys\nfrom pathlib import Path\n'
+        'def argument(name): return Path(sys.argv[sys.argv.index(name)+1])\n'
+        'assert argument("--cache").name=="fixed-precursor-qa"\n'
+        'assert argument("--cache").parent.name=='+repr('bct-recovery' if already_carried else 'bct-recovery-resume')+'\n'
+        'argument("--destination").mkdir()\n'
+        'argument("--receipt").write_text(json.dumps({'
+        '"status":"PASS_EXACT_FIXED230_LITERAL_COPY","source_input_sha256":"acd344732f2f087b42767bfe32d9f16d96da6de49a766d6fc73f3c0ed298f9ec",'
+        '"documents":230,"body_hashes_verified":230,"raw_hashes_verified":230,"copied_files":460,"copied_bytes":41784646,'
+        '"copied_file_hash_map_sha256":'+repr('0'*64 if changed_map else 'a489b7f008fa80bf3729d1563a29c7e60effd4da011ba9fa54abed010689e566')+'}))\n'
+        'Path("compact-copy-called").write_text("called")\n')
+    bin_dir=tmp_path/'bin'; bin_dir.mkdir(); gh=bin_dir/'gh'
+    gh.write_text('#!/usr/bin/env python3\nfrom pathlib import Path\nPath("unexpected-api").write_text("called")\nraise SystemExit(99)\n'); gh.chmod(0o755)
+    result = subprocess.run(['bash','-c',restore['run']],cwd=tmp_path,
+        env={**os.environ,'RUNNER_TEMP':str(runner),'PATH':str(bin_dir)+os.pathsep+os.environ['PATH']},
+        capture_output=True,text=True,timeout=15)
+    assert (tmp_path/'compact-copy-called').exists()
+    assert not (tmp_path/'unexpected-api').exists()
+    if changed_map:
+        assert result.returncode != 0 and 'FIXED230_COMPACT_GOLDEN_FILE_MAP_BINDING' in result.stderr
+    else:
+        assert result.returncode==0,result.stderr
+        assert (runner/'bct-recovery/fixed230-input-transport.json').is_file()
+
+
+def test_recovery_checkpoint_retains_compact_corpus_for_bounded_future_restores():
+    steps, _ = restore_steps()
+    upload = next(s for s in steps if s.get('uses')=='actions/upload-artifact@v4')
+    assert '${{ runner.temp }}/bct-recovery/fixed-precursor-qa/documents/*.json' in upload['with']['path']
+    assert '${{ runner.temp }}/bct-recovery/fixed-precursor-qa/raw/*' in upload['with']['path']

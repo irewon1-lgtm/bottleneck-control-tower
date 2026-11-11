@@ -185,6 +185,12 @@ jobs:
           import shutil
           copy_latest_root_state(root,output)
           if (root/'private-source-html').exists():shutil.copytree(root/'private-source-html',output/'private-source-html',dirs_exist_ok=True)
+          # Keep the exact compact corpus even if a later Gate fails before
+          # its required restore step. This is authenticated input only.
+          import sys
+          sys.path.insert(0,'.github/scripts')
+          from recovery_artifacts import carry_compact
+          print(carry_compact(root/'fixed-precursor-qa',output/'fixed-precursor-qa'))
           PY
       - name: Gate 0 then real GitHub storage Gate 1
         if: steps.request.outputs.full_pipeline != 'true'
@@ -231,6 +237,35 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/bct-recovery"
+          validate_compact_copy() {
+          python - "$1" <<'PY'
+          import json,os,sys
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP']); current=root/'bct-fixed230-copy-current.json'; report=json.loads(current.read_text())
+          expected={'status':'PASS_EXACT_FIXED230_LITERAL_COPY','source_input_sha256':'acd344732f2f087b42767bfe32d9f16d96da6de49a766d6fc73f3c0ed298f9ec',
+                    'documents':230,'body_hashes_verified':230,'raw_hashes_verified':230,'copied_files':460,'copied_bytes':41784646,
+                    'copied_file_hash_map_sha256':'a489b7f008fa80bf3729d1563a29c7e60effd4da011ba9fa54abed010689e566'}
+          if any(report.get(k)!=v for k,v in expected.items()):raise ValueError('FIXED230_COMPACT_GOLDEN_FILE_MAP_BINDING')
+          current.replace(root/'bct-recovery/fixed230-copy.json')
+          if sys.argv[1]=='resume':
+              checkpoint=json.loads((root/'bct-recovery-resume/checkpoint.json').read_text())
+              proof={'status':'PASS_AUTHENTICATED_COMPACT_FIXED230_INPUT','resume_run_id':checkpoint['run_id'],
+                     'resume_code_sha':checkpoint['code_sha'],'corpus':expected,'legacy_archive_downloads':0,
+                     'source_HTTP_requests':0,'new_gate_execution':False,'release_proof_renewed':False}
+              (root/'bct-recovery/fixed230-input-transport.json').write_text(json.dumps(proof,indent=2)+'\n')
+          PY
+          }
+          if [[ -d "$RUNNER_TEMP/bct-recovery-resume/fixed-precursor-qa" ]]; then
+            cache="$RUNNER_TEMP/bct-recovery-resume/fixed-precursor-qa"
+            destination="$RUNNER_TEMP/bct-recovery/fixed-precursor-qa"
+            # The early carry keeps bytes through failures. Recheck that
+            # carried directory with the immutable native/body verifier now.
+            if [[ -d "$destination" ]]; then cache="$destination"; destination="$RUNNER_TEMP/bct-fixed230-recheck"; fi
+            timeout 60 python .bct-fixed230-input/.github/scripts/copy_fixed230.py \
+              --cache "$cache" --destination "$destination" --receipt "$RUNNER_TEMP/bct-fixed230-copy-current.json"
+            validate_compact_copy resume
+            exit 0
+          fi
           timeout 120 gh api repos/irewon1-lgtm/bottleneck-control-tower/actions/runs/42939818925/artifacts?per_page=100 > "$RUNNER_TEMP/bct-fixed230-source-artifacts.json"
           timeout 120 gh api repos/irewon1-lgtm/bottleneck-control-tower/actions/runs/42939431146/artifacts?per_page=100 > "$RUNNER_TEMP/bct-fixed230-rss-artifacts.json"
           python - <<'PY'
@@ -266,7 +301,8 @@ jobs:
           PY
           timeout 60 python .bct-fixed230-input/.github/scripts/copy_fixed230.py \
             --cache "$RUNNER_TEMP/bct-fixed230-source" --destination "$RUNNER_TEMP/bct-recovery/fixed-precursor-qa" \
-            --receipt "$RUNNER_TEMP/bct-recovery/fixed230-copy.json"
+            --receipt "$RUNNER_TEMP/bct-fixed230-copy-current.json"
+          validate_compact_copy cold
       - name: Gate 6 real source E2E and required whole regressions
         if: steps.request.outputs.full_pipeline != 'true'
         env:
@@ -303,6 +339,8 @@ jobs:
             ${{ runner.temp }}/bct-recovery/e2e-original-230/operating-report.json
             ${{ runner.temp }}/bct-recovery/fixed230-input-transport.json
             ${{ runner.temp }}/bct-recovery/fixed230-copy.json
+            ${{ runner.temp }}/bct-recovery/fixed-precursor-qa/documents/*.json
+            ${{ runner.temp }}/bct-recovery/fixed-precursor-qa/raw/*
             ${{ runner.temp }}/bct-recovery/*.log
             ${{ runner.temp }}/bct-recovery/source-audit.json
             ${{ runner.temp }}/bct-recovery/source-recovery-*.json*

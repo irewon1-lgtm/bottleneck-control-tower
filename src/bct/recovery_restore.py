@@ -67,6 +67,8 @@ def source_retry_identity(previous, root='.'):
 
 
 LATEST_ROOT_STATE = (
+    'fixed230-copy.json',
+    'fixed230-input-transport.json',
     'source-audit.json',
     'source-recovery-attempts.jsonl',
     'source-recovery-versions.json',
