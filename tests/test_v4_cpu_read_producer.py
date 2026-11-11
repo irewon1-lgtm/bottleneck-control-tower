@@ -18,6 +18,19 @@ def test_source_accepts_workflow_expected_c_without_hardcoded_seed_pin(monkeypat
     with pytest.raises(ValueError,match='PIN_INVALID'):op.verify_execution_pin(code)
 
 
+def test_real_actions_without_a_reviewed_execution_pin_never_calls_model(tmp_path,monkeypatch):
+    monkeypatch.setenv('GITHUB_ACTIONS','true')
+    monkeypatch.setenv('GITHUB_REPOSITORY','irewon1-lgtm/bottleneck-control-tower')
+    monkeypatch.setenv('GITHUB_RUN_ID','100');monkeypatch.setenv('GITHUB_RUN_ATTEMPT','1')
+    monkeypatch.setenv('GITHUB_WORKFLOW_SHA','b'*40)
+    monkeypatch.delenv('EXPECTED_CPU_CODE_SHA',raising=False)
+    doc,native=document();ledger=q.open_queue(tmp_path);q.enqueue(ledger,doc,native,{})
+    model=Extractor()
+    with pytest.raises(ValueError,match='CPU_EXECUTION_PIN_INVALID'):q.work(ledger,extractor=model)
+    assert model.calls==0 and not q.events(ledger,'CPU_QUEUE_WINDOW_ATTEMPT')
+    ledger.close()
+
+
 def test_new_model_window_producer_is_restored_original_and_never_current_retry(tmp_path,monkeypatch):
     producer={'run_id':100,'run_attempt':1,'execution_sha':'a'*40,'workflow_sha':'b'*40}
     monkeypatch.setenv('GITHUB_ACTIONS','true');monkeypatch.setenv('GITHUB_REPOSITORY','irewon1-lgtm/bottleneck-control-tower')
