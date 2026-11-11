@@ -191,3 +191,43 @@ def test_analysis_exception_has_per_source_failed_pointer_and_never_becomes_hold
     assert public['analysis']['states'] == {'FAILED': 1}
     assert public['trace'][0]['reason_code'] == 'ANALYSIS_RUNTIME_FAILED'
     assert public['trace'][0]['window_counts']['total'] is None
+
+
+@pytest.mark.parametrize('reference', [None, {'run_id': 77, 'run_attempt': 2,
+                                            'execution_sha': '1' * 40, 'workflow_sha': '2' * 40}])
+def test_source_model_read_producer_is_preserved_without_publisher_inference(tmp_path, reference):
+    from bct.v4.public_research import build_snapshot
+    path, ack, proof, producer = input_state(tmp_path)
+    ledger = Ledger(path.parent)
+    record = json.loads(ledger.db.execute("SELECT payload FROM events WHERE kind='CPU_ANALYSIS_RESULT'").fetchone()[0])
+    with ledger.db:
+        ledger.event('CPU_ANALYSIS_RESULT', {**record, 'model_read_producer': reference})
+    ledger.close(); ack['persistence_receipt']['sqlite_sha256'] = proof['sqlite_sha256'] = file_sha(path)
+    with sqlite3.connect(path.as_uri() + '?mode=ro', uri=True) as db:
+        public = build_snapshot(db, ack, proof, producer)
+    assert public['trace'][0]['model_read_producer'] == reference
+    if reference:
+        assert reference['run_id'] != public['generation']['producer_run_id']
+
+
+def test_legacy_source_has_unknown_model_read_producer(tmp_path):
+    from bct.v4.public_research import validate_snapshot, seal
+    public = project(tmp_path)
+    assert public['trace'][0]['model_read_producer'] is None
+    # Previously emitted durable snapshots remain valid without relabeling.
+    del public['trace'][0]['model_read_producer']
+    assert 'model_read_producer' not in validate_snapshot(seal(public))['trace'][0]
+
+
+@pytest.mark.parametrize('reference', [
+    [{'run_id': 1}, {'run_id': 2}],  # mixed producers must be normalized to null upstream
+    {'run_id': 1, 'run_attempt': 1, 'execution_sha': '1' * 40},
+    {'run_id': 1, 'run_attempt': 1, 'execution_sha': '1' * 40, 'workflow_sha': '2' * 40,
+     'source_url': 'private source metadata'},
+])
+def test_source_model_read_producer_rejects_mixed_or_freeform_shapes(tmp_path, reference):
+    from bct.v4.public_research import validate_snapshot, seal
+    public = project(tmp_path)
+    public['trace'][0]['model_read_producer'] = reference
+    with pytest.raises(ValueError, match='FIELDS'):
+        validate_snapshot(seal(public))
