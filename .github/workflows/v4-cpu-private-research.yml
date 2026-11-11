@@ -12,12 +12,19 @@ on:
     inputs:
       purpose:
         type: choice
-        options: [seed, recovery-check, bridge-recover, recover-public, runtime-verify, source-transport-verify, manual-research, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart, q2-relations, official-sources, official-discovery, official-bidirectional, official-state-read, archive-storage-trial, monthly-storage-trial]
+        options: [seed, recovery-check, bridge-recover, recover-public, recover-result, runtime-verify, source-transport-verify, manual-research, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart, q2-relations, official-sources, official-discovery, official-bidirectional, official-state-read, archive-storage-trial, monthly-storage-trial]
         default: seed
       acquisition_run:
         type: string
         default: ''
         description: 'Explicit actual input only: successful main acquisition run; scheduled=false, seven-day=null'
+      result_run:
+        type: string
+        default: ''
+        description: 'Approved failed writer only: 43060982183; restore sealed windows without rereading'
+      result_attempt:
+        type: string
+        default: '1'
       q1_key_run:
         type: string
         default: ''
@@ -293,7 +300,7 @@ jobs:
           path: var/v4/cpu-private/result
   publish:
     needs: research
-    if: ${{ always() && github.ref == 'refs/heads/main' && ((github.event_name == 'workflow_dispatch' && (inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public')) || needs.research.result == 'success') }}
+    if: ${{ always() && github.ref == 'refs/heads/main' && ((github.event_name == 'workflow_dispatch' && (inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' || inputs.purpose == 'recover-result')) || needs.research.result == 'success') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     env:
@@ -311,6 +318,25 @@ jobs:
           python-version: '3.12.15'
       - name: Free/cache guard; private repo is storage only, no private Actions
         run: timeout 120 python tools/v4_cpu_preflight.py guard --output var/v4/cpu-private/free.json
+      - name: Verify exact failed CPU result producer and cache identity
+        id: recover
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'recover-result' }}
+        env:
+          RESULT_RUN: ${{ inputs.result_run }}
+          RESULT_ATTEMPT: ${{ inputs.result_attempt }}
+        run: timeout 120 python tools/v4_cpu_result_recover.py verify --run-id "$RESULT_RUN" --attempt "$RESULT_ATTEMPT" --output var/v4/cpu-private/recover-identity.json
+      - uses: actions/cache/restore@v4
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'recover-result' }}
+        with:
+          key: ${{ steps.recover.outputs.cache_key }}
+          fail-on-cache-miss: true
+          path: var/v4/cpu-private/result
+      - name: Authenticate saved failed CPU result without rereading
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'recover-result' }}
+        env:
+          RESULT_RUN: ${{ inputs.result_run }}
+          RESULT_ATTEMPT: ${{ inputs.result_attempt }}
+        run: timeout 120 python tools/v4_cpu_result_recover.py authenticate --run-id "$RESULT_RUN" --attempt "$RESULT_ATTEMPT" --output var/v4/cpu-private/recovered-result.json
       - name: Prepare existing verified seed without rereading or empty reset
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'seed' }}
         run: timeout 120 python tools/v4_cpu_private.py prepare-seed
@@ -399,7 +425,7 @@ jobs:
           print('BCT_PUBLIC_ACK_RECOVERY_FETCHED=READ_ONLY_NO_CPU_NO_PRIVATE_WRITE')
           PYCODE
       - name: Private CAS publish and fresh remote hash/table restore
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-result' }}
         env:
           BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
         run: |
@@ -412,7 +438,7 @@ jobs:
         env:
           CONFIGURED_CPU_CODE_SHA: ${{ vars.BCT_V4_CPU_CODE_SHA }}
           CONFIGURED_CPU_ENABLED: ${{ vars.BCT_V4_CPU_RESEARCH_ENABLED }}
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-result' }}
         run: |
           timeout 120 python - <<'PYCODE'
           import json,pathlib,subprocess,tempfile,sqlite3
@@ -453,7 +479,7 @@ jobs:
               'original_DB_fully_restored':False}))
           PYCODE
       - name: Project acknowledged research as strict source-free public counts and pointers
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' || inputs.purpose == 'recover-result' }}
         env:
           PUBLIC_RECOVERY_PURPOSE: ${{ inputs.purpose }}
         run: |
@@ -463,7 +489,7 @@ jobs:
             "${args[@]}" --output var/v4/cpu-private/public \
             --workflow-sha '${{ github.workflow_sha }}' --execution-sha "$CPU_CODE_SHA"
       - name: Publish only the allowlisted research snapshot and manifest
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' || inputs.purpose == 'recover-result' }}
         uses: actions/upload-artifact@v4
         with:
           name: bct-public-research-${{ github.run_attempt }}
@@ -478,10 +504,10 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'recovery-check' }}
         run: mv var/v4/cpu-private/bridge var/v4/cpu-private/recovery-input-preserved
       - name: Seal acknowledged private state for next read-only CPU job
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' || inputs.purpose == 'recover-result' }}
         run: timeout 120 python tools/v4_cpu_private.py seal --packet var/v4/cpu-private/bridge/state.gpg --parent-file var/v4/cpu-private/published.json
       - uses: actions/cache/save@v4
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' || inputs.purpose == 'recover-result' }}
         with:
           key: v4-cpu-private-bridge-${{ github.run_id }}-${{ github.run_attempt }}
           path: var/v4/cpu-private/bridge
