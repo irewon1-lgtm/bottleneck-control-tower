@@ -23,7 +23,7 @@ REASONS = {'MISSING_TARGET_EVIDENCE', 'UNREAD', 'PARTIAL', 'FAILED',
            'SOURCE_VERIFICATION_PENDING', 'NO_VALIDATED_EVENT',
            'READ_EVIDENCE_HOLD', 'RESEARCH_FORECAST_REVIEW', 'OTHER_RESEARCH_HOLD'}
 REASONS.update({'CPU_NOT_READ', 'CPU_READ_INCOMPLETE', 'CPU_WINDOW_VALIDATION_FAILED', 'CPU_CONTEXT_HELD',
-                'GRAPH_CONTEXT_UNAVAILABLE',
+                'GRAPH_CONTEXT_UNAVAILABLE', 'GRAPH_CONTEXT_LIMIT_EXCEEDED', 'GRAPH_CONTEXT_VERSION_MISMATCH',
                 'SOURCE_ORIGINAL_NOT_AVAILABLE', 'SOURCE_VERSION_OR_HASH_MISMATCH', 'SOURCE_PROVENANCE_NOT_VERIFIED',
                 'NO_SOURCE_BOUND_EVENT_IN_READ_SCOPE', 'CPU_ENTITY_VALIDATION_REVIEW_PENDING',
                 'CPU_ENTITY_ONLY_SEMANTICS_PENDING', 'TARGET_FIELDS_UNKNOWN', 'QUALIFIED_SUPPLY_SCOPE_UNKNOWN',
@@ -47,6 +47,7 @@ CLOCK_FIELDS = {'last_collection_at', 'last_read_at', 'persisted_at', 'data_at'}
 TRACE_FIELDS = {'document_id', 'body_sha256', 'raw_sha256', 'source_version', 'review_state',
                 'reason_code', 'missing_fields', 'source_verification', 'read_state', 'window_counts',
                 'model', 'revision', 'analysis_sha256'}
+TRACE_FIELDS.update({'window_binding_sha256', 'derived_reuse_binding_sha256'})
 APPROVED_MODEL = ('fastino/gliner2-base-v1', 'f9634218e53580c56edf0de97ca1a7d3f1c2354e')
 
 
@@ -144,6 +145,8 @@ def validate_snapshot(public):
         exact(row, TRACE_FIELDS); document_id(row['document_id'])
         for key in ('body_sha256', 'raw_sha256', 'source_version', 'analysis_sha256'):
             hexadecimal(row[key], 64)
+        for key in ('window_binding_sha256', 'derived_reuse_binding_sha256'):
+            if row[key] is not None: hexadecimal(row[key], 64)
         if (row['model'], row['revision']) not in ((None, None), APPROVED_MODEL):
             raise ValueError('PUBLIC_RESEARCH_MODEL')
         mismatch = row['source_version'] != row['body_sha256']
@@ -207,7 +210,9 @@ def build_snapshot(db, acknowledgment, restored, producer):
         if kind == 'CPU_ANALYSIS_FAILURE':
             record = {**record, 'read_state': record.get('read_state', 'FAILED'),
                       'source_validation': 'NOT_VERIFIED', 'missing_fields': [], 'strict_pair_count': None}
-        analyses[(record['document_id'], record['body_sha256'])] = {**record, '_public_analysis_sha256': analysis_sha}
+        key = (record['document_id'], record['body_sha256'])
+        analyses.pop(key, None)  # Trace bound follows latest updates, not first-seen IDs.
+        analyses[key] = {**record, '_public_analysis_sha256': analysis_sha}
     trace = []
     for record in analyses.values():
         trace.append({'document_id': record['document_id'], 'body_sha256': record['body_sha256'],
@@ -219,6 +224,9 @@ def build_snapshot(db, acknowledgment, restored, producer):
                       'source_verification': record.get('source_validation', 'NOT_VERIFIED'),
                       'model': record.get('model'), 'revision': record.get('revision'),
                       'analysis_sha256': record['_public_analysis_sha256'],
+                      'window_binding_sha256': (digest({key: record.get(key) for key in ('window_keys', 'window_result_sha256')})
+                                                if 'window_keys' in record or 'window_result_sha256' in record else None),
+                      'derived_reuse_binding_sha256': record.get('derived_reuse_binding_sha256'),
                       'read_state': record['read_state'],
                       'window_counts': {name: record.get('CPU_windows_' + field) for name, field in
                                         [('total', 'total'), ('success', 'success'), ('failed', 'failed'), ('unread', 'unread')]}})
