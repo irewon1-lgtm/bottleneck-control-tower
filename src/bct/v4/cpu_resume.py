@@ -217,8 +217,17 @@ def export_state(source, destination, *, legacy=None):
                 r['event_status']='DISCOVERY_ONLY';r['s_stage']='UNKNOWN'
                 for target in ('target','source_surface_target'):
                     r[target]={k:short(v)if v is not None else None for k,v in r[target].items()}
-                r['sources']=[{k:(url(v)if k in ('url','origin_id')and isinstance(v,str)and v.startswith('https:')else v)
-                    for k,v in s.items()if k in ('document_id','url','origin_id','published_at','acquired_at','raw_sha256','body_sha256')}for s in r['sources']]
+                detached=[]
+                for source_entry in r['sources']:
+                    safe={}
+                    for k,v in source_entry.items():
+                        if k not in ('document_id','url','origin_id','published_at','acquired_at','raw_sha256','body_sha256'):continue
+                        if k in ('url','origin_id')and isinstance(v,str)and v.startswith('https:'):
+                            try:safe[k]=url(v)
+                            except ValueError:safe.update({k+'_sha256':sha(v),k+'_withheld':True})
+                        else:safe[k]=v
+                    detached.append(safe)
+                r['sources']=detached
                 emit('CROSS_COMMON_EVIDENCE',r)
             for r in runs:emit('CPU_RESUME_RUN',r)
             emit('CPU_RESUME_MANIFEST',{'version':FORMAT,'source_sqlite_sha256':before,

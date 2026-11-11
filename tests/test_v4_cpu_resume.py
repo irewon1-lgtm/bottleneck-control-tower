@@ -190,3 +190,42 @@ def test_failed_committed_window_not_retried_after_source_separation(tmp_path):
     assert q.enqueue(l,d,raw,{})=='UNCHANGED_WINDOWS_UNREAD_CONTEXT_HELD'
     fake=Extractor();assert q.work(l,extractor=fake)['new_windows']==0 and fake.calls==0
     assert r.audit(l)['failed_windows_quarantined']==1;l.close()
+
+
+@pytest.mark.parametrize('locator',[
+    'https://official.example/report#article',
+    'https://official.example/report?private=withheld',
+    'https://user:password@official.example/report',
+])
+def test_source_locator_withheld_by_exact_hash_without_losing_cpu_checkpoint(tmp_path,locator):
+    d,raw=document('Atlas ordered Helios heat pumps.')
+    d['origin_id']=locator
+    ledger=q.open_queue(tmp_path/'original')
+    q.enqueue(ledger,d,raw,{})
+    model=Extractor();q.work(ledger,extractor=model)
+    assert model.calls==1
+    original=q.events(ledger,'CROSS_COMMON_EVIDENCE')[0]
+    assert original['sources'][0]['origin_id']==locator
+    ledger.close();before=file_sha(tmp_path/'original/v4.sqlite3')
+    r.export_state(tmp_path/'original/v4.sqlite3',tmp_path/'separated')
+    assert file_sha(tmp_path/'original/v4.sqlite3')==before
+    detached=q.open_queue(tmp_path/'separated')
+    assert r.audit(detached)['CPU_windows_preserved']==1
+    source=q.events(detached,'CROSS_COMMON_EVIDENCE')[0]['sources'][0]
+    assert source['url']==d['origin_url']
+    assert 'origin_id'not in source and source['origin_id_sha256']==sha(locator)
+    assert source['origin_id_withheld']is True
+    assert locator not in (tmp_path/'separated/v4.sqlite3').read_bytes().decode(errors='replace')
+    assert q.events(detached,'CROSS_COMMON_EVIDENCE')[0]['independence']=='UNKNOWN'
+    assert q.enqueue(detached,d,raw,{})=='UNCHANGED_BODY_COMPLETED_SOURCE_SEPARATED'
+    op.checkpoint(detached,tmp_path/'snapshot');detached.close()
+    script=('from bct.v4 import cpu_operations as o,cpu_automation as q,cpu_resume as r;import sys,json;'
+        'o.restore(sys.argv[1],sys.argv[2]);l=q.open_queue(sys.argv[2]);'
+        'assert r.audit(l)["CPU_windows_preserved"]==1;'
+        'assert q.work(l)["new_windows"]==0;'
+        'print(json.dumps(q.events(l,"CROSS_COMMON_EVIDENCE")[0]["sources"][0]));l.close()')
+    child=subprocess.run([sys.executable,'-c',script,str(tmp_path/'snapshot'),str(tmp_path/'restarted')],
+        capture_output=True,text=True,timeout=30)
+    assert child.returncode==0,child.stderr
+    assert json.loads(child.stdout)==source
+    with pytest.raises(ValueError,match='RESUME_URL_NOT_CLEAN'):r.url(locator)
