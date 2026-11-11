@@ -33,15 +33,18 @@ jobs:
           ACQUISITION_STARTED_AT: ${{ github.event.workflow_run.created_at }}
         run: |
           set -euo pipefail
-          mkdir -p var/review-handoff var/review-state var/review-source-cache
+          mkdir -p var/review-handoff var/review-state
           # A failed upstream run can still publish a valid verified cache.
           # Keep SHADOW independent: read the artifact when it exists; when it
           # does not, preserve an explicit blocked handoff without pretending
           # the original evidence was processed.
-          artifact_id=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$ACQUISITION_RUN_ID/artifacts?per_page=100" \
-            --jq '.artifacts[] | select(.name == "precursor-private-cache" and .expired == false) | .id' | head -n 1)
+          artifact=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$ACQUISITION_RUN_ID/artifacts?per_page=100" \
+            --jq '.artifacts[] | select(.name == "precursor-private-cache" and .expired == false) | [.id, .size_in_bytes] | @tsv' | head -n 1)
+          read -r artifact_id artifact_size <<< "$artifact"
           if [[ -n "$artifact_id" ]]; then
-            gh run download "$ACQUISITION_RUN_ID" --name precursor-private-cache --dir var/review-source-cache
+            python -m bct.review_artifact --repository "$GITHUB_REPOSITORY" \
+              --artifact-id "$artifact_id" --expected-size "$artifact_size" \
+              --cutover "$ACQUISITION_STARTED_AT" --destination var/review-source-cache
             echo "BCT_REVIEW_HANDOFF_AVAILABLE=true" >> "$GITHUB_ENV"
           else
             echo "BCT_REVIEW_HANDOFF_AVAILABLE=false" >> "$GITHUB_ENV"

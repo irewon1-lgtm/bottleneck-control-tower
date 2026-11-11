@@ -1,0 +1,1891 @@
+{
+  "task_id": "BCT_V4_FULL_PIPELINE_DEBUG_20261111",
+  "plan_id": "BCT-V4-Q-1.0",
+  "scope": "Q2/Q3 research linkage diagnostics and synthetic transport; no live promotion",
+  "recorded_at": "2026-11-11T07:39:14.613835+00:00",
+  "base_head": "23a0615f1a10f2b938cb2b5401706a1995b4d4f2",
+  "worktree_file_sha256": {
+    "src/bct/precursor_evidence_graph.py": "eedbb82645c91d5ea9d47f29350934f86f4284523bfc81c049426b8164cc0bee",
+    "src/bct/v4/official_discovery.py": "52311eb0220cae641da159da01d20fd6b9645a1ff9b9ebea06968aa1c4557c24",
+    "src/bct/precursor_scope_reader.py": "0b0dcfdd17eb2a5b892789a8b446425f7f4283808f2b4538fe152a7236212aea",
+    "src/bct/forecast_discovery.py": "f6bf9bf94a43949dd82bd55e2acb5b63f944158309679127e49427469c061c37",
+    "src/bct/early_forecast.py": "51d90d2265baec516d20383579816c5155e46c69599a8e7b281d329843d17675",
+    "BCT_OBJECTIVE_LOCK.md": "ef5fda64843439694d61f8e73a1162c5e38b4276e6afb4233ac5e18aba821518",
+    "tests/test_v4_q3_linkage_trace.py": "d0140a8cce271a532d9686b1c96d01fb31281f9a3f8f57f2baa15335c4434b20"
+  },
+  "audit_source": {
+    "commit": "2aaaa91f",
+    "paths": [
+      "docs/v4/audits/zero-pair-20261017/ROOT_CAUSE_REPORT.md",
+      "docs/v4/audits/zero-pair-20261017/STAGE_LOSS_EVIDENCE.csv",
+      "docs/v4/audits/zero-pair-20261017/CODEX_MINIMAL_FIX_SPEC.md"
+    ],
+    "access": "git show; audit files are not present at base checkout",
+    "stage_loss_md_absent_at_audit_commit": true
+  },
+  "before": {
+    "head": "23a0615f1a10f2b938cb2b5401706a1995b4d4f2",
+    "actual_reading_db": {
+      "path": "/tmp/bct-extraction-20261111/reading-quality.sqlite3",
+      "sha256": "a21227317a8d24225b54541e7a250138359b21793a64a19778db2abf3d0c4d29",
+      "documents": 7,
+      "precursor_events": 59,
+      "complete_target_events": 0,
+      "independent_pairs": 0,
+      "blocked_count": 0,
+      "missing_field_counts": {
+        "product": 51,
+        "specification": 60,
+        "region": 58,
+        "customer_group": 52,
+        "supply_pool": 60
+      },
+      "not_latest_full_research_db": true
+    },
+    "synthetic_incomplete": {
+      "precursor_events": 1,
+      "complete_target_events": 0,
+      "blocked": []
+    },
+    "synthetic_scalar_precheck": [
+      true,
+      "READY_FOR_EXISTING_ENGINE_NOT_A_SHORTAGE_DECISION"
+    ],
+    "synthetic_scalar_q3": {
+      "eligible_pairs": 0,
+      "reasons": {},
+      "strict_engine_state": "BLOCKED",
+      "strict_engine_candidates": 0,
+      "formal_Q3_complete": false,
+      "graph_independent_pairs": 0,
+      "graph_complete_target_events": 0,
+      "graph_forwarded_signals": 0,
+      "forecast_signal_binding": "EXISTING_EVIDENCE_GRAPH_TO_STRICT_FORECAST_RESEARCH_ONLY",
+      "S2": 0,
+      "S3": 0
+    },
+    "actual_saved_events_only_q3": {
+      "eligible_pairs": 0,
+      "reasons": {
+        "LINKAGE_NO_VERIFIED_OPPOSITE_SIDE": 18
+      },
+      "strict_engine_state": "BLOCKED",
+      "strict_engine_candidates": 0,
+      "formal_Q3_complete": false,
+      "graph_independent_pairs": 0,
+      "graph_complete_target_events": 0,
+      "graph_forwarded_signals": 0,
+      "forecast_signal_binding": "EXISTING_EVIDENCE_GRAPH_TO_STRICT_FORECAST_RESEARCH_ONLY",
+      "S2": 0,
+      "S3": 0
+    },
+    "actual_events_only_limits": "Saved scalar events replay; official raw documents not restored; not complete original run"
+  },
+  "after_actual_reading_db": {
+    "dataset_scope": "stored reading-quality 7-document subset; not latest complete CPU or quantitative database",
+    "db_sha256_before": "a21227317a8d24225b54541e7a250138359b21793a64a19778db2abf3d0c4d29",
+    "db_sha256_after": "a21227317a8d24225b54541e7a250138359b21793a64a19778db2abf3d0c4d29",
+    "read_mode": "sqlite mode=ro",
+    "integrity_check": "ok",
+    "documents": 7,
+    "body_hashes_verified": 7,
+    "retained_collection_events": 60,
+    "precursor_events": 59,
+    "complete_target_events": 0,
+    "independent_pairs": 0,
+    "blocked_events": 59,
+    "first_blocker_counts": {
+      "NO_SOURCE_BOUND_PRODUCT": 49,
+      "NO_SOURCE_BOUND_REGION": 1,
+      "NO_SOURCE_BOUND_SPECIFICATION": 9
+    },
+    "missing_field_counts": {
+      "product": 49,
+      "specification": 58,
+      "region": 57,
+      "customer_group": 52,
+      "supply_pool": 59
+    },
+    "blocked_event_trace": [
+      {
+        "event_id": "4c5f853297b8e885ee92ebf54eb0a1af1a7311de4dbcf9492e2f1cba34911824",
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "observation_id": "be79807c1d8d715a304bedc4de76dabc553527f4eed3dcb0a402077c3ca010d1",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "565e631cfdf32a51ceb2273ae60c6da318496e2232e8c4f440d7ff0a03c67fdf",
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "observation_id": "c70e2d66cecc7d6b9cd14af9d754a14e4465dd907daf7b186aec1a781c5cf65d",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "a5427c7d5e87c480a066d7d312fde821338610787021d7879bdd480916b7358c",
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "observation_id": "5b188f996d9816f7956cc553d25ec34e67d7560f28935b0495f1920ab36d624e",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "4d5f290677c6ea27fc3fb58411ca876d45f9b4cf03a519116a7dc78fbcfc021c",
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "observation_id": "4990fdd12618f195a70ef8c39c0691fa44c06d9dc18695c537329f0842761ec5",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "21bbb31b7547047ba158f802625777c4d6c9572ec20421549e42bd97a99b2d5a",
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "observation_id": "d9eb2fc44dcb2203d9c4382fcd9baf4b4ef2a7ef0b561f87192d84c957759b1f",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_REGION",
+        "missing_fields": [
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "8295bfd33912e6869f7b205601e7aae9673ef2e8080c6d2bec231d510dc670d8",
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "observation_id": "a371d1f77fc44765a6fd473f7dadb688d5ac6ccd91323b4f1b3fea2a8a0a92af",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_SPECIFICATION",
+        "missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "e49de5b8df4313c0d24bb545dcdca5a9ab88559087aa258576fdf7a14de6fc93",
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "observation_id": "f59d8f4580928d3c03e57bcba21ad7d255e610004e651df7b4470a5cba379f12",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "703d4ba7ed67041bc2dd45a8b8129271cbe9b063a935963fb00f76bec86357ec",
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "observation_id": "bced181e3243b6adb6503962819359ab28603ebb35a62eb4eb82ccf67ec1bbbc",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "3596e1ee74971c3c0d2a9e6346c838f3ae420e90e4647e61890f6f6a7982109d",
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "observation_id": "a4ff08b94d0d8d451c18198868d29250f0684e52d4ae91bc0375e3e021c5d04d",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "b7fa7a6048975b8d72b5d972c8a0bce019fc1d637da8aca6591f3e032f2eaf97",
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "observation_id": "b492958612f697b2852c690865b7b20b52e7def6ae800164c03a54c1885b351b",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_SPECIFICATION",
+        "missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "2dd382366ec989f7cef03c8792ffc474321fb807eeb8a2ba5f25dbfd838ae315",
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "observation_id": "e721ae6be86dcdb7dc825296053ec9f37048e6b46acab5952b43d97be28647ab",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "591e5f42a30599b8fddf0250ac30a821f151856fd8d88950fa5ca7ea1fbaaee2",
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "observation_id": "93952b478a33c21235dd49ec1921526dfaf8dbc8caf1a2ff417e2496cfacd406",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "14af5b641a82b28dfd101f545ac8084c18993759e375c422cec201b2bd8e0d97",
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "observation_id": "b8bb76492ea31bc359a2250faac3f04fe1b4ef380eeb0c57dab981abc1882e7f",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "123ad6b8ecf548ab1d27aabff25a9e732efe0b187975a887c73bd2530bf58457",
+        "document_id": "stage4doc-e99e1bc383849b5a4e98e71822ade9f7d8845959be1e0d8426a7997fc2084dfd",
+        "observation_id": "91cda088cbca4b9dd76dfef277d9a1b3ee58f226ec9e9915e28effa2c7a40112",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "a89e56d9e1cb58cc342f207eb25e5144fb226d0b66d572df3f209800293d0ae4",
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "observation_id": "22b4c37baeba5b3e76d4366c7eee952258dd72ce628fcfdf705163a9739985da",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_SPECIFICATION",
+        "missing_fields": [
+          "specification",
+          "region",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "region",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "25e7917003cd938d55a5bdf08d9480ee200a544e4c96d71485e57fd6986b4a79",
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "observation_id": "8054bd2701054a269c975b4a08fb95f134a310909d84191abe537020ba391d57",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_SPECIFICATION",
+        "missing_fields": [
+          "specification",
+          "region",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "region",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "69f562aa26d404de97ff4c85b4f2e6811ef79d72765add0f342af66b0923bd01",
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "observation_id": "52766d1398f39a09b7fd999a60b69d4fe7676e6f280cbc9d03e957a45afaf36e",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_SPECIFICATION",
+        "missing_fields": [
+          "specification",
+          "region",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "region",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "08408a416232194db6f3a7aa082718fd703a2ee475eae0f2c92410ef565b15e3",
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "observation_id": "a45bafdbc56a92e6534b3364d8356e2eb6c135d1f28975021c31b64599192316",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_SPECIFICATION",
+        "missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "4f047f767f0756bc8588fc4416d78c98cadc30ddefbd37f0b0b99f3ef93b85da",
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "observation_id": "b74050e8763cb433fb9b3f9218b8def792c779feb7e5a702c98d0a2a06623b07",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_SPECIFICATION",
+        "missing_fields": [
+          "specification",
+          "region",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "region",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "773f4223d1c6a3603e4cacf526b8254e2be697935b00c8e117d0de339aa56e3f",
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "observation_id": "ff34dd928c3c4d849acb1d09565cd5e5f87a81e16b5ce4dc2bc65844362c414a",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_SPECIFICATION",
+        "missing_fields": [
+          "specification",
+          "region",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "region",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "483c759cba4cbc03593b5d21b5442df86b02711d5a9b83c2bbee2504d6808238",
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "observation_id": "f2ae34bc08c6d92e05cf970754b9f4b0c794bf83e0b9404cc877ef9415051d2e",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "130a925e430b32e701a4d91d1d28869048f0088250224ac06e4d3e9131d20656",
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "observation_id": "3ea4e51c50a1aff7e86b32b4b50dcef0132da8fee1cd118435f10fb60cd4ea98",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "165502a8044df19c5b11cda1ea80174338273103530b70e4634623eb0fc4e419",
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "observation_id": "c9125f64014ffdc2208b0c06182d516cddc1763ba667986c38052842b4674984",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_SPECIFICATION",
+        "missing_fields": [
+          "specification",
+          "region",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "region",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "2e81f84bb6b5bfa623b56c5f69bff9048b7c19b1a80c48688778ff0907c7ee56",
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "observation_id": "41910e3c34e171b3bc633afb46f68e793b983a948b7cb199ce4798d269ed66f5",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "2ccaec64249e04845042183148deac90c1118e9e54f3e65d9d67a16d9d624ab1",
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "observation_id": "c61744d7068b2ff6f2f946eb8dbf32d0139d145a61d2cc10b639a1ba30bee5a1",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "84605c391cf5dd4c10f09cf97ad455d751c86b8b54673059fbefe9095c932f41",
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "observation_id": "585be93d3dcfbc788a7b698e390269cf6bfaa63aa5cb60930991c2d5af0b098c",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "d6ebe5a2ab4477d9ca7c18567213b1576e4637783a91e46f0f43d3a525b179ab",
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "observation_id": "14b0f285d7c87bd22096244abf10c70e969ebe36aa7d8ad084360bf7fc781a6d",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "04ace52a6644718a61df43652448754f3cf42877ecd883ca9457e2810de8bcf3",
+        "document_id": "stage4doc-f1197881f139abed28736c0bb2a5c72ddc714c04b727973a9671af0dcc73e81b",
+        "observation_id": "63c9b822787bb7a3d75579730259707972330941075556db26ca9cbf63df920e",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "60938f9868163c6950abc9d165f6e212e1c98f7b89d75f58fb3adf280ccdef20",
+        "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+        "observation_id": "b439e98373f3858d763bb18285cf2bd00eb1b82f09638f87081afc2e1d4c0e5b",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "a516b80935c396f9a82bbee2570f23206d534710860d95674c651d9b01746673",
+        "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+        "observation_id": "4a86e901251c02fcc8a035356c3ef3815e77c1621e4a1cba4018f3d4a37c6efa",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "a078a8d9af2a0b16ac8fa5e658d291693ad5d6d5ff7cc5681aa7e205fd9e5d66",
+        "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+        "observation_id": "760f9d050704c35fa1efdd9f6401f13e4d2f2a998afd1fd78b228a66fea05ee1",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "842afbb8900e1e92264346249ec185d4b99a9160d93ffc131e4093aa066dcd1e",
+        "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+        "observation_id": "c2543d0929ae1a24950f995e594ff3e50a87fd9fc4ca6e97a48c586a7754be64",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "c15d3db6c08ad60a0fbf7472c1f8dfa4683e89da1d8c15ccd03588e04f03d603",
+        "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+        "observation_id": "c116bca71cfa380c83e48cd59a663fd1d6d464deb3425619053efc21cbec2679",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "58228f33e84cbf59147deacc8ad2a36fd6725a87cbbcda9d0ed8bd7bddffe4f4",
+        "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+        "observation_id": "0d869105cbdc8fd8121176b427f8d7a1707a63e37ea73eb5f414d51db5c84595",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "086a4ef1a5d247ad360cae5f98d95bf97356757a615b5c7d91a6c50c4096271c",
+        "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+        "observation_id": "a4d8ff8e3affb7080aba7dd8c15aca306342e3bfebc73e0f8e6cd286edd0a18f",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "9e134952e63b9e56ed0ee86653f1c7481bba18bcd2962b60ba69ff112d522e11",
+        "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+        "observation_id": "c3e4b35693611edea234bc74721971ff2fb5cb8ec3ff3d2b04e1cc63a5f3e611",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "98a60b6c823e5ac12d2055c5e78345611be73c0e613e564b419581702e0d0b8c",
+        "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+        "observation_id": "59140bbcc7ca61fd9317135e9088430ba3b4c13fee3daebd81af13a283e43088",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "1dc48ed0c02ca4e22be568b47ac82dc263ba6c5b3e3b84e6a82635e67dcc9016",
+        "document_id": "v4doc-5144eeea28395ee3998802f4eabbecc001987a01a174e6997e6b31c0db610ddf",
+        "observation_id": "9ff413493afef8eb6397b940699a007b7fa8991e72eeb2136b53b7d4b1e1901a",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "1afa2b79c2bba49ad857fed3fc53dad83380407a838ebf17055d4a2fa3198fdc",
+        "document_id": "v4doc-629ba59abcbbe5d3e30004699cd2bcee12275db4562fbb8c39317c5a120e88f4",
+        "observation_id": "98ba4c8f0a761037482a70d89439e791d2d95a8ee23300acde86c2387893578c",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "585ce9647025eeb75c7d8500fd06616857ad6fd19c8ff0a302d891925aebc85e",
+        "document_id": "v4doc-629ba59abcbbe5d3e30004699cd2bcee12275db4562fbb8c39317c5a120e88f4",
+        "observation_id": "3218bbf9ba71226d1e5f9b70ed2048e543967d14fe840fb154ebc0c52200da76",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "f60bfccd868d795c04bd3fcbf780eee22ee4f6f11eb6c144e551456c5dba1618",
+        "document_id": "v4doc-629ba59abcbbe5d3e30004699cd2bcee12275db4562fbb8c39317c5a120e88f4",
+        "observation_id": "2d420e74003578cfc38a011fffa118f008644d4445462c817848f3f07175ea80",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "e06f4d78560417d0827a2def29436973fd70ed33d544c2f04e692029ac33dcce",
+        "document_id": "v4doc-629ba59abcbbe5d3e30004699cd2bcee12275db4562fbb8c39317c5a120e88f4",
+        "observation_id": "2383101385b761930792ded75a8943b090e900fe566cf010820f894316c0c3e8",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "12d2f949df62d67170f8e70c5230f97dd0cf7223e24fea4d2948e6d49385c204",
+        "document_id": "v4doc-629ba59abcbbe5d3e30004699cd2bcee12275db4562fbb8c39317c5a120e88f4",
+        "observation_id": "7ec0761bcc7935ccbda8a46ec8f1cd8aa9670d32a6c7f3621bc258c99892be48",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "8171708bf3b25762b9bb334a06bee1e1632ab787d7a3be9d514a9f08eb0bed09",
+        "document_id": "v4doc-629ba59abcbbe5d3e30004699cd2bcee12275db4562fbb8c39317c5a120e88f4",
+        "observation_id": "cc231ac1d75b14c3ccd1af8aae7add477d97d29f6a696bb10e795a4355e130de",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "3bc769157fca90e499583cb44625a643dab8dc8aa74cce03e208ca915a90694e",
+        "document_id": "v4doc-629ba59abcbbe5d3e30004699cd2bcee12275db4562fbb8c39317c5a120e88f4",
+        "observation_id": "3b09f59311c589950ddceecf8e549c3c65e1abf10acbe145c5aeddfd03fa24dc",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "34d5f8e25c8214c877b9de86f5c0fced16caec50f38e89f4b667aae970c042ce",
+        "document_id": "v4doc-9f3e742d8dc714214766ac470fe216fe36d2851e98c9a13b3b2b5ebe092b2cab",
+        "observation_id": "927555001cd6c106c082622a615108d8af7c3697477ca9c517f86648881c1804",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "ce098efa501e8165d802276144b05940514ad23e322cd2d652df2551656864c6",
+        "document_id": "v4doc-9f3e742d8dc714214766ac470fe216fe36d2851e98c9a13b3b2b5ebe092b2cab",
+        "observation_id": "1cd15974f47fc474be590121e95eb8b91cb5337bc700f9e0ed215b2424777967",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "919a78f482dd9a29f687674741d4a2ede469786c5e7d960237ebfe661004f158",
+        "document_id": "v4doc-9f3e742d8dc714214766ac470fe216fe36d2851e98c9a13b3b2b5ebe092b2cab",
+        "observation_id": "808d06efff79e49856040beb3f2a828a6e935261ff7ce160461d0817790f7069",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "80186ed5c9db487a65c86c78379cc53333b0252fac13ef85ff69c74519464e1e",
+        "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+        "observation_id": "346477a770e3ef6b6b3e177928df910c11241ce19f8d38c7439b8e9ea30faceb",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "1aedeb86a9e1e08b8c52c02706a73deb235a8380c6868d03ab6bdc796b292a0d",
+        "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+        "observation_id": "b74f8d575dbb787af8e99d064f0c3ea0a31a987ce2892668d2ffd35923aeac2b",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "8ea4a6ece08d78c7a345e972c547087846c6d4b6779c696348aa56e091891188",
+        "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+        "observation_id": "3ee3a935dae1d3a5a04ea594f504e809950dceaa1fe53cb7574ac1fa844198fa",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "85291ff095fbe2dcb46c8ee0f6e74d7dffceeff8f02213a145f579a6f2a1dca4",
+        "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+        "observation_id": "b6de701fe6f65f9579dd2eefcc0102f9adfbe54e877d75eef7112a4da7dd35f5",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "531a49bbcacb5c27bfd7a1a1794d38a98891964a436183345f79714c2bd181fd",
+        "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+        "observation_id": "019d85978905ecd5e2d70a8758b6af2ed202523c7c640e5e494ed70adaebaa18",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "a967150a5bc50a00a2908ba6786fa3b615a840a298157aeb6292d8a202e9e255",
+        "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+        "observation_id": "9fd9bd0a3042d5bd6c511d94f0bbca37466b11bfeaa23d2d828f41ae5bf082cd",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "609afa4f39029a2f082ec4d3c7c2b30461cb6bec9ba1fee4947ace71ec0760e8",
+        "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+        "observation_id": "364e05111cbd90910d9fe9023255f47a849a11365599b97a65c9466e2ec62063",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "7aad95150f19ff1f207808cf36deab8fbe17a094602e7aff834ce0c129552172",
+        "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+        "observation_id": "85657111aa3aa8972bd117d5d81157688bd95f15a04a65b16df9b9e959ddf9f4",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "2df331c65fa70da25da8cef0730f430f2f4c963a1aa3cffd5169f7a38354298f",
+        "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+        "observation_id": "b79f25cd343c318e6c7ae7760e0caac54dfccacaa7a9442152eaa281e7fdce9e",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "6a541abd820df263f89706b39c0d07d157fea58a0010e67e4d33e8b2d4df8ca5",
+        "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+        "observation_id": "b4951bc755d9bcdb3dd58ad3cb083cd57dbcd7360444d60222caf28961f44960",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      },
+      {
+        "event_id": "5ae7b39cf91515ff57956796a033ba55f1845c03bf38a2b072d72eda7e8c2946",
+        "document_id": "v4doc-9c59b2a4619996e7c54bb9629f8db9fbc24e18c35e07176e7612592942b65bac",
+        "observation_id": "7ca028ccf2d8f4558155c8b680e84b066daade9a6236269709e42810da51d636",
+        "reason": "INCOMPLETE_TARGET_SCOPE",
+        "first_blocker": "NO_SOURCE_BOUND_PRODUCT",
+        "missing_fields": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "secondary_missing_fields": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "missing_field_reasons": {
+          "product": "NO_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_SOURCE_BOUND_REGION",
+          "customer_group": "NO_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_SOURCE_BOUND_SUPPLY_POOL"
+        }
+      }
+    ],
+    "q3_counts": {
+      "eligible_pairs": 0,
+      "strict_engine_candidates": 0,
+      "graph_complete_target_events": 0,
+      "graph_independent_pairs": 0,
+      "graph_forwarded_signals": 0,
+      "formal_Q3_complete": false,
+      "S2": 0,
+      "S3": 0
+    },
+    "parser_revision": "frozen final combined scope_reader v5; sha256 0b0dcfdd17eb2a5b892789a8b446425f7f4283808f2b4538fe152a7236212aea",
+    "final_reader_replay_recorded_at": "2026-11-11T07:51:05.533029+00:00",
+    "final_reader_replay_result": "IDENTICAL_59_EVENT_TRACE_AND_COUNTS; read-only actual7-body replay, no test rerun"
+  },
+  "actual_saved_official_event_only": {
+    "events": 30,
+    "demand_events": 18,
+    "supply_events": 0,
+    "Q3": {
+      "eligible_pairs": 0,
+      "reasons": {
+        "LINKAGE_NO_VERIFIED_OPPOSITE_SIDE": 18
+      },
+      "strict_engine_state": "BLOCKED",
+      "structured_precheck_eligible_pairs": 0,
+      "structured_pair_blocks": [],
+      "graph_blocked_events": [],
+      "graph_pair_blocks": [],
+      "strict_engine_candidates": 0,
+      "formal_Q3_complete": false,
+      "graph_independent_pairs": 0,
+      "graph_complete_target_events": 0,
+      "graph_forwarded_signals": 0,
+      "forecast_signal_binding": "EXISTING_EVIDENCE_GRAPH_TO_STRICT_FORECAST_RESEARCH_ONLY",
+      "S2": 0,
+      "S3": 0
+    },
+    "limit": "Scalar packet replay only: matching official native/prose originals were not restored, so not a complete original-run replay"
+  },
+  "synthetic": {
+    "verified_timing_no_quantities": {
+      "dataset_kind": "SYNTHETIC_FUNCTIONAL_FIXTURE",
+      "q3_execution_mode": "BACKFILL_EXISTING_ROUTE",
+      "not_live_or_real_performance": true,
+      "input_document_body_hashes": {
+        "Meridian": "dcf71036b84e921fe296e371a3e09a3553563b6244722376a350cb99c20d7001",
+        "Atlas Metals": "7802cd248bc1e98a84152ed18a01321aa4c70751b329f5c634b8297797b60297"
+      },
+      "graph_pairs": [
+        {
+          "target_id": "precursor-d2bca17b19b71a95bf75c07ced9fb9a658c3ea59646f69c14e0ee8c41387f042",
+          "demand_event": "9e208dcbea3fdd7fb806e8f4ea4da39b8296a9e9ccc6ad6f9325325ddf99ca5f",
+          "supply_event": "12613a92b6b504659d138bb494508560bac425c4e82083d54319ecd27bf50788",
+          "engine_state": "FORWARDED_TO_UNCHANGED_EARLY_ENGINE",
+          "comparison_state": "POSSIBLE_TIMING_GAP"
+        }
+      ],
+      "graph_signal_quantities": [
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "Q3": {
+        "eligible_pairs": 1,
+        "reasons": {},
+        "strict_engine_state": "FINISHED",
+        "structured_precheck_eligible_pairs": 0,
+        "structured_pair_blocks": [],
+        "graph_blocked_events": [],
+        "graph_pair_blocks": [],
+        "strict_engine_candidates": 1,
+        "formal_Q3_complete": false,
+        "graph_independent_pairs": 1,
+        "graph_complete_target_events": 2,
+        "graph_forwarded_signals": 2,
+        "forecast_signal_binding": "EXISTING_EVIDENCE_GRAPH_TO_STRICT_FORECAST_RESEARCH_ONLY",
+        "S2": 0,
+        "S3": 0
+      }
+    },
+    "verified_dates_supply_scope_unknown": {
+      "dataset_kind": "SYNTHETIC_FUNCTIONAL_FIXTURE",
+      "q3_execution_mode": "BACKFILL_EXISTING_ROUTE",
+      "not_live_or_real_performance": true,
+      "input_document_body_hashes": {
+        "Meridian": "dcf71036b84e921fe296e371a3e09a3553563b6244722376a350cb99c20d7001",
+        "Atlas Metals": "4dd8d19b78abe564834ca9c54c4ed79107d1ce4b82cad9a6f5f6b45e3b17e92b"
+      },
+      "graph_pairs": [
+        {
+          "target_id": "precursor-d2bca17b19b71a95bf75c07ced9fb9a658c3ea59646f69c14e0ee8c41387f042",
+          "demand_event": "9e208dcbea3fdd7fb806e8f4ea4da39b8296a9e9ccc6ad6f9325325ddf99ca5f",
+          "supply_event": "bb52cd7e152c20a906e6ba8c6b672a7107e7efbc1e984b1ad4f5789cb9cecee0",
+          "engine_state": "FORWARDED_TO_UNCHANGED_EARLY_ENGINE",
+          "comparison_state": "POSSIBLE_TIMING_GAP"
+        }
+      ],
+      "graph_signal_quantities": [
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "Q3": {
+        "eligible_pairs": 0,
+        "reasons": {},
+        "strict_engine_state": "BLOCKED",
+        "structured_precheck_eligible_pairs": 0,
+        "structured_pair_blocks": [],
+        "graph_blocked_events": [],
+        "graph_pair_blocks": [
+          {
+            "demand_event": "9e208dcbea3fdd7fb806e8f4ea4da39b8296a9e9ccc6ad6f9325325ddf99ca5f",
+            "supply_event": "bb52cd7e152c20a906e6ba8c6b672a7107e7efbc1e984b1ad4f5789cb9cecee0",
+            "reason": "SUPPLY_UNKNOWN",
+            "first_blocker": "QUALIFIED_ENTIRE_SUPPLY_SCOPE_UNPROVEN",
+            "missing_fields": [
+              "coverage_complete"
+            ]
+          }
+        ],
+        "strict_engine_candidates": 0,
+        "formal_Q3_complete": false,
+        "graph_independent_pairs": 1,
+        "graph_complete_target_events": 2,
+        "graph_forwarded_signals": 2,
+        "forecast_signal_binding": "EXISTING_EVIDENCE_GRAPH_TO_STRICT_FORECAST_RESEARCH_ONLY",
+        "S2": 0,
+        "S3": 0
+      }
+    },
+    "supply_ready_before_need": {
+      "dataset_kind": "SYNTHETIC_FUNCTIONAL_FIXTURE",
+      "q3_execution_mode": "BACKFILL_EXISTING_ROUTE",
+      "not_live_or_real_performance": true,
+      "input_document_body_hashes": {
+        "Meridian": "dcf71036b84e921fe296e371a3e09a3553563b6244722376a350cb99c20d7001",
+        "Atlas Metals": "7233c25f08a2102f959d24f47047cf1869b3ba69b49203347fb68a6817b80dc6"
+      },
+      "graph_pairs": [
+        {
+          "target_id": "precursor-d2bca17b19b71a95bf75c07ced9fb9a658c3ea59646f69c14e0ee8c41387f042",
+          "demand_event": "9e208dcbea3fdd7fb806e8f4ea4da39b8296a9e9ccc6ad6f9325325ddf99ca5f",
+          "supply_event": "12613a92b6b504659d138bb494508560bac425c4e82083d54319ecd27bf50788",
+          "engine_state": null,
+          "comparison_state": "SUPPLY_BEFORE_NEED"
+        }
+      ],
+      "graph_signal_quantities": [],
+      "Q3": {
+        "eligible_pairs": 0,
+        "reasons": {},
+        "strict_engine_state": "BLOCKED",
+        "structured_precheck_eligible_pairs": 0,
+        "structured_pair_blocks": [],
+        "graph_blocked_events": [],
+        "graph_pair_blocks": [],
+        "strict_engine_candidates": 0,
+        "formal_Q3_complete": false,
+        "graph_independent_pairs": 1,
+        "graph_complete_target_events": 2,
+        "graph_forwarded_signals": 0,
+        "forecast_signal_binding": "EXISTING_EVIDENCE_GRAPH_TO_STRICT_FORECAST_RESEARCH_ONLY",
+        "S2": 0,
+        "S3": 0
+      }
+    },
+    "scalar_eligible_no_source_binding": {
+      "dataset_kind": "SYNTHETIC_SCALAR_METADATA_NOT_SOURCE_FACTS",
+      "Q3": {
+        "eligible_pairs": 0,
+        "reasons": {
+          "STRUCTURED_PAIR_SOURCE_BINDING_REQUIRED": 1
+        },
+        "strict_engine_state": "BLOCKED",
+        "structured_precheck_eligible_pairs": 1,
+        "structured_pair_blocks": [
+          {
+            "demand_event": "synthetic-buyer",
+            "supply_event": "synthetic-maker",
+            "demand_source_fact": "synthetic-buyer-fact",
+            "supply_source_fact": "synthetic-maker-fact",
+            "state": "BLOCKED",
+            "reason": "STRUCTURED_PAIR_SOURCE_BINDING_REQUIRED",
+            "first_blocker": "STRUCTURED_PAIR_SOURCE_BINDING_REQUIRED",
+            "missing_contract": [
+              "SOURCE_FACT_TO_GRAPH_EVENT_BINDING",
+              "LOCATED_TARGET_AND_TEMPORAL_REFERENCES",
+              "VERIFIED_GRAPH_SUPPLY_QUALIFICATION_AND_COVERAGE"
+            ]
+          }
+        ],
+        "graph_blocked_events": [],
+        "graph_pair_blocks": [],
+        "strict_engine_candidates": 0,
+        "formal_Q3_complete": false,
+        "graph_independent_pairs": 0,
+        "graph_complete_target_events": 0,
+        "graph_forwarded_signals": 0,
+        "forecast_signal_binding": "EXISTING_EVIDENCE_GRAPH_TO_STRICT_FORECAST_RESEARCH_ONLY",
+        "S2": 0,
+        "S3": 0
+      }
+    }
+  },
+  "verification": {
+    "red": {
+      "command": "PYTHONPATH=src .venv/bin/python -m pytest -q tests/test_v4_q3_linkage_trace.py",
+      "executed_before_fix": true,
+      "failed": 5,
+      "passed": 2,
+      "failures": "Missing incomplete/unbound TARGET blocks, missing scalar-precheck diagnostic, missing coverage hold and missing Q3 graph block propagation"
+    },
+    "focused": {
+      "command": "PYTHONPATH=src .venv/bin/python -m pytest -q tests/test_v4_q3_linkage_trace.py tests/test_precursor_evidence_graph.py tests/test_v4_official_discovery.py tests/test_forecast_discovery.py",
+      "passed": 97,
+      "skipped": 1,
+      "failed": 0,
+      "skip": "Independent real pre-public holdout unavailable",
+      "log_sha256": "e37c9cd7dadea62d7b0322699a20e8582845ae82752fccb6134279db3a9b4618"
+    },
+    "protected_file_bytes_unchanged": {
+      "src/bct/forecast_discovery.py": true,
+      "src/bct/early_forecast.py": true,
+      "BCT_OBJECTIVE_LOCK.md": true
+    },
+    "official_producer_and_save_AST_unchanged": {
+      "extract_ocds": true,
+      "indicative_supply": true,
+      "read_context": true,
+      "save": true,
+      "enqueue": true
+    },
+    "objective_binding": {
+      "objective_version": "bct-objective-1",
+      "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+    },
+    "source_HTTP_requests": 0,
+    "AI_calls": 0,
+    "operational_writes": 0,
+    "stored_original_modifications": 0
+  },
+  "remaining_blocked": [
+    "ACTUAL_COMPLETE_QUALIFIED_PAIR_ABSENT_IN_ACCESSIBLE_SUBSET",
+    "SCALAR_TYPED_PAIR_HAS_NO_VERIFIED_NATIVE_FACT_TO_GRAPH_EVENT_BINDING_CONTRACT",
+    "INDEPENDENT_REAL_PRE_PUBLIC_PERFORMANCE_NOT_MEASURED"
+  ],
+  "no_new_S2_S3": true,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+}

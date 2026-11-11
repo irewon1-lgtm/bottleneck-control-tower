@@ -1,0 +1,137 @@
+{
+  "task_id": "BCT_V4_FULL_PIPELINE_DEBUG_20261111",
+  "plan_id": "BCT-V4-Q-1.0",
+  "Q_stage": "Q2",
+  "execution_at_utc": "2026-11-11T07:40:34.819699+00:00",
+  "baseline_sha": "23a0615f1a10f2b938cb2b5401706a1995b4d4f2",
+  "scope": "GENERIC_EXTRACTION_REPAIR_CONSUMED_DEVELOPMENT_ONLY",
+  "stages": [
+    {
+      "name": "preserved_input_integrity",
+      "status": "PASS",
+      "documents": 7
+    },
+    {
+      "name": "baseline_actual_misses_reproduced",
+      "status": "PASS",
+      "expected_bug_count": 2,
+      "actual_bug_count": 2
+    },
+    {
+      "name": "test_first_regression",
+      "status": "PASS",
+      "initial_failed": 6,
+      "initial_passed": 6
+    },
+    {
+      "name": "same_actual_statements_after_repair",
+      "status": "PASS",
+      "cases": 2
+    },
+    {
+      "name": "focused_and_related_regressions",
+      "status": "PASS",
+      "passed": 270,
+      "failed": 0
+    },
+    {
+      "name": "frozen_evidence_integrity",
+      "status": "PASS",
+      "evidence": "extraction-integrity.json"
+    },
+    {
+      "name": "same_consumed_six_literal_recognition",
+      "status": "PASS",
+      "before": {
+        "TP": 1,
+        "FP": 4,
+        "FN": 24,
+        "precision_denominator": 5,
+        "recall_denominator": 25,
+        "precision": 0.2,
+        "recall": 0.04,
+        "f1": 0.06666666666666667
+      },
+      "after": {
+        "TP": 1,
+        "FP": 4,
+        "FN": 24,
+        "precision_denominator": 5,
+        "recall_denominator": 25,
+        "precision": 0.2,
+        "recall": 0.04,
+        "f1": 0.06666666666666667
+      },
+      "historical_gold_and_windows_unchanged": true,
+      "observation": "NO_REGRESSION"
+    }
+  ],
+  "before_metrics": {
+    "TP": 0,
+    "FP": 1,
+    "FN": 2
+  },
+  "after_metrics": {
+    "TP": 2,
+    "FP": 0,
+    "FN": 0
+  },
+  "score_denominator": "TWO_ALREADY_CONSUMED_AUDITED_MODEL_OBJECT_STATEMENTS",
+  "new_independent_evaluation": false,
+  "source_originals_modified": false,
+  "gold_or_holdout_modified": false,
+  "source_requests": 0,
+  "model_inferences": 0,
+  "models_installed": 0,
+  "AI_calls": 0,
+  "operating_changes_by_subtask": false,
+  "full_suite_owner": "parent task; not claimed by this focused result",
+  "reader_version": "source-scope-reader-5",
+  "reader_sha256": "0b0dcfdd17eb2a5b892789a8b446425f7f4283808f2b4538fe152a7236212aea",
+  "files": [
+    "src/bct/precursor_scope_reader.py",
+    "tests/test_precursor_order_binding.py",
+    "docs/v4/full-pipeline-debug-20261111/extraction_replay.py"
+  ],
+  "verdicts_preserved": {
+    "AI_adoption": "FAIL",
+    "independent_accuracy": "BLOCKED",
+    "lead_performance": "BLOCKED",
+    "Q2": "PARTIAL",
+    "Q3_real_pairs": 0
+  },
+  "remaining_blocker": "NO_VERIFIED_SAME_TARGET_INDEPENDENT_OPPOSITE_SIDE_SUPPLY_FACTS",
+  "review": {
+    "independent_agents": true,
+    "issues_found": "serial comma object and unsupported contiguous list continuation",
+    "issues_reproduced_before_fix": true,
+    "issues_fixed": true,
+    "final_recheck": "PASS_PARENT_REVIEWER_106_TESTS_NO_IMPORTANT_OR_CRITICAL_ISSUES",
+    "unknown_item_identity_is_not_proof_of_uniqueness": true,
+    "subtask_focused_test_count": 37
+  },
+  "consumed_six_literal_product_metrics": {
+    "before": {
+      "TP": 1,
+      "FP": 4,
+      "FN": 24,
+      "precision_denominator": 5,
+      "recall_denominator": 25,
+      "precision": 0.2,
+      "recall": 0.04,
+      "f1": 0.06666666666666667
+    },
+    "after": {
+      "TP": 1,
+      "FP": 4,
+      "FN": 24,
+      "precision_denominator": 5,
+      "recall_denominator": 25,
+      "precision": 0.2,
+      "recall": 0.04,
+      "f1": 0.06666666666666667
+    }
+  },
+  "consumed_six_score_denominator": 25,
+  "consumed_six_scope": "HISTORICAL_EXACT_PARTIAL_WINDOWS_LITERAL_CANDIDATES_NOT_EVENT_OR_ADOPTION_METRICS"
+}

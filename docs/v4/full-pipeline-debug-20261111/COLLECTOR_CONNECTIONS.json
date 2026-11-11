@@ -1,0 +1,95 @@
+{
+  "task_id": "BCT_V4_FULL_PIPELINE_DEBUG_20261111",
+  "checked_at_UTC": "2026-11-11T07:43:31Z",
+  "schedule_audit": {
+    "Q1_Q2_scheduled_workflow_found": false,
+    "scope": "Current local development YAML plus exact main28d0b8c6 CPU workflow",
+    "manual_workflow": ".github/workflows/v4-cpu-private-research.yml",
+    "manual_jobs_require": "workflow_dispatch AND refs/heads/codex/bct-v4-integration",
+    "manual_job_lines": {
+      "q1-key": 323,
+      "q1-publish": 341,
+      "q1-connectivity": 365,
+      "q1-source-prior": 388,
+      "q1-source-process": 407,
+      "q1-source-publish": 542
+    },
+    "workflow_run_path": "Legacy pinned CPU research/publish only; main has only seed/recovery-check/bridge-recover dispatch purposes",
+    "registry_refresh_policy": "MANUAL_FIXED_SCOPE_ONLY; dataset-native new dates/revisions; no new schedule",
+    "registry_source_lines": {
+      "m3": 5880,
+      "g17": 5903,
+      "eia": 5926
+    }
+  },
+  "metadata_checks": [
+    {
+      "source_id": "m3",
+      "url": "https://www.census.gov/manufacturing/m3/index.html",
+      "GET_attempts": 1,
+      "status": 200,
+      "seconds": 0.434,
+      "bytes": 502449,
+      "sha256": "2c09bb8086135f85c970fa8143314cb68b3b671b6b7e9c3371eef768f33206c5",
+      "last_modified": "Tue, 03 Nov 2026 14:59:54 GMT"
+    },
+    {
+      "source_id": "g17",
+      "url": "https://www.federalreserve.gov/releases/g17/",
+      "GET_attempts": 1,
+      "status": 200,
+      "seconds": 0.186,
+      "bytes": 331230,
+      "sha256": "4f019a735d276704da9dec7b9094e8cb387018c6e9e32e6a60d8dec200f784d4",
+      "last_modified": "Fri, 16 Oct 2026 13:15:05 GMT"
+    },
+    {
+      "source_id": "eia",
+      "url": "https://www.eia.gov/electricity/data/eia860m/index.php",
+      "GET_attempts": 1,
+      "status": 200,
+      "seconds": 0.206,
+      "bytes": 93612,
+      "sha256": "834ceb32c60333a39cc0897a5bf8f09a5bdf8178f9cb4c3cc209867812b4f635",
+      "last_modified": null
+    }
+  ],
+  "limits": {
+    "automatic_retries": 0,
+    "redirects_followed": 0,
+    "data_file_GETs": 0,
+    "keyed_API_requests": 0,
+    "raw_files_saved": 0,
+    "DB_writes": 0,
+    "repository_edits": 0
+  },
+  "meaning": "Metadata landing-page connectivity only; no numeric data validation, source refresh, Q1 completion or scheduled operation claim",
+  "ESA_directory": {
+    "requested_url": "https://www.esa.int/rss",
+    "error_type": "HTTPError",
+    "error": "HTTP Error 404: Not Found",
+    "seconds": 1.33,
+    "requests": 1,
+    "feed_links": [],
+    "http_status": 404,
+    "category_preserving_replacements": "UNKNOWN_NO_OFFICIAL_DIRECTORY_OBTAINED",
+    "known_failed_feed_URLs_retried": 0,
+    "rss_feeds_yaml_modified": false,
+    "actual_replacement_XML_entries_checked": 0
+  },
+  "remaining_latest_RSS_failures": {
+    "receipt": "RSS_LATEST_RECEIPT.json",
+    "ESA_old_feed_404": 7,
+    "DOE_network_TLS": 6,
+    "USGS_empty_feed": 1,
+    "no_unchanged_failed_URL_retried": true
+  },
+  "credentials": {
+    "SEC_Census_EIA_presence": "ABSENT_AS_REPORTED_BY_ROOT_VALUES_NOT_READ_OR_PRINTED",
+    "known_403_endpoint_retries": 0
+  },
+  "current_task_public_GETs": 4,
+  "external_AI_calls": 0,
+  "new_models": 0,
+  "operational_writes": 0
+}

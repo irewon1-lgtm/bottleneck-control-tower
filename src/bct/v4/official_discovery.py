@@ -780,6 +780,20 @@ def q3_input(events, facts, *, as_of, documents=()):
             if d['source_hash'] == s['source_hash']:
                 reasons['INDEPENDENCE_COPIED_SOURCE'] += 1; continue
             eligible.append((d, s))
+    # Scalar eligibility is not a source binding. No current typed producer
+    # supplies a verified mapping from its native facts to located graph
+    # events, attributes, dates and qualified supply coverage. Preserve this
+    # dependency explicitly instead of silently discarding the precheck result.
+    structured_blocks = []
+    for d, s in eligible:
+        reason = 'STRUCTURED_PAIR_SOURCE_BINDING_REQUIRED'
+        reasons[reason] += 1
+        structured_blocks.append({'demand_event': d.get('id'), 'supply_event': s.get('id'),
+                                  'demand_source_fact': d.get('source_fact_id'), 'supply_source_fact': s.get('source_fact_id'),
+                                  'state': 'BLOCKED', 'reason': reason, 'first_blocker': reason,
+                                  'missing_contract': ['SOURCE_FACT_TO_GRAPH_EVENT_BINDING',
+                                                       'LOCATED_TARGET_AND_TEMPORAL_REFERENCES',
+                                                       'VERIFIED_GRAPH_SUPPLY_QUALIFICATION_AND_COVERAGE']})
     # Reuse the actual evidence graph and its fully located signal projection,
     # including relief, exact scope, provenance and12-36 month checks. Structured
     # proposals aren't inserted into prose or disguised as old parser events.
@@ -787,13 +801,18 @@ def q3_input(events, facts, *, as_of, documents=()):
     strict_batch = evaluated['protected_batch']
     # Only the graph's source-backed, qualified total/unallocated supply enters
     # the unchanged strict forecast engine. EARLY != qualified supply gap.
-    selected = []
+    selected = []; graph_pair_blocks = []
     for pair in evaluated['pairs']:
         if pair.get('engine_state') != 'FORWARDED_TO_UNCHANGED_EARLY_ENGINE': continue
         members = [s for s in strict_batch['signals'] if s['event_id'] in {pair['demand_event'], pair['supply_event']}]
         demand = next((s for s in members if s['role'] == 'DEMAND'), None)
         supply = next((s for s in members if s['role'] == 'SUPPLY'), None)
-        if not demand or not supply or not supply.get('qualified') or not supply.get('coverage_complete'): continue
+        if not demand or not supply: continue
+        if not supply.get('qualified') or not supply.get('coverage_complete'):
+            graph_pair_blocks.append({'demand_event': pair['demand_event'], 'supply_event': pair['supply_event'],
+                                      'reason': 'SUPPLY_UNKNOWN', 'first_blocker': 'QUALIFIED_ENTIRE_SUPPLY_SCOPE_UNPROVEN',
+                                      'missing_fields': [k for k in ('qualified', 'coverage_complete') if not supply.get(k)]})
+            continue
         need, ready = pair['comparison'].get('need'), pair['comparison'].get('readiness')
         if not need or not ready or need['start'] == 'UNKNOWN' or ready['start'] == 'UNKNOWN': continue
         period = {k: need[k] for k in ('start', 'end')}
@@ -803,6 +822,8 @@ def q3_input(events, facts, *, as_of, documents=()):
                          {**supply, 'period': period, 'available_date': ready['start']}])
     strict_result = forecast.discover(stamp_export({'documents': list(documents), 'signals': selected}), now=as_of, mode='BACKFILL')
     return {'eligible_pairs': len(selected)//2, 'reasons': dict(reasons), 'strict_engine_state': strict_result['state'],
+            'structured_precheck_eligible_pairs': len(eligible), 'structured_pair_blocks': structured_blocks,
+            'graph_blocked_events': evaluated['blocked'], 'graph_pair_blocks': graph_pair_blocks,
             'strict_engine_candidates': len(strict_result['candidates']), 'formal_Q3_complete': False,
             'graph_independent_pairs': evaluated['independent_pairs'], 'graph_complete_target_events': evaluated['complete_target_events'],
             'graph_forwarded_signals': len(strict_batch['signals']),

@@ -1,0 +1,55 @@
+{
+  "task_id": "BCT_V4_FULL_PIPELINE_DEBUG_20261111",
+  "code_base": "23a0615f1a10f2b938cb2b5401706a1995b4d4f2",
+  "verified_at": "2026-11-11T07:53:22.738833+00:00",
+  "python": {
+    "command": ".venv/bin/python -m pytest -q --junitxml=/tmp/bct-final-tests.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "1",
+        "tests": "1829",
+        "time": "134.682",
+        "timestamp": "2026-11-11T07:47:53.795400+00:00",
+        "hostname": "d7eb1b330ad2"
+      }
+    ],
+    "passed": 1828,
+    "skipped": [
+      {
+        "test": "tests.test_forecast_discovery::test_D_real_pre_public_holdout",
+        "reason": "BLOCKED: independent frozen real pre-public holdout and archived precursor facts unavailable"
+      }
+    ],
+    "exit_code": 0
+  },
+  "javascript": {
+    "command": "node --test tests/*.js",
+    "passed": 5,
+    "failed": 0,
+    "exit_code": 0
+  },
+  "independent_review": {
+    "critical": 0,
+    "important": 0,
+    "related_tests_passed": 106,
+    "closed_issue": "Ambiguous/unrecognized additional order-list items fail closed"
+  },
+  "source_files": {
+    "src/bct/precursor_scope_reader.py": "0b0dcfdd17eb2a5b892789a8b446425f7f4283808f2b4538fe152a7236212aea",
+    "src/bct/precursor_evidence_graph.py": "eedbb82645c91d5ea9d47f29350934f86f4284523bfc81c049426b8164cc0bee",
+    "src/bct/v4/official_discovery.py": "52311eb0220cae641da159da01d20fd6b9645a1ff9b9ebea06968aa1c4557c24",
+    "src/bct/review_artifact.py": "bda409f3decceb177300702d3ac6d6aa79d472e81f7dc2f5c7de961021ae3446",
+    ".github/scripts/rss_ai_outcome.py": "f462fa4c39b24db598255f7e54b5ba43a151f6de70026017bb304264614bdfe1",
+    ".github/workflows/rss-ai.yml": "58bc2d6691c0ca7494f9efae8b03063b8e4272f5956600e5bb4175a36577f6e5",
+    ".github/workflows/review-lead-shadow.yml": "57fec636c80e62711224468bc1c3ea0e591d464817bfb5815536c21404fbbce3"
+  },
+  "scope_limits": [
+    "Real pre-public holdout unavailable",
+    "No production main or DB writes",
+    "No CPU inference/model installation/new API keys/paid API calls",
+    "Monthly generation6 restore blocked by unavailable local passphrase"
+  ]
+}

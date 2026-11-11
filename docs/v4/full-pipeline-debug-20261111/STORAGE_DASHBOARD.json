@@ -1,0 +1,1260 @@
+{
+  "task_id": "BCT_V4_FULL_PIPELINE_DEBUG_20261111",
+  "plan_id": "BCT-V4-Q-1.0",
+  "scope": "Storage/restore/review/dashboard audit, /tmp replay only",
+  "production_writes": 0,
+  "new_paid_calls": 0,
+  "new_models": 0,
+  "new_CPU_windows": 0,
+  "storage": {
+    "private_repository_read": "PASS_CLI_READ_ONLY",
+    "private_refs": [
+      {
+        "ref": "refs/heads/codex/bct-v4-cpu-research-state",
+        "node_id": "REF_kwDOVKe3ytoAKnJlZnMvaGVhZHMvY29kZXgvYmN0LXY0LWNwdS1yZXNlYXJjaC1zdGF0ZQ",
+        "url": "https://api.github.com/repos/irewon1-lgtm/bct-v4-private-state/git/refs/heads/codex/bct-v4-cpu-research-state",
+        "object": {
+          "sha": "1ea13ed1ff81b75f8c6216177c34bb04c0e088b5",
+          "type": "commit",
+          "url": "https://api.github.com/repos/irewon1-lgtm/bct-v4-private-state/git/commits/1ea13ed1ff81b75f8c6216177c34bb04c0e088b5"
+        }
+      },
+      {
+        "ref": "refs/heads/codex/bct-v4-quantitative-state",
+        "node_id": "REF_kwDOVKe3ytoAKnJlZnMvaGVhZHMvY29kZXgvYmN0LXY0LXF1YW50aXRhdGl2ZS1zdGF0ZQ",
+        "url": "https://api.github.com/repos/irewon1-lgtm/bct-v4-private-state/git/refs/heads/codex/bct-v4-quantitative-state",
+        "object": {
+          "sha": "c87e8db9666387fa2d7346f43ac39c86bb45742b",
+          "type": "commit",
+          "url": "https://api.github.com/repos/irewon1-lgtm/bct-v4-private-state/git/commits/c87e8db9666387fa2d7346f43ac39c86bb45742b"
+        }
+      },
+      {
+        "ref": "refs/heads/main",
+        "node_id": "REF_kwDOVKe3yq9yZWZzL2hlYWRzL21haW4",
+        "url": "https://api.github.com/repos/irewon1-lgtm/bct-v4-private-state/git/refs/heads/main",
+        "object": {
+          "sha": "72ef6c93ec073dd05797271af1ba31423e5d3a14",
+          "type": "commit",
+          "url": "https://api.github.com/repos/irewon1-lgtm/bct-v4-private-state/git/commits/72ef6c93ec073dd05797271af1ba31423e5d3a14"
+        }
+      }
+    ],
+    "monthly_latest_metadata": {
+      "assets": [
+        {
+          "created_at": "2026-10-16T01:37:32Z",
+          "id": 645772992,
+          "name": "blob-09a9461041b09bea1cc8d87125717dbd6ac992ce0caf12150de78294b8a0de52.gpg",
+          "size": 9775781
+        },
+        {
+          "created_at": "2026-10-16T11:56:50Z",
+          "id": 647191319,
+          "name": "blob-610c80e614cbe9d95c43fd66d233d45e8cab1ab4395eff4b6c654307db213c4a.gpg",
+          "size": 220369
+        },
+        {
+          "created_at": "2026-10-16T01:45:00Z",
+          "id": 645789720,
+          "name": "blob-75dc07a9ef6200b5dc58b9d6e934e7a9c36940a00ef9dd9a74d6259a3a3ce0a9.gpg",
+          "size": 3111
+        },
+        {
+          "created_at": "2026-10-16T03:13:44Z",
+          "id": 645973816,
+          "name": "blob-9c3b4b74d6625e0af860f953bc6cd78f38dc52b55670e45d8ca3f1c244fc4baf.gpg",
+          "size": 324955
+        },
+        {
+          "created_at": "2026-10-16T11:00:20Z",
+          "id": 647054000,
+          "name": "blob-e48d315b81675bd6fcc6445dfe06f44dbc49a2163c479a0a74908d7fb9f71ceb.gpg",
+          "size": 14065745
+        },
+        {
+          "created_at": "2026-10-16T12:54:21Z",
+          "id": 647334072,
+          "name": "blob-e915375ee053fd14239576c5ea24eb4f0f9633662659535df21869095305c8b4.gpg",
+          "size": 405544
+        },
+        {
+          "created_at": "2026-10-16T05:47:30Z",
+          "id": 646294167,
+          "name": "blob-fff48c4866886a9eadc7eff6662e8ad487929c3b1a3159aeeee74e94310ef638.gpg",
+          "size": 13268964
+        },
+        {
+          "created_at": "2026-10-16T01:37:36Z",
+          "id": 645773120,
+          "name": "commit-00000000.gpg",
+          "size": 2565
+        },
+        {
+          "created_at": "2026-10-16T01:45:41Z",
+          "id": 645791294,
+          "name": "commit-00000001.gpg",
+          "size": 2914
+        },
+        {
+          "created_at": "2026-10-16T03:13:47Z",
+          "id": 645973952,
+          "name": "commit-00000002.gpg",
+          "size": 3199
+        },
+        {
+          "created_at": "2026-10-16T05:47:34Z",
+          "id": 646294257,
+          "name": "commit-00000003.gpg",
+          "size": 2628
+        },
+        {
+          "created_at": "2026-10-16T11:00:24Z",
+          "id": 647054187,
+          "name": "commit-00000004.gpg",
+          "size": 2628
+        },
+        {
+          "created_at": "2026-10-16T11:56:55Z",
+          "id": 647191599,
+          "name": "commit-00000005.gpg",
+          "size": 2917
+        },
+        {
+          "created_at": "2026-10-16T12:54:26Z",
+          "id": 647334250,
+          "name": "commit-00000006.gpg",
+          "size": 3202
+        }
+      ],
+      "id": 414441772,
+      "published_at": "2026-10-16T01:37:12Z",
+      "tag_name": "bct-v4-archive-monthly-2026-10",
+      "asset_bytes": 38084522,
+      "asset_count": 14,
+      "latest_completed_generation": 6
+    },
+    "monthly_latest_database_restore": "BLOCKED_EXISTING_ACTIONS_PASSPHRASE_NOT_AVAILABLE_IN_THIS_PROCESS",
+    "monthly_manifest_encrypted_bytes": 3202,
+    "latest_monthly_numeric_recount": "BLOCKED_NOT_SUBSTITUTED_WITH_OLDER_GIT_STATE",
+    "passphrase_recreation_or_secret_request": false,
+    "legacy_git_materialize": {
+      "restored": true,
+      "tables": 8,
+      "sqlite_sha256": "8b725e750f95810f423fdfacc3432183f5403888cf0e6d31dbfbe15ab6d6c16c",
+      "review": {
+        "format": "bct-q1-private-facts-1",
+        "observation_versions": 42601,
+        "sources": [
+          "census_trade",
+          "eia",
+          "g17",
+          "m3",
+          "ted",
+          "usaspending",
+          "usgs"
+        ],
+        "article_bodies": 0,
+        "native_source_files": 0,
+        "original_evidence_recovery": false,
+        "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+        "CPU_queue_restored": false,
+        "automatic_promotion": false
+      }
+    },
+    "legacy_git_separate_process_restore": {
+      "restored": true,
+      "tables": 8,
+      "sqlite_sha256": "8b725e750f95810f423fdfacc3432183f5403888cf0e6d31dbfbe15ab6d6c16c",
+      "review": {
+        "format": "bct-q1-private-facts-1",
+        "observation_versions": 42601,
+        "sources": [
+          "census_trade",
+          "eia",
+          "g17",
+          "m3",
+          "ted",
+          "usaspending",
+          "usgs"
+        ],
+        "article_bodies": 0,
+        "native_source_files": 0,
+        "original_evidence_recovery": false,
+        "rights": "Official numerical facts/identifiers and own processing state only; native source rights not granted.",
+        "CPU_queue_restored": false,
+        "automatic_promotion": false
+      }
+    },
+    "legacy_git_recount": {
+      "scope": "Latest logical facts in private Git anchor c87e8db9666387fa2d7346f43ac39c86bb45742b only; not latest encrypted monthly generation6",
+      "versions": 42601,
+      "latest_logical_records": 38231,
+      "numeric": 38046,
+      "physical_numeric": 21916,
+      "sources": {
+        "m3": 540,
+        "g17": 1080,
+        "usaspending": 8498,
+        "eia": 18745,
+        "ted": 3645,
+        "usgs": 372,
+        "census_trade": 5166
+      },
+      "latest_source_acquired_at": "2026-10-15T14:54:42.189427+00:00",
+      "integrity": "ok",
+      "tables": {
+        "metadata": 2,
+        "blobs": 0,
+        "documents": 0,
+        "captures": 0,
+        "readings": 0,
+        "runs": 0,
+        "firsts": 0,
+        "events": 45049
+      }
+    },
+    "current_cpu_separate_process_restore": {
+      "restored": true,
+      "tables": 8,
+      "sqlite_sha256": "dc2434510ec58e247c838353ad7c8d95f7f127161431ec55e4db1849f80fa7db",
+      "event_kind_counts": {
+        "CPU_QUEUE_IMPORT": 9,
+        "CPU_QUEUE_LEGACY_COMPLETE": 41,
+        "CPU_RESUME_MANIFEST": 1,
+        "CPU_RESUME_REVIEW": 20,
+        "CPU_RESUME_RUN": 4,
+        "CPU_RESUME_SOURCE": 41,
+        "CPU_RESUME_WINDOW": 1277,
+        "CROSS_COMMON_EVIDENCE": 140
+      },
+      "integrity": "ok"
+    }
+  },
+  "review": {
+    "state_counts": {
+      "branch": "review-lead-shadow-state",
+      "commit": "0ad6ba0a9a6cea0211c760b3e19502ad9e29a54c",
+      "base_immutable_files_git_blob_hash_verified": 6046,
+      "all_time_run_receipts": 197,
+      "all_time_intake_records": 2837,
+      "queue_records_at_remote_snapshot": 2837,
+      "semantic_records_at_remote_snapshot": 0,
+      "first_review_records_at_remote_snapshot": 0,
+      "week_start": "2026-11-04T00:00:00Z",
+      "week_run_receipts": 39,
+      "week_intake_records": 578,
+      "week_statuses": {
+        "HOLD": 578
+      },
+      "week_alerts": 0,
+      "week_handoff_skipped": 703,
+      "week_SKIP_reasons": {
+        "CAPTURE_PROVENANCE_NOT_PASS": 703
+      },
+      "latest": {
+        "run_id": 42942892140,
+        "source_run_id": 42939818925,
+        "started_at": "2026-11-11T02:06:11.481900+00:00",
+        "records": 2,
+        "statuses": {
+          "HOLD": 2
+        },
+        "alerts": 0,
+        "handoff_skipped": 3
+      },
+      "EARLY_success_count": 0,
+      "LIVE_writes": 0,
+      "workflow_success_is_not_semantic_review_success": true
+    },
+    "week_jobs": [
+      {
+        "run_id": 42942892140,
+        "job_id": 130268685805,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42922503435,
+        "job_id": 130200592913,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42793857910,
+        "job_id": 129753846197,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42870188401,
+        "job_id": 130019067713,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42900932675,
+        "job_id": 130126375706,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42832583642,
+        "job_id": 129886225670,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42755229282,
+        "job_id": 129627951850,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42737371299,
+        "job_id": 129569780154,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42697152649,
+        "job_id": 129431937968,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42722116526,
+        "job_id": 129518387361,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42594572300,
+        "job_id": 129083980939,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42639527520,
+        "job_id": 129236581898,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42502046388,
+        "job_id": 128796709021,
+        "conclusion": "failure",
+        "intake": "skipped"
+      },
+      {
+        "run_id": 42528038667,
+        "job_id": 128875894735,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42546609985,
+        "job_id": 128932858878,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42512566826,
+        "job_id": 128828600921,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42465119070,
+        "job_id": 128682717407,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42481267598,
+        "job_id": 128733508685,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42433569311,
+        "job_id": 128587503891,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42417894872,
+        "job_id": 128539826972,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42390645727,
+        "job_id": 128457310496,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42371945589,
+        "job_id": 128401703691,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42402882402,
+        "job_id": 128494269853,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42356876075,
+        "job_id": 128356770961,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42324850749,
+        "job_id": 128257648761,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42309433859,
+        "job_id": 128206914729,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42289789144,
+        "job_id": 128139889971,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42261360037,
+        "job_id": 128041827340,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42232550557,
+        "job_id": 127941804230,
+        "conclusion": "success",
+        "intake": "skipped"
+      },
+      {
+        "run_id": 42193954107,
+        "job_id": 127812437359,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42129057767,
+        "job_id": 127600806134,
+        "conclusion": "success",
+        "intake": "skipped"
+      },
+      {
+        "run_id": 42148907223,
+        "job_id": 127667040830,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42111935758,
+        "job_id": 127541437450,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42039440921,
+        "job_id": 127286044613,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42002026260,
+        "job_id": 127159348806,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 42081655259,
+        "job_id": 127435981491,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 41953393312,
+        "job_id": 127002402893,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 41935642588,
+        "job_id": 126943286400,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 41911486455,
+        "job_id": 126859906490,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 41884578697,
+        "job_id": 126765502865,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 41839882352,
+        "job_id": 126608337388,
+        "conclusion": "success",
+        "intake": "success"
+      },
+      {
+        "run_id": 41756797890,
+        "job_id": 126334691588,
+        "conclusion": "success",
+        "intake": "skipped"
+      },
+      {
+        "run_id": 41803954491,
+        "job_id": 126486257046,
+        "conclusion": "success",
+        "intake": "success"
+      }
+    ],
+    "missing_handoff_jobs": [
+      {
+        "run_id": 42232550557,
+        "job_id": 127941804230,
+        "conclusion": "success",
+        "intake": "skipped",
+        "lines": [
+          "2026-11-06T14:17:18.1276571Z   ACQUISITION_RUN_ID: 42224871845",
+          "2026-11-06T14:17:18.1276802Z   ACQUISITION_STARTED_AT: 2026-11-06T13:21:42Z",
+          "2026-11-06T14:17:22.5201012Z   BASE_REVIEW_SHA: f26dd1102cbd273a73f79a447d7035aed2b2b49d",
+          "2026-11-06T14:18:19.0063157Z   BASE_REVIEW_SHA: f26dd1102cbd273a73f79a447d7035aed2b2b49d"
+        ]
+      },
+      {
+        "run_id": 42129057767,
+        "job_id": 127600806134,
+        "conclusion": "success",
+        "intake": "skipped",
+        "lines": [
+          "2026-11-05T23:24:15.2709604Z   ACQUISITION_RUN_ID: 42129040987",
+          "2026-11-05T23:24:15.2709892Z   ACQUISITION_STARTED_AT: 2026-11-05T23:23:30Z",
+          "2026-11-05T23:24:18.9611236Z   BASE_REVIEW_SHA: 4da6b18eaf1b22be49e25e4a5080588ab3d3e596",
+          "2026-11-05T23:25:22.2420114Z   BASE_REVIEW_SHA: 4da6b18eaf1b22be49e25e4a5080588ab3d3e596"
+        ]
+      },
+      {
+        "run_id": 41756797890,
+        "job_id": 126334691588,
+        "conclusion": "success",
+        "intake": "skipped",
+        "lines": [
+          "2026-11-04T01:50:52.2597467Z   ACQUISITION_RUN_ID: 41756307100",
+          "2026-11-04T01:50:52.2597749Z   ACQUISITION_STARTED_AT: 2026-11-04T01:46:15Z",
+          "2026-11-04T01:50:55.3529442Z   BASE_REVIEW_SHA: d3b5deea6966a6036f12913dc1b006fa553d3f60",
+          "2026-11-04T01:51:51.6852925Z   BASE_REVIEW_SHA: d3b5deea6966a6036f12913dc1b006fa553d3f60"
+        ]
+      }
+    ],
+    "run_log_lines": {
+      "latest": {
+        "run_id": 42942892140,
+        "job_id": 130268685805,
+        "lines": [
+          "2026-11-11T01:59:58.9109718Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe",
+          "2026-11-11T01:59:59.6440294Z   ref: 28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+          "2026-11-11T01:59:59.9741210Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+          "2026-11-11T02:00:00.4384314Z [command]/usr/bin/git checkout --progress --force 28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+          "2026-11-11T02:00:00.5019918Z 28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+          "2026-11-11T02:00:08.4545701Z   ACQUISITION_RUN_ID: 42939818925",
+          "2026-11-11T02:00:08.4545933Z   ACQUISITION_STARTED_AT: 2026-11-11T01:33:31Z",
+          "2026-11-11T02:06:10.0634559Z   BASE_REVIEW_SHA: 76ba081f28aa9fcce639af87c8e0e57ba0a76bb0",
+          "2026-11-11T02:06:11.9595871Z {\"state\": \"PASS\", \"records\": 2, \"alerts\": 0, \"EARLY_success_count\": 0}",
+          "2026-11-11T02:06:11.9803913Z   BASE_REVIEW_SHA: 76ba081f28aa9fcce639af87c8e0e57ba0a76bb0",
+          "2026-11-11T02:07:37.6295997Z    76ba081..0ad6ba0  0ad6ba0a9a6cea0211c760b3e19502ad9e29a54c -> review-lead-shadow-state",
+          "2026-11-11T02:07:37.6343085Z 0ad6ba0a9a6cea0211c760b3e19502ad9e29a54c",
+          "2026-11-11T02:07:37.6497724Z   BASE_REVIEW_SHA: 76ba081f28aa9fcce639af87c8e0e57ba0a76bb0",
+          "2026-11-11T02:07:43.2854906Z   BASE_REVIEW_SHA: 76ba081f28aa9fcce639af87c8e0e57ba0a76bb0"
+        ]
+      },
+      "failed": {
+        "run_id": 42502046388,
+        "job_id": 128796709021,
+        "lines": [
+          "2026-11-08T16:52:17.4432065Z   ACQUISITION_RUN_ID: 42500260011",
+          "2026-11-08T16:53:57.3289509Z error downloading precursor-private-cache: error extracting zip archive: error extracting \"evaluations/4b8c9f893380ed5f1eeffc7b4745b185f8f199777c43b5f30d74b51120c9615f.json\": write /home/runner/work/bottleneck-control-tower/bottleneck-control-tower/var/review-source-cache/evaluations/4b8c9f893380ed5f1eeffc7b4745b185f8f199777c43b5f30d74b51120c9615f.json: no space left on device",
+          "2026-11-08T16:53:57.3326132Z ##[error]Process completed with exit code 1.",
+          "2026-11-08T16:54:00.5869663Z   BASE_REVIEW_SHA: 4f8b0f042563f598829e9b38bff95d2cd611a547",
+          "2026-11-08T16:54:46.4635014Z 4f8b0f042563f598829e9b38bff95d2cd611a547",
+          "2026-11-08T16:54:46.4773055Z   BASE_REVIEW_SHA: 4f8b0f042563f598829e9b38bff95d2cd611a547"
+        ]
+      }
+    },
+    "confirmed_defect": {
+      "run_id": 42502046388,
+      "job_id": 128796709021,
+      "upstream_run_id": 42500260011,
+      "failure": "Full precursor-private-cache extraction failed: no space left on device in unrelated evaluations directory",
+      "upstream_compressed_bytes": 3895345797,
+      "latest_upstream_compressed_bytes": 4598165007,
+      "preserved_review_base_and_result": "4f8b0f042563f598829e9b38bff95d2cd611a547"
+    },
+    "fix": {
+      "files": [
+        "src/bct/review_artifact.py",
+        ".github/workflows/review-lead-shadow.yml",
+        "tests/test_review_artifact.py"
+      ],
+      "compressed_limit": 6442450944,
+      "expanded_limit": 268435456,
+      "free_space_reserve": 1073741824,
+      "preflight": "Requires expected compressed bytes + bounded expanded limit + reserve before downloading; verifies extraction destination disk separately",
+      "required_entries": "Only current-acquisition captures/*.json and their referenced raw/<sha256>.html. Malformed capture metadata retained for existing handoff skip receipts. No evaluations or historical raw expansion.",
+      "compressed_archive_removed_after_processing": true,
+      "frozen_intake_executable_changes": 0,
+      "latest_real_archive_selected_byte_count": "NOT_MEASURED_NO_4_6_GB_REDOWNLOAD",
+      "real_Actions_verification_after_fix": "NOT_RUN"
+    }
+  },
+  "one_source_local_replay": {
+    "status": "PASS_ONE_EXISTING_SOURCE_LOCAL_REPLAY",
+    "source_document_id": "stage4doc-7b0adb76aad1d07c72aa37250c3e8e9cee0226d81ee3c5dd5df4ec989b3e3ed9",
+    "source_url": "https://www.aehr.com/2026/07/aehr-receives-follow-on-production-order-from-lead-silicon-photonics-customer-for-fully-automated-fox-xp-wafer-level-burn-in-system/",
+    "source_acquired_at": "2026-10-14T01:49:18.438454+00:00",
+    "source_body_sha256": "850ee76ba3a99af6d7e0b9c989e8c205e158c091c27f8c7c442e663a4aa8ce8a",
+    "source_raw_sha256": "a02cb7e8c992432a0a6a2c506e4454f9a9f92572c4f01c9e0050888730c87321",
+    "native_raw_hash_and_current_proof_loader_match": true,
+    "input_metadata": "Current raw re-extraction in /tmp only; frozen source published_at remains date-only; current loader returns source timestamp. Not an exact frozen metadata replay.",
+    "metadata_differences_from_frozen": [
+      "published_at"
+    ],
+    "original_snapshot_sha256": "588c7b8d5ce6446a0acb88d6e1f0c49482c1a17ea366e7b4f221e1cf3d8bbb2f",
+    "original_snapshot_unchanged": true,
+    "bounded_artifact": {
+      "selected_captures": 1,
+      "selected_raw_files": 1,
+      "expanded_bytes": 153843,
+      "expanded_limit": 268435456,
+      "historical_cache_modified": false,
+      "frozen_reader_modified": false
+    },
+    "handoff_documents": 1,
+    "source_store_documents": 1,
+    "new_process_supply_review": {
+      "source_documents": 1,
+      "supply_review_cases": 1,
+      "adopted_events": 1,
+      "strict_candidates": 0,
+      "live_firsts": 0
+    },
+    "frozen_review_copy": {
+      "records": 1,
+      "statuses": [
+        "HOLD"
+      ],
+      "alerts": 0,
+      "old_files_preserved": 6046,
+      "LIVE_writes": 0,
+      "EARLY_success_count": 0
+    },
+    "new_source_HTTP_requests": 0,
+    "new_CPU_windows": 0,
+    "AI_calls": 0,
+    "production_writes": 0,
+    "scope": "BACKFILL function replay on new /tmp ledgers and a copied existing review state; no new prospective acquisition or performance proof",
+    "sqlite_backup_tables_equal_source": true,
+    "additional_readonly_new_process_restore": {
+      "sha256": "7898822a476a315fc8624465152f55a894a92e13074d11a913597bf8a46778b2",
+      "integrity": "ok",
+      "documents": 1
+    },
+    "backup_and_readonly_restore_byte_equal": true,
+    "measurement_note": "Initial live-file-versus-SQLite-backup byte comparison differed because backup serialization bytes may differ. Exact eight-table equality and a new-process byte-identical restore of the backup were verified afterward; initial receipt retained in /tmp."
+  },
+  "preserved_held_attempts": [
+    {
+      "source": "Aehr frozen record",
+      "status": "BLOCKED_EXACT_STORED_METADATA_HANDOFF",
+      "reason": "Frozen publication date-only differs from original raw timestamp returned by current proof loader. Original record preserved; successful local BACKFILL input explicitly re-extracted original raw."
+    },
+    {
+      "source_document_id": "v4doc-dfb2b273a80d08495e4dd482f9906c318e6f1f4f1effc6e1b20e859da30168db",
+      "status": "EXISTING_CORPUS_EXCLUDED",
+      "current_raw_proof_exact_fields_match": true,
+      "bypass": false
+    }
+  ],
+  "dashboard": {
+    "task": "BCT_V4_FULL_PIPELINE_DEBUG_20261111",
+    "plan_id": "BCT-V4-Q-1.0",
+    "checked_at": "2026-11-11T07:37:54.214933+00:00",
+    "scope": "Read-only actual deployed GitHub Pages dashboard and publication path audit; no production or repository writes.",
+    "url": "https://irewon1-lgtm.github.io/bottleneck-control-tower/",
+    "hosting": {
+      "url": "https://api.github.com/repos/irewon1-lgtm/bottleneck-control-tower/pages",
+      "status": null,
+      "cname": null,
+      "custom_404": false,
+      "html_url": "https://irewon1-lgtm.github.io/bottleneck-control-tower/",
+      "build_type": "workflow",
+      "source": {
+        "branch": "main",
+        "path": "/"
+      },
+      "public": true,
+      "protected_domain_state": null,
+      "pending_domain_unverified_at": null,
+      "https_enforced": true
+    },
+    "branch_heads": {
+      "main": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+      "integration": "23a0615f1a10f2b938cb2b5401706a1995b4d4f2"
+    },
+    "publication_workflow": {
+      "file": ".github/workflows/ui-pages.yml",
+      "ref": "main",
+      "saved_file": "/tmp/bct-main-ui-pages.yml",
+      "source_checkout_branch": "codex/bct-v4-integration",
+      "upstream_gate": "V4 dashboard release gate",
+      "automatic_publish_trigger": "successful same-repository push gate on integration, plus current-source SHA equality",
+      "consumes_canonical_data_branch": false,
+      "reads_private_monthly_releases": false,
+      "latest_pages_run": {
+        "id": 38914878655,
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/38914878655",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "head_branch": "main",
+        "event": "workflow_run",
+        "conclusion": "success",
+        "created_at": "2026-10-16T14:19:51Z",
+        "updated_at": "2026-10-16T14:21:27Z"
+      },
+      "latest_gate_run": {
+        "id": 38914608375,
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/38914608375",
+        "head_sha": "23a0615f1a10f2b938cb2b5401706a1995b4d4f2",
+        "head_branch": "codex/bct-v4-integration",
+        "event": "push",
+        "conclusion": "success",
+        "created_at": "2026-10-16T14:17:47Z",
+        "updated_at": "2026-10-16T14:19:49Z"
+      }
+    },
+    "manifest": {
+      "source_branch": "codex/bct-v4-integration",
+      "code_commit": "23a0615f1a10f2b938cb2b5401706a1995b4d4f2",
+      "generated_at": "2026-10-16T14:20:15.719967+00:00",
+      "data_at": "2026-10-14T23:16:13.592709+00:00",
+      "dashboard_sha256": "e55a85ebb6409e42266b225af8f4e079a84902081861f1268f9a7c4b0ee61d55",
+      "evidence_count": 1703,
+      "evidence_bytes": 5044684,
+      "site_type": "PUBLIC_STATIC_READ_ONLY",
+      "new_ai_calls": 0
+    },
+    "freshness": {
+      "code_verdict": "PASS_MATCHES_CURRENT_INTEGRATION_HEAD",
+      "data_verdict": "FROZEN_RESEARCH_SNAPSHOT_NOT_CURRENT_OPERATIONAL_DATA",
+      "deployed_code_matches_current_integration": true,
+      "dashboard_data_at": "2026-10-14T23:16:13.592709+00:00",
+      "quantitative_receipt_at": "2026-10-16T05:54:50.426844+00:00",
+      "generated_at": "2026-10-16T14:20:15.719967+00:00",
+      "dashboard_data_age_days": 27.348,
+      "publication_age_days": 25.721,
+      "complete_live_progress_equals_local_latest_progress": false,
+      "quantitative_top_fields_match_public_progress": true,
+      "explanation": "Refreshing browser re-reads static JSON; RSS/data/private storage writes do not regenerate this integration-branch snapshot by themselves. New validated research bundle/progress in integration plus passing release gate is the existing update path."
+    },
+    "counts": {
+      "main_evidence_records": 511,
+      "CPU_recovery_records": 1192,
+      "total_detail_count": 1703,
+      "numeric_observations_displayed": 38046,
+      "physical_quantity_observations_displayed": 21916,
+      "versioned_records_receipt": 42601,
+      "future_candidates": {
+        "S1": 0,
+        "S2": 0,
+        "S3": 0
+      },
+      "independent_latest_database_recount": "NOT_PERFORMED_BY_THIS_DASHBOARD_SUBTASK"
+    },
+    "integrity": {
+      "downloaded_dashboard_bytes": 1755910,
+      "downloaded_dashboard_sha256": "e55a85ebb6409e42266b225af8f4e079a84902081861f1268f9a7c4b0ee61d55",
+      "hash_matches_manifest": true,
+      "sample_detail_count_freshly_fetched": 4,
+      "sample_detail_ids_and_ref_verification": [
+        {
+          "id": "931ad34bdf20b30118ea19277edad659d6919f206b8f1c858fbe449bb0263224",
+          "http_status": 200,
+          "all_references_verified": true
+        },
+        {
+          "id": "f5701a63e61661edb66e9174d0804eb752021cfa790b6a7816ebaaefda9a63d0",
+          "http_status": 200,
+          "all_references_verified": true
+        },
+        {
+          "id": "72e5b04178e47f1edecfa68df0c9ba382997df90a8e0eb9f257c7ff1e9c7393c",
+          "http_status": 200,
+          "all_references_verified": true
+        },
+        {
+          "id": "e7756e708009f2e54e58ebde86c03f2e62b57db578b8b3d295182dbb2f8ff976",
+          "http_status": 200,
+          "all_references_verified": true
+        }
+      ],
+      "all_1703_detail_validation": "HISTORICAL_LATEST_GATE_AND_PAGES_BUILD_SUCCESS; only4details rechecked live in this audit"
+    },
+    "live_browser": {
+      "at": "2026-11-11T07:36:41.458855+00:00",
+      "url": "https://irewon1-lgtm.github.io/bottleneck-control-tower/",
+      "checks": [
+        "LIVE_OVERVIEW_SHOWS_38046_NUMERIC_AND_21916_PHYSICAL",
+        "LIVE_DESKTOP_OVERVIEW",
+        "LIVE_DESKTOP_CANDIDATES",
+        "LIVE_DESKTOP_EVIDENCE",
+        "LIVE_DESKTOP_AUTOMATION",
+        "LIVE_EVIDENCE_DETAIL_OPEN",
+        "FAIL_MOBILE_OVERFLOW_390",
+        "FAIL_MOBILE_OVERFLOW_320",
+        "LIVE_REFRESH_READ_ONLY",
+        "LIVE_FOUR_BOUNDARY_EVIDENCE_DETAILS_MATCH_IDS",
+        "NO_BROWSER_ERROR_OR_MUTATING_REQUEST"
+      ],
+      "errors": [],
+      "failed_requests": [],
+      "mutating_requests": [],
+      "evidence_details": [
+        {
+          "id": "931ad34bdf20b30118ea19277edad659d6919f206b8f1c858fbe449bb0263224",
+          "http_status": 200,
+          "all_references_verified": true
+        },
+        {
+          "id": "f5701a63e61661edb66e9174d0804eb752021cfa790b6a7816ebaaefda9a63d0",
+          "http_status": 200,
+          "all_references_verified": true
+        },
+        {
+          "id": "72e5b04178e47f1edecfa68df0c9ba382997df90a8e0eb9f257c7ff1e9c7393c",
+          "http_status": 200,
+          "all_references_verified": true
+        },
+        {
+          "id": "e7756e708009f2e54e58ebde86c03f2e62b57db578b8b3d295182dbb2f8ff976",
+          "http_status": 200,
+          "all_references_verified": true
+        }
+      ],
+      "http_status": 200,
+      "detail_title": "A320 Family",
+      "mobile_layout": [
+        {
+          "innerWidth": 390,
+          "scrollWidth": 402,
+          "overflow": [
+            {
+              "tag": "HTML",
+              "id": "",
+              "cls": "",
+              "text": "\n  \n  \n  \n  \n  한눈에 보기 · BCT V4 연구실\n  \n  \n  \n\n\n  본문으로 바로 가기\n  \n    \n      BCT미래 병목 연구실 V4\n      연구 살펴보기\n      \n        ◫한눈에 보기\n        ◎미래 병목 후보\n        ▤판단 근거\n ",
+              "left": 0,
+              "right": 390,
+              "width": 390,
+              "clientWidth": 390,
+              "scrollWidth": 402,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "BODY",
+              "id": "",
+              "cls": "",
+              "text": "\n  본문으로 바로 가기\n  \n    \n      BCT미래 병목 연구실 V4\n      연구 살펴보기\n      \n        ◫한눈에 보기\n        ◎미래 병목 후보\n        ▤판단 근거\n        ↻자동화 현황\n      \n      연구 자료를 보는 화면저장된 기",
+              "left": 0,
+              "right": 390,
+              "width": 390,
+              "clientWidth": 390,
+              "scrollWidth": 402,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "DIV",
+              "id": "",
+              "cls": "app-shell",
+              "text": "\n    \n      BCT미래 병목 연구실 V4\n      연구 살펴보기\n      \n        ◫한눈에 보기\n        ◎미래 병목 후보\n        ▤판단 근거\n        ↻자동화 현황\n      \n      연구 자료를 보는 화면저장된 기록을 읽습니다.운영 판단과 알",
+              "left": 0,
+              "right": 390,
+              "width": 390,
+              "clientWidth": 390,
+              "scrollWidth": 402,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "DIV",
+              "id": "",
+              "cls": "workspace",
+              "text": "\n      BCT 연구실 / 전 산업 탐색읽기 전용↻ 기록 새로 읽기\n      \n        검증된 고정 연구 자료 · 마지막 동기화 2026. 10. 16. 23:20 · 무료 GitHub Pages · 자동 배포. 새로 읽기는 수집·분석을 실행하지 않습니다.\n        전 ",
+              "left": 0,
+              "right": 390,
+              "width": 390,
+              "clientWidth": 390,
+              "scrollWidth": 402,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "MAIN",
+              "id": "main",
+              "cls": "",
+              "text": "\n        검증된 고정 연구 자료 · 마지막 동기화 2026. 10. 16. 23:20 · 무료 GitHub Pages · 자동 배포. 새로 읽기는 수집·분석을 실행하지 않습니다.\n        전 산업 탐색 · 연구 기록한눈에 보기자료가 얼마나 읽혔는지, 어떤 변화가 확인됐는지 ",
+              "left": 0,
+              "right": 390,
+              "width": 390,
+              "clientWidth": 390,
+              "scrollWidth": 402,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "DIV",
+              "id": "content",
+              "cls": "",
+              "text": "전 산업 탐색 · 연구 기록한눈에 보기자료가 얼마나 읽혔는지, 어떤 변화가 확인됐는지 살펴봅니다.데이터 기준 · 한국 시간2026. 10. 15. 08:16코드 버전 23a0615f1a10화면에서 읽은 시각 2026. 11. 11. 16:36근거를 모으는 단계아직 미래 병목 후보로 확정",
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "clientWidth": 358,
+              "scrollWidth": 386,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "SECTION",
+              "id": "",
+              "cls": "hero",
+              "text": "근거를 모으는 단계아직 미래 병목 후보로 확정된 대상은 없습니다수요·공급 변화가 있다는 것만으로 병목을 판단하지 않습니다. 같은 제품과 기간의 독립적인 근거를 연결하고, 공급을 늘릴 대안까지 확인합니다.검토 중인 변화 살펴보기  →향후 12~36개월 후보0건자료 부족은 ‘병목 없음’을 ",
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "clientWidth": 356,
+              "scrollWidth": 461,
+              "overflowX": "hidden",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "SECTION",
+              "id": "",
+              "cls": "panel",
+              "text": "최신 Q1·Q2·Q3 연구 진행공식 통계 수치와 미래 병목 판정은 구분합니다.수치 관측▤38,046건공식 자료 원문에 저장된 관측실물량 관측◫21,916건관측 수이며 적격 공급 확정은 아님미래 병목 후보◎0건독립 공급 공백 Q3 미검증현재 판정: Q1_PARTIAL_Q2_AUTOMATI",
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "clientWidth": 356,
+              "scrollWidth": 385,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "P",
+              "id": "",
+              "cls": "section-note",
+              "text": "현재 판정: Q1_PARTIAL_Q2_AUTOMATIC_RESEARCH_PARTIAL_Q3_QUALIFIED_PAIRS_BLOCKED · 기록 시각 2026. 10. 16. 14:54",
+              "left": 36,
+              "right": 354,
+              "width": 318,
+              "clientWidth": 318,
+              "scrollWidth": 366,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            }
+          ]
+        },
+        {
+          "innerWidth": 320,
+          "scrollWidth": 402,
+          "overflow": [
+            {
+              "tag": "HTML",
+              "id": "",
+              "cls": "",
+              "text": "\n  \n  \n  \n  \n  한눈에 보기 · BCT V4 연구실\n  \n  \n  \n\n\n  본문으로 바로 가기\n  \n    \n      BCT미래 병목 연구실 V4\n      연구 살펴보기\n      \n        ◫한눈에 보기\n        ◎미래 병목 후보\n        ▤판단 근거\n ",
+              "left": 0,
+              "right": 320,
+              "width": 320,
+              "clientWidth": 320,
+              "scrollWidth": 402,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "BODY",
+              "id": "",
+              "cls": "",
+              "text": "\n  본문으로 바로 가기\n  \n    \n      BCT미래 병목 연구실 V4\n      연구 살펴보기\n      \n        ◫한눈에 보기\n        ◎미래 병목 후보\n        ▤판단 근거\n        ↻자동화 현황\n      \n      연구 자료를 보는 화면저장된 기",
+              "left": 0,
+              "right": 320,
+              "width": 320,
+              "clientWidth": 320,
+              "scrollWidth": 402,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "DIV",
+              "id": "",
+              "cls": "app-shell",
+              "text": "\n    \n      BCT미래 병목 연구실 V4\n      연구 살펴보기\n      \n        ◫한눈에 보기\n        ◎미래 병목 후보\n        ▤판단 근거\n        ↻자동화 현황\n      \n      연구 자료를 보는 화면저장된 기록을 읽습니다.운영 판단과 알",
+              "left": 0,
+              "right": 320,
+              "width": 320,
+              "clientWidth": 320,
+              "scrollWidth": 402,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "DIV",
+              "id": "",
+              "cls": "workspace",
+              "text": "\n      BCT 연구실 / 전 산업 탐색읽기 전용↻ 기록 새로 읽기\n      \n        검증된 고정 연구 자료 · 마지막 동기화 2026. 10. 16. 23:20 · 무료 GitHub Pages · 자동 배포. 새로 읽기는 수집·분석을 실행하지 않습니다.\n        전 ",
+              "left": 0,
+              "right": 320,
+              "width": 320,
+              "clientWidth": 320,
+              "scrollWidth": 402,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "MAIN",
+              "id": "main",
+              "cls": "",
+              "text": "\n        검증된 고정 연구 자료 · 마지막 동기화 2026. 10. 16. 23:20 · 무료 GitHub Pages · 자동 배포. 새로 읽기는 수집·분석을 실행하지 않습니다.\n        전 산업 탐색 · 연구 기록한눈에 보기자료가 얼마나 읽혔는지, 어떤 변화가 확인됐는지 ",
+              "left": 0,
+              "right": 320,
+              "width": 320,
+              "clientWidth": 320,
+              "scrollWidth": 402,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "DIV",
+              "id": "content",
+              "cls": "",
+              "text": "전 산업 탐색 · 연구 기록한눈에 보기자료가 얼마나 읽혔는지, 어떤 변화가 확인됐는지 살펴봅니다.데이터 기준 · 한국 시간2026. 10. 15. 08:16코드 버전 23a0615f1a10화면에서 읽은 시각 2026. 11. 11. 16:36근거를 모으는 단계아직 미래 병목 후보로 확정",
+              "left": 16,
+              "right": 304,
+              "width": 288,
+              "clientWidth": 288,
+              "scrollWidth": 386,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "SECTION",
+              "id": "",
+              "cls": "hero",
+              "text": "근거를 모으는 단계아직 미래 병목 후보로 확정된 대상은 없습니다수요·공급 변화가 있다는 것만으로 병목을 판단하지 않습니다. 같은 제품과 기간의 독립적인 근거를 연결하고, 공급을 늘릴 대안까지 확인합니다.검토 중인 변화 살펴보기  →향후 12~36개월 후보0건자료 부족은 ‘병목 없음’을 ",
+              "left": 16,
+              "right": 304,
+              "width": 288,
+              "clientWidth": 286,
+              "scrollWidth": 391,
+              "overflowX": "hidden",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "SECTION",
+              "id": "",
+              "cls": "panel",
+              "text": "최신 Q1·Q2·Q3 연구 진행공식 통계 수치와 미래 병목 판정은 구분합니다.수치 관측▤38,046건공식 자료 원문에 저장된 관측실물량 관측◫21,916건관측 수이며 적격 공급 확정은 아님미래 병목 후보◎0건독립 공급 공백 Q3 미검증현재 판정: Q1_PARTIAL_Q2_AUTOMATI",
+              "left": 16,
+              "right": 304,
+              "width": 288,
+              "clientWidth": 286,
+              "scrollWidth": 385,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            },
+            {
+              "tag": "P",
+              "id": "",
+              "cls": "section-note",
+              "text": "현재 판정: Q1_PARTIAL_Q2_AUTOMATIC_RESEARCH_PARTIAL_Q3_QUALIFIED_PAIRS_BLOCKED · 기록 시각 2026. 10. 16. 14:54",
+              "left": 36,
+              "right": 284,
+              "width": 248,
+              "clientWidth": 248,
+              "scrollWidth": 366,
+              "overflowX": "visible",
+              "minWidth": "0px"
+            }
+          ]
+        }
+      ]
+    },
+    "confirmed_defect": {
+      "status": "FAIL_CURRENT_DEPLOYED_MOBILE_HORIZONTAL_OVERFLOW",
+      "offending_file": "tools/v4_dashboard_static_export.py",
+      "rendered_selector": "quantitative progress panel p.section-note",
+      "offending_token": "Q1_PARTIAL_Q2_AUTOMATIC_RESEARCH_PARTIAL_Q3_QUALIFIED_PAIRS_BLOCKED",
+      "baseline_mobile_scroll_width": [
+        {
+          "viewport": 390,
+          "document_scrollWidth": 402
+        },
+        {
+          "viewport": 320,
+          "document_scrollWidth": 402
+        }
+      ],
+      "minimal_suggestion": {
+        "file": "src/bct/v4/dashboard_web/style.css",
+        "selector": ".section-note",
+        "declaration": "overflow-wrap:anywhere",
+        "trial_only": true
+      },
+      "browser_memory_CSS_trial": {
+        "at": "2026-11-11T07:37:05.885704+00:00",
+        "url": "https://irewon1-lgtm.github.io/bottleneck-control-tower/",
+        "checks": [
+          "LIVE_OVERVIEW_SHOWS_38046_NUMERIC_AND_21916_PHYSICAL",
+          "LIVE_DESKTOP_OVERVIEW",
+          "LIVE_DESKTOP_CANDIDATES",
+          "LIVE_DESKTOP_EVIDENCE",
+          "LIVE_DESKTOP_AUTOMATION",
+          "LIVE_EVIDENCE_DETAIL_OPEN",
+          "LIVE_MOBILE_OVERVIEW_390",
+          "LIVE_MOBILE_OVERVIEW_320",
+          "LIVE_REFRESH_READ_ONLY",
+          "LIVE_FOUR_BOUNDARY_EVIDENCE_DETAILS_MATCH_IDS",
+          "NO_BROWSER_ERROR_OR_MUTATING_REQUEST"
+        ],
+        "errors": [],
+        "failed_requests": [],
+        "mutating_requests": [],
+        "evidence_details": [
+          {
+            "id": "931ad34bdf20b30118ea19277edad659d6919f206b8f1c858fbe449bb0263224",
+            "http_status": 200,
+            "all_references_verified": true
+          },
+          {
+            "id": "f5701a63e61661edb66e9174d0804eb752021cfa790b6a7816ebaaefda9a63d0",
+            "http_status": 200,
+            "all_references_verified": true
+          },
+          {
+            "id": "72e5b04178e47f1edecfa68df0c9ba382997df90a8e0eb9f257c7ff1e9c7393c",
+            "http_status": 200,
+            "all_references_verified": true
+          },
+          {
+            "id": "e7756e708009f2e54e58ebde86c03f2e62b57db578b8b3d295182dbb2f8ff976",
+            "http_status": 200,
+            "all_references_verified": true
+          }
+        ],
+        "http_status": 200,
+        "detail_title": "A320 Family",
+        "css_patch_trial": ".section-note{overflow-wrap:anywhere}",
+        "mobile_layout": [
+          {
+            "innerWidth": 390,
+            "scrollWidth": 390,
+            "overflow": [
+              {
+                "tag": "SECTION",
+                "id": "",
+                "cls": "hero",
+                "text": "근거를 모으는 단계아직 미래 병목 후보로 확정된 대상은 없습니다수요·공급 변화가 있다는 것만으로 병목을 판단하지 않습니다. 같은 제품과 기간의 독립적인 근거를 연결하고, 공급을 늘릴 대안까지 확인합니다.검토 중인 변화 살펴보기  →향후 12~36개월 후보0건자료 부족은 ‘병목 없음’을 ",
+                "left": 16,
+                "right": 374,
+                "width": 358,
+                "clientWidth": 356,
+                "scrollWidth": 461,
+                "overflowX": "hidden",
+                "minWidth": "0px"
+              }
+            ]
+          },
+          {
+            "innerWidth": 320,
+            "scrollWidth": 320,
+            "overflow": [
+              {
+                "tag": "SECTION",
+                "id": "",
+                "cls": "hero",
+                "text": "근거를 모으는 단계아직 미래 병목 후보로 확정된 대상은 없습니다수요·공급 변화가 있다는 것만으로 병목을 판단하지 않습니다. 같은 제품과 기간의 독립적인 근거를 연결하고, 공급을 늘릴 대안까지 확인합니다.검토 중인 변화 살펴보기  →향후 12~36개월 후보0건자료 부족은 ‘병목 없음’을 ",
+                "left": 16,
+                "right": 304,
+                "width": 288,
+                "clientWidth": 286,
+                "scrollWidth": 391,
+                "overflowX": "hidden",
+                "minWidth": "0px"
+              }
+            ]
+          }
+        ]
+      },
+      "repository_fix_applied": false,
+      "reason_not_applied": "Parent instructed dashboard design/layout change is outside the authorized audit scope; suggestion documented only."
+    },
+    "probe_limitations": [
+      "Initial harness navigation attempted while evidence dialog open; corrected by Escape before navigation.",
+      "Playwright APIRequestContext direct request used blocked IPv6 path (ENETUNREACH); browser fetch path worked and supplied all four detail checks.",
+      "No current private research DB was read or recounted in dashboard subtask; numeric counts are displayed public progress receipts.",
+      "No fresh source/model/AI calls or data mutations were performed."
+    ],
+    "commands": [
+      "gh api repos/irewon1-lgtm/bottleneck-control-tower/pages",
+      "gh api repos/irewon1-lgtm/bottleneck-control-tower/contents/.github/workflows/ui-pages.yml?ref=main --jq .content | base64 -d",
+      "gh api repos/irewon1-lgtm/bottleneck-control-tower/branches/main",
+      "gh api repos/irewon1-lgtm/bottleneck-control-tower/branches/codex/bct-v4-integration",
+      "gh api repos/irewon1-lgtm/bottleneck-control-tower/actions/workflows/ui-pages.yml/runs?per_page=10",
+      "gh api repos/irewon1-lgtm/bottleneck-control-tower/actions/workflows/v4-dashboard-release-gate.yml/runs?per_page=10",
+      "curl -fsS https://irewon1-lgtm.github.io/bottleneck-control-tower/build-manifest.json",
+      "curl -fsS https://irewon1-lgtm.github.io/bottleneck-control-tower/api/dashboard.json",
+      "curl -fsS https://irewon1-lgtm.github.io/bottleneck-control-tower/api/progress.json",
+      "python /tmp/bct-dashboard-live-probe.py",
+      "python /tmp/bct-dashboard-css-trial.py"
+    ],
+    "mutations": {
+      "repository_edits": 0,
+      "remote_writes": 0,
+      "database_writes": 0,
+      "paid_or_AI_calls": 0,
+      "only_files_written_under": "/tmp"
+    }
+  },
+  "validation": {
+    "failure_first": "4 new artifact tests failed with missing implementation before production change",
+    "focused_command": ".venv/bin/python -m pytest -q tests/test_review_artifact.py tests/test_review_shadow.py tests/test_review_frozen_transport.py tests/test_review_intake.py tests/test_review_leads.py",
+    "focused_passed": 46,
+    "focused_failed": 0,
+    "additional_frozen_manifest_tests": "Parent aggregate run includes tests/test_v4_post_ui.py and exact saved workflow bytes; old manifest untouched",
+    "new_source_HTTP_requests": 0,
+    "full_project_suite": "PARENT_AGGREGATE_PENDING",
+    "focused_with_frozen_manifest_command": ".venv/bin/python -m pytest -q tests/test_review_artifact.py tests/test_review_shadow.py tests/test_review_frozen_transport.py tests/test_review_intake.py tests/test_review_leads.py tests/test_v4_post_ui.py",
+    "focused_with_frozen_manifest_passed": 56,
+    "focused_with_frozen_manifest_failed": 0
+  },
+  "next_action": "Run final aggregate tests, then deliver reviewable development changes. Real next REVIEW execution must verify bounded transport receipt; latest monthly restore requires its existing secret-enabled read-only Actions context, no secret recreation."
+}

@@ -9,7 +9,7 @@ import re
 
 from . import future_body
 
-VERSION = 'source-scope-reader-4'
+VERSION = 'source-scope-reader-5'
 FIELDS = ('product', 'specification', 'region', 'customer_group', 'supply_pool')
 GENERIC = frozenset('the id company facility product market shares stock revenue cash plant factory system equipment demand supply capacity production project contract customers supplier component components fuel power'.split())
 CLAUSE_WORDS = re.compile(r'\b(?:is|are|was|were|has|have|been|will|would|could|should|said|says|announced|developing|producing|receiving|watching|creates|requires|selling|last|these|those|this|that|which|while|whether|and|or|but|over)\b', re.I)
@@ -21,6 +21,8 @@ MODEL = re.compile(r'\b(?:ID\.(?:\d\s+[A-Z]{2,}|\s+[A-Z][\w-]*(?:\s+[A-Z]{2,})?)
 NAMED_MODEL = re.compile(r'\b(?:[A-Z][a-z]+(?:[A-Z][A-Za-z]*)?\d{1,4}[A-Za-z]*|[A-Z]{2,6}-[A-Z]{2,6})\b')
 # Filing/accounting headings and currency tags are identifiers, not models.
 NONPRODUCT_IDENTIFIER = re.compile(r'^(?:FORM|ITEM|ASC|RMB|USD|EUR|GBP|ISO|MIL|ASTM)\b', re.I)
+EQUIPMENT_TAIL = re.compile(r'\s*[®™]?\s+((?:[A-Za-z0-9][\w/-]*\s+){1,7})(?:systems?|equipment|machines?)\b', re.I)
+EQUIPMENT_MODIFIERS = MODIFIERS | frozenset(('ultra-high-power', 'high-power', 'package-level', 'multi-wafer', 'and'))
 SPEC = re.compile(r'\b(?:NDAA[- ]compliant|FEOC[- ](?:compliant|independent)|non[- ]Chinese|military[- ]grade|customer[- ]qualified|unobligated|(?:\d{2,4}\s*mm)|\d{2,4}\s*G(?:bps)?(?:/lane|\s+per\s+lane)|InP|SiGe|(?:high[- ]energy[- ]density)|(?:lithium iron phosphate|LFP)|Class\s+[1-9]|grade\s+[A-Z0-9][\w/-]*|ISO[- ]\d{4,5}|MIL[- ](?:STD|DTL|PRF|SPEC)[- ]\d{2,}[A-Z0-9/-]*|ASTM[- ]?[A-Z]\d{2,}[A-Z0-9/-]*)\b', re.I)
 REGION = r'(?:United States|U\.S\.|US|United Kingdom|UK|North America|South America|Europe|Canada|Japan|Germany|France|China|Mississippi|Pennsylvania|Nevada|Texas|Alaska|Tanzania|Mexico|Brazil|Chile)'
 REGIONS = re.compile(r'\b'+REGION+r'(?!\w)')
@@ -122,6 +124,18 @@ def named_anchors(quote):
     return result
 
 
+def _equipment_tail(text):
+    """A contiguous physical equipment description, never a nearby noun."""
+    match = EQUIPMENT_TAIL.match(text)
+    if not match:
+        return None
+    words = match[1].casefold().split()
+    if (all(word in EQUIPMENT_MODIFIERS or re.fullmatch(HEAD, word, re.I) for word in words)
+            and any(re.fullmatch(HEAD, word, re.I) or word == 'test' for word in words)):
+        return match
+    return None
+
+
 def _products(doc, line):
     q = line['quote']; found = []
     for m in list(PRODUCT.finditer(q)) + list(MODEL.finditer(q)) + list(NAMED_MODEL.finditer(q)):
@@ -148,12 +162,27 @@ def _products(doc, line):
         if raw.upper()=='CHIPS' and re.match(r'\s+Act\b',q[b:]):continue
         if raw.casefold() in ('alignment','bonding') and not re.search(r'photonic|wafer|laser|fiber|fibre|\bdie\b|chip|semiconductor|optical|\bPIC\b',q,re.I):continue
         if valid_product(raw): found.append(field(doc, line['start']+a, line['start']+b))
+    # A trademarked proper model name also requires an immediately attached
+    # engineering equipment description. Capitalized adjectives alone never
+    # become models. Keep the descriptor as literal identity evidence.
+    for m in re.finditer(r'\b[A-Z][A-Za-z0-9]*(?:-[A-Za-z0-9]+)*\b(?=[®™])', q):
+        name = m[0]
+        tail = _equipment_tail(q[m.end():])
+        if (tail and name.casefold() not in GENERIC | {'our', 'their', 'one', 'this', 'these', 'that', 'those', 'class', 'grade'}
+                and not NONPRODUCT_IDENTIFIER.search(name) and not re.fullmatch(HEAD, name, re.I)):
+            f = field(doc, line['start']+m.start(), line['start']+m.end(),
+                      reference(doc, line['start']+m.start(), line['start']+m.end()+tail.end()))
+            f['identity_kind'] = 'NAMED_ENGINEERING_EQUIPMENT'
+            found = [p for p in found if p['locator'] != f['locator']]
+            found.append(f)
     # A model and its physical noun are one identity when the source explicitly
     # says "MODEL gas turbines", not two unrelated products in the sentence.
-    models=[f for f in found if NAMED_MODEL.fullmatch(f['value'])]
+    models=[f for f in found if NAMED_MODEL.fullmatch(f['value']) or f.get('identity_kind') == 'NAMED_ENGINEERING_EQUIPMENT']
     for model in models:
         tail=q[model['locator']['end']-line['start']:]
-        noun=re.match(r'(?:™)?\s+(?:gas\s+|industrial\s+|optical\s+)?'+HEAD+r'\b',tail,re.I)
+        noun=_equipment_tail(tail)
+        if not noun:
+            noun=re.match(r'(?:™)?\s+(?:gas\s+|industrial\s+|optical\s+)?'+HEAD+r'\b',tail,re.I)
         if not noun:
             noun=re.match(r'\s*[®™]?\s*(?:(?:multi-wafer|wafer-level|high-power|fully automated|production)\s+){0,4}burn-in\s+system\b',tail,re.I)
         if not noun:
@@ -173,8 +202,8 @@ def bound_product(line, products):
     p=_unique(products,product=True)
     if p:return p
     q=line['quote']
-    for m in re.finditer(r'\b(?:orders?\s+(?:for|of)|orders?\b.{0,100}?\bcustomer\s+for|purchase\s+of|(?:production|qualified)\s+(?:capacity|output|supply)\s+(?:for|of))\s+',q,re.I):
-        end=re.search(r'[,;.]|\b(?:configured to|designed to|which|that|including)\b',q[m.end():],re.I)
+    for m in re.finditer(r'\b(?:orders?\s+(?:for|of|includes?|comprises?)|orders?\b.{0,100}?\bcustomer\s+for|purchase\s+of|(?:production|qualified)\s+(?:capacity|output|supply)\s+(?:for|of))\s+',q,re.I):
+        end=re.search(r'[;.]|\b(?:configured to|designed to|used to|for production|which|that|including)\b',q[m.end():],re.I)
         limit=m.end()+end.start() if end else len(q)
         candidates=[f for f in products if line['start']+m.end()<=f['locator']['start']<line['start']+limit]
         p=_unique(candidates,product=True)
@@ -301,6 +330,40 @@ def read_scopes(doc, events, labels, raw=None):
                 line={'start':e['locator']['start'],'end':e['locator']['end'],'quote':e['source_quote']}
                 ps=_products(doc,line);p=bound_product(line,ps)
                 records.append({**line,'products':ps,'fields':_attributes(doc,line,p) if p else {}})
+    # An explicit colon list connects the purchase statement to its contiguous
+    # new-equipment item. Upgrades remain separate; no item count, delivery
+    # date, commitment or supplier qualification is inferred from this link.
+    for i, parent in enumerate(records):
+        if not re.fullmatch(r'(?:The|This)\s+(?:(?:initial|purchase)\s+)?order\s+(?:includes|comprises):', parent['quote'], re.I):
+            continue
+        items = []
+        previous = parent
+        for item in records[i+1:]:
+            if doc['body'][previous['end']:item['start']].strip():
+                break
+            if not re.match(r'^(?:\S+\s+(?:new|additional)\b|An?\s+upgrade\b)', item['quote'], re.I):
+                # Unknown item wording/identity cannot establish uniqueness.
+                # Only an explicit equipment anaphor ends the list with its
+                # following description ("Each system is configured ...").
+                description = re.match(r'^(?:Each|This|These|Those|The)\s+(?:systems?|equipment|machines?)\b', item['quote'], re.I)
+                if re.search(r'\b(?:and|or)\s*$', previous['quote'], re.I) or not description:
+                    items = []
+                break
+            previous = item
+            if re.match(r'^An?\s+upgrade\b', item['quote'], re.I):
+                continue
+            if re.search(r'\b(?:options?|cancel\w*|not|planned|proposed)\b', item['quote'], re.I):
+                continue
+            items.append(item)
+        # Multiple new items need individual event attribution; do not pick a
+        # convenient model even when several items repeat the same name.
+        if len(items) == 1 and items[0]['fields'].get('product'):
+            item = items[0]
+            p = deepcopy(item['fields']['product'])
+            p['link_kind'] = 'EXPLICIT_ORDER_LIST_ITEM'
+            p['support_references'] += [reference(doc, parent['start'], parent['end']),
+                                        reference(doc, item['start'], item['end'])]
+            parent['fields']['product'] = p
     # Labels are a complete explicit document definition only when unique and
     # in allowed text. A region metadata menu cannot populate this definition.
     definition = labels('\n'.join(x['quote'] for x in lines))

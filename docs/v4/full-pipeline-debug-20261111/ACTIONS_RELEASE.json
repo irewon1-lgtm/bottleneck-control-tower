@@ -1,0 +1,679 @@
+{
+  "task_id": "BCT_V4_FULL_PIPELINE_DEBUG_20261111",
+  "plan_id": "BCT-V4-Q-1.0",
+  "q_step": "Q2",
+  "checked_at_UTC_date": "2026-11-11",
+  "scope": "Read-only operational diagnosis and isolated real metadata replay; historical gate results preserved",
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "development_start_SHA": "23a0615f1a10f2b938cb2b5401706a1995b4d4f2",
+  "main_SHA": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+  "api_receipt": {
+    "gate_run": {
+      "id": 38331945733,
+      "name": "BCT recovery storage gates",
+      "event": "push",
+      "path": ".github/workflows/bct-recovery.yml",
+      "status": "completed",
+      "conclusion": "success",
+      "head_branch": "ops/recovery-20261010",
+      "head_sha": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+      "created_at": "2026-10-13T01:24:00Z",
+      "updated_at": "2026-10-13T01:47:28Z",
+      "run_attempt": 1
+    },
+    "gate_jobs": {
+      "jobs": [
+        {
+          "id": 115083438178,
+          "name": "storage",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 38331945733,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Read preserved recovery request",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Restore prior observations and private cache",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Restore historical cache hashes absent from latest checkpoint",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Verify storage, preserving merge and legacy regressions",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Verify restored checkpoint journal and every source cache hash",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Gate 0 then real GitHub storage Gate 1",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Gate 2 original source access on GitHub runner",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Gate 3 full failed-source inventory",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Gate 4 official original verification and evidence holds",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 12
+            },
+            {
+              "name": "Stage 5 cost-zero real-source reading pilot",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 13
+            },
+            {
+              "name": "Gate 5 actual readings and atomic production queue recovery",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 14
+            },
+            {
+              "name": "Restore original 230-source regression corpus",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15
+            },
+            {
+              "name": "Gate 6 real source E2E and required whole regressions",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16
+            },
+            {
+              "name": "Install actual browser and operating quality dependencies",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 17
+            },
+            {
+              "name": "Execute actual Stage 0 through FULL recovery engine",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 18
+            },
+            {
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 19
+            },
+            {
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 37
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 38
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 39
+            }
+          ]
+        }
+      ]
+    },
+    "gate_artifact": {
+      "id": 11783493914,
+      "name": "bct-recovery-checkpoint-38331945733",
+      "size_in_bytes": 45073105,
+      "url": "https://api.github.com/repos/irewon1-lgtm/bottleneck-control-tower/actions/artifacts/11783493914",
+      "archive_download_url": "https://api.github.com/repos/irewon1-lgtm/bottleneck-control-tower/actions/artifacts/11783493914/zip",
+      "expired": false,
+      "created_at": "2026-10-13T01:47:25Z",
+      "expires_at": "2026-11-12T01:47:21Z",
+      "updated_at": "2026-10-13T01:47:25Z",
+      "digest": "sha256:00ac5d87109c6c365f9d2a19fe2f15a83919012ed012222f9b4932fd5d70243a",
+      "workflow_run": {
+        "id": 38331945733,
+        "repository_id": 1396803513,
+        "head_repository_id": 1396803513,
+        "head_branch": "ops/recovery-20261010",
+        "head_sha": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50"
+      }
+    },
+    "cpu_run": {
+      "id": 42942892160,
+      "name": "V4 CPU private research consumer",
+      "event": "workflow_run",
+      "path": ".github/workflows/v4-cpu-private-research.yml",
+      "status": "completed",
+      "conclusion": "skipped",
+      "head_branch": "main",
+      "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+      "created_at": "2026-11-11T01:59:56Z",
+      "updated_at": "2026-11-11T01:59:57Z",
+      "run_attempt": 1
+    },
+    "cpu_jobs": [
+      {
+        "id": 130268719218,
+        "name": "research",
+        "status": "completed",
+        "conclusion": "skipped",
+        "run_id": 42942892160,
+        "logs_url": null,
+        "steps": null
+      },
+      {
+        "id": 130268740547,
+        "name": "publish",
+        "status": "completed",
+        "conclusion": "skipped",
+        "run_id": 42942892160,
+        "logs_url": null,
+        "steps": null
+      }
+    ],
+    "future_run_id": 42944587807,
+    "future_jobs": [
+      {
+        "id": 130274206639,
+        "name": "candidates",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_id": 42944587807,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Verify actual code release gates before automatic candidates",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 4
+          },
+          {
+            "name": "Run full regression suite",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 5
+          },
+          {
+            "name": "Read existing canonical database and prior candidate sidecar",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 6
+          },
+          {
+            "name": "Screen article bodies without any AI API",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Frozen 100-document trial on implementation branch only",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 8
+          },
+          {
+            "name": "Restore preserved source classifications for operating queue",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 9
+          },
+          {
+            "name": "Publish candidate sidecar only",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 10
+          },
+          {
+            "name": "Read FULL sources with pinned cost-zero CPU reader",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 11
+          },
+          {
+            "name": "Publish atomic operating queue",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 12
+          },
+          {
+            "name": "Run actions/upload-artifact@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 25
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 26
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 27
+          }
+        ]
+      },
+      {
+        "id": 130274209131,
+        "name": "backlog-body-recovery",
+        "status": "completed",
+        "conclusion": "skipped",
+        "run_id": 42944587807,
+        "logs_url": null,
+        "steps": null
+      }
+    ],
+    "future_error": [
+      "2026-11-11T02:14:14.1390564Z \u001b[36;1mpython .github/scripts/bct_release_guard.py\u001b[0m",
+      "2026-11-11T02:14:27.2982527Z   File \"/home/runner/work/bottleneck-control-tower/bottleneck-control-tower/.github/scripts/bct_release_guard.py\", line 82, in <module>",
+      "2026-11-11T02:14:27.2984076Z   File \"/home/runner/work/bottleneck-control-tower/bottleneck-control-tower/.github/scripts/bct_release_guard.py\", line 78, in main",
+      "2026-11-11T02:14:27.2986317Z   File \"/home/runner/work/bottleneck-control-tower/bottleneck-control-tower/.github/scripts/bct_release_guard.py\", line 62, in verify_release",
+      "2026-11-11T02:14:27.3012020Z ##[error]    raise ValueError('validated code/test file set changed or missing')",
+      "2026-11-11T02:14:27.3019181Z ValueError: validated code/test file set changed or missing"
+    ],
+    "fixed230_artifacts": [],
+    "earliest_future_failure": {
+      "run_id": 41756307135,
+      "jobs": [
+        {
+          "id": 126333110870,
+          "name": "candidates",
+          "status": "completed",
+          "conclusion": "failure",
+          "run_id": 41756307135,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Verify actual code release gates before automatic candidates",
+              "status": "completed",
+              "conclusion": "failure",
+              "number": 4
+            },
+            {
+              "name": "Run full regression suite",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 5
+            },
+            {
+              "name": "Read existing canonical database and prior candidate sidecar",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 6
+            },
+            {
+              "name": "Screen article bodies without any AI API",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 7
+            },
+            {
+              "name": "Frozen 100-document trial on implementation branch only",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 8
+            },
+            {
+              "name": "Restore preserved source classifications for operating queue",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 9
+            },
+            {
+              "name": "Publish candidate sidecar only",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 10
+            },
+            {
+              "name": "Read FULL sources with pinned cost-zero CPU reader",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 11
+            },
+            {
+              "name": "Publish atomic operating queue",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 12
+            },
+            {
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 13
+            },
+            {
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 25
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 26
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 27
+            }
+          ]
+        },
+        {
+          "id": 126333112472,
+          "name": "backlog-body-recovery",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 41756307135,
+          "logs_url": null,
+          "steps": null
+        }
+      ],
+      "error": [
+        "2026-11-04T01:46:20.3990911Z \u001b[36;1mpython .github/scripts/bct_release_guard.py\u001b[0m",
+        "2026-11-04T01:46:28.1751019Z   File \"/home/runner/work/bottleneck-control-tower/bottleneck-control-tower/.github/scripts/bct_release_guard.py\", line 82, in <module>",
+        "2026-11-04T01:46:28.1751756Z   File \"/home/runner/work/bottleneck-control-tower/bottleneck-control-tower/.github/scripts/bct_release_guard.py\", line 78, in main",
+        "2026-11-04T01:46:28.1756521Z   File \"/home/runner/work/bottleneck-control-tower/bottleneck-control-tower/.github/scripts/bct_release_guard.py\", line 62, in verify_release",
+        "2026-11-04T01:46:28.1774567Z ##[error]    raise ValueError('validated code/test file set changed or missing')",
+        "2026-11-04T01:46:28.1779829Z ValueError: validated code/test file set changed or missing"
+      ]
+    },
+    "nearest_preceding_acquisition": {
+      "run_id": 42939818925,
+      "job_id": 130258687837,
+      "jobs": [
+        {
+          "id": 130258687837,
+          "name": "acquire",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 42939818925,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Run python -m pip install -e .",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Restore new-only private evidence state and receive RSS delta",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Restore the existing LIVE session byte for byte",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Acquire new precursor scope and independent opposite-side evidence",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Persist aggregate index without rewriting canonical database or LIVE state",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Persist only newly appended LIVE records with compare and swap",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 19
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 20
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 21
+            }
+          ]
+        }
+      ],
+      "rss_parent_log_lines": [
+        "2026-11-11T01:33:42.5358469Z   RSS_RUN_ID: 42939431146"
+      ],
+      "binding_to_skipped_cpu_event_payload": "UNKNOWN_EVENT_PAYLOAD_NOT_AVAILABLE_IN_SKIPPED_JOB"
+    }
+  },
+  "cache_inventory": {
+    "endpoint": "GET /repos/irewon1-lgtm/bottleneck-control-tower/actions/caches",
+    "total_count": 0,
+    "actions_caches": [],
+    "usage_endpoint": "GET /repos/irewon1-lgtm/bottleneck-control-tower/actions/cache/usage",
+    "active_caches_count": 0,
+    "active_caches_size_in_bytes": 0
+  },
+  "CPU_configuration": {
+    "expected_reviewed_execution_SHA": "221fa92b1cbff8950716ec373eac793ca340c873",
+    "current_variable_values": "UNKNOWN_GET_VARIABLES_HTTP403_REPORTED_BY_ROOT_NO_RETRY",
+    "last_stored_observation": {
+      "source": "docs/v4/PROGRESS.json#quantitative_plan.Q2_relation_resume.CPU_observation",
+      "enabled": "false",
+      "code_SHA": "da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6"
+    },
+    "skip_false_conjunct": "UNKNOWN_CURRENT_VARIABLES_AND_TRIGGER_EVENT_PAYLOAD_UNOBSERVED",
+    "runtime_and_bridge_cache": "BOTH_ABSENT_AS_OF_CHECK",
+    "first_actual_scheduled_read_and_persistence": "NOT_RUN_THIS_TASK",
+    "seven_day_observation": "NOT_STARTED_THIS_TASK"
+  },
+  "tests": {
+    "command": "PYTHONPATH=src .venv/bin/python -m pytest -q tests/test_operating_release_guard.py tests/test_v4_cpu_research_workflow.py tests/test_v4_cpu_operations.py tests/test_v4_private_state.py",
+    "sandbox": "require_escalated_for_gpg_and_local_socket_tests",
+    "passed": 51,
+    "seconds": 8.06,
+    "exit_code": 0,
+    "new_CPU_model_inferences": 0
+  },
+  "sample_coverage": {
+    "seven_day_future_runs": 58,
+    "failed": 57,
+    "exact_failure_log_samples": [
+      41756307135,
+      42944587807
+    ],
+    "other_failures_not_log_inspected": 55,
+    "same_head_SHA_across_failed_runs": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933"
+  },
+  "prior_zero_pair_audit": {
+    "commit": "2aaaa91f17ea1c29eb7a36c4cd26783e405610b9",
+    "method": "git show; not checked out or re-executed",
+    "files_changed": 14,
+    "source_code_or_operating_workflow_changes": 0,
+    "conclusion": "PARTIAL_BLOCKED; two real extraction misses, actual complete target/pairs zero in accessible seven-body replay; full latest DB audit unavailable",
+    "scope_limit": "Does not validate operating release, CPU activation or full current data"
+  },
+  "isolated_replay": {
+    "kind": "isolated_actual_metadata_and_immutable_git_tree_replay",
+    "network_requests_during_replay": 0,
+    "operating_writes": 0,
+    "old_Gates_0_6_not_reexecuted_or_relabelled": true,
+    "replays": {
+      "validated": {
+        "ref": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+        "result": {
+          "status": "PASS",
+          "gate_run_id": 38331945733,
+          "verified_code_files": 235,
+          "validated_code_sha": "1e4ec2aaed3cba0a627d31e28c613c8490a27b50",
+          "artifact_id": 11783493914
+        }
+      },
+      "current_main": {
+        "ref": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "result": {
+          "status": "EXPECTED_REFUSAL",
+          "error": "validated code/test file set changed or missing"
+        }
+      }
+    },
+    "code_tree_diff": {
+      "validated_files": 235,
+      "main_files": 238,
+      "added": [
+        ".github/workflows/v4-cpu-main-cache-seed.yml",
+        ".github/workflows/v4-cpu-private-research.yml",
+        ".github/workflows/v4-cpu-private-settings-check.yml"
+      ],
+      "missing": [],
+      "changed": [
+        {
+          "path": ".github/workflows/ui-pages.yml",
+          "validated_blob": "eddcbbf87c97269e7aa814bb77750cfb4ef37866",
+          "main_blob": "7a3bd725db8bf48a9f57070c57bb462bf96efd7b"
+        }
+      ]
+    },
+    "current_main_existing_readonly_helper": {
+      "status": "EXPECTED_REFUSAL",
+      "error": "REVALIDATION_SCOPE_CHANGED_NOT_THE_THREE_ADDITIONS"
+    }
+  },
+  "changes": {
+    "release_guard": 0,
+    "workflow": 0,
+    "CPU_pin": 0,
+    "variables_or_secrets": 0,
+    "operational_writes": 0,
+    "production_gate_executions": 0,
+    "commit_or_push": 0
+  }
+}

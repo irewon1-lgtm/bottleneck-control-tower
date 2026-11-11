@@ -1,0 +1,189 @@
+{
+  "baseline": {
+    "suite_attributes": [
+      {
+        "name": "pytest",
+        "errors": "3",
+        "failures": "19",
+        "skipped": "1",
+        "tests": "1757",
+        "time": "52.511",
+        "timestamp": "2026-11-11T07:33:31.793447+00:00",
+        "hostname": "d7eb1b330ad2"
+      }
+    ],
+    "nonpassing": [
+      {
+        "test": "tests.test_forecast_discovery::test_D_real_pre_public_holdout",
+        "status": "skipped",
+        "reason": "BLOCKED: independent frozen real pre-public holdout and archived precursor facts unavailable"
+      },
+      {
+        "test": "tests.test_v4_dashboard::test_connection_and_requests_never_change_db",
+        "status": "error",
+        "reason": "failed on setup with \"PermissionError: [Errno 1] Operation not permitted\""
+      },
+      {
+        "test": "tests.test_v4_dashboard::test_api_files_errors_export_and_no_mutation_route",
+        "status": "error",
+        "reason": "failed on setup with \"PermissionError: [Errno 1] Operation not permitted\""
+      },
+      {
+        "test": "tests.test_v4_dashboard::test_missing_report_returns_error_never_zero_success",
+        "status": "error",
+        "reason": "failed on setup with \"PermissionError: [Errno 1] Operation not permitted\""
+      },
+      {
+        "test": "tests.test_v4_monthly_storage::test_monthly_full_append_restore_dedup_and_stale_parent",
+        "status": "failure",
+        "reason": "ValueError: STATE_TRANSPORT_AUTHENTICATION_OR_SIZE_FAILED"
+      },
+      {
+        "test": "tests.test_v4_monthly_storage::test_next_month_is_full_and_links_previous_completed_manifest",
+        "status": "failure",
+        "reason": "ValueError: STATE_TRANSPORT_AUTHENTICATION_OR_SIZE_FAILED"
+      },
+      {
+        "test": "tests.test_v4_monthly_storage::test_new_primary_cannot_drop_any_previous_processing_history",
+        "status": "failure",
+        "reason": "ValueError: STATE_TRANSPORT_AUTHENTICATION_OR_SIZE_FAILED"
+      },
+      {
+        "test": "tests.test_v4_monthly_storage::test_release_access_failure_and_corruption_never_fall_back_to_old_git",
+        "status": "failure",
+        "reason": "ValueError: STATE_TRANSPORT_AUTHENTICATION_OR_SIZE_FAILED"
+      },
+      {
+        "test": "tests.test_v4_monthly_storage::test_encrypted_handoff_preserves_exact_monthly_input_cursor",
+        "status": "failure",
+        "reason": "ValueError: STATE_TRANSPORT_AUTHENTICATION_OR_SIZE_FAILED"
+      },
+      {
+        "test": "tests.test_v4_monthly_storage::test_archives_remain_readable_after_write_horizon_expires",
+        "status": "failure",
+        "reason": "ValueError: STATE_TRANSPORT_AUTHENTICATION_OR_SIZE_FAILED"
+      },
+      {
+        "test": "tests.test_v4_official_sources::test_ercot_headers_cell_dates_and_planned_capacity_are_distinct",
+        "status": "failure",
+        "reason": "ModuleNotFoundError: No module named 'openpyxl'"
+      },
+      {
+        "test": "tests.test_v4_official_sources::test_encrypted_failed_input_is_preserved_and_new_seal_does_not_overwrite_it",
+        "status": "failure",
+        "reason": "ValueError: STATE_TRANSPORT_AUTHENTICATION_OR_SIZE_FAILED"
+      },
+      {
+        "test": "tests.test_v4_owner_settings_probe::test_roundtrip_uploads_only_nonproduction_metadata_and_reads_immutable_blobs",
+        "status": "failure",
+        "reason": "assert 1 == 0\n +  where 1 = SystemExit(1).code\n +    where SystemExit(1) = <ExceptionInfo SystemExit(1) tblen=2>.value"
+      },
+      {
+        "test": "tests.test_v4_private_state::test_ciphertext_handoff_restores_exact_tables_and_rejects_tampering",
+        "status": "failure",
+        "reason": "ValueError: STATE_TRANSPORT_AUTHENTICATION_OR_SIZE_FAILED"
+      },
+      {
+        "test": "tests.test_v4_quantitative::test_usgs_footnote_is_not_negative_and_withheld_is_not_zero",
+        "status": "failure",
+        "reason": "ModuleNotFoundError: No module named 'openpyxl'"
+      },
+      {
+        "test": "tests.test_v4_quantitative::test_xlsx_m3_month_columns_scale_and_same_source_location",
+        "status": "failure",
+        "reason": "ModuleNotFoundError: No module named 'openpyxl'"
+      },
+      {
+        "test": "tests.test_v4_release_archive::test_full_delta_checkpoint_exact_restore_and_noop_dedup",
+        "status": "failure",
+        "reason": "ValueError: STATE_TRANSPORT_AUTHENTICATION_OR_SIZE_FAILED"
+      },
+      {
+        "test": "tests.test_v4_release_archive::test_oversize_delta_uses_existing_bounded_checkpoint_without_raising_delta_limit",
+        "status": "failure",
+        "reason": "ValueError: STATE_TRANSPORT_AUTHENTICATION_OR_SIZE_FAILED"
+      },
+      {
+        "test": "tests.test_v4_release_archive::test_interrupted_upload_reuses_orphan_without_duplicate_data_or_commit",
+        "status": "failure",
+        "reason": "AssertionError: Regex pattern did not match.\n Regex: 'INTERRUPTED'\n Input: 'STATE_TRANSPORT_AUTHENTICATION_OR_SIZE_FAILED'"
+      },
+      {
+        "test": "tests.test_v4_release_archive::test_corrupt_ciphertext_refused_prior_valid_generation_restorable",
+        "status": "failure",
+        "reason": "ValueError: STATE_TRANSPORT_AUTHENTICATION_OR_SIZE_FAILED"
+      },
+      {
+        "test": "tests.test_v4_release_archive::test_stale_parent_never_uploads_and_missing_object_not_silently_skipped",
+        "status": "failure",
+        "reason": "ValueError: STATE_TRANSPORT_AUTHENTICATION_OR_SIZE_FAILED"
+      },
+      {
+        "test": "tests.test_v4_release_archive::test_wrong_key_expected_hash_and_overwrite_are_refused",
+        "status": "failure",
+        "reason": "ValueError: STATE_TRANSPORT_AUTHENTICATION_OR_SIZE_FAILED"
+      },
+      {
+        "test": "tests.test_v4_release_archive::test_periodic_age_checkpoint_and_namespace_guard",
+        "status": "failure",
+        "reason": "ValueError: STATE_TRANSPORT_AUTHENTICATION_OR_SIZE_FAILED"
+      }
+    ]
+  },
+  "environment": {
+    "suite_attributes": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "7",
+        "skipped": "1",
+        "tests": "1791",
+        "time": "136.891",
+        "timestamp": "2026-11-11T07:36:18.276143+00:00",
+        "hostname": "d7eb1b330ad2"
+      }
+    ],
+    "nonpassing": [
+      {
+        "test": "tests.test_forecast_discovery::test_D_real_pre_public_holdout",
+        "status": "skipped",
+        "reason": "BLOCKED: independent frozen real pre-public holdout and archived precursor facts unavailable"
+      },
+      {
+        "test": "tests.test_precursor_order_binding::test_actual_order_list_parent_links_new_item_and_preserves_upgrade",
+        "status": "failure",
+        "reason": "assert (None)"
+      },
+      {
+        "test": "tests.test_v4_post_ui::test_original_frozen_UI_copy_and_evidence_files_are_preserved",
+        "status": "failure",
+        "reason": "AssertionError: .github/workflows/rss-ai.yml\nassert '58bc2d6691c0...175a36577f6e5' == 'fbac7572cc22...61e63ba73ef27'\n  \n  - fbac7572cc22a079718c11df6494bd9452bf5db6b92cbe282a261e63ba73ef27\n  + 58bc2d6691c0ca7494f9efae8b03063b8e4272f5956600e5bb4175a36577f6e5"
+      },
+      {
+        "test": "tests.test_v4_q3_linkage_trace::test_incomplete_target_retains_ids_first_blocker_and_secondary_missing_fields",
+        "status": "failure",
+        "reason": "ValueError: not enough values to unpack (expected 1, got 0)"
+      },
+      {
+        "test": "tests.test_v4_q3_linkage_trace::test_event_without_bound_observation_is_explicitly_held",
+        "status": "failure",
+        "reason": "ValueError: not enough values to unpack (expected 1, got 0)"
+      },
+      {
+        "test": "tests.test_v4_q3_linkage_trace::test_scalar_eligible_pair_has_explicit_source_binding_hold",
+        "status": "failure",
+        "reason": "KeyError: 'structured_precheck_eligible_pairs'"
+      },
+      {
+        "test": "tests.test_v4_q3_linkage_trace::test_verified_dates_with_incomplete_qualified_supply_coverage_stay_supply_unknown",
+        "status": "failure",
+        "reason": "KeyError: 'graph_pair_blocks'"
+      },
+      {
+        "test": "tests.test_v4_q3_linkage_trace::test_target_block_trace_reaches_q3_caller",
+        "status": "failure",
+        "reason": "KeyError: 'graph_blocked_events'"
+      }
+    ]
+  }
+}

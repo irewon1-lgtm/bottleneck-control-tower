@@ -1,0 +1,1175 @@
+{
+  "origin/main": [
+    {
+      "file": ".github/workflows/bct-isolated-review.yml",
+      "name": "BCT isolated frozen REVIEW validation",
+      "on": {
+        "push": {
+          "branches": [
+            "fix/bct-storage-linked-verification-20261012"
+          ],
+          "paths": [
+            ".github/scripts/review_shadow_frozen.py",
+            "tests/test_review_frozen_transport.py",
+            ".github/workflows/review-lead-shadow.yml"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "concurrency": null,
+      "jobs": {
+        "review": {
+          "if": null,
+          "timeout-minutes": "10",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/bct-isolated-storage.yml",
+      "name": "BCT isolated storage and source validation",
+      "on": {
+        "push": {
+          "branches": [
+            "fix/bct-storage-linked-verification-20261012"
+          ],
+          "paths": [
+            "src/bct/future_github.py",
+            "tests/test_future_github_atomic.py",
+            ".github/scripts/bct_isolated_storage_validation.py"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "concurrency": {
+        "group": "bct-isolated-storage-validation",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "isolated": {
+          "if": null,
+          "timeout-minutes": "30",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/bct-native-extent-probe.yml",
+      "name": "BCT actual native extent grammar before and after",
+      "on": {
+        "push": {
+          "branches": [
+            "fix/bct-native-extent-integrity-20261013"
+          ],
+          "paths": [
+            "src/bct/future_local_reader.py",
+            ".github/scripts/bct_native_extent_probe.py",
+            ".github/workflows/bct-native-extent-probe.yml"
+          ]
+        }
+      },
+      "concurrency": null,
+      "jobs": {
+        "native": {
+          "if": null,
+          "timeout-minutes": "30",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/bct-publication-resume-probe.yml",
+      "name": "BCT publication resume regression before and after",
+      "on": {
+        "push": {
+          "branches": [
+            "fix/bct-publication-budget-resume-20261013"
+          ],
+          "paths": [
+            ".github/scripts/bct_wait_publication.py",
+            ".github/scripts/bct_operating_recovery.py",
+            "tests/test_operating_publication_wait.py",
+            ".github/workflows/bct-publication-resume-probe.yml"
+          ]
+        }
+      },
+      "concurrency": null,
+      "jobs": {
+        "publication": {
+          "if": null,
+          "timeout-minutes": "10",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/bct-recovery.yml",
+      "name": "BCT recovery storage gates",
+      "on": {
+        "push": {
+          "branches": [
+            "ops/recovery-20261010"
+          ]
+        },
+        "workflow_dispatch": {
+          "inputs": {
+            "resume_run_id": {
+              "description": "Prior recovery artifact run ID, after its recorded resume condition changed",
+              "required": "false",
+              "default": ""
+            },
+            "full_pipeline": {
+              "description": "Execute real operating Stage 0 through FULL after guarded main release",
+              "type": "boolean",
+              "default": "false"
+            }
+          }
+        }
+      },
+      "concurrency": {
+        "group": "bct-recovery-validation",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "storage": {
+          "if": null,
+          "timeout-minutes": "100",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/future-bottleneck.yml",
+      "name": "Future bottleneck body candidates",
+      "on": {
+        "push": {
+          "branches": [
+            "main",
+            "codex/future-bottleneck",
+            "codex/bct-v33-implementation"
+          ],
+          "paths": [
+            "src/bct/future_*.py",
+            "tests/test_future*.py",
+            ".github/scripts/future*.py",
+            "docs/v33-quality-*.json",
+            ".github/workflows/future-bottleneck.yml"
+          ]
+        },
+        "workflow_dispatch": {
+          "inputs": {
+            "backlog_body_recovery": {
+              "description": "Recover a frozen operational body selection through the existing pipeline",
+              "type": "boolean",
+              "default": "false"
+            }
+          }
+        },
+        "workflow_run": {
+          "workflows": [
+            "RSS live environment check"
+          ],
+          "types": [
+            "completed"
+          ],
+          "branches": [
+            "main"
+          ]
+        },
+        "repository_dispatch": {
+          "types": [
+            "bct-operating-publication"
+          ]
+        },
+        "schedule": [
+          {
+            "cron": "45 22,10 * * *"
+          }
+        ]
+      },
+      "concurrency": {
+        "group": "future-bottleneck-results",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "backlog-body-recovery": {
+          "if": "${{ github.event_name == 'workflow_dispatch' && inputs.backlog_body_recovery }}",
+          "timeout-minutes": "35",
+          "permissions": null
+        },
+        "candidates": {
+          "if": "${{ (github.event_name == 'workflow_dispatch' && !inputs.backlog_body_recovery) || (github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'))) }}",
+          "timeout-minutes": "75",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/precursor-acquisition.yml",
+      "name": "New precursor evidence acquisition",
+      "on": {
+        "workflow_run": {
+          "workflows": [
+            "RSS live environment check"
+          ],
+          "types": [
+            "completed"
+          ]
+        }
+      },
+      "concurrency": {
+        "group": "rss-canonical-data",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "acquire": {
+          "if": "${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.event != 'pull_request' }}",
+          "timeout-minutes": "55",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/review-evaluation-observer.yml",
+      "name": "BCT read-only evaluation observer",
+      "on": {
+        "schedule": [
+          {
+            "cron": "30 3,15 * * *"
+          }
+        ],
+        "workflow_dispatch": ""
+      },
+      "concurrency": {
+        "group": "review-lead-evaluation-state",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "observe": {
+          "if": "github.ref == 'refs/heads/main'",
+          "timeout-minutes": "15",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/review-lead-shadow.yml",
+      "name": "REVIEW_LEAD SHADOW intake",
+      "on": {
+        "workflow_run": {
+          "workflows": [
+            "New precursor evidence acquisition"
+          ],
+          "types": [
+            "completed"
+          ]
+        }
+      },
+      "concurrency": {
+        "group": "review-lead-shadow-state",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "shadow": {
+          "if": "${{ vars.BCT_REVIEW_SHADOW_ENABLED == 'true' &&\n    github.event.workflow_run.head_branch == 'main' &&\n    github.event.workflow_run.head_repository.full_name == github.repository &&\n    github.event.workflow_run.event != 'pull_request' }}",
+          "timeout-minutes": "20",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/rss-ai.yml",
+      "name": "RSS AI annotation",
+      "on": {
+        "workflow_dispatch": "",
+        "schedule": [
+          {
+            "cron": "20 22 * * *"
+          },
+          {
+            "cron": "20 10 * * *"
+          }
+        ]
+      },
+      "concurrency": {
+        "group": "rss-canonical-data",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "annotate": {
+          "if": null,
+          "timeout-minutes": "40",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/rss-live-check.yml",
+      "name": "RSS live environment check",
+      "on": {
+        "workflow_dispatch": {
+          "inputs": {
+            "live_snapshot_only": {
+              "description": "Acquire only an explicitly selected new LIVE batch, without RSS or backlog work",
+              "type": "boolean",
+              "default": "false"
+            },
+            "live_document_ids": {
+              "description": "JSON array of 1 to 20 newly collected document IDs",
+              "type": "string",
+              "default": "[]"
+            }
+          }
+        },
+        "schedule": [
+          {
+            "cron": "0 18 * * *"
+          },
+          {
+            "cron": "0 22 * * *"
+          },
+          {
+            "cron": "0 2 * * *"
+          },
+          {
+            "cron": "0 6 * * *"
+          },
+          {
+            "cron": "0 10 * * *"
+          },
+          {
+            "cron": "0 14 * * *"
+          }
+        ]
+      },
+      "concurrency": {
+        "group": "rss-canonical-data",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "collect": {
+          "if": "${{ !inputs.live_snapshot_only }}",
+          "timeout-minutes": "55",
+          "permissions": null
+        },
+        "live-snapshot": {
+          "if": "${{ github.event_name == 'workflow_dispatch' && inputs.live_snapshot_only }}",
+          "timeout-minutes": "10",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/tests.yml",
+      "name": "Stage 0 tests",
+      "on": {
+        "push": "",
+        "pull_request": ""
+      },
+      "concurrency": null,
+      "jobs": {
+        "pytest": {
+          "if": null,
+          "timeout-minutes": null,
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/ui-pages.yml",
+      "name": "Read-only BCT Pages",
+      "on": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            ".github/workflows/ui-pages.yml"
+          ]
+        },
+        "workflow_run": {
+          "workflows": [
+            "V4 dashboard release gate"
+          ],
+          "types": [
+            "completed"
+          ],
+          "branches": [
+            "codex/bct-v4-integration"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "concurrency": {
+        "group": "bct-readonly-pages",
+        "cancel-in-progress": "true"
+      },
+      "jobs": {
+        "build": {
+          "if": "${{ github.event_name != 'workflow_run' ||\n    (github.event.workflow_run.conclusion == 'success' &&\n     github.event.workflow_run.head_branch == 'codex/bct-v4-integration' &&\n     github.event.workflow_run.head_repository.full_name == github.repository &&\n     github.event.workflow_run.event == 'push') }}",
+          "timeout-minutes": "15",
+          "permissions": null
+        },
+        "deploy": {
+          "if": "needs.build.outputs.publish == 'yes'",
+          "timeout-minutes": "10",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/v4-cpu-main-cache-seed.yml",
+      "name": "V4 CPU main cache seed",
+      "on": {
+        "workflow_dispatch": ""
+      },
+      "concurrency": {
+        "group": "v4-cpu-main-cache-seed",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "seed": {
+          "if": "${{ github.ref == 'refs/heads/main' }}",
+          "timeout-minutes": "10",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/v4-cpu-private-research.yml",
+      "name": "V4 CPU private research consumer",
+      "on": {
+        "workflow_run": {
+          "workflows": [
+            "New precursor evidence acquisition"
+          ],
+          "types": [
+            "completed"
+          ]
+        },
+        "workflow_dispatch": {
+          "inputs": {
+            "purpose": {
+              "type": "choice",
+              "options": [
+                "seed",
+                "recovery-check",
+                "bridge-recover"
+              ],
+              "default": "seed"
+            }
+          }
+        }
+      },
+      "concurrency": {
+        "group": "v4-cpu-private-research-single-writer",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "research": {
+          "if": "${{ vars.BCT_V4_CPU_CODE_SHA == '221fa92b1cbff8950716ec373eac793ca340c873' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_run' && vars.BCT_V4_CPU_RESEARCH_ENABLED == 'true' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success' }}",
+          "timeout-minutes": "10",
+          "permissions": null
+        },
+        "publish": {
+          "if": "${{ always() && github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || needs.research.result == 'success') }}",
+          "timeout-minutes": "5",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/v4-cpu-private-settings-check.yml",
+      "name": "V4 CPU private settings check",
+      "on": {
+        "workflow_dispatch": {
+          "inputs": {
+            "remote_roundtrip": {
+              "type": "boolean",
+              "default": "false",
+              "description": "Verify non-sensitive private remote storage; never seed production or enable CPU"
+            },
+            "auth_denials_only": {
+              "type": "boolean",
+              "default": "false",
+              "description": "Diagnose authentication and public-ref denials without retrying private-repo access"
+            }
+          }
+        }
+      },
+      "concurrency": {
+        "group": "v4-cpu-private-settings-check",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "publisher_permission_check": {
+          "if": "${{ github.ref == 'refs/heads/main' }}",
+          "timeout-minutes": "5",
+          "permissions": null
+        }
+      }
+    }
+  ],
+  "23a0615f": [
+    {
+      "file": ".github/workflows/bct-isolated-review.yml",
+      "name": "BCT isolated frozen REVIEW validation",
+      "on": {
+        "push": {
+          "branches": [
+            "fix/bct-storage-linked-verification-20261012"
+          ],
+          "paths": [
+            ".github/scripts/review_shadow_frozen.py",
+            "tests/test_review_frozen_transport.py",
+            ".github/workflows/review-lead-shadow.yml"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "concurrency": null,
+      "jobs": {
+        "review": {
+          "if": null,
+          "timeout-minutes": "10",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/bct-isolated-storage.yml",
+      "name": "BCT isolated storage and source validation",
+      "on": {
+        "push": {
+          "branches": [
+            "fix/bct-storage-linked-verification-20261012"
+          ],
+          "paths": [
+            "src/bct/future_github.py",
+            "tests/test_future_github_atomic.py",
+            ".github/scripts/bct_isolated_storage_validation.py"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "concurrency": {
+        "group": "bct-isolated-storage-validation",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "isolated": {
+          "if": null,
+          "timeout-minutes": "30",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/bct-native-extent-probe.yml",
+      "name": "BCT actual native extent grammar before and after",
+      "on": {
+        "push": {
+          "branches": [
+            "fix/bct-native-extent-integrity-20261013"
+          ],
+          "paths": [
+            "src/bct/future_local_reader.py",
+            ".github/scripts/bct_native_extent_probe.py",
+            ".github/workflows/bct-native-extent-probe.yml"
+          ]
+        }
+      },
+      "concurrency": null,
+      "jobs": {
+        "native": {
+          "if": null,
+          "timeout-minutes": "30",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/bct-publication-resume-probe.yml",
+      "name": "BCT publication resume regression before and after",
+      "on": {
+        "push": {
+          "branches": [
+            "fix/bct-publication-budget-resume-20261013"
+          ],
+          "paths": [
+            ".github/scripts/bct_wait_publication.py",
+            ".github/scripts/bct_operating_recovery.py",
+            "tests/test_operating_publication_wait.py",
+            ".github/workflows/bct-publication-resume-probe.yml"
+          ]
+        }
+      },
+      "concurrency": null,
+      "jobs": {
+        "publication": {
+          "if": null,
+          "timeout-minutes": "10",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/bct-recovery.yml",
+      "name": "BCT recovery storage gates",
+      "on": {
+        "push": {
+          "branches": [
+            "ops/recovery-20261010"
+          ]
+        },
+        "workflow_dispatch": {
+          "inputs": {
+            "resume_run_id": {
+              "description": "Prior recovery artifact run ID, after its recorded resume condition changed",
+              "required": "false",
+              "default": ""
+            },
+            "full_pipeline": {
+              "description": "Execute real operating Stage 0 through FULL after guarded main release",
+              "type": "boolean",
+              "default": "false"
+            }
+          }
+        }
+      },
+      "concurrency": {
+        "group": "bct-recovery-validation",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "storage": {
+          "if": null,
+          "timeout-minutes": "100",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/future-bottleneck.yml",
+      "name": "Future bottleneck body candidates",
+      "on": {
+        "push": {
+          "branches": [
+            "main",
+            "codex/future-bottleneck",
+            "codex/bct-v33-implementation"
+          ],
+          "paths": [
+            "src/bct/future_*.py",
+            "tests/test_future*.py",
+            ".github/scripts/future*.py",
+            "docs/v33-quality-*.json",
+            ".github/workflows/future-bottleneck.yml"
+          ]
+        },
+        "workflow_dispatch": {
+          "inputs": {
+            "backlog_body_recovery": {
+              "description": "Recover a frozen operational body selection through the existing pipeline",
+              "type": "boolean",
+              "default": "false"
+            }
+          }
+        },
+        "workflow_run": {
+          "workflows": [
+            "RSS live environment check"
+          ],
+          "types": [
+            "completed"
+          ],
+          "branches": [
+            "main"
+          ]
+        },
+        "repository_dispatch": {
+          "types": [
+            "bct-operating-publication"
+          ]
+        },
+        "schedule": [
+          {
+            "cron": "45 22,10 * * *"
+          }
+        ]
+      },
+      "concurrency": {
+        "group": "future-bottleneck-results",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "backlog-body-recovery": {
+          "if": "${{ github.event_name == 'workflow_dispatch' && inputs.backlog_body_recovery }}",
+          "timeout-minutes": "35",
+          "permissions": null
+        },
+        "candidates": {
+          "if": "${{ (github.event_name == 'workflow_dispatch' && !inputs.backlog_body_recovery) || (github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'))) }}",
+          "timeout-minutes": "75",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/precursor-acquisition.yml",
+      "name": "New precursor evidence acquisition",
+      "on": {
+        "workflow_run": {
+          "workflows": [
+            "RSS live environment check"
+          ],
+          "types": [
+            "completed"
+          ]
+        }
+      },
+      "concurrency": {
+        "group": "rss-canonical-data",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "acquire": {
+          "if": "${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.event != 'pull_request' }}",
+          "timeout-minutes": "55",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/review-evaluation-observer.yml",
+      "name": "BCT read-only evaluation observer",
+      "on": {
+        "schedule": [
+          {
+            "cron": "30 3,15 * * *"
+          }
+        ],
+        "workflow_dispatch": ""
+      },
+      "concurrency": {
+        "group": "review-lead-evaluation-state",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "observe": {
+          "if": "github.ref == 'refs/heads/main'",
+          "timeout-minutes": "15",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/review-lead-shadow.yml",
+      "name": "REVIEW_LEAD SHADOW intake",
+      "on": {
+        "workflow_run": {
+          "workflows": [
+            "New precursor evidence acquisition"
+          ],
+          "types": [
+            "completed"
+          ]
+        }
+      },
+      "concurrency": {
+        "group": "review-lead-shadow-state",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "shadow": {
+          "if": "${{ vars.BCT_REVIEW_SHADOW_ENABLED == 'true' &&\n    github.event.workflow_run.head_branch == 'main' &&\n    github.event.workflow_run.head_repository.full_name == github.repository &&\n    github.event.workflow_run.event != 'pull_request' }}",
+          "timeout-minutes": "20",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/rss-ai.yml",
+      "name": "RSS AI annotation",
+      "on": {
+        "workflow_dispatch": "",
+        "schedule": [
+          {
+            "cron": "20 22 * * *"
+          },
+          {
+            "cron": "20 10 * * *"
+          }
+        ]
+      },
+      "concurrency": {
+        "group": "rss-canonical-data",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "annotate": {
+          "if": null,
+          "timeout-minutes": "40",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/rss-live-check.yml",
+      "name": "RSS live environment check",
+      "on": {
+        "workflow_dispatch": {
+          "inputs": {
+            "live_snapshot_only": {
+              "description": "Acquire only an explicitly selected new LIVE batch, without RSS or backlog work",
+              "type": "boolean",
+              "default": "false"
+            },
+            "live_document_ids": {
+              "description": "JSON array of 1 to 20 newly collected document IDs",
+              "type": "string",
+              "default": "[]"
+            }
+          }
+        },
+        "schedule": [
+          {
+            "cron": "0 18 * * *"
+          },
+          {
+            "cron": "0 22 * * *"
+          },
+          {
+            "cron": "0 2 * * *"
+          },
+          {
+            "cron": "0 6 * * *"
+          },
+          {
+            "cron": "0 10 * * *"
+          },
+          {
+            "cron": "0 14 * * *"
+          }
+        ]
+      },
+      "concurrency": {
+        "group": "rss-canonical-data",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "collect": {
+          "if": "${{ !inputs.live_snapshot_only }}",
+          "timeout-minutes": "55",
+          "permissions": null
+        },
+        "live-snapshot": {
+          "if": "${{ github.event_name == 'workflow_dispatch' && inputs.live_snapshot_only }}",
+          "timeout-minutes": "10",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/tests.yml",
+      "name": "Stage 0 tests",
+      "on": {
+        "push": "",
+        "pull_request": ""
+      },
+      "concurrency": null,
+      "jobs": {
+        "pytest": {
+          "if": null,
+          "timeout-minutes": null,
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/ui-pages.yml",
+      "name": "Read-only BCT Pages",
+      "on": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "docs/**",
+            ".github/scripts/export_ui_snapshot.py",
+            ".github/workflows/ui-pages.yml",
+            ".github/workflows/rss-ai.yml",
+            "rss_feeds.yaml"
+          ]
+        },
+        "workflow_run": {
+          "workflows": [
+            "RSS live environment check",
+            "RSS AI annotation",
+            "Future bottleneck body candidates"
+          ],
+          "types": [
+            "completed"
+          ],
+          "branches": [
+            "main"
+          ]
+        },
+        "repository_dispatch": {
+          "types": [
+            "bct-pages-publication"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "concurrency": {
+        "group": "bct-readonly-pages",
+        "cancel-in-progress": "true"
+      },
+      "jobs": {
+        "publish": {
+          "if": null,
+          "timeout-minutes": "10",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/v4-cpu-main-cache-seed.yml",
+      "name": "V4 CPU main cache seed",
+      "on": {
+        "workflow_dispatch": ""
+      },
+      "concurrency": {
+        "group": "v4-cpu-main-cache-seed",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "seed": {
+          "if": "${{ github.ref == 'refs/heads/main' }}",
+          "timeout-minutes": "10",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/v4-cpu-preflight.yml",
+      "name": "V4 CPU environment preflight",
+      "on": {
+        "push": {
+          "branches": [
+            "codex/bct-v4-integration"
+          ],
+          "paths": [
+            ".github/workflows/v4-cpu-preflight.yml"
+          ]
+        }
+      },
+      "concurrency": {
+        "group": "v4-cpu-preflight-${{ github.ref }}",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "prepare": {
+          "if": null,
+          "timeout-minutes": "10",
+          "permissions": null
+        },
+        "restore": {
+          "if": "${{ always() && needs.prepare.outputs.state_key != '' }}",
+          "timeout-minutes": "10",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/v4-cpu-private-research.yml",
+      "name": "V4 CPU private research consumer",
+      "on": {
+        "workflow_run": {
+          "workflows": [
+            "New precursor evidence acquisition"
+          ],
+          "types": [
+            "completed"
+          ]
+        },
+        "workflow_dispatch": {
+          "inputs": {
+            "purpose": {
+              "type": "choice",
+              "options": [
+                "seed",
+                "recovery-check",
+                "bridge-recover",
+                "q1-transfer-key",
+                "q1-publish",
+                "q1-connectivity",
+                "q1-source-batch",
+                "q1-trade-resume",
+                "q1-storage-check",
+                "q1-quality-Q2",
+                "q1-recover-result",
+                "q2-review",
+                "q2-counterpart",
+                "q2-relations",
+                "official-sources",
+                "official-discovery",
+                "official-bidirectional",
+                "official-state-read",
+                "archive-storage-trial",
+                "monthly-storage-trial"
+              ],
+              "default": "seed"
+            },
+            "q1_key_run": {
+              "type": "string",
+              "default": ""
+            },
+            "q1_blob_sha": {
+              "type": "string",
+              "default": ""
+            },
+            "q1_packet_sha": {
+              "type": "string",
+              "default": ""
+            },
+            "official_result_run": {
+              "type": "string",
+              "default": "",
+              "description": "Reviewed encrypted source result recovery only (38855145291); no source refetch"
+            }
+          }
+        }
+      },
+      "concurrency": {
+        "group": "v4-cpu-private-research-single-writer",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "official-state-read": {
+          "if": "${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'official-state-read' }}",
+          "timeout-minutes": "5",
+          "permissions": null
+        },
+        "monthly-storage-trial": {
+          "if": "${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'monthly-storage-trial' }}",
+          "timeout-minutes": "18",
+          "permissions": null
+        },
+        "archive-storage-trial": {
+          "if": "${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'archive-storage-trial' }}",
+          "timeout-minutes": "18",
+          "permissions": null
+        },
+        "research": {
+          "if": "${{ vars.BCT_V4_CPU_CODE_SHA == '221fa92b1cbff8950716ec373eac793ca340c873' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_run' && vars.BCT_V4_CPU_RESEARCH_ENABLED == 'true' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success' }}",
+          "timeout-minutes": "10",
+          "permissions": null
+        },
+        "publish": {
+          "if": "${{ always() && github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || needs.research.result == 'success') }}",
+          "timeout-minutes": "5",
+          "permissions": null
+        },
+        "q1-key": {
+          "if": "${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'q1-transfer-key' }}",
+          "timeout-minutes": "3",
+          "permissions": null
+        },
+        "q1-publish": {
+          "if": "${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'q1-publish' }}",
+          "timeout-minutes": "5",
+          "permissions": null
+        },
+        "q1-connectivity": {
+          "if": "${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'q1-connectivity' }}",
+          "timeout-minutes": "3",
+          "permissions": null
+        },
+        "q1-source-prior": {
+          "if": "${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && (inputs.purpose == 'q1-source-batch' || inputs.purpose == 'q1-trade-resume' || inputs.purpose == 'q2-review' || inputs.purpose == 'q1-storage-check' || inputs.purpose == 'q1-quality-Q2' || inputs.purpose == 'q1-recover-result' || inputs.purpose == 'q2-counterpart' || inputs.purpose == 'q2-relations' || inputs.purpose == 'official-sources' || inputs.purpose == 'official-discovery' || inputs.purpose == 'official-bidirectional') }}",
+          "timeout-minutes": "5",
+          "permissions": null
+        },
+        "q1-source-process": {
+          "if": null,
+          "timeout-minutes": "25",
+          "permissions": null
+        },
+        "q1-source-publish": {
+          "if": null,
+          "timeout-minutes": "5",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/v4-cpu-private-settings-check.yml",
+      "name": "V4 CPU private settings check",
+      "on": {
+        "workflow_dispatch": {
+          "inputs": {
+            "remote_roundtrip": {
+              "type": "boolean",
+              "default": "false",
+              "description": "Verify non-sensitive private remote storage; never seed production or enable CPU"
+            },
+            "auth_denials_only": {
+              "type": "boolean",
+              "default": "false",
+              "description": "Diagnose authentication and public-ref denials without retrying private-repo access"
+            }
+          }
+        }
+      },
+      "concurrency": {
+        "group": "v4-cpu-private-settings-check",
+        "cancel-in-progress": "false"
+      },
+      "jobs": {
+        "publisher_permission_check": {
+          "if": "${{ github.ref == 'refs/heads/main' }}",
+          "timeout-minutes": "5",
+          "permissions": null
+        }
+      }
+    },
+    {
+      "file": ".github/workflows/v4-dashboard-release-gate.yml",
+      "name": "V4 dashboard release gate",
+      "on": {
+        "workflow_dispatch": "",
+        "push": {
+          "branches": [
+            "codex/bct-v4-integration"
+          ]
+        },
+        "pull_request": {
+          "branches": [
+            "codex/bct-v4-integration"
+          ]
+        }
+      },
+      "concurrency": {
+        "group": "v4-dashboard-gate-${{ github.ref }}",
+        "cancel-in-progress": "true"
+      },
+      "jobs": {
+        "verify": {
+          "if": "${{ github.event_name != 'workflow_dispatch' }}",
+          "timeout-minutes": "15",
+          "permissions": null
+        },
+        "readonly-release-revalidation": {
+          "if": "${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' }}",
+          "timeout-minutes": "15",
+          "permissions": {
+            "contents": "read",
+            "actions": "read"
+          }
+        }
+      }
+    }
+  ]
+}

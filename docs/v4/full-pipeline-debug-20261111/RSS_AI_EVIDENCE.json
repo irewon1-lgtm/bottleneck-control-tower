@@ -1,0 +1,582 @@
+{
+  "task_id": "BCT_V4_FULL_PIPELINE_DEBUG_20261111",
+  "scope": "RSS AI annotation/result persistence only",
+  "plan_id": "BCT-V4-Q-1.0",
+  "Q1": "PARTIAL_UNCHANGED",
+  "Q2": "PARTIAL_UNCHANGED",
+  "Q3_eligible_pairs": 0,
+  "baseline": {
+    "dev_sha": "23a0615f1a10f2b938cb2b5401706a1995b4d4f2",
+    "main_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+    "files": {
+      "src/bct/rss_ai.py": {
+        "dev_blob": "1bd81d7b4e302ebc0579d74b97165ee07f4b988c",
+        "main_blob": "1bd81d7b4e302ebc0579d74b97165ee07f4b988c"
+      },
+      ".github/workflows/rss-ai.yml": {
+        "dev_blob": "51327ccfe38563aee74f3e7e31cae7133f3bda9b",
+        "main_blob": "51327ccfe38563aee74f3e7e31cae7133f3bda9b"
+      },
+      "tests/test_rss_ai.py": {
+        "dev_blob": "aaee496df6126c07f1c62595de764d9907cc6c61",
+        "main_blob": "aaee496df6126c07f1c62595de764d9907cc6c61"
+      },
+      "tests/test_rss_ai_workflow.py": {
+        "dev_blob": "dee7c7383a2411b135cb25b1009598dc0ffa7588",
+        "main_blob": "dee7c7383a2411b135cb25b1009598dc0ffa7588"
+      }
+    }
+  },
+  "observed_actions": {
+    "window_source": "Existing /tmp/bct-runs-7d.json snapshot (concatenated gh paginate pages)",
+    "first_created_at": "2026-11-04T02:26:44Z",
+    "last_created_at": "2026-11-11T01:58:59Z",
+    "run_count": 15,
+    "github_success_count": 15,
+    "annotation_executed_count": 0,
+    "save_executed_count": 0,
+    "actual_ai_annotations": 0,
+    "actual_persisted_ai_batches": 0,
+    "posthoc_classification": "SKIPPED_CONFIG",
+    "classification_basis": "All 15 configuration steps succeeded; the only enabled=true annotation step and save step were skipped. Unchanged workflow configuration guard emits enabled=false only for absent/empty existing OPENAI_API_KEY. No Secret value was fetched.",
+    "runs": [
+      {
+        "id": 42942786702,
+        "created_at": "2026-11-11T01:58:59Z",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "workflow_conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42942786702",
+        "steps": [
+          {
+            "name": "Check AI annotation configuration",
+            "conclusion": "success",
+            "started_at": "2026-11-11T02:00:36Z",
+            "completed_at": "2026-11-11T02:00:36Z"
+          },
+          {
+            "name": "Annotate up to 20 unprocessed signal articles",
+            "conclusion": "skipped",
+            "started_at": "2026-11-11T02:00:36Z",
+            "completed_at": "2026-11-11T02:00:36Z"
+          },
+          {
+            "name": "Persist AI results in existing data branch",
+            "conclusion": "skipped",
+            "started_at": "2026-11-11T02:00:36Z",
+            "completed_at": "2026-11-11T02:00:36Z"
+          }
+        ]
+      },
+      {
+        "id": 42869993206,
+        "created_at": "2026-11-10T17:56:09Z",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "workflow_conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42869993206",
+        "steps": [
+          {
+            "name": "Check AI annotation configuration",
+            "conclusion": "success",
+            "started_at": "2026-11-10T17:57:54Z",
+            "completed_at": "2026-11-10T17:57:54Z"
+          },
+          {
+            "name": "Annotate up to 20 unprocessed signal articles",
+            "conclusion": "skipped",
+            "started_at": "2026-11-10T17:57:54Z",
+            "completed_at": "2026-11-10T17:57:54Z"
+          },
+          {
+            "name": "Persist AI results in existing data branch",
+            "conclusion": "skipped",
+            "started_at": "2026-11-10T17:57:54Z",
+            "completed_at": "2026-11-10T17:57:54Z"
+          }
+        ]
+      },
+      {
+        "id": 42754153619,
+        "created_at": "2026-11-10T04:10:32Z",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "workflow_conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42754153619",
+        "steps": [
+          {
+            "name": "Check AI annotation configuration",
+            "conclusion": "success",
+            "started_at": "2026-11-10T04:20:56Z",
+            "completed_at": "2026-11-10T04:20:56Z"
+          },
+          {
+            "name": "Annotate up to 20 unprocessed signal articles",
+            "conclusion": "skipped",
+            "started_at": "2026-11-10T04:20:56Z",
+            "completed_at": "2026-11-10T04:20:56Z"
+          },
+          {
+            "name": "Persist AI results in existing data branch",
+            "conclusion": "skipped",
+            "started_at": "2026-11-10T04:20:56Z",
+            "completed_at": "2026-11-10T04:20:56Z"
+          }
+        ]
+      },
+      {
+        "id": 42696624404,
+        "created_at": "2026-11-09T20:49:31Z",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "workflow_conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42696624404",
+        "steps": [
+          {
+            "name": "Check AI annotation configuration",
+            "conclusion": "success",
+            "started_at": "2026-11-09T20:53:23Z",
+            "completed_at": "2026-11-09T20:53:23Z"
+          },
+          {
+            "name": "Annotate up to 20 unprocessed signal articles",
+            "conclusion": "skipped",
+            "started_at": "2026-11-09T20:53:23Z",
+            "completed_at": "2026-11-09T20:53:23Z"
+          },
+          {
+            "name": "Persist AI results in existing data branch",
+            "conclusion": "skipped",
+            "started_at": "2026-11-09T20:53:23Z",
+            "completed_at": "2026-11-09T20:53:23Z"
+          }
+        ]
+      },
+      {
+        "id": 42547272338,
+        "created_at": "2026-11-09T01:45:57Z",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "workflow_conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42547272338",
+        "steps": [
+          {
+            "name": "Check AI annotation configuration",
+            "conclusion": "success",
+            "started_at": "2026-11-09T01:46:24Z",
+            "completed_at": "2026-11-09T01:46:24Z"
+          },
+          {
+            "name": "Annotate up to 20 unprocessed signal articles",
+            "conclusion": "skipped",
+            "started_at": "2026-11-09T01:46:24Z",
+            "completed_at": "2026-11-09T01:46:24Z"
+          },
+          {
+            "name": "Persist AI results in existing data branch",
+            "conclusion": "skipped",
+            "started_at": "2026-11-09T01:46:24Z",
+            "completed_at": "2026-11-09T01:46:24Z"
+          }
+        ]
+      },
+      {
+        "id": 42501316471,
+        "created_at": "2026-11-08T16:43:12Z",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "workflow_conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42501316471",
+        "steps": [
+          {
+            "name": "Check AI annotation configuration",
+            "conclusion": "success",
+            "started_at": "2026-11-08T16:52:28Z",
+            "completed_at": "2026-11-08T16:52:28Z"
+          },
+          {
+            "name": "Annotate up to 20 unprocessed signal articles",
+            "conclusion": "skipped",
+            "started_at": "2026-11-08T16:52:28Z",
+            "completed_at": "2026-11-08T16:52:28Z"
+          },
+          {
+            "name": "Persist AI results in existing data branch",
+            "conclusion": "skipped",
+            "started_at": "2026-11-08T16:52:28Z",
+            "completed_at": "2026-11-08T16:52:28Z"
+          }
+        ]
+      },
+      {
+        "id": 42434513184,
+        "created_at": "2026-11-08T01:30:11Z",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "workflow_conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42434513184",
+        "steps": [
+          {
+            "name": "Check AI annotation configuration",
+            "conclusion": "success",
+            "started_at": "2026-11-08T01:30:39Z",
+            "completed_at": "2026-11-08T01:30:39Z"
+          },
+          {
+            "name": "Annotate up to 20 unprocessed signal articles",
+            "conclusion": "skipped",
+            "started_at": "2026-11-08T01:30:39Z",
+            "completed_at": "2026-11-08T01:30:39Z"
+          },
+          {
+            "name": "Persist AI results in existing data branch",
+            "conclusion": "skipped",
+            "started_at": "2026-11-08T01:30:39Z",
+            "completed_at": "2026-11-08T01:30:39Z"
+          }
+        ]
+      },
+      {
+        "id": 42391580285,
+        "created_at": "2026-11-07T16:30:00Z",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "workflow_conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42391580285",
+        "steps": [
+          {
+            "name": "Check AI annotation configuration",
+            "conclusion": "success",
+            "started_at": "2026-11-07T16:30:34Z",
+            "completed_at": "2026-11-07T16:30:34Z"
+          },
+          {
+            "name": "Annotate up to 20 unprocessed signal articles",
+            "conclusion": "skipped",
+            "started_at": "2026-11-07T16:30:34Z",
+            "completed_at": "2026-11-07T16:30:34Z"
+          },
+          {
+            "name": "Persist AI results in existing data branch",
+            "conclusion": "skipped",
+            "started_at": "2026-11-07T16:30:34Z",
+            "completed_at": "2026-11-07T16:30:34Z"
+          }
+        ]
+      },
+      {
+        "id": 42327058907,
+        "created_at": "2026-11-07T02:01:03Z",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "workflow_conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42327058907",
+        "steps": [
+          {
+            "name": "Check AI annotation configuration",
+            "conclusion": "success",
+            "started_at": "2026-11-07T02:01:48Z",
+            "completed_at": "2026-11-07T02:01:48Z"
+          },
+          {
+            "name": "Annotate up to 20 unprocessed signal articles",
+            "conclusion": "skipped",
+            "started_at": "2026-11-07T02:01:48Z",
+            "completed_at": "2026-11-07T02:01:48Z"
+          },
+          {
+            "name": "Persist AI results in existing data branch",
+            "conclusion": "skipped",
+            "started_at": "2026-11-07T02:01:48Z",
+            "completed_at": "2026-11-07T02:01:48Z"
+          }
+        ]
+      },
+      {
+        "id": 42262575185,
+        "created_at": "2026-11-06T17:32:31Z",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "workflow_conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42262575185",
+        "steps": [
+          {
+            "name": "Check AI annotation configuration",
+            "conclusion": "success",
+            "started_at": "2026-11-06T17:33:12Z",
+            "completed_at": "2026-11-06T17:33:12Z"
+          },
+          {
+            "name": "Annotate up to 20 unprocessed signal articles",
+            "conclusion": "skipped",
+            "started_at": "2026-11-06T17:33:12Z",
+            "completed_at": "2026-11-06T17:33:12Z"
+          },
+          {
+            "name": "Persist AI results in existing data branch",
+            "conclusion": "skipped",
+            "started_at": "2026-11-06T17:33:12Z",
+            "completed_at": "2026-11-06T17:33:12Z"
+          }
+        ]
+      },
+      {
+        "id": 42151096611,
+        "created_at": "2026-11-06T02:33:39Z",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "workflow_conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42151096611",
+        "steps": [
+          {
+            "name": "Check AI annotation configuration",
+            "conclusion": "success",
+            "started_at": "2026-11-06T02:34:10Z",
+            "completed_at": "2026-11-06T02:34:10Z"
+          },
+          {
+            "name": "Annotate up to 20 unprocessed signal articles",
+            "conclusion": "skipped",
+            "started_at": "2026-11-06T02:34:10Z",
+            "completed_at": "2026-11-06T02:34:10Z"
+          },
+          {
+            "name": "Persist AI results in existing data branch",
+            "conclusion": "skipped",
+            "started_at": "2026-11-06T02:34:10Z",
+            "completed_at": "2026-11-06T02:34:10Z"
+          }
+        ]
+      },
+      {
+        "id": 42080832588,
+        "created_at": "2026-11-05T18:05:05Z",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "workflow_conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42080832588",
+        "steps": [
+          {
+            "name": "Check AI annotation configuration",
+            "conclusion": "success",
+            "started_at": "2026-11-05T18:10:43Z",
+            "completed_at": "2026-11-05T18:10:43Z"
+          },
+          {
+            "name": "Annotate up to 20 unprocessed signal articles",
+            "conclusion": "skipped",
+            "started_at": "2026-11-05T18:10:43Z",
+            "completed_at": "2026-11-05T18:10:43Z"
+          },
+          {
+            "name": "Persist AI results in existing data branch",
+            "conclusion": "skipped",
+            "started_at": "2026-11-05T18:10:43Z",
+            "completed_at": "2026-11-05T18:10:43Z"
+          }
+        ]
+      },
+      {
+        "id": 41956113304,
+        "created_at": "2026-11-05T02:34:36Z",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "workflow_conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/41956113304",
+        "steps": [
+          {
+            "name": "Check AI annotation configuration",
+            "conclusion": "success",
+            "started_at": "2026-11-05T02:35:14Z",
+            "completed_at": "2026-11-05T02:35:14Z"
+          },
+          {
+            "name": "Annotate up to 20 unprocessed signal articles",
+            "conclusion": "skipped",
+            "started_at": "2026-11-05T02:35:14Z",
+            "completed_at": "2026-11-05T02:35:14Z"
+          },
+          {
+            "name": "Persist AI results in existing data branch",
+            "conclusion": "skipped",
+            "started_at": "2026-11-05T02:35:14Z",
+            "completed_at": "2026-11-05T02:35:14Z"
+          }
+        ]
+      },
+      {
+        "id": 41883190180,
+        "created_at": "2026-11-04T18:03:17Z",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "workflow_conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/41883190180",
+        "steps": [
+          {
+            "name": "Check AI annotation configuration",
+            "conclusion": "success",
+            "started_at": "2026-11-04T18:11:30Z",
+            "completed_at": "2026-11-04T18:11:30Z"
+          },
+          {
+            "name": "Annotate up to 20 unprocessed signal articles",
+            "conclusion": "skipped",
+            "started_at": "2026-11-04T18:11:30Z",
+            "completed_at": "2026-11-04T18:11:30Z"
+          },
+          {
+            "name": "Persist AI results in existing data branch",
+            "conclusion": "skipped",
+            "started_at": "2026-11-04T18:11:30Z",
+            "completed_at": "2026-11-04T18:11:30Z"
+          }
+        ]
+      },
+      {
+        "id": 41760790596,
+        "created_at": "2026-11-04T02:26:44Z",
+        "head_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
+        "workflow_conclusion": "success",
+        "html_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/41760790596",
+        "steps": [
+          {
+            "name": "Check AI annotation configuration",
+            "conclusion": "success",
+            "started_at": "2026-11-04T02:27:18Z",
+            "completed_at": "2026-11-04T02:27:18Z"
+          },
+          {
+            "name": "Annotate up to 20 unprocessed signal articles",
+            "conclusion": "skipped",
+            "started_at": "2026-11-04T02:27:18Z",
+            "completed_at": "2026-11-04T02:27:18Z"
+          },
+          {
+            "name": "Persist AI results in existing data branch",
+            "conclusion": "skipped",
+            "started_at": "2026-11-04T02:27:18Z",
+            "completed_at": "2026-11-04T02:27:18Z"
+          }
+        ]
+      }
+    ]
+  },
+  "offline_reproduction": {
+    "missing_key_shell": {
+      "returncode": 0,
+      "outputs": "enabled=false\n",
+      "summary": "AI annotation skipped: OPENAI_API_KEY is not configured.\n",
+      "stdout": "",
+      "stderr": ""
+    },
+    "outcome_cases": {
+      "success": {
+        "schema_version": 1,
+        "run_id": "OFFLINE_FIXTURE",
+        "code_sha": "",
+        "status": "ANALYSIS_PASS",
+        "reason": "ANNOTATED_AND_PERSISTED",
+        "processed": 3,
+        "success": 3,
+        "error": 0,
+        "persisted": 3,
+        "persisted_success": 3
+      },
+      "missing_key": {
+        "schema_version": 1,
+        "run_id": "OFFLINE_FIXTURE",
+        "code_sha": "",
+        "status": "SKIPPED_CONFIG",
+        "reason": "OPENAI_API_KEY_NOT_CONFIGURED",
+        "processed": 0,
+        "success": 0,
+        "error": 0,
+        "persisted": 0,
+        "persisted_success": 0
+      },
+      "zero_input": {
+        "schema_version": 1,
+        "run_id": "OFFLINE_FIXTURE",
+        "code_sha": "",
+        "status": "NO_NEW_INPUT",
+        "reason": "NO_UNPROCESSED_SIGNAL_ARTICLES",
+        "processed": 0,
+        "success": 0,
+        "error": 0,
+        "persisted": 0,
+        "persisted_success": 0
+      },
+      "runtime_failure": {
+        "schema_version": 1,
+        "run_id": "OFFLINE_FIXTURE",
+        "code_sha": "",
+        "status": "FAIL_RUNTIME",
+        "reason": "ANNOTATION_BATCH_FAILED",
+        "processed": 0,
+        "success": 0,
+        "error": 0,
+        "persisted": 0,
+        "persisted_success": 0
+      },
+      "save_failure": {
+        "schema_version": 1,
+        "run_id": "OFFLINE_FIXTURE",
+        "code_sha": "",
+        "status": "FAIL_SAVE",
+        "reason": "DATA_BRANCH_PUBLICATION_FAILED",
+        "processed": 3,
+        "success": 3,
+        "error": 0,
+        "persisted": 0,
+        "persisted_success": 0
+      },
+      "saved_article_error": {
+        "schema_version": 1,
+        "run_id": "OFFLINE_FIXTURE",
+        "code_sha": "",
+        "status": "FAIL_RUNTIME",
+        "reason": "ARTICLE_ERRORS_PERSISTED",
+        "processed": 3,
+        "success": 2,
+        "error": 1,
+        "persisted": 3,
+        "persisted_success": 2
+      }
+    },
+    "external_provider_calls": 0,
+    "new_keys_or_provider_setup": 0,
+    "paid_api_cost": 0,
+    "publication_test": "Real disposable local bare Git origin; seed snapshot -> offline reviewer -> publication shell -> immutable Git snapshot hash/integrity load -> saved OK row queried; concurrent ref change refused.",
+    "snapshot_resume_test": "25 fixtures; first batch20 including one terminal ERROR, saved/restored second batch5, then0; non-AI tables unchanged."
+  },
+  "verification": {
+    "baseline_rss_ai_tests": {
+      "passed": 10,
+      "failed": 0
+    },
+    "tests_added_before_implementation": {
+      "outcome_cases_failed": 15,
+      "workflow_guard_failed": 1,
+      "failure_cause": "Missing outcome classifier and step receipt wiring; captured before adding implementation."
+    },
+    "command": ".venv/bin/python -m pytest tests/test_rss_ai.py tests/test_rss_ai_workflow.py tests/test_rss_ai_outcome.py tests/test_rss_state_workflow.py tests/test_rss_cycle_families.py tests/test_rss_collector.py -q --junitxml=/tmp/bct-rss-ai-final-tests.xml",
+    "final": {
+      "tests": 35,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "git_diff_check": "PASS",
+    "historical_immutability_followup": {
+      "reason": "Current RSS AI/review workflow changes explicitly authorized for full-pipeline repair; historical initial-scope hashes remain unchanged and are checked against exact original workflow bytes via established evolved-assets mapping.",
+      "baseline_source": "23a0615f",
+      "manifest_unchanged": true,
+      "frozen_assets": {
+        "rss-ai.yml": "fbac7572cc22a079718c11df6494bd9452bf5db6b92cbe282a261e63ba73ef27",
+        "review-lead-shadow.yml": "651fb347b99e07f9b2aae13b964e792324dfaf4d0a856b678c7b4e63bdc0f403"
+      },
+      "tests": {
+        "tests": 33,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "command": ".venv/bin/python -m pytest tests/test_v4_post_ui.py::test_original_frozen_UI_copy_and_evidence_files_are_preserved tests/test_rss_ai.py tests/test_rss_ai_workflow.py tests/test_rss_ai_outcome.py tests/test_review_artifact.py -q"
+    }
+  },
+  "production_changes": false,
+  "new_actions_dispatches": 0,
+  "data_cursor_mutations": false,
+  "limits": [
+    "No live provider analysis was executed; production AI throughput remains 0 in the observed window.",
+    "No paid/new key request or new provider call is authorized.",
+    "New reporting/save verification code is local development verification, not observed deployed workflow behavior.",
+    "Source text truth, independent forecasting performance and AI adoption verdict remain unproven/FAIL/BLOCKED under existing plan."
+  ]
+}

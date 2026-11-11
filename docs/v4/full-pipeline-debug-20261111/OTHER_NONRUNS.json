@@ -1,0 +1,135 @@
+{
+  "scope": "Actual skipped/cancelled jobs outside CPU; no full triggering payload/cancellation actor inferred",
+  "runs": [
+    {
+      "run_id": 42129040987,
+      "jobs": [
+        {
+          "id": 127600735338,
+          "name": "acquire",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 42129040987,
+          "logs_url": null,
+          "steps": null
+        }
+      ]
+    },
+    {
+      "run_id": 42129040988,
+      "jobs": [
+        {
+          "id": 127600735266,
+          "name": "candidates",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 42129040988,
+          "logs_url": null,
+          "steps": null
+        },
+        {
+          "id": 127600735610,
+          "name": "backlog-body-recovery",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 42129040988,
+          "logs_url": null,
+          "steps": null
+        }
+      ]
+    },
+    {
+      "run_id": 42224871845,
+      "jobs": [
+        {
+          "id": 127915709509,
+          "name": "acquire",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "run_id": 42224871845,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Run python -m pip install -e .",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Restore new-only private evidence state and receive RSS delta",
+              "status": "completed",
+              "conclusion": "cancelled",
+              "number": 5
+            },
+            {
+              "name": "Restore the existing LIVE session byte for byte",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 6
+            },
+            {
+              "name": "Acquire new precursor scope and independent opposite-side evidence",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 7
+            },
+            {
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 8
+            },
+            {
+              "name": "Persist aggregate index without rewriting canonical database or LIVE state",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 9
+            },
+            {
+              "name": "Persist only newly appended LIVE records with compare and swap",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 10
+            },
+            {
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 19
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 20
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 21
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
