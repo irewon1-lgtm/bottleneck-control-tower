@@ -111,7 +111,8 @@
       "fixed230-copy.json",
       "cpu-source-gate6-qa.json"
     ],
-    "local_download": "SDK_AND_REST_SIGNED_REDIRECT_HTTP403; no repeated source-archive download; exact transport/copy/wrapper result recovered from successful job logs"
+    "local_download": "RECOVERED_VIA_GITHUB_PLUGIN_FILE_PROXY; ZIP3449bytesSHA256matchedGitHubartifactdigest. No sourcearchive rerun or source refetch.",
+    "full_QA_receipt_path": "docs/v4/operations-recovery-20261111/CPU_SOURCE_QA_RECEIPT.json"
   },
   "main_candidate_local_validation": {
     "candidate_commit": "164019bed86c2e5db660911813ab428c061c768a",
@@ -193,5 +194,142 @@
     "merged_at": "2026-11-11T09:54:46Z",
     "variables_owner_reply": "PENDING",
     "actual_new_scheduled_CPU_reading": "NOT_RUN"
+  },
+  "full_source_QA_summary": {
+    "mode": "BACKFILL_QA",
+    "as_of": "2026-10-08T14:11:35+00:00",
+    "before": {
+      "verified_documents": 230,
+      "events": 616,
+      "product": 16,
+      "specification": 0,
+      "region": 65,
+      "customer_group": 0,
+      "supply_pool": 0,
+      "complete_target_events": 0,
+      "independent_pairs": 0,
+      "comparable_period_pairs": 0,
+      "synthesized_targets": 0,
+      "backfill_early_candidates": 0,
+      "new_live_early_candidates": 0,
+      "known_bad_product_events": 2,
+      "taxonomy_region_events": 65,
+      "scope_unknowns": {
+        "product": 600,
+        "specification": 616,
+        "region": 551,
+        "customer_group": 616,
+        "supply_pool": 616
+      },
+      "temporal_unknowns": {},
+      "period_references": 0,
+      "physical_quantity_references": 0,
+      "rejected_inputs": 17,
+      "rejection_reasons": {
+        "PUBLIC_CONFIRMATION_NOT_PRECURSOR": 17
+      }
+    },
+    "after": {
+      "verified_documents": 230,
+      "events": 682,
+      "product": 74,
+      "specification": 8,
+      "region": 19,
+      "customer_group": 6,
+      "supply_pool": 0,
+      "complete_target_events": 0,
+      "independent_pairs": 0,
+      "comparable_period_pairs": 0,
+      "synthesized_targets": 0,
+      "backfill_early_candidates": 0,
+      "new_live_early_candidates": 0,
+      "known_bad_product_events": 0,
+      "taxonomy_region_events": 0,
+      "scope_unknowns": {
+        "product": 608,
+        "specification": 674,
+        "region": 663,
+        "customer_group": 676,
+        "supply_pool": 682
+      },
+      "temporal_unknowns": {
+        "QUALITATIVE_BOUND_NOT_AN_EXACT_DATE": 5,
+        "NO_PHYSICAL_QUANTITY": 633,
+        "NO_SOURCE_PERIOD": 623
+      },
+      "period_references": 75,
+      "physical_quantity_references": 75,
+      "rejected_inputs": 18,
+      "rejection_reasons": {
+        "PUBLIC_CONFIRMATION_NOT_PRECURSOR": 18
+      }
+    },
+    "graph_qa": {
+      "version": "source-evidence-graph-2",
+      "source_reference_checks": 16630,
+      "cross_document_edges": 0,
+      "complete_target_events": 0,
+      "independent_pairs": 0,
+      "comparable_period_pairs": 0,
+      "backfill_early_candidates": 0
+    },
+    "preservation": {
+      "cache_files_unchanged": true,
+      "cache_file_count": 460,
+      "deterministic_replay": true,
+      "source_reference_checks": "PASS",
+      "new_temporal_references_checked": 226,
+      "source_input_sha256": "acd344732f2f087b42767bfe32d9f16d96da6de49a766d6fc73f3c0ed298f9ec",
+      "engine_hashes": {
+        "precursor_discovery.py": "614e841938daf41e34d7e31b97ec636f06f2997c8b7b4252926dd135e5bc2639",
+        "early_forecast.py": "51d90d2265baec516d20383579816c5155e46c69599a8e7b281d329843d17675",
+        "forecast_discovery.py": "f6bf9bf94a43949dd82bd55e2acb5b63f944158309679127e49427469c061c37",
+        "prospective.py": "6ca939e378ffb02323feecb869aa1aac0e9f7b56ec5cbc92689233e30d65a153"
+      },
+      "live_write_count": 0,
+      "same_version_documents": 227,
+      "corrected_source_versions": [
+        {
+          "document_id": "1d956845-b4b4-4689-87b1-3cc541a1e1ba",
+          "rule": "PRESERVED_CARD_TO_PRIMARY_BODY_V1",
+          "prior_body_sha256": "196f7f4f9aed202515f955392ee9af1ed2b8619751b64e6c6ef596ef9a72e2da",
+          "body_sha256": "e95a6c3f86f5a68f709a3ddf0708e797b101285f0daec09f1a6553d2e8f67e10",
+          "raw_sha256": "38b52f505b62f41aafbbf944ca9d1a8f5888a157ffe37ea9da4d5825f2981eba",
+          "prior_completeness": "PARTIAL",
+          "prior_record_preserved": true,
+          "derived_view_only": true
+        },
+        {
+          "document_id": "75e3cc48-7a56-4135-ba2d-6e4d772ac90a",
+          "rule": "PRESERVED_CARD_TO_PRIMARY_BODY_V1",
+          "prior_body_sha256": "5b826d6782b92b966b16cc68031e2398f5664925d9a2236a43bdb3590894d7b1",
+          "body_sha256": "c569952a527c2f47a6edeb70a647c133d4c8762fe13347a62deafe5923d72439",
+          "raw_sha256": "ea286855907f13297304ebfa1f56ae94a1de5df20538e7a0df556feaec6af845",
+          "prior_completeness": "PARTIAL",
+          "prior_record_preserved": true,
+          "derived_view_only": true
+        },
+        {
+          "document_id": "01c8151c-5e60-45d1-a24a-aeadcaa33ba3",
+          "rule": "PRESERVED_CARD_TO_PRIMARY_BODY_V1",
+          "prior_body_sha256": "b3d097321b6c696f7a3a34fb2b0f9c5f8c3796875a27314329df13793a222549",
+          "body_sha256": "aec8b1db27709385ec1856346ce14b4e111462677b747972e06bef017e96cc50",
+          "raw_sha256": "bb04a9f86f0bf931962724bfa01ee78c49cf6267bbea23985e84e96feb419ff1",
+          "prior_completeness": "PARTIAL",
+          "prior_record_preserved": true,
+          "derived_view_only": true
+        }
+      ]
+    },
+    "operating_wrapper": {
+      "state": "PASS",
+      "module": ".github/scripts/new_precursor_cycle.py",
+      "scope_reader_version": "source-scope-reader-5",
+      "backfill_qa_documents": 230,
+      "external_requests": 0,
+      "new_live_early_candidates": 0,
+      "live_write_count": 0,
+      "cache_original_unchanged": true
+    }
   }
 }

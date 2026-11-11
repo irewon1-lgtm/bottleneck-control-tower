@@ -1,0 +1,285 @@
+{
+  "task": "BCT_V4_OPERATIONS_RECOVERY_20261111",
+  "PR": 45,
+  "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/45",
+  "status": "READY_FOR_REVIEW_USER_APPROVAL_PENDING",
+  "head": "8ae9fb8716ed211a317481fbe93e8062898c91d3",
+  "base": "e31743a91ab3604421ec7c35796dfda8f63dd51f",
+  "tree": "4127ea0156c42ac4b8615f485115b9751ce63483",
+  "files": [
+    ".github/bct-recovery-request.json",
+    ".github/workflows/bct-recovery.yml",
+    "tests/test_recovery_fixed230_workflow.py"
+  ],
+  "full_local_tests": {
+    "passed": 1020,
+    "existing_independent_holdout_skipped": 1,
+    "seconds": 25.09,
+    "javascript_passed": 34,
+    "new_contract_shell_tests_passed": 7,
+    "old_failure_reproduced_tests": 5
+  },
+  "independent_review": "NO_NEW_BLOCKERS_7_TESTS_PASS",
+  "existing_fixed230_QA_reuse": {
+    "actual_run": 42995363348,
+    "core7files_equal_018f_and_current_candidate": true,
+    "same_fingerprint": "acd344732f2f087b42767bfe32d9f16d96da6de49a766d6fc73f3c0ed298f9ec",
+    "new_large_download": false
+  },
+  "source_artifact": {
+    "run": 42939818925,
+    "id": 13821760877,
+    "bytes": 4598165007,
+    "digest": "sha256:949e95d2efda7a3fd3e7a124eb0d6569b56b54dcd1a3d5fd7f053dc75b8dfb72",
+    "expired": false,
+    "expires_at": "2026-12-11T01:48:44Z"
+  },
+  "RSS_artifact": {
+    "run": 42939431146,
+    "id": 13820246103,
+    "bytes": 527551,
+    "digest": "sha256:006124e204a8315e68e9a8abbd39cbca8eacc523e09d89318fbe1d830e2f403a",
+    "manifest_sha256": "65aa1e71528bc0b2e156ba83ad4ff7d76ecf3c30536a1ffb0b72601f2abe0446",
+    "expired": false,
+    "expires_at": "2027-02-09T01:30:22Z"
+  },
+  "prior_recovery_artifact": {
+    "id": 11783493914,
+    "resume_run": 38331945733,
+    "expires_at": "2026-11-12T01:47:21Z",
+    "local_exact_copy": "/tmp/bct-operations-recovery-20261111/preserved/bct-recovery-checkpoint-38331945733.zip",
+    "local_copy_not_API_expiry_bypass": true
+  },
+  "backup_summary": {
+    "started_at_UTC": "2026-11-11T10:09:58Z",
+    "preheads": {
+      "main": "e31743a91ab3604421ec7c35796dfda8f63dd51f",
+      "data": "064ab2d22b78cbf377e09f1c2b80cd1fe00fa9c7",
+      "future-bottleneck-data": "8730f5cdec9c7f6eb624df1c6d40a76b2b5d1bfe",
+      "ops/recovery-20261010": "a461cc7787d588a28c8d17a7a94ae81c9f0bdf9c"
+    },
+    "paired_generation": "8730f5cdec9c7f6eb624df1c6d40a76b2b5d1bfe",
+    "paired_roots": {
+      "future-candidates.json": {
+        "git_root_sha": "faf0b378a33a629145eb1f7218d58369280fe87e",
+        "assembled_sha256": "155626b86c8f9b41e9ee154cb6a927725ad53921b7c29d53e02add928c8e97e0",
+        "assembled_bytes": 231980251
+      },
+      "future-tracking.json": {
+        "git_root_sha": "adbec29fe290ff6a131c792861e564a15577c989",
+        "assembled_sha256": "98cd3bb00bb2632072079f209891a5f3c2e6cbe9c4e31a0324ee1684c13817a9",
+        "assembled_bytes": 10939744
+      }
+    },
+    "data_files": [
+      {
+        "path": "canonical.previous.sqlite3",
+        "sha": "d65985765283dd8c5fd23f7af6bc6ede25e4f26a",
+        "size": 56107008,
+        "type": "blob"
+      },
+      {
+        "path": "canonical.sqlite3",
+        "sha": "4d398e033167293932f346c929f068b7f6eb54d9",
+        "size": 56336384,
+        "type": "blob"
+      },
+      {
+        "path": "state.json",
+        "sha": "0e2a47bf067cf33ebb53641d65cf6f41d377ed41",
+        "size": 254,
+        "type": "blob"
+      }
+    ],
+    "queue_counts_before": {
+      "computed_at": "2026-11-11T10:10:44.755356+00:00",
+      "reader_version": "bct-v33-reader-1",
+      "documents_total": 3992,
+      "preserved_versions": 5718,
+      "automatic_candidates": 3406,
+      "review_list_versions": 5358,
+      "quick_pending": 1839,
+      "completed_documents": 596,
+      "deep_pending": 0,
+      "candidate_data_wait": 76,
+      "material_pending": 680,
+      "oldest_wait_hours": 996.14,
+      "failed_versions": 2847,
+      "unresolved_versions": 4994,
+      "failure_reasons": {
+        "ENVIRONMENT_DNS_RESOLUTION_FAILED": 857,
+        "FULL_SOURCE_NOT_OBTAINED": 1916,
+        "REQUIRED_EVIDENCE_MISSING": 74
+      },
+      "event_count": 5431,
+      "pending_events": 4861
+    },
+    "GET_requests": 26,
+    "writes": 0,
+    "seconds": 50.895
+  },
+  "backup_directory": "/tmp/bct-operations-recovery-20261111/pre-gate-backup",
+  "gate1_local_preview": {
+    "status": "PASS_LOCAL_GATE1_PROJECTION_PREVIEW_NOT_A_GATE_PASS",
+    "base_generation": "8730f5cdec9c7f6eb624df1c6d40a76b2b5d1bfe",
+    "changed_top_level_fields": [
+      "operation_samples",
+      "operations",
+      "summary"
+    ],
+    "changed_summary_fields": [
+      "operation_observation",
+      "prd_operation_observation",
+      "review_queue"
+    ],
+    "source_results_unchanged": true,
+    "tracking_bytes_unchanged": true,
+    "new_hypotheses": 0,
+    "removed_hypotheses": 0,
+    "operation_samples_before": 120,
+    "operation_samples_after": 121,
+    "stages_before": {
+      "S1": 3375
+    },
+    "stages_after": {
+      "S1": 3375
+    },
+    "preservation_check": {
+      "status": "PASS",
+      "preserved_candidates": 3992,
+      "preserved_completed_versions": 596,
+      "preserved_failure_versions": 3696,
+      "preserved_reviews": 1786
+    },
+    "proposed_candidate_sha256": "08703f56c1c3e82967935575b64aee4778c45d6162eccafb91c99303c0b7f704",
+    "snapshot_original_sha256": "155626b86c8f9b41e9ee154cb6a927725ad53921b7c29d53e02add928c8e97e0",
+    "remote_writes": 0,
+    "source_or_model_requests": 0,
+    "notes": "UUID/time fields and operation history make each real projection a new append-only transition; execute again at actual before generation. Gate5 diff requires actual new receipt IDs and is not fabricated here."
+  },
+  "after_readonly_check": {
+    "prior_resume_seal_against_current_paired_backup": {
+      "status": "PASS",
+      "details": {
+        "status": "PASS",
+        "preserved_candidates": 3397,
+        "preserved_completed_versions": 505,
+        "preserved_failure_versions": 3696,
+        "preserved_reviews": 1695
+      }
+    },
+    "heads_after_local_checks": {
+      "main": "e31743a91ab3604421ec7c35796dfda8f63dd51f",
+      "data": "064ab2d22b78cbf377e09f1c2b80cd1fe00fa9c7",
+      "future-bottleneck-data": "8730f5cdec9c7f6eb624df1c6d40a76b2b5d1bfe",
+      "ops/recovery-20261010": "a461cc7787d588a28c8d17a7a94ae81c9f0bdf9c"
+    },
+    "unchanged_during_readonly_checks": {
+      "main": true,
+      "data": true,
+      "future-bottleneck-data": true,
+      "ops/recovery-20261010": true
+    },
+    "remote_mutations": 0
+  },
+  "actual_gate_dispatches": 0,
+  "operating_writes": 0,
+  "model_installation_or_inferences": 0,
+  "source_fetches": 0,
+  "main_mutations": 0,
+  "helper_ref": "7d9188608a66520115727ff5daa30d13190f4958",
+  "limits_and_criteria_unchanged": true,
+  "requested_parent_action": "Port exact3-file commit todev while preserving uncommitteddocs; ask user approval for PR45 merge and reviewed existing Gate0-6 effects. After actual successful newmain run, separate receipt-only PR; CPUenable remains separate.",
+  "PR_draft": false,
+  "GitHub_CI": [
+    {
+      "id": 43002046730,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43002046730"
+    },
+    {
+      "id": 43002162715,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43002162715"
+    }
+  ],
+  "development_port_by_root": "faa90b9",
+  "user_approval": "PENDING_ROOT_ASYNC_ANSWER; root must confirm before merge or actual Gate",
+  "current_workflow_effects": {
+    "Gate1": "Storage probe branch + production future-candidates projection/operations changes; old/current preservation seals both pass against prepared pair.",
+    "Stage5": {
+      "model": "Qwen/Qwen2.5-7B-Instruct-GGUF",
+      "revision": "bb5d59e06d9551d752d08b292a50eb208b07ab1f",
+      "llama_cpp": "79e2e74eb11022c1ba2e438df7f0ca2d4c10f8b6",
+      "GGUF_sha256": [
+        "dfce12e3862a5283ccfb88221b48480e58745165de856439950d0f22590580db",
+        "539cf93f78e887edea1c04e2d7d8cdaca9d01dae9c9025bcb8accbe29df3d72a"
+      ],
+      "restoration": "Same existing selected model/runtime, fresh setup is expected. No model replacement or GLiNER substitution.",
+      "max_fresh_readings": 50,
+      "prior_qualification_calls": 61,
+      "prior_drain_calls": 5,
+      "native_claim_fault_probe": "Dedicated ops/bct-native-claim-probe-* branch, not production claim mutation"
+    },
+    "Gate5": {
+      "branch": "future-bottleneck-data",
+      "authoritative_roots": [
+        "future-candidates.json",
+        "future-tracking.json"
+      ],
+      "display_roots": [
+        "future-candidates.ui.json.gz",
+        "future-tracking.ui.json.gz"
+      ],
+      "additional_objects": "Content-addressed shards, manifests and immutable Git commits",
+      "publication": "Nonforced CAS, immutable readback, preservation and idempotency checks",
+      "automatic_postpublication_rollback": false
+    },
+    "Gate6": "Must actually execute all preceding gates and required checks at exact merged-main SHA; existing source-only QA and CI are not all-Gates PASS."
+  },
+  "resources": {
+    "runner": "Existing public standard Ubuntu GitHub-hosted job; no paid runner/API introduced",
+    "job_timeout_minutes": 100,
+    "source_transport_timeout_seconds": 300,
+    "source_transport_max_archive_bytes": 6442450944,
+    "source_transport_max_expanded_bytes": 3221225472,
+    "source_transport_disk_reserve_bytes": 2147483648,
+    "literal_copy_max_bytes": 67108864,
+    "model_download_max_bytes_per_part": 5368709120,
+    "reader_startup_timeout_seconds": 120,
+    "inference_timeout_seconds": 180,
+    "reader_loop_deadline_seconds": 1800,
+    "native_claim_child_timeout_seconds": 600,
+    "compile_download_step_separate_timeout": "Not present in unchanged existing setup; overall100-minute job still applies",
+    "new_cache_or_model_framework_added": false
+  },
+  "rollback_and_safety": {
+    "approval_required": true,
+    "before_dispatch": [
+      "Root confirms explicit user choice, including merge plus Gate effects; merge-only consent is not Gate consent.",
+      "Freeze actual merge SHA, refresh all four preheads and authoritative paired generation; if branch state changed rerun only read-only backup/preview as needed.",
+      "Recheck old resume artifact unexpired and exact digest/pins; current saved source/RSS IDs/digests and fixed230 remain available.",
+      "Retain exact before/published commits, both root blobs, assembled hashes, sealed versions/reviews and canonical data file blob IDs; verify main/data/frozen-HOLDOUT unchanged.",
+      "Execute existing gates without lowering model, batch, source, fingerprint, CAS or quality criteria."
+    ],
+    "after_failure": [
+      "Stop and inspect immutable publication/after roots before any retry; a verification failure can follow successful publication.",
+      "If compensating change is needed, prepare an explicit append-only merge against the exact current generation, keeping legitimate new readings/history/concurrent additions.",
+      "Use nonforced CAS; reject an unreviewed moved ref and recompute; never blind-replace production with the old whole snapshot.",
+      "Do not reset/force/delete branches, overwrite canonical main/data, edit frozen answers or assert rollback happened without actual readback."
+    ],
+    "release_receipt": "After actual exact merged-main Gate0-6 success, prepare a separate reviewed config/bct-operating-release.json-only PR with actualrun/head/artifact/digest. Its intentional exclusion from code_path avoids self-reference; all other code/test hashes must match.",
+    "scheduled_CPU_enable": "Separate owner variables action; remains OFF in this preparation."
+  },
+  "focused_verification": {
+    "initial_recovery_guard_transport": 23,
+    "expanded_recovery_guard_pilot": 30,
+    "final_new_shell_contract_tests": 7,
+    "independent_new_test_verification": "7 passed in 0.76s; no new blocker"
+  },
+  "current_Gates0_6_PASS_claim": false
+}

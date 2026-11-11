@@ -243,7 +243,7 @@
     }
   ],
   "scope": "Private-state storage/permission separation only, free CPU research. No public main/data runtime write token; no operating changes, new model/cache/RSS/oldCPU reprocessing, AI or automatic S2/S3/LIVE. Actual activation conditional on owner setup, verified exclusive permission and source archival rights.",
-  "updated_at": "2026-11-11T10:06:15.719437+00:00",
+  "updated_at": "2026-11-11T10:32:44.041596+00:00",
   "evidence": [
     "docs/v4/STAGE1_STATUS.json",
     "docs/v4/API_TEST_RESULTS.json",
@@ -7553,7 +7553,7 @@
     },
     "operations_recovery_20261111": {
       "task_id": "BCT_V4_OPERATIONS_RECOVERY_20261111",
-      "status": "APPROVED_MAIN_MERGED_GATE_CORPUS_RESTORE_AND_OWNER_VARIABLES_PENDING",
+      "status": "DEVELOPMENT_REPAIRS_VERIFIED_PR44_MAIN_MERGED_PR45_PR46_APPROVAL_PENDING",
       "started_at": "2026-11-11T08:35:56.899025+00:00",
       "base_development_sha": "42ee0a6ee6b0ed21228a0409aa64e973359bf65f",
       "base_main_sha": "28d0b8c648c0218ab2e74a1fa04ca8d63e659933",
@@ -7568,7 +7568,7 @@
       },
       "reused_verification": "09cbdf2 executable hashes unchanged; actual prior1828Python+GitHubJS34/CI/Page proofs reused, not rerun",
       "evidence_root": "docs/v4/operations-recovery-20261111",
-      "next_action": "PR44 approved and normally merged to e31743a. Prepare minimal separate main PR for expired fixed230 artifact restoration; retain exact original fingerprint and Gate checks. Review real Gate1/5 effects and rollback before full dispatch. Owner variable response and actual new scheduled CPU/persistence/restore remain pending; no operational PASS.",
+      "next_action": "PR44 is approved and merged to actualmain e31743a. PR45 exactfixed230 restore and PR46 validemptyRSS fix are ready with passingCI, awaiting explicitmain approval. ActualGates operatingwrites also explicitly requested inPR45question. Beforeauthorizeddispatch freeze finalmergedmainSHA, refreshpairedroots, use unchangedGates/sameapprovedQwen then realreceipt-onlyreleasePR. CPU remains lastobservedOFF; ownerVariables response awaited. No freshscheduledCPU/livewholechainPASS.",
       "main_promotion": "PR44_EXPLICITLY_USER_APPROVED_AND_MERGED_NORMAL_MERGE",
       "Q6_7day": "NOT_STARTED",
       "latest_monthly_baseline": {
@@ -7622,7 +7622,7 @@
         },
         "new_model_selection": false
       },
-      "updated_at": "2026-11-11T10:05:37.613655+00:00",
+      "updated_at": "2026-11-11T10:32:44.041596+00:00",
       "main_candidate": {
         "commit": "164019bed86c2e5db660911813ab428c061c768a",
         "pr": "https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/44",
@@ -7641,10 +7641,17 @@
       },
       "RSS": {
         "repaired_official_feeds": 2,
-        "remaining_individual_BLOCKED": 12,
+        "remaining_individual_BLOCKED": 11,
         "temporary_current_DB_new_rows": 20,
         "repeat_duplicates": 20,
-        "production_DB_writes": 0
+        "production_DB_writes": 0,
+        "valid_empty_NO_NEW_INPUT": 1,
+        "source_coverage_unresolved_for_empty_feed": true,
+        "empty_feed_development_commit": "30d678757ce1da785b1387e2a841dbd99cbbc63a",
+        "empty_feed_main_PR": "https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/46",
+        "empty_feed_main_applied": false,
+        "empty_feed_related_tests": 80,
+        "existing_production_feed_counts_unchanged_as_historical_receipt": true
       },
       "review": {
         "status": "PASS_ACTIONS_REPLAY",
@@ -7686,7 +7693,99 @@
         "operating_automation": "BLOCKED",
         "future_bottleneck_prediction_performance": "BLOCKED"
       },
-      "evidence_report": "docs/v4/operations-recovery-20261111/REPORT.md"
+      "evidence_report": "docs/v4/operations-recovery-20261111/REPORT.md",
+      "development_CI": {
+        "commit": "30d678757ce1da785b1387e2a841dbd99cbbc63a",
+        "run_id": 43003680158,
+        "result": "PASS",
+        "python_passed": 1919,
+        "python_frozen_holdout_blocked_skip": 1,
+        "javascript_passed": 34
+      },
+      "Pages": {
+        "code_commit": "2e86fd82edb1eeb3fb21c1afb8add7da6b890e98",
+        "deployment_run": 43001061701,
+        "code_and_progress_receipts": "PASS",
+        "body_research_data_at": "2026-10-14T23:16:13.592709+00:00",
+        "body_research_data_refresh": "BLOCKED",
+        "evidence": "docs/v4/operations-recovery-20261111/DASHBOARD_RECOVERY.json"
+      },
+      "actions_observation": "docs/v4/operations-recovery-20261111/ACTIONS_OBSERVATION.json",
+      "Gate_restore_PR": {
+        "url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/45",
+        "head": "8ae9fb8716ed211a317481fbe93e8062898c91d3",
+        "development_commit": "faa90b960b1694ceffa23ce7c0cb0218cb0d54de",
+        "PR_CI": 43002162715,
+        "push_CI": 43002046730,
+        "CI": "PASS",
+        "python_passed": 1020,
+        "python_frozen_holdout_blocked_skip": 1,
+        "javascript_passed": 34,
+        "independent_review": "NO_NEW_BLOCKERS",
+        "approval": "REQUESTED_PENDING",
+        "actual_Gates_run": "NOT_RUN",
+        "production_writes_by_this_fix": 0
+      },
+      "code_defect_repairs": {
+        "count": 6,
+        "count_unit": "distinct_root_cause_groups",
+        "groups": [
+          "recovery resume run/pins inventory mismatch",
+          "two relocated official DOE RSS endpoints",
+          "same-step RSS_RUN environment propagation",
+          "unbounded CPU evaluation-cache expansion",
+          "expired fixed230 recovery artifact route",
+          "valid zero-entry RSS/Atom classified as malformed input"
+        ],
+        "prior_six_debug_fixes_preserved": true,
+        "code_changes_do_not_imply_operating_Gates_PASS": true
+      },
+      "latest_actual_scheduled_chain": {
+        "scope": "BEFORE_PR44_MAIN_UPDATE_NOT_NEW_CPU_ROUNDTRIP",
+        "RSS_run": 42990958603,
+        "RSS_articles_new": 47,
+        "RSS_duplicate_articles": 1037,
+        "RSS_total_rows_before": 9921,
+        "RSS_total_rows_after": 9968,
+        "acquisition_run": 42991420695,
+        "verified_documents_new": 9,
+        "additional_bodies": 0,
+        "source_holds": 1,
+        "body_attempts": "NOT_EMITTED_IN_PUBLIC_SUMMARY",
+        "REVIEW_run": 42995175538,
+        "new_REVIEW_records": 9,
+        "REVIEW_HOLD": 9,
+        "semantic_completions": 0,
+        "CPU_run": 42995175645,
+        "CPU_status": "SKIPPED",
+        "new_CPU_documents": 0,
+        "independent_pairs": 0,
+        "new_S2": 0,
+        "new_S3": 0,
+        "evidence": "docs/v4/operations-recovery-20261111/LATEST_SCHEDULED_CHAIN_COUNTS.json"
+      },
+      "empty_feed_main_PR": {
+        "number": 46,
+        "head": "a57cda356b0de227530132f3ad6ca3a9c4fde6ff",
+        "base": "e31743a91ab3604421ec7c35796dfda8f63dd51f",
+        "main_full_passed": 1055,
+        "existing_holdout_skipped": 1,
+        "javascript_passed": 34,
+        "push_CI": 43003990199,
+        "PR_CI": 43004062734,
+        "main_merged": false,
+        "approval": "EXPLICIT_REQUEST_SENT_PENDING",
+        "CI": "PASS",
+        "draft": false
+      },
+      "schedule_watch": {
+        "cutoff_utc": "2026-11-11T10:25:52Z",
+        "scheduled_RSS_after_10_UTC": "NOT_OBSERVED",
+        "new_CPU_documents": 0,
+        "owner_variables_completion": "UNCONFIRMED",
+        "indefinite_polling_stopped": true,
+        "evidence": "POST_MERGE_SCHEDULE_WATCH.json"
+      }
     }
   }
 }

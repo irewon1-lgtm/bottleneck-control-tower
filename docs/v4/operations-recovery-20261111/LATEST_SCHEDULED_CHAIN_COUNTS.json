@@ -1,0 +1,83 @@
+{
+  "task_id": "BCT_V4_OPERATIONS_RECOVERY_20261111",
+  "scope": "Actual latest scheduled chain before main update; structured counts, no raw source text",
+  "run_ids": {
+    "RSS": 42990958603,
+    "acquisition": 42991420695,
+    "REVIEW": 42995175538,
+    "CPU": 42995175645
+  },
+  "RSS": {
+    "registered": 125,
+    "initial_articles": 9921,
+    "final_articles": 9968,
+    "successful_feeds": 111,
+    "failed_feeds": 14,
+    "new_articles": 47,
+    "duplicate_articles": 1037,
+    "error_types": {
+      "HTTPError": 7,
+      "URLError": 6,
+      "MalformedRecord": 1
+    },
+    "event": "schedule",
+    "created_at": "2026-11-11T08:56:05Z",
+    "new_manifest_articles": 47
+  },
+  "acquisition": {
+    "engine_hashes": {},
+    "new_verified_documents": 9,
+    "scope_complete_events": 0,
+    "independent_pair_count": 0,
+    "common_window_pair_count": 0,
+    "synthesized_targets": 0,
+    "early_preflight": 0,
+    "early_frozen": 0,
+    "baseline_reprocessed": 0,
+    "backfill_qa_documents": 233,
+    "additional_bodies_acquired": 0,
+    "valid_additional_primary_documents": 0,
+    "unverified_source_holds": 1,
+    "evidence_graph": {
+      "complete_target_events": 0,
+      "independent_pairs": 0,
+      "comparable_period_pairs": 0,
+      "reference_checks": 183744
+    },
+    "graph_early_preflight": 0,
+    "graph_early_frozen": 0,
+    "unique_early_preflight": 0,
+    "gap_verified_early_preflight": 0,
+    "unverified_legacy_preflight": 0,
+    "new_source_body_attempts": "NOT_EMITTED_IN_PUBLIC_LOG_SUMMARY",
+    "new_seed_statuses": "NOT_EMITTED_IN_PUBLIC_LOG_SUMMARY",
+    "acquired_verified_new_documents": 9,
+    "provenance_boundary": "9 new verified documents is not total attempted body URLs or independent primary evidence.",
+    "known_source_integrity": "PARTIAL_HOLD",
+    "source_holds": 1
+  },
+  "REVIEW": {
+    "receipt_path": "review-lead-shadow/runs/e7ac0141bc0adf5938a0e70c769f637e47cfebfb0258312d5f4ec9287dbcefc0.json",
+    "blob_sha": "37151af63445e2c27b5285c978258e05b5726726",
+    "state_commit": "9ce910b1cec545b21167f5f47c010198c9281696",
+    "records": 9,
+    "new_records": 9,
+    "duplicates": 0,
+    "HOLD": 9,
+    "semantic_pending": 9,
+    "semantic_complete": 0,
+    "omitted_backfill": 0,
+    "alerts": 0
+  },
+  "CPU": {
+    "workflow_run": 42995175645,
+    "conclusion": "skipped",
+    "new_CPU_windows": 0,
+    "semantic_or_independent_success_claimed": false
+  },
+  "limits": [
+    "New seed body attempt counts and status breakdown are preserved privately by the acquisition code but omitted from its public JSON log summary. They were not inferred from47 RSS items or9 verified outputs.",
+    "Review exact fresh/duplicate/HOLD/semantic counts were read from the single immutable newly added run receipt; no old source articles or full source texts were emitted.",
+    "No manual workflow, consumer diagnostic, settings query/change, source refetch or inference was executed for this read-only count extraction."
+  ]
+}

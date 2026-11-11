@@ -7,13 +7,13 @@
 | 기능 | 기존 상태 | 복구 결과 | 실제 운영 검증 |
 |---|---|---|---|
 | 운영 릴리스 Gate0~6 | FAIL | BLOCKED | 복원 요청의 잘못된 run/누락 해시를 수정. 과거 증거 ZIP 무결성 보존, 현재 후보 품질·230원문 QA PASS. 전체 새 Gate 실행/새 영수증은 미완료 |
-| CPU 자동 실행 | SKIPPED | BLOCKED | 기존 승인 seed·runtime·bridge 복원 PASS. 현재 두 변수는 옛 SHA/false; 예약 신규 판독 0. 입력 캐시·RSS_RUN 전달 결함 수정은 승인된 main에 반영 |
+| CPU 자동 실행 | SKIPPED | BLOCKED | 기존 승인 seed·runtime·bridge 복원 PASS. 마지막 관측 두 변수는 옛 SHA/false; 예약 신규 판독 0. 입력 캐시·RSS_RUN 전달 결함 수정은 승인된 main에 반영 |
 | 최신 연구 DB 복원 | BLOCKED | PASS | 실제 generation6 암호/해시/8테이블/새 프로세스 복원·generation5 보존·원격 무변경 검증 |
-| RSS 수집 | PARTIAL | PASS / BLOCKED | 공식 대체 RSS2개 수정, 임시 최신 DB에 신규20→재처리 중복20. 나머지12개 개별 BLOCKED; 수정2개는 main 반영 |
+| RSS 수집 | PARTIAL | PASS / BLOCKED | 공식 대체 RSS2개 수정, 임시 최신 DB에 신규20→재처리 중복20. 나머지11개 BLOCKED·정상 빈 피드1개 NO_NEW_INPUT; XML 판별 수정은 PR46 승인 대기 |
 | 공식 원문 확보 | PARTIAL | PASS / BLOCKED | 저장 실제 창의 출처검증2·보류3, 고정230 원본 확인/QA. 모든 공식 출처의 최신 갱신 완료가 아님 |
 | 제품·사건 판독 | PARTIAL | PASS / NOT_RUN | 기존 일반 장비·주문 추출 보수 보존, 230원문 결정론적 QA 실행. 신규 CPU 문서 판독은 NOT_RUN |
 | 수요·공급 연결 | BLOCKED | BLOCKED | 실제 적격 독립쌍0 유지. scalar→source-bound 계약 부재 및 공급풀 미확인을 억지 보충하지 않음 |
-| REVIEW_LEAD | 운영 미검증 | PASS / NOT_RUN | 실제 Actions 제한 복원·과거 상태 복사본 HOLD2·중복2·새 프로세스·기존 파일 보존 PASS. 의미 검토 완료0, 변경 후 운영 쓰기는 NOT_RUN |
+| REVIEW_LEAD | 운영 미검증 | PASS / NOT_RUN | 실제 Actions 제한 복원·과거 상태 복사본 HOLD2·중복2·새 프로세스·기존 파일 보존 PASS. 의미 검토 완료0. 가장 최근 구main 자동 실행은 신규9HOLD 저장; 변경 후 운영 쓰기는 NOT_RUN |
 | 연구 결과 저장·복원 | PARTIAL | PASS / NOT_RUN | 실제 기존 연구/CPU 상태 복원·동일 DB bridge 회복 PASS. 신규 CPU 연구 결과의 영속 저장은 NOT_RUN |
 | 대시보드 데이터 갱신 | BLOCKED | PASS / BLOCKED | 새 코드·진행 영수증의 기존 Pages 연쇄 export 검증. 본문 연구 스냅샷10월14일은 그대로이며 최신 연구 데이터 갱신 PASS로 세지 않음 |
 | 실제 전체 왕복 | NOT_RUN | BLOCKED | 수동/REPLAY 단계별 실증은 완료. 신규 자동 수집→CPU→새 비공개 결과→검토의 한 LIVE 왕복은 미실행 |
@@ -100,8 +100,44 @@ main 반영은 사용자 승인 후 일반 merge만 사용한다. 승인된 새 
 
 ## 소유자가 해야 하는 항목
 
-1. **운영 코드 승인 완료:** 사용자가 “PR #44 main 반영 승인”을 전달했고 일반 병합 완료. 새 main `e31743a`에서 Gate workflow가 만료된 고정230 artifact run37790294699를 여전히 참조하는 후속 차단을 발견했다. 이미 검증한 동일 원문의 복원 경로만 별도 PR로 보수하고 승인받을 예정이다. 이를 알면서 운영 쓰기 Gate를 먼저 실행하지 않았다. 승인 없는 merge는 실행하지 않는다.
-2. **CPU 변수:** PR 적용과 마지막 유효 bridge 확인 뒤, GitHub 저장소 **Settings → Secrets and variables → Actions → Variables**에서 기존 항목의 연필/Edit를 눌러 `BCT_V4_CPU_CODE_SHA=221fa92b1cbff8950716ec373eac793ca340c873`, `BCT_V4_CPU_RESEARCH_ENABLED=true`를 저장한다. 현재 앱의 Variables 권한은403이므로 대신 변경하지 못했다. 실행 pin 자체·Secret은 변경하지 않는다. 승인/최신 bridge 조건 전에는false를 유지한다.
+1. **운영 코드 승인 완료:** 사용자가 “PR #44 main 반영 승인”을 전달했고 일반 병합 완료. 새 main `e31743a`에서 Gate workflow가 만료된 고정230 artifact run37790294699를 여전히 참조하는 후속 차단을 발견했다. 이미 검증한 동일 원문의 복원 경로를 PR45로 보수했고 CI 통과 후 승인 요청했다. 빈 피드 분류 오류 PR46도 별도로 검증해 승인 요청했다. 이를 알면서 운영 쓰기 Gate를 먼저 실행하지 않았다. 승인 없는 merge는 실행하지 않는다.
+2. **CPU 변수:** PR 적용과 마지막 유효 bridge 확인 뒤, GitHub 저장소 **Settings → Secrets and variables → Actions → Variables**에서 기존 항목의 연필/Edit를 눌러 `BCT_V4_CPU_CODE_SHA=221fa92b1cbff8950716ec373eac793ca340c873`, `BCT_V4_CPU_RESEARCH_ENABLED=true`를 저장한다. 현재 앱의 Variables 권한은403이므로 대신 변경하지 못했다. 소유자 설정 완료 응답은 아직 없다. 실행 pin 자체·Secret은 변경하지 않는다. 승인/최신 bridge 조건 전에는false를 유지한다.
 3. 수동 consumer 진단 또는 미게시/생략 consumer 실행으로 predecessor가 달라지면, 기존 **Actions → V4 CPU private research consumer → Run workflow → main → purpose=bridge-recover**의 유효 회복이 먼저 필요하다. 다른 모델 설치나 새 키는 필요하지 않다. 첫 실제 예약의 신규 판독·검증·비공개 ACK·복원이 성공하기 전까지 운영 PASS/7일 시작으로 세지 않는다.
 
 **개발 코드 정상화:** 확인된 범위 PASS, 개발 push/PR44 승인·main 일반 병합 완료. **운영 자동화 정상화:** BLOCKED(고정230 복원 경로·조건부 변수·새 main Gate·실제 신규 예약 왕복 대기). **미래 병목 예측 성능:** BLOCKED(적격 독립 수급 근거/독립 선행 평가 부재). 실패/대기 중에도 원래 DB·원본·완료 키·검토 이력은 유지했고 빈 상태로 성공 처리하지 않았다.
+
+## 개발 CI·실제 Pages 배포 추가 증거
+
+개발 증거 커밋 `2e86fd82edb1eeb3fb21c1afb8add7da6b890e98`의 [CI43000796112](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43000796112)는 Python1,870PASS·동결 실자료 HOLDOUT 부재1SKIP·JS34PASS다. [Pages43001061701](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43001061701)는 main workflow `e31743a`에서 해당 개발 코드를 검증·배포했다. 실제 공개 manifest/dashboard SHA와 전체 progress JSON의 PR44 승인·병합 영수증 일치를 확인했다. 본문 `data_at`은 여전히 2026-10-14T23:16:13.592709+00:00이다. 상세 [DASHBOARD_RECOVERY.md](DASHBOARD_RECOVERY.md).
+
+최종 메타데이터 관측 창(2026-11-11 08:35:56UTC 이후, 문서 전용 마지막 push 이전)의 실제47runs는 SUCCESS42/FAIL2/SKIPPED1/진행중2다. 수동을 제외한 자동 event40회는 SUCCESS35/FAIL2/SKIPPED1/진행중2, 성공한 workflow 종류6개(CI·Pages 포함)다. 이는 CPU 실제 신규 판독이나 전체 왕복 성공 횟수가 아니다. FAIL은 body release guard42991420784와 이후 보정된 개발 보존시험43002283054, SKIPPED는 CPU42995175645다. 정확한 범위/개별 run은 [ACTIONS_OBSERVATION.json](ACTIONS_OBSERVATION.json), 엄밀한 최근7일 예약 집계는 대시보드 영수증에 분리했다.
+
+## 후속 고정230 복원 수정 — 승인 대기
+
+[PR45](https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/45) `8ae9fb8716ed211a317481fbe93e8062898c91d3`는 만료된 원문 artifact 경로만 교체한다. 원문 fingerprint/기존 helper7d918/모든 Gate 조건/모델/실행 pin/릴리스 guard는 유지한다. [PR CI43002162715](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43002162715)·push CI43002046730 PASS, main 후보 전체1,020Python PASS·기존 HOLDOUT1SKIP·JS34PASS, 독립 검토 추가 차단0이다. 동일 보수는 개발 `faa90b960b1694ceffa23ce7c0cb0218cb0d54de`에 commit/push했고, 개발 환경의 관련14개 시험도 PASS다. PR45 병합과 실제 Gate 운영 쓰기는 명시적 승인 요청 상태이며 아직 실행하지 않았다. CPU 정기 실행 OFF는 별도 소유자 설정 응답 전까지 유지한다.
+
+이번에 코드로 보수한 결함은 원인군 기준6종이다: 복원 요청 run·해시 누락, DOE 공식 RSS2개 이전, RSS_RUN step 간 전달 실패, CPU 평가 이력 무제한 확장, 고정230 artifact 만료 참조, 정상 빈 피드를 malformed로 처리. runtime/bridge/gen6 복원 성공은 별도 복구 결과이며, 이전 디버깅6개 결함과 이6종을 혼합하지 않는다. 전체 Gate와 운영 새 판독이 성공한 것으로 집계하지 않는다.
+
+## 최근 실제 예약 자료의 단계별 집계
+
+이 자료군은 PR44 적용 전 [RSS42990958603](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42990958603) → [acquisition42991420695](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42991420695) → [REVIEW42995175538](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42995175538)로 이어진 실제 예약 실행이다. RSS47신규/1,037중복, canonical9,921→9,968행 저장, 125피드 중111성공/14실패다. acquisition은 신규 검증9문서/추가본문0/출처HOLD1/완성 TARGET0/독립쌍0이다. 본문 URL 총 시도와 각 상태는 공개 요약에 없고 기존 private artifact에 남으므로 47건을 모두 본문 시도로 가정하지 않는다. 기존 paired 후보/추적 원본에서도 해당 run의 상세 카운터를 찾지 못했다. 불필요한 전체 archive 재다운로드는 하지 않았다.
+
+동일 REVIEW의 immutable 신규 receipt를 읽어 실제 **신규9/중복0/HOLD9/의미검토 PENDING9/완료0/alerts0**을 확인했다. 기존 제한복원 PRE_INTAKE_REPLAY의2HOLD와 다른 자료군이다. CPU42995175645는 SKIPPED라 신규 CPU판독/새 CPU결과저장0이다. 이를 한 CPU 전체왕복 PASS로 집계하지 않는다. 정확한 상태·Git blob·receipt 경로는 [LATEST_SCHEDULED_CHAIN_COUNTS.json](LATEST_SCHEDULED_CHAIN_COUNTS.json)에 보존했다.
+
+## 개발 CI 보존 시험 보정
+
+개발 `faa90b9`의 [CI43002283054](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43002283054)는 과거 UI snapshot 보존 시험이 변경된 현재 bct-recovery workflow를 옛 해시와 대조하면서1건 실패했다. 기존 golden manifest를 수정하지 않고 원래 workflow bytes(SHA256 `b4f32d78070a23b12a3b03b99fa5fb6fb471693b5885574efcfebbda7215121d`)를 동결 자산에 보존한 뒤, 이 시험이 해당 원본을 계속 검증하도록 매핑했다. 현재 workflow의 실행 계약은 새7개 시험이 계속 검증한다. 개발 보정 커밋 `2159979`의 관련8개 시험 PASS이며 전체 CI 결과는 후속 기록으로 구분한다. 릴리스 guard/검증 제외 규칙/과거 정답/HOLDOUT은 변경하지 않았다.
+
+## 정상 빈 피드의 분류 오류 보수
+
+저장된 실제 USGS 응답643바이트(SHA256 `148ee2cbd14f29c4c40d809dfe336a200fc73a2297f1ed035e07e050a5473c0c`)는 제목·링크·설명 등 필수 메타데이터를 갖춘 항목0개의 정상 RSS2.0이었다. 공통 파서의 무조건적 “feed has no entries” 오류를 보수해 정상 RSS/Atom 빈 응답만 기존 succeeded 상태·신규0·errorNone으로 저장한다. 공급자 하드코딩/스키마 변경/기사 생성은 없고 HTML·DTD·잘못된 XML/항목/날짜·시간대 차단은 유지한다. 단위는 **NO_NEW_INPUT**이며 광물 coverage는 미해결이다. 따라서 운송·파싱 차단은11개, 정상 빈 응답1개를 별도로 기록한다. 앞의12개 BLOCKED는 당시 최초 분류였고 원래 실제 실패 로그를 소급 변경하지 않았다.
+
+개발 `7594788`·`30d678757ce1da785b1387e2a841dbd99cbbc63a`를 commit/push했다. 관련80개 시험, [최종 코드 CI43003680158](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43003680158)의 **1,919Python PASS·기존 HOLDOUT1SKIP·JS34PASS**가 확인됐다. 별도 [PR46](https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/46) `a57cda356b0de227530132f3ad6ca3a9c4fde6ff`는 새 main 후보에서1,055Python PASS·1SKIP·JS34PASS다. PR45와 파일 겹침이 없으며 main에 아직 적용하지 않았다. 상세 [EMPTY_FEED_RECOVERY.md](EMPTY_FEED_RECOVERY.md).
+
+## 현재 승인 경계와 최종 코드 시험
+
+PR45 `8ae9fb8`와 PR46 `a57cda3` 모두 ready for review·push/PR CI PASS이며 아직 main 미반영이다. 사용자 지시8항에 따라 PR45 병합+기존 Gate 실제 운영 효과, PR46 일반 병합을 각각 구체적 범위로 승인 요청했다. 승인/응답을 시간 경과로 대체하지 않는다. 실제 Gate0~6/새 릴리스 영수증/신규 CPU 전체 왕복은 아직 미실행이다. 2026-11-11 19:25:52 KST 관측까지 19:00 이후의 새 예약 RSS run이 없었고 CPU 변수 소유자 완료 응답도 없어, 같은 조회를 무한 반복하지 않고 감시를 종료했다. 이후 새 승인·설정·상위 실행 문맥이 확인되면 해당 지점부터 재개한다.
+
+최종 실행 코드 `30d678757ce1da785b1387e2a841dbd99cbbc63a`의 실제 [CI43003680158](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43003680158)는 1,919Python PASS·독립 실자료 HOLDOUT 부재1SKIP·JS34PASS다. 보존 시험 실패43002283054는 원본 해시를 유지한2159979로 보정됐고 해당 수정까지 포함한 이 CI가 통과했다. PR46 [실제 CI43004062734](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43004062734)도 PASS다. [EMPTY_FEED_MAIN_PR.json](EMPTY_FEED_MAIN_PR.json)에 적용 범위·해시·시험을 보존했다.
+
+**개발 코드 정상화 PASS(확인된6개 원인군·회귀·개발 push), 운영 자동화 정상화 BLOCKED(승인/Variables/새main Gate/신규 CPU 저장·복원 미실행), 미래 병목 예측 성능 BLOCKED(적격 독립쌍0·신규S2/S3각0·독립 선행 HOLDOUT 부재)**로 구분한다.

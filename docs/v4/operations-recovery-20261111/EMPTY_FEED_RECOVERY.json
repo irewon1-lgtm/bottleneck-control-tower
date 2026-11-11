@@ -1,0 +1,115 @@
+{
+  "task_id": "BCT_V4_OPERATIONS_RECOVERY_20261111",
+  "subtask": "GENERIC_VALID_EMPTY_FEED_CLASSIFICATION",
+  "created_at_utc": "2026-11-11T10:28:28.323112+00:00",
+  "development_base_sha": "215997951c2956bd838b7415399a0a351ef80a62",
+  "initial_fix_commit": "7594788",
+  "final_development_commit": "30d678757ce1da785b1387e2a841dbd99cbbc63a",
+  "remote_ref_verified_equal_final_commit": true,
+  "branch": "codex/bct-v4-operations-recovery-20261111",
+  "owned_commit_files": [
+    "src/bct/collectors/rss/collector.py",
+    "tests/fixtures/rss_empty_source.xml",
+    "tests/test_rss_empty_feed.py"
+  ],
+  "saved_capture": {
+    "name": "USGS Minerals News",
+    "url": "https://www.usgs.gov/news/minerals/feed",
+    "requested_at_utc": "2026-11-11T08:36:03.941956+00:00",
+    "status": 200,
+    "final_url": "https://www.usgs.gov/news/minerals/feed",
+    "content_type": "application/rss+xml; charset=utf-8",
+    "http_date": "Wed, 11 Nov 2026 08:36:04 GMT",
+    "last_modified": "Wed, 11 Nov 2026 08:36:04 GMT",
+    "byte_count": 643,
+    "sha256": "148ee2cbd14f29c4c40d809dfe336a200fc73a2297f1ed035e07e050a5473c0c"
+  },
+  "fixture_path": "tests/fixtures/rss_empty_source.xml",
+  "fixture_bytes_match_saved_capture": true,
+  "metadata_shape": {
+    "root": "rss",
+    "version": "2.0",
+    "channels": 1,
+    "title": "News Feed",
+    "link": "https://www.usgs.gov/",
+    "description_element_present": true,
+    "description_text_empty": true,
+    "direct_item_count": 0
+  },
+  "same_empty_capture_hash_previously_preserved": "docs/repair-20261012/rss-source-diagnosis.json",
+  "baseline_observation": {
+    "parser": "MalformedRecord: feed has no entries",
+    "collector_status": "failed",
+    "classification": "MALFORMED_SOURCE",
+    "classification_defect_confirmed": true
+  },
+  "after_observation": {
+    "parser_result": [],
+    "collector_status": "succeeded",
+    "saved": 0,
+    "updated": 0,
+    "duplicates": 0,
+    "failed": 0,
+    "error": null,
+    "logical_outcome": "NO_NEW_INPUT",
+    "new_receipt_or_DB_schema_fields": false,
+    "existing_rows_preserved": true
+  },
+  "implementation": {
+    "empty_RSS_2": "One channel and unique title/link/description; description may be empty.",
+    "empty_Atom": "Unique nonempty title, absolute id, valid timezone-bearing RFC3339 updated; timezone hours/minutes bounded.",
+    "zero_entry_only": true,
+    "nonempty_entry_behavior_unchanged": true,
+    "HTML_DTD_XML_and_malformed_entries_still_rejected": true,
+    "misplaced_item_or_entry_nodes_still_rejected": true,
+    "legacy_empty_RDF_still_rejected": true,
+    "source_specific_whitelist": false
+  },
+  "verification": {
+    "test_first_initial": {
+      "failed": 7,
+      "passed": 32,
+      "log": "/tmp/bct-rss-empty-feed-red.txt"
+    },
+    "initial_related_green": {
+      "passed": 77,
+      "failed": 0
+    },
+    "review_timezone_counterexample": {
+      "examples": [
+        "+02:99",
+        "+00:60",
+        "-00:60"
+      ],
+      "failed_before_fix": 3,
+      "passed_before_fix": 39,
+      "log": "/tmp/bct-rss-empty-offset-red.txt"
+    },
+    "final_related": {
+      "command": ".venv/bin/python -m pytest -q tests/test_rss_empty_feed.py tests/test_rss_collector.py tests/test_rss_ai_workflow.py tests/test_rss_cycle_families.py tests/test_rss_state_workflow.py tests/test_v4_cross_industry.py",
+      "passed": 80,
+      "failed": 0,
+      "code_content_equal_final_commit": true
+    },
+    "independent_review": {
+      "scope": "Three owned empty-feed paths",
+      "initial_focused_passed": 43,
+      "initial_material_findings": 0,
+      "additional_reviewer_timezone_issue": "REPRODUCED_AND_FIXED_WITH_THREE_RED_THEN_GREEN_TESTS",
+      "final_SHA_CI": "PENDING_PARENT_OBSERVATION_NOT_SUBSTITUTED_BY_LOCAL_TESTS"
+    }
+  },
+  "source_coverage": {
+    "minerals_channel_items": 0,
+    "new_articles": 0,
+    "minerals_content_recovery": "UNRESOLVED",
+    "broader_All_News_substitution_used": false,
+    "transport_parser_validity_is_not_source_content_recovery": true
+  },
+  "new_network_requests_in_empty_feed_subtask": 0,
+  "new_model_or_AI_calls": 0,
+  "production_DB_writes": 0,
+  "main_PR45_changed_by_this_patch": false,
+  "main_merge_or_GATE_started": false,
+  "PROGRESS_or_master_REPORT_edits_by_subtask": false
+}
