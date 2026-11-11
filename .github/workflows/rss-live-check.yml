@@ -41,7 +41,7 @@ jobs:
           data_sha=$(git ls-remote origin refs/heads/data | cut -f1)
           echo "BASE_DATA_SHA=$data_sha" >> "$GITHUB_ENV"
           if [[ -n "$data_sha" ]]; then
-            git fetch --no-tags origin data
+            git fetch --no-tags --depth=1 origin data
             mkdir -p "$RUNNER_TEMP/rss-prior"
             for name in canonical.sqlite3 canonical.previous.sqlite3 state.json; do
               git show "FETCH_HEAD:$name" > "$RUNNER_TEMP/rss-prior/$name"
@@ -144,7 +144,7 @@ jobs:
             exit 1
           fi
           if [[ -n "$current_sha" ]]; then
-            git fetch --no-tags origin data
+            git fetch --no-tags --depth=1 origin data
             git worktree add "$RUNNER_TEMP/rss-data" FETCH_HEAD
           else
             empty_tree=$(git hash-object -t tree /dev/null)

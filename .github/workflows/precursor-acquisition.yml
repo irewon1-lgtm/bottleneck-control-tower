@@ -42,7 +42,7 @@ jobs:
           data_sha=$(git ls-remote origin refs/heads/data | cut -f1)
           test -n "$data_sha"
           echo "BASE_DATA_SHA=$data_sha" >> "$GITHUB_ENV"
-          git fetch --no-tags origin data
+          git fetch --no-tags --depth=1 origin data
           if git cat-file -e "$data_sha:precursor-index.json" 2>/dev/null; then
             git show "$data_sha:precursor-index.json" > var/prior-precursor-index.json
             prior_run=$(python -c 'import json; v=json.load(open("var/prior-precursor-index.json"))["cache_run_id"]; assert str(v).isdigit(); print(v)')
