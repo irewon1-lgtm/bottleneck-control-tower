@@ -26,8 +26,8 @@ concurrency:
   cancel-in-progress: false
 env:
   PYTHONPATH: src
-  CPU_CODE_SHA: e06c522b6d2960052810641a0b2a6ec650ea4a0e
-  EXPECTED_CPU_CODE_SHA: e06c522b6d2960052810641a0b2a6ec650ea4a0e
+  CPU_CODE_SHA: 58817b1fed0791e2a4ac591b1e684cab8e7f3b61
+  EXPECTED_CPU_CODE_SHA: 58817b1fed0791e2a4ac591b1e684cab8e7f3b61
 jobs:
   runtime-verify:
     if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.purpose == 'runtime-verify' }}
@@ -64,7 +64,7 @@ jobs:
           TRANSFORMERS_OFFLINE: '1'
         run: timeout 120 .v4-cpu-env/bin/python pinned-cpu/tools/v4_cpu_runtime_verify.py --code-root pinned-cpu --expected-code-pin "$CPU_CODE_SHA"
   research:
-    if: ${{ github.ref == 'refs/heads/main' && ((vars.BCT_V4_CPU_CODE_SHA == 'e06c522b6d2960052810641a0b2a6ec650ea4a0e' && github.event_name == 'workflow_run' && vars.BCT_V4_CPU_RESEARCH_ENABLED == 'true' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success') || (github.event_name == 'workflow_dispatch' && inputs.purpose == 'manual-research')) }}
+    if: ${{ github.ref == 'refs/heads/main' && ((vars.BCT_V4_CPU_CODE_SHA == '58817b1fed0791e2a4ac591b1e684cab8e7f3b61' && github.event_name == 'workflow_run' && vars.BCT_V4_CPU_RESEARCH_ENABLED == 'true' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success') || (github.event_name == 'workflow_dispatch' && inputs.purpose == 'manual-research')) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
