@@ -1,0 +1,317 @@
+{
+  "task_id": "BCT_V4_AUTOMATION_FULL_RECOVERY_20261111",
+  "observed_at_KST": "2026-11-12T03:06:09.428327+09:00",
+  "status": "PASS_SCHEDULED_RSS_BODY_ACQUISITION_AND_PUBLIC_COLLECTION_RESEARCH_PRESERVATION_CPU_STILL_SKIPPED",
+  "read_only_scope": {
+    "only_small_public_artifact_ZIPs_downloaded": true,
+    "RSS_ZIP_bytes": 541436,
+    "acquisition_ZIP_bytes": 1073,
+    "native_or_private_caches_downloaded": 0,
+    "new_source_requests": 0,
+    "model_calls": 0,
+    "Git_or_private_writes": 0
+  },
+  "runs": {
+    "43069839035": {
+      "id": 43069839035,
+      "name": "RSS live environment check",
+      "path": ".github/workflows/rss-live-check.yml",
+      "event": "schedule",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-11T17:36:44Z",
+      "updated_at": "2026-11-11T17:39:11Z",
+      "head_sha": "5c66cd8ef5ec47046024027d52e0e8b755d1f012",
+      "run_attempt": 1
+    },
+    "43070231555": {
+      "id": 43070231555,
+      "name": "New precursor evidence acquisition",
+      "path": ".github/workflows/precursor-acquisition.yml",
+      "event": "workflow_run",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-11T17:39:15Z",
+      "updated_at": "2026-11-11T17:45:08Z",
+      "head_sha": "5c66cd8ef5ec47046024027d52e0e8b755d1f012",
+      "run_attempt": 1
+    },
+    "43071173782": {
+      "id": 43071173782,
+      "name": "V4 CPU private research consumer",
+      "path": ".github/workflows/v4-cpu-private-research.yml",
+      "event": "workflow_run",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-11-11T17:45:12Z",
+      "updated_at": "2026-11-11T17:45:13Z",
+      "head_sha": "5c66cd8ef5ec47046024027d52e0e8b755d1f012",
+      "run_attempt": 1
+    },
+    "43070231522": {
+      "id": 43070231522,
+      "name": "Future bottleneck body candidates",
+      "path": ".github/workflows/future-bottleneck.yml",
+      "event": "workflow_run",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-11T17:39:15Z",
+      "updated_at": "2026-11-11T17:39:31Z",
+      "head_sha": "5c66cd8ef5ec47046024027d52e0e8b755d1f012",
+      "run_attempt": 1
+    }
+  },
+  "RSS_summary": {
+    "registered": 125,
+    "initial_articles": 10065,
+    "final_articles": 10144,
+    "successful_feeds": 114,
+    "failed_feeds": 11,
+    "new_articles": 79,
+    "duplicate_articles": 1026,
+    "error_types": {
+      "HTTPError": 7,
+      "URLError": 4
+    },
+    "completed_at_utc": "2026-11-11T17:38:54.391947+00:00"
+  },
+  "RSS_failed_feeds": [
+    {
+      "feed": "ESA Space News",
+      "status": "failed",
+      "attempts": 2,
+      "saved": 0,
+      "duplicates": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "feed": "ESA Launchers",
+      "status": "failed",
+      "attempts": 2,
+      "saved": 0,
+      "duplicates": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "feed": "ESA Navigation",
+      "status": "failed",
+      "attempts": 2,
+      "saved": 0,
+      "duplicates": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "feed": "ESA Space Engineering Technology",
+      "status": "failed",
+      "attempts": 2,
+      "saved": 0,
+      "duplicates": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "feed": "ESA Telecommunications Integrated Applications",
+      "status": "failed",
+      "attempts": 2,
+      "saved": 0,
+      "duplicates": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "feed": "ESA Space Science",
+      "status": "failed",
+      "attempts": 2,
+      "saved": 0,
+      "duplicates": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "feed": "ESA Operations",
+      "status": "failed",
+      "attempts": 2,
+      "saved": 0,
+      "duplicates": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "feed": "DOE Carbon Capture",
+      "status": "failed",
+      "attempts": 2,
+      "saved": 0,
+      "duplicates": 0,
+      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1011)>"
+    },
+    {
+      "feed": "DOE Fossil clean coal news",
+      "status": "failed",
+      "attempts": 2,
+      "saved": 0,
+      "duplicates": 0,
+      "error": "URLError: <urlopen error [Errno 101] Network is unreachable>"
+    },
+    {
+      "feed": "DOE Fossil oil natural gas news",
+      "status": "failed",
+      "attempts": 2,
+      "saved": 0,
+      "duplicates": 0,
+      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1011)>"
+    },
+    {
+      "feed": "DOE Fossil petroleum reserves news",
+      "status": "failed",
+      "attempts": 2,
+      "saved": 0,
+      "duplicates": 0,
+      "error": "URLError: <urlopen error TLS/SSL connection has been closed (EOF) (_ssl.c:1011)>"
+    }
+  ],
+  "RSS_artifact": {
+    "id": 13878056131,
+    "bytes": 541436,
+    "SHA256": "35eae937f0f909568106e387569950170f328287b736068d1d3e51d801d0d48d",
+    "new_document_manifest_SHA256": "dc22cbb7d9627a4667c21be633da1ba89c691c7e1f2c043ad71f7586e015e964"
+  },
+  "acquisition_artifact": {
+    "id": 13876874251,
+    "bytes": 1073,
+    "SHA256": "de0585712089c253a521ce5266f9cf076b32c84d912356e5699ef2e5b3523756",
+    "manifest": {
+      "bytes": 1250,
+      "file": "snapshot.json",
+      "format": "bct-public-acquisition-manifest-1",
+      "sha256": "5217b3a4be6e52e7e3361c4e9a526e674ea72929b25398d1a5151d954642827e"
+    },
+    "snapshot": {
+      "RSS_manifest_sha256": "dc22cbb7d9627a4667c21be633da1ba89c691c7e1f2c043ad71f7586e015e964",
+      "RSS_run_attempt": 1,
+      "RSS_run_id": 43069839035,
+      "acquisition_started_at": "2026-11-11T17:39:52.812304+00:00",
+      "collection_started_at": "2026-11-11T17:37:48.892098+00:00",
+      "completed_at": "2026-11-11T17:44:16.003737+00:00",
+      "counts": {
+        "additional_bodies_acquired": 0,
+        "body_HTTP_requests": null,
+        "body_pending": null,
+        "new_URLs": 79,
+        "new_seed_attempts": 79,
+        "new_seed_statuses": {
+          "CAPTURED": 40,
+          "HTTP_403": 6,
+          "PROVENANCE_BLOCKED": 31,
+          "TIMEOUT": 2
+        },
+        "new_verified_documents": 40,
+        "valid_additional_primary_documents": 0
+      },
+      "format": "bct-public-acquisition-1",
+      "head_sha": "5c66cd8ef5ec47046024027d52e0e8b755d1f012",
+      "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+      "objective_version": "bct-objective-1",
+      "repository": "irewon1-lgtm/bottleneck-control-tower",
+      "run_attempt": 1,
+      "run_id": 43070231555,
+      "scope_reader_version": "source-scope-reader-5",
+      "source_integrity_state": "PARTIAL_HOLD",
+      "units": {
+        "new_seed_attempts": "SEED_CAPTURE_OUTCOMES_NOT_HTTP_REQUESTS",
+        "new_seed_statuses": "SEED_CAPTURE_OUTCOMES_BY_FIXED_CODE",
+        "new_verified_documents": "NEW_SOURCE_VERIFIED_DOCUMENTS"
+      },
+      "unverified_source_holds": 1
+    }
+  },
+  "live_checks": {
+    "RSS_manifest_hash_matches_acquisition": true,
+    "public_acquisition_artifact_matches_live_collection": true,
+    "live_dashboard_bytes_match_manifest": true,
+    "live_research_generation_matches_manifest": true,
+    "live_dashboard_research_matches_manifest": true,
+    "live_research_snapshot_preserved": true,
+    "live_research_ack_sequence_still20": true,
+    "live_collection_now_latest_scheduled_wave": true
+  },
+  "live_build_manifest": {
+    "source_branch": "codex/bct-v4-integration",
+    "code_commit": "1072284b42742a2c81760007fd724edeb500d476",
+    "generated_at": "2026-11-11T17:49:38.708118+00:00",
+    "data_at": "2026-11-11T17:03:11.149991+00:00",
+    "dashboard_sha256": "d9609f9a5084ab776e805d7399e0b18ab66f75f4cc354c09a76ecb159dacc66c",
+    "evidence_count": 1703,
+    "evidence_bytes": 5044684,
+    "site_type": "PUBLIC_STATIC_READ_ONLY",
+    "new_ai_calls": 0,
+    "historical_data_at": "2026-10-14T23:16:13.592709+00:00",
+    "research_generation": {
+      "RSS_run_id": null,
+      "ack_sequence": 20,
+      "acquisition_run_id": null,
+      "checkpoint_commit": "bc4585c54d8da30a0635fb609a2a6ea927c0765f",
+      "execution_sha": "6e788d18cf85fdb834b451bb35585a8b58925301",
+      "lineage_root": "6f1914c532e9ed411af75e82192e1386c01e3c1b",
+      "private_commit": "20db8addf53958b38ec2f5a44ee41d1abfca1c4d",
+      "producer_attempt": 1,
+      "producer_run_id": 43064155117,
+      "sqlite_sha256": "cc9ba41642bc8d010c9795c0b9dd724202bb33ad4121f4bbae848c901d19656b",
+      "workflow_sha": "5c66cd8ef5ec47046024027d52e0e8b755d1f012"
+    },
+    "research_snapshot_sha256": "be43e03166f5bed707a404175a4ae475f41b606564f346b68b31ad16f5edb8e3",
+    "transport_cursor_sha256": "780e349444a58f4f725df6070f83804993e73df83cf9d45a74feec37d3f92a64",
+    "collection_generation": {
+      "collection_started_at": "2026-11-11T17:37:48.892098+00:00",
+      "RSS_run_id": 43069839035,
+      "run_id": 43070231555,
+      "run_attempt": 1,
+      "completed_at": "2026-11-11T17:44:16.003737+00:00"
+    }
+  },
+  "live_research_counts": {
+    "analysis_runtime_failures": 0,
+    "complete_analyzed_new_CPU_documents": 1,
+    "completed_body_keys": 42,
+    "failed_windows": 0,
+    "held_inputs": 18,
+    "independent_pairs": null,
+    "new_CPU_characters": 9329,
+    "new_CPU_documents": 6,
+    "new_CPU_windows": 24,
+    "pending_windows": 60,
+    "preserved_windows": 1349,
+    "review_pending_windows": 72,
+    "successful_new_CPU_windows": 24
+  },
+  "live_research_analysis": {
+    "states": {
+      "PARTIAL": 5,
+      "READ_EVIDENCE_HOLD": 1
+    },
+    "status": "ANALYZED_READ",
+    "trace_total": 6,
+    "trace_truncated": false
+  },
+  "live_research_clock": {
+    "data_at": "2026-11-11T17:03:11.149991+00:00",
+    "last_collection_at": null,
+    "last_read_at": "2026-11-11T17:03:11.149991+00:00",
+    "persisted_at": "2026-11-11T17:03:36.741425+00:00"
+  },
+  "interpretation": {
+    "latest_scheduled_wave_new_RSS_entries": 79,
+    "latest_scheduled_wave_new_verified_bodies": 40,
+    "latest_scheduled_wave_new_CPU_readings": 0,
+    "source_seed_holds_or_errors": 39,
+    "source_seed_outcomes": {
+      "CAPTURED": 40,
+      "HTTP_403": 6,
+      "PROVENANCE_BLOCKED": 31,
+      "TIMEOUT": 2
+    },
+    "extra_unverified_source_hold_unit_separate": 1,
+    "body_HTTP_transaction_count": null,
+    "body_pending_count": null,
+    "manual_earlier18_RSS_6_bodies_72CPU_windows_1_complete_are_separate_wave": true,
+    "research_pairs_null_not_coerced_to_zero": null,
+    "scheduled_CPU_skipped_cause": "Existing variables previously observed old CODE SHA da7cb9bc1e6b99d5f4859aaeda4431dbacee03d6 and enabled=false; skipped job itself executes no diagnostic step",
+    "seven_day_started": false,
+    "Future_failure_scope": "Before PR53 release receipt refresh; do not attribute to current J guard verified separately by root"
+  }
+}
