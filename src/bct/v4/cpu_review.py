@@ -10,13 +10,10 @@ import json
 from pathlib import Path, PurePosixPath
 import re
 
-from bct import precursor_collection as collection, precursor_scope_reader
+from bct import precursor_scope_reader
 from bct.objective_lock import require_objective, stamp_export
-from .adapters import MODEL, MODEL_REVISION
-from .cross_industry import reading_result
-from .reading_quality import coverage
+from .cpu_resume import MODEL, REVISION as MODEL_REVISION
 from .store import now, sha
-from . import official_discovery
 
 KIND = 'CPU_ANALYSIS_RESULT'
 FORMAT = 'bct-cpu-source-review-1'
@@ -140,6 +137,7 @@ def load_graph_context(cache, manifest, doc):
 def _valid_window(doc, task, row):
     """Reject a read receipt whose source, model or actually sent text differs."""
     from .cpu_automation import body_key
+    from .cross_industry import reading_result
     w = task['window']; a, b = w['start'], w['end']
     if (any(row.get(k) != task.get(k) for k in ('key', 'document_id', 'body_key', 'window'))
             or task['document_id'] != doc['document_id'] or task['body_key'] != body_key(doc)
@@ -173,6 +171,9 @@ def analyze_document(doc, queued, results, *, raw, as_of=None, related_documents
     Unread/failed/held ranges never become a zero-event or zero-pair conclusion.
     Original CPU receipts are retained by the caller independently of this stage.
     """
+    from bct import precursor_collection as collection
+    from . import official_discovery
+    from .reading_quality import coverage
     if len(related_documents) > 3: raise ValueError('CPU_ANALYSIS_COUNTERPART_CAP_3')
     evaluated_at = as_of or now()
     tasks = queued.get('tasks', []); keys = {t['key'] for t in tasks}

@@ -83,7 +83,8 @@ def test_unread_and_partial_are_not_evaluated_zero_pairs(monkeypatch):
     windows = [{'start': 0, 'end': cut, 'text': d['body'][:cut]},
                {'start': cut+1, 'end': len(d['body']), 'text': d['body'][cut+1:]}]
     planned, results = receipts(d, windows)
-    monkeypatch.setattr(module.collection, 'structure', lambda *a, **k: pytest.fail('unread body must not be analyzed'))
+    from bct import precursor_collection as collection
+    monkeypatch.setattr(collection, 'structure', lambda *a, **k: pytest.fail('unread body must not be analyzed'))
     for supplied, expected in [([], 'UNREAD'), (results[:1], 'PARTIAL')]:
         result = module.analyze_document(d, planned, supplied, raw=raw, as_of=AS_OF)
         assert result['review_state'] == expected
@@ -215,12 +216,13 @@ def test_analysis_is_immutable_source_free_deduplicated_and_readable_after_resta
 
 def test_analysis_dependency_failure_is_not_normal_hold_and_can_recover_without_inference(monkeypatch):
     module = analyzer(); d, raw = source(); planned, results = receipts(d)
-    real = module.official_discovery.q3_input
-    monkeypatch.setattr(module.official_discovery, 'q3_input', lambda *a, **k: (_ for _ in ()).throw(ValueError('fixture')))
+    from bct.v4 import official_discovery
+    real = official_discovery.q3_input
+    monkeypatch.setattr(official_discovery, 'q3_input', lambda *a, **k: (_ for _ in ()).throw(ValueError('fixture')))
     failed = module.analyze_document(d, planned, results, raw=raw, as_of=AS_OF)
     assert failed['review_state'] == 'FAILED' and failed['reason_code'] == 'ANALYSIS_DEPENDENCY_FAILED'
     assert failed['CPU_windows_success'] == 1 and failed['strict_pair_count'] is None
-    monkeypatch.setattr(module.official_discovery, 'q3_input', real)
+    monkeypatch.setattr(official_discovery, 'q3_input', real)
     recovered = module.analyze_document(d, planned, results, raw=raw, as_of=AS_OF)
     assert recovered['review_state'] == 'READ_EVIDENCE_HOLD' and recovered['id'] != failed['id']
     assert recovered['window_result_sha256'] == failed['window_result_sha256']
