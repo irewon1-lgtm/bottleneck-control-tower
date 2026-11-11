@@ -14,6 +14,8 @@ import re
 import shutil
 
 from bct.v4.dashboard import ASSETS, ResearchReader
+from bct.v4.public_research import validate_snapshot, digest
+from bct.v4.public_data import validate_acquisition, validate_health, validate_cursor
 
 
 def pack(value):
@@ -26,10 +28,25 @@ def change_once(text, old, new):
     return text.replace(old, new)
 
 
-def export(repo, dest, commit):
+def export(repo, dest, commit, *, public_input=None):
     repo, dest = Path(repo).resolve(), Path(dest).resolve()
     if dest != repo / "var/v4/pages-site":
         raise ValueError("Only the generated var/v4/pages-site directory can be replaced")
+    operating = collection = workflow = transport = None
+    if public_input is not None:
+        inputs = Path(public_input)
+        for filename, validator in [('research.json', validate_snapshot), ('collection.json', validate_acquisition),
+                                    ('workflow.json', validate_health), ('transport.json', validate_cursor)]:
+            path = inputs / filename
+            if not path.exists():
+                continue
+            if path.stat().st_size > 192 * 1024:
+                raise ValueError('PUBLIC_INPUT_SIZE')
+            value = validator(json.loads(path.read_text()))
+            if filename == 'research.json': operating = value
+            elif filename == 'collection.json': collection = value
+            elif filename == 'workflow.json': workflow = value
+            else: transport = value
     reader = ResearchReader(repo)
     data = reader.dashboard()
     cpu = data.get("research_updates", {}).get("cpu_recovery", {})
@@ -44,6 +61,14 @@ def export(repo, dest, commit):
     if len(cpu.get("records", [])) != expected_cpu:
         raise ValueError("Unmatched CPU/reported evidence count")
     at = datetime.now(timezone.utc).isoformat()
+    data['historical_data_at'] = data.get('data_at')
+    if operating is not None:
+        data['operating_research'] = operating
+        if operating['clocks']['data_at'] is not None:
+            data['data_at'] = operating['clocks']['data_at']
+    if collection is not None: data['collection_observation'] = collection
+    if workflow is not None: data['workflow_observation'] = workflow
+    if transport is not None: data['public_transport'] = transport
     data["source"].update({"read_only": True, "snapshot": True, "mode": "공개 정적 연구 스냅샷"})
     data["code_commit"] = commit
     data["snapshot_generated_at"] = at
@@ -100,6 +125,9 @@ def export(repo, dest, commit):
         path = dest / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(body)
+    for name, value in [('research', operating), ('collection', collection), ('workflow', workflow), ('transport', transport)]:
+        if value is not None:
+            (dest / 'api' / (name + '.json')).write_bytes(pack(value))
     total_size = 0
     for identifier in ids:
         record = reader.evidence(identifier)
@@ -117,6 +145,12 @@ def export(repo, dest, commit):
         "evidence_count": len(ids), "evidence_bytes": total_size,
         "site_type": "PUBLIC_STATIC_READ_ONLY", "new_ai_calls": 0
     }
+    manifest['historical_data_at'] = data['historical_data_at']
+    manifest['research_generation'] = operating['generation'] if operating else None
+    manifest['research_snapshot_sha256'] = operating['snapshot_sha256'] if operating else None
+    manifest['transport_cursor_sha256'] = digest(transport) if transport else None
+    manifest['collection_generation'] = ({key: collection[key] for key in
+        ('collection_started_at', 'RSS_run_id', 'run_id', 'run_attempt', 'completed_at')} if collection else None)
     (dest / "build-manifest.json").write_bytes(pack(manifest))
     print(json.dumps(manifest, ensure_ascii=False))
 
@@ -126,5 +160,6 @@ if __name__ == "__main__":
     p.add_argument("--repo", type=Path, default=Path.cwd())
     p.add_argument("--output", type=Path, default=Path("var/v4/pages-site"))
     p.add_argument("--commit", default=os.environ.get("BCT_CODE_SHA", "LOCAL_NOT_DEPLOYED"))
+    p.add_argument('--public-input', type=Path)
     a = p.parse_args()
-    export(a.repo, a.output if a.output.is_absolute() else a.repo / a.output, a.commit)
+    export(a.repo, a.output if a.output.is_absolute() else a.repo / a.output, a.commit, public_input=a.public_input)

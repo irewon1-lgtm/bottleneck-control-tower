@@ -29,7 +29,7 @@ for(const route of ["overview","candidates","evidence","automation"])assert.ok(h
 assert.ok(html.includes('id="refresh"'));
 const app=await (await call("/app.js")).text();
 new vm.Script(app);
-assert.ok(app.includes("고정 연구 자료"));
+assert.ok(app.includes("저장된 연구 자료"));
 for(const path of ["/.env","/worker/index.js","/snapshot-manifest.json","/var/v4/cross-industry/ledger/v4.sqlite3"]){
   assert.equal((await call(path)).status,404);
 }

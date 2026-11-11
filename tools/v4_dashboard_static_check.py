@@ -25,4 +25,11 @@ assert 'request(' + chr(96) + './api/evidence/' in js
 assert '"/api/dashboard"' not in js
 assert not (root / "canonical.sqlite3").exists()
 assert not (root / ".env").exists()
+if data.get('operating_research'):
+    from bct.v4.public_research import validate_snapshot
+    public = validate_snapshot(json.loads((root / 'api/research.json').read_text()))
+    assert public == data['operating_research']
+    assert manifest['research_generation'] == public['generation']
+    assert manifest['research_snapshot_sha256'] == public['snapshot_sha256']
+    assert data['data_at'] == (public['clocks']['data_at'] or data['historical_data_at'])
 print("PASS: public static V4:", manifest["evidence_count"], "verified details, commit", manifest["code_commit"])
