@@ -7792,18 +7792,19 @@
       "full_automation_recovery": {
         "task_id": "BCT_V4_AUTOMATION_FULL_RECOVERY_20261111",
         "authorization": "FULL_RECOVERY_AUTHORIZATION.json",
-        "status": "ACTUAL_GATE_DEADLINE_INPUT_PRESERVED_FINAL_RECOVERY_FIXES",
+        "status": "FINAL_MAIN_F_GATES_RUNNING_FROM_VERIFIED_PARTIAL_INPUT",
         "base_main": "e31743a91ab3604421ec7c35796dfda8f63dd51f",
         "base_development": "a6f511760c6e5a4b10b0f1d51ac77c73b40e5589",
         "Q_plan_id": "BCT-V4-Q-1.0",
         "no_new_master_plan": true,
-        "next_action": "Finish safe inert-SKIPPED bridge proof repair; freeze C3 with unchanged approved model, actual runtime verification and consistent pins. Complete PR49 with auth fix and authenticated E partial input; fresh final-main Gates must revalidate E saved readings and finish remaining actual batch, never stamp E as success. Then genuine receipt, latest bridge, first actual GLiNER reading/private restore/REVIEW/Pages; owner Variables403 separate.",
-        "current_main": "933a29638c06d72d4cf4c17d843cfec2978066d2",
+        "next_action": "Observe actual F Gates; only authenticated valid saved E readings may resume, no same-version repeated model work. A complete actual F run alone may create final release+resume metadata PR. Then latest private bridge and manual first GLiNER reading, new-process remote restore, real REVIEW receipts, public generation/Pages same-session transition. Owner Variables403 and scheduled stability remain separate.",
+        "current_main": "66b790f2737a350950e2f609def51af3b18acf45",
         "merged_PRs": [
           45,
           46,
           47,
-          48
+          48,
+          49
         ],
         "main_CI": 43031885912,
         "code_dependencies_currently_integrated": [
@@ -7812,14 +7813,13 @@
         ],
         "model_inferences_new": 0,
         "real_Gates_current_code": {
-          "run_id": 43032067823,
-          "status": "FAIL",
-          "first_blocker": "Stage5_RUNNER_DEADLINE",
-          "Gates0_to4": "PASS",
-          "Gate5_and6": "NOT_RUN",
-          "Qwen_model_calls_saved": 31,
-          "release_receipt_prepared": false,
-          "verified_partial_resume": "E_GATE_PARTIAL.json"
+          "status": "RUNNING_NOT_PASS",
+          "run_id": 43045049058,
+          "full_pipeline": false,
+          "resume_input_only": true,
+          "input_run_id": 43032067823,
+          "prior_saved_Qwen_calls": 31,
+          "no_new_release_receipt": true
         },
         "Variables_access": "HTTP403_EXISTING_INTEGRATION_NO_OWNER_BROWSER_TOOL",
         "Variables_access_evidence": "FULL_RECOVERY_VARIABLE_ACCESS.json",
@@ -7829,19 +7829,19 @@
           "automatic_operations": "BLOCKED_CONDITIONS_PENDING",
           "prediction_performance": "BLOCKED"
         },
-        "processing_code_SHA": "7afb1a25590ff604fd6293d237877f456b7f62b0",
-        "workflow_integration_SHA": "c6fd5771720cc9bac5ffd97fa7a8af4067542d76",
+        "processing_code_SHA": "e06c522b6d2960052810641a0b2a6ec650ea4a0e",
+        "workflow_integration_SHA": "b2616e29328e94ab6114754e335517a41a923e85",
         "processing_CI": {
-          "run_id": 43030097108,
-          "Python_pass": 2134,
+          "run_id": 43043675313,
+          "Python_pass": 2174,
           "Python_HOLDOUT_skip": 1,
           "JavaScript_pass": 34
         },
         "runtime_verification": {
-          "run_id": 43030199072,
+          "run_id": 43043982105,
           "status": "PASS_SAME_APPROVED_SEED_RUNTIME_VERIFIED",
           "new_inferences": 0,
-          "evidence": "FULL_RECOVERY_RUNTIME_C2.json"
+          "evidence": "FULL_RECOVERY_RUNTIME_C4.json"
         },
         "preserved_original": {
           "run_id": 43020215888,
@@ -7856,8 +7856,8 @@
           "Python_HOLDOUT_skip": 1,
           "JavaScript_pass": 34
         },
-        "main_code_freeze": "FINAL_MAIN_CODE_FREEZE.json",
-        "pre_Gate_refs": "FINAL_PRE_GATE_REFS.json",
+        "main_code_freeze": "FINAL_MAIN_CODE_FREEZE_F.json",
+        "pre_Gate_refs": "FINAL_PRE_GATE_REFS_F.json",
         "manual_RSS_new_input": {
           "run_id": 43032161571,
           "scheduled": false,
@@ -7893,7 +7893,8 @@
           "fix_main_tests_pass": 1139,
           "fix_main_HOLDOUT_skip": 1,
           "operating_retry": "NOT_RUN"
-        }
+        },
+        "safe_inert_skip_proof": "C3_ACTUAL_INERT_SKIP_43033762241.json"
       }
     }
   }
