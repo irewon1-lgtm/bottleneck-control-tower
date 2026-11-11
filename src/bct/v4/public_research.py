@@ -14,7 +14,7 @@ from bct.objective_lock import require_objective, stamp_export
 from .store import file_sha
 
 FORMAT = 'bct-public-research-1'
-STATES = {'UNREAD', 'PARTIAL', 'FAILED', 'SOURCE_VERIFICATION_PENDING',
+STATES = {'UNREAD', 'PARTIAL', 'FAILED', 'SOURCE_VERIFICATION_PENDING', 'GRAPH_CONTEXT_PENDING',
           'READ_EVIDENCE_HOLD', 'NO_VALIDATED_EVENT', 'RESEARCH_FORECAST_REVIEW'}
 MISSING = {'product', 'specification', 'region', 'customer_group', 'supply_pool',
            'quantity', 'unit', 'need_period', 'ready_period', 'need_time', 'ready_time',
@@ -23,6 +23,7 @@ REASONS = {'MISSING_TARGET_EVIDENCE', 'UNREAD', 'PARTIAL', 'FAILED',
            'SOURCE_VERIFICATION_PENDING', 'NO_VALIDATED_EVENT',
            'READ_EVIDENCE_HOLD', 'RESEARCH_FORECAST_REVIEW', 'OTHER_RESEARCH_HOLD'}
 REASONS.update({'CPU_NOT_READ', 'CPU_READ_INCOMPLETE', 'CPU_WINDOW_VALIDATION_FAILED', 'CPU_CONTEXT_HELD',
+                'GRAPH_CONTEXT_UNAVAILABLE',
                 'SOURCE_ORIGINAL_NOT_AVAILABLE', 'SOURCE_VERSION_OR_HASH_MISMATCH', 'SOURCE_PROVENANCE_NOT_VERIFIED',
                 'NO_SOURCE_BOUND_EVENT_IN_READ_SCOPE', 'CPU_ENTITY_VALIDATION_REVIEW_PENDING',
                 'CPU_ENTITY_ONLY_SEMANTICS_PENDING', 'TARGET_FIELDS_UNKNOWN', 'QUALIFIED_SUPPLY_SCOPE_UNKNOWN',
@@ -31,6 +32,8 @@ REASONS.update({'CPU_NOT_READ', 'CPU_READ_INCOMPLETE', 'CPU_WINDOW_VALIDATION_FA
 ISSUES = {'UPSTREAM_BODY_NOT_AVAILABLE_NO_REFETCH', 'UPSTREAM_VERSION_AMBIGUOUS',
           'PRIVATE_ARCHIVAL_OR_PRIVACY_UNREVIEWED', 'SOURCE_PUBLICATION_OR_PROVENANCE_HELD',
           'NATIVE_OR_BODY_HASH_MISMATCH', 'NATIVE_TO_BODY_MISMATCH', 'OTHER_SOURCE_HOLD'}
+ISSUES.update({'LEGACY_EXACT_INPUT_RECOVERY_REQUIRED', 'PRIOR_INPUT_ARTIFACT_BUDGET_HELD',
+               'EXACT_PRIOR_ARTIFACT_UNAVAILABLE_OR_INVALID'})
 COUNT_FIELDS = {'new_CPU_documents', 'new_CPU_windows', 'successful_new_CPU_windows',
                 'new_CPU_characters', 'pending_windows', 'failed_windows', 'held_inputs',
                 'review_pending_windows', 'preserved_windows', 'completed_body_keys',
@@ -215,6 +218,9 @@ def build_snapshot(db, acknowledgment, restored, producer):
     imports = {row['item_key']: row for row in events(db, 'CPU_QUEUE_IMPORT')}
     issues = Counter(row.get('reason') if row.get('reason') in ISSUES else 'OTHER_SOURCE_HOLD'
                      for row in imports.values() if row.get('status') == 'HELD_ISOLATED')
+    issues.update(row.get('reason_code') if row.get('reason_code') in ISSUES else 'OTHER_SOURCE_HOLD'
+                  for row in latest.get('upstream', {}).get('input_holds', [])
+                  if row.get('status') == 'HELD_INPUT_UNAVAILABLE')
     pair_counts = [row.get('strict_pair_count') for row in analyses.values()]
     # A per-document positive count is not a deduplicated global pair count.
     pairs = 0 if pair_counts and all(value == 0 for value in pair_counts) else None
