@@ -149,6 +149,21 @@ def test_original_metadata_cannot_change_head_digest_or_origin_even_with_copy_tr
         with pytest.raises(ValueError, match='ORIGINAL_BINDING'): module.original_metadata(FakeAPI(), entry)
 
 
+def test_automatic_maintenance_refuses_large_copy_without_explicit_request(monkeypatch):
+    module = helper(); entry = {**descriptor(), 'bytes': module.MAX_AUTOMATIC_COPY+1}
+    metadata = {'expired': True, 'expires_at': '2026-01-01T00:00:00Z'}
+    monkeypatch.setattr(module, 'original_metadata', lambda *args: metadata)
+    monkeypatch.setattr(module, 'copies', lambda *args: [])
+    class FakeAPI:
+        def read(self, suffix): return None
+    release = {'artifact_id': 10}
+    report = module.inspect(FakeAPI(), {'recovery': entry}, release, 'recovery')
+    assert report['archives']['recovery']['preservation_needed']
+    assert not report['archives']['recovery']['automatic_copy_allowed']
+    assert not report['preservation_due']
+    assert module.inspect(FakeAPI(), {'recovery': entry}, release, 'recovery', requested=True)['preservation_due']
+
+
 def test_failed_copy_producer_does_not_hide_a_later_verified_copy():
     module = helper(); entry = descriptor()
     base = {'name': module.copy_name(entry), 'size_in_bytes': 200, 'digest': 'sha256:'+'b'*64,
