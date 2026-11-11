@@ -1,10 +1,13 @@
 # Bounded REVIEW recovery verification
 
 Task `BCT_V4_OPERATIONS_RECOVERY_20261111`, plan `BCT-V4-Q-1.0`. Development
-base `42ee0a6`; operational main remains `28d0b8c648c0218ab2e74a1fa04ca8d63e659933`.
-The current status is **prepared; actual Actions execution NOT_RUN**. The job
-must run and its receipt must be downloaded before transport recovery can be
-reported as verified.
+base `42ee0a6`; actual execution code
+`bd9ee61092b0b94131fd7879874d50c8d385a872`. Operational main remains
+`28d0b8c648c0218ab2e74a1fa04ca8d63e659933`.
+**Actual development Actions transport replay passed.**
+[Run 42990692268](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42990692268)
+was dispatched exactly once and completed in 5m25s. Its small receipt was
+downloaded and its ZIP digest verified. Semantic review remains pending.
 
 The existing development transport limits extraction to capture metadata
 from the selected acquisition window and its referenced raw originals. The
@@ -25,14 +28,17 @@ changes the operating review state or represents semantic completion.
 | Stage | Input/condition | Current result |
 |---|---|---|
 | Bind actual saved input | [Acquisition 42939818925](https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42939818925), main `28d0b8c6`, success, created `2026-11-11T01:33:31Z` | PASS, read-only live metadata check |
-| Bind artifact | `precursor-private-cache`, ID `13821760877`, 4,598,165,007 compressed bytes, digest `949e95d2efda7a3fd3e7a124eb0d6569b56b54dcd1a3d5fd7f053dc75b8dfb72` | PASS, metadata only; download NOT_RUN |
-| Bind copied review state | Exact immutable public Git SHA `0ad6ba0a9a6cea0211c760b3e19502ad9e29a54c` | Selected; restore NOT_RUN |
+| Bind artifact | `precursor-private-cache`, ID `13821760877`, 4,598,165,007 compressed bytes, digest `949e95d2efda7a3fd3e7a124eb0d6569b56b54dcd1a3d5fd7f053dc75b8dfb72` | PASS, actual download and digest match; temporary ZIP removed |
+| Bound extraction | Five capture records and five referenced raw files; 1,074,585 expanded bytes within 268,435,456-byte cap | PASS; historical cache/evaluations not expanded |
+| Verify actual source handoff | Existing frozen proof loader | PASS; two verified documents; three `CAPTURE_PROVENANCE_NOT_PASS` skips |
+| Current-state copy | Exact Git SHA `0ad6ba0a9a6cea0211c760b3e19502ad9e29a54c` | PASS; two existing HOLD duplicates, zero new intake/semantic completions; 6,046 old files preserved |
+| Historical parent copy | `PRE_INTAKE_REPLAY` at `76ba081f28aa9fcce639af87c8e0e57ba0a76bb0` | PASS; two new HOLD records in copy, then two duplicates and zero new records on repeat; 6,040 old files preserved |
 | Regression before implementation | New helper/job absent | Expected FAIL, four tests |
-| Related local regressions | New wrapper guards/counting plus existing bounded artifact, frozen transport, shadow and intake checks | PASS, 40 tests |
-| Actual bounded extraction → verified-source handoff → copied-state intake → duplicate delivery → fresh-process readback | GitHub standard Ubuntu runner, manual development ref only | NOT_RUN |
-| Actual receipt download | Run URL/artifact not yet created | NOT_RUN |
+| Related regressions | New wrapper guards/counting plus existing bounded artifact, frozen transport, shadow and intake checks | PASS locally and in actual Actions; 40 tests per run; independent review found no material issues |
+| Fresh-process readback | Core-state file hashes after intake and duplicate delivery | PASS in both copies; original files unchanged |
+| Receipt download/readback | Artifact `13842175964`, 24,797-byte ZIP; SHA-256 `325ac47defc421728f4b883e534c25914285ea6025e21a4f3a0d4118c07cdb54` | PASS via GitHub connector; direct CLI 403 retained as a separate access failure, no identical retry |
 
-Dispatch the existing workflow after this code is pushed to development:
+The executed command was:
 
 ```bash
 gh workflow run bct-isolated-review.yml \
@@ -49,13 +55,24 @@ work and is never counted as semantic completion. All actual saved inputs are
 reported as REPLAY; new records in the temporary copy are not new operating
 discoveries.
 
-Within the same temporary ZIP, an independent bounded inventory may identify
-the historical fixed230 metadata vector. Date selection alone is insufficient:
-the exact original fingerprint must match before referenced historical raw
-bytes are hash-checked. This optional result cannot turn the current REVIEW
-test into a source-quality, CPU, Gates0–6 or independent performance PASS.
+The ZIP central directory declares 51,460,031,534 expanded bytes, including
+49,054,341,364 bytes under `evaluations/`. This explains why expanding the
+whole saved cache exceeds a small runner's disk budget. The bounded REVIEW
+path expanded only 1,074,585 bytes; it did not read or expand those evaluation
+bodies.
 
-Conditions, file hashes, commands and pending actual run fields are recorded in
-[REVIEW_RECOVERY.json](REVIEW_RECOVERY.json). The actual result must replace
-the NOT_RUN rows after the run and receipt readback finish. Operating main
-transport application remains a separate reviewed change.
+The independent bounded inventory also located the exact historical fixed230
+snapshot: 230 selected document metadata records reproduce fingerprint
+`acd344732f2f087b42767bfe32d9f16d96da6de49a766d6fc73f3c0ed298f9ec`.
+All 230 stored body hashes and all 230 referenced raw hashes matched; raw bytes
+read were 38,607,847, with zero missing originals. Historical raw files were
+streamed for hashing and were not extracted or uploaded. This identifies an
+intact existing source copy. It does not rerun source provenance/semantic QA,
+CPU processing, Gates0–6 or independent performance evaluation.
+
+Conditions, file hashes, commands and actual stage counts are recorded in
+[REVIEW_RECOVERY.json](REVIEW_RECOVERY.json). The exact downloaded, Objective
+Lock-stamped result is [REVIEW_ACTIONS_RECEIPT.json](REVIEW_ACTIONS_RECEIPT.json),
+SHA-256 `1e7c8fcd39e49c6a923a36f85c81684a32545452510b6d542050179f6370a413`.
+The operating review ref stayed unchanged. Operating main transport application
+and actual semantic completion remain separate work.

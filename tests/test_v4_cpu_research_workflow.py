@@ -18,7 +18,11 @@ def test_deployed_consumer_requires_exact_configured_code_and_explicit_enable():
     assert "head_branch == 'main'"in guard and "conclusion == 'success'"in guard
     assert 'BCT_V4_PRIVATE_STATE_TOKEN'not in json.dumps(w['jobs']['research'])
     text=path.read_text()
-    assert 'verify-scope'not in text and 'upload-artifact'not in text
+    assert 'verify-scope'not in text
+    # The authorized manual source-transport verification uploads only three
+    # numeric/hash receipts; the scheduled CPU/DB publisher never uploads data.
+    for name in ('research','publish'):
+        assert 'upload-artifact'not in json.dumps(w['jobs'][name])
     # The approved manual official-format job needs the existing lightweight
     # XLSX/core dependencies. The scheduled CPU path must still never install
     # anything. Check the actual execution boundary, not an unrelated job's text.

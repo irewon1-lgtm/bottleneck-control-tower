@@ -1,7 +1,7 @@
 {
   "task_id": "BCT_V4_OPERATIONS_RECOVERY_20261111",
   "plan_id": "BCT-V4-Q-1.0",
-  "status": "PREPARED_ACTUAL_ACTIONS_NOT_RUN",
+  "status": "PASS_ACTUAL_ACTIONS_BOUNDED_REVIEW_TRANSPORT_REPLAY_SEMANTICS_PENDING",
   "mode": "REPLAY",
   "recorded_at": "2026-11-11T08:44:02.660135+00:00",
   "base_sha": "42ee0a6ee6b0ed21228a0409aa64e973359bf65f",
@@ -42,31 +42,31 @@
     "steps": [
       {
         "step": "ACTUAL_ACTIONS_DOWNLOAD_AND_DIGEST",
-        "status": "NOT_RUN"
+        "status": "PASS"
       },
       {
         "step": "BOUNDED_SELECTED_CAPTURE_EXTRACTION",
-        "status": "NOT_RUN"
+        "status": "PASS"
       },
       {
         "step": "ORIGINAL_SOURCE_HANDOFF_VERIFICATION",
-        "status": "NOT_RUN"
+        "status": "PASS"
       },
       {
         "step": "FROZEN_INTAKE_COPIED_STATE",
-        "status": "NOT_RUN"
+        "status": "PASS"
       },
       {
         "step": "REPEAT_DEDUPLICATION",
-        "status": "NOT_RUN"
+        "status": "PASS"
       },
       {
         "step": "FRESH_PROCESS_HASH_READBACK",
-        "status": "NOT_RUN"
+        "status": "PASS"
       },
       {
         "step": "RECEIPT_ARTIFACT_READBACK",
-        "status": "NOT_RUN"
+        "status": "PASS"
       }
     ],
     "worktree_sha256": {
@@ -77,7 +77,17 @@
       ".github/scripts/review_shadow_frozen.py": "87712eefe13eda105c8499a79435b6694b89169b8081c3a4de3ae9f7ca0ddc88",
       "src/bct/review_shadow.py": "cc1805c030e3013216989e911a6e413b5ff59b72289b009e3085e7da99070ea5",
       "src/bct/review_intake.py": "1b9502c139cd6402d9872c3453db7b4b29ef87c11ff5fa34b124923252c7060c"
-    }
+    },
+    "receipt_readback": {
+      "artifact_id": 13842175964,
+      "artifact_zip_bytes": 24797,
+      "artifact_zip_sha256": "325ac47defc421728f4b883e534c25914285ea6025e21a4f3a0d4118c07cdb54",
+      "receipt_sha256": "1e7c8fcd39e49c6a923a36f85c81684a32545452510b6d542050179f6370a413",
+      "receipt_path": "docs/v4/operations-recovery-20261111/REVIEW_ACTIONS_RECEIPT.json",
+      "objective_lock_checked": true,
+      "retrieval": "GitHub connector artifact download, then bounded local ZIP readback with exact digest; direct gh download returned403 and was not retried"
+    },
+    "independent_review": "NO_MATERIAL_FINDINGS;40 focused tests repeated by reviewer"
   },
   "controls": {
     "contents_permission": "read",
@@ -97,13 +107,151 @@
     "uploaded_files": "numeric/hash verification receipt only; no source cache or copied review state",
     "pre_intake_copy_mode": "PRE_INTAKE_REPLAY; minimum1 new HOLD in copied historical parent; duplicate repeat; no operating write"
   },
-  "actual_actions_run_url": null,
+  "actual_actions_run_url": "https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/42990692268",
   "limits": [
-    "Prepared job is not an actual Actions PASS",
-    "Frozen deterministic intake without semantic packet remains HOLD/PENDING",
+    "Actual proof is saved-source REPLAY into temporary copies, not new operating review or live discovery",
+    "Current-state replay returns2duplicates/new0; historical parent-copy replay stores2newHOLD then deduplicates",
+    "All semantic completions remain0/PENDING; HOLD is not completed semantic review",
     "Current main remains old transport until separately reviewed operating application",
-    "Historical fixed230 hash inventory does not rerun or pass Gates0-6"
+    "Exact historical230 bytes located/hash-verified; Gates0-6 and source semantic/provenance QA were not rerun by this job"
   ],
   "objective_version": "bct-objective-1",
-  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "actual_actions": {
+    "run_id": 42990692268,
+    "head_sha": "bd9ee61092b0b94131fd7879874d50c8d385a872",
+    "head_branch": "codex/bct-v4-integration",
+    "event": "workflow_dispatch",
+    "created_at": "2026-11-11T08:54:03Z",
+    "status": "completed",
+    "conclusion": "success",
+    "dispatch_count": 1,
+    "observed_at": "2026-11-11T09:04:18.603480+00:00",
+    "job_id": 130422566382,
+    "job_duration_seconds": 325,
+    "guard_tests_passed": 40,
+    "guard_test_log_line": "2026-11-11T08:54:29.8401655Z 40 passed in 1.03s",
+    "fresh_process_log_times": [
+      "2026-11-11T08:59:17.6018174Z",
+      "2026-11-11T08:59:27.5298822Z"
+    ]
+  },
+  "actual_stage_counts": {
+    "transport": {
+      "selected_captures": 5,
+      "selected_raw_files": 5,
+      "expanded_bytes": 1074585,
+      "expanded_limit": 268435456,
+      "historical_cache_modified": false,
+      "frozen_reader_modified": false,
+      "compressed_bytes": 4598165007,
+      "downloaded_digest_verified": true,
+      "compressed_archive_removed": true
+    },
+    "source_verified_handoff_documents": 2,
+    "provenance_skips": 3,
+    "provenance_skip_reasons": {
+      "CAPTURE_PROVENANCE_NOT_PASS": 3
+    },
+    "first_delivery": {
+      "intake_records": 2,
+      "new_intake_records_in_copy": 0,
+      "duplicate_records": 2,
+      "new_HOLD_records_in_copy": 0,
+      "new_semantic_completions": 0,
+      "semantic_pending_records": 2,
+      "status_counts": {
+        "HOLD": 2
+      },
+      "omitted_backfill": 0,
+      "alerts": 0
+    },
+    "repeat_delivery": {
+      "intake_records": 2,
+      "new_intake_records_in_copy": 0,
+      "duplicate_records": 2,
+      "new_HOLD_records_in_copy": 0,
+      "new_semantic_completions": 0,
+      "semantic_pending_records": 2,
+      "status_counts": {
+        "HOLD": 2
+      },
+      "omitted_backfill": 0,
+      "alerts": 0
+    },
+    "old_files_preserved": 6046,
+    "new_process_copy_hash_verification": "PASS",
+    "pre_intake_replay": {
+      "mode": "PRE_INTAKE_REPLAY",
+      "copied_review_state_sha": "76ba081f28aa9fcce639af87c8e0e57ba0a76bb0",
+      "first_delivery": {
+        "intake_records": 2,
+        "new_intake_records_in_copy": 2,
+        "duplicate_records": 0,
+        "new_HOLD_records_in_copy": 2,
+        "new_semantic_completions": 0,
+        "semantic_pending_records": 2,
+        "status_counts": {
+          "HOLD": 2
+        },
+        "omitted_backfill": 0,
+        "alerts": 0
+      },
+      "repeat_delivery": {
+        "intake_records": 2,
+        "new_intake_records_in_copy": 0,
+        "duplicate_records": 2,
+        "new_HOLD_records_in_copy": 0,
+        "new_semantic_completions": 0,
+        "semantic_pending_records": 2,
+        "status_counts": {
+          "HOLD": 2
+        },
+        "omitted_backfill": 0,
+        "alerts": 0
+      },
+      "old_files_preserved": 6040,
+      "new_process_copy_hash_verification": "PASS",
+      "operational_state_writes": 0,
+      "semantic_review_complete": false
+    },
+    "operating_review_ref_before": "0ad6ba0a9a6cea0211c760b3e19502ad9e29a54c",
+    "operating_review_ref_after": "0ad6ba0a9a6cea0211c760b3e19502ad9e29a54c",
+    "historical_review_ref_unchanged": true
+  },
+  "historical_fixed230": {
+    "historical_selection_cutoff": "2026-10-08T14:11:35+00:00",
+    "selected_documents": 230,
+    "metadata_bytes_read": 53926084,
+    "input_fingerprint": "acd344732f2f087b42767bfe32d9f16d96da6de49a766d6fc73f3c0ed298f9ec",
+    "expected_fingerprint": "acd344732f2f087b42767bfe32d9f16d96da6de49a766d6fc73f3c0ed298f9ec",
+    "exact_fingerprint_match": true,
+    "source_originals_reverified": false,
+    "Gates_revalidated": false,
+    "status": "EXACT_HISTORICAL_CACHE_BYTES_AVAILABLE",
+    "body_hashes_verified": true,
+    "required_originals": 230,
+    "missing_originals": 0,
+    "raw_hashes_verified": 230,
+    "raw_bytes_read": 38607847
+  },
+  "archive_inventory": {
+    "member_counts": {
+      "other": 218,
+      "captures": 8008,
+      "documents": 2948,
+      "evaluations": 214,
+      "raw": 7046,
+      "requests": 234
+    },
+    "expanded_bytes_by_group": {
+      "other": 1068318,
+      "captures": 74468504,
+      "documents": 53926084,
+      "evaluations": 49054341364,
+      "raw": 2274182519,
+      "requests": 2044745
+    },
+    "declared_total_expanded_bytes": 51460031534
+  }
 }

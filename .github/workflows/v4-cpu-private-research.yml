@@ -11,7 +11,7 @@ on:
     inputs:
       purpose:
         type: choice
-        options: [seed, recovery-check, bridge-recover, runtime-verify, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart, q2-relations, official-sources, official-discovery, official-bidirectional, official-state-read, archive-storage-trial, monthly-storage-trial]
+        options: [seed, recovery-check, bridge-recover, runtime-verify, source-transport-verify, q1-transfer-key, q1-publish, q1-connectivity, q1-source-batch, q1-trade-resume, q1-storage-check, q1-quality-Q2, q1-recover-result, q2-review, q2-counterpart, q2-relations, official-sources, official-discovery, official-bidirectional, official-state-read, archive-storage-trial, monthly-storage-trial]
         default: seed
       q1_key_run:
         type: string
@@ -37,6 +37,66 @@ env:
   CPU_CODE_SHA: 221fa92b1cbff8950716ec373eac793ca340c873
   EXPECTED_CPU_CODE_SHA: 221fa92b1cbff8950716ec373eac793ca340c873
 jobs:
+  source-transport-verify:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'source-transport-verify' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 7d9188608a66520115727ff5daa30d13190f4958
+          path: input-transport
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/scripts/receive_cpu_sources.py
+            /.github/scripts/copy_fixed230.py
+      - uses: actions/checkout@v4
+        with:
+          ref: 018f5bb1aa9d27e2891b9902155cb14107f9b019
+          path: gate-candidate
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - uses: actions/cache/restore@v4
+        with:
+          key: v4-cpu-runtime-${{ runner.os }}-${{ runner.arch }}-3.12.15-fff880f684241e7320bcb1f19eecf3f5ad9a32f15f730cc2351aae63c13bda10
+          fail-on-cache-miss: true
+          path: |
+            .v4-cpu-env
+            .v4-cpu-runtime
+      - name: Verify saved input transport with the runtime present; no schedule or CPU execution
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test -x .v4-cpu-env/bin/python
+          test -f .v4-cpu-runtime/models/gliner2-base-v1/model.safetensors
+          timeout 120 gh run download 42939431146 --repo irewon1-lgtm/bottleneck-control-tower --name rss-live-result --dir "$RUNNER_TEMP/cpu-input-rss"
+          # Bound download, full ZIP hash and 3GiB source-only extraction together.
+          timeout 300 python input-transport/.github/scripts/receive_cpu_sources.py \
+            --run-id 42939818925 --expected-head 28d0b8c648c0218ab2e74a1fa04ca8d63e659933 \
+            --rss-run-id 42939431146 --rss-manifest "$RUNNER_TEMP/cpu-input-rss/new-document-manifest.json" \
+            --destination "$RUNNER_TEMP/cpu-source-cache" --receipt "$RUNNER_TEMP/cpu-source-transport.json"
+      - name: Copy the exact preserved fixed corpus without rewriting source originals
+        run: timeout 60 python input-transport/.github/scripts/copy_fixed230.py --cache "$RUNNER_TEMP/cpu-source-cache" --destination "$RUNNER_TEMP/fixed230" --receipt "$RUNNER_TEMP/fixed230-copy.json"
+      - name: Run only candidate Gate6 source QA offline; no model, HTTP, LIVE or DB writes
+        env:
+          PYTHONPATH: gate-candidate/src
+          HF_HUB_OFFLINE: '1'
+          TRANSFORMERS_OFFLINE: '1'
+        run: timeout 120 .v4-cpu-env/bin/python gate-candidate/tools/precursor_operating_qa.py --cache "$RUNNER_TEMP/fixed230" --output "$RUNNER_TEMP/cpu-source-gate6-qa.json"
+      - name: Preserve numeric and hash source verification receipts only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cpu-source-transport-verification-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/cpu-source-transport.json
+            ${{ runner.temp }}/fixed230-copy.json
+            ${{ runner.temp }}/cpu-source-gate6-qa.json
+          if-no-files-found: warn
   runtime-verify:
     if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/codex/bct-v4-integration' && inputs.purpose == 'runtime-verify' }}
     runs-on: ubuntu-24.04
@@ -156,6 +216,14 @@ jobs:
         with:
           ref: ${{ env.CPU_CODE_SHA }}
           persist-credentials: false
+      - name: Receive only the reviewed source transport helper, separate from the CPU engine
+        uses: actions/checkout@v4
+        with:
+          ref: 7d9188608a66520115727ff5daa30d13190f4958
+          path: .bct-input-transport
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /.github/scripts/receive_cpu_sources.py
       - uses: actions/setup-python@v5
         id: python
         with:
@@ -184,8 +252,6 @@ jobs:
       - name: Authenticate and restore private input; missing/corrupt stops
         run: timeout 120 python tools/v4_cpu_private.py unseal --packet var/v4/cpu-private/bridge/state.gpg --checkpoint var/v4/cpu-private/prior
       - name: Verify original scheduled RSS and receive existing data only
-        env:
-          ACQUISITION_RUN: ${{ github.event.workflow_run.id }}
         run: |
           timeout 120 python - <<'PYCODE'
           from bct.v4.cpu_operations import github_schedule_context,verified_schedule
@@ -193,8 +259,20 @@ jobs:
           proof=verified_schedule(github_schedule_context())
           with open(os.environ['GITHUB_ENV'],'a')as out:out.write('RSS_RUN='+str(proof['RSS_run_id'])+'\n')
           PYCODE
+      - name: Receive the verified RSS delta and bounded saved CPU source inputs
+        env:
+          ACQUISITION_RUN: ${{ github.event.workflow_run.id }}
+          ACQUISITION_HEAD: ${{ github.event.workflow_run.head_sha }}
+          BCT_V4_STATE_PASSPHRASE: ''
+        run: |
+          set -euo pipefail
           timeout 120 gh run download "$RSS_RUN" --name rss-live-result --dir var/v4/cpu-private/rss
-          timeout 120 gh run download "$ACQUISITION_RUN" --name precursor-private-cache --dir var/v4/cpu-private/source
+          # The 10-minute job still caps receive + pinned processing; source
+          # download/hash/extraction has a separate finite 300-second budget.
+          timeout 300 python .bct-input-transport/.github/scripts/receive_cpu_sources.py \
+            --run-id "$ACQUISITION_RUN" --expected-head "$ACQUISITION_HEAD" \
+            --rss-run-id "$RSS_RUN" --rss-manifest var/v4/cpu-private/rss/new-document-manifest.json \
+            --destination var/v4/cpu-private/source
       - name: Consume approved new windows with the existing bounded CPU queue
         run: timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_private.py process --checkpoint var/v4/cpu-private/prior --output var/v4/cpu-private/observation.json
       - name: Seal output; only ciphertext crosses jobs
