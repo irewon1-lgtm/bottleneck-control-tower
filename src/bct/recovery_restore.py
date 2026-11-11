@@ -4,9 +4,71 @@ import json
 from pathlib import Path, PurePosixPath
 import re
 import shutil
+import subprocess
+
+
+# Only code executed by the per-source access/extraction path can authorize
+# retrying a saved technical ERROR. Receipt/docs-only commits cannot do so.
+SOURCE_ACCESS_PATHS = (
+    'src/bct/future_body.py',
+    'src/bct/future_bottleneck.py',
+    'src/bct/recovery_capture.py',
+    'src/bct/recovery_sources.py',
+)
+
+
+def source_access_fingerprint(root='.', ref=None):
+    root = Path(root)
+    if ref is not None and not re.fullmatch('[0-9a-f]{40}', ref):
+        raise ValueError('invalid prior source-code commit')
+    values = []
+    for name in SOURCE_ACCESS_PATHS:
+        if ref is None:
+            raw = (root/name).read_bytes()
+        else:
+            try:
+                result = subprocess.run(['git', '-C', str(root), 'show', ref+':'+name],
+                                        capture_output=True, timeout=15)
+            except subprocess.TimeoutExpired:
+                raise ValueError('prior source-code bytes unavailable') from None
+            if result.returncode: raise ValueError('prior source-code bytes unavailable')
+            raw = result.stdout
+        values.append({'path': name, 'sha256': hashlib.sha256(raw).hexdigest()})
+    return hashlib.sha256(json.dumps(values, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+
+def source_retry_identity(previous, root='.'):
+    """Migrate old checkpoints by actual immutable code bytes, never HEAD age."""
+    current = source_access_fingerprint(root)
+    prior = previous.get('source_access_code_sha256')
+    method = 'checkpoint_fingerprint'
+    if prior is not None and not re.fullmatch('[0-9a-f]{64}', prior):
+        raise ValueError('invalid preserved source-code fingerprint')
+    if prior is None:
+        ref = previous.get('code_sha', '')
+        method = 'immutable_prior_commit'
+        if isinstance(ref, str) and re.fullmatch('[0-9a-f]{40}', ref):
+            try:
+                prior = source_access_fingerprint(root, ref)
+            except ValueError:
+                # Read a missing immutable public code snapshot once. Failure
+                # leaves identity UNKNOWN and never authorizes an ERROR retry.
+                try:
+                    result = subprocess.run(['git', '-C', str(root), 'fetch', '--no-tags', '--depth=1', 'origin', ref],
+                                            capture_output=True, timeout=60)
+                except subprocess.TimeoutExpired:
+                    result = None
+                if result is not None and result.returncode == 0:
+                    try: prior = source_access_fingerprint(root, ref)
+                    except ValueError: pass
+    comparison = 'UNKNOWN' if prior is None else 'SAME' if prior == current else 'CHANGED'
+    return {'current': current, 'prior': prior, 'comparison': comparison,
+            'method': method, 'paths': list(SOURCE_ACCESS_PATHS), 'retry_errors': comparison == 'CHANGED'}
 
 
 LATEST_ROOT_STATE = (
+    'fixed230-copy.json',
+    'fixed230-input-transport.json',
     'source-audit.json',
     'source-recovery-attempts.jsonl',
     'source-recovery-versions.json',

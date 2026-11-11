@@ -16,6 +16,7 @@ from bct.future_bottleneck import fetch_html
 from bct.future_github import GitHubTransport
 from bct.future_review import failure_index
 from bct.recovery_sources import restore_observations, host_cooldowns, source_attempt_order
+from bct.recovery_restore import source_retry_identity
 
 
 def main():
@@ -31,8 +32,12 @@ def main():
     resume=Path(os.environ['RUNNER_TEMP'])/'bct-recovery-resume'
     old_checkpoint=json.loads((resume/'checkpoint.json').read_text()) if (resume/'checkpoint.json').exists() else {}
     request=json.loads(Path('.github/bct-recovery-request.json').read_text())
+    code_identity=source_retry_identity(old_checkpoint)
+    report['source_access_code_sha256']=code_identity['current']
+    report['source_retry_identity']=code_identity
+    (root/'checkpoint.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
     restored,pending=restore_observations(resume,cache,
-        retry_errors=bool(old_checkpoint.get('code_sha')) and old_checkpoint['code_sha']!=os.environ['GITHUB_SHA'],
+        retry_errors=code_identity['retry_errors'],
         reinspect_urls=request.get('source_scope_reinspection_urls',[]))
     restored={u:r for u,r in restored.items() if u in urls}
     pending={u:r for u,r in pending.items() if u in urls}
