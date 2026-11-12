@@ -54,6 +54,12 @@ def feed_group_hints(feed_config):
     by_host = {}
     current = None
     for line in config.splitlines():
+        # The YAML file also holds disabled historical sources for audit.
+        # They are not active feeds and must never define industry hints.
+        if line.strip() == "disabled_feeds:":
+            break
+        if line and not line.startswith(" ") and line.strip() != "feeds:":
+            break
         if line.startswith("  # "):
             section = line[4:].strip()
             if section in FEED_GROUPS:

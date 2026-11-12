@@ -142,12 +142,15 @@ def test_feed_host_group_is_hint_not_bottleneck_prediction(tmp_path):
   Electronics: https://multi.example.org/rss/tech
   # Logistics ports shipping
   Logistics: https://multi.example.org/rss/logistics
+disabled_feeds:
+  Obsolete: https://obsolete.example.org/feed
 """, encoding="utf-8")
     hints = m.feed_group_hints(feeds)
     assert hints["esa.int"] == "방산·우주"
     assert hints["pharma.example.org"] == "바이오·의약"
     assert hints["multi.example.org"] == "출처 분야 복수"
     assert "news.unlisted.org" not in hints
+    assert "obsolete.example.org" not in hints
     db, state, summary, delta = fixture(tmp_path)
     mapped = {**hints, "example.com": "바이오·의약"}
     data = m.extract(db, state, summary, delta, data_commit="a" * 40,
