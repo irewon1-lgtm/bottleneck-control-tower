@@ -102,3 +102,30 @@ def test_every_article_is_rendered_with_original_date_and_source(tmp_path):
     assert data["articles"][0]["published_at"] is None
     assert data["new_article_count"] == 2
     assert data["latest_published_at"] == datetime(2026,11,12,4,tzinfo=timezone.utc).isoformat()
+
+
+
+def test_future_pub_date_not_misreported_as_latest(tmp_path):
+    db, state, summary, delta = fixture(tmp_path)
+    with sqlite3.connect(db) as con:
+        con.execute("UPDATE radar_items SET published_at=? WHERE id='newid0002'",
+                    ("2027-10-25T04:00:00+00:00",))
+    state["sha256"] = hashlib.sha256(db.read_bytes()).hexdigest()
+    data = m.extract(db, state, summary, delta, data_commit="a" * 40)
+    assert data["future_date_holds"] == 1
+    assert data["articles"][0]["published_at"] is None
+    assert data["articles"][0]["publication_date_status"] == "FUTURE_DATE_HOLD"
+    assert data["latest_published_at"] == "2026-11-09T07:00:00+00:00"
+
+
+def test_new_articles_nav_is_unverified_and_paginated():
+    html = (ROOT / "src/bct/v4/dashboard_web/index.html").read_text()
+    js = (ROOT / "src/bct/v4/dashboard_web/app.js").read_text()
+    assert 'data-nav="news"' in html
+    for code in ('function news()', 'function rssNewsTeaser()', 'function renderNewsResults()',
+                 'request("./api/rss-news.json")', "const pageSize=24",
+                 '"최근 수집순"', '"최근 발행순"', '"이번 수집에서 새로 추가된 기사만 보기"',
+                 '"제목·요약 수집 / 병목 미검증"'):
+        assert code in js
+    assert "boardEvidenceFor(sector)" in js
+    assert 'data.sector_rankings' in js

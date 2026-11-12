@@ -339,7 +339,7 @@
       line.append(el("span",article.source,"bct-news-source"));
       const a=external(article.title,article.url);
       line.append(a||el("span",article.title));
-      line.append(el("small","수집 "+date(article.collected_at)+" · 발행 "+(article.published_at?date(article.published_at):"미확인")));
+      line.append(el("small","수집 "+date(article.collected_at)+" · 발행 "+(article.published_at?date(article.published_at):article.publication_date_status==="FUTURE_DATE_HOLD"?"검증 보류(미래 날짜)":"미확인")));
       list.append(line);
     }
     box.append(list,el("p","뉴스의 제목과 요약은 수집 원문 표기이며 병목 검증이 아닙니다. 순위표는 별도의 근거 기록만 사용합니다.","bct-panel-explain"));
@@ -468,7 +468,7 @@
       article.append(title);
       if(item.snippet)article.append(el("p",item.snippet,"bct-news-snippet"));
       article.append(add(el("div",null,"bct-news-article-foot"),
-        el("span","발행 "+(item.published_at?date(item.published_at):"미확인")),
+        el("span","발행 "+(item.published_at?date(item.published_at):item.publication_date_status==="FUTURE_DATE_HOLD"?"검증 보류(미래 날짜)":"미확인")),
         el("span","수집 "+date(item.collected_at)),
         item.url?external("원문 기사 열기",item.url,"bct-news-source-link"):
           el("span","출처 링크 안전성 확인 대기")));

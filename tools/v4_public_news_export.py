@@ -6,7 +6,7 @@ model inference occurs here. Verifies the exact RSS run's saved artifacts.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import hashlib
 import ipaddress
 import json
@@ -113,6 +113,7 @@ def extract(db_path, state, summary, delta, *, data_commit):
     if (len(old_ids) != len(prior) or len(new_ids) != len(newly) or old_ids.intersection(new_ids)):
         raise ValueError("RSS_DELTA_DUPLICATE")
     collected_rows = []
+    future_date_holds = 0
     with sqlite3.connect(db_path.resolve().as_uri() + "?mode=ro", uri=True) as db:
         db.execute("PRAGMA query_only=ON")
         if db.execute("PRAGMA quick_check").fetchone() != ("ok",):
@@ -136,12 +137,23 @@ def extract(db_path, state, summary, delta, *, data_commit):
             if not title or not _iso(collected):
                 raise ValueError("RSS_ITEM_METADATA_INVALID")
             safe_url = _safe_link(url)
+            collected_at = _iso(collected)
+            published_at = _iso(published)
+            published_status = "RECORDED" if published_at else "UNKNOWN"
+            # RSS can contain a wrong year/timezone. Never present a future
+            # article dated months ahead as today's newest publication.
+            if (published_at and datetime.fromisoformat(published_at) >
+                    datetime.fromisoformat(collected_at) + timedelta(days=1)):
+                future_date_holds += 1
+                published_at = None
+                published_status = "FUTURE_DATE_HOLD"
             collected_rows.append({
                 "id": id_, "source": _text(source, 120),
                 "title": _text(title, 350),
                 "url": safe_url,
-                "published_at": _iso(published),
-                "collected_at": _iso(collected),
+                "published_at": published_at,
+                "publication_date_status": published_status,
+                "collected_at": collected_at,
                 "snippet": _text(snippet, 300) if snippet else None,
                 "is_new": id_ in new_ids,
                 "link_available": safe_url is not None,
@@ -183,6 +195,7 @@ def extract(db_path, state, summary, delta, *, data_commit):
         "total_db_records": state["radar_items"], "visible_article_count": len(collected_rows),
         "new_article_count": actual_new,
         "latest_published_at": by_published[0] if by_published else None,
+        "future_date_holds": future_date_holds,
         "feed_total": summary["registered"], "feed_success": summary["successful_feeds"],
         "feed_failed": len(failures), "failed_feeds": failures,
         "classification": "RSS_TITLE_METADATA_NOT_VERIFIED_BOTTLENECK",
