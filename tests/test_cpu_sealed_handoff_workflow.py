@@ -132,13 +132,16 @@ def test_latest_bridge_prefers_successful_ack_and_checks_job(monkeypatch):
             "head_branch": "main", "head_repository": {"full_name": mod.REPOSITORY},
             "event": "workflow_run", "status": "completed", "conclusion": "success",
             "head_sha": "a" * 40}
+    item = {"id": 1, "name": "bct-sealed-cpu-bridge-1",
+            "expired": False, "size_in_bytes": 100,
+            "digest": "sha256:" + "a" * 64, "workflow_run": {"id": 80}}
     def fake_api(path):
-        if "/runs?branch=" in path:
-            return {"workflow_runs": [{**good, "id": 90}, good]}
-        if "actions/runs/80/artifacts" in path:
-            return {"artifacts": [{"id": 1, "name": "bct-sealed-cpu-bridge-1",
-                                  "expired": False, "size_in_bytes": 100,
-                                  "digest": "sha256:" + "a" * 64}]}
+        if path == "actions/artifacts?per_page=100&page=1":
+            return {"artifacts": [item]}
+        if path == "actions/runs/80":
+            return good
+        if path == "actions/runs/80/artifacts?per_page=100":
+            return {"artifacts": [item]}
         if "actions/runs/80/attempts/" in path:
             return {"jobs": [{"name": "publish", "conclusion": "success"}]}
         raise AssertionError(path)
