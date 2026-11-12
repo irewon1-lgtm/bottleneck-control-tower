@@ -61,6 +61,16 @@ def export(repo, dest, commit, *, public_input=None):
     if len(cpu.get("records", [])) != expected_cpu:
         raise ValueError("Unmatched CPU/reported evidence count")
     at = datetime.now(timezone.utc).isoformat()
+    # Source-linked rank counts: not unique shortages or CPU product proposals.
+    # The previous rank comes from the independently SHA256-verified last
+    # published Pages snapshot, never from invented or local-browser values.
+    from bct.v4.sector_ranking import ranks, previous_public_snapshot
+    data["sector_rankings"] = ranks(data["records"])
+    data["sector_rank_previous"] = (
+        previous_public_snapshot() if os.environ.get("GITHUB_WORKFLOW") == "Read-only BCT Pages"
+        else {"status": "PREVIOUS_PUBLIC_NOT_QUERIED_OUTSIDE_PAGES",
+              "generated_at": None, "data_at": None,
+              "source_dashboard_sha256": None, "ranks": {}})
     data['historical_data_at'] = data.get('data_at')
     if operating is not None:
         data['operating_research'] = operating
