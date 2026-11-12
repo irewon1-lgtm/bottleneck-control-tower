@@ -1,0 +1,60 @@
+name: BCT RSS finalized industry-filter anonymous live acceptance
+on:
+  push:
+    branches: [qa/bct-rss-final-live-20261112]
+    paths: ['.github/workflows/bct-rss-final-live-qa.yml']
+permissions:
+  contents: read
+jobs:
+  public-no-login:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify published V4 and RSS bytes anonymously
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/bct-anon"
+          base="https://irewon1-lgtm.github.io/bottleneck-control-tower"
+          curl -fsSL --retry 2 --max-time 50 -H "Cache-Control: no-cache" "$base/" -o "$RUNNER_TEMP/bct-anon/index.html"
+          curl -fsSL --retry 2 --max-time 50 -H "Cache-Control: no-cache" "$base/app.js" -o "$RUNNER_TEMP/bct-anon/app.js"
+          curl -fsSL --retry 2 --max-time 50 -H "Cache-Control: no-cache" "$base/build-manifest.json" -o "$RUNNER_TEMP/bct-anon/build-manifest.json"
+          curl -fsSL --retry 2 --max-time 50 -H "Cache-Control: no-cache" "$base/api/dashboard.json" -o "$RUNNER_TEMP/bct-anon/dashboard.json"
+          curl -fsSL --retry 2 --max-time 90 -H "Cache-Control: no-cache" "$base/api/rss-news.json" -o "$RUNNER_TEMP/bct-anon/rss-news.json"
+          python - "$RUNNER_TEMP/bct-anon" <<'PY'
+          import hashlib,json,pathlib,sys
+          root=pathlib.Path(sys.argv[1])
+          sha=lambda p:hashlib.sha256((root/p).read_bytes()).hexdigest()
+          manifest=json.loads((root/'build-manifest.json').read_bytes())
+          dash=json.loads((root/'dashboard.json').read_bytes())
+          rss=json.loads((root/'rss-news.json').read_bytes())
+          html=(root/'index.html').read_text(encoding='utf-8')
+          js=(root/'app.js').read_text(encoding='utf-8')
+          assert manifest['code_commit']=='949ad464b5a1c12dee220622579d835f546aa6ec'
+          assert sha('dashboard.json')==manifest['dashboard_sha256']
+          assert sha('rss-news.json')==manifest['rss_news_sha256']
+          assert rss['source_run_id']==manifest['rss_source_run_id']==dash['rss_news_summary']['source_run_id']
+          assert rss['visible_article_count']==len(rss['articles'])==manifest['rss_article_count']
+          assert rss['new_article_count']==sum(x['is_new'] for x in rss['articles'])
+          assert rss['classification']=='RSS_TITLE_METADATA_NOT_VERIFIED_BOTTLENECK'
+          assert len(dash['records'])==511
+          assert len(dash['sector_rankings']['rows'])>0
+          assert 'data-nav="news"' in html and 'data-nav="overview"' in html
+          assert 'function news()' in js and 'function renderNewsResults()' in js
+          assert 'request("./api/rss-news.json")' in js
+          assert '출처 등록 분야(참고)' in js
+          assert 'sourceGroup:' in js
+          assert all('source_group' in a for a in rss['articles'])
+          assert any(a['source_group']=='바이오·의약' for a in rss['articles'])
+          assert all(a['source_group']!='' for a in rss['articles'])
+          assert 'login' not in html.lower() and 'accounts.google' not in html
+          result={'status':'PASS_PUBLIC_ANONYMOUS','code_commit':manifest['code_commit'],
+                  'rss_run_id':rss['source_run_id'],'total_articles':rss['visible_article_count'],
+                  'recent_added':rss['new_article_count'],'source_failed':rss['feed_failed'],
+                  'base_research_evidence':len(dash['records']),
+                  'rss_sha256':sha('rss-news.json')}
+          print('BCT_LIVE_RSS_NEWS_ACCEPTANCE '+json.dumps(result))
+          PY
