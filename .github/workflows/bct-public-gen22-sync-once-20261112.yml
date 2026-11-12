@@ -1,0 +1,80 @@
+name: BCT public research gen22 verified sync and Pages once 20261112
+on:
+  push:
+    branches: [ops/bct-cpu-manual-roundtrip-20261112]
+    paths: ['.github/workflows/bct-public-gen22-sync-once-20261112.yml']
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: rss-canonical-data
+  cancel-in-progress: false
+jobs:
+  sync-and-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONPATH: src
+    steps:
+      - name: Verify original manual CPU publisher and current operating main
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,os,subprocess
+          repo=os.environ['GITHUB_REPOSITORY']
+          def fetch(path):
+              p=subprocess.run(['gh','api','repos/'+repo+'/'+path],capture_output=True,text=True,timeout=25)
+              if p.returncode:raise ValueError('GEN22_SYNC_METADATA_READ_DENIED')
+              return json.loads(p.stdout)
+          if fetch('branches/main')['commit']['sha']!='6fb60adda5c18c9078fad752739ec3ced8e815d0':
+              raise ValueError('GEN22_SYNC_MAIN_MOVED')
+          r=fetch('actions/runs/43168975665')
+          if (r.get('status')!='completed' or r.get('conclusion')!='success' or
+                  r.get('head_branch')!='main' or r.get('event')!='workflow_dispatch' or
+                  r.get('path')!='.github/workflows/v4-cpu-private-research.yml'):
+              raise ValueError('GEN22_SYNC_SOURCE_RUN_NOT_SUCCESSFUL')
+          jobs=fetch('actions/runs/43168975665/jobs?per_page=100')['jobs']
+          if not any(j.get('name')=='publish' and j.get('conclusion')=='success' for j in jobs):
+              raise ValueError('GEN22_SYNC_PRIVATE_PUBLICATION_UNCONFIRMED')
+          artifacts=fetch('actions/runs/43168975665/artifacts?per_page=100')['artifacts']
+          rows=[a for a in artifacts if a.get('name')=='bct-public-research-1']
+          if (len(rows)!=1 or rows[0].get('id')!=13921770489
+                  or rows[0].get('digest')!='sha256:e5aa40469de3ab9250953fd694f88365bc491234e24d184282ec956c6c00ef72'
+                  or rows[0].get('expired') is not False):
+              raise ValueError('GEN22_SYNC_PUBLIC_SOURCE_DIGEST')
+          print('BCT_PUBLIC_GEN22_SOURCE_ID_AND_DIGEST_VERIFIED')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          ref: 6e788d18cf85fdb834b451bb35585a8b58925301
+          persist-credentials: false
+      - name: Verify pinned free public-only synchronizer, sync exact CPU run, no private source access
+        run: |
+          set -euo pipefail
+          timeout 180 python tools/v4_pages_research_input.py sync --trigger-id 43168975665
+      - name: Read back generation 22 from durable data branch before requesting deployment
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64,json,os,subprocess
+          path='repos/'+os.environ['GITHUB_REPOSITORY']+'/contents/v4-public/research.json?ref=data'
+          p=subprocess.run(['gh','api',path],capture_output=True,text=True,timeout=25)
+          if p.returncode:raise ValueError('GEN22_PUBLIC_READBACK_UNAVAILABLE')
+          j=json.loads(p.stdout)
+          blob=base64.b64decode(j['content'],validate=False)
+          research=json.loads(blob)
+          g=research['generation']
+          if (g.get('ack_sequence')!=22 or
+                  g.get('producer_run_id')!=43168975665 or
+                  g.get('private_commit')!='f51845c0b999ceb6c38e8f2741db8620307a012e'):
+              raise ValueError('GEN22_PUBLIC_SOURCE_MISMATCH')
+          print('BCT_PUBLIC_GEN22_DURABLE_DATA_VERIFIED: ack_sequence=22; producer_run=43168975665')
+          PY
+      - name: Request already deployed GitHub Pages workflow after durable public sync
+        run: |
+          set -euo pipefail
+          printf '%s\n' '{"ref":"main"}' > "$RUNNER_TEMP/pages-request.json"
+          gh api --method POST "repos/$GITHUB_REPOSITORY/actions/workflows/ui-pages.yml/dispatches" \
+            --input "$RUNNER_TEMP/pages-request.json" >/dev/null
+          echo 'BCT_GEN22_PAGES_DEPLOYMENT_REQUESTED; verify actual Pages job separately.'
