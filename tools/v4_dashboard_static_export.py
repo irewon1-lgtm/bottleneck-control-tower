@@ -16,6 +16,7 @@ import shutil
 from bct.v4.dashboard import ASSETS, ResearchReader
 from bct.v4.public_research import validate_snapshot, digest
 from bct.v4.public_data import validate_acquisition, validate_health, validate_cursor
+from v4_public_news_export import build_from_public_branch
 
 
 def pack(value):
@@ -98,6 +99,25 @@ def export(repo, dest, commit, *, public_input=None):
         "source_status": {name: {"status": item.get("status"), "counts": item.get("counts", {})}
                           for name, item in q.get("source_status", {}).items()},
     }
+
+    # The RSS source is a separate existing PUBLIC writer. It must not change
+    # source-linked candidate rankings or become a verified bottleneck signal.
+    rss_news = (build_from_public_branch(repo)
+                if os.environ.get("GITHUB_WORKFLOW") == "Read-only BCT Pages" else None)
+    if rss_news is not None:
+        data["rss_news_summary"] = {
+            key: val for key, val in rss_news.items()
+            if key not in ("articles", "failed_feeds")
+        }
+        data["rss_news_summary"]["newest_articles"] = rss_news["articles"][:8]
+        data["rss_news_summary"]["feed_failure_samples"] = rss_news["failed_feeds"][:11]
+    else:
+        data["rss_news_summary"] = {
+            "format": "bct-public-rss-news-1", "status": "NOT_LOADED_OFFLINE",
+            "visible_article_count": None, "new_article_count": None,
+            "feed_failed": None, "collected_completed_at": None,
+            "newest_articles": [], "feed_failure_samples": []
+        }
     html = (ASSETS / "index.html").read_text(encoding="utf-8")
     html = change_once(html, 'href="/style.css"', 'href="./style.css"')
     html = change_once(html, 'src="/app.js"', 'src="./app.js"')
@@ -135,6 +155,9 @@ def export(repo, dest, commit, *, public_input=None):
         path = dest / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(body)
+
+    if rss_news is not None:
+        (dest / "api/rss-news.json").write_bytes(pack(rss_news))
     for name, value in [('research', operating), ('collection', collection), ('workflow', workflow), ('transport', transport)]:
         if value is not None:
             (dest / 'api' / (name + '.json')).write_bytes(pack(value))
@@ -155,6 +178,14 @@ def export(repo, dest, commit, *, public_input=None):
         "evidence_count": len(ids), "evidence_bytes": total_size,
         "site_type": "PUBLIC_STATIC_READ_ONLY", "new_ai_calls": 0
     }
+
+    manifest["rss_news_sha256"] = (
+        hashlib.sha256((dest / "api/rss-news.json").read_bytes()).hexdigest()
+        if rss_news is not None else None
+    )
+    manifest["rss_source_run_id"] = rss_news["source_run_id"] if rss_news else None
+    manifest["rss_article_count"] = rss_news["visible_article_count"] if rss_news else None
+    manifest["rss_data_ref"] = rss_news["data_ref"] if rss_news else None
     manifest['historical_data_at'] = data['historical_data_at']
     manifest['research_generation'] = operating['generation'] if operating else None
     manifest['research_snapshot_sha256'] = operating['snapshot_sha256'] if operating else None

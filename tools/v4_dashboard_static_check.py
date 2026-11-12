@@ -41,4 +41,28 @@ if data.get('operating_research'):
     assert manifest['research_generation'] == public['generation']
     assert manifest['research_snapshot_sha256'] == public['snapshot_sha256']
     assert data['data_at'] == (public['clocks']['data_at'] or data['historical_data_at'])
+# Separate RSS NEWS metadata never counts as vetted forecast evidence.
+rss_summary = data.get("rss_news_summary")
+assert isinstance(rss_summary, dict)
+if manifest.get("rss_news_sha256"):
+    import hashlib
+    raw_news = (root / "api/rss-news.json").read_bytes()
+    assert hashlib.sha256(raw_news).hexdigest() == manifest["rss_news_sha256"]
+    rss = json.loads(raw_news)
+    assert rss["format"] == "bct-public-rss-news-1"
+    assert rss["status"] == "VERIFIED_PUBLIC_RSS_METADATA"
+    assert rss_summary["status"] == rss["status"]
+    assert rss_summary["source_run_id"] == manifest["rss_source_run_id"]
+    assert len(rss["articles"]) == manifest["rss_article_count"] == rss_summary["visible_article_count"]
+    assert len([r for r in rss["articles"] if r["is_new"]]) == rss["new_article_count"]
+    assert rss["feed_failed"] == len(rss["failed_feeds"])
+    assert rss["classification"] == "RSS_TITLE_METADATA_NOT_VERIFIED_BOTTLENECK"
+    assert all(set(r) == {"id", "source", "title", "url", "published_at",
+                          "collected_at", "snippet", "is_new", "link_available"} for r in rss["articles"])
+    assert data["sector_rankings"] == ranks(data["records"])  # RSS adds no ranking signal.
+else:
+    assert rss_summary["status"] == "NOT_LOADED_OFFLINE"
+    assert not (root / "api/rss-news.json").exists()
+if __import__("os").environ.get("GITHUB_WORKFLOW") == "Read-only BCT Pages":
+    assert manifest["rss_news_sha256"] and rss_summary["status"] == "VERIFIED_PUBLIC_RSS_METADATA"
 print("PASS: public static V4:", manifest["evidence_count"], "verified details, commit", manifest["code_commit"])

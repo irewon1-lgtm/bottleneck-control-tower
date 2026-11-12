@@ -230,18 +230,23 @@
   const detailButton = (r, text="근거 보기") => { const b=btn(text,()=>openDetail(r.id),"button small");b.setAttribute("aria-label",`${productLabel(r.product)} ${text}`);b.dataset.evidence=r.id;return b; };
   const panels = {
     overview:["한눈에 보기","자료가 얼마나 읽혔는지, 어떤 변화가 확인됐는지 살펴봅니다."],
+    news:["최신 뉴스","RSS 수집 기사 제목을 발행일·수집일과 함께 보여줍니다. 병목 검증 근거와 구분합니다."],
     candidates:["미래 병목 후보","향후 12~36개월의 공급 부족 후보와 아직 검토 중인 변화를 구분합니다."],
     evidence:["판단 근거","저장된 원문과 공식 표를 열어, 판단이 어디에서 나왔는지 확인합니다."],
     automation:["자동화 현황","자동화 설정과 실제 실행 기록을 구분해 보여줍니다."]
   };
   let data=null, currentPage="overview", loadBusy=false, detailRequest=0;
+  let rssNews=null, rssNewsError="", rssNewsLoading=false;
+  const rssNewsState={query:"",source:"",period:"all",sort:"collected",onlyNew:false,page:1};
   const state={candidates:{tab:"reviewed",query:"",industry:"",role:"",page:1},evidence:{source:"base",category:"",query:"",industry:"",role:"",page:1}};
   const content=$("content");
   function notify(text, tone=""){ $("notice").replaceChildren(text ? el("div",text,`notice ${tone}`) : document.createTextNode("")); }
   async function request(path){const r=await fetch(path,{cache:"no-store"});const body=await r.json();if(!r.ok)throw Error(body.error||"자료를 불러오지 못했습니다.");return body;}
   async function load(){
     if(loadBusy)return;loadBusy=true;$("refresh").disabled=true;
-    try{data=await request("/api/dashboard");data.loaded_at=new Date().toISOString();render();notify(data.publication?`저장된 연구 자료 · 화면 배포 ${date(data.publication.last_sync_at)} · ${data.publication.status_label}. 새로 읽기는 수집·분석을 실행하지 않습니다.`:data.source.snapshot?"검증된 연구 백업을 보고 있습니다. 현재 수집기의 실시간 상태를 뜻하지 않습니다.":"");}
+    try{data=await request("/api/dashboard");data.loaded_at=new Date().toISOString();
+      if(rssNews&&rssNews.source_run_id!==data.rss_news_summary?.source_run_id){rssNews=null;rssNewsError="";}
+      render();notify(data.publication?`저장된 연구 자료 · 화면 배포 ${date(data.publication.last_sync_at)} · ${data.publication.status_label}. 새로 읽기는 수집·분석을 실행하지 않습니다.`:data.source.snapshot?"검증된 연구 백업을 보고 있습니다. 현재 수집기의 실시간 상태를 뜻하지 않습니다.":"");}
     catch(e){notify(`${e.message}${data?" 마지막으로 읽은 자료를 표시하고 있습니다.":""}`,"error");if(!data){content.replaceChildren(empty("연구 자료를 읽지 못했습니다","데이터 연결을 복구한 뒤 다시 읽을 수 있습니다.",btn("다시 읽기",load)));}}
     finally{loadBusy=false;$("refresh").disabled=false;}
   }
@@ -260,7 +265,7 @@
     content.replaceChildren();
     if(currentPage!=="overview")content.append(head());
     if($("top-latest"))$("top-latest").textContent="최근 반영: "+date(data.snapshot_generated_at||data.data_at);
-    ({overview:firstOverview,candidates:candidates,evidence:evidence,automation:automation}[currentPage])();
+    ({overview:firstOverview,news:news,candidates:candidates,evidence:evidence,automation:automation}[currentPage])();
   }
 
   // Approved first-image layout. Everything is calculated from the saved
@@ -311,6 +316,176 @@
         a.id.localeCompare(b.id));
   }
 
+
+  // Separate source-linked RSS publication lane. RSS headlines are discovery
+  // inputs only, never evidence for sector ranking, S1/S2/S3 or EARLY success.
+  function rssNewsTeaser(){
+    const info=data.rss_news_summary||{};
+    const box=el("section",null,"bct-first-panel bct-news-teaser");
+    box.append(add(el("div",null,"bct-panel-title"),el("span","▤","bct-panel-icon"),
+      el("h2","최신 수집 뉴스"),link("기사 전체 보기","#news","bct-news-jump")));
+    if(info.status!=="VERIFIED_PUBLIC_RSS_METADATA"){
+      box.append(el("p","최신 뉴스 공개 기록은 확인 중입니다. 과거 연구 근거를 오늘의 뉴스로 표시하지 않습니다.","bct-news-limited"));
+      return box;
+    }
+    box.append(add(el("div",null,"bct-news-counter"),
+      add(el("div"),el("span","이번 수집에서 추가된 기사"),el("strong",number(info.new_article_count)+"건")),
+      add(el("div"),el("span","저장된 전체 RSS 기사"),el("strong",number(info.visible_article_count)+"건")),
+      add(el("div"),el("span","최근 RSS 수집 완료"),el("strong",date(info.collected_completed_at))),
+      add(el("div"),el("span","수집 실패 출처"),el("strong",number(info.feed_failed)+"개"))));
+    const list=el("div",null,"bct-news-teaser-list");
+    for(const article of (info.newest_articles||[]).slice(0,6)){
+      const line=el("div",null,"bct-news-teaser-item");
+      line.append(el("span",article.source,"bct-news-source"));
+      const a=external(article.title,article.url);
+      line.append(a||el("span",article.title));
+      line.append(el("small","수집 "+date(article.collected_at)+" · 발행 "+(article.published_at?date(article.published_at):"미확인")));
+      list.append(line);
+    }
+    box.append(list,el("p","뉴스의 제목과 요약은 수집 원문 표기이며 병목 검증이 아닙니다. 순위표는 별도의 근거 기록만 사용합니다.","bct-panel-explain"));
+    return box;
+  }
+
+  function rssNewsFilterControl(labelText,control){
+    return add(el("label",null,"bct-news-filter"),el("span",labelText),control);
+  }
+  function rssNewsSelect(options,value,onChange){
+    const s=el("select");
+    for(const [key,labelText] of options){const o=el("option",labelText);o.value=key;s.append(o);}
+    s.value=value;s.addEventListener("change",()=>onChange(s.value));
+    return s;
+  }
+
+  function news(){
+    const info=data.rss_news_summary||{};
+    if(info.status!=="VERIFIED_PUBLIC_RSS_METADATA"){
+      content.append(empty("최신 뉴스 자료 연결 확인 중",
+        "현재 공개된 뉴스 파일의 실제 수집 이력이 아직 검증되지 않았습니다. 역사적 근거 수를 최신 뉴스로 표시하지 않습니다."));
+      return;
+    }
+    if(!rssNews){
+      if(rssNewsError){
+        content.append(empty("최신 기사 파일을 불러오지 못했습니다",rssNewsError,
+          btn("뉴스 파일 다시 읽기",()=>{rssNewsError="";rssNewsLoading=false;render();},"button primary")));
+        return;
+      }
+      content.append(empty("기사 원장을 읽는 중입니다","실제 RSS 수집 원본과 연결된 별도 공개 기사 목록입니다."));
+      if(!rssNewsLoading){
+        rssNewsLoading=true;
+        request("./api/rss-news.json").then(body=>{
+          if(body.format!=="bct-public-rss-news-1"||
+             body.status!=="VERIFIED_PUBLIC_RSS_METADATA"||
+             body.source_run_id!==info.source_run_id||
+             !Array.isArray(body.articles)||
+             body.articles.length!==info.visible_article_count){
+            throw Error("기사 버전과 공개 화면의 수집 이력이 일치하지 않습니다.");
+          }
+          rssNews=body;rssNewsError="";
+        }).catch(e=>{rssNewsError=e.message||"자료 요청이 실패했습니다.";})
+          .finally(()=>{rssNewsLoading=false;if(currentPage==="news")render();});
+      }
+      return;
+    }
+    const n=rssNews;
+    const summary=el("section",null,"bct-first-panel bct-news-main-summary");
+    summary.append(add(el("div",null,"bct-panel-title"),el("span","▤","bct-panel-icon"),el("h2","실제로 수집한 뉴스 전체")));
+    summary.append(add(el("div",null,"bct-news-counter"),
+      add(el("div"),el("span","보유 기사"),el("strong",number(n.visible_article_count)+"건")),
+      add(el("div"),el("span","최근 실행 새 기사"),el("strong",number(n.new_article_count)+"건")),
+      add(el("div"),el("span","정상 작동 출처"),el("strong",number(n.feed_success)+"개")),
+      add(el("div"),el("span","실패 출처"),el("strong",number(n.feed_failed)+"개"))));
+    summary.append(el("p","RSS 수집 완료: "+date(n.collected_completed_at)+" · 기사의 발행일은 각 항목에 따로 표시됩니다. 원문 읽기·사실 확인·병목 확정 이전의 뉴스 제목 목록입니다.","bct-news-limited"));
+    content.append(summary);
+
+    const filters=el("section",null,"bct-first-panel bct-news-controls");
+    const filterItems=el("div",null,"bct-news-controls-grid");
+    const query=el("input");query.type="search";query.placeholder="기사 제목·요약·출처 검색";
+    query.value=rssNewsState.query;query.setAttribute("aria-label","뉴스 검색어");
+    query.addEventListener("input",()=>{rssNewsState.query=query.value;rssNewsState.page=1;renderNewsResults();});
+    filterItems.append(rssNewsFilterControl("검색",query));
+    const sources=[...new Set(n.articles.map(r=>r.source))].sort((a,b)=>a.localeCompare(b));
+    filterItems.append(rssNewsFilterControl("기사 출처",rssNewsSelect([["","모든 출처"],...sources.map(s=>[s,s])],
+      rssNewsState.source,v=>{rssNewsState.source=v;rssNewsState.page=1;renderNewsResults();})));
+    filterItems.append(rssNewsFilterControl("표시 순서",rssNewsSelect([["collected","최근 수집순"],["published","최근 발행순"]],
+      rssNewsState.sort,v=>{rssNewsState.sort=v;rssNewsState.page=1;renderNewsResults();})));
+    filterItems.append(rssNewsFilterControl("기사 발행일",rssNewsSelect([["all","전체 기간"],["7","최근 7일"],["30","최근 30일"]],
+      rssNewsState.period,v=>{rssNewsState.period=v;rssNewsState.page=1;renderNewsResults();})));
+    const newOnly=el("input");newOnly.type="checkbox";newOnly.checked=rssNewsState.onlyNew;
+    newOnly.addEventListener("change",()=>{rssNewsState.onlyNew=newOnly.checked;rssNewsState.page=1;renderNewsResults();});
+    filterItems.append(add(el("label",null,"bct-news-check"),newOnly,el("span","이번 수집에서 새로 추가된 기사만 보기")));
+    filters.append(filterItems);
+    content.append(filters);
+
+    const result=el("section",null,"bct-first-panel bct-news-results");
+    result.id="rss-news-results";content.append(result);
+    renderNewsResults();
+    const bad=el("section",null,"bct-first-panel bct-feed-failures");
+    const details=el("details");
+    details.append(el("summary","최근 수집 실패 출처 "+number(n.feed_failed)+"개 확인"));
+    details.append(el("p","실패는 해당 출처의 최근 수집 시도에 한정됩니다. 접근 거부·주소 오류가 있더라도 다른 출처의 기사는 보존합니다.","bct-news-limited"));
+    for(const failure of n.failed_feeds){
+      const line=el("div",null,"bct-feed-error-line");
+      line.append(el("strong",failure.feed),
+        el("span",failure.type+(failure.http_status?" · HTTP "+failure.http_status:"")),
+        el("span",failure.reason));
+      details.append(line);
+    }
+    bad.append(details);content.append(bad);
+  }
+
+  function renderNewsResults(){
+    const root=$("rss-news-results");if(!root||!rssNews)return;
+    const s=rssNewsState;
+    const keyword=s.query.trim().toLocaleLowerCase();
+    const cutoff=s.period==="all"?null:Date.now()-Number(s.period)*24*3600*1000;
+    const selected=rssNews.articles.filter(r=>
+      (!s.onlyNew||r.is_new) &&
+      (!s.source||r.source===s.source) &&
+      (!keyword||(r.title+" "+(r.snippet||"")+" "+r.source).toLocaleLowerCase().includes(keyword)) &&
+      (!cutoff||(r.published_at&&Date.parse(r.published_at)>=cutoff))
+    );
+    if(s.sort==="published")selected.sort((a,b)=>
+      String(b.published_at||"").localeCompare(String(a.published_at||""))||
+      b.collected_at.localeCompare(a.collected_at));
+    else selected.sort((a,b)=>b.collected_at.localeCompare(a.collected_at)||
+      String(b.published_at||"").localeCompare(String(a.published_at||"")));
+    const pageSize=24,pages=Math.max(1,Math.ceil(selected.length/pageSize));
+    s.page=Math.max(1,Math.min(s.page,pages));
+    const shown=selected.slice((s.page-1)*pageSize,s.page*pageSize);
+    root.replaceChildren();
+    root.append(add(el("div",null,"bct-news-result-heading"),
+      el("strong","조건에 맞는 기사 "+number(selected.length)+"건"),
+      el("span","전체 저장 "+number(rssNews.visible_article_count)+"건 · "+number(s.page)+"/"+number(pages)+"쪽")));
+    if(!shown.length){root.append(el("p","조건에 맞는 기사가 없습니다. 검색어나 날짜 조건을 변경하세요.","bct-news-limited"));return;}
+    const list=el("div",null,"bct-news-article-list");
+    for(const item of shown){
+      const article=el("article",null,"bct-news-article");
+      article.append(add(el("div",null,"bct-news-tags"),
+        el("span",item.source,"bct-news-source"),
+        item.is_new?el("span","이번 수집 신규","bct-news-new"):null,
+        el("span","제목·요약 수집 / 병목 미검증","bct-news-unverified")));
+      const title=el("h3",item.title);
+      article.append(title);
+      if(item.snippet)article.append(el("p",item.snippet,"bct-news-snippet"));
+      article.append(add(el("div",null,"bct-news-article-foot"),
+        el("span","발행 "+(item.published_at?date(item.published_at):"미확인")),
+        el("span","수집 "+date(item.collected_at)),
+        item.url?external("원문 기사 열기",item.url,"bct-news-source-link"):
+          el("span","출처 링크 안전성 확인 대기")));
+      list.append(article);
+    }
+    root.append(list);
+    if(pages>1){
+      const pg=el("div",null,"bct-news-pagination");
+      const prev=btn("이전 페이지",()=>{s.page--;renderNewsResults();},"button");
+      prev.disabled=s.page===1;
+      const next=btn("다음 페이지",()=>{s.page++;renderNewsResults();},"button primary");
+      next.disabled=s.page===pages;
+      pg.append(prev,el("span",number(s.page)+" / "+number(pages)+"쪽"),next);
+      root.append(pg);
+    }
+  }
+
   function boardStatus(icon,label,status,tone,note){
     const item=el("div",null,"bct-process-item");
     const symbol=el("span",icon,"bct-process-icon");symbol.setAttribute("aria-hidden","true");
@@ -338,6 +513,7 @@
       el("p","주가 추천이 아니라, 실제 저장된 산업별 근거를 찾아보는 화면입니다."),
       el("span","확정된 미래 병목 "+number(future)+"건 · 근거 기록이 많아도 공급 부족 확정은 아닙니다.","bct-promise"));
     page.append(title);
+    page.append(rssNewsTeaser());
 
     const columns=el("div",null,"bct-rank-columns");
     const rankingPanel=el("section",null,"bct-first-panel");
