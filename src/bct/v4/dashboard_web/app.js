@@ -6,6 +6,217 @@
   const number = n => n == null ? "미확인" : Number(n).toLocaleString("ko-KR");
   const known = v => v != null && v !== "" && v !== "UNKNOWN";
   const value = v => known(v) ? String(v) : "아직 확인되지 않음";
+  // Presentation aliases only. Source names, IDs, quotes and ranking inputs
+  // stay untouched; the original name remains available in the detail view.
+  const productLabelsKo = Object.freeze({
+    "a320 family": "A320 항공기 계열",
+    "a350f": "A350F · 원문 모델명",
+    "a350f freighter": "A350F 화물기",
+    "agent studio platform": "에이전트 스튜디오 플랫폼",
+    "agx": "AGX 항로 서비스",
+    "ai agent builder": "인공지능 작업 도우미 제작 도구",
+    "ai inference gpu": "인공지능 실행용 그래픽 처리 장치",
+    "ai processor": "인공지능 처리 반도체",
+    "ai processors": "인공지능 처리 반도체",
+    "ai-agent": "인공지능 작업 도우미",
+    "air": "에이아이알 · 원문 약어",
+    "airbus": "에어버스",
+    "airbus family": "에어버스 계열",
+    "airbus h160": "에어버스 H160",
+    "american nuclear energy": "아메리칸 뉴클리어 에너지",
+    "batteries": "배터리",
+    "battery electric": "배터리 전기 구동",
+    "battery materials": "배터리 소재",
+    "biosimilar": "바이오시밀러 · 기존 바이오의약품과 유사한 약",
+    "blackwell ultra": "블랙웰 울트라",
+    "burn-in modules": "불량 선별용 가속 노화 시험 장치",
+    "bwrx-300": "BWRX-300 · 원문 모델명",
+    "call": "전화 설명회 · 제품명 여부 확인 필요",
+    "cassiopée": "카시오페",
+    "ccl stage 3": "CCL 3단계",
+    "chatgpt": "챗지피티",
+    "claude": "클로드",
+    "coal-fired power plants": "석탄 화력발전소",
+    "commercial crude oil": "상업용 원유",
+    "competitor aircraft": "경쟁사 항공기",
+    "consteel ® electric arc furnace": "콘스틸 전기로 · 전기로 금속을 녹이는 설비",
+    "consumables": "소모품",
+    "conventional hydroelectric": "일반 수력발전",
+    "converse gold": "컨버스 금광 개발 사업",
+    "copilot": "코파일럿",
+    "corpus christi lng expansion": "코퍼스 크리스티 액화천연가스 시설 확장",
+    "crescent island": "크레센트 아일랜드",
+    "crude oil": "원유",
+    "cybersecurity gateways": "사이버 보안 연결 장치",
+    "data center optical interconnects": "데이터센터의 빛을 이용한 통신 연결",
+    "device-specific sockets": "기기별 전용 연결 소켓",
+    "diesel": "경유",
+    "direct feed system": "직접 공급 시스템",
+    "distillate": "증류유 · 원유를 증류해 얻은 기름",
+    "distillate fuel": "증류 연료 · 경유·난방유 등",
+    "distillate fuel oil": "증류 연료유 · 경유·난방유 등",
+    "distributed energy resources": "분산 에너지 자원 · 여러 곳의 발전·저장 설비",
+    "drones": "드론",
+    "earnings press release": "실적 발표 보도자료",
+    "ecnoglutide": "에크노글루타이드",
+    "electric generating capacity": "발전 능력",
+    "electric motorcycle": "전기 오토바이",
+    "electric trucks": "전기 트럭",
+    "electric vehicle": "전기차",
+    "electric vehicles": "전기차",
+    "electricity": "전력",
+    "elibrary": "전자자료실",
+    "emergency exchange": "비상 교환",
+    "employee share ownership plan": "직원 주식 소유 제도",
+    "emulsions": "유화액 · 서로 섞이지 않는 액체를 분산시킨 혼합물",
+    "engineering academy": "공학 교육 과정",
+    "equity-based compensation plans": "주식 기반 보상 제도",
+    "european launcher challenge": "유럽 발사체 공모 사업",
+    "expanded mobility tactical truck": "기동성 확장 전술 트럭",
+    "f126": "F126 · 원문 모델명",
+    "falcon shores": "팰컨 쇼어스",
+    "federal tax credits": "연방 세액공제",
+    "ferc.ai": "퍼크 에이아이",
+    "fm1": "FM1 항로 서비스",
+    "foams": "거품 재료",
+    "fox north energy center": "폭스 노스 에너지 센터",
+    "fox wlbi test cell": "폭스 웨이퍼 불량 선별 시험 구획",
+    "fox-xp": "폭스 엑스피",
+    "fox-xp tm multi-wafer test and burn-in system": "폭스 엑스피 다중 웨이퍼 검사·가속 노화 시험 장비",
+    "fox-xp ® wafer-level burn-in": "폭스 엑스피 웨이퍼 상태 가속 노화 시험",
+    "fox-xp ® wafer-level burn-in (wlbi) system": "폭스 엑스피 웨이퍼 상태 가속 노화 시험 장비",
+    "frigates": "호위함",
+    "fuel supplies": "연료 공급",
+    "g302": "G302 네트워크 연결 장치",
+    "gas": "가스",
+    "gas-fired facility": "가스 연소 시설",
+    "gasoline": "휘발유",
+    "ge vernova": "지이 버노바",
+    "ge vernova 9f gas turbines": "지이 버노바 9F 가스터빈",
+    "glp-1": "GLP-1 계열 의약품",
+    "gpu d-series": "그래픽 처리 장치 D 계열",
+    "grid": "전력망",
+    "grid capacity": "전력망 수용 능력",
+    "h145": "H145 · 원문 모델명",
+    "h160": "H160 · 원문 모델명",
+    "h215ms": "H215M 계열",
+    "h225ms": "H225M 계열",
+    "hugh brinson pipeline": "휴 브린슨 가스관",
+    "hybrid electric": "하이브리드 전기 구동",
+    "iar-330 puma": "IAR-330 푸마",
+    "integrated fires protection capability": "통합 화력 방어 능력",
+    "interceptor": "요격 장비",
+    "isd": "아이에스디 · 원문 약어",
+    "jebel ali": "제벨알리",
+    "jet fuel": "항공유",
+    "khor fakkan": "코르파칸",
+    "landfill gas": "매립지에서 발생하는 가스",
+    "launch service supply": "발사 서비스 공급",
+    "launchers": "발사체·발사 장치",
+    "leopold i": "레오폴트 1세",
+    "light tactical drone system": "경량 전술 드론 체계",
+    "light-duty vehicles": "경량 차량",
+    "liquefied natural gas": "액화천연가스",
+    "liquid fuels": "액체 연료",
+    "lng": "액화천연가스",
+    "louise-marie": "루이즈마리",
+    "manganese sulphate": "황산망간",
+    "megacharger": "메가차저",
+    "meko a-200 deu": "메코 A-200 DEU",
+    "mi455x": "MI455X · 원문 모델명",
+    "munitions": "탄약·군수품",
+    "natural gas": "천연가스",
+    "natural gas fired combined cycle": "천연가스 복합발전",
+    "natural gas fired combustion turbine": "천연가스 연소 터빈",
+    "natural gas internal combustion engine": "천연가스 엔진",
+    "natural gas steam turbine": "천연가스 증기터빈",
+    "natural gas-fired power plant": "천연가스 발전소",
+    "networking products": "통신망 연결 제품",
+    "new clean vehicle credit": "신규 친환경차 세액공제",
+    "next-generation advanced reactors": "차세대 첨단 원자로",
+    "next-generation devices": "차세대 기기",
+    "nhon trach 3&4 power plant": "년짝 3·4호 발전소",
+    "nist internal report": "미국 표준기술연구소 내부 보고서",
+    "nuclear fuel": "핵연료",
+    "nuclear plants": "원자력발전소",
+    "offshore wind turbine": "해상 풍력발전기",
+    "oil": "석유",
+    "onshore wind turbine": "육상 풍력발전기",
+    "optical connectivity solutions": "빛을 이용한 통신 연결 기술",
+    "optical i/o architectures": "빛을 이용한 데이터 입출력 구조",
+    "order": "주문 · 문맥 검토 필요",
+    "other gases": "기타 가스",
+    "other oils": "기타 석유류",
+    "paracom": "파라콤",
+    "paracom gateways": "파라콤 연결 장치",
+    "patriot missiles": "패트리엇 미사일",
+    "payload": "탑재체 · 기체에 실리는 장비",
+    "perjeta": "퍼제타",
+    "petroleum liquids": "액체 석유 연료",
+    "plant of the year": "올해의 발전소 · 수상 명칭",
+    "ponte vecchio": "폰테베키오",
+    "powders": "분말",
+    "preliminary monthly electric generator inventory": "월별 발전설비 목록 잠정치",
+    "press releases": "보도자료",
+    "product slate": "생산 제품 구성",
+    "production software enhancements": "생산 소프트웨어 개선",
+    "propane": "프로판",
+    "puma": "푸마",
+    "qshield": "큐실드",
+    "qualified commercial clean vehicle credit": "요건을 충족하는 상업용 친환경차 세액공제",
+    "quantum science": "양자과학",
+    "replay": "다시보기 · 제품명 여부 확인 필요",
+    "residual fuel oil": "잔사 연료유 · 중유",
+    "rialto bridge": "리알토 브리지",
+    "roadster": "로드스터",
+    "rotor life extension": "회전자 수명 연장",
+    "s250 platform": "S250 플랫폼",
+    "satellite solution": "위성 기술·서비스",
+    "semiconductor devices": "반도체 소자 · 전자부품",
+    "sensors": "센서",
+    "sentinel-3 series": "센티넬 3 계열",
+    "sentinel-3c": "센티넬 3C",
+    "share buyback programme": "자사주 매입 계획",
+    "silicon one a100l": "실리콘 원 A100L",
+    "silicon one g300": "실리콘 원 G300",
+    "silicon photonic integrated circuits": "실리콘 광통신 집적회로",
+    "silicon photonics": "실리콘을 이용한 광통신 기술",
+    "silicon photonics integrated circuits": "실리콘 광통신 집적회로",
+    "simple-cycle natural gas": "단순 가스터빈 방식의 천연가스 발전",
+    "smart solar farms": "지능형 태양광 발전단지",
+    "software": "소프트웨어",
+    "solar cells": "태양전지",
+    "solar photovoltaic": "태양광 발전",
+    "sonoma": "소노마",
+    "sonoma systems": "소노마 시스템",
+    "sonoma ultra-high-power systems": "소노마 초고출력 시스템",
+    "state energy data system": "미국 주별 에너지 통계 시스템",
+    "steam turbines": "증기터빈",
+    "stem programme": "과학·기술·공학·수학 교육 과정",
+    "strategic petroleum reserve exchange": "전략비축유 교환",
+    "super intelligence": "초지능",
+    "supplementary financial information": "추가 재무 정보",
+    "supply chain traceability principles": "공급망 이력 추적 원칙",
+    "systems": "시스템 · 세부 대상 확인 필요",
+    "targeting systems": "표적 지정 시스템",
+    "tissue bank specimens": "조직은행 검체",
+    "top gas plant": "최우수 가스발전소 · 수상 명칭",
+    "u050 capa-x": "U050 카파엑스",
+    "u740-valkyrie": "U740 발키리",
+    "ultra-dense small form factor": "고밀도 소형 규격",
+    "uncrewed collaborative combat aircraft (cca)": "무인 협동 전투 항공기",
+    "usfp": "USFP 광통신 모듈 규격",
+    "usfp 400g optics": "USFP 400G 광통신 모듈",
+    "waferpak": "웨이퍼팩",
+    "waferpak™ contactors": "웨이퍼팩 접촉 검사 장치",
+    "weapons": "무기",
+    "wlbi": "웨이퍼 상태 가속 노화 시험",
+    "wood/wood waste biomass": "목재·폐목재 바이오매스 연료"
+});
+  const productLabel = raw => {
+    const key=String(raw??"").toLowerCase().trim().replace(/\s+/g," ");
+    return Object.hasOwn(productLabelsKo,key)?productLabelsKo[key]:value(raw);
+  };
   const date = v => {
     if (!known(v) || Number.isNaN(new Date(v).getTime())) return "시각 미확인";
     if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return v.replaceAll("-", ".");
@@ -16,7 +227,7 @@
   const link = (text, href, cls="text-link") => { const n=el("a",text,cls); n.href=href; return n; };
   const external = (text, raw) => { try { const u=new URL(raw); if(!["http:","https:"].includes(u.protocol)||u.username||u.password)return null; const n=link(text,u.href);n.target="_blank";n.rel="noopener noreferrer";return n; } catch {return null;} };
   const displayStage = s => ({S1:"변화 신호 · S1",S2:"대상 구체화 · S2",S3:"공급 공백 근거 · S3"}[s]||"단계 판정 전");
-  const detailButton = (r, text="근거 보기") => { const b=btn(text,()=>openDetail(r.id),"button small");b.setAttribute("aria-label",`${r.product} ${text}`);b.dataset.evidence=r.id;return b; };
+  const detailButton = (r, text="근거 보기") => { const b=btn(text,()=>openDetail(r.id),"button small");b.setAttribute("aria-label",`${productLabel(r.product)} ${text}`);b.dataset.evidence=r.id;return b; };
   const panels = {
     overview:["한눈에 보기","자료가 얼마나 읽혔는지, 어떤 변화가 확인됐는지 살펴봅니다."],
     candidates:["미래 병목 후보","향후 12~36개월의 공급 부족 후보와 아직 검토 중인 변화를 구분합니다."],
@@ -116,10 +327,10 @@
     const current=boardRankRows();
     const snapshot=data.operating_research||null;
     const counts=snapshot&&snapshot.counts||{};
-    const generation=snapshot&&snapshot.generation||{};
     const collection=data.collection_observation||null;
     const observed=data.workflow_observation&&data.workflow_observation.workflows||{};
     const lastPublished=data.snapshot_generated_at||data.data_at;
+    const lastStored=snapshot?.clocks?.persisted_at;
     const future=Object.values(data.counts.future_candidates||{}).reduce((sum,n)=>sum+(Number(n)||0),0);
     const page=el("div",null,"bct-first-page");
     const title=el("header",null,"bct-page-title");
@@ -212,10 +423,10 @@
         line.append(el("span",r.published_at?date(r.published_at):"날짜 미확인","bct-evidence-date"),
                     el("span",boardKinds[r.category],"bct-kind "+r.category));
         const summary=el("div",null,"bct-evidence-description");
-        summary.append(el("strong",r.product),el("p",r.role_label+" · "+({reviewed:"원문 검토 · 사람 검증 전",structured:"공식 표 기록 · 실제 공급 확인 전",discovery:"제품 이름 탐색 · 수급 사실 확인 전"}[r.category]||"검토 대기")));
+        summary.append(el("strong",productLabel(r.product)),el("p",r.role_label+" · "+({reviewed:"원문 검토 · 사람 검증 전",structured:"공식 표 기록 · 실제 공급 확인 전",discovery:"제품 이름 탐색 · 수급 사실 확인 전"}[r.category]||"검토 대기")));
         line.append(summary);
         const show=btn("원문 보기",()=>openDetail(r.id),"bct-evidence-open");
-        show.setAttribute("aria-label",r.product+" 원문 근거 상세 보기");
+        show.setAttribute("aria-label",productLabel(r.product)+" 원문 근거 상세 보기");
         line.append(show);list.append(line);
       }
       detailBody.append(list);
@@ -246,7 +457,7 @@
     const cpuSuccess=cpu&&cpu.conclusion==="success";
     const cpuLabel=cpuSuccess?"최근 예약 성공":cpu&&cpu.conclusion==="failure"?"최근 예약 실패":cpu?"예약 상태 확인 필요":"예약 기록 없음";
     stripe.append(boardStatus("▣","문서 자동 읽기",cpuLabel,cpuSuccess?"good":cpu&&cpu.conclusion==="failure"?"bad":"unknown",
-      generation.producer_run_id?"최근 영속 저장 "+generation.producer_run_id+" · 수동/예약 별도":"저장 실행을 확인할 수 없습니다."));
+      known(lastStored)?"마지막 결과 저장 "+date(lastStored)+" · 예약 결과와 별도":"결과 저장 시각을 확인할 수 없습니다."));
     stripe.append(boardStatus("⌕","판단 근거 검토",counts.review_pending_windows>0?"검토 "+number(counts.review_pending_windows)+"개 대기":"검토 기록 확인 필요",
       counts.review_pending_windows>0?"warn":"unknown","인용 확인과 공급 부족 판단은 서로 다른 단계입니다."));
     stripe.append(boardStatus("▣","화면 최신화",data.publication&&data.publication.automatic_deployment==="GITHUB_PAGES_ACTIONS"?"공개 화면 반영":"공개 상태 미확인",
@@ -258,12 +469,11 @@
     metrics.append(add(el("div",null,"bct-panel-title"),el("span","▥","bct-panel-icon"),el("h2","지금 상태")));
     const metricsGrid=el("div",null,"bct-metrics-grid");
     metricsGrid.append(
-      boardMetric("미판독 창",known(counts.pending_windows)?number(counts.pending_windows):"미확인","원문 확보된 입력 기준"),
+      boardMetric("아직 읽지 못한 구간",known(counts.pending_windows)?number(counts.pending_windows):"미확인","확보한 원문을 나눈 구간 기준"),
       boardMetric("원문 미확보",known(counts.held_inputs)?number(counts.held_inputs)+"건":"미확인","아직 읽을 본문이 없는 항목"),
-      boardMetric("의미 검토 대기",known(counts.review_pending_windows)?number(counts.review_pending_windows)+"개":"미확인","병목으로 확정된 건수 아님"),
+      boardMetric("내용 검토 대기",known(counts.review_pending_windows)?number(counts.review_pending_windows)+"개":"미확인","병목으로 확정된 건수 아님"),
       boardMetric("마지막 화면 반영",date(lastPublished),"실제 게시된 자료 기준"),
-      boardMetric("최근 판독 저장",generation.producer_run_id?String(generation.producer_run_id):"미확인",
-        generation.RSS_run_id?"예약 연결 기록":"예약 성공 여부 별도 확인"));
+      boardMetric("최근 판독 저장",date(lastStored),"결과 저장 완료 시각 · 한국 시간"));
     metrics.append(metricsGrid);page.append(metrics);
 
     const help=el("section",null,"bct-help-strip");
@@ -284,7 +494,7 @@
     const columns=el("div",null,"two-col");
     const signals=panel("근거가 있는 변화부터","과거 연구에서 검토된 사건 · 미래 병목 확정 아님",link("모두 보기 →","#candidates"));
     const choices=[];const seen=new Set();for(const r of data.records.filter(r=>r.category==="reviewed")){if(!seen.has(r.industry)){choices.push(r);seen.add(r.industry);}if(choices.length===4)break;}
-    const list=el("div",null,"mini-list");for(const r of choices){const a=btn("↗",()=>openDetail(r.id),"icon-button");a.setAttribute("aria-label",`${r.product} 근거 열기`);add(list,add(el("div",null,"mini-row"),el("div",r.role.startsWith("DEMAND")?"↗":r.role==="RELIEF"?"↘":"⌁","mini-icon"),add(el("div"),el("b",r.product),el("p",`${r.industry} · ${r.role_label} · ${r.actuality}`)),a));}
+    const list=el("div",null,"mini-list");for(const r of choices){const a=btn("↗",()=>openDetail(r.id),"icon-button");a.setAttribute("aria-label",`${productLabel(r.product)} 근거 열기`);add(list,add(el("div",null,"mini-row"),el("div",r.role.startsWith("DEMAND")?"↗":r.role==="RELIEF"?"↘":"⌁","mini-icon"),add(el("div"),el("b",productLabel(r.product)),el("p",`${r.industry} · ${r.role_label} · ${r.actuality}`)),a));}
     signals.append(list);columns.append(signals);
     const flow=panel(data.operating_research?"과거 자료 판독 범위":"자료는 어디까지 읽혔나요?",data.operating_research?`고정 연구 기준 ${date(data.historical_data_at)} · 신규 CPU 상태와 별도`:"이번 확보량과 전체 판독 범위를 나누어 봅니다.");
     const f=el("div",null,"flow");[[c.discovered_urls,"발견 URL"],[c.captured,"원본 확보"],[c.body_nonempty,"본문 있음"]].forEach(([n,t],i)=>{if(i)f.append(el("span","›","flow-arrow"));f.append(add(el("div",null,"flow-item"),el("strong",number(n)),el("span",t)));});flow.append(f);
@@ -319,21 +529,22 @@
   }
   function renderList(page){
     const s=state[page],root=$(`${page}-list`);if(!root)return;
-    const q=s.query.trim().toLocaleLowerCase();const all=recordsFor(page).filter(r=>(page!=="candidates"||r.category==="reviewed")&&(!s.category||r.category===s.category)&&(!s.industry||r.industry===s.industry)&&(!s.role||r.role===s.role)&&(!q||`${r.product} ${r.industry}`.toLocaleLowerCase().includes(q)));
+    const q=s.query.trim().toLocaleLowerCase();const all=recordsFor(page).filter(r=>(page!=="candidates"||r.category==="reviewed")&&(!s.category||r.category===s.category)&&(!s.industry||r.industry===s.industry)&&(!s.role||r.role===s.role)&&(!q||`${productLabel(r.product)} ${r.product} ${r.industry}`.toLocaleLowerCase().includes(q)));
     const pages=Math.max(1,Math.ceil(all.length/12));s.page=Math.min(s.page,pages);const rows=all.slice((s.page-1)*12,s.page*12);
     root.replaceChildren(add(el("div",null,"list-summary"),add(el("span"),el("b",`${number(all.length)}건`),document.createTextNode("의 기록")),el("span",page==="candidates"?"예상 시기는 원문으로 확인된 경우만 표시":"인용 위치 검증과 의미 검증은 별개입니다")));
     if(!rows.length){root.append(empty("조건에 맞는 기록이 없습니다","검색어나 산업·역할 조건을 바꿔 보세요."));return;}
     if(page==="candidates"){
       const wrap=el("div",null,"panel table-panel"),table=el("table",null,"research-table");const tr=el("tr");["산업 · 제품","수요·공급 변화","예상 시기","검증 상태","근거"].forEach(t=>tr.append(el("th",t)));table.append(add(el("thead"),tr));const body=el("tbody");
-      for(const r of rows){const tr=el("tr");const product=add(el("td",null,"product-cell"),el("span",r.product,"product-title"),el("span",r.industry,"product-meta"));const role=add(el("td"),el("span",r.role_label,"cell-main"),badge(r.actuality,r.actuality==="계획"?"amber":""));role.dataset.label="변화";const time=add(el("td"),el("span",r.period,"cell-main"),el("span",`공개 ${date(r.published_at)}`,"product-meta"));time.dataset.label="예상 시기";const status=add(el("td"),badge(displayStage(r.stage),r.stage==="S1"?"green":""),el("p","원문 AI 검토 · 사람 검증 전","product-meta"));status.dataset.label="검증 상태";tr.append(product,role,time,status,add(el("td"),detailButton(r)));body.append(tr);}table.append(body);wrap.append(table);root.append(wrap);
+      for(const r of rows){const tr=el("tr");const product=add(el("td",null,"product-cell"),el("span",productLabel(r.product),"product-title"),el("span",r.industry,"product-meta"));const role=add(el("td"),el("span",r.role_label,"cell-main"),badge(r.actuality,r.actuality==="계획"?"amber":""));role.dataset.label="변화";const time=add(el("td"),el("span",r.period,"cell-main"),el("span",`공개 ${date(r.published_at)}`,"product-meta"));time.dataset.label="예상 시기";const status=add(el("td"),badge(displayStage(r.stage),r.stage==="S1"?"green":""),el("p","원문 AI 검토 · 사람 검증 전","product-meta"));status.dataset.label="검증 상태";tr.append(product,role,time,status,add(el("td"),detailButton(r)));body.append(tr);}table.append(body);wrap.append(table);root.append(wrap);
     }else{
-      const grid=el("div",null,"evidence-grid");for(const r of rows){const card=el("article",null,"evidence-card");add(card,add(el("div",null,"card-meta"),badge({reviewed:"별도 원문 검토",structured:"공식 표의 변화",discovery:"제품 탐색 · 검토 대기",cpu_product:"CPU 제품 표기 · 의미 검증 전",reported:"보도 검토 · 공식 1차 확인 전"}[r.category],r.category==="reviewed"?"green":r.category==="structured"?"blue":"amber"),el("span",r.industry)),el("h3",r.product),el("p",`${r.role_label} · ${r.actuality}`),add(el("div",null,"card-bottom"),el("span",known(r.published_at)?`공개 ${date(r.published_at)}`:"공개일 확인 필요"),detailButton(r,"원문 대조")));grid.append(card);}root.append(grid);
+      const grid=el("div",null,"evidence-grid");for(const r of rows){const card=el("article",null,"evidence-card");add(card,add(el("div",null,"card-meta"),badge({reviewed:"별도 원문 검토",structured:"공식 표의 변화",discovery:"제품 탐색 · 검토 대기",cpu_product:"CPU 제품 표기 · 의미 검증 전",reported:"보도 검토 · 공식 1차 확인 전"}[r.category],r.category==="reviewed"?"green":r.category==="structured"?"blue":"amber"),el("span",r.industry)),el("h3",productLabel(r.product)),el("p",`${r.role_label} · ${r.actuality}`),add(el("div",null,"card-bottom"),el("span",known(r.published_at)?`공개 ${date(r.published_at)}`:"공개일 확인 필요"),detailButton(r,"원문 대조")));grid.append(card);}root.append(grid);
     }
     if(pages>1){const p=el("div",null,"pagination");const prev=btn("← 이전",()=>{s.page--;renderList(page);});prev.disabled=s.page===1;const next=btn("다음 →",()=>{s.page++;renderList(page);});next.disabled=s.page===pages;p.append(prev,el("span",`${s.page} / ${pages} 페이지`),next);root.append(p);}
   }
   const stateLabel=s=>({UNREAD:"미판독",PARTIAL:"부분 판독",FAILED:"처리 실패",SOURCE_VERIFICATION_PENDING:"원문 검증 대기",GRAPH_CONTEXT_PENDING:"독립 근거 문맥 대기",READ_EVIDENCE_HOLD:"판독 후 근거 보류",NO_VALIDATED_EVENT:"검증된 사건 없음",RESEARCH_FORECAST_REVIEW:"연구 후보 검토",READ_COMPLETE:"판독 범위 완료"}[s]||s);
-  function workflowLabel(row){if(!row)return "상태 미확인";return `${row.conclusion||row.status} · 실행 ${row.id}`;}
-  function cpuWorkflowLabel(row){if(!row)return "작업 상태 미확인";return `판독 작업 ${row.processing_jobs?.research||"미확인"} · 저장 작업 ${row.processing_jobs?.publish||"미확인"}`;}
+  const workflowStateLabel=s=>({success:"성공",failure:"실패",skipped:"실행 안 함",cancelled:"취소됨",timed_out:"시간 초과",queued:"대기 중",in_progress:"실행 중",completed:"종료됨",waiting:"대기 중",pending:"대기 중",action_required:"확인 필요",neutral:"판정 없음",stale:"오래된 실행"}[s]||"상태 미확인");
+  function workflowLabel(row){if(!row)return "상태 미확인";return `${workflowStateLabel(row.conclusion||row.status)} · 실행 ${row.id}`;}
+  function cpuWorkflowLabel(row){if(!row)return "작업 상태 미확인";return `판독 작업 ${workflowStateLabel(row.processing_jobs?.research)} · 저장 작업 ${workflowStateLabel(row.processing_jobs?.publish)}`;}
   function operatingSummary(){
     const r=data.operating_research,c=data.collection_observation,p=panel("현재 자동화 관측","수집 기록과 CPU 저장 세대는 각자의 실행 번호로 구분합니다.",link("처리·보류 상태 보기 →","#automation"));
     p.append(add(el("div",null,"stats-grid"),stat("최근 발견 URL",c?.counts.new_URLs,"마지막 수집 관측 · CPU 판독 수와 별도","▤"),stat("이번 저장 세대 신규 판독",r?.counts.new_CPU_windows,"실제 모델 판독 시도 창 · 검증 성공과 별도","◫","창"),stat("검증 성공 창",r?.counts.successful_new_CPU_windows,"실제 성공한 새 창만 집계","✓","창"),stat("미판독 대기 창",r?.counts.pending_windows,"저장된 CPU 대기열 기준","◷","창")),el("p",`최근 수집 ${date(c?.collection_started_at)} · 실제 판독 시도 ${date(r?.clocks.last_read_at)} · 영속 저장 ${date(r?.clocks.persisted_at)}. 과거 상세 연구 기준 ${date(data.historical_data_at)}는 별도 보존합니다.` ,"section-note"));content.append(p);
@@ -382,10 +593,11 @@
   async function openDetail(id){
     const token=++detailRequest;const dialog=$("detail"),body=$("detail-body");body.replaceChildren(el("h2","근거를 읽고 있습니다","loading"));if(!dialog.open)dialog.showModal();
     try{const r=await request(`/api/evidence/${id}`);if(token!==detailRequest||!dialog.open)return;body.replaceChildren();
-      const title=el("h2",r.product);title.id="detail-title";body.append(title,add(el("div",null,"detail-status"),badge(r.status,r.category==="reviewed"?"green":"amber"),badge(displayStage(r.stage)),badge(r.actuality)));
+      const title=el("h2",productLabel(r.product));title.id="detail-title";body.append(title,add(el("div",null,"detail-status"),badge(r.status,r.category==="reviewed"?"green":"amber"),badge(displayStage(r.stage)),badge(r.actuality)));
+      const originalName=el("details");originalName.append(el("summary","원문에 적힌 제품명 확인"),el("p",value(r.product)));body.append(originalName);
       if(r.category==="discovery"||r.category==="cpu_product")body.append(el("p","제품명과 역할은 CPU가 제안한 값입니다. 수요·공급 사실로 채택하지 않은 탐색 기록입니다.","notice"));
-      body.append(kv([["산업",r.industry],["제품",r.product],["제품 규격",r.target.specification],["지역",r.target.region],["고객",r.target.customer_group],["공급자 범위",r.target.supply_pool],["예상 병목 시기",r.period],["고객 필요 시기",r.need_time],["공급 준비 시기",r.ready_time],["근거의 대상 기간",r.evidence_period]]));
-      body.append(el("p",`${r.industry_basis} 제품·규격·지역·고객·공급자 이름은 저장된 원문 표기를 유지합니다.`,"caption"));
+      body.append(kv([["산업",r.industry],["제품",productLabel(r.product)],["제품 규격",r.target.specification],["지역",r.target.region],["고객",r.target.customer_group],["공급자 범위",r.target.supply_pool],["예상 병목 시기",r.period],["고객 필요 시기",r.need_time],["공급 준비 시기",r.ready_time],["근거의 대상 기간",r.evidence_period]]));
+      body.append(el("p",`${r.industry_basis} 제품명은 읽기 쉬운 한글 표시명을 함께 사용합니다. 원문 제품명·규격·지역·고객·공급자·인용 내용은 바꾸지 않고 보존합니다.`,"caption"));
       const judgement=el("section",null,"detail-section");judgement.append(el("h3","수요·공급 판단"),el("p",`이 기록의 분류: ${r.role_label} · ${r.actuality}`,"muted"),el("p",r.counterpart_note,"section-note"));
       const fields=r.fields||{},quantity=fields.quantity,unit=fields.unit;if(quantity||unit)judgement.append(kv([["수량 원문",quantity?.surface],["단위 원문",unit?.surface]]));body.append(judgement);
       const missing=el("section",null,"detail-section");missing.append(el("h3","아직 부족한 근거"));const ul=el("ul",null,"missing-list");r.missing.forEach(t=>ul.append(el("li",t)));missing.append(ul);body.append(missing);
