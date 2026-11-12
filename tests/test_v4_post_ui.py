@@ -184,7 +184,8 @@ def test_original_frozen_UI_copy_and_evidence_files_are_preserved():
     # Approved full automation recovery evolves these delivery/deployment
     # workflows. Retain their original exact bytes; focused current workflow
     # tests verify the new handoff contracts without editing the old manifest.
-    evolved = {"src/bct/v4/dashboard_web/app.js": "app.js",
+    evolved = {"src/bct/v4/dashboard_web/index.html": "index.html",
+               "src/bct/v4/dashboard_web/app.js": "app.js",
                "src/bct/v4/dashboard_web/style.css": "style.css",
                ".github/workflows/rss-ai.yml": "rss-ai.yml",
                ".github/workflows/review-lead-shadow.yml": "review-lead-shadow.yml",
