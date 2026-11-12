@@ -212,7 +212,7 @@
         line.append(el("span",r.published_at?date(r.published_at):"날짜 미확인","bct-evidence-date"),
                     el("span",boardKinds[r.category],"bct-kind "+r.category));
         const summary=el("div",null,"bct-evidence-description");
-        summary.append(el("strong",r.product),el("p",r.role_label+" · "+r.status));
+        summary.append(el("strong",r.product),el("p",r.role_label+" · "+({reviewed:"원문 검토 · 사람 검증 전",structured:"공식 표 기록 · 실제 공급 확인 전",discovery:"제품 이름 탐색 · 수급 사실 확인 전"}[r.category]||"검토 대기")));
         line.append(summary);
         const show=btn("원문 보기",()=>openDetail(r.id),"bct-evidence-open");
         show.setAttribute("aria-label",r.product+" 원문 근거 상세 보기");
@@ -262,7 +262,7 @@
       boardMetric("원문 미확보",known(counts.held_inputs)?number(counts.held_inputs)+"건":"미확인","아직 읽을 본문이 없는 항목"),
       boardMetric("의미 검토 대기",known(counts.review_pending_windows)?number(counts.review_pending_windows)+"개":"미확인","병목으로 확정된 건수 아님"),
       boardMetric("마지막 화면 반영",date(lastPublished),"실제 게시된 자료 기준"),
-      boardMetric("최근 CPU 저장",generation.producer_run_id?String(generation.producer_run_id):"미확인",
+      boardMetric("최근 판독 저장",generation.producer_run_id?String(generation.producer_run_id):"미확인",
         generation.RSS_run_id?"예약 연결 기록":"예약 성공 여부 별도 확인"));
     metrics.append(metricsGrid);page.append(metrics);
 
