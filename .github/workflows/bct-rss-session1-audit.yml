@@ -23,16 +23,22 @@ jobs:
         run: |
           set -euo pipefail
           git fetch --no-tags --depth=1 origin \
-            refs/heads/data:refs/remotes/origin/data \
-            refs/heads/future-bottleneck-data:refs/remotes/origin/future-bottleneck-data
+            refs/heads/data:refs/remotes/origin/data
           DATA_SHA=$(git rev-parse refs/remotes/origin/data)
-          FUTURE_SHA=$(git rev-parse refs/remotes/origin/future-bottleneck-data)
+          FUTURE_SHA=$(git ls-remote origin refs/heads/future-bottleneck-data | cut -f1)
+          test -n "$DATA_SHA" && test -n "$FUTURE_SHA"
           echo "Pinned data $DATA_SHA, sidecar $FUTURE_SHA"
           mkdir -p "$RUNNER_TEMP/session1-input" "$RUNNER_TEMP/session1-output"
           git show "$DATA_SHA:state.json" > "$RUNNER_TEMP/session1-input/state.json"
           git show "$DATA_SHA:canonical.sqlite3" > "$RUNNER_TEMP/session1-input/canonical.sqlite3"
           git show "$DATA_SHA:canonical.previous.sqlite3" > "$RUNNER_TEMP/session1-input/previous.sqlite3"
-          git show "$FUTURE_SHA:future-candidates.json" > "$RUNNER_TEMP/session1-input/future-candidates.json"
+          python - "$FUTURE_SHA" "$RUNNER_TEMP/session1-input/future-candidates.json" <<'PY'
+          import sys, urllib.request
+          sha, destination = sys.argv[1:]
+          url = "https://raw.githubusercontent.com/irewon1-lgtm/bottleneck-control-tower/" + sha + "/future-candidates.json"
+          with urllib.request.urlopen(url, timeout=60) as response, open(destination, "wb") as output:
+              output.write(response.read())
+          PY
           python tools/bct_rss_session1_audit.py \
             --db "$RUNNER_TEMP/session1-input/canonical.sqlite3" \
             --previous-db "$RUNNER_TEMP/session1-input/previous.sqlite3" \
