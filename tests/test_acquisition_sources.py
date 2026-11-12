@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import stat
 import zipfile
+from types import SimpleNamespace
 
 import pytest
 
