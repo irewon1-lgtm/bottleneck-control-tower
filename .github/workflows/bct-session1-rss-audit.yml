@@ -1,0 +1,66 @@
+name: BCT RSS Session 1 - Read Only Inventory
+on:
+  push:
+    branches:
+      - audit/bct-v4-rss-session1-20261113
+    paths:
+      - .github/workflows/bct-session1-rss-audit.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: bct-session1-audit-read-only
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      DATA_SHA: 75e2705e1381d9a2a469d4f22360f2fb95fa820b
+      FUTURE_SHA: e8acd5e91f9f972974b5027a36056651098da71f
+      MAIN_SOURCE_SHA: 7fc96389c4d91d99b582a8b0fa2006a8d54b3860
+    steps:
+      - name: Read only checkout of isolated audit branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Fetch pinned historical source snapshots without modifying data
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin "$DATA_SHA"
+          git fetch --no-tags --depth=1 origin "$FUTURE_SHA"
+          git cat-file -e "$DATA_SHA:canonical.sqlite3"
+          git cat-file -e "$DATA_SHA:canonical.previous.sqlite3"
+          git cat-file -e "$FUTURE_SHA:future-candidates.json"
+          git cat-file -e "$FUTURE_SHA:future-tracking.json"
+      - name: Audit each RSS article and verify every sidecar shard
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/session1_rss_audit.py \
+            --data-sha "$DATA_SHA" \
+            --future-sha "$FUTURE_SHA" \
+            --main-sha "$MAIN_SOURCE_SHA" \
+            --output session1-output
+      - name: Publish aggregate read-only audit summary
+        if: always()
+        shell: bash
+        run: |
+          if test -f session1-output/session1_report.md; then
+            cat session1-output/session1_report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Session 1 incomplete: see the failing step logs; no database modified." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Preserve metadata-only report and article status manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-session1-audit
+          path: |
+            session1-output/session1_report.md
+            session1-output/session1_report.json
+            session1-output/article_status_10365.csv
+          if-no-files-found: warn
+          retention-days: 30
