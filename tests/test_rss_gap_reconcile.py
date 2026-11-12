@@ -40,7 +40,8 @@ def test_identical_url_is_recovered_even_if_document_id_changed(tmp_path):
     assert report["status"] == "PASS_SAVED_URL_RECONCILIATION"
     assert report["comparison"]["same_url_in_later_save"] == 2
     assert report["comparison"]["still_missing_by_exact_url"] == 0
-    assert report["comparison"]["same_original_document_id_visible"] == 0
+    # An ID reused by an unrelated later URL is NOT proof of the same article identity.
+    assert report["comparison"]["original_id_present_in_later_id_set"] == 1
     assert not report["comparison"]["missing_url_sha256"]
 
 
