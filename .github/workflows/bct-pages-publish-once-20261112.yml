@@ -1,0 +1,58 @@
+name: BCT Pages publish verified CPU generation once 20261112
+on:
+  push:
+    branches: [ops/bct-cpu-manual-roundtrip-20261112]
+    paths: ['.github/workflows/bct-pages-publish-once-20261112.yml']
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: bct-pages-publish-once-20261112
+  cancel-in-progress: false
+jobs:
+  dispatch-verified-pages:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Verify current main and exact completed private CPU publisher plus public artifact before dispatch
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,os,subprocess
+          repo=os.environ['GITHUB_REPOSITORY']
+          def api(suffix):
+              p=subprocess.run(['gh','api','repos/'+repo+'/'+suffix],
+                               capture_output=True,text=True,timeout=20)
+              if p.returncode:raise ValueError('PAGES_DISPATCH_GITHUB_READ_FAILED')
+              return json.loads(p.stdout)
+          main=api('branches/main')['commit']['sha']
+          if main!='6fb60adda5c18c9078fad752739ec3ced8e815d0':
+              raise ValueError('PAGES_DISPATCH_MAIN_CHANGED')
+          run=api('actions/runs/43168975665')
+          if (run.get('status')!='completed' or run.get('conclusion')!='success'
+                  or run.get('event')!='workflow_dispatch' or run.get('head_branch')!='main'
+                  or run.get('head_sha')!=main
+                  or run.get('path')!='.github/workflows/v4-cpu-private-research.yml'
+                  or run.get('head_repository',{}).get('full_name')!=repo):
+              raise ValueError('PAGES_DISPATCH_CPU_PUBLISHER_UNVERIFIED')
+          jobs=api('actions/runs/43168975665/jobs?per_page=100')['jobs']
+          if not any(j.get('name')=='publish' and j.get('conclusion')=='success' for j in jobs):
+              raise ValueError('PAGES_DISPATCH_CPU_PRIVATE_PUBLISH_NOT_SUCCESSFUL')
+          artifacts=api('actions/runs/43168975665/artifacts?per_page=100')['artifacts']
+          found=[a for a in artifacts if a.get('name')=='bct-public-research-1']
+          if (len(found)!=1 or found[0].get('id')!=13921770489
+                  or found[0].get('digest')!='sha256:e5aa40469de3ab9250953fd694f88365bc491234e24d184282ec956c6c00ef72'
+                  or found[0].get('expired') is not False):
+              raise ValueError('PAGES_DISPATCH_PUBLIC_ARTIFACT_UNVERIFIED')
+          print('BCT_PAGES_PUBLIC_MANIFEST_SOURCE_VERIFIED: CPU publisher 43168975665')
+          PY
+      - name: Ask existing read-only Pages workflow to sync new generation from validated artifact
+        run: |
+          set -euo pipefail
+          printf '%s\n' '{"ref":"main"}' > "$RUNNER_TEMP/pages-request.json"
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/ui-pages.yml/dispatches" \
+            --input "$RUNNER_TEMP/pages-request.json" >/dev/null
+          echo 'PAGES_REFRESH_REQUESTED; automatic trigger and deployed generation still require separate verification.'
