@@ -6,7 +6,7 @@ name: BCT Gate 0-6 release proof renewal
 on:
   push:
     branches: [main]
-    paths: ['.github/workflows/bct-gate-renewal-20261112.yml']
+    paths: ['.github/workflows/bct-gate-renewal-20261112.yml', '.github/scripts/acquisition_sources.py', 'tests/test_acquisition_sources.py']
   workflow_run:
     workflows: [BCT recovery storage gates]
     types: [completed]
