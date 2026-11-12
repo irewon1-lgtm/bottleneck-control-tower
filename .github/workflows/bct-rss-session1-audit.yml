@@ -1,0 +1,50 @@
+name: BCT RSS session1 read-only inventory
+on:
+  push:
+    branches: [audit/bct-rss-session1-20261113]
+    paths:
+      - .github/workflows/bct-rss-session1-audit.yml
+permissions:
+  contents: read
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pin current source snapshots and audit without writing
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin \
+            refs/heads/data:refs/remotes/origin/data \
+            refs/heads/future-bottleneck-data:refs/remotes/origin/future-bottleneck-data
+          DATA_SHA=$(git rev-parse refs/remotes/origin/data)
+          FUTURE_SHA=$(git rev-parse refs/remotes/origin/future-bottleneck-data)
+          echo "Pinned data $DATA_SHA, sidecar $FUTURE_SHA"
+          mkdir -p "$RUNNER_TEMP/session1-input" "$RUNNER_TEMP/session1-output"
+          git show "$DATA_SHA:state.json" > "$RUNNER_TEMP/session1-input/state.json"
+          git show "$DATA_SHA:canonical.sqlite3" > "$RUNNER_TEMP/session1-input/canonical.sqlite3"
+          git show "$DATA_SHA:canonical.previous.sqlite3" > "$RUNNER_TEMP/session1-input/previous.sqlite3"
+          git show "$FUTURE_SHA:future-candidates.json" > "$RUNNER_TEMP/session1-input/future-candidates.json"
+          python tools/bct_rss_session1_audit.py \
+            --db "$RUNNER_TEMP/session1-input/canonical.sqlite3" \
+            --previous-db "$RUNNER_TEMP/session1-input/previous.sqlite3" \
+            --state "$RUNNER_TEMP/session1-input/state.json" \
+            --manifest "$RUNNER_TEMP/session1-input/future-candidates.json" \
+            --data-sha "$DATA_SHA" --future-sha "$FUTURE_SHA" \
+            --out "$RUNNER_TEMP/session1-output"
+      - name: Preserve complete audit without modifying production branches
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-rss-session1-audit
+          path: ${{ runner.temp }}/session1-output/
+          retention-days: 30
+          if-no-files-found: warn
