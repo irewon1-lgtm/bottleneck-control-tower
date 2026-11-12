@@ -1,0 +1,91 @@
+name: BCT V4 first-image live UI visual QA
+on:
+  push:
+    branches: [qa/bct-readable-ui-20261112]
+    paths: ['.github/workflows/bct-v4-first-ui-visual-qa.yml']
+permissions:
+  contents: read
+jobs:
+  visual-read-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install isolated browser test tools for this one test, not production
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/bct-visual"
+          cd "$RUNNER_TEMP/bct-visual"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.56.1
+          npx playwright install chromium
+      - name: Verify live deployed first-image UI, click evidence and save desktop and mobile screenshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/bct-visual"
+          cat > verify.cjs <<'JS'
+          const assert = require('node:assert/strict');
+          const fs = require('node:fs');
+          const { chromium } = require('playwright');
+          const site = 'https://irewon1-lgtm.github.io/bottleneck-control-tower/';
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const report = [];
+            const api = await browser.newPage();
+            const r = await api.request.get(site + 'build-manifest.json', {timeout:30000});
+            assert.equal(r.status(), 200, 'Manifest must be reachable');
+            const manifest = await r.json();
+            assert.equal(manifest.code_commit, '2508c5ef0ffd63eaf5055865e53b1bc9460af552');
+            assert.equal(manifest.research_generation.ack_sequence, 28);
+            await api.close();
+            for(const [mode,width,height] of [['desktop',1500,950],['mobile',390,844]]) {
+              const page = await browser.newPage({viewport:{width,height},deviceScaleFactor:1});
+              const errors = [];
+              page.on('pageerror', e => errors.push(e.message));
+              const response = await page.goto(site, {waitUntil:'domcontentloaded',timeout:50000});
+              assert.equal(response.status(), 200);
+              await page.waitForSelector('.bct-rank-table tbody tr', {timeout:45000});
+              const titles = await page.locator('.bct-page-title h1').allTextContents();
+              assert(titles[0].includes('미래 병목 탐색판'));
+              const sectors = page.locator('.bct-sector-name');
+              assert.equal(await sectors.count(),9);
+              assert.equal((await sectors.nth(0).innerText()).trim(),'전력·발전');
+              assert.equal((await page.locator('.bct-evidence-count').nth(0).innerText()).trim(),'244');
+              assert.equal(await page.locator('.bct-process-item').count(),5);
+              const previous = (await page.locator('.bct-rank-table tbody tr:first-child td:nth-child(2)').innerText()).trim();
+              assert(previous.length > 0);
+              await page.screenshot({path:mode+'-first-ui.png',fullPage:true,animations:'disabled'});
+              const selected = (await sectors.nth(1).innerText()).trim();
+              await sectors.nth(1).click();
+              assert.equal((await page.locator('.bct-selected-sector strong').innerText()).trim(), selected);
+              const detailButton = page.locator('.bct-evidence-open').first();
+              await detailButton.click();
+              await page.waitForSelector('dialog[open] #detail-title', {timeout:30000});
+              const detailTitle = (await page.locator('dialog[open] #detail-title').innerText()).trim();
+              assert(detailTitle.length > 0);
+              await page.locator('#close-detail').click();
+              assert.equal(await page.locator('dialog[open]').count(),0);
+              assert.deepEqual(errors,[]);
+              report.push({mode,ranked_sectors:9,first:'전력·발전',first_count:244,previous,selected,detail_title:detailTitle,page_errors:errors});
+              await page.close();
+            }
+            fs.writeFileSync('proof.json',JSON.stringify({status:'PASS_LIVE_UI',generation:28,code:manifest.code_commit,report},null,2));
+            await browser.close();
+            process.stdout.write('BCT_FIRST_UI_LIVE_QA_PASS '+JSON.stringify(report)+'\n');
+          })().catch(e=>{console.error(e);process.exitCode=1;});
+          JS
+          node verify.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-v4-first-ui-qa-20261112
+          path: |
+            ${{ runner.temp }}/bct-visual/desktop-first-ui.png
+            ${{ runner.temp }}/bct-visual/mobile-first-ui.png
+            ${{ runner.temp }}/bct-visual/proof.json
+          retention-days: 7
+          if-no-files-found: warn
