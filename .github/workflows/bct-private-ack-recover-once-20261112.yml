@@ -1,0 +1,74 @@
+# Single-use dispatch on an isolated operations branch.
+# This branch never changes main, private Git, cache, source documents or models.
+name: BCT private ACK recovery once 20261112
+on:
+  push:
+    branches: [ops/bct-private-ack-recover-20261112]
+    paths: ['.github/workflows/bct-private-ack-recover-once-20261112.yml']
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  verify-and-request:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    env:
+      GH_TOKEN: ${{ github.token }}
+      EXPECTED_MAIN: 37749caff3c85773b5d51e06ff340e0200c55bfd
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 37749caff3c85773b5d51e06ff340e0200c55bfd
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Require exact current-main Gate receipt and verified code tree before any dispatch
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os,pathlib,re,subprocess
+          repo=os.environ['GITHUB_REPOSITORY']
+          def api(method,path):
+              if method!='GET' or not path.startswith('/'):
+                  raise ValueError('READ_ONLY_VERIFICATION')
+              result=subprocess.run(['gh','api','repos/'+repo+path],
+                                    capture_output=True,text=True,timeout=25)
+              if result.returncode:
+                  raise ValueError('GATE_PROOF_METADATA_UNAVAILABLE')
+              return json.loads(result.stdout)
+
+          current=api('GET','/branches/main')['commit']['sha']
+          if current!=os.environ['EXPECTED_MAIN']:
+              raise ValueError('MAIN_ADVANCED_ABORT_SOURCE_FREE_RECOVERY')
+          receipt=json.loads(pathlib.Path('config/bct-operating-release.json').read_text())
+          if receipt != {
+              'gate_run_id':43160725360,
+              'validated_code_sha':'11e5c3da21fff0652c0478ac8e41268bd8da7848',
+              'artifact_id':13919429635,
+              'artifact_sha256':'110e8b8a788db6b91d18431d621cadc74a3d6198f8b92f3278c8aa9184354954'
+          }:
+              raise ValueError('CURRENT_MAIN_RELEASE_RECEIPT_MISMATCH')
+          import sys
+          sys.path.insert(0,'.github/scripts')
+          from bct_release_guard import verify_release
+          proof=verify_release(api,receipt,pathlib.Path('.'))
+          if proof.get('status')!='PASS' or proof['gate_run_id']!=43160725360:
+              raise ValueError('ACTUAL_GATE_PROOF_REQUIRED')
+          print('BCT_SOURCE_FREE_PRIVATE_ACK_GATE_VERIFIED='+json.dumps({
+              'gate_run':proof['gate_run_id'],'code_sha':proof['validated_code_sha'],
+              'checked_protected_files':proof['verified_code_files']}))
+          PY
+      - name: Request one existing recover-public action; no CPU model or source refetch
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/ack-recovery.json" <<'JSON'
+          {"ref":"main","inputs":{"purpose":"recover-public"}}
+          JSON
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/v4-cpu-private-research.yml/dispatches" \
+            --input "$RUNNER_TEMP/ack-recovery.json" >/dev/null
+          echo 'SOURCE_FREE_PRIVATE_ACK_RECOVERY_REQUESTED; this is not persistence PASS.'
