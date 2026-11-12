@@ -1,0 +1,243 @@
+name: BCT Korean display focused QA
+on:
+  push:
+    branches: [qa/bct-korean-display-20261112]
+    paths: ['.github/workflows/bct-v4-korean-display-qa.yml']
+permissions:
+  contents: read
+env:
+  APP_COMMIT: 32d66f5e40c6ba263a15596c88973a42d295e743
+  MODE: preview
+  EXPECTED_CODE: ''
+jobs:
+  visual-read-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.APP_COMMIT }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Korean fonts in the temporary QA runner
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-cache -f
+      - name: Prepare isolated read-only browser QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$APP_COMMIT"
+          mkdir -p "$RUNNER_TEMP/bct-korean-qa"
+          cd "$RUNNER_TEMP/bct-korean-qa"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.56.1
+          npx playwright install chromium
+      - name: Verify localized display against actual unchanged public data
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/bct-korean-qa"
+          export QA_OUTPUT="$RUNNER_TEMP/bct-korean-qa/proof"
+          cat > verify.cjs <<'BCT_KOREAN_QA_JS'
+          const assert = require('node:assert/strict');
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const crypto = require('node:crypto');
+          const { chromium } = require('playwright');
+          
+          const site = 'https://irewon1-lgtm.github.io/bottleneck-control-tower/';
+          const mode = process.env.MODE || 'preview';
+          const expectedCode = process.env.EXPECTED_CODE || '';
+          const appCommit = process.env.APP_COMMIT;
+          const output = path.resolve(process.env.QA_OUTPUT || 'proof');
+          const hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+          assert(['preview', 'live'].includes(mode), 'MODE must be preview or live');
+          fs.mkdirSync(output, { recursive: true });
+          
+          function replaceOnce(text, before, after) {
+            assert.equal(text.split(before).length - 1, 1, 'Exporter route contract: ' + before);
+            return text.replace(before, after);
+          }
+          function staticPreviewSource() {
+            const root = process.env.GITHUB_WORKSPACE || path.resolve('../bct');
+            let code = fs.readFileSync(path.join(root, 'src/bct/v4/dashboard_web/app.js'), 'utf8');
+            // The exact route substitutions in tools/v4_dashboard_static_export.py.
+            // No data or markup is intercepted. This is explicitly an un-deployed overlay.
+            code = replaceOnce(code, 'request("/api/dashboard")', 'request("./api/dashboard.json")');
+            code = replaceOnce(code, '"/api/export","button"', '"./api/dashboard.json","button"');
+            code = replaceOnce(code, 'request(`/api/evidence/${id}`)', 'request(`./api/evidence/${id}.json`)');
+            return code;
+          }
+          async function mobileFits(page, viewport, label) {
+            if (viewport !== 'mobile') return;
+            const geometry = await page.evaluate(() => ({
+              viewport: innerWidth,
+              document: document.documentElement.scrollWidth,
+              rank: [...document.querySelectorAll('.bct-table-scroll')].map(n => ({ visible: n.clientWidth, scroll: n.scrollWidth }))
+            }));
+            assert(geometry.document <= geometry.viewport + 2, label + ' document overflow: ' + JSON.stringify(geometry));
+            for (const r of geometry.rank) assert(r.scroll <= r.visible + 2, label + ' rank overflow: ' + JSON.stringify(r));
+          }
+          async function searchIds(page, query, expectedCount) {
+            await page.locator('#evidence-search').fill(query);
+            await page.waitForFunction(n => document.querySelector('#evidence-list .list-summary b')?.textContent === n.toLocaleString('ko-KR') + '건', expectedCount);
+            const ids = [];
+            for (let pageNumber = 0; pageNumber <= Math.ceil(expectedCount / 12); pageNumber++) {
+              ids.push(...await page.locator('#evidence-list button[data-evidence]').evaluateAll(nodes => nodes.map(n => n.dataset.evidence)));
+              const next = page.locator('#evidence-list .pagination button').filter({ hasText: '다음 →' });
+              if (!await next.count() || await next.isDisabled()) return ids.sort();
+              await next.click();
+            }
+            throw Error('Search pagination did not terminate');
+          }
+          
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const proof = { status: 'NOT_RUN', mode: mode === 'preview' ? 'PREVIEW_OVERLAY' : 'LIVE_DEPLOYMENT', app_commit: appCommit, intercepted: [], reports: [] };
+            try {
+              const api = await browser.newContext();
+              const manifestResponse = await api.request.get(site + 'build-manifest.json', { timeout: 30000 });
+              assert.equal(manifestResponse.status(), 200);
+              const manifest = await manifestResponse.json();
+              if (expectedCode) assert.equal(manifest.code_commit, expectedCode, 'Expected actual published code');
+              const dataResponse = await api.request.get(site + 'api/dashboard.json', { timeout: 30000 });
+              assert.equal(dataResponse.status(), 200);
+              const dataBytes = await dataResponse.body();
+              assert.equal(hash(dataBytes), manifest.dashboard_sha256, 'Actual data bytes must match the published manifest');
+              const data = JSON.parse(dataBytes.toString('utf8'));
+              const expectedRows = data.sector_rankings.rows;
+              assert(expectedRows.length > 0);
+              const excluded = new Set(['산업 확인 필요', '산업 추가 확인', '아직 분류하지 않은 산업']);
+              const actualSourceCounts = new Map();
+              for (const r of data.records) {
+                if (!['reviewed', 'structured', 'discovery'].includes(r.category) || excluded.has(r.industry) || !r.industry) continue;
+                if (!actualSourceCounts.has(r.industry)) actualSourceCounts.set(r.industry, new Set());
+                actualSourceCounts.get(r.industry).add(r.id);
+              }
+              for (const row of expectedRows) assert.equal(row.evidence_count, actualSourceCounts.get(row.name)?.size, 'Count actual source IDs: ' + row.name);
+              const searchRecordIds = data.records.filter(r => r.product.toLowerCase().includes('jet fuel')).map(r => r.id).sort();
+              assert(searchRecordIds.length > 0, 'The current real dataset must contain the jet fuel search acceptance case');
+              const preview = mode === 'preview' ? staticPreviewSource() : null;
+              proof.published_code = manifest.code_commit;
+              proof.data_sha256 = hash(dataBytes);
+              proof.generation = manifest.research_generation?.ack_sequence;
+              proof.persisted_at = data.operating_research?.clocks?.persisted_at;
+              assert(proof.persisted_at && !Number.isNaN(Date.parse(proof.persisted_at)), 'Actual persisted_at must exist');
+              if (preview) proof.overlay_app_sha256 = hash(preview);
+              await api.close();
+          
+              for (const [viewport, width, height] of [['desktop', 1500, 950], ['mobile', 390, 844]]) {
+                const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1 });
+                const page = await context.newPage();
+                const errors = [], failedRequests = [];
+                page.on('pageerror', e => errors.push(e.message));
+                page.on('requestfailed', r => failedRequests.push({ url: r.url(), error: r.failure()?.errorText }));
+                let overlays = 0;
+                if (preview) await page.route(url => url.origin + url.pathname === site + 'app.js', async route => {
+                  assert.equal(route.request().method(), 'GET');
+                  overlays++;
+                  await route.fulfill({ status: 200, contentType: 'application/javascript; charset=utf-8', body: preview });
+                });
+                const dashboardLoaded = page.waitForResponse(r => new URL(r.url()).pathname.endsWith('/api/dashboard.json'));
+                const response = await page.goto(site, { waitUntil: 'domcontentloaded', timeout: 50000 });
+                assert.equal(response.status(), 200);
+                const actualDashboard = await dashboardLoaded;
+                assert.equal(hash(await actualDashboard.body()), proof.data_sha256, 'UI used the same untouched public data');
+                await page.waitForSelector('.bct-rank-table tbody tr', { timeout: 45000 });
+                if (mode === 'preview') assert.equal(overlays, 1, 'Only one app.js overlay is allowed');
+                else assert.equal(overlays, 0);
+                const showAll = page.locator('.bct-more-button').filter({ hasText: /^나머지 .*개 산업 더 보기$/ });
+                if (await showAll.count()) await showAll.click();
+                const rendered = await page.locator('.bct-rank-table tbody tr').evaluateAll(rows => rows.map(row => ({
+                  name: row.querySelector('.bct-sector-name').textContent.trim(),
+                  count: Number(row.querySelector('.bct-evidence-count').textContent.replaceAll(',', '')),
+                  rank: Number(row.querySelector('.bct-rank-number').textContent.match(/\d+/)[0])
+                })));
+                assert.deepEqual(rendered, expectedRows.map(r => ({ name: r.name, count: r.evidence_count, rank: r.rank })));
+                assert.equal(await page.locator('.bct-process-item').count(), 5);
+                const storedExpected = await page.evaluate(t => new Intl.DateTimeFormat('ko-KR', {
+                  timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false
+                }).format(new Date(t)), proof.persisted_at);
+                const storedActual = (await page.locator('.bct-metric').filter({ hasText: '최근 판독 저장' }).locator('.bct-metric-value').innerText()).trim();
+                assert.equal(storedActual, storedExpected);
+                assert.notEqual(storedActual, String(data.operating_research.generation.producer_run_id));
+                await page.locator('.bct-sector-name').filter({ hasText: /^전력·발전$/ }).click();
+                assert.equal((await page.locator('.bct-evidence-description strong').first().innerText()).trim(), '배터리');
+                await mobileFits(page, viewport, 'overview');
+                await page.screenshot({ path: path.join(output, viewport + '-korean-overview.png'), fullPage: true, animations: 'disabled' });
+          
+                await page.locator('.bct-sector-name').filter({ hasText: /^에너지 통계$/ }).click();
+                const crudeRow = page.locator('.bct-evidence-record').filter({ has: page.locator('.bct-evidence-description strong').filter({ hasText: /^원유$/ }) }).first();
+                await crudeRow.waitFor();
+                const detailLoaded = page.waitForResponse(r => /\/api\/evidence\/[a-f0-9]{64}\.json$/.test(new URL(r.url()).pathname));
+                await crudeRow.locator('.bct-evidence-open').click();
+                const detailResponse = await detailLoaded;
+                assert.equal(detailResponse.status(), 200);
+                const detailBytes = await detailResponse.body();
+                const detail = JSON.parse(detailBytes.toString('utf8'));
+                assert.equal(detail.product.toLowerCase(), 'crude oil');
+                assert.equal(detail.all_references_verified, true);
+                await page.waitForSelector('dialog[open] #detail-title');
+                assert.equal((await page.locator('#detail-title').innerText()).trim(), '원유');
+                const originalName = page.locator('#detail-body > details').first();
+                await originalName.locator('summary').click();
+                assert.equal(await originalName.locator('p').textContent(), detail.product);
+                const refs = page.locator('.reference-box');
+                assert.equal(await refs.count(), detail.references.length);
+                let quotesVerified = 0;
+                for (let i = 0; i < detail.references.length; i++) {
+                  const ref = detail.references[i];
+                  if (ref.kind === 'text') {
+                    assert.equal(await refs.nth(i).locator(':scope > blockquote').textContent(), ref.quote);
+                    quotesVerified++;
+                  }
+                }
+                assert(quotesVerified > 0, 'Acceptance case must compare an actual original quote');
+                await mobileFits(page, viewport, 'detail');
+                await page.screenshot({ path: path.join(output, viewport + '-korean-detail.png'), fullPage: true, animations: 'disabled' });
+                await page.locator('#close-detail').click();
+                assert.equal(await page.locator('dialog[open]').count(), 0);
+          
+                await page.locator('[data-nav="evidence"]').click();
+                await page.waitForSelector('#evidence-search');
+                const koreanIds = await searchIds(page, '항공유', searchRecordIds.length);
+                const englishIds = await searchIds(page, 'jet fuel', searchRecordIds.length);
+                assert.deepEqual(koreanIds, searchRecordIds, 'Korean search preserves real record IDs');
+                assert.deepEqual(englishIds, searchRecordIds, 'Original English search remains supported');
+                assert.deepEqual(koreanIds, englishIds);
+                await page.locator('#evidence-search').fill('항공유');
+                await mobileFits(page, viewport, 'search');
+                await page.screenshot({ path: path.join(output, viewport + '-korean-search.png'), fullPage: true, animations: 'disabled' });
+                assert.deepEqual(errors, []);
+                assert.deepEqual(failedRequests, []);
+                proof.intercepted.push({ viewport, app_js_only: overlays });
+                proof.reports.push({ viewport, width, height, rank_rows: rendered, translated_headings: ['배터리', '원유'], original_product: detail.product, detail_id: detail.id,
+                  detail_sha256: hash(detailBytes), exact_original_quotes: quotesVerified, matching_search_records: searchRecordIds.length, persisted_at_display: storedActual,
+                  page_errors: errors, failed_requests: failedRequests, mobile_overflow: viewport === 'mobile' ? false : 'NOT_APPLICABLE' });
+                await context.close();
+              }
+              proof.status = mode === 'preview' ? 'PASS_PREVIEW_OVERLAY' : 'PASS_LIVE_UI';
+              proof.completed_at = new Date().toISOString();
+              process.stdout.write('BCT_KOREAN_DISPLAY_QA_PASS ' + JSON.stringify(proof) + '\n');
+            } catch (e) {
+              proof.status = 'FAIL';
+              proof.error = e.stack || String(e);
+              throw e;
+            } finally {
+              fs.writeFileSync(path.join(output, 'proof.json'), JSON.stringify(proof, null, 2));
+              await browser.close();
+            }
+          })().catch(e => { console.error(e); process.exitCode = 1; });
+          BCT_KOREAN_QA_JS
+          node verify.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-korean-display-${{ env.MODE }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/bct-korean-qa/proof/
+          retention-days: 7
+          if-no-files-found: warn
