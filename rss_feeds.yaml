@@ -8,22 +8,26 @@ feeds:
   Defense News Space: https://www.defensenews.com/arc/outboundfeeds/rss/category/space/?outputType=xml
   Defense News Industry: https://www.defensenews.com/arc/outboundfeeds/rss/category/industry/?outputType=xml
   Defense One: https://www.defenseone.com/rss/all/
-  ESA Space News: https://www.esa.int/rssfeed/Our_Activities/Space_News
+  # ESA's /Our_Activities/ topic endpoints returned HTTP 404 in the 2026-11-12 live run.
+  # ESA official TopNews -> /rss/news.rss: HTTP 200 and real RSS (15 entries) in isolated probe.
+  # This is a BROAD ESA replacement, not proof that all former topic feeds are restored.
+  ESA Space News: https://www.esa.int/rss/news.rss
   ESA Human Spaceflight: https://www.esa.int/rssfeed/Our_Activities/Human_Spaceflight
-  ESA Launchers: https://www.esa.int/rssfeed/Our_Activities/Launchers
-  ESA Navigation: https://www.esa.int/rssfeed/Our_Activities/Navigation
-  ESA Space Engineering Technology: https://www.esa.int/rssfeed/Our_Activities/Space_Engineering_Technology
-  ESA Telecommunications Integrated Applications: https://www.esa.int/rssfeed/Our_Activities/Telecommunications_Integrated_Applications
+  # ESA Launchers legacy endpoint: 404, retired pending a verified specialist feed.
+  # ESA Navigation legacy endpoint: 404, retired pending a verified specialist feed.
+  # ESA Space Engineering Technology legacy endpoint: 404, retired pending a verified specialist feed.
+  # ESA Telecommunications Integrated Applications legacy endpoint: 404, retired pending a verified specialist feed.
   SupplyChainBrain Aerospace Defense: https://www.supplychainbrain.com/rss/topic/1182-aerospace-defense
-  ESA Space Science: https://www.esa.int/rssfeed/Our_Activities/Space_Science
-  ESA Operations: https://www.esa.int/rssfeed/Our_Activities/Operations
+  # ESA Space Science legacy endpoint: 404, retired pending a verified specialist feed.
+  # ESA Operations legacy endpoint: 404, retired pending a verified specialist feed.
   # Power grid generation
   POWER Magazine: https://www.powermag.com/feed/
   EIA Today in Energy: https://www.eia.gov/rss/todayinenergy.xml
   EIA What's New: https://www.eia.gov/about/new/WNtest3.php
   Renewable Energy World: https://www.renewableenergyworld.com/feed/
   NIST Energy: https://www.nist.gov/news-events/energy/rss.xml
-  DOE Carbon Capture: https://energy.gov/fe/carbon-capture-storage-news?view=rss
+  # DOE Carbon Capture old FE category URL: connection error in 2026-11-12 run;
+  # FECM coverage retained by verified general DOE Fossil techlines below.
   NIST Resilience: https://www.nist.gov/news-events/resilience/rss.xml
   NIST Environment: https://www.nist.gov/news-events/environment/rss.xml
   SupplyChainBrain Green Energy: https://www.supplychainbrain.com/rss/topic/1377-green-energy
@@ -68,10 +72,11 @@ feeds:
   Mining Weekly Latest: https://www.miningweekly.com/page/latest-news/feed
   NIST Metrology: https://www.nist.gov/news-events/metrology/rss.xml
   # Oil gas chemicals
+  # Verified 200 RSS / 10 entries on 2026-11-12; broad FECM news, not four category feeds.
   DOE Fossil techlines: https://www.energy.gov/rss/hgeo/2282977
-  DOE Fossil clean coal news: https://energy.gov/fe/clean-coal-news?view=rss
-  DOE Fossil oil natural gas news: https://energy.gov/fe/oil-natural-gas-news?view=rss
-  DOE Fossil petroleum reserves news: https://energy.gov/fe/petroleum-reserves-news?view=rss
+  # DOE Fossil clean coal old FE category URL: connection error; general DOE feed retained.
+  # DOE Fossil oil natural gas old FE category URL: connection error; general DOE feed retained.
+  # DOE Fossil petroleum reserves old FE category URL: connection error; general DOE feed retained.
   DOE Fossil blog: https://www.energy.gov/rss/hgeo/2283029
   SupplyChainBrain Chemicals Energy: https://www.supplychainbrain.com/rss/topic/1185-chemicals-energy
   # Logistics ports shipping
