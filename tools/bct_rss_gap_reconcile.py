@@ -82,11 +82,12 @@ def compare(before: Path, after: Path):
         "comparison": {
             "failed_run_new_urls": len(old_urls), "same_url_in_later_save": present,
             "still_missing_by_exact_url": len(missing),
-            "same_original_document_id_visible": same_id,
+            "original_id_present_in_later_id_set": same_id,
             "missing_url_sha256": [hashlib.sha256(url.encode()).hexdigest() for url in missing],
         },
         "limits": ["Exact URL identity only; different canonical URLs may refer to the same article",
                    "URL retention does not prove original body capture, CPU analysis, or source completeness",
+                   "The original ID intersection is not an ID/URL pairing; old IDs may be reused by other articles",
                    "Historical source publications never visible to an RSS feed cannot be counted here"],
     }
 
