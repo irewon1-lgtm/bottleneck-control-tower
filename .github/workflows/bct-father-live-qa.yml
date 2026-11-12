@@ -1,0 +1,42 @@
+name: BCT father laptop live anonymous check
+on:
+  push:
+    branches: [qa/bct-father-laptop-20261112]
+    paths: ['.github/workflows/bct-father-live-qa.yml']
+permissions:
+  contents: read
+jobs:
+  anonymous-live:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Public Pages GET without credentials or cookies
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/bct-live"
+          site="https://irewon1-lgtm.github.io/bottleneck-control-tower"
+          curl -fL -sS --max-time 40 -H 'Cache-Control: no-cache' "$site/" -o "$RUNNER_TEMP/bct-live/index.html"
+          curl -fL -sS --max-time 40 -H 'Cache-Control: no-cache' "$site/style.css" -o "$RUNNER_TEMP/bct-live/style.css"
+          curl -fL -sS --max-time 40 -H 'Cache-Control: no-cache' "$site/build-manifest.json" -o "$RUNNER_TEMP/bct-live/manifest.json"
+          curl -fL -sS --max-time 40 -H 'Cache-Control: no-cache' "$site/api/dashboard.json" -o "$RUNNER_TEMP/bct-live/dashboard.json"
+          python3 - "$RUNNER_TEMP/bct-live" <<'PY'
+          import hashlib,json,pathlib,sys
+          root=pathlib.Path(sys.argv[1])
+          html=(root/'index.html').read_text(encoding='utf-8')
+          css=(root/'style.css').read_text(encoding='utf-8')
+          manifest=json.loads((root/'manifest.json').read_bytes())
+          body=(root/'dashboard.json').read_bytes()
+          expected='063ae97792e26739b8160137c3726d23764dabe8'
+          assert manifest['code_commit']==expected, ('STALE_PAGES_COMMIT', manifest['code_commit'])
+          assert hashlib.sha256(body).hexdigest()==manifest['dashboard_sha256']
+          assert 'id="bct-large-text"' in html
+          assert '로그인 없는 공개 읽기 전용' in html
+          assert '16-inch laptop readability, 2026-11-12' in css
+          assert 'body:has(#bct-large-text:checked)' in css
+          assert 'href="./style.css"' in html and 'src="./app.js"' in html
+          assert 'accounts.google' not in html and 'login' not in html.lower()
+          data=json.loads(body)
+          assert len(data['records'])>0
+          print('BCT_FATHER_LIVE_PASS',json.dumps({'published_code':manifest['code_commit'],'anonymous_http':200,'records':len(data['records']),'dashboard_sha256':manifest['dashboard_sha256'],'large_text_toggle':True},ensure_ascii=False))
+          PY
