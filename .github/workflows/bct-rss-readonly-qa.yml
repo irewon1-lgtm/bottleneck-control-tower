@@ -1,0 +1,53 @@
+name: BCT public RSS metadata integration QA
+on:
+  push:
+    branches: [qa/bct-rss-readonly-20261112]
+    paths: ['.github/workflows/bct-rss-readonly-qa.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  readonly-news:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify published RSS database and exact producer artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p qa/news-proof
+          python - <<'PY'
+          import hashlib,json,sys
+          from pathlib import Path
+          sys.path.insert(0,'tools')
+          from v4_public_news_export import build_from_public_branch
+          obj=build_from_public_branch(Path.cwd())
+          assert obj['status']=='VERIFIED_PUBLIC_RSS_METADATA'
+          assert len(obj['articles'])==obj['visible_article_count']
+          assert obj['feed_success']+obj['feed_failed']==obj['feed_total']
+          assert obj['new_article_count']==sum(x['is_new'] for x in obj['articles'])
+          assert obj['classification']=='RSS_TITLE_METADATA_NOT_VERIFIED_BOTTLENECK'
+          proof={k:v for k,v in obj.items() if k not in ('articles','failed_feeds')}
+          proof['newest_5']=[{'source':a['source'],'published_at':a['published_at'],
+                              'collected_at':a['collected_at'],'is_new':a['is_new']}
+                             for a in obj['articles'][:5]]
+          proof['failures']=obj['failed_feeds']
+          body=json.dumps(proof,ensure_ascii=False,indent=2)
+          Path('qa/news-proof/result.json').write_text(body,encoding='utf-8')
+          print('BCT_RSS_PUBLIC_QA_PASS',body[:7000])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-rss-readonly-qa
+          path: qa/news-proof/
+          retention-days: 7
+          if-no-files-found: warn
