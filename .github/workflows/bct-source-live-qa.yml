@@ -1,0 +1,63 @@
+name: BCT latest captured-originals anonymous live acceptance
+on:
+  push:
+    branches: [qa/bct-source-live-20261113]
+    paths: ['.github/workflows/bct-source-live-qa.yml']
+permissions:
+  contents: read
+jobs:
+  public-no-login:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check exact published RSS, research and source-intake generations without login
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/bct-anon-source"
+          base='https://irewon1-lgtm.github.io/bottleneck-control-tower'
+          for f in index.html app.js build-manifest.json api/dashboard.json api/rss-news.json api/source-intake.json; do
+            mkdir -p "$RUNNER_TEMP/bct-anon-source/$(dirname "$f")"
+            curl -fsSL --max-time 75 -H 'Cache-Control: no-cache' "$base/$f" -o "$RUNNER_TEMP/bct-anon-source/$f"
+          done
+          python - "$RUNNER_TEMP/bct-anon-source" <<'PY'
+          from pathlib import Path
+          import hashlib,json,sys
+          root=Path(sys.argv[1])
+          m=json.loads((root/'build-manifest.json').read_bytes())
+          d=json.loads((root/'api/dashboard.json').read_bytes())
+          rss=json.loads((root/'api/rss-news.json').read_bytes())
+          intake=json.loads((root/'api/source-intake.json').read_bytes())
+          sha=lambda p:hashlib.sha256((root/p).read_bytes()).hexdigest()
+          assert m['code_commit']=='833a383c71bb094cc90467706d095115febf659d'
+          assert sha('api/dashboard.json')==m['dashboard_sha256']
+          assert sha('api/rss-news.json')==m['rss_news_sha256']
+          assert sha('api/source-intake.json')==m['source_intake_sha256']
+          assert d['latest_source_capture']==intake
+          assert rss['source_run_id']==intake['rss_run_id']==43243530759
+          assert rss['visible_article_count']==m['rss_article_count']==10365
+          assert rss['new_article_count']==32 and rss['feed_failed']==0
+          assert intake['status']=='VERIFIED_PUBLIC_SOURCE_INTAKE'
+          assert intake['source_run_id']==m['source_intake_run_id']==43245595579
+          assert intake['seed_attempts']==32 and intake['captured']==13 and intake['held']==19
+          assert intake['statuses']=={'CAPTURED':13,'PROVENANCE_BLOCKED':16,'HTTP_403':2,'TIMEOUT':1}
+          assert intake['valid_additional_primary_documents']==0
+          assert intake['classification']=='CAPTURED_SOURCE_DOCUMENTS_NOT_VERIFIED_BOTTLENECKS'
+          assert len(d['records'])==511
+          html=(root/'index.html').read_text(encoding='utf8')
+          js=(root/'app.js').read_text(encoding='utf8')
+          assert 'data-nav="news"' in html and 'data-nav="automation"' in html
+          assert 'function sourceIntakePanel()' in js
+          assert 'login' not in html.lower()
+          proof={'status':'PASS_ANONYMOUS_LIVE_SOURCE_CAPTURE',
+            'code_commit':m['code_commit'],'rss_articles':10365,'new_rss':32,
+            'source_run_id':intake['source_run_id'],'attempts':intake['seed_attempts'],
+            'captured':intake['captured'],'held':intake['held'],
+            'source_artifact_sha256':intake['source_artifact_sha256'],
+            'source_intake_sha256':m['source_intake_sha256'],
+            'research_evidence':len(d['records'])}
+          print('BCT_SOURCE_LIVE_PASS '+json.dumps(proof,ensure_ascii=False))
+          PY
