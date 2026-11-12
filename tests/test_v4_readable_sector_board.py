@@ -84,3 +84,25 @@ def test_exporter_and_first_image_ui_keep_source_provenance():
     assert "bct-rank-columns" in css and "bct-process-grid" in css
     assert "전력 설비 (18건)" not in html
     assert "반도체 생산 장비" not in js  # No sample values in production.
+
+
+def test_mobile_rank_table_stacks_all_seven_source_columns():
+    root = Path(__file__).resolve().parents[1]
+    css = (root / "src/bct/v4/dashboard_web/style.css").read_text()
+    assert "Mobile: preserve the approved desktop table" in css
+    for expected in (
+        "grid-template-areas:",
+        '"sector sector sector sector"',
+        '"current previous change count"',
+        '"recent recent action action"',
+        "tbody td:nth-child(1){grid-area:current}",
+        "tbody td:nth-child(2){grid-area:previous}",
+        "tbody td:nth-child(3){grid-area:change}",
+        "tbody td:nth-child(4){grid-area:sector",
+        "tbody td:nth-child(5){grid-area:count}",
+        "tbody td:nth-child(6){grid-area:recent",
+        "tbody td:nth-child(7){grid-area:action",
+        "content:attr(data-label)",
+        "width:100%;min-width:0",
+    ):
+        assert expected in css
