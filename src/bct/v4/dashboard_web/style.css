@@ -250,3 +250,144 @@ body:has(.bct-first-app){color:#12253f;background:#f7f9fd;font-size:16px;line-he
   .bct-first-page .bct-evidence-record{grid-template-columns:80px 90px minmax(0,1fr)}
   .bct-first-page .bct-evidence-open{grid-column:3;justify-self:stretch}
 }
+
+
+/* 16-inch laptop readability, 2026-11-12.
+   Account-free public Pages, no tracking, login, JavaScript, external fonts or
+   changes to the approved blue navigation / genuine evidence and ranking. */
+.bct-first-app .bct-reader-toggle{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:46px;border:1px solid #c1d8fc;
+  border-radius:9px;color:#fff;font-size:15px;font-weight:850;
+  white-space:nowrap;cursor:pointer;background:#ffffff1a;
+}
+.bct-first-app .bct-reader-toggle:hover{background:#ffffff30}
+.bct-first-app .bct-reader-toggle:focus-within{outline:3px solid #ffe38d;outline-offset:2px}
+.bct-first-app .bct-reader-toggle input{width:20px;height:20px;margin:0;flex:none;accent-color:#ffe38d;cursor:pointer}
+
+@media (min-width:741px){
+  body:has(.bct-first-app){font-size:18px;line-height:1.62}
+  .bct-first-app main{max-width:1900px;padding:24px clamp(16px,1.7vw,34px) 48px}
+  .bct-first-app .bct-main-nav{min-height:76px;gap:clamp(10px,1.2vw,22px);padding:10px clamp(16px,1.65vw,32px)}
+  .bct-first-app .bct-tabs a{font-size:clamp(16px,1.05vw,18px);min-height:50px;padding:10px clamp(9px,1vw,18px)}
+  .bct-first-app .bct-header-actions{gap:10px}
+  .bct-first-app .bct-refresh{font-size:16px;min-height:47px;padding:10px 15px}
+  .bct-first-app .bct-latest{font-size:13px}
+  .bct-first-app .bct-page-title h1{font-size:clamp(33px,2.6vw,46px)}
+  .bct-first-app .bct-page-title p{font-size:18px}
+  .bct-first-app .bct-promise{font-size:16px}
+  .bct-first-app .bct-rank-columns{gap:18px}
+  .bct-first-app .bct-panel-title{min-height:66px;padding:15px 20px}
+  .bct-first-app .bct-panel-title h2{font-size:clamp(21px,1.5vw,26px)}
+  .bct-first-app .bct-table-scroll{padding:11px 11px 0}
+  .bct-first-app .bct-rank-table{min-width:0}
+  .bct-first-app .bct-rank-table th,.bct-first-app .bct-rank-table td{font-size:16px;padding:14px 7px;line-height:1.45}
+  .bct-first-app .bct-rank-table th{font-size:15px;font-weight:900}
+  .bct-first-app .bct-rank-number{font-size:18px!important}
+  .bct-first-app .bct-sector-name{font-size:18px;line-height:1.5;padding:6px 0}
+  .bct-first-app .bct-evidence-count{font-size:22px!important}
+  .bct-first-app .bct-rank-change{font-size:15px!important}
+  .bct-first-app .bct-date-cell{font-size:14px!important;white-space:normal}
+  .bct-first-app .bct-view-button{font-size:16px;min-height:46px;min-width:64px;padding:8px 10px}
+  .bct-first-app .bct-more-button{font-size:16px;min-height:48px}
+  .bct-first-app .bct-panel-explain,.bct-first-app .bct-history-note{font-size:14px}
+  .bct-first-app .bct-evidence-body{padding:16px}
+  .bct-first-app .bct-selected-label{font-size:14px}
+  .bct-first-app .bct-selected-sector strong{font-size:23px}
+  .bct-first-app .bct-selected-total{font-size:17px}
+  .bct-first-app .bct-evidence-intro,.bct-first-app .bct-evidence-warning{font-size:15px}
+  .bct-first-app .bct-evidence-record{min-height:84px;padding:12px 10px}
+  .bct-first-app .bct-evidence-date{font-size:14px}
+  .bct-first-app .bct-kind{font-size:14px;min-height:38px}
+  .bct-first-app .bct-evidence-description strong{font-size:17px}
+  .bct-first-app .bct-evidence-description p{font-size:14px;line-height:1.55}
+  .bct-first-app .bct-evidence-open{font-size:15px;min-height:44px;padding:8px 10px}
+  .bct-first-app .bct-process-item{min-height:156px;padding:15px}
+  .bct-first-app .bct-process-line strong{font-size:17px}
+  .bct-first-app .bct-process-badge{font-size:15px}
+  .bct-first-app .bct-process-note{font-size:14px}
+  .bct-first-app .bct-metric{min-height:123px}
+  .bct-first-app .bct-metric-label{font-size:16px}
+  .bct-first-app .bct-metric-value{font-size:clamp(24px,2vw,32px)}
+  .bct-first-app .bct-metric-note{font-size:13px}
+  .bct-first-app .bct-metric:nth-child(4) .bct-metric-value,
+  .bct-first-app .bct-metric:nth-child(5) .bct-metric-value{font-size:clamp(16px,1.2vw,21px)}
+  .bct-first-app .bct-help-strip p{font-size:16px}
+  .bct-first-app .bct-final-disclaimer{font-size:14px}
+  .bct-first-app .page-head p,.bct-first-app .section-note{font-size:15px}
+  .bct-first-app .research-table{font-size:16px}
+  .bct-first-app .research-table th,.bct-first-app .research-table td{font-size:15px}
+  .bct-first-app .research-table .button{font-size:15px;min-height:44px}
+  .bct-first-app .product-title,.bct-first-app .evidence-card h3{font-size:18px}
+  .bct-first-app .product-meta,.bct-first-app .evidence-card p,.bct-first-app .card-bottom{font-size:14px}
+  .bct-first-app .process-card h2{font-size:20px}
+  .bct-first-app .process-card p,.bct-first-app .process-last{font-size:15px}
+  .bct-first-app .stat-top,.bct-first-app .stat-note,.bct-first-app .stage-box p{font-size:14px}
+  .bct-first-app .stage-box b,.bct-first-app .tab,.bct-first-app .filter{font-size:16px}
+  .bct-first-app .filter input,.bct-first-app .filter select{font-size:16px;height:48px}
+  .bct-first-app .badge{font-size:13px}
+  .bct-first-app .kv{font-size:15px}
+  .bct-first-app .pagination span{font-size:16px}
+  .bct-first-app .button{font-size:15px;min-height:46px}
+  .bct-first-app #detail{width:min(980px,94vw);max-width:94vw}
+  .bct-first-app #detail .dialog-top{font-size:16px;padding:16px 24px}
+  .bct-first-app #detail #detail-title{font-size:29px}
+  .bct-first-app #detail .detail-section h3{font-size:19px}
+  .bct-first-app #detail .quote{font-size:16px}
+  .bct-first-app #detail .reference-meta,.bct-first-app #detail .reference-box details{font-size:14px}
+  .bct-first-app #detail .icon-button{width:47px;height:47px}
+}
+
+/* 16-inch 1366–1500px effective viewport: one full-width rank table avoids
+   shrinking seven source columns to unreadable widths. */
+@media (min-width:741px) and (max-width:1500px){
+  .bct-first-app .bct-rank-columns{grid-template-columns:minmax(0,1fr)}
+  .bct-first-app .bct-evidence-record{grid-template-columns:140px 115px minmax(0,1fr) auto}
+  .bct-first-app .bct-evidence-open{grid-column:auto}
+  .bct-first-app .bct-process-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .bct-first-app .bct-metrics-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .bct-first-app .bct-metric,.bct-first-app .bct-metric:first-child,
+  .bct-first-app .bct-metric:last-child{border:0;border-radius:9px}
+}
+@media (min-width:741px) and (max-width:1350px){
+  .bct-first-app .bct-main-nav{flex-wrap:wrap;gap:10px}
+  .bct-first-app .bct-header-actions{margin-left:auto}
+  .bct-first-app .bct-tabs{order:3;flex-basis:100%;justify-content:space-between}
+  .bct-first-app .bct-tabs a{flex:1}
+}
+@media (min-width:741px) and (max-width:900px){
+  .bct-first-app .bct-evidence-record{grid-template-columns:100px 100px minmax(0,1fr)}
+  .bct-first-app .bct-evidence-open{grid-column:3;justify-self:start}
+  .bct-first-app .bct-process-grid,.bct-first-app .bct-metrics-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* Optional oversized letters for an older reader. It is CSS-only and works
+   locally per viewer; the user has no need to share any account or credential. */
+@media (min-width:741px){
+  body:has(#bct-large-text:checked){font-size:20px}
+  body:has(#bct-large-text:checked) .bct-first-app .bct-rank-columns{grid-template-columns:minmax(0,1fr)}
+  body:has(#bct-large-text:checked) .bct-first-app .bct-rank-table th,
+  body:has(#bct-large-text:checked) .bct-first-app .bct-rank-table td{font-size:19px}
+  body:has(#bct-large-text:checked) .bct-first-app .bct-sector-name{font-size:21px}
+  body:has(#bct-large-text:checked) .bct-first-app .bct-rank-number{font-size:21px!important}
+  body:has(#bct-large-text:checked) .bct-first-app .bct-rank-change{font-size:18px!important}
+  body:has(#bct-large-text:checked) .bct-first-app .bct-evidence-count{font-size:25px!important}
+  body:has(#bct-large-text:checked) .bct-first-app .bct-date-cell{font-size:17px!important}
+  body:has(#bct-large-text:checked) .bct-first-app .bct-evidence-description strong{font-size:21px}
+  body:has(#bct-large-text:checked) .bct-first-app .bct-evidence-description p{font-size:18px}
+  body:has(#bct-large-text:checked) .bct-first-app .bct-evidence-open{font-size:18px;min-height:50px}
+  body:has(#bct-large-text:checked) .bct-first-app .bct-process-line strong{font-size:20px}
+  body:has(#bct-large-text:checked) .bct-first-app .bct-process-note{font-size:17px}
+  body:has(#bct-large-text:checked) .bct-first-app .bct-metric-label{font-size:19px}
+  body:has(#bct-large-text:checked) .bct-first-app .bct-metric-note{font-size:16px}
+  body:has(#bct-large-text:checked) .bct-first-app .research-table th,
+  body:has(#bct-large-text:checked) .bct-first-app .research-table td{font-size:18px}
+  body:has(#bct-large-text:checked) .bct-first-app .product-title,
+  body:has(#bct-large-text:checked) .bct-first-app .evidence-card h3{font-size:21px}
+  body:has(#bct-large-text:checked) .bct-first-app .process-card p{font-size:18px}
+  body:has(#bct-large-text:checked) .bct-first-app #detail .quote{font-size:19px}
+  body:has(#bct-large-text:checked) .bct-first-app .bct-tabs a{font-size:18px}
+}
+@media (max-width:740px){
+  .bct-first-app .bct-reader-toggle{display:none}
+}
