@@ -46,9 +46,233 @@
     document.querySelectorAll("[data-nav]").forEach(a=>{if(a.dataset.nav===currentPage)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});
     document.title=`${panels[currentPage][0]} · BCT V4 연구실`;
     if(!data)return;
-    content.replaceChildren(head());
-    ({overview:overview,candidates:candidates,evidence:evidence,automation:automation}[currentPage])();
+    content.replaceChildren();
+    if(currentPage!=="overview")content.append(head());
+    if($("top-latest"))$("top-latest").textContent="최근 반영: "+date(data.snapshot_generated_at||data.data_at);
+    ({overview:firstOverview,candidates:candidates,evidence:evidence,automation:automation}[currentPage])();
   }
+
+  // Approved first-image layout. Everything is calculated from the saved
+  // public snapshot; never turn a product mention into a proved bottleneck.
+  let selectedBoardSector = "";
+  let shownBoardEvidence = 7;
+  let shownBoardSectors = 10;
+  const boardKinds = {reviewed:"원문 검토",structured:"공식 표 기록",discovery:"제품 탐색"};
+  const boardExcludedSectors = new Set(["산업 확인 필요","산업 추가 확인","아직 분류하지 않은 산업"]);
+
+  function boardRankRows(){
+    if(data.sector_rankings && Array.isArray(data.sector_rankings.rows))return data.sector_rankings.rows;
+    // Local read-only dashboard fallback; public static exports use the
+    // identical source-linked server ranking calculation.
+    const groups=new Map();
+    for(const r of data.records||[]){
+      if(!Object.hasOwn(boardKinds,r.category)||boardExcludedSectors.has(r.industry)||!r.industry)continue;
+      if(!groups.has(r.industry))groups.set(r.industry,new Map());
+      groups.get(r.industry).set(r.id,r);
+    }
+    const rows=[...groups].map(([name,values])=>{
+      const all=[...values.values()];
+      const dates=all.map(r=>r.published_at).filter(Boolean).sort().reverse();
+      return {name:name,evidence_count:all.length,recent_publication:dates[0]||null,
+        reviewed_count:all.filter(r=>r.category==="reviewed").length,
+        structured_count:all.filter(r=>r.category==="structured").length,
+        discovery_count:all.filter(r=>r.category==="discovery").length};
+    }).sort((a,b)=>b.evidence_count-a.evidence_count||a.name.localeCompare(b.name,"ko"));
+    let previousCount=-1,rank=0;
+    rows.forEach((r,i)=>{if(r.evidence_count!==previousCount){rank=i+1;previousCount=r.evidence_count;}r.rank=rank;});
+    return rows;
+  }
+
+  function boardPrevious(row){
+    const p=data.sector_rank_previous;
+    if(!p||p.status!=="VERIFIED_PREVIOUS_PUBLIC_SNAPSHOT")return {label:"—",change:"비교 전",tone:"muted"};
+    const old=p.ranks&&p.ranks[row.name];
+    if(!old||!Number.isInteger(old.rank))return {label:"신규",change:"새로 등장",tone:"up"};
+    const delta=old.rank-row.rank;
+    return {label:String(old.rank)+"위",change:delta>0?"▲ "+delta:delta<0?"▼ "+(-delta):"유지",tone:delta>0?"up":delta<0?"down":"muted"};
+  }
+
+  function boardEvidenceFor(sector){
+    const priority={reviewed:0,structured:1,discovery:2};
+    return (data.records||[]).filter(r=>r.industry===sector&&Object.hasOwn(boardKinds,r.category))
+      .sort((a,b)=>priority[a.category]-priority[b.category]||
+        String(b.published_at||"").localeCompare(String(a.published_at||""))||
+        a.id.localeCompare(b.id));
+  }
+
+  function boardStatus(icon,label,status,tone,note){
+    const item=el("div",null,"bct-process-item");
+    const symbol=el("span",icon,"bct-process-icon");symbol.setAttribute("aria-hidden","true");
+    const line=add(el("div",null,"bct-process-line"),el("strong",label),el("span",status,"bct-process-badge "+tone));
+    item.append(symbol,line,el("p",note,"bct-process-note"));
+    return item;
+  }
+
+  function boardMetric(label,reading,note){
+    return add(el("div",null,"bct-metric"),el("span",label,"bct-metric-label"),el("strong",reading,"bct-metric-value"),el("small",note||"","bct-metric-note"));
+  }
+
+  function firstOverview(){
+    const current=boardRankRows();
+    const snapshot=data.operating_research||null;
+    const counts=snapshot&&snapshot.counts||{};
+    const generation=snapshot&&snapshot.generation||{};
+    const collection=data.collection_observation||null;
+    const observed=data.workflow_observation&&data.workflow_observation.workflows||{};
+    const lastPublished=data.snapshot_generated_at||data.data_at;
+    const future=Object.values(data.counts.future_candidates||{}).reduce((sum,n)=>sum+(Number(n)||0),0);
+    const page=el("div",null,"bct-first-page");
+    const title=el("header",null,"bct-page-title");
+    title.append(el("h1","BCT V4 미래 병목 탐색판"),
+      el("p","주가 추천이 아니라, 실제 저장된 산업별 근거를 찾아보는 화면입니다."),
+      el("span","확정된 미래 병목 "+number(future)+"건 · 근거 기록이 많아도 공급 부족 확정은 아닙니다.","bct-promise"));
+    page.append(title);
+
+    const columns=el("div",null,"bct-rank-columns");
+    const rankingPanel=el("section",null,"bct-first-panel");
+    const rankingHead=add(el("div",null,"bct-panel-title"),el("span","☷","bct-panel-icon"),el("h2","병목 후보 섹터 순위표"));
+    rankingPanel.append(rankingHead);
+    const tableArea=el("div",null,"bct-table-scroll");
+    const table=el("table",null,"bct-rank-table");
+    const tHead=el("thead"),header=el("tr");
+    ["현재","이전","변동","병목 후보 섹터","증거 수","최근 자료","상세"].forEach(text=>header.append(el("th",text)));
+    tHead.append(header);table.append(tHead);
+    const tbody=el("tbody");table.append(tbody);
+    tableArea.append(table);rankingPanel.append(tableArea);
+    const moreSector=el("div",null,"bct-rank-more");
+    const previous=data.sector_rank_previous||{};
+    rankingPanel.append(moreSector);
+    rankingPanel.append(el("p","증거 수는 이 산업에 연결된 저장 기록 수입니다. 중복 기사·검토 전 탐색 기록이 포함될 수 있습니다. 검증된 미래 병목 수와 다릅니다.","bct-panel-explain"));
+    rankingPanel.append(el("p",previous.status==="VERIFIED_PREVIOUS_PUBLIC_SNAPSHOT"?
+      "이전 순위 비교: "+date(previous.generated_at)+" 공개 화면을 기준으로 계산했습니다.":
+      "이전 공개 순위 기록을 확인하지 못한 항목은 ‘—’로 표시합니다. 순위를 지어내지 않습니다.","bct-history-note"));
+    columns.append(rankingPanel);
+
+    const details=el("section",null,"bct-first-panel bct-evidence-panel");
+    details.append(add(el("div",null,"bct-panel-title"),el("span","▤","bct-panel-icon"),el("h2","선택한 섹터 근거")));
+    const detailBody=el("div",null,"bct-evidence-body");
+    detailBody.setAttribute("aria-live","polite");
+    details.append(detailBody);
+    columns.append(details);
+    page.append(columns);
+    content.append(page);
+
+    function choose(name){
+      selectedBoardSector=name;shownBoardEvidence=7;
+      renderRanks();renderSector();
+    }
+    function renderRanks(){
+      tbody.replaceChildren();moreSector.replaceChildren();
+      const visible=current.slice(0,shownBoardSectors);
+      for(const r of visible){
+        const prev=boardPrevious(r);
+        const shared=current.some(other=>other!==r&&other.evidence_count===r.evidence_count);
+        const tr=el("tr",null,r.name===selectedBoardSector?"bct-row-selected":"");
+        const selector=btn(r.name,()=>choose(r.name),"bct-sector-name");
+        selector.setAttribute("aria-pressed",String(r.name===selectedBoardSector));
+        selector.setAttribute("aria-label",r.name+" 근거 "+number(r.evidence_count)+"건 보기");
+        const view=btn("보기",()=>choose(r.name),"bct-view-button");
+        view.setAttribute("aria-label",r.name+"의 근거 자세히 보기");
+        const cRank=el("td",(shared?"공동 ":"")+r.rank+"위","bct-rank-number");cRank.dataset.label="현재";
+        const cPrevious=el("td",prev.label);cPrevious.dataset.label="이전";
+        const cChange=el("td",prev.change,"bct-rank-change "+prev.tone);cChange.dataset.label="변동";
+        const cSector=add(el("td",null,"bct-sector-cell"),selector);cSector.dataset.label="섹터";
+        const cCount=el("td",number(r.evidence_count),"bct-evidence-count");cCount.dataset.label="증거 수";
+        const cDate=el("td",r.recent_publication?date(r.recent_publication):"날짜 미확인","bct-date-cell");cDate.dataset.label="최근 자료";
+        const cView=add(el("td",null,"bct-button-cell"),view);cView.dataset.label="상세";
+        tr.append(cRank,cPrevious,cChange,cSector,cCount,cDate,cView);
+        tbody.append(tr);
+      }
+      if(current.length>shownBoardSectors){
+        moreSector.append(btn("나머지 "+number(current.length-shownBoardSectors)+"개 산업 더 보기",()=>{
+          shownBoardSectors=current.length;renderRanks();
+        },"bct-more-button"));
+      }else if(shownBoardSectors>10&&current.length>10){
+        moreSector.append(btn("상위 10개만 보기",()=>{shownBoardSectors=10;renderRanks();},"bct-more-button"));
+      }
+      if(!current.length){
+        tbody.append(add(el("tr"),add(el("td","아직 산업을 확인한 근거 기록이 없습니다.","bct-empty-rank"))));
+        tbody.lastChild.firstChild.colSpan=7;
+      }
+    }
+    function renderSector(){
+      detailBody.replaceChildren();
+      if(!current.length){
+        detailBody.append(el("p","산업이 확인된 근거가 없어 순위를 표시할 수 없습니다.","bct-empty-message"));return;
+      }
+      const sector=current.find(r=>r.name===selectedBoardSector)||current[0];
+      const evidence=boardEvidenceFor(sector.name);
+      detailBody.append(add(el("div",null,"bct-selected-sector"),
+        add(el("div"),el("span","선택한 섹터","bct-selected-label"),el("strong",sector.name)),
+        el("b","근거 기록 "+number(sector.evidence_count)+"건","bct-selected-total")));
+      detailBody.append(el("p","먼저 원문 검토 기록을 보여주고, 그다음 공식 표와 제품 탐색 기록을 표시합니다. 각 기록을 눌러 출처를 확인할 수 있습니다.","bct-evidence-intro"));
+      const list=el("div",null,"bct-evidence-list");
+      for(const r of evidence.slice(0,shownBoardEvidence)){
+        const line=el("div",null,"bct-evidence-record");
+        line.append(el("span",r.published_at?date(r.published_at):"날짜 미확인","bct-evidence-date"),
+                    el("span",boardKinds[r.category],"bct-kind "+r.category));
+        const summary=el("div",null,"bct-evidence-description");
+        summary.append(el("strong",r.product),el("p",r.role_label+" · "+({reviewed:"원문 검토 · 사람 검증 전",structured:"공식 표 기록 · 실제 공급 확인 전",discovery:"제품 이름 탐색 · 수급 사실 확인 전"}[r.category]||"검토 대기")));
+        line.append(summary);
+        const show=btn("원문 보기",()=>openDetail(r.id),"bct-evidence-open");
+        show.setAttribute("aria-label",r.product+" 원문 근거 상세 보기");
+        line.append(show);list.append(line);
+      }
+      detailBody.append(list);
+      if(evidence.length>shownBoardEvidence){
+        detailBody.append(btn("근거 "+number(evidence.length-shownBoardEvidence)+"건 더 보기",()=>{
+          shownBoardEvidence+=15;renderSector();
+        },"bct-more-button bct-evidence-more"));
+      }
+      detailBody.append(el("p","원문 위치가 확인돼도 수요·공급 관계와 병목 여부는 별도 검증이 필요합니다.","bct-evidence-warning"));
+    }
+    if(!current.some(r=>r.name===selectedBoardSector))selectedBoardSector=current.length?current[0].name:"";
+    renderRanks();renderSector();
+
+    const automation=el("section",null,"bct-first-panel bct-process-panel");
+    automation.append(add(el("div",null,"bct-panel-title"),el("span","⚙","bct-panel-icon"),el("h2","자동화와 자료 현황")));
+    const stripe=el("div",null,"bct-process-grid");
+    const rss=observed.rss;
+    const rssOk=rss&&rss.status==="completed"&&rss.conclusion==="success";
+    stripe.append(boardStatus("◉","뉴스 자동 수집",rssOk?"최근 수집 성공":rss?"최근 실행 "+(rss.conclusion==="failure"?"실패":"확인 필요"):"실행 기록 없음",
+      rssOk?"good":rss&&rss.conclusion==="failure"?"bad":"unknown",
+      rss?"실행 "+date(rss.created_at):"최근 예약 실행을 확인할 수 없습니다."));
+    const acquired=collection&&collection.counts||{};
+    const captureHold=acquired.new_seed_statuses&&Object.entries(acquired.new_seed_statuses).some(([key,n])=>key!=="CAPTURED"&&Number(n)>0);
+    stripe.append(boardStatus("▤","공식 원문 확보",!collection?"자료 미확인":captureHold?"일부 보류":"최근 확보 기록 있음",
+      !collection?"unknown":captureHold?"warn":"good",
+      collection?"새 공식 자료 "+number(acquired.new_verified_documents)+"건 · 미확보 사유는 별도 기록":"최근 확보 자료를 확인할 수 없습니다."));
+    const cpu=observed.cpu;
+    const cpuSuccess=cpu&&cpu.conclusion==="success";
+    const cpuLabel=cpuSuccess?"최근 예약 성공":cpu&&cpu.conclusion==="failure"?"최근 예약 실패":cpu?"예약 상태 확인 필요":"예약 기록 없음";
+    stripe.append(boardStatus("▣","문서 자동 읽기",cpuLabel,cpuSuccess?"good":cpu&&cpu.conclusion==="failure"?"bad":"unknown",
+      generation.producer_run_id?"최근 영속 저장 "+generation.producer_run_id+" · 수동/예약 별도":"저장 실행을 확인할 수 없습니다."));
+    stripe.append(boardStatus("⌕","판단 근거 검토",counts.review_pending_windows>0?"검토 "+number(counts.review_pending_windows)+"개 대기":"검토 기록 확인 필요",
+      counts.review_pending_windows>0?"warn":"unknown","인용 확인과 공급 부족 판단은 서로 다른 단계입니다."));
+    stripe.append(boardStatus("▣","화면 최신화",data.publication&&data.publication.automatic_deployment==="GITHUB_PAGES_ACTIONS"?"공개 화면 반영":"공개 상태 미확인",
+      data.publication&&data.publication.automatic_deployment==="GITHUB_PAGES_ACTIONS"?"good":"unknown","화면 생성 "+date(lastPublished)));
+    automation.append(stripe);
+    page.append(automation);
+
+    const metrics=el("section",null,"bct-first-panel bct-metrics-panel");
+    metrics.append(add(el("div",null,"bct-panel-title"),el("span","▥","bct-panel-icon"),el("h2","지금 상태")));
+    const metricsGrid=el("div",null,"bct-metrics-grid");
+    metricsGrid.append(
+      boardMetric("미판독 창",known(counts.pending_windows)?number(counts.pending_windows):"미확인","원문 확보된 입력 기준"),
+      boardMetric("원문 미확보",known(counts.held_inputs)?number(counts.held_inputs)+"건":"미확인","아직 읽을 본문이 없는 항목"),
+      boardMetric("의미 검토 대기",known(counts.review_pending_windows)?number(counts.review_pending_windows)+"개":"미확인","병목으로 확정된 건수 아님"),
+      boardMetric("마지막 화면 반영",date(lastPublished),"실제 게시된 자료 기준"),
+      boardMetric("최근 판독 저장",generation.producer_run_id?String(generation.producer_run_id):"미확인",
+        generation.RSS_run_id?"예약 연결 기록":"예약 성공 여부 별도 확인"));
+    metrics.append(metricsGrid);page.append(metrics);
+
+    const help=el("section",null,"bct-help-strip");
+    help.append(el("span","ⓘ","bct-help-icon"),el("strong","쉽게 보기"),
+      el("p","근거 기록이 많은 섹터부터 위에 보입니다. 산업을 누르면 실제 원문 기록을 볼 수 있습니다. 이전 순위는 검증된 지난 공개 화면과만 비교합니다."));
+    page.append(help);
+    page.append(el("p","※ 기록 건수는 고유한 병목 사건 수가 아닙니다. 아직 확인되지 않은 산업과 새 CPU 제품명 제안은 섹터 순위에서 제외했습니다.","bct-final-disclaimer"));
+  }
+
   function overview(){
     const c=data.counts; const future=Object.values(c.future_candidates).reduce((a,b)=>a+b,0);
     const hero=el("section",null,"hero");

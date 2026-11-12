@@ -13,6 +13,15 @@ assert data["publication"]["automatic_deployment"] == "GITHUB_PAGES_ACTIONS"
 assert len(data["records"]) == data["counts"]["evidence"]
 rows = list(data["records"]) + list(data.get("research_updates", {}).get("cpu_recovery", {}).get("records", []))
 assert len(rows) == manifest["evidence_count"]
+from bct.v4.sector_ranking import ranks
+assert data.get("sector_rankings") == ranks(data["records"])
+prior = data.get("sector_rank_previous", {})
+assert prior.get("status") in ("VERIFIED_PREVIOUS_PUBLIC_SNAPSHOT",
+                              "PREVIOUS_PUBLIC_SNAPSHOT_UNAVAILABLE",
+                              "PREVIOUS_PUBLIC_NOT_QUERIED_OUTSIDE_PAGES")
+if prior.get("status") == "VERIFIED_PREVIOUS_PUBLIC_SNAPSHOT":
+    assert len(prior["source_dashboard_sha256"]) == 64
+    assert all(x["rank"] > 0 for x in prior["ranks"].values())
 for row in rows:
     assert re.fullmatch("[a-f0-9]{64}", row["id"])
     detail = json.loads((root / "api/evidence" / (row["id"] + ".json")).read_text())

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#112f3a">
+  <meta name="description" content="실제 BCT V4 연구 자료로 미래 병목 후보, 판단 근거, 자동화 현황을 확인합니다.">
+  <title>BCT V4 · 미래 병목 연구실</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%23112f3a'/%3E%3Cpath d='M10 27V13h7a4 4 0 010 8h-7m7 0a3 3 0 010 6h-7M28 13v14' fill='none' stroke='%2391e1c0' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">본문으로 바로 가기</a>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#overview" aria-label="BCT 연구실 한눈에 보기"><span class="brand-symbol">B<span>CT</span><i></i></span><span class="brand-caption">미래 병목 연구실 <b>V4</b></span></a>
+      <p class="nav-label">연구 살펴보기</p>
+      <nav aria-label="주요 화면">
+        <a href="#overview" data-nav="overview"><span class="nav-icon" aria-hidden="true">◫</span>한눈에 보기</a>
+        <a href="#candidates" data-nav="candidates"><span class="nav-icon" aria-hidden="true">◎</span>미래 병목 후보</a>
+        <a href="#evidence" data-nav="evidence"><span class="nav-icon" aria-hidden="true">▤</span>판단 근거</a>
+        <a href="#automation" data-nav="automation"><span class="nav-icon" aria-hidden="true">↻</span>자동화 현황</a>
+      </nav>
+      <div class="sidebar-bottom"><span class="research-dot"></span><strong>연구 자료를 보는 화면</strong><p>저장된 기록을 읽습니다.<br>운영 판단과 알림은 바꾸지 않습니다.</p><span class="sidebar-line"></span><p>먼저 확인하는 변화,<br>근거로 좁혀 가는 후보.</p></div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar"><span class="breadcrumb">BCT 연구실 <span>/</span> 전 산업 탐색</span><div class="top-actions"><span class="read-only"><span></span>읽기 전용</span><button id="refresh" class="button small" type="button"><span aria-hidden="true">↻</span> 기록 새로 읽기</button></div></header>
+      <main id="main" tabindex="-1">
+        <div id="notice" role="status" aria-live="polite"></div>
+        <div id="content"><div class="loading"><span class="spinner"></span><h1>연구 기록을 불러오는 중입니다</h1><p>저장된 자료와 실행 기록을 확인하고 있습니다.</p></div></div>
+      </main>
+      <footer><span>BCT V4 · 미래 병목 연구</span><span>화면을 여는 동안 수집·AI 호출·후보 생성은 실행되지 않습니다.</span></footer>
+    </div>
+  </div>
+  <dialog id="detail" aria-labelledby="detail-title"><div class="dialog-top"><span>저장된 판단 근거</span><button type="button" class="icon-button" id="close-detail" aria-label="상세 닫기">×</button></div><div id="detail-body"></div></dialog>
+</body>
+</html>
