@@ -1,0 +1,83 @@
+name: BCT verified latest original-source view QA
+on:
+  push:
+    branches: [qa/bct-source-intake-20261113]
+    paths: ['.github/workflows/bct-source-intake-qa.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-linked-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify exact source intake receipt against public data branch
+        env:
+          PYTHONPATH: src
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e .
+          python -m pytest -q tests/test_v4_source_intake_public.py
+          python tools/v4_pages_research_input.py prepare --path var/v4/pages-input
+          GITHUB_WORKFLOW="Read-only BCT Pages" python tools/v4_dashboard_static_export.py \
+            --commit caf6268f438e05fbc6e37b0db80a9742fe112b91 --public-input var/v4/pages-input
+          GITHUB_WORKFLOW="Read-only BCT Pages" python tools/v4_dashboard_static_check.py
+          node --check var/v4/pages-site/app.js
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          folder=Path("var/v4/pages-site")
+          manifest=json.loads((folder/"build-manifest.json").read_bytes())
+          dashboard=json.loads((folder/"api/dashboard.json").read_bytes())
+          intake=json.loads((folder/"api/source-intake.json").read_bytes())
+          rss=json.loads((folder/"api/rss-news.json").read_bytes())
+          assert intake["source_run_id"]==43245595579
+          assert intake["rss_run_id"]==rss["source_run_id"]==43243530759
+          assert intake["status"]=="VERIFIED_PUBLIC_SOURCE_INTAKE"
+          assert intake["matches_current_rss"] is True
+          assert intake["seed_attempts"]==32 and intake["captured"]==13 and intake["held"]==19
+          assert intake["statuses"]=={"CAPTURED":13,"PROVENANCE_BLOCKED":16,"HTTP_403":2,"TIMEOUT":1}
+          assert intake["valid_additional_primary_documents"]==0
+          assert len(dashboard["records"])==511 and manifest["evidence_count"]==1703
+          assert manifest["rss_article_count"]==10365
+          assert hashlib.sha256((folder/"api/source-intake.json").read_bytes()).hexdigest()==manifest["source_intake_sha256"]
+          assert dashboard["sector_rankings"]["count_kind"]=="SOURCE_LINKED_RESEARCH_RECORDS_NOT_VERIFIED_SHORTAGES"
+          print("BCT_SOURCE_INTAKE_EXACT_PASS", json.dumps({
+            "source_run_id":intake["source_run_id"],"rss_run_id":intake["rss_run_id"],
+            "attempts":intake["seed_attempts"],"captured":intake["captured"],"held":intake["held"],
+            "statuses":intake["statuses"],"ranked_research":len(dashboard["records"]),
+            "rss_articles":rss["visible_article_count"],
+            "source_artifact_sha256":intake["source_artifact_sha256"]},ensure_ascii=False))
+          PY
+      - name: Browser-check 16-inch and mobile preserved sectors and capture notes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/bct-acq-browser"
+          cd "$RUNNER_TEMP/bct-acq-browser"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.56.1
+          npx playwright install chromium
+          cd "$GITHUB_WORKSPACE"
+          python -m http.server 8767 --directory var/v4/pages-site >/tmp/bct-status-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true' EXIT
+          NODE_PATH="$RUNNER_TEMP/bct-acq-browser/node_modules" node qa/source-intake-browser-verify.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-source-intake-display-qa
+          path: qa/source-intake-proof/
+          retention-days: 7
+          if-no-files-found: warn
