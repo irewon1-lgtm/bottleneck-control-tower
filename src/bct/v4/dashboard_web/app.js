@@ -503,6 +503,44 @@
     return add(el("div",null,"bct-metric"),el("span",label,"bct-metric-label"),el("strong",reading,"bct-metric-value"),el("small",note||"","bct-metric-note"));
   }
 
+
+  // Genuine latest new-only source-intake receipt; the legacy automatic
+  // observation remains distinct, so a manual run is never a scheduled one.
+  function sourceIntakePanel(){
+    const item=data.latest_source_capture;
+    const area=el("section",null,"bct-first-panel bct-source-intake");
+    area.append(add(el("div",null,"bct-panel-title"),el("span","▤","bct-panel-icon"),
+      el("h2","기사 수집 → 원문 확보 결과")));
+    if(!item||item.status!=="VERIFIED_PUBLIC_SOURCE_INTAKE"){
+      area.append(el("p","최근 원문 확보 실행의 공개 검증 기록을 확인할 수 없습니다. 과거 수집 실적을 최신 결과로 대신 표시하지 않습니다.","bct-source-note"));
+      return area;
+    }
+    const mode=item.source_event==="workflow_dispatch"?"요청하여 실행":"자동 연동 실행";
+    const cells=el("div",null,"bct-source-grid");
+    for(const [label,note,amt] of [
+      ["원문 확보 시도",mode,item.seed_attempts],
+      ["원문·출처 검증 통과","새 원문 자료, 병목 확정 아님",item.captured],
+      ["검증 보류·접근 실패","검증 미통과",item.held],
+      ["독립 1차 근거 확보","별도 검증 완료 문서",item.valid_additional_primary_documents]
+    ])cells.append(add(el("div",null,"bct-source-cell"),
+      el("span",label),el("strong",number(amt)+"건"),el("small",note)));
+    area.append(cells);
+    const statusLabels={
+      CAPTURED:"원문 확보",PROVENANCE_BLOCKED:"원출처 확인 보류",
+      TIMEOUT:"접속 시간 초과",HTTP_403:"접근 거부(403)",
+      NETWORK_FAILED:"연결 실패",CONNECT_BLOCKED:"연결 차단",
+      DUPLICATE_BODY_EXCLUDED:"중복 본문 제외",
+      EXISTING_CORPUS_EXCLUDED:"기존 자료 제외",
+      BEFORE_NEW_COLLECTION_CUTOVER:"수집 기준일 이전"
+    };
+    const status=(Object.entries(item.statuses||{})
+       .map(([key,n])=>(statusLabels[key]||key)+" "+number(n)+"건").join(" · "));
+    const current=item.matches_current_rss?"이번 최신 RSS 수집과 일치":"최신 RSS보다 앞선 원문 확보 실행";
+    area.append(el("p","원문 확보 "+date(item.completed_at)+" · "+current+" · "+status,"bct-source-note"));
+    area.append(el("p","이 숫자는 원문 접근·출처 확인 결과입니다. 병목 섹터 근거 511건이나 독립 수요·공급 검증 건수에 자동 합산하지 않습니다.","bct-source-disclaimer"));
+    return area;
+  }
+
   function firstOverview(){
     const current=boardRankRows();
     const snapshot=data.operating_research||null;
@@ -519,6 +557,7 @@
       el("span","확정된 미래 병목 "+number(future)+"건 · 근거 기록이 많아도 공급 부족 확정은 아닙니다.","bct-promise"));
     page.append(title);
     page.append(rssNewsTeaser());
+    page.append(sourceIntakePanel());
 
     const columns=el("div",null,"bct-rank-columns");
     const rankingPanel=el("section",null,"bct-first-panel");
@@ -629,11 +668,16 @@
     stripe.append(boardStatus("◉","뉴스 자동 수집",rssOk?"최근 수집 성공":rss?"최근 실행 "+(rss.conclusion==="failure"?"실패":"확인 필요"):"실행 기록 없음",
       rssOk?"good":rss&&rss.conclusion==="failure"?"bad":"unknown",
       rss?"실행 "+date(rss.created_at):"최근 예약 실행을 확인할 수 없습니다."));
+    const latest=data.latest_source_capture;
+    const hasCurrent=latest?.status==="VERIFIED_PUBLIC_SOURCE_INTAKE"&&latest.matches_current_rss;
     const acquired=collection&&collection.counts||{};
     const captureHold=acquired.new_seed_statuses&&Object.entries(acquired.new_seed_statuses).some(([key,n])=>key!=="CAPTURED"&&Number(n)>0);
-    stripe.append(boardStatus("▤","공식 원문 확보",!collection?"자료 미확인":captureHold?"일부 보류":"최근 확보 기록 있음",
-      !collection?"unknown":captureHold?"warn":"good",
-      collection?"새 공식 자료 "+number(acquired.new_verified_documents)+"건 · 미확보 사유는 별도 기록":"최근 확보 자료를 확인할 수 없습니다."));
+    stripe.append(boardStatus("▤","기사 원문 확보",
+      hasCurrent?(latest.held?"확보 "+number(latest.captured)+"건 · 일부 보류":"확보 "+number(latest.captured)+"건"):
+      !collection?"자료 미확인":captureHold?"기존 실행 일부 보류":"기존 실행 확보 기록",
+      hasCurrent?(latest.held?"warn":"good"):!collection?"unknown":captureHold?"warn":"good",
+      hasCurrent?"최신 수집 "+number(latest.seed_attempts)+"건 처리 · "+number(latest.held)+"건 미확보 · "+date(latest.completed_at):
+      collection?"이전 자동 실행 원문 "+number(acquired.new_verified_documents)+"건 · 최신 처리와 구분":"원문 확보 기록 확인 필요"));
     const cpu=observed.cpu;
     const cpuSuccess=cpu&&cpu.conclusion==="success";
     const cpuLabel=cpuSuccess?"최근 예약 성공":cpu&&cpu.conclusion==="failure"?"최근 예약 실패":cpu?"예약 상태 확인 필요":"예약 기록 없음";
@@ -733,6 +777,26 @@
   function operatingAutomation(){
     const r=data.operating_research,c=data.collection_observation,w=data.workflow_observation?.workflows||{},n=r?.counts,b=r?.last_read_batch;
     if(data.public_transport&&data.public_transport.pending_reason!=="NONE")content.append(el("p",`공개 요약 연결 확인 대기 · ${data.public_transport.pending_reason}. 확인된 저장 세대는 보존하며, 대기 중인 실행을 완료로 세지 않습니다.`,"notice"));
+    const newest=data.latest_source_capture;
+    if(newest?.status==="VERIFIED_PUBLIC_SOURCE_INTAKE"){
+      const p=panel("최신 기사 원문 확보 실행 · 실제 저장 확인",
+        "최신 RSS와 연결되는 수집 실행과 자동 실행으로 수집된 과거 자료를 구분합니다.");
+      const statusNames={CAPTURED:"원문 확보",PROVENANCE_BLOCKED:"출처 보류",
+        HTTP_403:"접근 거부 403",TIMEOUT:"시간 초과",NETWORK_FAILED:"네트워크 실패",
+        CONNECT_BLOCKED:"연결 차단"};
+      p.append(add(el("div",null,"stats-grid"),
+        stat("이번 원문 확보 시도",newest.seed_attempts,"RSS 수집 기사 중 새로 처리한 건수","▤"),
+        stat("원문·출처 확인",newest.captured,"원문 확보 · 병목 근거 확정 아님","✓"),
+        stat("원문 미확보·보류",newest.held,"원출처 확인 또는 네트워크 장애","!"),
+        stat("추가 독립 1차 자료",newest.valid_additional_primary_documents,"검증된 반대편 근거 문서 수","◷")));
+      p.append(el("p","저장 "+date(newest.completed_at)+" · "+(newest.source_event==="workflow_dispatch"?"요청 실행":"자동 연동")+" · "+
+        (newest.matches_current_rss?"현재 최신 RSS 수집과 일치":"이후 RSS 수집이 더 존재함"),"section-note"),
+        el("p",Object.entries(newest.statuses||{}).map(([k,n])=>(statusNames[k]||k)+" "+number(n)+"건").join(" · "),"section-note"),
+        el("p","기존 자동 원문 확보 기록 "+date(c?.completed_at)+"과 별개입니다. 최신 원문을 기존 산업 순위의 증거 수에 자동 추가하지 않습니다.","section-note"));
+      const origin=external("실행 내역 보기","https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/"+newest.source_run_id);
+      if(origin)p.append(origin);
+      content.append(p);
+    }
     const grid=el("div",null,"automation-grid");
     const review=r?Object.entries(r.analysis.states).map(([key,count])=>`${stateLabel(key)} ${number(count)}`).join(" · "):"영속 저장된 공개 연구 요약 대기";
     for(const [idx,title,status,description,last]of[
