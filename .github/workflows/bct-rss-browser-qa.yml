@@ -29,7 +29,7 @@ jobs:
           set -euo pipefail
           python -m pip install -e .
           python tools/v4_pages_research_input.py prepare --path var/v4/pages-input
-          GITHUB_WORKFLOW="Read-only BCT Pages" python tools/v4_dashboard_static_export.py --commit 7889c99ec52df061e9eb81e64264670323dbe178 --public-input var/v4/pages-input
+          GITHUB_WORKFLOW="Read-only BCT Pages" python tools/v4_dashboard_static_export.py --commit 019f77d667d791b229bcc6a3a8518286d0efaaef --public-input var/v4/pages-input
           GITHUB_WORKFLOW="Read-only BCT Pages" python tools/v4_dashboard_static_check.py
           node --check var/v4/pages-site/app.js
           sudo apt-get update -qq
