@@ -57,7 +57,7 @@ if manifest.get("rss_news_sha256"):
     assert len([r for r in rss["articles"] if r["is_new"]]) == rss["new_article_count"]
     assert rss["feed_failed"] == len(rss["failed_feeds"])
     assert rss["classification"] == "RSS_TITLE_METADATA_NOT_VERIFIED_BOTTLENECK"
-    assert all(set(r) == {"id", "source", "title", "url", "published_at", "publication_date_status",
+    assert all(set(r) == {"id", "source", "source_group", "title", "url", "published_at", "publication_date_status",
                           "collected_at", "snippet", "is_new", "link_available"} for r in rss["articles"])
     assert data["sector_rankings"] == ranks(data["records"])  # RSS adds no ranking signal.
 else:
