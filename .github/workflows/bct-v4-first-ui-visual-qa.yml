@@ -13,6 +13,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - name: Install Korean fonts only in the temporary visual QA runner
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-cache -f
+          fc-match :lang=ko
       - name: Install isolated browser test tools for this one test, not production
         shell: bash
         run: |
