@@ -1,4 +1,4 @@
-name: BCT CPU pending exact-window third batch once 20261112
+name: BCT CPU pending exact-window final fourth batch once 20261112
 on:
   push:
     branches: [ops/bct-pending-window-drain-20261112]
@@ -38,17 +38,17 @@ jobs:
               raise ValueError('PENDING_DRAIN_SOURCE_GENERATION_CHANGED')
           cpu=get('actions/workflows/v4-cpu-private-research.yml/runs?per_page=30')['workflow_runs']
           for row in cpu:
-              if row['id']>43172851442 and (row.get('status')!='completed' or row.get('conclusion')!='skipped'):
+              if row['id']>43173351817 and (row.get('status')!='completed' or row.get('conclusion')!='skipped'):
                   raise ValueError('PENDING_DRAIN_NEWER_CPU_RUN_EXISTS')
-          producer=get('actions/runs/43172851442')
+          producer=get('actions/runs/43173351817')
           if (producer.get('status')!='completed' or producer.get('conclusion')!='success'
                   or producer.get('path')!='.github/workflows/v4-cpu-private-research.yml'
                   or producer.get('head_branch')!='main'):
               raise ValueError('PENDING_DRAIN_LAST_PUBLISHER_UNVERIFIED')
-          b=[a for a in get('actions/runs/43172851442/artifacts?per_page=100')['artifacts']
+          b=[a for a in get('actions/runs/43173351817/artifacts?per_page=100')['artifacts']
              if a.get('name')=='bct-sealed-cpu-bridge-1']
-          if (len(b)!=1 or b[0].get('id')!=13922578795
-                  or b[0].get('digest')!='sha256:7d589ec29e18050bb1b898619ee2c2fbf8cfd0b11375fa4b277f8391631feafc'
+          if (len(b)!=1 or b[0].get('id')!=13922724039
+                  or b[0].get('digest')!='sha256:edeb5bdbbd1902c0b34215e4c69cf33f5cdacae72c4743fcee08dc8ee9a3c687'
                   or b[0].get('expired') is not False):
               raise ValueError('PENDING_DRAIN_EXACT_BRIDGE_UNAVAILABLE')
           acquisition=get('actions/runs/43142524193')
@@ -62,7 +62,7 @@ jobs:
                   or sources[0].get('digest')!='sha256:24e5ae2b24170372f044c8a4893e1690d1ea02cf35e49118963d47bff1ff1966'
                   or sources[0].get('expired') is not False):
               raise ValueError('PENDING_DRAIN_SOURCE_ARTIFACT_UNAVAILABLE')
-          print('BCT_PENDING_DRAIN_PRECHECK_PASS: public cursor22, latest private publisher24, previous durable remaining43, exact old input, old completed receipts retained')
+          print('BCT_PENDING_DRAIN_PRECHECK_PASS: public cursor22, latest private publisher26, previous durable remaining19, exact old input, old completed receipts retained')
           PY
       - name: Resume existing pinned GLiNER2 only through the existing official manual-research path
         run: |
