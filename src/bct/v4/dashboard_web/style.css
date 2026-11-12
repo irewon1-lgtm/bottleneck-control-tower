@@ -177,3 +177,76 @@ body:has(.bct-first-app){color:#12253f;background:#f7f9fd;font-size:16px;line-he
   .bct-help-strip p{font-size:12px}
   .bct-first-app footer{flex-direction:column;align-items:flex-start;font-size:11px;padding:12px 15px}
 }
+
+
+/* Mobile: preserve the approved desktop table while keeping all seven fields
+   visible as tappable, full-width cards, not a clipped 620px horizontal table. */
+@media (max-width:740px){
+  .bct-first-page .bct-table-scroll{overflow:visible;padding:9px}
+  .bct-first-page .bct-rank-table{display:block;width:100%;min-width:0;background:transparent;border:0;border-radius:0;overflow:visible}
+  .bct-first-page .bct-rank-table thead{display:none}
+  .bct-first-page .bct-rank-table tbody{display:grid;gap:9px}
+  .bct-first-page .bct-rank-table tbody tr{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-template-areas:
+      "sector sector sector sector"
+      "current previous change count"
+      "recent recent action action";
+    gap:5px;
+    border:1px solid #c8d8f0;
+    border-radius:10px;
+    padding:10px 8px;
+    box-shadow:0 1px 3px #25487810;
+    background:#fff;
+    overflow:hidden;
+  }
+  .bct-first-page .bct-rank-table tbody tr.bct-row-selected{
+    background:#e6f1ff;
+    border-color:#2472d7;
+    box-shadow:inset 0 0 0 1px #2472d7;
+  }
+  .bct-first-page .bct-rank-table tbody td{
+    display:block;
+    border:0!important;
+    padding:5px 3px;
+    min-width:0;
+    max-width:none;
+    font-size:14px;
+    line-height:1.35;
+    background:transparent;
+    text-align:center;
+    overflow-wrap:anywhere;
+  }
+  .bct-first-page .bct-rank-table tbody td[data-label]:not(.bct-sector-cell)::before{
+    content:attr(data-label);
+    display:block;
+    font-size:10px;
+    font-weight:700;
+    color:#56677f;
+    margin:0 0 4px;
+    white-space:nowrap;
+  }
+  .bct-first-page .bct-rank-table tbody td:nth-child(1){grid-area:current}
+  .bct-first-page .bct-rank-table tbody td:nth-child(2){grid-area:previous}
+  .bct-first-page .bct-rank-table tbody td:nth-child(3){grid-area:change}
+  .bct-first-page .bct-rank-table tbody td:nth-child(4){grid-area:sector;padding:4px 7px 10px;border-bottom:1px solid #d2deed!important}
+  .bct-first-page .bct-rank-table tbody td:nth-child(5){grid-area:count}
+  .bct-first-page .bct-rank-table tbody td:nth-child(6){grid-area:recent;align-self:center}
+  .bct-first-page .bct-rank-table tbody td:nth-child(7){grid-area:action;display:flex;align-items:center;justify-content:flex-end}
+  .bct-first-page .bct-rank-table .bct-sector-name{
+    font-size:19px;
+    font-weight:900;
+    text-align:left;
+    line-height:1.35;
+    width:100%;
+    white-space:normal;
+  }
+  .bct-first-page .bct-rank-table .bct-rank-number{font-size:15px!important}
+  .bct-first-page .bct-rank-table .bct-evidence-count{font-size:20px!important}
+  .bct-first-page .bct-rank-table .bct-date-cell{font-size:12px!important;white-space:normal}
+  .bct-first-page .bct-rank-table .bct-view-button{min-width:115px;min-height:38px;font-size:14px}
+  .bct-first-page .bct-rank-table .bct-empty-rank{display:block;grid-column:1/-1;text-align:left}
+  .bct-first-page .bct-evidence-record{grid-template-columns:80px 90px minmax(0,1fr)}
+  .bct-first-page .bct-evidence-open{grid-column:3;justify-self:stretch}
+}
