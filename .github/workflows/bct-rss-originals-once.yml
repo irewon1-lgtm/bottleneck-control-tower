@@ -1,0 +1,35 @@
+name: BCT requested one-shot RSS to original-source intake
+on:
+  push:
+    branches:
+      - ops/bct-rss-originals-20261112
+    paths:
+      - .github/workflows/bct-rss-originals-once.yml
+permissions:
+  contents: read
+  actions: write
+jobs:
+  trigger-approved-pipeline-once:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - name: Dispatch existing main RSS workflow, triggering original-source acquisition on success
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GH_REPO" = "irewon1-lgtm/bottleneck-control-tower"
+          state=$(gh api "repos/$GH_REPO/actions/workflows/rss-live-check.yml" --jq '.state')
+          test "$state" = active
+          head=$(gh api "repos/$GH_REPO/branches/main" --jq '.commit.sha')
+          test "$head" = "522814683f0b31b94f07675c5a2d2ec5ce35c2af"
+          echo "EXPECTED_MAIN_SHA=$head"
+          echo "REQUESTED_FLOW=RSS_live_environment_check:main -> New_precursor_evidence_acquisition"
+          echo "SAFE_SCOPE=existing workflow, dedupe RSS, newly added documents only"
+          gh workflow run rss-live-check.yml --ref main --field live_snapshot_only=false --field live_document_ids='[]'
+          echo "BCT_RSS_ORIGINALS_DISPATCH_ACCEPTED"
+          gh api "repos/$GH_REPO/actions/workflows/rss-live-check.yml/runs?event=workflow_dispatch&per_page=3" \
+            --jq '.workflow_runs[] | {id,head_branch,status,conclusion,created_at}'
