@@ -1,0 +1,74 @@
+name: BCT CPU pending exact-window second batch once 20261112
+on:
+  push:
+    branches: [ops/bct-pending-window-drain-20261112]
+    paths: ['.github/workflows/bct-pending-drain-once-20261112.yml']
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: bct-cpu-pending-safe-drain-dispatch
+  cancel-in-progress: false
+jobs:
+  verify-and-dispatch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check saved CPU generation 22 and exact input before one bounded manual research resume
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64,json,os,subprocess
+          repo=os.environ['GITHUB_REPOSITORY']
+          def get(path):
+              p=subprocess.run(['gh','api','repos/'+repo+'/'+path],capture_output=True,text=True,timeout=20)
+              if p.returncode:raise ValueError('PENDING_DRAIN_METADATA_UNAVAILABLE')
+              return json.loads(p.stdout)
+          if get('branches/main')['commit']['sha']!='6fb60adda5c18c9078fad752739ec3ced8e815d0':
+              raise ValueError('PENDING_DRAIN_MAIN_MOVED')
+          r=get('contents/v4-public/research.json?ref=data')
+          durable=json.loads(base64.b64decode(r['content']))
+          generation=durable['generation']
+          if (generation.get('ack_sequence')!=22
+                  or generation.get('producer_run_id')!=43168975665
+                  or generation.get('private_commit')!='f51845c0b999ceb6c38e8f2741db8620307a012e'
+                  or durable['counts'].get('pending_windows')!=67):
+              raise ValueError('PENDING_DRAIN_SOURCE_GENERATION_CHANGED')
+          cpu=get('actions/workflows/v4-cpu-private-research.yml/runs?per_page=30')['workflow_runs']
+          for row in cpu:
+              if row['id']>43168975665 and (row.get('status')!='completed' or row.get('conclusion')!='skipped'):
+                  raise ValueError('PENDING_DRAIN_NEWER_CPU_RUN_EXISTS')
+          producer=get('actions/runs/43168975665')
+          if (producer.get('status')!='completed' or producer.get('conclusion')!='success'
+                  or producer.get('path')!='.github/workflows/v4-cpu-private-research.yml'
+                  or producer.get('head_branch')!='main'):
+              raise ValueError('PENDING_DRAIN_LAST_PUBLISHER_UNVERIFIED')
+          b=[a for a in get('actions/runs/43168975665/artifacts?per_page=100')['artifacts']
+             if a.get('name')=='bct-sealed-cpu-bridge-1']
+          if (len(b)!=1 or b[0].get('id')!=13921795399
+                  or b[0].get('digest')!='sha256:fa23e662e61503b58806c655f4e0a767b744a76caee7419fd13c672eac2d5042'
+                  or b[0].get('expired') is not False):
+              raise ValueError('PENDING_DRAIN_EXACT_BRIDGE_UNAVAILABLE')
+          acquisition=get('actions/runs/43142524193')
+          if (acquisition.get('conclusion')!='success'
+                  or acquisition.get('path')!='.github/workflows/precursor-acquisition.yml'
+                  or acquisition.get('event')!='workflow_run' or acquisition.get('head_branch')!='main'):
+              raise ValueError('PENDING_DRAIN_EXACT_INPUT_RUN_NOT_VERIFIED')
+          sources=[a for a in get('actions/runs/43142524193/artifacts?per_page=100')['artifacts']
+                   if a.get('name')=='precursor-cpu-delta-1']
+          if (len(sources)!=1 or sources[0].get('id')!=13910531867
+                  or sources[0].get('digest')!='sha256:24e5ae2b24170372f044c8a4893e1690d1ea02cf35e49118963d47bff1ff1966'
+                  or sources[0].get('expired') is not False):
+              raise ValueError('PENDING_DRAIN_SOURCE_ARTIFACT_UNAVAILABLE')
+          print('BCT_PENDING_DRAIN_PRECHECK_PASS: predecessor 22, 67 windows, exact old input, old completed receipts retained')
+          PY
+      - name: Resume existing pinned GLiNER2 only through the existing official manual-research path
+        run: |
+          set -euo pipefail
+          printf '%s\n' '{"ref":"main","inputs":{"purpose":"manual-research","acquisition_run":"43142524193"}}' > "$RUNNER_TEMP/pending.json"
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/v4-cpu-private-research.yml/dispatches" \
+            --input "$RUNNER_TEMP/pending.json" >/dev/null
+          echo 'BCT_MANUAL_RESUME_DISPATCHED; this is NOT a scheduled result or a durable PASS.'
