@@ -139,7 +139,7 @@ def test_acquisition_workflow_uses_bounded_history_and_separate_current_source_d
     assert 'acquisition_sources.py restore' in text
     assert '!var/new-precursors/evaluations/**' in text
     assert 'name: precursor-cpu-delta' in text and 'name: bct-public-acquisition' in text
-    assert 'RSS_RUN_ID: ${{ github.event.workflow_run.id }}' in text
+    assert 'RSS_RUN_ID: ${{ github.event.workflow_run.id || inputs.rss_run_id }}' in text
 
 
 def test_matching_metadata_with_invalid_raw_path_stays_for_per_source_hold(tmp_path):
