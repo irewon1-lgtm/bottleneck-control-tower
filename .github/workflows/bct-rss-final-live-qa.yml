@@ -39,6 +39,10 @@ jobs:
           assert rss['source_run_id']==manifest['rss_source_run_id']==dash['rss_news_summary']['source_run_id']
           assert rss['visible_article_count']==len(rss['articles'])==manifest['rss_article_count']
           assert rss['new_article_count']==sum(x['is_new'] for x in rss['articles'])
+          assert rss['source_run_id']==43243530759
+          assert rss['visible_article_count']==10365
+          assert rss['new_article_count']==32
+          assert rss['feed_failed']==0
           assert rss['classification']=='RSS_TITLE_METADATA_NOT_VERIFIED_BOTTLENECK'
           assert len(dash['records'])==511
           assert len(dash['sector_rankings']['rows'])>0
