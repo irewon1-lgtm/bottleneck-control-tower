@@ -225,7 +225,7 @@
   const badge = (text, tone="") => el("span", text, `badge ${tone}`);
   const btn = (text, action, cls="button") => { const n=el("button",text,cls); n.type="button"; if(action)n.addEventListener("click",action); return n; };
   const link = (text, href, cls="text-link") => { const n=el("a",text,cls); n.href=href; return n; };
-  const external = (text, raw) => { try { const u=new URL(raw); if(!["http:","https:"].includes(u.protocol)||u.username||u.password)return null; const n=link(text,u.href);n.target="_blank";n.rel="noopener noreferrer";return n; } catch {return null;} };
+  const external = (text, raw, cls="text-link") => { try { const u=new URL(raw); if(!["http:","https:"].includes(u.protocol)||u.username||u.password)return null; const n=link(text,u.href,cls);n.target="_blank";n.rel="noopener noreferrer";return n; } catch {return null;} };
   const displayStage = s => ({S1:"변화 신호 · S1",S2:"대상 구체화 · S2",S3:"공급 공백 근거 · S3"}[s]||"단계 판정 전");
   const detailButton = (r, text="근거 보기") => { const b=btn(text,()=>openDetail(r.id),"button small");b.setAttribute("aria-label",`${productLabel(r.product)} ${text}`);b.dataset.evidence=r.id;return b; };
   const panels = {
