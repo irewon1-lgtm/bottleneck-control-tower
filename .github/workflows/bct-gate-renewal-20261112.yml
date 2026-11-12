@@ -1,4 +1,5 @@
 # One-time current-main Gate 0–6 renewal after the CPU handoff merge.
+# 2026-11-13 verified manual source restore repair: request a fresh REAL Gate after merge; no bypass.
 # The second job safely attests any eligible actual manual main Gate, without
 # rewriting protected code or source DBs. Receipt JSON is excluded from the
 # existing code_path release guard.
@@ -6,7 +7,7 @@ name: BCT Gate 0-6 release proof renewal
 on:
   push:
     branches: [main]
-    paths: ['.github/workflows/bct-gate-renewal-20261112.yml', '.github/scripts/acquisition_sources.py', 'tests/test_acquisition_sources.py']
+    paths: ['.github/workflows/bct-gate-renewal-20261112.yml']
   workflow_run:
     workflows: [BCT recovery storage gates]
     types: [completed]
