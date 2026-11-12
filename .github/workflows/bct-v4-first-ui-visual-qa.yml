@@ -45,7 +45,7 @@ jobs:
             const r = await api.request.get(site + 'build-manifest.json', {timeout:30000});
             assert.equal(r.status(), 200, 'Manifest must be reachable');
             const manifest = await r.json();
-            assert.equal(manifest.code_commit, '2508c5ef0ffd63eaf5055865e53b1bc9460af552');
+            assert.equal(manifest.code_commit, '64432f01fbb9fd032f77bec7850ae0f5e2a12ba9');
             assert.equal(manifest.research_generation.ack_sequence, 28);
             await api.close();
             for(const [mode,width,height] of [['desktop',1500,950],['mobile',390,844]]) {
@@ -62,6 +62,15 @@ jobs:
               assert.equal((await sectors.nth(0).innerText()).trim(),'전력·발전');
               assert.equal((await page.locator('.bct-evidence-count').nth(0).innerText()).trim(),'244');
               assert.equal(await page.locator('.bct-process-item').count(),5);
+              if (mode === 'mobile') {
+                const rankScroll = await page.locator('.bct-table-scroll').evaluate(node =>
+                  ({ scroll: node.scrollWidth, visible: node.clientWidth }));
+                assert(rankScroll.scroll <= rankScroll.visible + 2,
+                  'mobile rank table must not require horizontal scrolling: ' + JSON.stringify(rankScroll));
+                const firstRow = await page.locator('.bct-rank-table tbody tr').first().boundingBox();
+                assert(firstRow && firstRow.width <= width,
+                  'mobile selected row must fit the screen');
+              }
               const previous = (await page.locator('.bct-rank-table tbody tr:first-child td:nth-child(2)').innerText()).trim();
               assert(previous.length > 0);
               await page.screenshot({path:mode+'-first-ui.png',fullPage:true,animations:'disabled'});
