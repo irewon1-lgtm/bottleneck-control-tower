@@ -27,7 +27,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install -e .
+          python -m pip install -e . pytest
           python -m pytest -q tests/test_v4_source_intake_public.py
           python tools/v4_pages_research_input.py prepare --path var/v4/pages-input
           GITHUB_WORKFLOW="Read-only BCT Pages" python tools/v4_dashboard_static_export.py \
