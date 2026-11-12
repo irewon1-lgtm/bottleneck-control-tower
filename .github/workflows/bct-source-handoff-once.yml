@@ -1,0 +1,29 @@
+name: BCT exact RSS originals handoff requested by owner
+on:
+  push:
+    branches: [ops/bct-source-handoff-20261113]
+    paths: ['.github/workflows/bct-source-handoff-once.yml']
+permissions:
+  contents: read
+  actions: write
+jobs:
+  dispatch-verified-original-intake:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Dispatch only once for verified source RSS run 43243530759/1
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GH_REPO" = 'irewon1-lgtm/bottleneck-control-tower'
+          head=$(gh api "repos/$GH_REPO/branches/main" --jq '.commit.sha')
+          test "$head" = 'ef50df4cd2e2926cf5478fef209449fa85b0a660'
+          echo "MAIN_SOURCE_HANDOFF_VERIFIED=$head"
+          gh api "repos/$GH_REPO/actions/workflows/precursor-acquisition.yml" --jq '.state' | grep -qx active
+          gh workflow run precursor-acquisition.yml --ref main --field rss_run_id=43243530759 --field rss_run_attempt=1
+          echo 'BCT_ORIGINAL_ACQUISITION_DISPATCH_ACCEPTED source_RSS=43243530759 attempt=1'
+          gh api "repos/$GH_REPO/actions/workflows/precursor-acquisition.yml/runs?event=workflow_dispatch&per_page=3" --jq '.workflow_runs[] | {id,head_branch,status,conclusion,created_at}'
