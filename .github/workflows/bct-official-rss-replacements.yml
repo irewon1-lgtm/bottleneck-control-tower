@@ -1,0 +1,63 @@
+name: BCT official replacement feed read-only probe
+on:
+  push:
+    branches: [qa/bct-rss-readonly-20261112]
+    paths: ['.github/workflows/bct-official-rss-replacements.yml']
+permissions:
+  contents: read
+jobs:
+  official-probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Probe never-tried official feeds once, no LIVE writes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from urllib.request import urlopen, Request
+          from urllib.error import HTTPError, URLError
+          from xml.etree import ElementTree as ET
+          import json
+          candidates = {
+            "ESA overall": "https://www.esa.int/rssfeed/TopNews",
+            "ESA overall rss": "https://www.esa.int/rss/news.rss",
+            "ESA launchers new": "https://www.esa.int/rssfeed/Enabling_Support/Space_Transportation",
+            "ESA navigation new": "https://www.esa.int/rssfeed/Applications/Satellite_navigation",
+            "ESA science new": "https://www.esa.int/rssfeed/Science_Exploration/Space_Science",
+            "ESA engineering new": "https://www.esa.int/rssfeed/Enabling_Support/Space_Engineering_Technology",
+            "ESA operations new": "https://www.esa.int/rssfeed/Enabling_Support/Operations",
+            "ESA connectivity new": "https://www.esa.int/rssfeed/Applications/Connectivity_and_Secure_Communications",
+            "ESA human new": "https://www.esa.int/rssfeed/Science_Exploration/Human_and_Robotic_Exploration",
+            "DOE general working": "https://www.energy.gov/rss/hgeo/2282977",
+            "DOE FECM techlines www": "https://www.energy.gov/fe/techlines?view=rss",
+            "DOE FECM press www": "https://www.energy.gov/fecm/listings/fecm-press-releases-and-techlines?view=rss",
+            "DOE clean coal www": "https://www.energy.gov/fe/clean-coal-news?view=rss",
+            "DOE CCS www": "https://www.energy.gov/fe/carbon-capture-storage-news?view=rss",
+          }
+          output={}
+          for name,url in candidates.items():
+            try:
+              req=Request(url, headers={"User-Agent":"BottleneckControlTower/0.1","Accept":"application/rss+xml, application/atom+xml, application/xml, text/xml"})
+              with urlopen(req,timeout=8) as response:
+                data=response.read(600_000+1)
+                status=response.status; actual_url=response.url
+              if len(data)>600_000: raise ValueError("FEED_OVERSIZE")
+              if b'<!DOCTYPE' in data.upper() or b'<!ENTITY' in data.upper(): raise ValueError("DTD_FORBIDDEN")
+              root=ET.fromstring(data)
+              entries=sum(1 for node in root.iter() if node.tag.rsplit('}',1)[-1] in ('item','entry'))
+              output[name]={"code":status,"xml_root":root.tag[:80],"entries":entries,"url":actual_url[:280]}
+            except (Exception) as ex:
+              output[name]={"error":type(ex).__name__,"status":ex.code if isinstance(ex,HTTPError) else None}
+          print("BCT_OFFICIAL_FEED_PROBE",json.dumps(output,ensure_ascii=False))
+          from pathlib import Path
+          Path('official-feed-probe.json').write_text(json.dumps(output,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bct-official-feed-probe
+          path: official-feed-probe.json
+          retention-days: 7
