@@ -259,3 +259,85 @@ def test_referenced_sec_native_metadata_is_carried_with_the_same_source_version(
     module.build_delta(cache,rss,dest,rss_run_id=10,acquisition_run_id=11,head_sha='a'*40)
     assert (dest/'raw'/(native_hash+'.json')).read_bytes()==native
     assert json.loads((dest/'documents/one.json').read_text())['sec_filing_metadata']==doc['sec_filing_metadata']
+
+def _verified_manual_prior_fixture(monkeypatch, module, *, event='workflow_dispatch', step_fail=None,
+                                   run_attempt=1):
+    from types import SimpleNamespace
+    run={'id':43245595579,'run_attempt':run_attempt,'head_sha':'a'*40,
+         'path':'.github/workflows/precursor-acquisition.yml','head_branch':'main',
+         'event':event,'conclusion':'success',
+         'head_repository':{'full_name':'irewon1-lgtm/bottleneck-control-tower'}}
+    names=(
+        'Verify exact completed RSS run before manual original-source intake',
+        'Restore new-only private evidence state and receive RSS delta',
+        'Acquire new precursor scope and independent opposite-side evidence',
+        'Persist aggregate index without rewriting canonical database or LIVE state',
+        'Persist only newly appended LIVE records with compare and swap')
+    job={'name':'acquire','conclusion':'success','run_attempt':run_attempt,
+         'steps':[{'name':name,'conclusion':'failure' if name==step_fail else 'success'} for name in names]}
+    artifact={'id':13957405776,'name':'precursor-private-cache-1',
+              'size_in_bytes':256,'expired':False,'digest':'sha256:'+'c'*64}
+    calls=[]
+    def gh_json(path):
+        calls.append(path)
+        if path.startswith('actions/runs/') and path.endswith('/jobs?per_page=100'):
+            return {'jobs':[job],'total_count':1}
+        if path.endswith('/artifacts?per_page=100'):
+            return {'artifacts':[artifact],'total_count':1}
+        return run
+    def download(artifact, archive):
+        calls.append('download')
+        Path(archive).write_bytes(b'fixture')
+    transport=SimpleNamespace(gh_json=gh_json,download=download,
+        free_disk=lambda _:100*1024**3,MAX_ARCHIVE=1024**3,
+        REPOSITORY='irewon1-lgtm/bottleneck-control-tower')
+    monkeypatch.setattr(module,'transport_module',lambda:transport)
+    def fake_restore(archive,destination):
+        destination.mkdir()
+        (destination/'activation.json').write_text('{"prior":"preserved"}')
+        return {'status':'PASS_LITERAL_ACQUISITION_STATE','skipped_evaluation_members':0}
+    monkeypatch.setattr(module,'restore_state',fake_restore)
+    return calls
+
+
+def test_verified_manual_precursor_success_restores_existing_checkpoint(tmp_path,monkeypatch):
+    module=helper();calls=_verified_manual_prior_fixture(monkeypatch,module)
+    destination=tmp_path/'cache'
+    receipt=module.restore_run(43245595579,destination,run_attempt=1)
+    assert receipt['status']=='PASS_LITERAL_ACQUISITION_STATE'
+    assert receipt['prior_run_id']==43245595579 and receipt['prior_run_attempt']==1
+    assert (destination/'activation.json').read_text()=='{"prior":"preserved"}'
+    assert len(list((destination/'archive-history').glob('*.json')))==1
+    assert any('/attempts/1/jobs?per_page=100' in path for path in calls)
+    assert calls[-1]=='download'
+
+
+@pytest.mark.parametrize('fault', ['bad_event','missing_proof','failed_proof','wrong_attempt'])
+def test_manual_precursor_requires_original_proof_and_exact_attempt_before_download(tmp_path,monkeypatch,fault):
+    module=helper()
+    event='push' if fault=='bad_event' else 'workflow_dispatch'
+    step=('Verify exact completed RSS run before manual original-source intake'
+          if fault=='failed_proof' else None)
+    attempt=2 if fault=='wrong_attempt' else 1
+    calls=_verified_manual_prior_fixture(monkeypatch,module,event=event,step_fail=step,
+                                          run_attempt=attempt)
+    if fault=='missing_proof':
+        original=module.verify_manual_source_run
+        def incomplete(transport,run_id,run_attempt):
+            result=transport.gh_json(f'actions/runs/{run_id}/attempts/{run_attempt}/jobs?per_page=100')
+            result['jobs'][0]['steps']=[]
+            return original(SimpleNamespace(gh_json=lambda _:result),run_id,run_attempt)
+        monkeypatch.setattr(module,'verify_manual_source_run',incomplete)
+    with pytest.raises(ValueError, match='ACQUISITION_PRIOR_(ATTEMPT_BINDING|MANUAL_SOURCE_PROOF)'):
+        module.restore_run(43245595579,tmp_path/'cache',run_attempt=1)
+    assert 'download' not in calls
+    assert not (tmp_path/'cache').exists()
+
+
+def test_automatic_prior_still_restores_without_manual_step(tmp_path,monkeypatch):
+    module=helper()
+    calls=_verified_manual_prior_fixture(monkeypatch,module,event='workflow_run')
+    receipt=module.restore_run(43245595579,tmp_path/'cache',run_attempt=1)
+    assert receipt['status']=='PASS_LITERAL_ACQUISITION_STATE'
+    assert not any('/jobs?per_page=100' in item for item in calls)
+    assert calls[-1]=='download'
