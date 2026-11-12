@@ -41,6 +41,23 @@ if data.get('operating_research'):
     assert manifest['research_generation'] == public['generation']
     assert manifest['research_snapshot_sha256'] == public['snapshot_sha256']
     assert data['data_at'] == (public['clocks']['data_at'] or data['historical_data_at'])
+# The manual source-acquisition public receipt remains independently bound.
+source_capture = data.get("latest_source_capture", {})
+if manifest.get("source_intake_sha256"):
+    import hashlib
+    raw = (root / "api/source-intake.json").read_bytes()
+    assert hashlib.sha256(raw).hexdigest() == manifest["source_intake_sha256"]
+    source = json.loads(raw)
+    assert source == source_capture and source["status"] == "VERIFIED_PUBLIC_SOURCE_INTAKE"
+    assert source["source_run_id"] == manifest["source_intake_run_id"]
+    assert source["rss_run_id"] <= manifest["rss_source_run_id"]
+    assert source["captured"] + source["held"] == source["seed_attempts"]
+    assert source["classification"] == "CAPTURED_SOURCE_DOCUMENTS_NOT_VERIFIED_BOTTLENECKS"
+else:
+    assert source_capture.get("status") == "NOT_VERIFIED_OFFLINE"
+    assert not (root / "api/source-intake.json").exists()
+if __import__("os").environ.get("GITHUB_WORKFLOW") == "Read-only BCT Pages":
+    assert manifest.get("source_intake_sha256")
 # Separate RSS NEWS metadata never counts as vetted forecast evidence.
 rss_summary = data.get("rss_news_summary")
 assert isinstance(rss_summary, dict)

@@ -17,6 +17,7 @@ from bct.v4.dashboard import ASSETS, ResearchReader
 from bct.v4.public_research import validate_snapshot, digest
 from bct.v4.public_data import validate_acquisition, validate_health, validate_cursor
 from v4_public_news_export import build_from_public_branch
+from v4_source_intake_public import from_data_snapshot
 
 
 def pack(value):
@@ -104,6 +105,12 @@ def export(repo, dest, commit, *, public_input=None):
     # source-linked candidate rankings or become a verified bottleneck signal.
     rss_news = (build_from_public_branch(repo)
                 if os.environ.get("GITHUB_WORKFLOW") == "Read-only BCT Pages" else None)
+    # The existing pinned Pages consumer accepts automatic acquisition only.
+    # The newest successful manual intake remains source bound and is displayed
+    # as a SEPARATE verified run, without rebranding the earlier receipt.
+    source_capture = (from_data_snapshot(repo, rss_news["data_ref"], rss_news["source_run_id"])
+                      if rss_news is not None else None)
+    data["latest_source_capture"] = source_capture or {"status": "NOT_VERIFIED_OFFLINE"}
     if rss_news is not None:
         data["rss_news_summary"] = {
             key: val for key, val in rss_news.items()
@@ -158,6 +165,7 @@ def export(repo, dest, commit, *, public_input=None):
 
     if rss_news is not None:
         (dest / "api/rss-news.json").write_bytes(pack(rss_news))
+        (dest / "api/source-intake.json").write_bytes(pack(source_capture))
     for name, value in [('research', operating), ('collection', collection), ('workflow', workflow), ('transport', transport)]:
         if value is not None:
             (dest / 'api' / (name + '.json')).write_bytes(pack(value))
@@ -179,6 +187,13 @@ def export(repo, dest, commit, *, public_input=None):
         "site_type": "PUBLIC_STATIC_READ_ONLY", "new_ai_calls": 0
     }
 
+    manifest["source_intake_sha256"] = (
+        hashlib.sha256((dest / "api/source-intake.json").read_bytes()).hexdigest()
+        if source_capture is not None else None
+    )
+    manifest["source_intake_run_id"] = (
+        source_capture["source_run_id"] if source_capture is not None else None
+    )
     manifest["rss_news_sha256"] = (
         hashlib.sha256((dest / "api/rss-news.json").read_bytes()).hexdigest()
         if rss_news is not None else None

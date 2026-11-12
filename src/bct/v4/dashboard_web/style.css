@@ -473,3 +473,15 @@ body:has(.bct-first-app){color:#12253f;background:#f7f9fd;font-size:16px;line-he
 /* Publisher RSS category is a tentative UI filter, NOT a verified sector. */
 .bct-news-source-group{display:inline-flex;align-items:center;border:1px solid #bed3ed;background:#eff5ff;color:#335579;border-radius:6px;padding:3px 7px;font-size:12px;font-weight:800;overflow-wrap:anywhere}
 @media(min-width:1351px){.bct-news-controls-grid{grid-template-columns:minmax(180px,1.5fr) repeat(4,minmax(130px,1fr))}}
+
+/* Independently verified latest original-source intake, readable for 16-inch laptops. */
+.bct-first-page .bct-source-intake{margin:0 0 17px}
+.bct-source-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:14px;gap:10px}
+.bct-source-cell{border:1px solid #d3e1f2;background:#f4f8ff;border-radius:9px;padding:14px;min-width:0}
+.bct-source-cell span{display:block;font-size:15px;font-weight:800;color:#325171}
+.bct-source-cell strong{display:block;font-size:clamp(23px,2vw,30px);font-weight:900;color:#142c50;font-variant-numeric:tabular-nums}
+.bct-source-cell small{display:block;font-size:13px;line-height:1.5;color:#4b647f}
+.bct-source-note{margin:0 14px 6px;color:#344e70;font-size:15px;line-height:1.65}
+.bct-source-disclaimer{margin:7px 14px 14px;color:#745d37;font-size:14px;line-height:1.6}
+@media(max-width:950px){.bct-source-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.bct-source-grid{padding:8px;gap:6px}.bct-source-cell{padding:9px}.bct-source-cell span{font-size:12px}.bct-source-cell strong{font-size:21px}.bct-source-cell small{font-size:11px}.bct-source-note,.bct-source-disclaimer{font-size:12px;margin-inline:10px}}
