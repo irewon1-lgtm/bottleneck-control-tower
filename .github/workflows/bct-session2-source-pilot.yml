@@ -1,0 +1,141 @@
+name: BCT Session 2 source recovery proof (no production writes)
+on:
+  push:
+    branches: [fix/bct-session2-source-recovery-20261113]
+    paths: [.github/workflows/bct-session2-source-pilot.yml, .github/scripts/acquisition_sources.py, tests/test_acquisition_sources.py]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-session2-source-pilot-readonly
+  cancel-in-progress: false
+jobs:
+  proof-and-recovery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      DATA_PIN: da7b17f34d58c69c72b5d067d6279ec98db8bb44
+      RSS_RUN: 43327217572
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify source provenance regression fixtures
+        run: |
+          python -m pip install -e '.[test]'
+          python -m pytest -q tests/test_acquisition_sources.py tests/test_precursor_collection.py tests/test_future_body_v33.py
+      - name: Verify historical manual source proof against real GitHub run
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import importlib.util, json
+          spec=importlib.util.spec_from_file_location('acquisition_sources','.github/scripts/acquisition_sources.py')
+          mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+          transport=mod.transport_module()
+          run=transport.gh_json('actions/runs/43245595579/attempts/1')
+          assert run['path']=='.github/workflows/precursor-acquisition.yml'
+          assert run['event']=='workflow_dispatch' and run['conclusion']=='success'
+          assert run['head_branch']=='main'
+          verified=mod.verify_manual_source_run(transport,43245595579,1)
+          assert verified['status']=='PASS_VERIFIED_MANUAL_RSS_INPUT'
+          print('BCT_SESSION2_MANUAL_PROOF='+json.dumps(verified))
+          PY
+      - name: Restore authentic private source archive in runner only
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/session2"
+          git fetch --no-tags --depth=1 origin "$DATA_PIN"
+          git show "$DATA_PIN:precursor-index.json" > "$RUNNER_TEMP/session2/precursor-index.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          report=json.loads((Path(os.environ['RUNNER_TEMP'])/'session2/precursor-index.json').read_text())
+          assert report['cache_run_id']=='43245595579' and report['cache_run_attempt']==1
+          PY
+          timeout 460 python .github/scripts/acquisition_sources.py restore \
+            --run-id 43245595579 --run-attempt 1 \
+            --destination "$RUNNER_TEMP/session2/precursor-private"
+          test -f "$RUNNER_TEMP/session2/precursor-private/activation.json"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'session2/precursor-private'
+          assert (root/'activation.json').exists()
+          result={'status':'PASS_ARCHIVE_RESTORED','activation_preserved':True,
+                  'source_documents_present':len(list((root/'documents').glob('*.json'))),
+                  'source_capture_receipts_present':len(list((root/'captures').glob('*.json')))}
+          (root.parent/'restore-receipt.json').write_text(json.dumps(result,indent=2)+'\n')
+          print('BCT_SESSION2_RESTORE='+json.dumps(result))
+          PY
+      - name: Inspect only one new public source per host, max 12, without publishing
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/session2/rss"
+          gh run download "$RSS_RUN" --name rss-live-result-1 --dir "$RUNNER_TEMP/session2/rss"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          from urllib.parse import urlsplit
+          from bct import precursor_collection as c
+          root=Path(os.environ['RUNNER_TEMP'])/'session2'
+          manifest=json.loads((root/'rss/new-document-manifest.json').read_text())
+          assert manifest['run_id']==int(os.environ['RSS_RUN']) and manifest['run_attempt']==1
+          prior=root/'precursor-private'
+          activation=c.read(prior/'activation.json')
+          choices=[];seen=set()
+          for row in manifest['documents']:
+              url=row.get('url','');host=urlsplit(url).hostname
+              if not host or host in seen:continue
+              if any(s in url.lower() for s in ('/images/','/videos/','/podcast/','/multimedia/')):continue
+              seen.add(host);choices.append(row)
+              if len(choices)==12:break
+          outcomes=[]
+          for row in choices:
+              try:
+                  value=c.capture(prior,row['url'],row['document_id'],activation,collected_at=row.get('collected_at'))
+                  record={'document_id':row['document_id'],'source_host':urlsplit(row['url']).hostname,
+                          'status':value.get('status','UNKNOWN'),
+                          'provenance':value.get('provenance','UNKNOWN'),
+                          'body_digest_available':bool(value.get('body_sha256'))}
+              except Exception as exc:
+                  record={'document_id':row['document_id'],'source_host':urlsplit(row['url']).hostname,
+                          'status':'SOURCE_EXCEPTION','exception_type':type(exc).__name__}
+              outcomes.append(record)
+          report={'format':'bct-s2-pilot-1','scope':'RSS_RUN_NEW_URLS_ONLY',
+                  'rss_run_id':int(os.environ['RSS_RUN']),'tested':len(outcomes),
+                  'raw_body_published':False,'original_data_written':False,
+                  'outcomes':outcomes}
+          (root/'pilot-receipt.json').write_text(json.dumps(report,indent=2)+'\n')
+          print('BCT_SESSION2_PILOT='+json.dumps(report))
+          PY
+      - name: Publish accurate read-only trial status
+        if: always()
+        shell: bash
+        run: |
+          echo '## BCT Session 2 (READ ONLY)' >> "$GITHUB_STEP_SUMMARY"
+          for file in "$RUNNER_TEMP"/session2/{restore-receipt,pilot-receipt}.json; do
+            if test -f "$file"; then
+              python - "$file" <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json,sys
+          v=json.load(open(sys.argv[1]))
+          print('\n**'+sys.argv[1].split('/')[-1]+'**\n\n'+json.dumps(v,ensure_ascii=False,indent=2))
+          PY
+            else
+              echo "Missing receipt: $file (incomplete; no production writes)." >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-session2-source-recovery-trial
+          path: |
+            ${{ runner.temp }}/session2/restore-receipt.json
+            ${{ runner.temp }}/session2/pilot-receipt.json
+          if-no-files-found: warn
+          retention-days: 30

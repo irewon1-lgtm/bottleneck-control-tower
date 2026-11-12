@@ -299,6 +299,44 @@ def transport_module():
     return module
 
 
+def verify_manual_source_run(transport, run_id, run_attempt):
+    """Allow manual source checkpoints only when the *real RSS proof* passed.
+
+    GitHub's run.event differs between workflow_run and workflow_dispatch.
+    Both are accepted only with a completed main source run and the exact
+    existing step-level validation for the manual input. No source cache is
+    downloaded and no historical state is rewritten by this check.
+    """
+    if type(run_id) is not int or run_id <= 0 or type(run_attempt) is not int or run_attempt <= 0:
+        raise ValueError('ACQUISITION_PRIOR_MANUAL_SOURCE_PROOF')
+    listing = transport.gh_json(
+        f'actions/runs/{run_id}/attempts/{run_attempt}/jobs?per_page=100')
+    jobs = listing.get('jobs')
+    if (not isinstance(jobs, list)
+            or listing.get('total_count', len(jobs)) != len(jobs)):
+        raise ValueError('ACQUISITION_PRIOR_MANUAL_SOURCE_PROOF')
+    matches = [j for j in jobs if j.get('name') == 'acquire']
+    if len(matches) != 1 or matches[0].get('conclusion') != 'success':
+        raise ValueError('ACQUISITION_PRIOR_MANUAL_SOURCE_PROOF')
+    if matches[0].get('run_attempt', run_attempt) != run_attempt:
+        raise ValueError('ACQUISITION_PRIOR_MANUAL_SOURCE_PROOF')
+    required = (
+        'Verify exact completed RSS run before manual original-source intake',
+        'Restore new-only private evidence state and receive RSS delta',
+        'Acquire new precursor scope and independent opposite-side evidence',
+        'Persist aggregate index without rewriting canonical database or LIVE state',
+        'Persist only newly appended LIVE records with compare and swap',
+    )
+    steps = matches[0].get('steps')
+    if not isinstance(steps, list):
+        raise ValueError('ACQUISITION_PRIOR_MANUAL_SOURCE_PROOF')
+    actual = {step.get('name'): step.get('conclusion') for step in steps}
+    if any(actual.get(name) != 'success' for name in required):
+        raise ValueError('ACQUISITION_PRIOR_MANUAL_SOURCE_PROOF')
+    return {'status': 'PASS_VERIFIED_MANUAL_RSS_INPUT', 'run_id': run_id,
+            'run_attempt': run_attempt, 'verified_steps': len(required)}
+
+
 def restore_run(run_id, destination, *,run_attempt=0):
     destination=Path(destination);vacant(destination);destination.parent.mkdir(parents=True,exist_ok=True)
     transport=transport_module()
@@ -309,11 +347,13 @@ def restore_run(run_id, destination, *,run_attempt=0):
     if (run.get('id')!=run_id or run.get('run_attempt')!=(run_attempt or 1)
             or not re.fullmatch('[0-9a-f]{40}',run.get('head_sha',''))
             or run.get('path')!='.github/workflows/precursor-acquisition.yml'
-            or run.get('head_branch')!='main' or run.get('event')!='workflow_run'
+            or run.get('head_branch')!='main' or run.get('event') not in ('workflow_run', 'workflow_dispatch')
             or run.get('conclusion')!='success'
             or run.get('head_repository',{}).get('full_name')!=transport.REPOSITORY
             or listing.get('total_count',len(listing.get('artifacts',[])))>len(listing.get('artifacts',[]))):
         raise ValueError('ACQUISITION_PRIOR_ATTEMPT_BINDING')
+    if run.get('event') == 'workflow_dispatch':
+        verify_manual_source_run(transport, run_id, run_attempt or 1)
     matches=[row for row in listing['artifacts'] if row.get('name')==expected_name]
     if (len(matches)!=1 or matches[0].get('expired')is not False or type(matches[0].get('id'))is not int
             or type(matches[0].get('size_in_bytes'))is not int or not 0<matches[0]['size_in_bytes']<=transport.MAX_ARCHIVE
