@@ -1,0 +1,58 @@
+name: BCT RSS news industry source filter browser QA
+on:
+  push:
+    branches: [qa/bct-news-industry-20261112]
+    paths: ['.github/workflows/bct-rss-browser-qa.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Prepare actual public research and verified RSS only
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONPATH: src
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e .
+          python tools/v4_pages_research_input.py prepare --path var/v4/pages-input
+          GITHUB_WORKFLOW="Read-only BCT Pages" python tools/v4_dashboard_static_export.py --commit 92814449aa96e3afe8c1738ec61189ff50cd7893 --public-input var/v4/pages-input
+          GITHUB_WORKFLOW="Read-only BCT Pages" python tools/v4_dashboard_static_check.py
+          node --check var/v4/pages-site/app.js
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          mkdir -p "$RUNNER_TEMP/bct-news-playwright"
+          cd "$RUNNER_TEMP/bct-news-playwright"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.56.1
+          npx playwright install chromium
+      - name: Real-data 16-inch and phone browser navigation
+        env:
+          NODE_PATH: ${{ runner.temp }}/bct-news-playwright/node_modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m http.server 8766 --directory var/v4/pages-site > /tmp/bct-browser-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true' EXIT
+          node qa/rss-news-browser-verify.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-rss-news-browser-proof
+          path: qa/rss-news-browser-proof/
+          retention-days: 7
+          if-no-files-found: warn
