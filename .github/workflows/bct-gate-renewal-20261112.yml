@@ -1,0 +1,151 @@
+# One-time current-main Gate 0–6 renewal after the CPU handoff merge.
+# The second job safely attests any eligible actual manual main Gate, without
+# rewriting protected code or source DBs. Receipt JSON is excluded from the
+# existing code_path release guard.
+name: BCT Gate 0-6 release proof renewal
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/bct-gate-renewal-20261112.yml']
+  workflow_run:
+    workflows: [BCT recovery storage gates]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bct-gate-attestation-single-writer
+  cancel-in-progress: false
+
+jobs:
+  dispatch-current-gates:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    permissions:
+      actions: write
+      contents: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Request actual current-main Gate 0–6, never full_pipeline
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/gates-request.json" <<'JSON'
+          {"ref":"main","inputs":{"preserve_resume_only":false,"full_pipeline":false,"archive_key":"recovery"}}
+          JSON
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/bct-recovery.yml/dispatches" \
+            --input "$RUNNER_TEMP/gates-request.json" >/dev/null
+          echo 'Gate dispatch accepted. This is not a Gate PASS.'
+
+  attest-and-recover:
+    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.status == 'completed' && github.event.workflow_run.event == 'workflow_dispatch' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      actions: write
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONPATH: src
+      GATE_RUN_ID: ${{ github.event.workflow_run.id }}
+    steps:
+      - name: Check out exactly the main code tested by the completed Gate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - name: Attest real Gate steps, exact code tree and artifact before any release write
+        id: attest
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64, json, os, pathlib, re, subprocess
+          import sys
+          sys.path.insert(0, '.github/scripts')
+          from bct_release_guard import verify_release
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          run_id = int(os.environ['GATE_RUN_ID'])
+
+          def api(method, path):
+              if method != 'GET' or not path.startswith('/'):
+                  raise ValueError('GATE_READ_ONLY_VERIFICATION')
+              response = subprocess.run(
+                  ['gh', 'api', 'repos/'+repo+path], capture_output=True,
+                  text=True, timeout=25)
+              if response.returncode:
+                  raise ValueError('GATE_API_READ_UNAVAILABLE')
+              return json.loads(response.stdout)
+
+          run = api('GET', '/actions/runs/'+str(run_id))
+          current = api('GET', '/branches/main')
+          if (run.get('id') != run_id or run.get('event') != 'workflow_dispatch'
+                  or run.get('path') != '.github/workflows/bct-recovery.yml'
+                  or run.get('head_branch') != 'main'
+                  or run.get('head_repository', {}).get('full_name') != repo
+                  or run.get('status') != 'completed' or run.get('conclusion') != 'success'
+                  or run.get('head_sha') != current['commit']['sha']):
+              raise ValueError('GATE_NOT_COMPLETED_FOR_CURRENT_MAIN')
+
+          artifacts = api('GET', '/actions/runs/'+str(run_id)+'/artifacts?per_page=100')['artifacts']
+          candidates = [a for a in artifacts if a.get('name') == 'bct-recovery-checkpoint-'+str(run_id)]
+          if len(candidates) != 1:
+              raise ValueError('GATE_CHECKPOINT_ARTIFACT_NOT_UNIQUE')
+          artifact = candidates[0]
+          dgst = artifact.get('digest') or ''
+          if (artifact.get('expired') is not False
+                  or not re.fullmatch('sha256:[0-9a-f]{64}', dgst)
+                  or artifact.get('workflow_run', {}).get('id') != run_id
+                  or type(artifact.get('id')) is not int):
+              raise ValueError('GATE_ARTIFACT_HASH_OR_PRODUCER')
+          receipt = {'gate_run_id': run_id, 'validated_code_sha': run['head_sha'],
+                     'artifact_id': artifact['id'], 'artifact_sha256': dgst.split(':',1)[1]}
+
+          # Existing production release guard must accept this *exact* receipt
+          # against every protected code path and the completed Gate steps.
+          proof = verify_release(api, receipt, pathlib.Path('.'))
+          if proof['status'] != 'PASS' or proof['validated_code_sha'] != run['head_sha']:
+              raise ValueError('GATE_RELEASE_GUARD_REJECTED')
+          target = pathlib.Path(os.environ['RUNNER_TEMP'])/'release-receipt.json'
+          target.write_text(json.dumps(receipt, indent=2)+'\n', encoding='utf-8')
+          print('BCT_GATE_PROOF_VERIFIED='+json.dumps({
+              'gate_run_id':run_id, 'protected_files':proof['verified_code_files'],
+              'artifact_id':artifact['id'], 'actual_gate_steps':'ALL_PASS'}))
+
+          # Preserve contents-file CAS and avoid a blind Git ref update.
+          current = api('GET', '/branches/main')
+          if current['commit']['sha'] != run['head_sha']:
+              raise ValueError('MAIN_ADVANCED_DURING_GATE_VERIFICATION')
+          old_file = api('GET', '/contents/config/bct-operating-release.json')
+          if not re.fullmatch('[0-9a-f]{40}', old_file.get('sha') or ''):
+              raise ValueError('RELEASE_RECEIPT_OLD_BLOB_INVALID')
+          encoded = base64.b64encode(target.read_bytes()).decode('ascii')
+          body = {'message':'chore(bct): attest actual main Gate 0-6 #'+str(run_id),
+                  'branch':'main','sha':old_file['sha'], 'content': encoded}
+          request = pathlib.Path(os.environ['RUNNER_TEMP'])/'release-write.json'
+          request.write_text(json.dumps(body),encoding='utf-8')
+          result = subprocess.run(['gh','api','--method','PUT','repos/'+repo+
+                   '/contents/config/bct-operating-release.json','--input',str(request)],
+                   capture_output=True,timeout=30)
+          if result.returncode:
+              raise ValueError('GATE_RECEIPT_COMMIT_DENIED_OR_CONFLICT')
+          updated = json.loads(result.stdout)
+          if not re.fullmatch('[0-9a-f]{40}',updated.get('commit',{}).get('sha') or ''):
+              raise ValueError('GATE_RECEIPT_COMMIT_UNCONFIRMED')
+          print('BCT_GATE_RELEASE_RECEIPT_COMMITTED='+json.dumps({
+              'run_id': run_id, 'new_main':updated['commit']['sha']}))
+          PY
+      - name: Trigger existing source-free private ACK recovery, not CPU inference
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/recover-request.json" <<'JSON'
+          {"ref":"main","inputs":{"purpose":"recover-public"}}
+          JSON
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/v4-cpu-private-research.yml/dispatches" \
+            --input "$RUNNER_TEMP/recover-request.json" >/dev/null
+          echo 'Private ACK public-bridge recovery requested; actual success is not assumed.'
