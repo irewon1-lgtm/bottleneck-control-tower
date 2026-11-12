@@ -50,3 +50,13 @@ def test_navisp_atom_is_programme_specific_and_parseable_with_existing_collector
     assert entries[0].url == "https://navisp.esa.int/news/article/example-programme-update"
     assert entries[0].published_at == "2026-11-12T11:05:11+00:00"
     assert entries[0].snippet == "NAVISP programme update."
+
+
+# TEMPORARY_LIVE_PROBE_20261113
+def test_live_navisp_atom_with_github_actions_network():
+    # Temporary PR-only probe. Remove after one real runner result; permanent
+    # unit tests remain deterministic and require no external service.
+    from bct.collectors.rss.collector import RSSTransport, parse_feed
+    feed_url = "https://navisp.esa.int/atom/latest-news"
+    articles = parse_feed(RSSTransport(timeout_seconds=15).get(feed_url), limit=10)
+    assert articles and all(article.source == "navisp.esa.int" for article in articles)
