@@ -126,3 +126,17 @@ def test_original_readonly_static_projection_remains_separate():
     assert "function sourceIntakePanel()" in app
     assert "data.latest_source_capture" in app
     assert "source_capture" not in (ROOT/"src/bct/v4/sector_ranking.py").read_text(encoding="utf-8")
+
+
+
+def test_queued_prior_unattempted_urls_are_not_mislabeled_as_corrupt():
+    index,run,raw,manifest=example()
+    original=json.loads(raw)
+    # A later collection can process old pending URLs together with fewer newly
+    # discovered URLs. Its public tally still must match captured+held.
+    original["counts"]["new_URLs"]=15
+    raw=json.dumps(original,separators=(",",":"),sort_keys=True).encode()+b"\n"
+    manifest["bytes"]=len(raw)
+    manifest["sha256"]=hashlib.sha256(raw).hexdigest()
+    result=check(index,run,raw,manifest)
+    assert result["seed_attempts"]==32 and result["captured"]==13

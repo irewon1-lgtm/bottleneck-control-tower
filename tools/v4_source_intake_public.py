@@ -73,8 +73,9 @@ def verify_receipt(index, run, snapshot_raw, artifact_manifest, *, data_commit, 
         raise ValueError("SOURCE_STATUS_CAPTURE_COUNT")
     processed = counts["new_seed_attempts"]
     held = processed - captured
-    if (held < 0 or counts["new_URLs"] < processed
-            or receipt["RSS_run_id"] > rss_run_id):
+    # Pending queue items from previous RSS runs may also be processed here;
+    # new_URLs is the current manifest size, not the number of attempted queue items.
+    if (held < 0 or receipt["RSS_run_id"] > rss_run_id):
         raise ValueError("SOURCE_STATUS_TIME_ORDER")
     return {
         "format": FORMAT,
