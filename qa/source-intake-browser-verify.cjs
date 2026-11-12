@@ -23,7 +23,7 @@ fs.mkdirSync(dir,{recursive:true});
       await page.screenshot({path:path.join(dir,label+".png"),fullPage:true,animations:"disabled"});
       await page.locator('[data-nav="automation"]').click();
       await page.getByText("최신 기사 원문 확보 실행 · 실제 저장 확인").waitFor({timeout:20000});
-      const note=await page.getByText("원출처 확인 보류", {exact:false}).first().innerText();
+      const note=await page.getByText("출처 보류 16건", {exact:false}).first().innerText();
       assert(note.includes("16건"));
       assert.deepEqual(errs,[]);
       result.views.push({label,width,height,counts:"32/13/19",horizontalOverflow:false,errors:0});
