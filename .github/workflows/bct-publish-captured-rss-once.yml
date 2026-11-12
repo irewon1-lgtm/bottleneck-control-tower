@@ -1,0 +1,31 @@
+name: BCT publish captured RSS receipts one shot
+on:
+  push:
+    branches: [ops/bct-publish-captured-rss-20261113]
+    paths: ['.github/workflows/bct-publish-captured-rss-once.yml']
+permissions:
+  contents: read
+  actions: write
+jobs:
+  dispatch-existing-pages:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Publish read-only site only after verified article and original-source receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GH_REPO" = 'irewon1-lgtm/bottleneck-control-tower'
+          head=$(gh api "repos/$GH_REPO/branches/main" --jq '.commit.sha')
+          test "$head" = 'ef50df4cd2e2926cf5478fef209449fa85b0a660'
+          rss=$(gh api "repos/$GH_REPO/actions/runs/43243530759" --jq '.conclusion')
+          acq=$(gh api "repos/$GH_REPO/actions/runs/43245595579" --jq '.conclusion')
+          test "$rss" = success && test "$acq" = success
+          test "$(gh api "repos/$GH_REPO/actions/workflows/ui-pages.yml" --jq '.state')" = active
+          echo 'VERIFIED_CANONICAL_RSS_AND_ORIGINAL_SOURCE_SUCCESS'
+          gh workflow run ui-pages.yml --ref main
+          echo 'BCT_PUBLIC_PAGES_REFRESH_DISPATCH_ACCEPTED'
