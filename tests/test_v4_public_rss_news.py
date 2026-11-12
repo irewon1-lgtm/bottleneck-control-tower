@@ -129,3 +129,38 @@ def test_new_articles_nav_is_unverified_and_paginated():
         assert code in js
     assert "boardEvidenceFor(sector)" in js
     assert 'data.sector_rankings' in js
+
+
+def test_feed_host_group_is_hint_not_bottleneck_prediction(tmp_path):
+    feeds = tmp_path / "rss_feeds.yaml"
+    feeds.write_text("""feeds:
+  # Defense and space
+  ESA: https://www.esa.int/rss/news.rss
+  # Biopharma supply chain
+  Pharma: https://pharma.example.org/rss
+  # Semiconductor AI datacenter
+  Electronics: https://multi.example.org/rss/tech
+  # Logistics ports shipping
+  Logistics: https://multi.example.org/rss/logistics
+""", encoding="utf-8")
+    hints = m.feed_group_hints(feeds)
+    assert hints["esa.int"] == "방산·우주"
+    assert hints["pharma.example.org"] == "바이오·의약"
+    assert hints["multi.example.org"] == "출처 분야 복수"
+    assert "news.unlisted.org" not in hints
+    db, state, summary, delta = fixture(tmp_path)
+    mapped = {**hints, "example.com": "바이오·의약"}
+    data = m.extract(db, state, summary, delta, data_commit="a" * 40,
+                     feed_domains=mapped)
+    assert all(r["source_group"] == "바이오·의약" for r in data["articles"])
+    assert all("s_stage" not in r and "forecast" not in r for r in data["articles"])
+
+
+def test_news_filters_are_explicitly_only_source_group_hints():
+    app = (ROOT / "src/bct/v4/dashboard_web/app.js").read_text(encoding="utf-8")
+    assert '"출처 등록 분야(참고)"' in app
+    assert 'sourceGroup:' in app
+    assert "r.source_group" in app
+    assert '"출처 분야: "+' in app
+    assert "출처 등록 분야는 뉴스 내용의 산업 검증 결과가 아니며" in app
+

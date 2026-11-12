@@ -18,6 +18,56 @@ import subprocess
 import tempfile
 from urllib.parse import parse_qsl, urlsplit
 
+
+# This is only a non-authoritative publisher feed-group hint. Same-domain
+# publications used in multiple categories are deliberately not assigned a
+# single industry. Never use these hints as BCT sector evidence or TARGET IDs.
+FEED_GROUPS = {
+    "Defense and space": "방산·우주",
+    "Power grid generation": "전력·발전",
+    "Semiconductor AI datacenter": "반도체·AI·데이터센터",
+    "Manufacturing industrial equipment": "제조·산업장비",
+    "Minerals metals rare earths": "광물·희토류",
+    "Oil gas chemicals": "석유·가스·화학",
+    "Logistics ports shipping": "물류·항만·운송",
+    "Automotive batteries": "자동차·배터리",
+    "Construction infrastructure": "건설·인프라",
+    "Biopharma supply chain": "바이오·의약",
+}
+
+
+def _domain(value):
+    try:
+        host = urlsplit(value).hostname or ""
+        return host.removeprefix("www.").lower()
+    except (ValueError, AttributeError):
+        return ""
+
+
+def feed_group_hints(feed_config):
+    """Extract only active feed publishers, not article content or dead URLs.
+
+    Publisher domain may correspond to multiple feeds / industries. Those hosts
+    remain ambiguous rather than being given multiple false industry matches.
+    """
+    config = Path(feed_config).read_text(encoding="utf-8")
+    by_host = {}
+    current = None
+    for line in config.splitlines():
+        if line.startswith("  # "):
+            section = line[4:].strip()
+            if section in FEED_GROUPS:
+                current = FEED_GROUPS[section]
+        elif line.startswith("  ") and not line.startswith("  #"):
+            match = re.fullmatch(r"\s{2}[^:\n]+:\s+(https://\S+)\s*", line)
+            if match and current is not None:
+                host = _domain(match.group(1))
+                if host:
+                    by_host.setdefault(host, set()).add(current)
+    return {host: next(iter(groups)) if len(groups) == 1 else "출처 분야 복수"
+            for host, groups in by_host.items()}
+
+
 FORMAT = "bct-public-rss-news-1"
 SENSITIVE_QUERY = {"key", "api_key", "apikey", "token", "access_token", "auth", "secret", "password", "signature", "sig"}
 NEEDED = {"id", "source", "title", "url", "published_at", "collected_at", "snippet", "source_type", "status"}
@@ -79,7 +129,7 @@ def _positive_int(value):
     return type(value) is int and value >= 0
 
 
-def extract(db_path, state, summary, delta, *, data_commit):
+def extract(db_path, state, summary, delta, *, data_commit, feed_domains=None):
     """Verify authoritative RSS state against run receipts and create safe data."""
     if not isinstance(state, dict) or not re.fullmatch("[0-9a-f]{64}", str(state.get("sha256", ""))):
         raise ValueError("RSS_STATE_INVALID")
@@ -113,6 +163,7 @@ def extract(db_path, state, summary, delta, *, data_commit):
     if (len(old_ids) != len(prior) or len(new_ids) != len(newly) or old_ids.intersection(new_ids)):
         raise ValueError("RSS_DELTA_DUPLICATE")
     collected_rows = []
+    feed_domains = feed_domains or {}
     future_date_holds = 0
     with sqlite3.connect(db_path.resolve().as_uri() + "?mode=ro", uri=True) as db:
         db.execute("PRAGMA query_only=ON")
@@ -149,6 +200,7 @@ def extract(db_path, state, summary, delta, *, data_commit):
                 published_status = "FUTURE_DATE_HOLD"
             collected_rows.append({
                 "id": id_, "source": _text(source, 120),
+                "source_group": feed_domains.get(_domain(safe_url or "https://" + str(source)), "분야 확인 필요"),
                 "title": _text(title, 350),
                 "url": safe_url,
                 "published_at": published_at,
@@ -242,4 +294,5 @@ def build_from_public_branch(repo):
         if summaries[0].stat().st_size > 2_000_000 or manifests[0].stat().st_size > 5_000_000:
             raise ValueError("RSS_ARTIFACT_SIZE_EXCEEDED")
         return extract(db_path, state, json.loads(summaries[0].read_text()),
-                       json.loads(manifests[0].read_text()), data_commit=data_commit)
+                       json.loads(manifests[0].read_text()), data_commit=data_commit,
+                       feed_domains=feed_group_hints(repo / "rss_feeds.yaml"))

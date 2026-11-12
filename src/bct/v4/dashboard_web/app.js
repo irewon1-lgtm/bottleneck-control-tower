@@ -237,7 +237,7 @@
   };
   let data=null, currentPage="overview", loadBusy=false, detailRequest=0;
   let rssNews=null, rssNewsError="", rssNewsLoading=false;
-  const rssNewsState={query:"",source:"",period:"all",sort:"collected",onlyNew:false,page:1};
+  const rssNewsState={query:"",source:"",sourceGroup:"",period:"all",sort:"collected",onlyNew:false,page:1};
   const state={candidates:{tab:"reviewed",query:"",industry:"",role:"",page:1},evidence:{source:"base",category:"",query:"",industry:"",role:"",page:1}};
   const content=$("content");
   function notify(text, tone=""){ $("notice").replaceChildren(text ? el("div",text,`notice ${tone}`) : document.createTextNode("")); }
@@ -394,7 +394,7 @@
       add(el("div"),el("span","최근 실행 새 기사"),el("strong",number(n.new_article_count)+"건")),
       add(el("div"),el("span","정상 작동 출처"),el("strong",number(n.feed_success)+"개")),
       add(el("div"),el("span","실패 출처"),el("strong",number(n.feed_failed)+"개"))));
-    summary.append(el("p","RSS 수집 완료: "+date(n.collected_completed_at)+" · 기사의 발행일은 각 항목에 따로 표시됩니다. 원문 읽기·사실 확인·병목 확정 이전의 뉴스 제목 목록입니다.","bct-news-limited"));
+    summary.append(el("p","RSS 수집 완료: "+date(n.collected_completed_at)+" · 기사의 발행일은 각 항목에 따로 표시됩니다. 출처 등록 분야는 뉴스 내용의 산업 검증 결과가 아니며, 분야 미확인·복수 출처는 확정 분류하지 않습니다.","bct-news-limited"));
     content.append(summary);
 
     const filters=el("section",null,"bct-first-panel bct-news-controls");
@@ -406,6 +406,9 @@
     const sources=[...new Set(n.articles.map(r=>r.source))].sort((a,b)=>a.localeCompare(b));
     filterItems.append(rssNewsFilterControl("기사 출처",rssNewsSelect([["","모든 출처"],...sources.map(s=>[s,s])],
       rssNewsState.source,v=>{rssNewsState.source=v;rssNewsState.page=1;renderNewsResults();})));
+    const sourceGroups=[...new Set(n.articles.map(r=>r.source_group||"분야 확인 필요"))].sort((a,b)=>a.localeCompare(b,"ko"));
+    filterItems.append(rssNewsFilterControl("출처 등록 분야(참고)",rssNewsSelect([["","모든 분야"],...sourceGroups.map(g=>[g,g])],
+      rssNewsState.sourceGroup,v=>{rssNewsState.sourceGroup=v;rssNewsState.page=1;renderNewsResults();})));
     filterItems.append(rssNewsFilterControl("표시 순서",rssNewsSelect([["collected","최근 수집순"],["published","최근 발행순"]],
       rssNewsState.sort,v=>{rssNewsState.sort=v;rssNewsState.page=1;renderNewsResults();})));
     filterItems.append(rssNewsFilterControl("기사 발행일",rssNewsSelect([["all","전체 기간"],["7","최근 7일"],["30","최근 30일"]],
@@ -441,6 +444,7 @@
     const selected=rssNews.articles.filter(r=>
       (!s.onlyNew||r.is_new) &&
       (!s.source||r.source===s.source) &&
+      (!s.sourceGroup||(r.source_group||"분야 확인 필요")===s.sourceGroup) &&
       (!keyword||(r.title+" "+(r.snippet||"")+" "+r.source).toLocaleLowerCase().includes(keyword)) &&
       (!cutoff||(r.published_at&&Date.parse(r.published_at)>=cutoff))
     );
@@ -462,6 +466,7 @@
       const article=el("article",null,"bct-news-article");
       article.append(add(el("div",null,"bct-news-tags"),
         el("span",item.source,"bct-news-source"),
+        el("span","출처 분야: "+(item.source_group||"분야 확인 필요"),"bct-news-source-group"),
         item.is_new?el("span","이번 수집 신규","bct-news-new"):null,
         el("span","제목·요약 수집 / 병목 미검증","bct-news-unverified")));
       const title=el("h3",item.title);
