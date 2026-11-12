@@ -61,7 +61,7 @@ def read_future(manifest_path, future_sha):
     for info in m["shards"]:
         path = info["path"]
         assert path.startswith("future-candidates.shards/") and ".." not in path
-        raw = subprocess.check_output(["git", "show", future_sha + ":" + path])
+        raw = __import__("urllib.request", fromlist=["urlopen"]).urlopen("https://raw.githubusercontent.com/irewon1-lgtm/bottleneck-control-tower/" + future_sha + "/" + path, timeout=120).read()
         digest = hashlib.sha256(raw).hexdigest()
         assert digest == info["sha256"], "sidecar shard SHA256 mismatch: " + path
         doc = json.loads(raw)
