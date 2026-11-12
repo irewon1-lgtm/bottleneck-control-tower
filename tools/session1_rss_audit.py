@@ -134,6 +134,11 @@ def audit(args):
         if not isinstance(progress, dict):
             progress = {}
         deep_ids = {x.split(":",1)[0] for x in progress if isinstance(x,str)}
+        progress_hashes = defaultdict(set)
+        for record in progress.values():
+            if isinstance(record, dict) and record.get("document_id") and record.get("body_sha256"):
+                progress_hashes[record["document_id"]].add(record["body_sha256"])
+        current_hash_match = set()
         refs = Counter()
         body = Counter()
         acquisition = Counter()
@@ -160,13 +165,12 @@ def audit(args):
             writer.writerow(["article_id","source","source_type","url","title","published_at","collected_at",
                 "db_status","previous_db_present","sidecar_record_present","sidecar_body_status",
                 "sidecar_acquisition_status","sidecar_decision","sidecar_candidate",
-                "sidecar_material_check_required","deep_progress_present","rss_ai_review_count","rss_ai_latest_status",
+                "sidecar_material_check_required","deep_progress_present","deep_progress_same_current_body_hash","rss_ai_review_count","rss_ai_latest_status",
                 "sidecar_source","sidecar_source_version","version_checked_at","audit_group"])
             for r in rows:
                 k = r["id"]
                 x = results.get(k)
                 if x is None:
-                    coverage["NO_SIDECAR_RESULT"] += 1
                     missing_in_sidecar.append(k)
                     group = "NO_SIDECAR_RESULT"
                 else:
@@ -187,12 +191,15 @@ def audit(args):
                         group = "BODY_UNKNOWN"
                 coverage[group] += 1
                 progress_presence[str(k in deep_ids)] += 1
+                current_match = bool(x is not None and x.get("body_sha256") and x["body_sha256"] in progress_hashes.get(k,set()))
+                if current_match:
+                    current_hash_match.add(k)
                 reviews = ai_by_id.get(k, [])
                 row = [k,r["source"],r["source_type"],r["url"],r["title"],r["published_at"],
                     r["collected_at"],r["status"],k in old_ids,x is not None,
                     x.get("body_status") if x else "",x.get("acquisition_status") if x else "",
                     x.get("decision") if x else "",bool(x.get("candidate")) if x else "",
-                    x.get("material_check_required") if x else "",k in deep_ids,len(reviews),
+                    x.get("material_check_required") if x else "",k in deep_ids,current_match,len(reviews),
                     reviews[-1]["status"] if reviews else "",x.get("source") if x else "",
                     x.get("source_version") if x else "",x.get("checked_at") if x else "",group]
                 writer.writerow([safe_csv(v) for v in row])
@@ -248,6 +255,8 @@ def audit(args):
                            "unique_document_ids_in_progress":len(deep_ids),
                            "progress_ids_in_current_db":len(deep_ids & ids),
                            "progress_ids_in_sidecar":len(deep_ids & set(results)),
+                           "same_current_body_version_reviewed":len(current_hash_match),
+                           "historic_progress_without_current_body_hash_match":len((deep_ids & ids)-current_hash_match),
                            "unique_document_ids_with_full_body":sum(
                                x in deep_ids and (results.get(x) or {}).get("body_status")=="FULL" for x in ids),
                            "all_historical_review_events":len(tracking.get("reviews",{})),
@@ -286,7 +295,8 @@ def audit(args):
             f"- DB 전체: **{len(rows):,}건**, 이전 대비 추가 **{len(new_ids):,}건**, 삭제 **{len(lost_ids):,}건**",
             f"- sidecar: **{len(results):,}건**, DB 결합 **{len(results.keys() & ids):,}건**, sidecar 결과 없는 기사 **{len(missing_in_sidecar):,}건**",
             f"- sidecar 기준 FULL 본문 **{body['FULL']:,}건**, PARTIAL **{body['PARTIAL']:,}건**, UNAVAILABLE **{body['UNAVAILABLE']:,}건**",
-            f"- 심층 검토 진행 기록(고유 문서): **{len(deep_ids & ids):,}건**; 검토 완료·병목 확정과 다름",
+            f"- 심층 검토 진행 기록(고유 문서): **{len(deep_ids & ids):,}건**, 현재 본문 SHA 일치 **{len(current_hash_match):,}건**",
+            "- 현재 본문 SHA가 일치하더라도 병목 사실 확정은 아닙니다.",
             f"- RSS AI 리뷰 실제 DB 기록: **{len(ai_rows):,}건**, 고유 문서 **{len(ai_by_id):,}건**",
             f"- 정확한 URL 중복 그룹: **{report['db']['exact_url_duplicate_groups']:,}개**, 초과 기사 **{report['db']['exact_url_duplicate_excess']:,}건**",
             f"- sidecar 원문 검증: **{actual_shards}개 shard SHA-256 + manifest 종합 SHA-256 PASS**",
