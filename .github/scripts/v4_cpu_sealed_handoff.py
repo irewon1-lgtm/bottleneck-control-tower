@@ -113,19 +113,32 @@ def store_cipher(destination: Path, cipher: bytes):
 
 
 def get_latest_bridge() -> tuple[dict, dict] | None:
-    runs = api(f"actions/workflows/v4-cpu-private-research.yml/runs?branch=main&status=success&per_page=100")["workflow_runs"]
+    """Search bounded artifact metadata pages, never an unbounded run-by-run scan."""
     current = int(os.environ.get("GITHUB_RUN_ID") or "0")
-    for candidate in runs:
-        if candidate.get("id", 0) >= current:
-            continue
-        try:
-            approved_run(candidate, require_success=True)
-        except ValueError:
-            continue
-        item = artifact(candidate, ARTIFACT_PREFIX["latest-bridge"])
-        if item is not None:
-            approved_job(candidate, "publish")
-            return candidate, item
+    prefix = ARTIFACT_PREFIX["latest-bridge"]
+    for page in range(1, 9):
+        entries = api(f"actions/artifacts?per_page=100&page={page}")["artifacts"]
+        # Repository artifacts are returned newest first; verify the producer
+        # only for an exact sealed-bridge candidate, not every unrelated run.
+        for entry in entries:
+            match = re.fullmatch(re.escape(prefix) + r"-([1-9][0-9]*)", entry.get("name") or "")
+            if not match:
+                continue
+            reference = entry.get("workflow_run") or {}
+            producer_id = reference.get("id")
+            if type(producer_id) is not int or producer_id >= current:
+                continue
+            run = api(f"actions/runs/{producer_id}")
+            approved_run(run, require_success=True)
+            if run.get("run_attempt") != int(match[1]):
+                raise ValueError("SEALED_HANDOFF_ARTIFACT_ATTEMPT")
+            item = artifact(run, prefix)
+            if item is None or item["id"] != entry.get("id"):
+                raise ValueError("SEALED_HANDOFF_ARTIFACT_IDENTITY")
+            approved_job(run, "publish")
+            return run, item
+        if len(entries) < 100:
+            break
     return None
 
 
