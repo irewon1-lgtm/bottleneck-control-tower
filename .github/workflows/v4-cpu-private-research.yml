@@ -12,7 +12,7 @@ on:
     inputs:
       purpose:
         type: choice
-        options: [seed, recovery-check, bridge-recover, recover-public, recover-result, runtime-verify, manual-research]
+        options: [seed, recovery-check, bridge-recover, recover-public, recover-result, recover-sealed-result, runtime-verify, manual-research]
         default: seed
       acquisition_run:
         type: string
@@ -21,7 +21,7 @@ on:
       result_run:
         type: string
         default: ''
-        description: 'Approved failed writer only: 43060982183; restore sealed windows without rereading'
+        description: 'Read-only existing cache recovery or exact failed sealed-result run; no rereading'
       result_attempt:
         type: string
         default: '1'
@@ -88,6 +88,14 @@ jobs:
         with:
           ref: ${{ env.CPU_CODE_SHA }}
           persist-credentials: false
+      - name: Check out current reviewed ciphertext-transfer helper
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: .bct-sealed-handoff
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /.github/scripts/v4_cpu_sealed_handoff.py
       - uses: actions/setup-python@v5
         id: python
         with:
@@ -111,8 +119,12 @@ jobs:
         with:
           key: v4-cpu-private-bridge-prior-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: v4-cpu-private-bridge-
-          fail-on-cache-miss: true
+          fail-on-cache-miss: false
           path: var/v4/cpu-private/bridge
+      - name: Restore latest acknowledged encrypted bridge or verify legacy bootstrap
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: timeout 120 python .bct-sealed-handoff/.github/scripts/v4_cpu_sealed_handoff.py latest-bridge --destination var/v4/cpu-private/bridge/state.gpg --allow-existing-bootstrap
       - name: Authenticate and restore private input; missing/corrupt stops
         run: timeout 120 python tools/v4_cpu_private.py unseal --packet var/v4/cpu-private/bridge/state.gpg --checkpoint var/v4/cpu-private/prior
       - name: Verify actual upstream identity without relabeling manual input as schedule
@@ -154,13 +166,17 @@ jobs:
           timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_private.py process --checkpoint var/v4/cpu-private/prior --input-receipt var/v4/cpu-private/input-receipt.json --output var/v4/cpu-private/observation.json "${args[@]}"
       - name: Seal output; only ciphertext crosses jobs
         run: timeout 120 python tools/v4_cpu_private.py seal --checkpoint var/v4/cpu-private/next-checkpoint --packet var/v4/cpu-private/result/state.gpg --parent-file var/v4/cpu-private/prior/parent.json
-      - uses: actions/cache/save@v4
+      - name: Upload only AES256-GPG sealed CPU result; fail on missing packet
+        uses: actions/upload-artifact@v4
         with:
-          key: v4-cpu-private-result-${{ github.run_id }}-${{ github.run_attempt }}
-          path: var/v4/cpu-private/result
+          name: bct-sealed-cpu-result-${{ github.run_attempt }}
+          path: var/v4/cpu-private/result/state.gpg
+          retention-days: 7
+          compression-level: 0
+          if-no-files-found: error
   publish:
     needs: research
-    if: ${{ always() && github.ref == 'refs/heads/main' && ((github.event_name == 'workflow_dispatch' && (inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' || inputs.purpose == 'recover-result')) || needs.research.result == 'success') }}
+    if: ${{ always() && github.ref == 'refs/heads/main' && ((github.event_name == 'workflow_dispatch' && (inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' || inputs.purpose == 'recover-result' || inputs.purpose == 'recover-sealed-result')) || needs.research.result == 'success') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     env:
@@ -173,6 +189,14 @@ jobs:
         with:
           ref: ${{ env.CPU_CODE_SHA }}
           persist-credentials: false
+      - name: Check out current reviewed ciphertext-transfer helper
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: .bct-sealed-handoff
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /.github/scripts/v4_cpu_sealed_handoff.py
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12.15'
@@ -197,14 +221,23 @@ jobs:
           RESULT_RUN: ${{ inputs.result_run }}
           RESULT_ATTEMPT: ${{ inputs.result_attempt }}
         run: timeout 120 python tools/v4_cpu_result_recover.py authenticate --run-id "$RESULT_RUN" --attempt "$RESULT_ATTEMPT" --output var/v4/cpu-private/recovered-result.json
+      - name: Recover a prior failed sealed CPU result without rerunning the model
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'recover-sealed-result' }}
+        env:
+          RESULT_RUN: ${{ inputs.result_run }}
+          RESULT_ATTEMPT: ${{ inputs.result_attempt }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          timeout 120 python .bct-sealed-handoff/.github/scripts/v4_cpu_sealed_handoff.py recover-result --run-id "$RESULT_RUN" --attempt "$RESULT_ATTEMPT" --destination var/v4/cpu-private/result/state.gpg
+          timeout 120 python tools/v4_cpu_private.py unseal --packet var/v4/cpu-private/result/state.gpg --checkpoint var/v4/cpu-private/checkpoint
       - name: Prepare existing verified seed without rereading or empty reset
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'seed' }}
         run: timeout 120 python tools/v4_cpu_private.py prepare-seed
-      - uses: actions/cache/restore@v4
+      - name: Download only the sealed CPU result produced in this same run
+        uses: actions/download-artifact@v4
         if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' }}
         with:
-          key: v4-cpu-private-result-${{ github.run_id }}-${{ github.run_attempt }}
-          fail-on-cache-miss: true
+          name: bct-sealed-cpu-result-${{ github.run_attempt }}
           path: var/v4/cpu-private/result
       - name: Authenticate CPU result, no model or upstream code execution
         if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' }}
@@ -285,7 +318,7 @@ jobs:
           print('BCT_PUBLIC_ACK_RECOVERY_FETCHED=READ_ONLY_NO_CPU_NO_PRIVATE_WRITE')
           PYCODE
       - name: Private CAS publish and fresh remote hash/table restore
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-result' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-result' || inputs.purpose == 'recover-sealed-result' }}
         env:
           BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
         run: |
@@ -298,7 +331,7 @@ jobs:
         env:
           CONFIGURED_CPU_CODE_SHA: ${{ vars.BCT_V4_CPU_CODE_SHA }}
           CONFIGURED_CPU_ENABLED: ${{ vars.BCT_V4_CPU_RESEARCH_ENABLED }}
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-result' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-result' || inputs.purpose == 'recover-sealed-result' }}
         run: |
           timeout 120 python - <<'PYCODE'
           import json,pathlib,subprocess,tempfile,sqlite3
@@ -339,7 +372,7 @@ jobs:
               'original_DB_fully_restored':False}))
           PYCODE
       - name: Project acknowledged research as strict source-free public counts and pointers
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' || inputs.purpose == 'recover-result' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' || inputs.purpose == 'recover-result' || inputs.purpose == 'recover-sealed-result' }}
         env:
           PUBLIC_RECOVERY_PURPOSE: ${{ inputs.purpose }}
         run: |
@@ -349,7 +382,7 @@ jobs:
             "${args[@]}" --output var/v4/cpu-private/public \
             --workflow-sha '${{ github.workflow_sha }}' --execution-sha "$CPU_CODE_SHA"
       - name: Publish only the allowlisted research snapshot and manifest
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' || inputs.purpose == 'recover-result' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' || inputs.purpose == 'recover-result' || inputs.purpose == 'recover-sealed-result' }}
         uses: actions/upload-artifact@v4
         with:
           name: bct-public-research-${{ github.run_attempt }}
@@ -364,13 +397,17 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'recovery-check' }}
         run: mv var/v4/cpu-private/bridge var/v4/cpu-private/recovery-input-preserved
       - name: Seal acknowledged private state for next read-only CPU job
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' || inputs.purpose == 'recover-result' }}
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' || inputs.purpose == 'recover-result' || inputs.purpose == 'recover-sealed-result' }}
         run: timeout 120 python tools/v4_cpu_private.py seal --packet var/v4/cpu-private/bridge/state.gpg --parent-file var/v4/cpu-private/published.json
-      - uses: actions/cache/save@v4
-        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' || inputs.purpose == 'recover-result' }}
+      - name: Upload only acknowledged AES256-GPG bridge for the next scheduled CPU run
+        uses: actions/upload-artifact@v4
+        if: ${{ github.event_name == 'workflow_run' || inputs.purpose == 'manual-research' || inputs.purpose == 'seed' || inputs.purpose == 'recovery-check' || inputs.purpose == 'bridge-recover' || inputs.purpose == 'recover-public' || inputs.purpose == 'recover-result' || inputs.purpose == 'recover-sealed-result' }}
         with:
-          key: v4-cpu-private-bridge-${{ github.run_id }}-${{ github.run_attempt }}
-          path: var/v4/cpu-private/bridge
+          name: bct-sealed-cpu-bridge-${{ github.run_attempt }}
+          path: var/v4/cpu-private/bridge/state.gpg
+          retention-days: 7
+          compression-level: 0
+          if-no-files-found: error
 # No raw DB/source artifact upload, code execution from upstream, public Git writes,
 # model setup, RSS refetch, external AI, automatic S2/S3, LIVE or UI deployment.
 # Source-separated schema enforced before encryption/publication. No original3 copied.
