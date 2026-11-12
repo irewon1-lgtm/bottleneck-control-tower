@@ -7,12 +7,15 @@
       "released_at": "2026-11-12T06:00:10.960938+00:00"
     },
     "quick-version-7fbeb001b64f1a1bf3cdf7fbfdfc438e": {
-      "state": "RUNNING",
+      "state": "SUCCESS",
       "run_id": "quick-worker-c35ee66738e54f9fb626babcaf77d8ce",
       "document_id": "50dd18a1-cdf7-4dba-87fb-6eef13ee4ee5",
       "body_sha256": "b0b9d8930307b055e162737f77a7d61e7ebbf80ec70dcdcb5fda038ceba0f7f3",
       "read_start": 0,
-      "claimed_at": "2026-11-12T05:58:12.375971+00:00"
+      "claimed_at": "2026-11-12T05:58:12.375971+00:00",
+      "review_id": "auto-quick-5679a9cb01aa9428ecc777d340ceaefe",
+      "reconciled_at": "2026-11-12T06:00:16.025667+00:00",
+      "reconciliation_id": "claim-reconciliation-db1762eeff159cf9bc8063e8cde8836a"
     },
     "quick-worker-c1ea3bc24b824672abd2986c1ba87dc6": {
       "id": "quick-worker-c1ea3bc24b824672abd2986c1ba87dc6",
@@ -137,6 +140,29 @@
       "duplicate_auto_reviews": 0,
       "distinct_events_attempted": 0,
       "summary_saved": true
+    },
+    "claim-reconciliation-db1762eeff159cf9bc8063e8cde8836a": {
+      "type": "stopped_owner_result_reconciliation",
+      "state": "PASS",
+      "previous_claim": {
+        "state": "RUNNING",
+        "run_id": "quick-worker-c35ee66738e54f9fb626babcaf77d8ce",
+        "document_id": "50dd18a1-cdf7-4dba-87fb-6eef13ee4ee5",
+        "body_sha256": "b0b9d8930307b055e162737f77a7d61e7ebbf80ec70dcdcb5fda038ceba0f7f3",
+        "read_start": 0,
+        "claimed_at": "2026-11-12T05:58:12.375971+00:00"
+      },
+      "stopped_owner_proof": {
+        "owner": "quick-worker-c35ee66738e54f9fb626babcaf77d8ce",
+        "stopped": true,
+        "observed_process_exit_code": 130,
+        "observed_pid": 4713,
+        "execution_id": "43160725360:native-claim-child:4713",
+        "observed_at": "2026-11-12T06:00:15.688879+00:00"
+      },
+      "preserved_result_sha256": "ea0700a5d16383a8ed599d603d043b6212a8ca4a3187e9dc633e15ea1d22cdf9",
+      "review_id": "auto-quick-5679a9cb01aa9428ecc777d340ceaefe",
+      "reconciled_at": "2026-11-12T06:00:16.025667+00:00"
     }
   },
   "operations": {
@@ -174,6 +200,11 @@
       "owner": "review",
       "patch_sha256": "a1a711dff8d0d186f68762c5c82a4e4d55d436622cf67eb79be6dec4c635c5bf",
       "applied_at": "2026-11-12T06:00:16.026293+00:00"
+    },
+    "claim-reconciliation-db1762eeff159cf9bc8063e8cde8836a": {
+      "owner": "review",
+      "patch_sha256": "32bbc3f0a2e64dc69977b8af68f4ad2ebac9908d25930029d16c967c439f8663",
+      "applied_at": "2026-11-12T06:00:20.411196+00:00"
     }
   },
   "reviews": {
