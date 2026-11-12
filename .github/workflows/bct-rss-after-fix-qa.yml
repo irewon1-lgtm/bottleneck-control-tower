@@ -1,0 +1,66 @@
+name: BCT RSS repaired-source one-pass QA
+on:
+  push:
+    branches: [qa/bct-rss-after-feed-fix-20261112]
+    paths: ['.github/workflows/bct-rss-after-fix-qa.yml']
+permissions:
+  contents: read
+jobs:
+  read-only-source-probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install existing RSS parser, not a new model
+        run: python -m pip install --disable-pip-version-check -e .
+      - name: Probe each configured source exactly once, without writes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p qa/after-rss-fix
+          python - <<'PY'
+          import concurrent.futures,json,threading
+          from collections import Counter,defaultdict
+          from datetime import datetime,timezone
+          from pathlib import Path
+          from urllib.parse import urlsplit
+          from bct.collectors.rss.cli import load_feeds
+          from bct.collectors.rss.collector import RSSTransport,parse_feed
+          feeds=list(load_feeds(Path('rss_feeds.yaml')).items())
+          locks=defaultdict(lambda:threading.BoundedSemaphore(2))
+          def check(pair):
+              name,url=pair
+              host=urlsplit(url).hostname
+              try:
+                  with locks[host]:
+                      content=RSSTransport(timeout_seconds=8,max_bytes=2_000_000).get(url)
+                      entries=parse_feed(content,limit=10)
+                  return {'feed':name,'host':host,'result':'PASS','entries':len(entries)}
+              except Exception as exc:
+                  return {'feed':name,'host':host,'result':'FAIL',
+                          'failure_type':type(exc).__name__,
+                          'reason':str(exc)[:180]}
+          with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
+              items=list(pool.map(check,feeds))
+          good=[x for x in items if x['result']=='PASS']
+          bad=[x for x in items if x['result']=='FAIL']
+          summary={'checked_at':datetime.now(timezone.utc).isoformat(),
+                   'type':'ONE_PASS_PUBLIC_FEED_HEALTH_NOT_A_FULL_RSS_COLLECTION',
+                   'configured':len(feeds),'success':len(good),'failures':len(bad),
+                   'failed_feeds':bad,'success_empty':sum(x['entries']==0 for x in good),
+                   'total_returned_items':sum(x['entries'] for x in good)}
+          Path('qa/after-rss-fix/results.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2))
+          print('BCT_REPAIRED_RSS_PROBE',json.dumps(summary,ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-rss-after-feed-fix
+          path: qa/after-rss-fix/results.json
+          retention-days: 7
+          if-no-files-found: warn
