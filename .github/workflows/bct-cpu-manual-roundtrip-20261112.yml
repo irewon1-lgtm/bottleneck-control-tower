@@ -1,0 +1,67 @@
+name: BCT CPU sealed handoff one-time manual end-to-end verification 20261112
+on:
+  push:
+    branches: [ops/bct-cpu-manual-roundtrip-20261112]
+    paths: ['.github/workflows/bct-cpu-manual-roundtrip-20261112.yml']
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: bct-cpu-manual-roundtrip-20261112
+  cancel-in-progress: false
+jobs:
+  dispatch-pinned-actual-input:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Prove current main, original schedule/acquisition, latest recovered ACK and absence of newer CPU attempts
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess
+          repo=os.environ["GITHUB_REPOSITORY"]
+          def read(suffix):
+              p=subprocess.run(["gh","api","repos/"+repo+"/"+suffix],capture_output=True,text=True,timeout=20)
+              if p.returncode:raise ValueError("CPU_DISPATCH_READ_ONLY_EVIDENCE_UNAVAILABLE")
+              return json.loads(p.stdout)
+          if read("branches/main")["commit"]["sha"]!="6fb60adda5c18c9078fad752739ec3ced8e815d0":
+              raise ValueError("CPU_DISPATCH_MAIN_MOVED")
+          gate=read("contents/config/bct-operating-release.json")
+          import base64
+          receipt=json.loads(base64.b64decode(gate["content"]))
+          if (receipt.get("gate_run_id")!=43160725360 or
+                  receipt.get("validated_code_sha")!="11e5c3da21fff0652c0478ac8e41268bd8da7848"):
+              raise ValueError("CPU_DISPATCH_GATE_RECEIPT_MISMATCH")
+          acq=read("actions/runs/43142524193")
+          rss=read("actions/runs/43142282729")
+          prev=read("actions/runs/43167548844")
+          if not (acq.get("conclusion")=="success" and acq.get("path")==".github/workflows/precursor-acquisition.yml"
+                  and acq.get("event")=="workflow_run" and acq.get("head_branch")=="main"
+                  and rss.get("conclusion")=="success" and rss.get("event")=="schedule"
+                  and rss.get("path")==".github/workflows/rss-live-check.yml"
+                  and prev.get("conclusion")=="success" and prev.get("path")==".github/workflows/v4-cpu-private-research.yml"
+                  and prev.get("head_branch")=="main"):
+              raise ValueError("CPU_DISPATCH_ORIGINAL_PRODUCER_OR_ACK_UNVERIFIED")
+          artifacts=read("actions/runs/43167548844/artifacts?per_page=100")["artifacts"]
+          bridges=[a for a in artifacts if a.get("name")=="bct-sealed-cpu-bridge-1"]
+          if (len(bridges)!=1 or bridges[0].get("id")!=13920672519 or bridges[0].get("expired") is not False
+                  or bridges[0].get("digest")!="sha256:8df530c92605c6344c5372b5e77f976fecc7a2ceca009e6eb80ed1e4e97b6add"):
+              raise ValueError("CPU_DISPATCH_RECOVERY_BRIDGE_UNAVAILABLE")
+          cpu=read("actions/workflows/v4-cpu-private-research.yml/runs?per_page=30")["workflow_runs"]
+          if any(row["id"]>43167548844 and row.get("status") not in ("completed",)
+                  or row["id"]>43167548844 and row.get("conclusion")!="skipped" for row in cpu):
+              raise ValueError("CPU_DISPATCH_NEWER_ACTIVE_OR_NONINERT_RUN_EXISTS")
+          print("BCT_MANUAL_CPU_DISPATCH_GUARDS_PASS: gate, actual scheduled RSS, acquisition, encrypted ACK; no new CPU result assumed")
+          PY
+      - name: Dispatch one actual CPU research consumer on approved archived acquisition
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/cpu-test.json" <<'JSON'
+          {"ref":"main","inputs":{"purpose":"manual-research","acquisition_run":"43142524193"}}
+          JSON
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/v4-cpu-private-research.yml/dispatches" \
+            --input "$RUNNER_TEMP/cpu-test.json" >/dev/null
+          echo "Manual actual-input CPU run requested. This is not a scheduled run and not a storage PASS."
