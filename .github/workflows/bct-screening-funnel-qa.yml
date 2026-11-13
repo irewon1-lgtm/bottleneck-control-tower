@@ -1,0 +1,89 @@
+name: BCT live sidecar screening funnel browser QA
+on:
+  push:
+    branches: [qa/bct-screening-funnel-real-20261113]
+    paths: ['.github/workflows/bct-screening-funnel-qa.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify-live-index-and-ui:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify manifest parser and source audit tests
+        env:
+          PYTHONPATH: .:src:tools
+        run: |
+          set -euo pipefail
+          python -m pip install -e '.[test]'
+          python -m pytest -q tests/test_v4_future_screening_index.py
+      - name: Build exact current Future index and archived V4 ranking, read-only
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PYTHONPATH: .:src:tools
+        run: |
+          set -euo pipefail
+          python tools/v4_pages_research_input.py prepare --path var/v4/pages-input
+          GITHUB_WORKFLOW='Read-only BCT Pages' python tools/v4_dashboard_static_export.py \
+            --commit dd6542e426f8efd451da09a0534e57a34ff5e91a --public-input var/v4/pages-input
+          GITHUB_WORKFLOW='Read-only BCT Pages' python tools/v4_dashboard_static_check.py
+          node --check var/v4/pages-site/app.js
+          python - <<'PY'
+          from pathlib import Path
+          import json,hashlib
+          dest=Path('var/v4/pages-site')
+          report=json.loads((dest/'api/dashboard.json').read_bytes())
+          index=report['source_backlog']['live_sidecar']
+          audit=report['source_backlog']['pinned_audit']
+          assert index['status']=='VERIFIED_INDEX_ONLY_NOT_ANALYSIS_COMPLETE'
+          assert index['registered_screening_record_slots']>=10107
+          assert index['shards_declared']>0 and index['shards_verified_in_this_read']==0
+          assert audit['rss_articles']==10604
+          assert audit['body_counts']=={'FULL':5727,'PARTIAL':1964,'UNAVAILABLE':2416,'NOT_IN_SIDECAR':497}
+          assert report['source_backlog']['historical_rank_input_count']==len(report['records'])==511
+          assert report['sector_rankings']['count_kind']=='SOURCE_LINKED_RESEARCH_RECORDS_NOT_VERIFIED_SHORTAGES'
+          print('BCT_REAL_SCREENING_FUNNEL_PASS',json.dumps({
+            'latest_sidecar_slots':index['registered_screening_record_slots'],
+            'latest_sidecar_head':index['sidecar_commit'],
+            'audited_articles':audit['rss_articles'],
+            'pinned_full':audit['body_counts']['FULL'],
+            'pinned_missing_sidecar':audit['unlinked'],
+            'old_rank_records':len(report['records']),
+            'audited_source_receipt_shards':audit['verified_read_only_shards'],
+            'current_root_only':index['shards_verified_in_this_read'],
+            'funnel_hash':json.loads((dest/'build-manifest.json').read_bytes())['screening_funnel_sha256']
+          },ensure_ascii=False))
+          PY
+      - name: Check actual funnel and ranking on laptop/mobile
+        env:
+          NODE_PATH: ${{ runner.temp }}/funnel-playwright/node_modules
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/funnel-playwright"
+          cd "$RUNNER_TEMP/funnel-playwright"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.56.1
+          npx playwright install chromium
+          cd "$GITHUB_WORKSPACE"
+          python -m http.server 8771 --directory var/v4/pages-site >/tmp/funnel-qa-http.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          node qa/funnel-real-browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-full-corpus-screening-funnel-browser
+          path: qa/funnel-proof/
+          retention-days: 7
+          if-no-files-found: warn
