@@ -16,6 +16,7 @@ from bct.future_github import GitHubTransport
 from bct.future_body import read_cached_body
 from bct.future_local_reader import LocalCPUQuickReader
 from bct.future_worker import run_worker, _runs
+from bct.future_review import READER_VERSION, event_groups
 from bct.recovery_auto_reader import eligible
 from bct.recovery_preservation import verify, quarantine_changed_version_judgments, digest
 from bct.recovery_restore import copy_preserved_caches
@@ -62,6 +63,39 @@ def assess_current_cpu_batch(report, *, expected_reads=5):
             and report['release_proof'].get('status') == 'PASS'),
         'cost_zero': report.get('paid_fallback_calls') == 0,
     }
+
+
+def fresh_native_event_guard(candidates, tracking):
+    """Reserve distinct, not-yet-read source events for real native CPU calls.
+
+    The general worker legitimately reuses an earlier confirmed judgment for an
+    identical event and body. A five-NATIVE-call operational gate must not select
+    those references as new inference inputs.
+    """
+    version_events = {
+        (ref['document_id'], ref.get('body_sha256')): event_id
+        for event_id, event in event_groups(candidates).items()
+        for ref in event['documents']
+    }
+    reusable = {
+        (r.get('worker_event_id'), r.get('body_sha256'))
+        for r in tracking.get('reviews', {}).values()
+        if isinstance(r, dict)
+        and r.get('kind') == 'quick' and r.get('reader_version') == READER_VERSION
+        and r.get('read_complete') is True and r.get('disposition') != 'INCOMPLETE'
+    }
+    reserved = set()
+
+    def reserve(item):
+        event_id = version_events.get((item['document_id'], item.get('body_sha256')))
+        key = (event_id, item.get('body_sha256'))
+        if not event_id or key in reusable or key in reserved:
+            return False
+        reserved.add(key)
+        return True
+
+    return reserve
+
 
 
 def main():
@@ -114,6 +148,7 @@ def main():
                        ensure_ascii=False,indent=2)+'\n')
         print(json.dumps({'integrity_state':'PARTIAL_UNVERIFIED_HISTORY',
                           'quarantined_versions':len(historic_holds)}),flush=True)
+    reserve_fresh_event = fresh_native_event_guard(c.document, t.document)
     config = json.loads(Path('config/bct-local-reader.json').read_text())
     process = None
     returned = []
@@ -181,7 +216,7 @@ def main():
                 if reader.input_characters(payload) > 12000:
                     budget_held.add((item['document_id'], item['body_sha256']))
                     return False  # Keep the full source pending, never truncate.
-                return True
+                return reserve_fresh_event(item)
             report = run_worker(transport, 'future-candidates.json', 'future-tracking.json',
                 reader=reader, cache_dir=cache, limit=5, max_input_chars=12000,
                 source_eligible=ready, retry_failed=retry_confirmed,
