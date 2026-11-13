@@ -24,6 +24,46 @@ from bct_release_guard import verify_release
 from bct_local_reader_probe import setup
 
 
+
+def assess_current_cpu_batch(report, *, expected_reads=5):
+    """Evaluate THIS batch; keep previously blocked versions quarantined.
+
+    run_worker records historical ERROR/BLOCKED holds without selecting or
+    changing them. Their mere presence is not a failure of current successful
+    CPU reads. RUNNING or unknown hold states still fail closed.
+    """
+    held = report.get('held_prior_version_states')
+    safe_historical_holds = (isinstance(held, dict) and all(
+        state in ('ERROR', 'BLOCKED') and type(number) is int and number >= 0
+        for state, number in held.items()))
+    results = report.get('results')
+    unique_current_successes = (
+        isinstance(results, list) and len(results) == expected_reads
+        and all(isinstance(row, dict) and row.get('state') == 'SUCCESS'
+                and row.get('document_id') and row.get('body_sha256')
+                for row in results)
+        and len({(row['document_id'], row['body_sha256']) for row in results})
+            == expected_reads)
+    return {
+        'finished': report.get('state') == 'FINISHED',
+        'current_batch_completed': (report.get('attempted') == expected_reads
+            and report.get('completed_delta') == expected_reads
+            and report.get('counts') == {'SUCCESS': expected_reads}
+            and unique_current_successes),
+        'native_cpu_receipts': (report.get('model_calls') == expected_reads
+            and report.get('actual_returned_native_calls') == expected_reads),
+        'summary_saved': report.get('summary_saved') is True,
+        'no_duplicate_auto_reviews': report.get('duplicate_auto_reviews') == 0,
+        'source_records_unchanged': report.get('source_records_unchanged') is True,
+        'historical_judgments_intact': (report.get('historical_judgment_holds') == 0
+            and report.get('historical_judgment_state') == 'PASS'),
+        'prior_failures_still_held': safe_historical_holds,
+        'released_code_proof': (isinstance(report.get('release_proof'), dict)
+            and report['release_proof'].get('status') == 'PASS'),
+        'cost_zero': report.get('paid_fallback_calls') == 0,
+    }
+
+
 def main():
     if os.environ.get('GITHUB_REF') != 'refs/heads/main' or os.environ.get('BCT_PUBLIC_REPOSITORY') != 'true':
         raise ValueError('released main on a standard public repository runner required')
@@ -165,12 +205,20 @@ def main():
             historical_judgment_state='PARTIAL_UNVERIFIED_HISTORY' if historic_holds else 'PASS',
             full_clean_status='BLOCKED_HISTORICAL_DRIFT' if historic_holds else 'ELIGIBLE_FOR_VERIFICATION')
         (root/'automatic-reader-report.json').write_text(json.dumps(report, indent=2)+'\n')
-        passed = (report.get('state') == 'FINISHED' and report.get('summary_saved') is True
-            and not report.get('counts', {}).get('ERROR') and not report.get('counts', {}).get('BLOCKED')
-            and report.get('duplicate_auto_reviews') == 0
-            and not report.get('held_prior_version_states'))
-        print(json.dumps({k: report.get(k) for k in ('run_id', 'state', 'counts', 'model_calls',
-            'actual_returned_native_calls', 'completed_delta', 'paid_fallback_calls')}))
+        checks = assess_current_cpu_batch(report)
+        passed = all(checks.values())
+        # Report individual release reasons. Historical ERROR/BLOCKED holds stay
+        # visible but do not falsely invalidate five verified current successes.
+        print(json.dumps({
+            'run_id': report.get('run_id'), 'state': report.get('state'),
+            'counts': report.get('counts'),
+            'model_calls': report.get('model_calls'),
+            'actual_returned_native_calls': report.get('actual_returned_native_calls'),
+            'completed_delta': report.get('completed_delta'),
+            'held_prior_version_states': report.get('held_prior_version_states'),
+            'cpu_batch_gate': 'PASS' if passed else 'FAIL', 'checks': checks,
+            'paid_fallback_calls': report.get('paid_fallback_calls'),
+        }, sort_keys=True), flush=True)
         return 0 if passed else 1
     finally:
         if process is not None:
