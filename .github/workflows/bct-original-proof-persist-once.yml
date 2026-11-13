@@ -1,0 +1,70 @@
+name: BCT owner-directed old FULL original reproof and CAS persistence
+on:
+  push:
+    branches: [ops/bct-original-proof-persist-20261114]
+    paths: ['.github/workflows/bct-original-proof-persist-once.yml']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  bounded-original-reproof:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    concurrency:
+      group: future-bottleneck-results
+      cancel-in-progress: false
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      GITHUB_REPOSITORY: ${{ github.repository }}
+      PYTHONPATH: src:.
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preserve exactly the released original-source collector and body storage code
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = '3753b917eeb7a10ed3ee140775e8544235cf27bc'
+          test "$(git show HEAD^:src/bct/future_bottleneck.py | sha256sum | cut -d' ' -f1)" = \
+               "$(sha256sum src/bct/future_bottleneck.py | cut -d' ' -f1)"
+          test "$(git show HEAD^:src/bct/future_store.py | sha256sum | cut -d' ' -f1)" = \
+               "$(sha256sum src/bct/future_store.py | cut -d' ' -f1)"
+          test "$(git show HEAD^:src/bct/target_acquisition.py | sha256sum | cut -d' ' -f1)" = \
+               "$(sha256sum src/bct/target_acquisition.py | cut -d' ' -f1)"
+          test "$(git diff --name-only HEAD^ HEAD | sort)" = \
+               "$(printf '%s\n' .github/workflows/bct-original-proof-persist-once.yml tools/bct_original_proof_backfill.py | sort)"
+      - name: Require earlier successful actual Stage0 main source and run exact targeted regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh_state=$(python - <<'PY'
+          import json,os,urllib.request
+          u="https://api.github.com/repos/irewon1-lgtm/bottleneck-control-tower/actions/runs/43485059023"
+          req=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GITHUB_TOKEN"],"Accept":"application/vnd.github+json"})
+          with urllib.request.urlopen(req,timeout=30) as r:x=json.load(r)
+          assert x["head_sha"]=="8eef9c55d8425a26ac7ed8759e5ca897ddf1c140"
+          print(x["conclusion"])
+          PY
+          )
+          test "$gh_state" = success
+          python -m pip install -e '.[test]'
+          python -m pytest -q tests/test_future_original_verified_capture.py \
+            tests/test_source_metadata_precision.py tests/test_future_body_v33.py
+      - name: Reverify old source evidence and persist with immutable Future CAS
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_original_proof_backfill.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-original-proof-cas-readback
+          path: ${{ runner.temp }}/bct-owner-reproof/receipt.json
+          retention-days: 10
+          if-no-files-found: warn
