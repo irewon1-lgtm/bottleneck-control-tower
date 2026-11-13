@@ -78,14 +78,15 @@ def selection(db_path, sidecar_path, *, budget=300, at=None):
 
 
 def save_selection(result,output):
-    output=Path(output);output.parent.mkdir(parents=True,exist_ok=True)
-    (output).write_text(json.dumps(result,ensure_ascii=False,sort_keys=True,indent=2)+"\n",encoding="utf-8")
+    output=Path(output)
     # Important: only validated ID strings are accepted by the shell bridge;
     # no publisher-provided shell text or URL becomes a CLI argument.
     import re
     ids=result["ids"]
     if any(not isinstance(id,str) or not re.fullmatch(r"[0-9A-Za-z][0-9A-Za-z._:-]{0,150}",id) for id in ids):
         raise ValueError("S7_SHELL_ID_NOT_SAFE")
+    output.parent.mkdir(parents=True,exist_ok=True)
+    output.write_text(json.dumps(result,ensure_ascii=False,sort_keys=True,indent=2)+"\n",encoding="utf-8")
     output.with_suffix(".ids").write_text("\n".join(ids)+("\n" if ids else ""),encoding="utf-8")
 
 
