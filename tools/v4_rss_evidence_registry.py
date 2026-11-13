@@ -66,7 +66,15 @@ def _record_body(record):
     status=version.get("body_status") or record.get("body_status")
     if status not in ("FULL","PARTIAL","UNAVAILABLE","BODY_OK"):
         return None,None
-    return digest,{**record,**version,"body_status":status}
+    # An unchanged FULL body can be reaccessed and verified *after* an older
+    # immutable version was first stored. The new exact-body proof lives in
+    # the current record and acquisition history; the old version must NOT be
+    # rewritten or allowed to mask the new verification.
+    combined={**record,**version,"body_status":status}
+    combined["scope_facts"]=record.get("scope_facts") or version.get("scope_facts") or []
+    combined.update(verified_source_metadata(version,digest))
+    combined.update(verified_source_metadata(record,digest))
+    return digest,combined
 
 
 def _sector(claims):

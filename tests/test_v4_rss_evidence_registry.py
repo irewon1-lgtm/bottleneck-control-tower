@@ -99,3 +99,18 @@ def test_never_publishes_article_body_or_invents_independent_pairs():
     assert "body" not in row and "source_quote" not in row
     assert row["verification"]=="ORIGINAL_PUBLISHER_AND_BODY_VERIFIED_UNPAIRED"
     assert not row["confirmed_future_shortage"]
+
+
+def test_reverified_existing_full_body_can_be_registered_without_rewriting_immutable_version():
+    old=record()
+    sha=old["current_body_sha256"]
+    proof=dict(old["versions"][sha])
+    old["versions"][sha]={"body_status":"FULL","body_chars":300,
+        "scope_facts":old["scope_facts"],"provenance_verified":False}
+    old.update(proof)
+    found=register_rows({"old-original-reverified":old})
+    assert found["source_verified_sector_count"]==1
+    assert found["counts"]["verified_original_and_publication"]==1
+    # A changed body hash invalidates all old issuer claims before reranking.
+    old["current_body_sha256"]="0"*64
+    assert register_rows({"changed-with-old-publisher-proof":old})["source_verified_sector_count"]==0
