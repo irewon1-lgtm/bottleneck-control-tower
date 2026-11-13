@@ -18,6 +18,7 @@ from bct.v4.public_research import validate_snapshot, digest
 from bct.v4.public_data import validate_acquisition, validate_health, validate_cursor
 from v4_public_news_export import build_from_public_branch
 from v4_source_intake_public import from_data_snapshot
+from v4_future_sidecar_index import retrieve as future_screening_index
 
 
 def pack(value):
@@ -125,6 +126,38 @@ def export(repo, dest, commit, *, public_input=None):
             "feed_failed": None, "collected_completed_at": None,
             "newest_articles": [], "feed_failure_samples": []
         }
+
+    # Keep the verified 2026-11-13 full-corpus queue audit explicitly
+    # timestamp-bound; the live Future sidecar may already have advanced.
+    audit = json.loads((repo / "docs/v4/live-screening-audit-20261113.json").read_text(encoding="utf-8"))
+    body_counts = audit.get("body_counts", {})
+    if (audit.get("format") != "bct-pinned-full-rss-queue-audit-v1"
+            or audit.get("status") != "PASS_READ_ONLY_QUEUE_RECONCILIATION"
+            or audit.get("classification") != "PINNED_AUDIT_NOT_CURRENT_PROCESSING_RECEIPT_NOT_VERIFIED_SHORTAGE"
+            or set(body_counts) != {"FULL", "PARTIAL", "UNAVAILABLE", "NOT_IN_SIDECAR"}
+            or any(type(n) is not int or n < 0 for n in body_counts.values())
+            or sum(body_counts.values()) != audit.get("rss_articles")
+            or audit["sidecar_results"] + audit["unlinked"] != audit["rss_articles"]
+            or audit["selected_future_work"]["completed_in_this_audit"] != 0
+            or audit["selected_future_work"]["recent"] + audit["selected_future_work"]["older"]
+               != audit["selected_future_work"]["total"]
+            or audit["verified_read_only_shards"] != 32
+            or not all(re.fullmatch("[0-9a-f]{40}", audit[k]) for k in ("data_commit", "sidecar_commit"))):
+        raise ValueError("BCT_PINNED_RSS_AUDIT_UNVERIFIED")
+    screening = (future_screening_index(repo)
+                 if os.environ.get("GITHUB_WORKFLOW") == "Read-only BCT Pages" else None)
+    data["source_backlog"] = {
+        "format": "bct-source-and-screening-funnel-1",
+        "status": "VERIFIED_LIVE_INDEX_AND_PINNED_AUDIT" if screening else "OFFLINE_PINNED_AUDIT_ONLY",
+        "classification": "NOT_VERIFIED_BOTTLENECK_EVIDENCE",
+        "live_sidecar": screening or {"status":"NOT_QUERIED_OUTSIDE_PAGES"},
+        "pinned_audit": audit,
+        "audit_matches_live_sidecar": screening["sidecar_commit"] == audit["sidecar_commit"] if screening else None,
+        "audit_rss_count_matches_live": (rss_news["visible_article_count"] == audit["rss_articles"]
+                                         if rss_news else None),
+        "historical_rank_input_count": len(data["records"]),
+        "rank_input_not_increased_by_rss": True
+    }
     html = (ASSETS / "index.html").read_text(encoding="utf-8")
     html = change_once(html, 'href="/style.css"', 'href="./style.css"')
     html = change_once(html, 'src="/app.js"', 'src="./app.js"')
@@ -187,6 +220,8 @@ def export(repo, dest, commit, *, public_input=None):
         "site_type": "PUBLIC_STATIC_READ_ONLY", "new_ai_calls": 0
     }
 
+    manifest["screening_sidecar_commit"] = screening["sidecar_commit"] if screening else None
+    manifest["screening_funnel_sha256"] = hashlib.sha256(pack(data["source_backlog"])).hexdigest()
     manifest["source_intake_sha256"] = (
         hashlib.sha256((dest / "api/source-intake.json").read_bytes()).hexdigest()
         if source_capture is not None else None

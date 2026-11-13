@@ -58,6 +58,26 @@ else:
     assert not (root / "api/source-intake.json").exists()
 if __import__("os").environ.get("GITHUB_WORKFLOW") == "Read-only BCT Pages":
     assert manifest.get("source_intake_sha256")
+# Article screening and an immutable full-RSS audit never change the ranked
+# evidence ledger. The live sidecar manifest index is NOT verified body provenance.
+funnel=data.get("source_backlog")
+assert isinstance(funnel,dict) and funnel.get("format")=="bct-source-and-screening-funnel-1"
+assert funnel["classification"]=="NOT_VERIFIED_BOTTLENECK_EVIDENCE"
+assert funnel["rank_input_not_increased_by_rss"] is True
+assert funnel["historical_rank_input_count"]==len(data["records"])
+audit=funnel["pinned_audit"]
+assert sum(audit["body_counts"].values())==audit["rss_articles"]
+assert audit["sidecar_results"]+audit["unlinked"]==audit["rss_articles"]
+assert audit["selected_future_work"]["completed_in_this_audit"]==0
+assert 'function sourceBacklogPanel()' in js
+assert __import__("hashlib").sha256((json.dumps(funnel,ensure_ascii=False,allow_nan=False,separators=(",",":"))+chr(10)).encode()).hexdigest()==manifest["screening_funnel_sha256"]
+if __import__("os").environ.get("GITHUB_WORKFLOW") == "Read-only BCT Pages":
+    assert funnel["status"]=="VERIFIED_LIVE_INDEX_AND_PINNED_AUDIT"
+    assert manifest["screening_sidecar_commit"]==funnel["live_sidecar"]["sidecar_commit"]
+else:
+    assert funnel["status"]=="OFFLINE_PINNED_AUDIT_ONLY"
+    assert manifest["screening_sidecar_commit"] is None
+assert data["sector_rankings"]==ranks(data["records"])
 # Separate RSS NEWS metadata never counts as vetted forecast evidence.
 rss_summary = data.get("rss_news_summary")
 assert isinstance(rss_summary, dict)
