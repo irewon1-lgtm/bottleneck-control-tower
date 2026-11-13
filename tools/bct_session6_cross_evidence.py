@@ -208,7 +208,7 @@ def graph_safe_summary(docs, *, now=None):
                        "POSSIBLE_QUANTITY_GAP") for p in pairs),
             "backfill_protected_candidates":len(protected.get("candidates",[])),
             "pairs":pairs,"blocked_reasons":dict(blocked),
-            "protected_forecast_status":protected.get("forecast_performance",{}).get("status")}
+           "protected_forecast_status":protected.get("forecast_performance",{}).get("status") or "UNVERIFIED"}
 
 def run(frozen, *, fetch_fn=fetch_one, now=None):
     if len(frozen)!=45:
