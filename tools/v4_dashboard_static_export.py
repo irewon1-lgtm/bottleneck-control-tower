@@ -20,6 +20,7 @@ from v4_public_news_export import build_from_public_branch
 from v4_source_intake_public import from_data_snapshot
 from v4_future_sidecar_index import retrieve as future_screening_index
 from v4_rss_evidence_registry import from_remote as register_rss_evidence
+from v4_precursor_original_research import from_data_snapshot as persisted_original_research
 
 
 def pack(value):
@@ -169,6 +170,26 @@ def export(repo, dest, commit, *, public_input=None):
                            "status":"OFFLINE_NOT_QUERIED","screened_articles":0,
                            "source_records":[],"groups":{},"preview":{},
                            "counts":{},"source_verified_sector_count":0})
+    # Use exactly the SAME SHA-bound canonical data generation as the already
+    # independently verified RSS export, never a floating data branch ref.
+    precursor_registered = (persisted_original_research(
+        repo, data_commit=rss_news["data_ref"], rss_run_id=rss_news["source_run_id"])
+        if rss_news else {"status":"NOT_QUERIED_OFFLINE",
+                         "verified_original_record_count":0,"records":[]})
+    existing_keys = {(r["url"].split("#")[0],r["body_sha256"],r["industry"])
+                     for r in live_evidence["source_records"]}
+    added = []
+    for record in precursor_registered["records"]:
+        key = (record["url"].split("#")[0],record["body_sha256"],record["industry"])
+        if key not in existing_keys:
+            live_evidence["source_records"].append(record)
+            added.append(record)
+            existing_keys.add(key)
+    live_evidence["source_records"].sort(key=lambda r:(r["industry"],r["url"],r["id"]))
+    live_evidence["source_verified_sector_count"] = len(live_evidence["source_records"])
+    live_evidence["counts"]["persisted_precursor_original_sources"] = len(added)
+    live_evidence["counts"]["registered_precursor_original_sources_total"] = precursor_registered["verified_original_record_count"]
+    data["registered_precursor_original_research"] = precursor_registered
     data["rss_research_evidence"] = live_evidence
     legacy = {r["name"]:dict(r) for r in data["sector_rankings"]["rows"]}
     for sector,n in ((r["industry"],r) for r in live_evidence["source_records"]):
@@ -245,6 +266,7 @@ def export(repo, dest, commit, *, public_input=None):
     if rss_news is not None:
         (dest / "api/rss-news.json").write_bytes(pack(rss_news))
         (dest / "api/source-intake.json").write_bytes(pack(source_capture))
+        (dest / "api/registered-source-research.json").write_bytes(pack(precursor_registered))
     for name, value in [('research', operating), ('collection', collection), ('workflow', workflow), ('transport', transport)]:
         if value is not None:
             (dest / 'api' / (name + '.json')).write_bytes(pack(value))
@@ -266,6 +288,11 @@ def export(repo, dest, commit, *, public_input=None):
         "site_type": "PUBLIC_STATIC_READ_ONLY", "new_ai_calls": 0
     }
 
+    manifest["registered_source_research_sha256"] = (
+        hashlib.sha256((dest / "api/registered-source-research.json").read_bytes()).hexdigest()
+        if rss_news is not None else None
+    )
+    manifest["registered_source_research_count"] = len(added)
     manifest["rss_research_sha256"] = hashlib.sha256(pack(live_evidence)).hexdigest()
     manifest["rss_research_sidecar_commit"] = live_evidence.get("sidecar_commit")
     manifest["rss_research_verified_source_records"] = len(live_evidence["source_records"])
