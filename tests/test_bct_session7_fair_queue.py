@@ -140,3 +140,16 @@ def test_operating_atomic_queue_does_not_depend_on_all_cpu_reads_succeeding():
     assert "steps.verified_operating_restore.conclusion == 'success'" in guard
     assert "continue-on-error" not in ids["full_body_cpu_reader"]
     assert "bct_publish_operating_queue.py" in publisher["run"]
+
+
+def test_runtime_selection_flag_does_not_leak_into_regression_suite():
+    import yaml
+    root = Path(__file__).resolve().parents[1]
+    workflow = yaml.safe_load((root/'.github/workflows/future-bottleneck.yml').read_text())
+    job = workflow['jobs']['candidates']
+    assert (job.get('env') or {}).get('BCT_FAIR_QUEUE_MODE') is None
+    steps = {v['name']:v for v in job['steps'] if 'name' in v}
+    assert (steps['Run full regression suite'].get('env') or {}).get('BCT_FAIR_QUEUE_MODE') is None
+    assert steps['Screen article bodies without any AI API']['env']['BCT_FAIR_QUEUE_MODE']=='balanced-v1'
+    assert steps['Publish candidate sidecar only']['env']['BCT_FAIR_QUEUE_MODE']=='balanced-v1'
+    assert (steps['Read FULL sources with pinned cost-zero CPU reader'].get('env') or {}).get('BCT_FAIR_QUEUE_MODE') is None
