@@ -120,3 +120,23 @@ def test_opt_in_existing_engine_fetches_recent_and_old_without_reset(tmp_path,mo
     assert balanced["summary"]["source_wide_scan"] is True
     assert set(json.loads((tmp_path/"balanced-sidecar.json").read_text())["results"])==set(
        str(i) for i in range(8) if any(f"/story/{i}" in x for x in called_new))
+
+
+def test_operating_atomic_queue_does_not_depend_on_all_cpu_reads_succeeding():
+    """Failing one native inference keeps FAIL yet does not skip saved queue."""
+    import yaml
+    root=Path(__file__).resolve().parents[1]
+    workflow=yaml.safe_load((root/".github/workflows/future-bottleneck.yml").read_text())
+    steps=workflow["jobs"]["candidates"]["steps"]
+    ids={step["id"]:step for step in steps if "id" in step}
+    assert "verified_operating_restore" in ids
+    assert "candidate_sidecar_publish" in ids
+    assert "full_body_cpu_reader" in ids
+    publisher=ids["atomic_operating_queue"]
+    guard=publisher["if"]
+    assert "success()" in guard and "failure()" in guard
+    assert "steps.full_body_cpu_reader.conclusion == 'failure'" in guard
+    assert "steps.candidate_sidecar_publish.conclusion == 'success'" in guard
+    assert "steps.verified_operating_restore.conclusion == 'success'" in guard
+    assert "continue-on-error" not in ids["full_body_cpu_reader"]
+    assert "bct_publish_operating_queue.py" in publisher["run"]
