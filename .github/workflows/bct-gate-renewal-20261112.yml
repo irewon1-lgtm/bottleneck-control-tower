@@ -193,7 +193,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          printf '%s\\n' '{"ref":"main","inputs":{"backlog_body_recovery":false}}' > "$RUNNER_TEMP/candidates-request.json"
+          cat > "$RUNNER_TEMP/candidates-request.json" <<'JSON'
+          {"ref":"main","inputs":{"backlog_body_recovery":false}}
+          JSON
           gh api --method POST \
             "repos/$GITHUB_REPOSITORY/actions/workflows/future-bottleneck.yml/dispatches" \
             --input "$RUNNER_TEMP/candidates-request.json" >/dev/null
