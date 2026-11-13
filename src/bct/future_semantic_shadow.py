@@ -110,7 +110,11 @@ def _roles(sentence):
     # Same-sentence co-occurrence is only a lead, never causal source proof.
     result=[]
     for name in SIGNALS:
-        if not (STATEMENTS[name].search(sentence) and CHANGES[name].search(sentence)):
+        qualification_completed = (name=="RELIEF" and
+            re.search(r"\\b(?:qualification|certification)\\b",sentence,re.I) and
+            re.search(r"\\b(?:completed|passed|achieved)\\b",sentence,re.I))
+        if not (STATEMENTS[name].search(sentence) and
+                (CHANGES[name].search(sentence) or qualification_completed)):
             continue
         # "Capacity shortfall increased" is pressure, NOT a relief signal.
         # Explicit expansion/recovery in the same sentence can be a separate
