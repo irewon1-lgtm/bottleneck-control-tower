@@ -23,9 +23,9 @@ def test_one_time_gate_dispatch_does_not_change_operating_pipeline():
 
 def test_gate_receipt_requires_actual_completed_main_gate_and_exact_hashes():
     for required in (
-        "github.event.workflow_run.conclusion == 'success'",
-        "github.event.workflow_run.event == 'workflow_dispatch'",
-        "github.event.workflow_run.head_repository.full_name == github.repository",
+        "run.get('conclusion') != 'success'",
+        "run.get('event') != 'workflow_dispatch'",
+        "(run.get('head_repository') or {}).get('full_name') != repo",
         "run.get('path') != '.github/workflows/bct-recovery.yml'",
         "run.get('head_sha') != current['commit']['sha']",
         "bct-recovery-checkpoint-",
@@ -61,3 +61,13 @@ def test_new_code_gate_dispatch_and_operational_resume_are_proof_bound():
     assert "future-bottleneck.yml/dispatches" in TEXT
     assert TEXT.index("GATE_RELEASE_RECEIPT_COMMITTED") < TEXT.index(
         "Resume existing CPU candidate cycle after BOTH Gate receipts")
+
+
+def test_completed_gate_is_authenticated_inside_job_even_if_event_fields_are_missing():
+    assert "if: ${{ github.event_name == 'workflow_run' }}" in TEXT
+    assert 'GATE_NON_ATTESTABLE_EVENT_NO_WRITE' in TEXT
+    assert "output.write('published=false\\n')" in TEXT
+    assert "output.write('published=true\\n')" in TEXT
+    assert TEXT.count("if: ${{ steps.attest.outputs.published == 'true' }}") == 2
+    assert TEXT.index('GATE_NON_ATTESTABLE_EVENT_NO_WRITE') < TEXT.index('verify_release(api, receipt')
+    assert TEXT.index('GATE_RELEASE_RECEIPT_COMMITTED') < TEXT.index("output.write('published=true")
