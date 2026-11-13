@@ -1,0 +1,40 @@
+name: BCT verified 3MB precursor CPU delta product research audit
+on:
+  push:
+    branches: [qa/bct-precursor-cpu-delta-20261114]
+    paths: ['.github/workflows/bct-precursor-cpu-delta-qa.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audited-source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify official source delta and exact product offsets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONPATH: src
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e .
+          mkdir -p "$RUNNER_TEMP/bct-delta-source-audit/delta"
+          gh run download 43473259686 --repo irewon1-lgtm/bottleneck-control-tower \
+            --name precursor-cpu-delta-1 --dir "$RUNNER_TEMP/bct-delta-source-audit/delta"
+          python tools/bct_precursor_delta_audit.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-verified-original-source-products-20261114
+          path: |
+            ${{ runner.temp }}/bct-delta-source-audit/receipt.json
+            ${{ runner.temp }}/bct-delta-source-audit/candidates.json
+          retention-days: 14
+          if-no-files-found: warn
