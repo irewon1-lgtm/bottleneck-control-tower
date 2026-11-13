@@ -111,8 +111,8 @@ def _roles(sentence):
     result=[]
     for name in SIGNALS:
         qualification_completed = (name=="RELIEF" and
-            re.search(r"\\b(?:qualification|certification)\\b",sentence,re.I) and
-            re.search(r"\\b(?:completed|passed|achieved)\\b",sentence,re.I))
+            re.search(r"\b(?:qualification|certification)\b",sentence,re.I) and
+            re.search(r"\b(?:completed|passed|achieved)\b",sentence,re.I))
         if not (STATEMENTS[name].search(sentence) and
                 (CHANGES[name].search(sentence) or qualification_completed)):
             continue
