@@ -1,0 +1,111 @@
+name: BCT Session 7 fair operational selector on actual 10510 RSS (dry run)
+on:
+  push:
+    branches: [research/bct-session7-queue-monitor-20261113]
+    paths:
+      - '.github/workflows/bct-session7-select-work.yml'
+      - 'tools/bct_session7_select_work.py'
+      - 'tests/test_bct_session7_select_work.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: bct-s7-operational-selector-readonly
+  cancel-in-progress: false
+jobs:
+  verify-fair-input:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      PYTHONPATH: .:src
+      DATA_PIN: da7b17f34d58c69c72b5d067d6279ec98db8bb44
+      SIDECAR_PIN: c48a6f7978a986ca2bb62a86009fdf7e830aba78
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify queue safety and exact CPU --document-id selection rules
+        run: |
+          set -euo pipefail
+          python -m pip install -e '.[test]'
+          python -m pytest -q tests/test_bct_session7_queue_monitor.py tests/test_bct_session7_select_work.py
+      - name: Read both immutable live generations but never write them
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin "$DATA_PIN"
+          git fetch --no-tags --depth=1 origin "$SIDECAR_PIN"
+          mkdir -p "$RUNNER_TEMP/s7-selection"
+          git show "$DATA_PIN:canonical.sqlite3" > "$RUNNER_TEMP/s7-selection/canonical.sqlite3"
+          python - <<'PY'
+          import hashlib,json,os,subprocess
+          from pathlib import Path
+          from bct.future_github import assemble
+          root=Path(os.environ["RUNNER_TEMP"])/"s7-selection"
+          state=json.loads(subprocess.check_output(["git","show",
+               os.environ["DATA_PIN"]+":state.json"]))
+          db=root/"canonical.sqlite3"
+          assert hashlib.sha256(db.read_bytes()).hexdigest()==state["sha256"]
+          manifest=json.loads(subprocess.check_output(["git","show",
+               os.environ["SIDECAR_PIN"]+":future-candidates.json"]))
+          assert manifest["format"]=="bct-sharded-sidecar-v1"
+          def shard(part):
+              return subprocess.check_output(["git","show",
+                  os.environ["SIDECAR_PIN"]+":"+part["path"]])
+          doc=assemble(manifest,shard)
+          assert len(doc["results"])==8145
+          (root/"candidates.json").write_text(json.dumps(doc,ensure_ascii=False))
+          print("BCT_S7_VERIFIED_27_SHARDED_SOURCE_TO_CPU_INPUT")
+          PY
+      - name: Select source-safe 120 actual article IDs for a fair CPU batch
+        run: |
+          set -euo pipefail
+          python tools/bct_session7_select_work.py \
+            --db "$RUNNER_TEMP/s7-selection/canonical.sqlite3" \
+            --sidecar "$RUNNER_TEMP/s7-selection/candidates.json" \
+            --budget 120 --output "$RUNNER_TEMP/s7-selection/selection.json"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path(os.environ["RUNNER_TEMP"])/"s7-selection"
+          result=json.loads((root/"selection.json").read_text())
+          ids=(root/"selection.ids").read_text().splitlines()
+          assert result["article_total"]==10510
+          assert result["previous_sidecar_results"]==8145
+          assert result["unlinked"]==2365
+          assert len(ids)==result["selected_count"]<=120
+          assert len(set(ids))==len(ids)
+          assert result["selected_recent"]>0 and result["selected_old"]>0
+          assert result["verified_bottleneck_promotions"]==0
+          assert result["source_access_requests"]==0
+          print("BCT_S7_CPU_INPUT_PLAN_VERIFIED="+str(len(ids)))
+          PY
+      - name: Explain what this did NOT process
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/s7-selection/selection.json"; then
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json,os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"s7-selection/selection.json"
+          j=json.loads(p.read_text())
+          print("## BCT7 selected fair CPU inputs\n")
+          print("RSS:",j["article_total"],"prior:",j["previous_sidecar_results"])
+          print("Selected:",j["selected_count"],"recent:",j["selected_recent"],"old:",j["selected_old"])
+          print("**Not actually fetched or persisted. This is only a verified CPU work input plan.**")
+          PY
+          else
+            echo "Selection incomplete; no CPU source fetch or production publication." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-session7-fair-cpu-input-120
+          path: |
+            ${{ runner.temp }}/s7-selection/selection.json
+            ${{ runner.temp }}/s7-selection/selection.ids
+          if-no-files-found: warn
+          retention-days: 30
