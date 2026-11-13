@@ -1,0 +1,92 @@
+name: BCT Session 7 10510-article automatic queue ledger (read-only)
+on:
+  push:
+    branches: [research/bct-session7-queue-monitor-20261113]
+    paths:
+      - '.github/workflows/bct-session7-queue-monitor.yml'
+      - 'tools/bct_session7_queue_monitor.py'
+      - 'tests/test_bct_session7_queue_monitor.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: bct-session7-queue-monitor-readonly
+  cancel-in-progress: false
+jobs:
+  complete-ledger:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      PYTHONPATH: .:src
+      RSS_DATA_PIN: da7b17f34d58c69c72b5d067d6279ec98db8bb44
+      PRIOR_RESEARCH_PIN: c48a6f7978a986ca2bb62a86009fdf7e830aba78
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify failed-article holds and balanced old plus fresh work
+        run: |
+          set -euo pipefail
+          python -m pip install -e '.[test]'
+          python -m pytest -q tests/test_bct_session7_queue_monitor.py
+      - name: Restore exactly immutable 10510 RSS and existing research sidecar
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin "$RSS_DATA_PIN"
+          git fetch --no-tags --depth=1 origin "$PRIOR_RESEARCH_PIN"
+          git cat-file -e "$RSS_DATA_PIN:canonical.sqlite3"
+          git cat-file -e "$PRIOR_RESEARCH_PIN:future-candidates.json"
+      - name: Reconcile all 10510 active article IDs and create 120-slot fair plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_session7_queue_monitor.py \
+            --data-sha "$RSS_DATA_PIN" --sidecar-sha "$PRIOR_RESEARCH_PIN" \
+            --budget 120 --output "$RUNNER_TEMP/bct-session7-queue"
+          python - <<'PY'
+          import csv,json,os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'bct-session7-queue'
+          summary=json.loads((root/'queue_health.json').read_text(encoding='utf-8'))
+          with (root/'articles_ledger.csv').open(encoding='utf-8-sig',newline='') as f:
+              articles=list(csv.DictReader(f))
+          with (root/'bounded_work_plan.csv').open(encoding='utf-8-sig',newline='') as f:
+              selection=list(csv.DictReader(f))
+          assert summary['status']=='PASS_READ_ONLY_QUEUE_RECONCILIATION'
+          assert summary['articles']==len(articles)==10510
+          assert summary['prior_sidecar_results']==8145
+          assert summary['articles_without_sidecar']==2365
+          assert summary['sidecar_shards_hash_verified']==27
+          assert len({a['article_id'] for a in articles})==10510
+          assert len(selection)<=120
+          assert len({a['article_id'] for a in selection})==len(selection)
+          assert sum(summary['body_counts'].values())==10510
+          assert sum(summary['work_actions'].values())==10510
+          assert summary['new_full_article_downloads']==0
+          assert summary['candidate_promotions']==0
+          print('BCT_S7_FULL_RSS_RECONCILIATION_PASS='+str(len(articles)))
+          PY
+      - name: Explain why a queue plan does not equal acquisition completed
+        if: always()
+        shell: bash
+        run: |
+          if test -f "$RUNNER_TEMP/bct-session7-queue/queue_readme_ko.md"; then
+            cat "$RUNNER_TEMP/bct-session7-queue/queue_readme_ko.md" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "QUEUE_LEDGER_INCOMPLETE; no new source acquisition or candidate promotion." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-session7-queue-10510
+          path: |
+            ${{ runner.temp }}/bct-session7-queue/articles_ledger.csv
+            ${{ runner.temp }}/bct-session7-queue/bounded_work_plan.csv
+            ${{ runner.temp }}/bct-session7-queue/queue_health.json
+            ${{ runner.temp }}/bct-session7-queue/queue_readme_ko.md
+          retention-days: 30
+          if-no-files-found: warn
