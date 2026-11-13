@@ -63,6 +63,20 @@ def triage_one(row, sidecar=None):
         priority = "P3_BROAD_TEXT_CUE"
     else:
         priority = "P4_NO_METADATA_CUE"
+    prior_decision = (sidecar or {}).get("decision", "NOT_IN_SIDECAR")
+    prior_candidate = bool((sidecar or {}).get("candidate"))
+    # A title-only non-match cannot erase an older FULL-body screening lead.
+    # Even those older FULL-body leads remain UNVERIFIED until independent review.
+    if body_status == "FULL" and prior_candidate and prior_decision in ("CONTEXT_REVIEW", "CANDIDATE_ONLY"):
+        lane = "Q1_PRIOR_FULL_BODY_LEAD"
+    elif body_status == "PARTIAL" and prior_candidate:
+        lane = "Q2_PRIOR_PARTIAL_BODY_LEAD"
+    elif body_status == "UNAVAILABLE" and prior_candidate:
+        lane = "Q3_PRIOR_UNAVAILABLE_LEAD_HOLD"
+    elif priority != "P4_NO_METADATA_CUE":
+        lane = "Q4_METADATA_SIGNAL_NEEDS_SOURCE"
+    else:
+        lane = "Q5_NO_SIGNAL_IN_AVAILABLE_SCREENING"
     return {
         "id": row["id"], "source": row["source"], "url": row["url"],
         "title": row["title"], "published_at": row["published_at"],
@@ -71,6 +85,7 @@ def triage_one(row, sidecar=None):
         "title_snippet_signal_paths": list(paths), "narrow_signal_codes": narrow,
         "metadata_conditional": bool(broad["context_review"]),
         "metadata_priority": priority,
+        "combined_review_lane": lane,
         "previous_body_status": body_status,
         "prior_body_screened": bool(sidecar and body_status in ("FULL", "PARTIAL")),
         "previous_body_screening_decision": (sidecar or {}).get("decision", "NOT_IN_SIDECAR"),
@@ -94,6 +109,8 @@ def evaluate(rows, sidecar_results):
     path_counts = Counter()
     path_combo_counts = Counter()
     priorities = Counter()
+    combined_lanes = Counter()
+    rescued_p4_from_full_body = 0
     body_counts = Counter()
     coverage = Counter()
     caveats = Counter()
@@ -105,6 +122,9 @@ def evaluate(rows, sidecar_results):
         out.append(value)
         source_counts[value["source"]] += 1
         priorities[value["metadata_priority"]] += 1
+        combined_lanes[value["combined_review_lane"]] += 1
+        if value["metadata_priority"] == "P4_NO_METADATA_CUE" and value["combined_review_lane"] == "Q1_PRIOR_FULL_BODY_LEAD":
+            rescued_p4_from_full_body += 1
         body_counts[value["previous_body_status"]] += 1
         coverage["with_prior_sidecar" if row["id"] in sidecar_results else "without_prior_sidecar"] += 1
         for k in value["title_snippet_signal_paths"]:
@@ -118,13 +138,16 @@ def evaluate(rows, sidecar_results):
             caveats["rss_summary_missing"] += 1
         if not row["published_at"]:
             caveats["rss_publication_date_missing"] += 1
-    if sum(body_counts.values()) != len(rows) or sum(priorities.values()) != len(rows):
+    if (sum(body_counts.values()) != len(rows) or sum(priorities.values()) != len(rows)
+            or sum(combined_lanes.values()) != len(rows)):
         raise ValueError("INCOMPLETE_FIRSTPASS_COUNTS")
     return out, {
         "total": len(rows), "screened_title_snippet": len(out),
         "prior_sidecar_linked": coverage["with_prior_sidecar"],
         "no_prior_sidecar": coverage["without_prior_sidecar"],
         "metadata_priorities": dict(sorted(priorities.items())),
+        "combined_review_lanes": dict(sorted(combined_lanes.items())),
+        "rescued_p4_using_prior_full_body_leads": rescued_p4_from_full_body,
         "previous_body_status": dict(sorted(body_counts.items())),
         "title_snippet_signal_article_counts": dict(sorted(path_counts.items())),
         "headline_snippet_signal_combinations": dict(sorted(path_combo_counts.items())),
@@ -196,10 +219,14 @@ def main(argv=None):
         })
         priority_sort={"P1_MULTISIGNAL_METADATA":0,"P2_TEXT_CUE":1,
                        "P3_BROAD_TEXT_CUE":2,"P4_NO_METADATA_CUE":3}
-        ordered=sorted(results,key=lambda r:(priority_sort[r["metadata_priority"]],
-                   r["previous_body_status"]=="FULL",r["collected_at"],r["id"]))
+        combined_sort={"Q1_PRIOR_FULL_BODY_LEAD":0,"Q2_PRIOR_PARTIAL_BODY_LEAD":1,
+                       "Q3_PRIOR_UNAVAILABLE_LEAD_HOLD":2,
+                       "Q4_METADATA_SIGNAL_NEEDS_SOURCE":3,
+                       "Q5_NO_SIGNAL_IN_AVAILABLE_SCREENING":4}
+        ordered=sorted(results,key=lambda r:(combined_sort[r["combined_review_lane"]],
+                   priority_sort[r["metadata_priority"]], r["collected_at"],r["id"]))
         columns=["id","source","url","title","published_at","collected_at",
-                 "metadata_classification","metadata_priority","title_snippet_signal_paths",
+                 "metadata_classification","metadata_priority","combined_review_lane","title_snippet_signal_paths",
                  "narrow_signal_codes","metadata_conditional","previous_body_status",
                  "prior_body_screened","previous_body_screening_decision",
                  "previous_body_candidate_unverified","stage"]
@@ -225,6 +252,11 @@ def main(argv=None):
                  "|---|---:|"]
         for k in ("P1_MULTISIGNAL_METADATA","P2_TEXT_CUE","P3_BROAD_TEXT_CUE","P4_NO_METADATA_CUE"):
             rows_md.append(f"| {k} | {summary['metadata_priorities'].get(k,0):,} |")
+        rows_md += ["","## 기존 본문 신호까지 합친 검토 대기열 — 병목 확정 아님",
+                    "| 통합 검토 대기열 | 건수 |","|---|---:|"]
+        for k in combined_sort:
+            rows_md.append(f"| {k} | {summary['combined_review_lanes'].get(k,0):,} |")
+        rows_md.append(f"| 제목 P4지만 과거 FULL 본문에 검토 신호 있음 | {summary['rescued_p4_using_prior_full_body_leads']:,} |")
         rows_md += ["","## 분류된 기사 신호 — 독립 근거로 확정되지 않음",
                     "| 신호 | 기초 일치 기사 수 |","|---|---:|"]
         for k in KINDS:
