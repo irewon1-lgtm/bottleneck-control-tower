@@ -1,0 +1,41 @@
+name: BCT newest archived source-verified RSS product evidence QA
+on:
+  push:
+    branches: [qa/bct-latest-precursor-source-evidence-20261114]
+    paths: ['.github/workflows/bct-latest-precursor-source-qa.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify-original:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore archived true original article sources without writes
+        env:
+          PYTHONPATH: src
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e .
+          mkdir -p "$RUNNER_TEMP/bct-precursor-audit/rss"
+          python .github/scripts/acquisition_sources.py restore \
+            --run-id 43473259686 --run-attempt 1 \
+            --destination "$RUNNER_TEMP/bct-precursor-audit/private"
+          gh run download 43472909460 --repo irewon1-lgtm/bottleneck-control-tower --name rss-live-result-1 \
+            --dir "$RUNNER_TEMP/bct-precursor-audit/rss"
+          python .github/scripts/bct_precursor_archived_qualify.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-precursor-new-verified-sector-audit
+          path: ${{ runner.temp }}/bct-precursor-audit/audit.json
+          retention-days: 7
+          if-no-files-found: warn
