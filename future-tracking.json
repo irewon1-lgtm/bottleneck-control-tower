@@ -6292,6 +6292,11 @@
       "owner": "review",
       "patch_sha256": "dccbcb672db13d4586c271d19999185925b1371a00a4e1a918dbc4f30b57d8ad",
       "applied_at": "2026-11-12T14:50:38.203281+00:00"
+    },
+    "recovery-review-629b68c598f072b78975fb351a564aef1b714cb07da6566bee30ea94e83f0314": {
+      "owner": "review",
+      "patch_sha256": "f94f029409d5860f41189589c071e998e7db72f3aa92526c04bc5847ab484cae",
+      "applied_at": "2026-11-13T00:15:14.961832+00:00"
     }
   },
   "policy": {
@@ -11144,6 +11149,13 @@
       "reader_version": "bct-v33-reader-1",
       "read_end": 4420,
       "last_review_id": "auto-quick-297d5026f22e096ae97bd7e05bae108b"
+    },
+    "9f43daa8-519a-464c-8c28-b780381f5f8b:4caeb9769ce4ed262aa3019bf60cdf06657d6b3ea6a49d29d33a6601ddcb73b8:bct-v33-reader-1": {
+      "document_id": "9f43daa8-519a-464c-8c28-b780381f5f8b",
+      "body_sha256": "4caeb9769ce4ed262aa3019bf60cdf06657d6b3ea6a49d29d33a6601ddcb73b8",
+      "reader_version": "bct-v33-reader-1",
+      "read_end": 2984,
+      "last_review_id": "recovered-quick-bd34ab4ccbf9b1ab36fbffb35203582918ac61c35a7b0458bf17826d514ca96f"
     }
   },
   "purpose": "향후 1~2년 내 구체적 산업 공급 TARGET의 수요·공급 시간차 발견 및 예측 결과 추적",
@@ -45086,6 +45098,33 @@
         "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST"
       },
       "candidate_state": "DATA_WAIT"
+    },
+    "recovered-quick-bd34ab4ccbf9b1ab36fbffb35203582918ac61c35a7b0458bf17826d514ca96f": {
+      "disposition": "CHANGE",
+      "reason": "The recall involves removing specific VentStar Resus Neo hoses due to potential cracks that could lead to serious injury or death.",
+      "read_end": 2984,
+      "review_id": "recovered-quick-bd34ab4ccbf9b1ab36fbffb35203582918ac61c35a7b0458bf17826d514ca96f",
+      "document_id": "9f43daa8-519a-464c-8c28-b780381f5f8b",
+      "body_sha256": "4caeb9769ce4ed262aa3019bf60cdf06657d6b3ea6a49d29d33a6601ddcb73b8",
+      "source_version": "c7596567d15887c0c9e758edd919caf1e04d4f152018791fa5c0e67b25da1899",
+      "reader_version": "bct-v33-reader-1",
+      "kind": "quick",
+      "read_start": 0,
+      "reviewed_at": "2026-11-13T00:14:11.572323+00:00",
+      "worker_provider": "local-cpu",
+      "worker_model": "Qwen/Qwen2.5-7B-Instruct-GGUF",
+      "model_revision": "bb5d59e06d9551d752d08b292a50eb208b07ab1f",
+      "actual_input_tokens": 1172,
+      "actual_output_tokens": 46,
+      "recovery_run_id": "43330584731",
+      "as_of": "2026-11-13",
+      "read_complete": true,
+      "source_access": {
+        "url": "http://www.fda.gov/medical-devices/medical-device-recalls-and-early-alerts/breathing-circuit-recall-draeger-removes-ventstar-resus-neo-hoses",
+        "body_sha256": "4caeb9769ce4ed262aa3019bf60cdf06657d6b3ea6a49d29d33a6601ddcb73b8",
+        "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST"
+      },
+      "candidate_state": "REVIEWED"
     }
   },
   "runs": [
@@ -233721,6 +233760,6 @@
       ]
     }
   ],
-  "updated_at": "2026-11-12T14:46:38.666807+00:00",
+  "updated_at": "2026-11-13T00:14:11.572323+00:00",
   "version": 1
 }
