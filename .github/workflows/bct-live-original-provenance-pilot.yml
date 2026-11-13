@@ -1,0 +1,31 @@
+name: BCT real publisher original-source provenance pilot (read only)
+on:
+  push:
+    branches: [qa/bct-live-original-provenance-20261114]
+    paths: ['.github/workflows/bct-live-original-provenance-pilot.yml']
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Probe official and commercial original publishers without state changes
+        shell: bash
+        env:
+          PYTHONPATH: src
+        run: |
+          set -euo pipefail
+          python -m pip install -e .
+          python .github/scripts/bct_real_source_proof_pilot.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-real-publisher-source-proof-pilot
+          path: ${{ runner.temp }}/bct-source-proof-rate.json
+          retention-days: 7
+          if-no-files-found: warn
