@@ -1,0 +1,50 @@
+name: BCT persist newly verified precursor original source research records
+on:
+  push:
+    branches: [ops/bct-precursor-research-register-20261114]
+    paths: ['.github/workflows/bct-precursor-source-register-once.yml']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  original-evidence-register:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    concurrency:
+      group: rss-canonical-data
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preserve canonical v4 source path and exact delta audit code
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = '3753b917eeb7a10ed3ee140775e8544235cf27bc'
+          test "$(git diff --name-only HEAD^ HEAD | sort)" = \
+            "$(printf '%s\n' .github/workflows/bct-precursor-source-register-once.yml tools/bct_precursor_delta_audit.py tools/bct_precursor_register.py | sort)"
+      - name: Verify historical exact-source proof, classify, and CAS publish append-only records
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONPATH: src
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e .
+          mkdir -p "$RUNNER_TEMP/bct-delta-source-audit/delta"
+          gh run download 43473259686 --repo irewon1-lgtm/bottleneck-control-tower \
+            --name precursor-cpu-delta-1 --dir "$RUNNER_TEMP/bct-delta-source-audit/delta"
+          python tools/bct_precursor_delta_audit.py
+          python tools/bct_precursor_register.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-source-evidence-registered-readback
+          path: ${{ runner.temp }}/bct-delta-source-audit/publish-receipt.json
+          retention-days: 10
+          if-no-files-found: warn
