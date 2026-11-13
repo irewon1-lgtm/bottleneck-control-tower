@@ -96,3 +96,15 @@ def test_reference_label_type_and_spreadsheet_formula_safety():
     assert s.any_truth({"DEMAND":"UNKNOWN","SUPPLY":"FALSE","RELIEF":"FALSE"})=="UNKNOWN"
     assert s.cell("=2+2")=="'=2+2"
     assert s.cell("@cmd")=="'@cmd"
+
+
+def test_p1_supplement_excludes_older_200_reference_and_preserves_priority():
+    s=load()
+    rows=[record(f"p{i}",paths="SUPPLY",priority="P1_MULTISIGNAL_METADATA",
+                 combined="Q4_METADATA_SIGNAL_NEEDS_SOURCE") for i in range(5)]
+    rows += [record("q",paths="DEMAND",priority="P2_TEXT_CUE")]
+    subset=s.select_new_p1(rows,{"p1","p3"})
+    assert len(subset)==3
+    assert {r["id"] for r in subset}=={"p0","p2","p4"}
+    assert all(r["metadata_priority"]=="P1_MULTISIGNAL_METADATA" for r in subset)
+    assert [r["id"] for r in subset] == [r["id"] for r in s.select_new_p1(rows,{"p1","p3"})]
