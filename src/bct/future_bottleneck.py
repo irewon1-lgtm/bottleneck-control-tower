@@ -154,9 +154,78 @@ def fetch_capture(url):
                 "truncated": truncated}
 
 
+def _original_source_metadata(url, capture):
+    """Bind original-publisher proof to the exact freshly extracted FULL body.
+
+    A successful HTTP response, RSS title, domain or title match alone does not
+    grant source/publication verification. Raw HTML stays inside the runner.
+    Old already-screened articles are NOT retrospectively marked verified.
+    """
+    from . import target_acquisition
+    from .future_body import extract_document
+
+    if (capture.get('status') != 200 or capture.get('truncated')
+            or not isinstance(capture.get('raw'), bytes)):
+        return {}
+    at = datetime.now(timezone.utc).isoformat()
+    raw = capture['raw']
+    try:
+        proof = target_acquisition.verify(
+            raw, url, capture['final_url'], at,
+            capture['status'], capture['content_type'])
+        same_body = extract_document(
+            capture['html'], http_status=capture['status'],
+            content_type=capture['content_type'])
+    except (ValueError, TypeError, KeyError, UnicodeError, RecursionError):
+        return {}  # Metadata failure retains the old unverified capture.
+    if (proof.get('provenance') != 'PASS' or proof.get('provenance_verified') is not True
+            or proof.get('body_status') != 'FULL'
+            or same_body.get('body_status') != 'FULL'
+            or proof.get('body_sha256') != same_body.get('body_sha256')
+            or not proof.get('origin_id') or proof.get('origin_id') == 'UNKNOWN'
+            or not proof.get('origin_publisher') or proof.get('origin_publisher') == 'UNKNOWN'):
+        return {}
+    source_hash = same_body['body_sha256']
+    # Recheck the publisher evidence over the *same* observed raw bytes;
+    # never promote reposted wire copy, redirect or blocked article pages.
+    if hashlib.sha256(raw).hexdigest() != proof.get('raw_sha256'):
+        return {}
+    publication = proof.get('published_at_raw')
+    if (not isinstance(publication, str) or not publication.strip()
+            or proof.get('publication_precision') not in ('DATE', 'TIMESTAMP')):
+        return {}
+    return {
+        'origin_id': proof['origin_id'],
+        'origin_url': proof['origin_url'],
+        'origin_publisher': proof['origin_publisher'],
+        'provenance_verified': True,
+        'provenance_evidence': {
+            'body_sha256': source_hash,
+            'verified_source_url': proof['origin_url'],
+            'source_identity': proof.get('canonical_url') or proof['origin_id'],
+            'raw_sha256': proof['raw_sha256'],
+            'verification': 'PRIMARY_CANONICAL_PUBLISHER_BODY_AND_DATE'
+        },
+        'published_at': proof['published_at'],
+        'publication_precision': proof['publication_precision'],
+        'publication_verified': True,
+        'publication_evidence': {
+            'body_sha256': source_hash,
+            'source_quote': publication.strip()[:90],
+            'source': 'PUBLISHER_LD_JSON_OR_META'
+        },
+        'available_at': at,
+        'public_snapshot_observed_at': at,
+    }
+
+
 def fetch_html(url):
-    # Existing collectors keep their JSON-compatible capture contract.
-    return {k:v for k,v in fetch_capture(url).items() if k not in ('raw','final_url')}
+    capture = fetch_capture(url)
+    # Returned public-compatible metadata never contains original raw bytes,
+    # final-URL redirect state or unverifiable booleans.
+    safe = {k:v for k,v in capture.items() if k not in ('raw','final_url')}
+    safe.update(_original_source_metadata(url, capture))
+    return safe
 
 
 def fetch_body(url):
