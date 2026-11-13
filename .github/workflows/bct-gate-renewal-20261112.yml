@@ -47,7 +47,9 @@ jobs:
           echo 'Gate dispatch accepted. This is not a Gate PASS.'
 
   attest-and-recover:
-    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.status == 'completed' && github.event.workflow_run.event == 'workflow_dispatch' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository }}
+    # Do not trust nested workflow_run event fields for the job-level filter.
+    # Actual eligibility and every release proof are rechecked against REST.
+    if: ${{ github.event_name == 'workflow_run' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
@@ -87,6 +89,16 @@ jobs:
               return json.loads(response.stdout)
 
           run = api('GET', '/actions/runs/'+str(run_id))
+          # Non-manual and unsuccessful Gates never issue receipts or invoke readers.
+          if (run.get('event') != 'workflow_dispatch'
+                  or run.get('path') != '.github/workflows/bct-recovery.yml'
+                  or run.get('head_branch') != 'main'
+                  or (run.get('head_repository') or {}).get('full_name') != repo
+                  or run.get('status') != 'completed' or run.get('conclusion') != 'success'):
+              print('GATE_NON_ATTESTABLE_EVENT_NO_WRITE')
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+                  output.write('published=false\n')
+              raise SystemExit(0)
           current = api('GET', '/branches/main')
           if (run.get('id') != run_id or run.get('event') != 'workflow_dispatch'
                   or run.get('path') != '.github/workflows/bct-recovery.yml'
@@ -177,8 +189,11 @@ jobs:
                   'run_id':run_id,'new_main':created['sha'],
                   'dual_release_and_resume_verified':True,
                   'verified_root_files':proof2['verified_root_files']}))
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+                  output.write('published=true\n')
           PY
       - name: Trigger existing source-free private ACK recovery, not CPU inference
+        if: ${{ steps.attest.outputs.published == 'true' }}
         run: |
           set -euo pipefail
           cat > "$RUNNER_TEMP/recover-request.json" <<'JSON'
@@ -189,6 +204,7 @@ jobs:
             --input "$RUNNER_TEMP/recover-request.json" >/dev/null
           echo 'Private ACK public-bridge recovery requested; actual success is not assumed.'
       - name: Resume existing CPU candidate cycle after BOTH Gate receipts
+        if: ${{ steps.attest.outputs.published == 'true' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
