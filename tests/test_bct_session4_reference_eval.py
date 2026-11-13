@@ -66,7 +66,7 @@ def test_different_source_url_does_not_silently_match_same_id():
     label={"docs":{"doc":{"id":"doc","url":"https://different.example/story",
                           "source":article["source"],
                           "labels":{"DEMAND":"TRUE","SUPPLY":"TRUE","RELIEF":"TRUE"}}}}
-    result,errors=s.evaluate([article],{"regression":label})
+    result,errors=s.evaluate([article],{"regression":{"sample_id":"synthetic-mismatch",**label}})
     assert result["aggregate"]["matched"]==0
     assert result["aggregate"]["not_comparable_count"]==1
     assert result["status"]=="BLOCKED_INSUFFICIENT_COMPARABLE_AI_REFERENCE"
