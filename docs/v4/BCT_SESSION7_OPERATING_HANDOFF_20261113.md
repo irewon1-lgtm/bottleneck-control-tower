@@ -45,3 +45,34 @@
 - 기존 Gate 검증 정책과 candidate 승격 조건 수정 없음.
 - 신규 유료 모델 API 및 별도 결제/키 설정 없음.
 - 전용 GitHub Pages/dashboard 디자인은 별도 세션 8이며 이번 운영 연결 복구만으로 화면 배포 완료로 표현하지 말 것.
+
+## 추가 실증 체크포인트 (2026-11-13 11시 이후 KST)
+
+### 기존 운영 CPU 실제 저장
+
+- 운영 실행: https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43347845889
+- 이전 release guard 통과, 전체 단위회귀 통과, 실 RSS/연구 sidecar 조회 통과, CPU 본문 분류와 기존 CAS 기록 게시 실행 확인.
+- 직전 `future-bottleneck-data` 실제 생성 HEAD: `229895ca2f4a4695b9bc8bf886ca2dedc7ffe749`
+- canonical DB: RSS **10,510건**, 이전 sidecar **8,145건**, 최신 연결 **8,309건**, 미연결 **2,201건**.
+- 이 실행 중 실제 연결 기사 +164건을 관측함. 신규 관측된 자료는 S1/S2/S3 확정 병목 근거가 아님.
+- 확인된 실 데이터 `summary.pending_due=2201`, `full_active_total=4727`. 일시적인 제한 배치의 `pending_due=0`과 혼동하지 말 것.
+- 이 문서 추가 시점 실제 실행은 **`Read FULL sources with pinned cost-zero CPU reader`** 처리 중. 최종 전체 SUCCESS와 atomic operating queue 저장은 아직 미확인.
+
+### 읽기전용 전체 기사 적체·신규 우선순위 실증
+
+- 검증된 전체 기사 상태표: https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43349308307 (**PASS**).
+- 10,510 기사 ID 전수 대조; 27개 연구 sidecar 분할 SHA256 검증, 기존 미연결 2,365 / 원문 획득·재검토 작업대기 3,007 / 재시도·접근 제약 등 보류 2,847 (시험 기준 불변 세대).
+- 원문 작업 계획 120건 중 신규 48/기존 적체 72.
+- 기존 엔진의 `--document-id` 인터페이스와 연계한 공정성 있는 ID 선별: https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/43350411695 (**PASS**, 실제 선정만, 본문 다운로드 0).
+- 단계 7 연구용 Draft PR #71: https://github.com/irewon1-lgtm/bottleneck-control-tower/pull/71
+  - 새 CPU 선택기 `src/bct/future_fair_queue.py`, 기존 `src/bct/future_bottleneck.py`의 명시적 `BCT_FAIR_QUEUE_MODE=balanced-v1` 플래그, 기존 workflow의 후보 작업에만 옵트인.
+  - 40% 최근 기사(48시간), 60% 오래된 적체, 원문 호스트당 최대 6, 실제 기존 source retry/hold filter를 통과한 입력만 선택.
+  - 연구 브랜치 테스트 PASS. **아직 main 병합 안 됨**; 새 코드에 대한 실 Gate 0–6, 전체 배포 승인 기록·복구 원본 요청의 동일 세대 검증 전에는 실 운영 성공이라고 주장하지 않음.
+- 기존 RUN의 +164건은 **기존 기본 FIFO 처리의 실제 성과**이며 PR #71을 사용한 결과가 아님.
+
+## 다음 시작 지점 (절대 이전 감사 반복하지 않음)
+
+1. #43347845889 완료 판정 확인: `Read FULL sources`, `Publish atomic operating queue`, artifact 저장 각 단계의 PASS/FAIL을 검증한다.
+2. 최종 sidecar HEAD와 `summary.active_processed_total`, `active_unprocessed_total`, `full_active_total`, `pending_due` 재검증; 확인되지 않은 처리 건은 합산하지 않는다.
+3. 연구 PR #71 안전성 검토/배포: Gate 재검증까지 하고 나서, 다음 운영 자동화 회차가 신규/기존 기사 혼합 처리하고 실제 감소량이 나오는지 실증한다.
+4. 이 연구용 선별은 원문 분석 후보이며 병목섹터 증거 순위표나 S단계 자동 승격 자료가 아니다.
