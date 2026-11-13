@@ -1,0 +1,109 @@
+name: BCT Session 5 independent source and semantic shadow trial
+on:
+  push:
+    branches: [research/bct-session5-semantic-shadow-20261113]
+    paths:
+      - '.github/workflows/bct-session5-semantic-pilot.yml'
+      - 'src/bct/future_semantic_shadow.py'
+      - 'tools/bct_session5_source_probe.py'
+      - 'tests/test_bct_session5_*.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-s5-302-pilot-single
+  cancel-in-progress: false
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 27
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_RUN_ID: 43337864700
+      SOURCE_RUN_SHA: a59d77e4e491b13c713ededced428547ff1a66a6
+      SOURCE_ARTIFACT_ID: 13998471594
+      SOURCE_ARTIFACT_SHA: sha256:aa715efc9ec7173f6814c0176eec07fe6255458536d15123c0f0bb64a9878f26
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify semantic source bindings and all failure modes first
+        run: |
+          python -m pip install -e '.[test]'
+          python -m pytest -q tests/test_bct_session5_semantic_shadow.py tests/test_bct_session5_source_probe.py
+      - name: Freeze exactly the pre-existing 302 unseen blind sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID" |
+            jq -e --arg sha "$SOURCE_RUN_SHA" \
+              '.status=="completed" and .conclusion=="success" and .head_sha==$sha and .name=="BCT Session 4 independent AI reference accuracy (200 historical)"' >/dev/null
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID/artifacts?per_page=100" |
+            jq -e --argjson id "$SOURCE_ARTIFACT_ID" --arg digest "$SOURCE_ARTIFACT_SHA" --argjson run "$SOURCE_RUN_ID" \
+              '[.artifacts[] | select(.id==$id and .name=="bct-session4-ai-reference-eval-200-and-blind240" and .digest==$digest and .expired==false and .workflow_run.id==$run)]|length==1' >/dev/null
+          mkdir -p "$RUNNER_TEMP/s5/inputs"
+          gh run download "$SOURCE_RUN_ID" --name bct-session4-ai-reference-eval-200-and-blind240 \
+            --dir "$RUNNER_TEMP/s5/inputs"
+          test -s "$RUNNER_TEMP/s5/inputs/blind_reference_packet_240.csv"
+          test -s "$RUNNER_TEMP/s5/inputs/blind_new_P1_packet.csv"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          from tools.bct_session5_source_probe import read_packets
+          root=Path(os.environ["RUNNER_TEMP"])/"s5/inputs"
+          rows=read_packets(root)
+          assert len(rows)==302
+          print("BCT_S5_BLIND_SOURCE_PINS_VERIFIED="+str(len(rows)))
+          PY
+      - name: Attempt all 302 public publisher originals at most once; no login workaround
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_session5_source_probe.py \
+             --blinded "$RUNNER_TEMP/s5/inputs" --workers 6 \
+             --output "$RUNNER_TEMP/s5/output"
+          python - <<'PY'
+          import csv,json,os
+          from pathlib import Path
+          root=Path(os.environ["RUNNER_TEMP"])/"s5/output"
+          report=json.loads((root/"source_probe_summary.json").read_text())
+          with (root/"source_probe_by_article.csv").open(encoding="utf-8-sig",newline="") as file:
+              rows=list(csv.DictReader(file))
+          assert report["attempted"]==report["unique_ids"]==len(rows)==302
+          assert report["S_stages_promoted"]==0
+          assert report["AI_model_calls"]==report["source_database_writes"]==0
+          assert all(r["labels"]=="UNKNOWN" for r in rows)
+          print("BCT_S5_LIVE_SOURCE_AUDIT_PASS="+str(len(rows)))
+          PY
+      - name: Public receipt contains counts only, never publisher body
+        if: always()
+        shell: bash
+        run: |
+          if test -f "$RUNNER_TEMP/s5/output/source_probe_summary.json"; then
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json,os
+          from pathlib import Path
+          report=json.loads((Path(os.environ["RUNNER_TEMP"])/"s5/output/source_probe_summary.json").read_text())
+          print("## BCT Session5 source reading\n")
+          print("Attempted:",report["attempted"],"/302")
+          print("Source status counts:",report["outcome_counts"])
+          print("Full verified:",report["verified_full"])
+          print("Accuracy: NOT_MEASURED until independent blind labels")
+          print("No production DB writes, no source-body export")
+          PY
+          else
+            echo "SOURCE_TRIAL_INCOMPLETE; no PASS claimed; no operating data changed." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-session5-source-semantic-shadow-302
+          path: |
+            ${{ runner.temp }}/s5/output/source_probe_summary.json
+            ${{ runner.temp }}/s5/output/source_probe_by_article.csv
+          retention-days: 30
+          if-no-files-found: warn

@@ -1,0 +1,99 @@
+name: BCT Session 5 HTTP original-only targeted repair
+on:
+  push:
+    branches: [research/bct-session5-semantic-hardening-20261113]
+    paths:
+      - '.github/workflows/bct-session5-http-recheck.yml'
+      - 'src/bct/future_semantic_shadow.py'
+      - 'tests/test_bct_session5_http_recheck.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-s5-http9-recheck
+  cancel-in-progress: false
+jobs:
+  fix-nine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONPATH: .:src
+      OLD_RUN: 43340338148
+      OLD_SHA: 6803442089c7c6e05fc243c4c5d44baaebb53d53
+      OLD_ARTIFACT_ID: 13998594561
+      OLD_DIGEST: sha256:6e4af7d4f5dc6c2d2551c7565f1b4ff4a0dda74dede5ff440e0ca275d9079e77
+      BLIND_RUN: 43337864700
+      BLIND_ARTIFACT_ID: 13998471594
+      BLIND_DIGEST: sha256:aa715efc9ec7173f6814c0176eec07fe6255458536d15123c0f0bb64a9878f26
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Semantics and exact nine-only regression tests
+        run: |
+          set -euo pipefail
+          python -m pip install -e '.[test]'
+          python -m pytest -q \
+            tests/test_bct_session5_semantic_shadow.py \
+            tests/test_bct_session5_source_probe.py \
+            tests/test_bct_session5_http_recheck.py
+      - name: Revalidate exact original 302 observation source and frozen blind sample
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$OLD_RUN" |
+            jq -e --arg sha "$OLD_SHA" '.status=="completed" and .conclusion=="success" and .head_sha==$sha' >/dev/null
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$OLD_RUN/artifacts?per_page=100" |
+            jq -e --argjson id "$OLD_ARTIFACT_ID" --arg digest "$OLD_DIGEST" --argjson run "$OLD_RUN" \
+              '[.artifacts[]|select(.id==$id and .digest==$digest and .expired==false and .workflow_run.id==$run)]|length==1' >/dev/null
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$BLIND_RUN/artifacts?per_page=100" |
+            jq -e --argjson id "$BLIND_ARTIFACT_ID" --arg digest "$BLIND_DIGEST" --argjson run "$BLIND_RUN" \
+              '[.artifacts[]|select(.id==$id and .digest==$digest and .expired==false and .workflow_run.id==$run)]|length==1' >/dev/null
+          mkdir -p "$RUNNER_TEMP/s5-http/original" "$RUNNER_TEMP/s5-http/blind"
+          gh run download "$OLD_RUN" --name bct-session5-source-semantic-shadow-302 \
+            --dir "$RUNNER_TEMP/s5-http/original"
+          gh run download "$BLIND_RUN" --name bct-session4-ai-reference-eval-200-and-blind240 \
+            --dir "$RUNNER_TEMP/s5-http/blind"
+      - name: Recheck only nine preserved HTTP parser failures
+        run: |
+          set -euo pipefail
+          python tools/bct_session5_http_recheck.py \
+            --previous "$RUNNER_TEMP/s5-http/original/source_probe_by_article.csv" \
+            --blind "$RUNNER_TEMP/s5-http/blind" \
+            --output "$RUNNER_TEMP/s5-http/results"
+          python - <<'PY'
+          import json,os,csv
+          from pathlib import Path
+          root=Path(os.environ["RUNNER_TEMP"])/"s5-http/results"
+          report=json.loads((root/"reconcile_receipt.json").read_text())
+          with (root/"merged_302_status.csv").open(encoding="utf-8-sig",newline="") as f:
+              rows=list(csv.DictReader(f))
+          assert len(rows)==302
+          assert report["rechecked_exact_ids"]==9
+          assert report["unchanged_originals"]==293
+          assert all(r.get("labels")=="UNKNOWN" for r in rows)
+          print("BCT_S5_HTTP9_RECONCILE_PASS="+str(len(rows)))
+          PY
+      - name: Report actual numbers, not speculative recovery
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/s5-http/results/reconcile_receipt.json"; then
+            cat "$RUNNER_TEMP/s5-http/results/reconcile_receipt.json" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "TARGETED_HTTP9_RECHECK_INCOMPLETE; old 302 report remains authoritative." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-session5-nine-http-reconciled-302
+          path: |
+            ${{ runner.temp }}/s5-http/results/reconcile_receipt.json
+            ${{ runner.temp }}/s5-http/results/targeted_9_recheck.csv
+            ${{ runner.temp }}/s5-http/results/merged_302_status.csv
+          retention-days: 30
+          if-no-files-found: warn
