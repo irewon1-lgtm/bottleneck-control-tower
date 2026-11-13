@@ -58,6 +58,27 @@ else:
     assert not (root / "api/source-intake.json").exists()
 if __import__("os").environ.get("GITHUB_WORKFLOW") == "Read-only BCT Pages":
     assert manifest.get("source_intake_sha256")
+# The canonical data-branch source ledger has separate provenance receipts.
+registered=data.get("registered_precursor_original_research")
+assert isinstance(registered,dict)
+if manifest.get("registered_source_research_sha256"):
+    import hashlib
+    raw=(root/"api/registered-source-research.json").read_bytes()
+    assert hashlib.sha256(raw).hexdigest()==manifest["registered_source_research_sha256"]
+    saved=json.loads(raw)
+    assert saved==registered
+    assert saved["status"]=="VERIFIED_PERSISTED_ORIGINAL_SOURCE_RESEARCH"
+    assert saved["verified_original_record_count"]==len(saved["records"])
+    assert saved["rss_run_id"]==manifest["rss_source_run_id"]
+    assert saved["data_commit"]==manifest["rss_data_ref"]
+    assert manifest["registered_source_research_count"]<=len(saved["records"])
+    assert all(r["verification"]=="ORIGINAL_PUBLISHER_AND_BODY_VERIFIED_UNPAIRED"
+        and not r["confirmed_future_shortage"] for r in saved["records"])
+    indexed={r["id"] for r in data["rss_research_evidence"]["source_records"]}
+    assert {r["id"] for r in saved["records"]} <= indexed
+else:
+    assert registered["status"]=="NOT_QUERIED_OFFLINE"
+    assert not (root/"api/registered-source-research.json").exists()
 # Dynamic verified RSS research observations are registered separately from
 # the historic 511 records. Screened headlines and incomplete original proofs
 # must not become sector evidence or independent demand/supply gaps.
