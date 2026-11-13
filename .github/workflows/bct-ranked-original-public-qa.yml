@@ -1,0 +1,64 @@
+name: BCT actual public RSS original evidence ranked-live acceptance
+on:
+  push:
+    branches: [qa/bct-ranked-original-public-20261114]
+    paths: ['.github/workflows/bct-ranked-original-public-qa.yml']
+permissions:
+  contents: read
+jobs:
+  anonymous-public:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify public origin evidence bridge, source receipts and unmodified old research
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=https://irewon1-lgtm.github.io/bottleneck-control-tower
+          dest="$RUNNER_TEMP/bct-source-rank-anon"
+          mkdir -p "$dest"
+          for entry in index.html app.js build-manifest.json api/dashboard.json api/rss-news.json; do
+            curl -fsSL --retry 3 --max-time 90 -H 'Cache-Control: no-cache' \
+              "$base/$entry" -o "$dest/$(basename "$entry")"
+          done
+          python - "$dest" <<'PY'
+          import hashlib,json,sys
+          from pathlib import Path
+          root=Path(sys.argv[1])
+          manifest=json.loads((root/'build-manifest.json').read_bytes())
+          dashboard=json.loads((root/'dashboard.json').read_bytes())
+          rss=json.loads((root/'rss-news.json').read_bytes())
+          evidence=dashboard["rss_research_evidence"]
+          rank=dashboard["sector_rankings_live"]
+          assert manifest["code_commit"]=="4992ba45223cba9d2e1474647e37a5ab4e7de002"
+          assert manifest["dashboard_sha256"]==hashlib.sha256((root/"dashboard.json").read_bytes()).hexdigest()
+          assert manifest["rss_research_sha256"]==hashlib.sha256((json.dumps(evidence,ensure_ascii=False,allow_nan=False,separators=(',',':'))+'\n').encode()).hexdigest()
+          assert evidence["sidecar_commit"]==manifest["rss_research_sidecar_commit"]
+          assert evidence["shards_hash_verified"]>=34
+          assert evidence["classification"]=="VERIFIED_ORIGINAL_RESEARCH_OBSERVATIONS_NOT_PROVEN_SHORTAGES"
+          assert rank["no_verified_supply_shortage_promoted"] is True
+          assert rank["new_original_verified"]==len(evidence["source_records"])
+          assert rank["ranked_record_count"]==rank["historical_source_rows"]+rank["new_original_verified"]
+          assert len(dashboard["records"])==511
+          assert rank["historical_source_rows"]==dashboard["sector_rankings"]["ranked_record_count"]
+          assert all(row["confirmed_future_shortage"] is False for row in evidence["source_records"])
+          assert rss["visible_article_count"]==manifest["rss_article_count"]
+          assert "RSS 원문검증" in (root/"app.js").read_text(encoding="utf8")
+          assert "RSS 검토대기" in (root/"app.js").read_text(encoding="utf8")
+          assert "<!doctype" in (root/"index.html").read_text(encoding="utf8").lower()
+          result={"status":"PASS_ANONYMOUS_RANKED_LIVE_BRIDGE",
+            "rss_total":rss["visible_article_count"],
+            "screened":evidence["screened_articles"],
+            "FULL_with_claim":evidence["counts"]["FULL_with_located_screening_claim"],
+            "provenance_pending":evidence["counts"].get("awaiting_original_publisher_proof",0),
+            "originals_verified":evidence["counts"].get("verified_original_and_publication",0),
+            "new_source_research_records":rank["new_original_verified"],
+            "legacy_research_records":len(dashboard["records"]),
+            "sector_ranked_total":rank["ranked_record_count"],
+            "sidecar_commit":evidence["sidecar_commit"],
+            "dashboard_sha256":manifest["dashboard_sha256"]}
+          print("BCT_PUBLIC_REAL_SOURCE_EVIDENCE_BRIDGE_PASS="+json.dumps(result))
+          PY
