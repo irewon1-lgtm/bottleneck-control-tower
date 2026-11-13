@@ -320,6 +320,16 @@ def frozen_blind_packet(rows, historical_ids, *, count=240):
     return chosen
 
 
+def select_new_p1(rows, historical_ids):
+    """Freeze all previously unseen high-priority metadata cases, no predictions."""
+    return sorted(
+        (r for r in rows if r["metadata_priority"]=="P1_MULTISIGNAL_METADATA"
+         and r["id"] not in historical_ids),
+        key=lambda r:hashlib.sha256(
+            ("BCT-S4-P1-BLIND-ADDON-01|"+r["id"]).encode()).hexdigest()
+    )
+
+
 def write_csv(path,records,fields):
     with Path(path).open("w",encoding="utf-8-sig",newline="") as f:
         writer=csv.DictWriter(f,fieldnames=fields,extrasaction="ignore")
@@ -350,13 +360,16 @@ def main(argv=None):
     result,err=evaluate(rows,references)
     historical=set().union(*(set(g["docs"]) for g in references.values()))
     fresh=frozen_blind_packet(rows,historical)
+    fresh_p1=select_new_p1(rows,historical)
     result["actual_article_ledger_sha256"]=PINNED_ARTICLE_SHA
     result["actual_summary_sha256"]=PINNED_SUMMARY_SHA
     result["frozen_reference_blobs"]=EXPECTED_REFERENCE_BLOBS
     result["new_blind_packet"]={"size":len(fresh),"unique_publishers":len({r["source"] for r in fresh}),
         "selection":"Deterministic balanced 48-source candidate pool, labels withheld",
         "prediction_labels_visible_to_reviewers":False,"historical_200_overlap":len(historical & {r["id"] for r in fresh}),
-        "packet_sha256":None}
+        "packet_sha256":None,
+        "new_P1_fresh_packet_size":len(fresh_p1),
+        "P1_existing_200_reference_overlap":sum(r["metadata_priority"]=="P1_MULTISIGNAL_METADATA" and r["id"] in historical for r in rows)}
     referr_cols=["sample","document_id","signal","error","reference_label","predicted_from",
                  "source","url","title","metadata_priority","combined_review_lane",
                  "reference_status","different_normalized_body_version"]
@@ -371,12 +384,23 @@ def main(argv=None):
                  "DEMAND_label","SUPPLY_label","RELIEF_label",
                  "source_quote_or_locator","independent_reader_notes"]
     write_csv(out/"blind_reference_packet_240.csv",reviewer,packet_cols)
+    p1_reviewers=[
+        {"review_id":f"P1-BLIND-{i:03d}","document_id":r["id"],"source":r["source"],
+         "url":r["url"],"title":r["title"],"published_at":r["published_at"],
+         "DEMAND_label":"UNKNOWN","SUPPLY_label":"UNKNOWN","RELIEF_label":"UNKNOWN",
+         "source_quote_or_locator":"","independent_reader_notes":""}
+        for i,r in enumerate(fresh_p1,1)]
+    write_csv(out/"blind_new_P1_packet.csv",p1_reviewers,packet_cols)
+    result["new_blind_packet"]["new_P1_packet_sha256"]=sha256(
+        (out/"blind_new_P1_packet.csv").read_bytes())
     packet_raw=(out/"blind_reference_packet_240.csv").read_bytes()
     result["new_blind_packet"]["packet_sha256"]=sha256(packet_raw)
     (out/"blind_sample_provenance.json").write_text(
         json.dumps({"sample_hash":sha256(packet_raw),"source_data_sha":PINNED_DATA_SHA,
                     "stage3_artifact_sha":PINNED_ARTICLE_SHA,
                     "selected_ids": [r["id"] for r in fresh],
+                    "P1_new_selected_ids": [r["id"] for r in fresh_p1],
+                    "P1_new_packet_sha256": result["new_blind_packet"]["new_P1_packet_sha256"],
                     "source_distribution":dict(Counter(r["source"] for r in fresh)),
                     "lane_distribution":dict(Counter(r["combined_review_lane"] for r in fresh)),
                     "priority_distribution":dict(Counter(r["metadata_priority"] for r in fresh)),
@@ -402,7 +426,7 @@ def main(argv=None):
         report.append(f"| {sig} | {fmt(val['precision'])} ({val['TP']}/{val['precision_denominator']}) | {fmt(val['recall'])} ({val['TP']}/{val['recall_denominator']}) | {val['UNKNOWN_REFERENCE']} |")
     report.extend([
         "",
-        f"- 새 평가용 블라인드 자료: {len(fresh)}건, 분리된 PDF/원문 판독 전부 UNKNOWN.",
+        f"- 새 평가용 블라인드 자료: {len(fresh)}건 (48개 출처), 고위험 P1 추가 {len(fresh_p1)}건, 원문 검토 전부 UNKNOWN.",
         f"- 과거 P4 자료 내 AI 양성/기존 본문 리드로 복구: {result['aggregate']['P4_hidden_reference']}",
         "- 과거 reference는 2026년 10월 자료이며 분석기 개발에 활용되었을 가능성을 배제할 수 없습니다.",
         "- 이번엔 새 원문 의미 판독이나 독립 인간 라벨을 생산하지 않았습니다.",
