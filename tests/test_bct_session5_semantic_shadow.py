@@ -105,3 +105,35 @@ def test_mixed_timeline_dates_do_not_become_qualified_gap():
 def test_blank_body_blocked(invalid):
     with pytest.raises(ValueError):
         analyze(invalid,document_id="a",origin_url="https://example.org/a")
+
+
+def test_legacy_http_original_url_retains_exact_source_identity_without_promoting():
+    result=analyze("Orders for gas turbines increased to 120 units.",
+                   document_id="legacy-http",origin_url="http://www.fda.gov/legacy",
+                   body_status="FULL",provenance_verified=False)
+    assert result["origin_url"]=="http://www.fda.gov/legacy"
+    assert result["literal_lead_counts"]["DEMAND"]>=1
+    assert not result["research_usable_full_original"]
+    assert not result["S1_S2_S3_assigned"]
+
+
+def test_bare_delayed_qualification_cannot_be_called_capacity_relief():
+    result=check("Qualification of solid rocket motors was delayed until 2028.",("SUPPLY",))
+    assert result["literal_lead_counts"]["RELIEF"]==0
+
+
+def test_increased_capacity_shortfall_is_pressure_not_recovered_supply():
+    value=check("Production capacity shortfalls increased by 20 percent.",("SUPPLY",))
+    assert value["literal_lead_counts"]["RELIEF"]==0
+
+
+def test_actual_qualification_completion_is_relief_lead_but_not_eligible_pool():
+    result=check("Qualification of high voltage transformers was completed in 2028.",("RELIEF",))
+    assert all(x["supplier_qualification_verified"] is False for x in result["literal_leads"])
+
+
+def test_reject_local_or_userinfo_url_even_when_no_network_is_accessed():
+    for url in ("http://localhost/test","https://user:password@real.example/story",
+                "ftp://www.fda.gov/source","https:///invalid"):
+        with pytest.raises(ValueError, match="SEMANTIC_INVALID_SOURCE_IDENTITY"):
+            analyze("Orders for gas turbines increased.",document_id="a",origin_url=url)
