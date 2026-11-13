@@ -330,3 +330,38 @@ def test_budget_includes_title_and_provider_instructions_not_only_body(tmp_path)
     reader=OpenAIQuickReader(api_key='fixture-only-not-a-secret',requester=forbidden)
     result=execute(paths,reader)
     assert result['model_calls']==0 and result['counts']=={'BLOCKED':1}
+
+
+def test_operating_reader_retry_code_safe_and_no_duplicate(tmp_path,monkeypatch):
+    """A failed CAS receipt is held, not called a good review or retried blindly."""
+    from bct import future_worker
+    paths=sources(tmp_path,2)
+    original=future_worker.save_review
+    def simulated_pending(transport,path,candidates,review,**kwargs):
+        if review.get("document_id")=="0" and review.get("kind")=="quick":
+            raise RuntimeError("REVIEW_SAVE_UNCONFIRMED")
+        return original(transport,path,candidates,review,**kwargs)
+    monkeypatch.setattr(future_worker,"save_review",simulated_pending)
+    report=execute(paths)
+    assert report["counts"]=={"ERROR":1,"SUCCESS":1}
+    failed=next(x for x in report["results"] if x["state"]=="ERROR")
+    assert failed["reason"]=="RuntimeError"
+    assert failed["error_code"]=="REVIEW_SAVE_UNCONFIRMED"
+    assert report["after"]["completed_documents"]==1
+    again=execute(paths)
+    assert again["attempted"]==0 and again["model_calls"]==0
+    assert again["held_prior_version_states"]=={"ERROR":1}
+    reviews=json.loads(paths[2].read_text())["reviews"]
+    assert len(reviews)==1
+
+
+def test_worker_redacts_unapproved_runtime_exception_messages(tmp_path):
+    paths=sources(tmp_path)
+    def unsafe(_):
+        raise RuntimeError("private source text or credential")
+    result=execute(paths,unsafe)
+    assert result["counts"]=={"ERROR":1}
+    failure=result["results"][0]
+    assert failure["reason"]=="RuntimeError"
+    assert "error_code" not in failure
+    assert "private source" not in json.dumps(result)
