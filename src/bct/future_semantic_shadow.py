@@ -9,6 +9,7 @@ from __future__ import annotations
 from collections import Counter
 import hashlib
 import re
+from urllib.parse import urlsplit
 from typing import Any
 
 from . import precursor_scope_reader as source_scope
@@ -49,7 +50,9 @@ CHANGES={
         r"\b(?:expan\w*|increas\w*|add(?:s|ed|ing)?|"
         r"ramp(?:ed|ing|s)?|recover\w*|restor\w*|"
         r"normaliz\w*|reopen\w*|restart\w*|"
-        r"qualif(?:y|ied|ication)|certif(?:y|ied|ication)|"
+        r"qualif(?:ied|y)|certif(?:ied|y)|"
+        r"(?:completed|passed|achieved)\s+(?:customer\s+|production\s+)?(?:qualification|certification)|"
+        r"(?:qualification|certification)\s+(?:is\s+|was\s+|has\s+been\s+)?completed|"
         r"second source|alternative\w*|substitut\w*|"
         r"reduce\w*|shorten\w*|commission\w*)\b",re.I),
 }
@@ -94,12 +97,28 @@ def _sentences(body):
             yield line
 
 
+_PRESSURE_NOUN = re.compile(
+    r"\b(?:shortages?|shortfalls?|constraints?|delays?|outages?|"
+    r"backlogs?|bottlenecks?|scarcity)\b", re.I)
+_EXPLICIT_RECOVERY = re.compile(
+    r"\b(?:resolv\w*|recover\w*|restor\w*|normaliz\w*|reopen\w*|"
+    r"restart\w*|expand\w*|ramp\w*|add(?:s|ed|ing)?|second source|"
+    r"alternative\w*|substitut\w*|shorten\w*|eas\w*)\b",re.I)
+
+
 def _roles(sentence):
-    # Same-sentence necessary co-occurrence is only a lead, not causal proof.
+    # Same-sentence co-occurrence is only a lead, never causal source proof.
     result=[]
     for name in SIGNALS:
-        if STATEMENTS[name].search(sentence) and CHANGES[name].search(sentence):
-            result.append(name)
+        if not (STATEMENTS[name].search(sentence) and CHANGES[name].search(sentence)):
+            continue
+        # "Capacity shortfall increased" is pressure, NOT a relief signal.
+        # Explicit expansion/recovery in the same sentence can be a separate
+        # relief lead, but no physical-supply sufficiency is inferred.
+        if (name=="RELIEF" and _PRESSURE_NOUN.search(sentence)
+            and not _EXPLICIT_RECOVERY.search(sentence)):
+            continue
+        result.append(name)
     return result
 
 
@@ -180,7 +199,16 @@ def analyze(body:str, *, document_id:str, origin_url:str, prior_screening=None,
     """Return source-located leads only. Raw body is never returned."""
     if not isinstance(body,str) or not body or len(body)>10_000_000:
         raise ValueError("SEMANTIC_INVALID_BODY")
-    if not document_id or not isinstance(origin_url,str) or not origin_url.startswith("https://"):
+    if not document_id or not isinstance(origin_url,str):
+        raise ValueError("SEMANTIC_INVALID_SOURCE_IDENTITY")
+    location=urlsplit(origin_url)
+    # Old RSS items retain literal HTTP URLs that often redirect to HTTPS.
+    # The source fetcher independently validates safe public network access.
+    # This parser never performs network I/O, and must accept the pinned
+    # original identity without inventing a HTTPS canonical URL.
+    if (location.scheme not in ("https","http") or not location.hostname
+        or location.username or location.password
+        or location.hostname.casefold() in ("localhost","localhost.localdomain")):
         raise ValueError("SEMANTIC_INVALID_SOURCE_IDENTITY")
     bodyhash=hashlib.sha256(body.encode()).hexdigest()
     doc={"document_id":document_id,"body":body,"body_sha256":bodyhash,
