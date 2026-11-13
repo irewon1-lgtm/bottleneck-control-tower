@@ -66,3 +66,32 @@ def test_invalid_unreadable_metadata_fails_closed_and_csv_blocks_formula():
     assert m.safe_cell("=1+2").startswith("'")
     assert m.safe_cell("@danger").startswith("'")
     assert m.safe_cell("safe")=="safe"
+
+
+def test_p4_without_headline_cues_keeps_prior_full_body_lead():
+    m=module()
+    x=m.triage_one(row("x","Ordinary company update"),
+        {"body_status":"FULL","candidate":True,"decision":"CONTEXT_REVIEW"})
+    assert x["metadata_priority"]=="P4_NO_METADATA_CUE"
+    assert x["combined_review_lane"]=="Q1_PRIOR_FULL_BODY_LEAD"
+    assert x["stage"]=="NOT_EVALUATED"
+    assert not x["final_bottleneck_verified"]
+
+
+def test_partially_captured_candidate_stays_a_hold_not_confirmed():
+    m=module()
+    rows=[row("x","Ordinary company update"),
+          row("y","General commentary"),
+          row("z","No information")]
+    sidecar={
+        "x":{"body_status":"FULL","candidate":True,"decision":"CANDIDATE_ONLY"},
+        "y":{"body_status":"PARTIAL","candidate":True,"decision":"CONTEXT_REVIEW"},
+        "z":{"body_status":"UNAVAILABLE","candidate":True,"decision":"UNREAD_MATERIAL"},
+    }
+    out,report=m.evaluate(rows,sidecar)
+    assert out[0]["combined_review_lane"]=="Q1_PRIOR_FULL_BODY_LEAD"
+    assert out[1]["combined_review_lane"]=="Q2_PRIOR_PARTIAL_BODY_LEAD"
+    assert out[2]["combined_review_lane"]=="Q3_PRIOR_UNAVAILABLE_LEAD_HOLD"
+    assert report["rescued_p4_using_prior_full_body_leads"]==1
+    assert sum(report["combined_review_lanes"].values())==3
+    assert all(not x["final_bottleneck_verified"] for x in out)
