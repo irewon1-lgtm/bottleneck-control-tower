@@ -1,0 +1,69 @@
+name: BCT live 10k screening funnel anonymous deployment QA
+on:
+  push:
+    branches: [qa/bct-funnel-public-final-20261113]
+    paths: ['.github/workflows/bct-funnel-public-final.yml']
+permissions:
+  contents: read
+jobs:
+  anonymous-funnel:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify real published Pages and archive SHA-bound source counters
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=https://irewon1-lgtm.github.io/bottleneck-control-tower
+          dest="$RUNNER_TEMP/bct-final-public"
+          mkdir -p "$dest"
+          curl --retry 2 --fail --show-error -L --max-time 40 -H 'Cache-Control: no-cache' \
+            "$base/" -o "$dest/index.html"
+          curl --retry 2 --fail --show-error -L --max-time 70 -H 'Cache-Control: no-cache' \
+            "$base/api/dashboard.json" -o "$dest/dashboard.json"
+          curl --retry 2 --fail --show-error -L --max-time 70 -H 'Cache-Control: no-cache' \
+            "$base/build-manifest.json" -o "$dest/build-manifest.json"
+          curl --retry 2 --fail --show-error -L --max-time 70 -H 'Cache-Control: no-cache' \
+            "$base/app.js" -o "$dest/app.js"
+          python - "$dest" <<'PY'
+          from pathlib import Path
+          import json,hashlib,sys
+          root=Path(sys.argv[1])
+          m=json.loads((root/'build-manifest.json').read_bytes())
+          d=json.loads((root/'dashboard.json').read_bytes())
+          assert m['code_commit']=='17efbd4269404e7af6bd701675bceca2a123c975'
+          assert hashlib.sha256((root/'dashboard.json').read_bytes()).hexdigest()==m['dashboard_sha256']
+          funnel=d['source_backlog']
+          assert funnel['status']=='VERIFIED_LIVE_INDEX_AND_PINNED_AUDIT'
+          assert funnel['classification']=='NOT_VERIFIED_BOTTLENECK_EVIDENCE'
+          assert funnel['rank_input_not_increased_by_rss'] is True
+          assert funnel['historical_rank_input_count']==len(d['records'])==511
+          assert funnel['live_sidecar']['status']=='VERIFIED_INDEX_ONLY_NOT_ANALYSIS_COMPLETE'
+          assert funnel['live_sidecar']['sidecar_commit']==m['screening_sidecar_commit']
+          assert funnel['live_sidecar']['registered_screening_record_slots']>=10171
+          assert funnel['live_sidecar']['shards_verified_in_this_read']==0
+          a=funnel['pinned_audit']
+          assert a['rss_articles']==sum(a['body_counts'].values())==10604
+          assert a['body_counts']=={'FULL':5727,'PARTIAL':1964,'UNAVAILABLE':2416,'NOT_IN_SIDECAR':497}
+          assert a['due_source_recheck']==739 and a['blocked_or_deferred']==4138
+          assert a['selected_future_work']['completed_in_this_audit']==0
+          assert d['sector_rankings']['count_kind']=='SOURCE_LINKED_RESEARCH_RECORDS_NOT_VERIFIED_SHORTAGES'
+          assert m['rss_article_count']==10604
+          assert 'function sourceBacklogPanel()' in (root/'app.js').read_text()
+          assert 'data-nav="news"' in (root/'index.html').read_text()
+          assert not (root/'index.html').read_text().lower().find('accounts.google')>=0
+          proof={'status':'PASS_PUBLIC_ANONYMOUS','sha':m['code_commit'],
+             'article_count':m['rss_article_count'],
+             'future_screening_rows':funnel['live_sidecar']['registered_screening_record_slots'],
+             'frozen_rank_rows':len(d['records']),
+             'pinned_full':a['body_counts']['FULL'],
+             'pinned_partial':a['body_counts']['PARTIAL'],
+             'pinned_unavailable':a['body_counts']['UNAVAILABLE'],
+             'pinned_unlinked':a['body_counts']['NOT_IN_SIDECAR'],
+             'screening_root_commit':m['screening_sidecar_commit'],
+             'dashboard_sha256':m['dashboard_sha256']}
+          print('BCT_FINAL_PUBLIC_SCREENING_FUNNEL_PASS '+json.dumps(proof))
+          PY
