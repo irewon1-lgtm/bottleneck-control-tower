@@ -7,6 +7,7 @@ import hashlib
 from html.parser import HTMLParser
 import ipaddress
 import json
+import os
 from typing import Any
 from pathlib import Path
 import re
@@ -549,8 +550,20 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
         if result["candidate"] or result["material_check_required"]:
             result["queue_entered_at"] = prior.get("queue_entered_at", now.isoformat())
         return result
+    selected_jobs=pending[:limit]
+    fair_metrics={}
+    queue_mode=os.environ.get("BCT_FAIR_QUEUE_MODE","")
+    if queue_mode not in ("","balanced-v1"):
+        raise ValueError("INVALID_BCT_FAIR_QUEUE_MODE")
+    if queue_mode=="balanced-v1" and trigger=="AUTO" and document_ids is None:
+        if limit>300 or workers>6:
+            raise ValueError("BCT_FAIR_QUEUE_EXCEEDS_FREE_CPU_BUDGET")
+        from .future_fair_queue import select
+        from .radar_signals import extract
+        selected_jobs,fair_metrics=select(
+            pending,limit=limit,now=now,screener=screen,narrow=extract)
     with ThreadPoolExecutor(max_workers=workers) as pool:
-        results = list(pool.map(process, pending[:limit]))
+        results = list(pool.map(process, selected_jobs))
     from .future_store import deep_merge
     patch = {"version": VERSION, "filter_version": filter_version,
              "results": {r["id"]: r for r in results}}
@@ -585,7 +598,7 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
                         "paired_precursor_documents_total": len(paired_precursor_docs),
                         "body_ok_total": sum(r.get("body_status") == "FULL" for r in live),
                         "candidates_total": sum(bool(r.get("candidate")) for r in live),
-                        "pending_due": max(0, len(pending) - limit), "closed_failed_sources": closed_attempts,
+                        "pending_due": max(0, len(pending) - len(selected_jobs)), "closed_failed_sources": closed_attempts,
                         "checked_at": now.isoformat(),
                         "private_cache": "RUNTIME_ONLY_NOT_PUBLISHED",
                         "detection_mode": detection_mode,
@@ -593,6 +606,8 @@ def run(db_path, output, *, limit=300, workers=6, fetcher=fetch_html,
                         "collection_budget_verified": limit <= 300 and workers <= 6,
                         "candidate_retention_verified": set(state['results']) <= set(projected['results']),
                         "source_reaccess_limit": "Cache may expire; historical body reproducibility is not guaranteed."}
+    if fair_metrics:
+        patch["summary"].update(fair_metrics)
     output.parent.mkdir(parents=True, exist_ok=True)
     if not output.exists():
         output.write_text(json.dumps(state, ensure_ascii=False) + "\n")

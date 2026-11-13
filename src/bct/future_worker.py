@@ -242,9 +242,16 @@ def run_worker(transport, candidates_path, tracking_path, *, reader, cache_dir,
                     result.update(state="SUCCESS", disposition=decision["disposition"], review_id=review_id,
                                   reused=bool(prior))
             except Exception as exc:
-                # Provider errors may contain source text or credentials; only
-                # the exception class is retained, never its message/body.
+                # Provider errors may contain source text or credentials; never
+                # store or print arbitrary exception messages. Preserve only
+                # predefined internal failure codes for recoverable diagnosis.
                 result.update(state="ERROR", reason=type(exc).__name__)
+                if type(exc) is RuntimeError and str(exc) in (
+                    "REVIEW_SAVE_UNCONFIRMED",
+                    "ACCESS_SAVE_UNCONFIRMED",
+                    "WORKER_CLAIM_LOST",
+                ):
+                    result["error_code"] = str(exc)
             result["elapsed_seconds"] = perf_counter() - case_started
             result["estimated_cost_usd"] = estimated_cost(result, input_rate, output_rate)
             tracking = _owned(transport, tracking_path, run_id)
