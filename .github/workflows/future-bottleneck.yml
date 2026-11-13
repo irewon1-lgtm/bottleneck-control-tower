@@ -84,6 +84,10 @@ jobs:
     if: ${{ (github.event_name == 'workflow_dispatch' && !inputs.backlog_body_recovery) || (github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'))) }}
     runs-on: ubuntu-latest
     timeout-minutes: 75
+    # Screen all source IDs for due status as before; change only eligible
+    # fetch order. Bounded 6 concurrent workers and existing CAS publishing.
+    env:
+      BCT_FAIR_QUEUE_MODE: balanced-v1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
