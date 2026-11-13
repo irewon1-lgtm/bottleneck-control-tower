@@ -68,6 +68,8 @@ jobs:
           assert r["aggregate"]["matched"]==200, "Do not publish inaccurate 200-document benchmark"
           assert r["new_blind_packet"]["size"]==240
           assert r["new_blind_packet"]["historical_200_overlap"]==0
+          assert r["new_blind_packet"]["new_P1_fresh_packet_size"]+r["new_blind_packet"]["P1_existing_200_reference_overlap"]==66
+          assert (root/"blind_new_P1_packet.csv").is_file()
           assert r["source_web_requests"]==r["AI_provider_calls"]==r["source_db_writes"]==0
           print("BCT_SESSION4_EVALUATION_VERIFIED=200")
           PY
@@ -88,6 +90,7 @@ jobs:
             ${{ runner.temp }}/bct-session4/results/evaluation_summary.json
             ${{ runner.temp }}/bct-session4/results/metadata_errors.csv
             ${{ runner.temp }}/bct-session4/results/blind_reference_packet_240.csv
+            ${{ runner.temp }}/bct-session4/results/blind_new_P1_packet.csv
             ${{ runner.temp }}/bct-session4/results/blind_sample_provenance.json
             ${{ runner.temp }}/bct-session4/results/session4_report.md
           if-no-files-found: warn
