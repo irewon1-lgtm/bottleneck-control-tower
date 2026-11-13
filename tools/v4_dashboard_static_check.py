@@ -58,6 +58,29 @@ else:
     assert not (root / "api/source-intake.json").exists()
 if __import__("os").environ.get("GITHUB_WORKFLOW") == "Read-only BCT Pages":
     assert manifest.get("source_intake_sha256")
+# Dynamic verified RSS research observations are registered separately from
+# the historic 511 records. Screened headlines and incomplete original proofs
+# must not become sector evidence or independent demand/supply gaps.
+rss_reg=data.get("rss_research_evidence")
+live=data.get("sector_rankings_live")
+assert isinstance(rss_reg,dict) and isinstance(live,dict)
+assert rss_reg["format"]=="bct-rss-sector-evidence-register-1"
+assert live["count_kind"]=="HISTORICAL_RESEARCH_PLUS_ORIGINAL_VERIFIED_UNPAIRED_OBSERVATIONS"
+assert live["historical_source_rows"]==data["sector_rankings"]["ranked_record_count"]
+assert live["new_original_verified"]==rss_reg["source_verified_sector_count"]==len(rss_reg["source_records"])
+assert live["ranked_record_count"]==live["historical_source_rows"]+live["new_original_verified"]
+assert all(r["category"]=="rss_source_observation" and r["verification"]=="ORIGINAL_PUBLISHER_AND_BODY_VERIFIED_UNPAIRED"
+           and r["confirmed_future_shortage"] is False
+           and re.fullmatch("[0-9a-f]{64}",r["body_sha256"])
+           for r in rss_reg["source_records"])
+assert live["no_verified_supply_shortage_promoted"] is True
+assert __import__("hashlib").sha256((json.dumps(rss_reg,ensure_ascii=False,allow_nan=False,separators=(",",":"))+chr(10)).encode()).hexdigest()==manifest["rss_research_sha256"]
+assert manifest["rss_research_verified_source_records"]==len(rss_reg["source_records"])
+if __import__("os").environ.get("GITHUB_WORKFLOW")=="Read-only BCT Pages":
+    assert rss_reg["status"]=="SOURCE_BOUND_RESEARCH_BRIDGE"
+    assert rss_reg["sidecar_commit"]==manifest["rss_research_sidecar_commit"]
+else:
+    assert rss_reg["status"]=="OFFLINE_NOT_QUERIED"
 # Article screening and an immutable full-RSS audit never change the ranked
 # evidence ledger. The live sidecar manifest index is NOT verified body provenance.
 funnel=data.get("source_backlog")
