@@ -541,6 +541,52 @@
     return area;
   }
 
+
+  // Do not display screening, body extraction or AI model progress as verified
+  // future supply gaps. Archived 511 research records remain a separate lane.
+  function sourceBacklogPanel(){
+    const info=data.source_backlog||{};
+    const audit=info.pinned_audit||{};
+    const screen=info.live_sidecar||{};
+    const panelRoot=el("section",null,"bct-first-panel bct-source-backlog");
+    panelRoot.append(add(el("div",null,"bct-panel-title"),el("span","◫","bct-panel-icon"),el("h2","RSS 1만 건이 병목 근거 511건과 다른 이유")));
+    if(info.format!=="bct-source-and-screening-funnel-1"){
+      panelRoot.append(el("p","기사별 원문 처리 대조 기록을 아직 확인하지 못했습니다.","bct-backlog-note"));return panelRoot;
+    }
+    const recent=screen.status==="VERIFIED_INDEX_ONLY_NOT_ANALYSIS_COMPLETE";
+    const sourceStats=el("div",null,"bct-backlog-stats");
+    const numberStat=(label,value,desc)=>add(el("div",null,"bct-backlog-metric"),
+      el("span",label),el("strong",value),el("small",desc));
+    sourceStats.append(
+      numberStat("전체 RSS 기사",number(data.rss_news_summary?.visible_article_count)+"건","최근 저장된 기사 제목·출처"),
+      numberStat("본문 전체(FULL) 기록",number(audit.body_counts?.FULL)+"건","전수 대조 당시 본문 상태 · 완전 의미 판독은 아님"),
+      numberStat("기사 분석 저장",recent?number(screen.registered_screening_record_slots)+"건":"최신 집계 확인 대기","별도 분석 저장소의 자료 수"),
+      numberStat("순위표 연구 기록",number(info.historical_rank_input_count)+"건","과거 연구 근거 기준 · 병목 확정 아님")
+    );
+    panelRoot.append(sourceStats);
+    const stats=el("p",null,"bct-backlog-note");
+    stats.textContent="11월 13일 원문 전수 대조: 일부 확보 "+number(audit.body_counts?.PARTIAL)+
+      "건 · 원문 확보 불가 "+number(audit.body_counts?.UNAVAILABLE)+"건 · 분석 저장소 미연결 "+
+      number(audit.body_counts?.NOT_IN_SIDECAR)+"건 · 원문 재확인 대상 "+number(audit.due_source_recheck)+
+      "건 · 접근/재시도 제한 등 보류 "+number(audit.blocked_or_deferred)+"건.";
+    panelRoot.append(stats);
+    const chronology=recent?(info.audit_matches_live_sidecar?
+      "원문 전수 대조와 분석 저장소가 같은 코드 저장 세대입니다.":
+      "분석 저장소가 전수 대조 이후 갱신되었습니다. FULL/보류 수는 전수 대조 당시 자료이며 최신 실적을 뜻하지 않습니다."):
+      "최신 분석 저장소 실적은 검증 대기입니다. 전수 대조 수치는 당시 기준으로 유지합니다.";
+    panelRoot.append(el("p",chronology,"bct-backlog-note"));
+    const hypot=recent?number(screen.unverified_hypothesis_slots)+"건":"미확인";
+    panelRoot.append(el("p","탐색 가설 "+hypot+"은 사실 확인 전 제안이며, 검증된 독립 수요·공급 근거 쌍이나 병목 부족 확정 건수가 아닙니다. 기존 연구 기록 "+
+      number(info.historical_rank_input_count)+"건의 산업별 순위는 검증된 최신 근거가 등록될 때만 갱신됩니다.","bct-backlog-disclaimer"));
+    const trial=audit.selected_future_work||{};
+    panelRoot.append(el("p","다음 실행을 위해 전수 대조 당시 선정한 "+number(trial.total)+
+      "건(최근 "+number(trial.recent)+"건·과거 "+number(trial.older)+
+      "건)은 선정 작업일 뿐, 원문 수집 또는 판독 완료로 세지 않았습니다.","bct-backlog-note"));
+    const go=link("10,604건 전수 대조 실행 내역 열기","https://github.com/irewon1-lgtm/bottleneck-control-tower/actions/runs/"+audit.source_run_id);
+    panelRoot.append(add(el("div",null,"bct-backlog-link"),go));
+    return panelRoot;
+  }
+
   function firstOverview(){
     const current=boardRankRows();
     const snapshot=data.operating_research||null;
@@ -586,6 +632,7 @@
     details.append(detailBody);
     columns.append(details);
     page.append(columns);
+    page.append(sourceBacklogPanel());
     content.append(page);
 
     function choose(name){
