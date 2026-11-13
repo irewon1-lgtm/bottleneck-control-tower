@@ -51,3 +51,32 @@ def test_restore_rebases_concurrent_reader_without_erasing_review_or_drift():
     assert verify(c.document, t.document, baseline)['status'] == 'PASS'
     before = changed['results']['d']['versions']['h']
     assert c.document['results']['d']['version_judgment_holds'][digest(before)]['observed_record'] == before
+
+
+def test_generation_guard_blocks_stale_ref_without_writing():
+    import pytest
+    class Remote:
+        def __init__(self):
+            self.value = 'production-advanced'
+            self.writes = 0
+        def head(self):
+            return self.value
+        def write(self, *args):
+            self.writes += 1
+    remote = Remote()
+    with pytest.raises(StoreConflict, match='sidecar SHA changed'):
+        module.require_projection_head(remote, 'old-pinned-generation')
+    assert remote.writes == 0
+    assert module.require_projection_head(remote, 'production-advanced') == 'production-advanced'
+
+
+def test_gate_and_cpu_writer_share_lock_but_rss_keeps_independent_lock():
+    recovery = Path('.github/workflows/bct-recovery.yml').read_text()
+    candidates = Path('.github/workflows/future-bottleneck.yml').read_text()
+    rss = Path('.github/workflows/rss-live-check.yml').read_text()
+    assert '  storage:\n    if:' in recovery
+    storage_job = recovery.split('  storage:\n', 1)[1]
+    assert '    concurrency:\n      group: future-bottleneck-results\n      cancel-in-progress: false' in storage_job
+    assert 'concurrency:\n  group: future-bottleneck-results\n  cancel-in-progress: false' in candidates
+    assert 'rss-canonical-data' in rss
+    assert 'future-bottleneck-results' not in rss

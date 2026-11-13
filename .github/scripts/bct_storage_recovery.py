@@ -61,6 +61,18 @@ def restore_generation(transport, original, tracking, recovered_baseline, truste
     raise StoreConflict('restoration publication could not acquire a stable generation')
 
 
+def require_projection_head(transport, pinned_head):
+    """Check that one immutable two-root projection is still current.
+
+    This is an early stale-input detector, not the atomicity guarantee.
+    GitHubTransport's non-forced ref update remains the final CAS.
+    """
+    observed = transport.head()
+    if observed != pinned_head:
+        raise StoreConflict('sidecar SHA changed')
+    return observed
+
+
 def main():
     root = Path(os.environ['RUNNER_TEMP']) / 'bct-recovery'
     root.mkdir(exist_ok=True)
@@ -183,7 +195,7 @@ def main():
         # from the latest immutable pair, never from the pre-probe generation.
         # The final non-forced CAS still rejects a later concurrent writer.
         report['baseline_queue_before_probe'] = before
-        for attempt in range(3):
+        for attempt in range(5):
             production_base = transport.head()
             report['projection_generation'] = production_base
             generation = read_generation_at(transport, production_base)
@@ -211,12 +223,33 @@ def main():
                 raise RuntimeError('candidate set changed during storage repair')
             if final['results'] != original.document['results']:
                 raise RuntimeError('source records changed during storage repair')
+            # The snapshot was read from a single immutable commit. Its
+            # projection may take time while another writer advances the ref.
+            # Recheck just before publication; the non-forced Git CAS inside
+            # transport.write also protects a later race.
+            phase = 'PREWRITE'
             try:
+                require_projection_head(transport, production_base)
+                phase = 'ATOMIC_CAS'
                 transport.write('future-candidates.json', final, original.sha)
             except StoreConflict as exc:
-                report.setdefault('projection_conflicts', []).append({'attempt': attempt+1, 'reason': str(exc)})
-                if attempt == 2:
+                latest_head = transport.head()
+                report.setdefault('projection_conflicts', []).append({
+                    'attempt': attempt + 1,
+                    'phase': phase,
+                    'pinned_generation': production_base,
+                    'observed_generation': latest_head,
+                    'generation_advanced': latest_head != production_base,
+                    'reason': str(exc),
+                })
+                # Nothing from a stale projection is force-pushed or marked
+                # published. Read both authoritative roots again at the next
+                # identical immutable generation; after bounded contention,
+                # fail closed and leave all prior data intact.
+                transport.last_commit = None
+                if attempt == 4:
                     raise
+                time.sleep(min(2 ** attempt, 4))
                 continue
             break
         # GitHub may briefly serve the old mutable ref after a successful
