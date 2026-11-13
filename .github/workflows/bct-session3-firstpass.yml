@@ -1,0 +1,81 @@
+name: BCT Session 3 all-RSS firstpass (read-only, free CPU)
+on:
+  push:
+    branches: [research/bct-session3-10510-firstpass-20261113]
+    paths: [.github/workflows/bct-session3-firstpass.yml, tools/bct_session3_firstpass.py, tests/test_bct_session3_firstpass.py]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: bct-s3-firstpass-read-only
+  cancel-in-progress: false
+jobs:
+  all-rss:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      DATA_PIN: da7b17f34d58c69c72b5d067d6279ec98db8bb44
+      SIDECAR_PIN: e8acd5e91f9f972974b5027a36056651098da71f
+      PYTHONPATH: src
+    steps:
+      - name: Read only checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reuse dependencies and run strict triage unit checks
+        run: |
+          python -m pip install -e '.[test]'
+          python -m pytest -q tests/test_bct_session3_firstpass.py
+      - name: Read the exact immutable RSS and research generations
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin "$DATA_PIN"
+          git fetch --no-tags --depth=1 origin "$SIDECAR_PIN"
+          git cat-file -e "$DATA_PIN:canonical.sqlite3"
+          git cat-file -e "$SIDECAR_PIN:future-candidates.json"
+      - name: Classify all 10510 RSS titles and snippets without body downloads
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_session3_firstpass.py \
+            --data-sha "$DATA_PIN" --sidecar-sha "$SIDECAR_PIN" \
+            --output "$RUNNER_TEMP/bct-session3"
+          test -f "$RUNNER_TEMP/bct-session3/article_firstpass.csv"
+          python - <<'PY'
+          import csv,os,json
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'bct-session3'
+          manifest=json.loads((root/'firstpass_summary.json').read_text())
+          with (root/'article_firstpass.csv').open(encoding='utf-8-sig',newline='') as f:
+              rows=list(csv.DictReader(f))
+          assert manifest['status']=='PASS_READ_ONLY_METADATA_FIRSTPASS'
+          assert manifest['total']==len(rows)==10510
+          assert len({r['id'] for r in rows})==10510
+          assert manifest['source_document_bodies_newly_read']==0
+          assert manifest['candidate_promotion']==0
+          assert sum(manifest['metadata_priorities'].values())==10510
+          print('BCT_S3_ARTICLE_LEDGER_TEST_PASS='+str(len(rows)))
+          PY
+      - name: Publish truthful trial outcome
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/bct-session3/firstpass_report.md"; then
+            cat "$RUNNER_TEMP/bct-session3/firstpass_report.md" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "BCT session 3 incomplete; no articles were promoted or production data changed." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Retain full per-article title/snippet triage and aggregate receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-session3-firstpass-10510
+          path: |
+            ${{ runner.temp }}/bct-session3/article_firstpass.csv
+            ${{ runner.temp }}/bct-session3/firstpass_summary.json
+            ${{ runner.temp }}/bct-session3/firstpass_report.md
+          if-no-files-found: warn
+          retention-days: 30
