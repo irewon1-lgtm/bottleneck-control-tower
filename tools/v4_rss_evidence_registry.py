@@ -201,33 +201,39 @@ def register(sidecar,*,sidecar_sha,feed_domains):
 
 
 def from_remote(repo):
+    """Use immutable authenticated GitHub blobs, not a huge sidecar git clone.
+
+    Full 33+-shard sidecar history can make git fetch --depth=1 exceed the
+    Pages 15-minute build. The existing sidecar reader already checks every
+    immutable blob's Git SHA and the combined semantic document SHA256.
+    """
+    from bct.future_github import GitHubTransport
+    import os
     repo=Path(repo).resolve()
-    side_sha=_cmd(repo,"git","ls-remote","origin","refs/heads/future-bottleneck-data").decode().split()[0]
-    if not re.fullmatch("[0-9a-f]{40}",side_sha):
-        raise ValueError("RSS_RESEARCH_SIDECAR_REF_INVALID")
-    _cmd(repo,"git","fetch","--no-tags","--depth=1","origin",side_sha)
-    raw=_cmd(repo,"git","show",side_sha+":future-candidates.json")
+    token=os.environ.get("GH_TOKEN")
+    current=os.environ.get("GITHUB_REPOSITORY")
+    if not token or current!="irewon1-lgtm/bottleneck-control-tower":
+        raise ValueError("RSS_RESEARCH_AUTHENTICATED_REPO_REQUIRED")
+    transport=GitHubTransport(current,"future-bottleneck-data",token)
+    sha=transport.head()
+    if not re.fullmatch(r"[0-9a-f]{40}",sha):
+        raise ValueError("RSS_RESEARCH_REF_INVALID")
+    raw,root_sha=transport._root("future-candidates.json",sha)
     if len(raw)>256_000:
         raise ValueError("RSS_RESEARCH_MANIFEST_EXCESSIVE")
     manifest=json.loads(raw)
     if (manifest.get("format")!="bct-sharded-sidecar-v1"
             or not re.fullmatch("[0-9a-f]{64}",str(manifest.get("document_sha256","")))
-            or len(manifest.get("shards",[]))>120):
+            or not 1<=len(manifest.get("shards",[]))<=120):
         raise ValueError("RSS_RESEARCH_SIDECAR_FORMAT")
-    stem="future-candidates"
-    def source(part):
-        i=source.count+1
-        expected=f"{stem}.shards/{manifest['document_sha256']}/{stem}.part-{i:03d}.json"
-        if part.get("path")!=expected:
-            raise ValueError("RSS_RESEARCH_UNEXPECTED_SHARD")
-        source.count=i
-        return _cmd(repo,"git","show",side_sha+":"+part["path"])
-    source.count=0
-    document=assemble(manifest,source)  # Per-shard + complete document SHA256.
+    # Each linked GitHub blob SHA is verified in read_at; assemble checks every
+    # content SHA, exact item counts and document canonical JSON hash.
+    document=transport.read_at("future-candidates.json",sha).document
     if len(document.get("results",{}))!=manifest["item_counts"]["results"]:
         raise ValueError("RSS_RESEARCH_COUNT_MISMATCH")
-    record=register(document,sidecar_sha=side_sha,
+    result=register(document,sidecar_sha=sha,
                     feed_domains=feed_group_hints(repo/"rss_feeds.yaml"))
-    record["shards_hash_verified"]=source.count
-    record["document_sha256"]=manifest["document_sha256"]
-    return record
+    result["shards_hash_verified"]=len(manifest["shards"])
+    result["document_sha256"]=manifest["document_sha256"]
+    result["root_git_sha"]=root_sha
+    return result
