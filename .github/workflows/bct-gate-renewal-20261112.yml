@@ -7,7 +7,11 @@ name: BCT Gate 0-6 release proof renewal
 on:
   push:
     branches: [main]
-    paths: ['.github/workflows/bct-gate-renewal-20261112.yml']
+    paths:
+      - '.github/workflows/bct-gate-renewal-20261112.yml'
+      - '.github/workflows/future-bottleneck.yml'
+      - 'src/bct/future_bottleneck.py'
+      - 'src/bct/future_fair_queue.py'
   workflow_run:
     workflows: [BCT recovery storage gates]
     types: [completed]
@@ -45,7 +49,7 @@ jobs:
   attest-and-recover:
     if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.status == 'completed' && github.event.workflow_run.event == 'workflow_dispatch' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 6
+    timeout-minutes: 20
     permissions:
       actions: write
       contents: write
@@ -111,34 +115,68 @@ jobs:
           proof = verify_release(api, receipt, pathlib.Path('.'))
           if proof['status'] != 'PASS' or proof['validated_code_sha'] != run['head_sha']:
               raise ValueError('GATE_RELEASE_GUARD_REJECTED')
-          target = pathlib.Path(os.environ['RUNNER_TEMP'])/'release-receipt.json'
-          target.write_text(json.dumps(receipt, indent=2)+'\n', encoding='utf-8')
-          print('BCT_GATE_PROOF_VERIFIED='+json.dumps({
-              'gate_run_id':run_id, 'protected_files':proof['verified_code_files'],
-              'artifact_id':artifact['id'], 'actual_gate_steps':'ALL_PASS'}))
+          # Build BOTH Gate-bound receipts with the existing authenticated ZIP
+          # verifier: all root hashes, inventory SHA, and original article/cache
+          # bytes are validated before metadata changes.
+          import tempfile
+          from recovery_artifacts import API, prepare_receipts
+          with tempfile.TemporaryDirectory(prefix='bct-gate-dual-',dir=os.environ['RUNNER_TEMP']) as temp:
+              target=pathlib.Path(temp)/'prepared'
+              proof2=prepare_receipts(API(),run_id,run['head_sha'],pathlib.Path('.'),target)
+              if proof2['status']!='PREPARED_FROM_ACTUAL_CURRENT_CODE_GATE_SUCCESS':
+                  raise ValueError('GATE_DUAL_RECEIPT_PREPARATION_FAILED')
+              files={
+                  'config/bct-operating-release.json':target/'bct-operating-release.json',
+                  '.github/bct-recovery-request.json':target/'bct-recovery-request.json',
+              }
+              release2=json.loads(files['config/bct-operating-release.json'].read_text())
+              recovery2=json.loads(files['.github/bct-recovery-request.json'].read_text())
+              entry=recovery2['resume_archive']
+              if (release2!=receipt or recovery2['resume_input_only'] is not False
+                      or str(recovery2['resume_run_id'])!=str(run_id)
+                      or entry['run_id']!=run_id or entry['head_sha']!=run['head_sha']
+                      or entry['artifact_id']!=artifact['id']
+                      or entry['sha256']!=receipt['artifact_sha256']
+                      or not recovery2.get('resume_cache_inventory_sha256')
+                      or proof2['verified_root_files']<7):
+                  raise ValueError('GATE_DUAL_RECEIPT_GENERATION_MISMATCH')
 
-          # Preserve contents-file CAS and avoid a blind Git ref update.
-          current = api('GET', '/branches/main')
-          if current['commit']['sha'] != run['head_sha']:
-              raise ValueError('MAIN_ADVANCED_DURING_GATE_VERIFICATION')
-          old_file = api('GET', '/contents/config/bct-operating-release.json')
-          if not re.fullmatch('[0-9a-f]{40}', old_file.get('sha') or ''):
-              raise ValueError('RELEASE_RECEIPT_OLD_BLOB_INVALID')
-          encoded = base64.b64encode(target.read_bytes()).decode('ascii')
-          body = {'message':'chore(bct): attest actual main Gate 0-6 #'+str(run_id),
-                  'branch':'main','sha':old_file['sha'], 'content': encoded}
-          request = pathlib.Path(os.environ['RUNNER_TEMP'])/'release-write.json'
-          request.write_text(json.dumps(body),encoding='utf-8')
-          result = subprocess.run(['gh','api','--method','PUT','repos/'+repo+
-                   '/contents/config/bct-operating-release.json','--input',str(request)],
-                   capture_output=True,timeout=30)
-          if result.returncode:
-              raise ValueError('GATE_RECEIPT_COMMIT_DENIED_OR_CONFLICT')
-          updated = json.loads(result.stdout)
-          if not re.fullmatch('[0-9a-f]{40}',updated.get('commit',{}).get('sha') or ''):
-              raise ValueError('GATE_RECEIPT_COMMIT_UNCONFIRMED')
-          print('BCT_GATE_RELEASE_RECEIPT_COMMITTED='+json.dumps({
-              'run_id': run_id, 'new_main':updated['commit']['sha']}))
+              # A single Git commit moves both required JSON files together.
+              # Non-force ref update rejects main-branch movement during work.
+              def write_api(method,suffix,payload):
+                  packet=pathlib.Path(temp)/'request.json'
+                  packet.write_text(json.dumps(payload),encoding='utf-8')
+                  proc=subprocess.run(['gh','api','--method',method,'repos/'+repo+suffix,
+                      '--input',str(packet)],capture_output=True,text=True,timeout=45)
+                  if proc.returncode:raise ValueError('GATE_ATOMIC_DUAL_RECEIPT_API_REJECTED')
+                  try:return json.loads(proc.stdout)
+                  except ValueError:raise ValueError('GATE_ATOMIC_DUAL_RECEIPT_BAD_API_RESPONSE')
+              current=api('GET','/branches/main')
+              if current['commit']['sha']!=run['head_sha']:
+                  raise ValueError('MAIN_ADVANCED_BEFORE_ATOMIC_DUAL_RECEIPT')
+              base=api('GET','/git/commits/'+run['head_sha'])
+              tree=write_api('POST','/git/trees',{
+                  'base_tree':base['tree']['sha'],
+                  'tree':[{'path':path,'mode':'100644','type':'blob',
+                           'content':file.read_text(encoding='utf-8')}
+                          for path,file in files.items()]})
+              created=write_api('POST','/git/commits',{
+                  'message':'chore(bct): attest actual Gate '+str(run_id)+' and pin source resume',
+                  'tree':tree['sha'],'parents':[run['head_sha']]})
+              if not re.fullmatch('[0-9a-f]{40}',created.get('sha') or ''):
+                  raise ValueError('GATE_ATOMIC_COMMIT_SHA_MISSING')
+              write_api('PATCH','/git/refs/heads/main',
+                        {'sha':created['sha'],'force':False})
+              if api('GET','/branches/main')['commit']['sha']!=created['sha']:
+                  raise ValueError('GATE_ATOMIC_BRANCH_READBACK_MISMATCH')
+              for path,file in files.items():
+                  found=api('GET','/contents/'+path+'?ref='+created['sha'])
+                  if base64.b64decode(found['content'])!=file.read_bytes():
+                      raise ValueError('GATE_ATOMIC_BOTH_FILES_READBACK_MISMATCH')
+              print('GATE_RELEASE_RECEIPT_COMMITTED='+json.dumps({
+                  'run_id':run_id,'new_main':created['sha'],
+                  'dual_release_and_resume_verified':True,
+                  'verified_root_files':proof2['verified_root_files']}))
           PY
       - name: Trigger existing source-free private ACK recovery, not CPU inference
         run: |
@@ -150,3 +188,13 @@ jobs:
             "repos/$GITHUB_REPOSITORY/actions/workflows/v4-cpu-private-research.yml/dispatches" \
             --input "$RUNNER_TEMP/recover-request.json" >/dev/null
           echo 'Private ACK public-bridge recovery requested; actual success is not assumed.'
+      - name: Resume existing CPU candidate cycle after BOTH Gate receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          printf '%s\\n' '{"ref":"main","inputs":{"backlog_body_recovery":false}}' > "$RUNNER_TEMP/candidates-request.json"
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/future-bottleneck.yml/dispatches" \
+            --input "$RUNNER_TEMP/candidates-request.json" >/dev/null
+          echo 'Guarded CPU workflow requested; successful mixed processing is not yet proven.'
