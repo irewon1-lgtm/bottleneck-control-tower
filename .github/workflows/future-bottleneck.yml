@@ -20,6 +20,8 @@ on:
 permissions:
   contents: write
   actions: read
+# Share this writer lock with the recovery storage job during Gate 1.
+# Keep independent RSS/data collection running; do not relax the release guard.
 concurrency:
   group: future-bottleneck-results
   cancel-in-progress: false
