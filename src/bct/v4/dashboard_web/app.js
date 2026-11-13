@@ -273,10 +273,11 @@
   let selectedBoardSector = "";
   let shownBoardEvidence = 7;
   let shownBoardSectors = 10;
-  const boardKinds = {reviewed:"원문 검토",structured:"공식 표 기록",discovery:"제품 탐색"};
+  const boardKinds = {reviewed:"원문 검토",structured:"공식 표 기록",discovery:"제품 탐색",rss_source_observation:"원출처 검증"};
   const boardExcludedSectors = new Set(["산업 확인 필요","산업 추가 확인","아직 분류하지 않은 산업"]);
 
   function boardRankRows(){
+    if(data.sector_rankings_live && Array.isArray(data.sector_rankings_live.rows))return data.sector_rankings_live.rows;
     if(data.sector_rankings && Array.isArray(data.sector_rankings.rows))return data.sector_rankings.rows;
     // Local read-only dashboard fallback; public static exports use the
     // identical source-linked server ranking calculation.
@@ -300,6 +301,7 @@
   }
 
   function boardPrevious(row){
+    if(data.sector_rankings_live?.new_original_verified>0)return {label:"별도",change:"근거 추가",tone:"up"};
     const p=data.sector_rank_previous;
     if(!p||p.status!=="VERIFIED_PREVIOUS_PUBLIC_SNAPSHOT")return {label:"—",change:"비교 전",tone:"muted"};
     const old=p.ranks&&p.ranks[row.name];
@@ -309,8 +311,9 @@
   }
 
   function boardEvidenceFor(sector){
-    const priority={reviewed:0,structured:1,discovery:2};
-    return (data.records||[]).filter(r=>r.industry===sector&&Object.hasOwn(boardKinds,r.category))
+    const priority={reviewed:0,rss_source_observation:1,structured:2,discovery:3};
+    const all=[...(data.records||[]),...(data.rss_research_evidence?.source_records||[])];
+    return all.filter(r=>r.industry===sector&&Object.hasOwn(boardKinds,r.category))
       .sort((a,b)=>priority[a.category]-priority[b.category]||
         String(b.published_at||"").localeCompare(String(a.published_at||""))||
         a.id.localeCompare(b.id));
@@ -612,14 +615,14 @@
     const tableArea=el("div",null,"bct-table-scroll");
     const table=el("table",null,"bct-rank-table");
     const tHead=el("thead"),header=el("tr");
-    ["현재","이전","변동","병목 후보 섹터","증거 수","최근 자료","상세"].forEach(text=>header.append(el("th",text)));
+    ["현재","이전","변동","병목 후보 섹터","연구 근거","RSS 원문검증","RSS 검토대기","최근 자료","상세"].forEach(text=>header.append(el("th",text)));
     tHead.append(header);table.append(tHead);
     const tbody=el("tbody");table.append(tbody);
     tableArea.append(table);rankingPanel.append(tableArea);
     const moreSector=el("div",null,"bct-rank-more");
     const previous=data.sector_rank_previous||{};
     rankingPanel.append(moreSector);
-    rankingPanel.append(el("p","증거 수는 이 산업에 연결된 저장 기록 수입니다. 중복 기사·검토 전 탐색 기록이 포함될 수 있습니다. 검증된 미래 병목 수와 다릅니다.","bct-panel-explain"));
+    rankingPanel.append(el("p","연구 근거는 과거 저장 기록과 원출처·발행일·본문 해시·명시적 제품 분야를 확인한 최신 기사 근거를 합친 값입니다. RSS 검토대기는 별도 집계하며 증거에 더하지 않습니다. 모두 공급 부족 확정과 다릅니다.","bct-panel-explain"));
     rankingPanel.append(el("p",previous.status==="VERIFIED_PREVIOUS_PUBLIC_SNAPSHOT"?
       "이전 순위 비교: "+date(previous.generated_at)+" 공개 화면을 기준으로 계산했습니다.":
       "이전 공개 순위 기록을 확인하지 못한 항목은 ‘—’로 표시합니다. 순위를 지어내지 않습니다.","bct-history-note"));
@@ -633,6 +636,7 @@
     columns.append(details);
     page.append(columns);
     page.append(sourceBacklogPanel());
+    page.append(el("p","RSS 검토대기는 원문에서 뽑은 탐색 단서이며 연구 근거 수에 더하지 않습니다. 원출처·발행일·본문 해시 및 명시적 제품·분야가 확인된 기사만 RSS 원문검증 건수에 등록합니다.","bct-source-proof-note"));
     content.append(page);
 
     function choose(name){
@@ -655,10 +659,12 @@
         const cPrevious=el("td",prev.label);cPrevious.dataset.label="이전";
         const cChange=el("td",prev.change,"bct-rank-change "+prev.tone);cChange.dataset.label="변동";
         const cSector=add(el("td",null,"bct-sector-cell"),selector);cSector.dataset.label="섹터";
-        const cCount=el("td",number(r.evidence_count),"bct-evidence-count");cCount.dataset.label="증거 수";
+        const cCount=el("td",number(r.evidence_count),"bct-evidence-count");cCount.dataset.label="연구 근거";
+        const cRss=el("td",number(r.rss_verified_count||0),"bct-source-verified-count");cRss.dataset.label="RSS 원문검증";
+        const cLeads=el("td",number(r.rss_source_lead_count||0),"bct-unverified-leads-count");cLeads.dataset.label="RSS 검토대기";
         const cDate=el("td",r.recent_publication?date(r.recent_publication):"날짜 미확인","bct-date-cell");cDate.dataset.label="최근 자료";
         const cView=add(el("td",null,"bct-button-cell"),view);cView.dataset.label="상세";
-        tr.append(cRank,cPrevious,cChange,cSector,cCount,cDate,cView);
+        tr.append(cRank,cPrevious,cChange,cSector,cCount,cRss,cLeads,cDate,cView);
         tbody.append(tr);
       }
       if(current.length>shownBoardSectors){
@@ -670,7 +676,7 @@
       }
       if(!current.length){
         tbody.append(add(el("tr"),add(el("td","아직 산업을 확인한 근거 기록이 없습니다.","bct-empty-rank"))));
-        tbody.lastChild.firstChild.colSpan=7;
+        tbody.lastChild.firstChild.colSpan=9;
       }
     }
     function renderSector(){
@@ -682,19 +688,29 @@
       const evidence=boardEvidenceFor(sector.name);
       detailBody.append(add(el("div",null,"bct-selected-sector"),
         add(el("div"),el("span","선택한 섹터","bct-selected-label"),el("strong",sector.name)),
-        el("b","근거 기록 "+number(sector.evidence_count)+"건","bct-selected-total")));
-      detailBody.append(el("p","먼저 원문 검토 기록을 보여주고, 그다음 공식 표와 제품 탐색 기록을 표시합니다. 각 기록을 눌러 출처를 확인할 수 있습니다.","bct-evidence-intro"));
+        el("b","연구 기록 "+number(sector.evidence_count)+"건 · RSS 원출처 검증 "+number(sector.rss_verified_count||0)+"건","bct-selected-total")));
+      detailBody.append(el("p","기존 원문 검토와 새로 원출처 검증된 기사 근거를 구분해 보여줍니다. 원출처가 확인됐어도 독립 수요·공급 부족은 별도 검증 대상입니다.","bct-evidence-intro"));
       const list=el("div",null,"bct-evidence-list");
       for(const r of evidence.slice(0,shownBoardEvidence)){
         const line=el("div",null,"bct-evidence-record");
         line.append(el("span",r.published_at?date(r.published_at):"날짜 미확인","bct-evidence-date"),
                     el("span",boardKinds[r.category],"bct-kind "+r.category));
         const summary=el("div",null,"bct-evidence-description");
-        summary.append(el("strong",productLabel(r.product)),el("p",r.role_label+" · "+({reviewed:"원문 검토 · 사람 검증 전",structured:"공식 표 기록 · 실제 공급 확인 전",discovery:"제품 이름 탐색 · 수급 사실 확인 전"}[r.category]||"검토 대기")));
-        line.append(summary);
-        const show=btn("원문 보기",()=>openDetail(r.id),"bct-evidence-open");
-        show.setAttribute("aria-label",productLabel(r.product)+" 원문 근거 상세 보기");
-        line.append(show);list.append(line);
+        if(r.category==="rss_source_observation"){
+          summary.append(el("strong",r.title||"원출처 문서"),
+            el("p","발행자 "+r.origin_publisher+" · "+r.roles.join(", ")+" · 독립 수요·공급 부족 미검증"));
+          line.append(summary);
+          const go=external("원출처 열기",r.url,"bct-evidence-open");
+          if(go)line.append(go);
+          else line.append(el("span","원출처 접근 확인 필요"));
+        }else{
+          summary.append(el("strong",productLabel(r.product)),el("p",r.role_label+" · "+({reviewed:"원문 검토 · 사람 검증 전",structured:"공식 표 기록 · 실제 공급 확인 전",discovery:"제품 이름 탐색 · 수급 사실 확인 전"}[r.category]||"검토 대기")));
+          line.append(summary);
+          const show=btn("원문 보기",()=>openDetail(r.id),"bct-evidence-open");
+          show.setAttribute("aria-label",productLabel(r.product)+" 원문 근거 상세 보기");
+          line.append(show);
+        }
+        list.append(line);
       }
       detailBody.append(list);
       if(evidence.length>shownBoardEvidence){

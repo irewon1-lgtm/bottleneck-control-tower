@@ -19,6 +19,7 @@ from bct.v4.public_data import validate_acquisition, validate_health, validate_c
 from v4_public_news_export import build_from_public_branch
 from v4_source_intake_public import from_data_snapshot
 from v4_future_sidecar_index import retrieve as future_screening_index
+from v4_rss_evidence_registry import from_remote as register_rss_evidence
 
 
 def pack(value):
@@ -158,6 +159,51 @@ def export(repo, dest, commit, *, public_input=None):
         "historical_rank_input_count": len(data["records"]),
         "rank_input_not_increased_by_rss": True
     }
+    # A real observation only enters the V4 sector research count after exact
+    # immutable-sidecar and publisher/body/publication verification. Historic
+    # 511 records are retained; rejected or source-group-only leads are NOT
+    # silently enrolled as independent supply gaps.
+    live_evidence = (register_rss_evidence(repo)
+                     if os.environ.get("GITHUB_WORKFLOW") == "Read-only BCT Pages"
+                     else {"format":"bct-rss-sector-evidence-register-1",
+                           "status":"OFFLINE_NOT_QUERIED","screened_articles":0,
+                           "source_records":[],"groups":{},"preview":{},
+                           "counts":{},"source_verified_sector_count":0})
+    data["rss_research_evidence"] = live_evidence
+    legacy = {r["name"]:dict(r) for r in data["sector_rankings"]["rows"]}
+    for sector,n in ((r["industry"],r) for r in live_evidence["source_records"]):
+        if sector not in legacy:
+            legacy[sector] = {"name":sector,"evidence_count":0,
+                "reviewed_count":0,"structured_count":0,"discovery_count":0,
+                "recent_publication":None}
+        row=legacy[sector]
+        row["evidence_count"]+=1
+        row["rss_verified_count"]=row.get("rss_verified_count",0)+1
+        if n["published_at"] and n["published_at"] > str(row["recent_publication"] or ""):
+            row["recent_publication"]=n["published_at"]
+    for row in legacy.values():
+        row.setdefault("rss_verified_count",0)
+        row["rss_source_lead_count"]=live_evidence.get("groups",{}).get(row["name"],{}).get("source_located_leads",0)
+    # Source-group routing hints are not accepted as evidence; they remain
+    # useful transparency metrics for why many FULL articles are still pending.
+    ordered=sorted(legacy.values(),key=lambda row:(-row["evidence_count"],row["name"]))
+    prev=None
+    for i,row in enumerate(ordered,1):
+        if row["evidence_count"]!=prev:
+            rank=i
+            prev=row["evidence_count"]
+        row["rank"]=rank
+    data["sector_rankings_live"]={
+        "format":"bct-sector-live-source-bound-1",
+        "count_kind":"HISTORICAL_RESEARCH_PLUS_ORIGINAL_VERIFIED_UNPAIRED_OBSERVATIONS",
+        "rows":ordered,
+        "ranked_record_count":sum(x["evidence_count"] for x in ordered),
+        "new_original_verified":len(live_evidence["source_records"]),
+        "historical_source_rows":data["sector_rankings"]["ranked_record_count"],
+        "includes_unverified_discovery":True,
+        "no_verified_supply_shortage_promoted":True,
+        "source_sidecar_commit":live_evidence.get("sidecar_commit")
+    }
     html = (ASSETS / "index.html").read_text(encoding="utf-8")
     html = change_once(html, 'href="/style.css"', 'href="./style.css"')
     html = change_once(html, 'src="/app.js"', 'src="./app.js"')
@@ -220,6 +266,9 @@ def export(repo, dest, commit, *, public_input=None):
         "site_type": "PUBLIC_STATIC_READ_ONLY", "new_ai_calls": 0
     }
 
+    manifest["rss_research_sha256"] = hashlib.sha256(pack(live_evidence)).hexdigest()
+    manifest["rss_research_sidecar_commit"] = live_evidence.get("sidecar_commit")
+    manifest["rss_research_verified_source_records"] = len(live_evidence["source_records"])
     manifest["screening_sidecar_commit"] = screening["sidecar_commit"] if screening else None
     manifest["screening_funnel_sha256"] = hashlib.sha256(pack(data["source_backlog"])).hexdigest()
     manifest["source_intake_sha256"] = (
