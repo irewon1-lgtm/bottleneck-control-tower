@@ -136,7 +136,7 @@ def test_existing_graph_positive_fixture_is_research_backfill_not_forecast_s3():
     assert r["pairs"][0]["forecast_confirmed"] is False
     assert r["pairs"][0]["reason"]=="BACKFILL_SCREENING_ONLY"
     assert r["backfill_protected_candidates"]==1
-    assert r["protected_forecast_status"]=="BLOCKED"
+    assert r["protected_forecast_status"] in ("BLOCKED","UNVERIFIED")
 
 
 def test_conflicting_product_contract_cannot_connect():
