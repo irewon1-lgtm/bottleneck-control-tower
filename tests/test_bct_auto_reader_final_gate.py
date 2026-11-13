@@ -6,7 +6,8 @@ from pathlib import Path
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / '.github' / 'scripts'))
-from bct_auto_reader import assess_current_cpu_batch
+from bct_auto_reader import assess_current_cpu_batch, fresh_native_event_guard
+from bct.future_review import event_groups, READER_VERSION
 
 
 def previous_failure_with_five_successes():
@@ -81,3 +82,38 @@ def test_missing_release_proof_and_repeated_success_identifiers_fail():
     report = previous_failure_with_five_successes()
     report['results'][1] = report['results'][0].copy()
     assert not all(assess_current_cpu_batch(report).values())
+
+
+def test_native_batch_selects_fresh_distinct_event_bodies_only():
+    """Five saved references may mean four real calls plus one exact reuse."""
+    a, b, c = ('a' * 64, 'b' * 64, 'c' * 64)
+    candidates = {'results': {
+        'fresh-a': {'body_sha256': a, 'body_status': 'FULL', 'body_chars': 100},
+        'same-body-different-reference': {'body_sha256': a, 'body_status': 'FULL', 'body_chars': 100},
+        'already-reviewed': {'body_sha256': b, 'body_status': 'FULL', 'body_chars': 100},
+        'fresh-c': {'body_sha256': c, 'body_status': 'FULL', 'body_chars': 100},
+    }}
+    events = event_groups(candidates)
+    prior_event = next(event_id for event_id, event in events.items()
+                       if any(ref['document_id'] == 'already-reviewed'
+                              for ref in event['documents']))
+    tracking = {'reviews': {'prior': {
+        'kind': 'quick', 'reader_version': READER_VERSION,
+        'worker_event_id': prior_event, 'body_sha256': b,
+        'read_complete': True, 'disposition': 'CURRENT',
+    }}}
+    select = fresh_native_event_guard(candidates, tracking)
+    assert select({'document_id': 'fresh-a', 'body_sha256': a})
+    assert not select({'document_id': 'same-body-different-reference', 'body_sha256': a})
+    assert not select({'document_id': 'already-reviewed', 'body_sha256': b})
+    assert select({'document_id': 'fresh-c', 'body_sha256': c})
+    assert not select({'document_id': 'fresh-c', 'body_sha256': c})
+    assert not select({'document_id': 'missing', 'body_sha256': 'unknown'})
+
+
+def test_reused_document_is_not_counted_as_a_fifth_native_inference():
+    report = previous_failure_with_five_successes()
+    report['results'][2]['reused'] = True
+    report['model_calls'] = 4
+    report['actual_returned_native_calls'] = 4
+    assert assess_current_cpu_batch(report)['native_cpu_receipts'] is False
