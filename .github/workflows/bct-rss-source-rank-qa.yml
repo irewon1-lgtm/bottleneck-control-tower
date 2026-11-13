@@ -1,0 +1,91 @@
+name: BCT RSS source-bound sector registration real-data QA
+on:
+  push:
+    branches: [qa/bct-rss-sector-real2-20261114]
+    paths: ['.github/workflows/bct-rss-source-rank-qa.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  proof-and-view:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Test exact source and publication requirements
+        env:
+          PYTHONPATH: src:tools
+        run: |
+          set -euo pipefail
+          python -m pip install -e '.[test]'
+          python -m pytest -q tests/test_v4_rss_evidence_registry.py
+      - name: Validate real Future sidecar and materialize source-bound live sector research ranking
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PYTHONPATH: src:tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/v4_pages_research_input.py prepare --path var/v4/pages-input
+          GITHUB_WORKFLOW='Read-only BCT Pages' python tools/v4_dashboard_static_export.py \
+            --commit 02d19808c1d31ba57bb75b0e881963b64b9cc10b --public-input var/v4/pages-input
+          GITHUB_WORKFLOW='Read-only BCT Pages' python tools/v4_dashboard_static_check.py
+          node --check var/v4/pages-site/app.js
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          root=Path("var/v4/pages-site")
+          data=json.loads((root/"api/dashboard.json").read_bytes())
+          manifest=json.loads((root/"build-manifest.json").read_bytes())
+          index=data["rss_research_evidence"]
+          rank=data["sector_rankings_live"]
+          assert index["status"]=="SOURCE_BOUND_RESEARCH_BRIDGE"
+          assert index["shards_hash_verified"]>=33
+          assert index["screened_articles"]>=10327
+          assert index["counts"]["FULL_with_located_screening_claim"]>0
+          assert index["source_verified_sector_count"]==rank["new_original_verified"]
+          assert sum(x["rss_verified_count"] for x in rank["rows"])==rank["new_original_verified"]
+          assert rank["ranked_record_count"]==data["sector_rankings"]["ranked_record_count"]+len(index["source_records"])
+          assert all(not r["confirmed_future_shortage"] for r in index["source_records"])
+          assert "RSS 검토대기" in (root/"app.js").read_text()
+          print("BCT_ACTUAL_SOURCE_REGISTERED="+json.dumps({
+            "screened_articles":index["screened_articles"],
+            "located_full_claims":index["counts"]["FULL_with_located_screening_claim"],
+            "proof_missing":index["counts"].get("awaiting_original_publisher_proof"),
+            "original_proof_pass":index["counts"].get("verified_original_and_publication",0),
+            "new_sector_research_records":len(index["source_records"]),
+            "ranked_research_before":data["sector_rankings"]["ranked_record_count"],
+            "ranked_research_after":rank["ranked_record_count"],
+            "sidecar_sha":index["sidecar_commit"],"shards_verified":index["shards_hash_verified"],
+            "rss_articles":manifest["rss_article_count"]}))
+          PY
+      - name: Check physical desktop/mobile HTML for actual registered column
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/bct-playwright"
+          cd "$RUNNER_TEMP/bct-playwright"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.56.1
+          npx playwright install chromium
+          cd "$GITHUB_WORKSPACE"
+          python -m http.server 8792 --directory var/v4/pages-site > /tmp/bct-source-rank-http.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          NODE_PATH="$RUNNER_TEMP/bct-playwright/node_modules" node qa/rank-source-browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-source-bound-ranking-real-browser-qa
+          path: qa/rank-source-proof/
+          retention-days: 7
+          if-no-files-found: warn
