@@ -66,6 +66,28 @@ jobs:
                   report[logfile.replace(".","_")+"_indicators"]={term:term in sample for term in
                      ("fatal error:","cmake error","error:","out of memory","killed","not found","failed",
                       "address already in use","ggml","timeout","download")}
+          # Drill one level into the native-child failure without exposing its
+          # original source, private inference, HTTP response, or model output.
+          childlogs=[q for q in root.rglob('native-claim-child.log') if q.is_file()]
+          report['native_child_log_present']=len(childlogs)==1
+          report['native_child_log_sha256']=(hashlib.sha256(childlogs[0].read_bytes()).hexdigest() if len(childlogs)==1 else None)
+          native_dirs=[q for q in root.rglob('private-native-claim') if q.is_dir()]
+          report['private_native_claim_directory_count']=len(native_dirs)
+          native_receipts=[q for q in root.rglob('native-execution.jsonl') if q.is_file()]
+          report['native_receipt_files']=len(native_receipts)
+          report['native_receipt_lines']=sum(len(q.read_bytes().splitlines()) for q in native_receipts)
+          report['native_response_files']=len([q for q in root.rglob('response.json') if q.is_file() and 'private-native-claim' in str(q)])
+          if len(childlogs)==1:
+              raw=childlogs[0].read_text(errors='replace')[-100000:]
+              frames=re.findall(r'File ["\']([^"\']+\.py)["\'], line ([0-9]+), in ([a-zA-Z_0-9]+)',raw)
+              report['native_child_python_stack_frames']=[{'module':Path(p).name,'line':int(num),'fn':fn} for p,num,fn in frames][-12:]
+              report['native_child_error_classes']=sorted(set(re.findall(r'\b(?:[A-Za-z_][A-Za-z_0-9]*(?:Error|Exception)|KeyboardInterrupt)\b(?=\s*:)',raw)))
+              report['native_child_safe_indicators']={key:key in raw for key in (
+                  'KeyboardInterrupt','No eligible','no eligible','API_REVIEW','LOCAL','HTTP 403',
+                  'PermissionError','FileNotFoundError','ValueError','RuntimeError',
+                  'KeyError','TypeError','NameError','IndexError','Traceback (most recent call last)',
+                  'run_worker','GitHubTransport','from bct.future_worker import run_worker',
+                  'input.json','response.json','native-execution.jsonl')}
           print("BCT_S3_GATE5_SAFE_ROOT_CAUSE="+json.dumps(report,sort_keys=True,ensure_ascii=False),flush=True)
           out=root/"bct-s3-gate5-root-cause.json"
           out.write_text(json.dumps(report,sort_keys=True,indent=2)+"\n")
