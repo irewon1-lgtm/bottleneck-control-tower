@@ -7382,6 +7382,11 @@
       "owner": "review",
       "patch_sha256": "6401c3afffef78441eec42b86e39c23b4403d5f1847c947bc15f84820b540990",
       "applied_at": "2026-11-14T13:04:25.089732+00:00"
+    },
+    "review-auto-quick-ee65f202ef5c5729498b495aa2d38e3b": {
+      "owner": "review",
+      "patch_sha256": "42c5ccca3bbc4fadfe9aef63b3e1f6f848ccd24829b7c12d99bfc54e55d72893",
+      "applied_at": "2026-11-14T13:05:59.083506+00:00"
     }
   },
   "policy": {
@@ -12703,6 +12708,13 @@
       "reader_version": "bct-v33-reader-1",
       "read_end": 3524,
       "last_review_id": "auto-quick-474c2bec4f6bc12fcf072e86e9cb8efe"
+    },
+    "3ff2d5a8-4aaf-40b2-bff7-6a9d0652ba1a:47668047485b945534b232f73936f1a00856038b9730730cabdc3862bea7aaee:bct-v33-reader-1": {
+      "document_id": "3ff2d5a8-4aaf-40b2-bff7-6a9d0652ba1a",
+      "body_sha256": "47668047485b945534b232f73936f1a00856038b9730730cabdc3862bea7aaee",
+      "reader_version": "bct-v33-reader-1",
+      "read_end": 5911,
+      "last_review_id": "auto-quick-ee65f202ef5c5729498b495aa2d38e3b"
     }
   },
   "purpose": "향후 1~2년 내 구체적 산업 공급 TARGET의 수요·공급 시간차 발견 및 예측 결과 추적",
@@ -48225,6 +48237,29 @@
         "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST"
       },
       "candidate_state": "REVIEWED"
+    },
+    "auto-quick-ee65f202ef5c5729498b495aa2d38e3b": {
+      "disposition": "DATA_INSUFFICIENT",
+      "reason": "The provided text does not contain sufficient supply/demand evidence to make a judgment.",
+      "read_end": 5911,
+      "worker_provider": "local-cpu",
+      "worker_model": "Qwen/Qwen2.5-7B-Instruct-GGUF",
+      "review_id": "auto-quick-ee65f202ef5c5729498b495aa2d38e3b",
+      "document_id": "3ff2d5a8-4aaf-40b2-bff7-6a9d0652ba1a",
+      "body_sha256": "47668047485b945534b232f73936f1a00856038b9730730cabdc3862bea7aaee",
+      "reader_version": "bct-v33-reader-1",
+      "kind": "quick",
+      "read_start": 0,
+      "reviewed_at": "2026-11-14T13:05:58.190509+00:00",
+      "worker_event_id": "event-b68c2e671d4125b6c4913d3e",
+      "as_of": "2026-11-14",
+      "read_complete": true,
+      "source_access": {
+        "url": "https://www.freightwaves.com/news/truckloads-mixed-signals",
+        "body_sha256": "47668047485b945534b232f73936f1a00856038b9730730cabdc3862bea7aaee",
+        "reproducibility_limit": "PRIVATE_CACHE_NOT_DURABLE_REACCESS_REQUIRED_IF_LOST"
+      },
+      "candidate_state": "DATA_WAIT"
     }
   },
   "runs": [
@@ -242242,6 +242277,6 @@
       ]
     }
   ],
-  "updated_at": "2026-11-14T13:03:50.984660+00:00",
+  "updated_at": "2026-11-14T13:05:58.190509+00:00",
   "version": 1
 }
