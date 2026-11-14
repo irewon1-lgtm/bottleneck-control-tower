@@ -1,0 +1,92 @@
+name: BCT pinpoint saved original proofs not yet eligible for sector research
+on:
+  push:
+    branches: [qa/bct-source-proof-sector-triage-20261114]
+    paths: ['.github/workflows/bct-proof-sector-triage.yml']
+permissions:
+  contents: read
+jobs:
+  source-research-diagnostics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Diagnose only saved exact FULL original proof and unresolved product/sector
+        shell: bash
+        env:
+          PYTHONPATH: src:tools
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python -m pip install -e .
+          python - <<'PY'
+          from collections import Counter
+          from pathlib import Path
+          from bct.future_github import GitHubTransport
+          from bct.future_body import verified_source_metadata
+          from v4_rss_evidence_registry import _record_body,_claims,_sector,register
+          from v4_public_news_export import feed_group_hints
+          import json,os,hashlib
+          t=GitHubTransport(os.environ["GITHUB_REPOSITORY"],"future-bottleneck-data",os.environ["GH_TOKEN"])
+          sha=t.head()
+          state=t.read_at("future-candidates.json",sha).document
+          got=register(state,sidecar_sha=sha,feed_domains=feed_group_hints(Path("rss_feeds.yaml")))
+          reasons=Counter(); examples=[]; resolved=[]; by_host=Counter()
+          for document_id,record in state["results"].items():
+            digest,version=_record_body(record)
+            if version is None or version["body_status"]!="FULL":continue
+            metadata=verified_source_metadata(version,digest)
+            if not(metadata.get("provenance_verified") is True and metadata.get("publication_verified") is True):
+              continue
+            by_host[metadata["origin_publisher"]]+=1
+            claims=_claims(version,version.get("body_chars",0))
+            literal=[f for f in claims if f.get("actual_statement") is True
+                     and not f.get("scope_ambiguous")
+                     and isinstance(f.get("target"),str)
+                     and f.get("target") not in ("UNKNOWN","")]
+            sector=_sector(literal)
+            if not claims:reason="NO_VALID_SOURCE_LOCATED_FACT"
+            elif not literal:reason="NO_ACTUAL_UNAMBIGUOUS_NAMED_PRODUCT_FACT"
+            elif sector is None:reason="NAMED_PRODUCT_NOT_IN_UNAMBIGUOUS_SECTOR_LEXICON"
+            else:reason="ELIGIBLE_IN_SECTOR_REGISTRY"
+            reasons[reason]+=1
+            targets=list(dict.fromkeys(f.get("target") for f in literal))
+            example={"article_id_sha256":hashlib.sha256(document_id.encode()).hexdigest()[:15],
+               "publisher":metadata["origin_publisher"],
+               "title":str(record.get("title") or "")[:140],
+               "reason":reason,"explicit_named_targets":targets[:6],
+               "source_located_fact_count":len(claims),
+               "literal_unambiguous_facts":len(literal),
+               "sector":sector}
+            if len(examples)<45:examples.append(example)
+            if reason=="ELIGIBLE_IN_SECTOR_REGISTRY":resolved.append(example)
+          report={"format":"bct-proof-to-sector-triage-v1",
+             "source_sidecar_sha":sha,"screened":len(state["results"]),
+             "saved_full_originals_with_provenance":sum(reasons.values()),
+             "registered_sector_records":got["source_verified_sector_count"],
+             "reason_counts":dict(reasons),"publisher_counts":dict(by_host),
+             "examples":examples,"status":"READ_ONLY_NO_EVIDENCE_PROMOTION"}
+          dest=Path(os.environ["RUNNER_TEMP"])/"proof-sector-triage.json"
+          dest.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
+          print("BCT_SAVED_PROOF_TO_SECTOR_DIAG="+json.dumps({
+             k:report[k] for k in ("source_sidecar_sha","screened","saved_full_originals_with_provenance",
+               "registered_sector_records","reason_counts","publisher_counts")
+           },ensure_ascii=False))
+          print("BCT_UNMATCHED_TARGET_EXAMPLES="+json.dumps([
+             {"title":x["title"],"target":x["explicit_named_targets"],"reason":x["reason"]}
+             for x in examples if x["reason"]!="ELIGIBLE_IN_SECTOR_REGISTRY"
+           ][:18],ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-saved-verified-originals-sector-triage
+          path: ${{ runner.temp }}/proof-sector-triage.json
+          retention-days: 7
+          if-no-files-found: warn
