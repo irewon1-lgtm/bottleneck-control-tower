@@ -1,0 +1,80 @@
+name: BCT S3 diagnose prior failed Gate 5 from immutable artifact only
+on:
+  push:
+    branches: [ops/bct-s3-gate5-root-cause-audit-20261115]
+    paths: ['.github/workflows/bct-s3-gate5-receipt-diagnosis-one-shot.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  diagnose-only:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Read exact failed Gate artifact, never rerun old Gates
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 43611022316
+          name: bct-recovery-checkpoint-43611022316
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/bct-s3-gate5-audit
+      - name: Classify safe local reader failure from authenticated receipt
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json,re,os
+          root=Path(os.environ["RUNNER_TEMP"])/"bct-s3-gate5-audit"
+          if not root.is_dir():
+              raise ValueError("SOURCE_ARTIFACT_MISSING")
+          names=sorted(str(p.relative_to(root)) for p in root.rglob("*") if p.is_file())
+          def select(name):
+              found=[p for p in root.rglob(name) if p.is_file()]
+              if len(found)!=1:
+                  raise ValueError("UNIQUE_GATE5_RECEIPT_NOT_FOUND_"+name)
+              return found[0]
+          prior=select("checkpoint.json")
+          probe=select("local-reader-probe.json")
+          p=json.loads(probe.read_text())
+          gate=json.loads(prior.read_text())
+          fields=("run_id","code_sha","probe_status","gate5","status","reason",
+                  "failure_code","error_type","eligible_real_sources","mode",
+                  "prior_pilot_already_applied","prior_model_calls_restored",
+                  "batch_limits","model_calls_this_run","returned_inferences_this_run")
+          report={"status":"READ_ONLY_DIAGNOSTIC",
+                  "gate_run":"43611022316",
+                  "artifact_digest_sha256":"ef10fbed01c4e68c6ba616ed99b983de497d89850981412983aea691eb6471c4",
+                  "gate_0_4":{k:gate.get(k) for k in ("gate0","gate1","gate2","gate3","gate4","gate5")},
+                  "safe_probe_fields":{key:p.get(key) for key in fields if key in p},
+                  "has_weights_verified_receipt":isinstance(p.get("model_setup_receipt"),dict),
+                  "source_artifact_files":len(names),
+                  "full_article_body_output":False,
+                  "read_only":True}
+          failure=p.get("failure_code")
+          if isinstance(failure,str) and len(failure)>400:
+              report["safe_probe_fields"]["failure_code"]=failure[:400]+"...[truncated]"
+          if any(x in (failure or "").lower() for x in ("token","secret","authorization","bearer","sk-")):
+              report["safe_probe_fields"]["failure_code"]="REDACTED_SENSITIVE"
+          for logfile in ("local-reader-build.log","local-reader-server.log"):
+              match=[q for q in root.rglob(logfile) if q.is_file()]
+              report[logfile.replace(".","_")+"_present"]=bool(match)
+              if match:
+                  report[logfile.replace(".","_")+"_sha256"]=hashlib.sha256(match[0].read_bytes()).hexdigest()
+                  # Suppress arbitrary model or source text. Only classify build log using
+                  # generic known failure tokens, never print untrusted log lines.
+                  sample=match[0].read_bytes()[-524288:].decode(errors="replace").lower()
+                  report[logfile.replace(".","_")+"_indicators"]={term:term in sample for term in
+                     ("fatal error:","cmake error","error:","out of memory","killed","not found","failed",
+                      "address already in use","ggml","timeout","download")}
+          print("BCT_S3_GATE5_SAFE_ROOT_CAUSE="+json.dumps(report,sort_keys=True,ensure_ascii=False),flush=True)
+          out=root/"bct-s3-gate5-root-cause.json"
+          out.write_text(json.dumps(report,sort_keys=True,indent=2)+"\n")
+          PY
+      - name: Store only safe diagnostic metadata
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-s3-gate5-safe-root-cause
+          path: ${{ runner.temp }}/bct-s3-gate5-audit/bct-s3-gate5-root-cause.json
+          retention-days: 7
+          if-no-files-found: warn
