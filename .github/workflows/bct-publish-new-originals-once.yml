@@ -1,0 +1,31 @@
+name: BCT one-shot public rank refresh after saved source proofs
+on:
+  push:
+    branches: [ops/bct-publish-after-new-originals-20261114]
+    paths: ['.github/workflows/bct-publish-new-originals-once.yml']
+permissions:
+  contents: read
+  actions: write
+jobs:
+  dispatch-read-only:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Only refresh if exact original-source proof is saved and already read back
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GH_REPO" = irewon1-lgtm/bottleneck-control-tower
+          test "$(gh api "repos/$GH_REPO/branches/main" --jq '.commit.sha')" = 'ffcee137975d25909b5bf883ba52f918789f4a2b'
+          proof=$(gh api "repos/$GH_REPO/actions/runs/43533047536")
+          printf '%s' "$proof" | jq -e '.event=="workflow_dispatch" and .status=="completed" and .conclusion=="success" and .head_branch=="main"' >/dev/null
+          test "$(gh api "repos/$GH_REPO/branches/future-bottleneck-data" --jq '.commit.sha')" = '464d39e9591cdfdccfac91f2dbd250a763dd1618'
+          test "$(gh api "repos/$GH_REPO/actions/workflows/ui-pages.yml" --jq '.state')" = active
+          gh workflow run ui-pages.yml --ref main
+          echo BCT_PAGES_REFRESH_DISPATCH_ACCEPTED_FROM_ACTUAL_SOURCE_CAS
+          gh api "repos/$GH_REPO/actions/workflows/ui-pages.yml/runs?event=workflow_dispatch&per_page=3" \
+            --jq '.workflow_runs[] | {id,head_branch,status,conclusion,created_at}'
