@@ -1,0 +1,83 @@
+name: BCT S3 one-shot full RSS coverage and source proof audit read-only
+on:
+  push:
+    branches: [ops/bct-s3-live-readonly-corpus-audit-20261115]
+    paths: ['.github/workflows/bct-s3-readonly-audit-snapshot-one-shot.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  actual-corpus-audit:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      PYTHONPATH: .:src
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Require unchanged protected source code plus this read-only workflow
+        run: |
+          set -euo pipefail
+          PIN=6b72e8f0426fb063434b56ff7a9509a7d5e207ee
+          git fetch --no-tags --depth=3 origin "$PIN"
+          git diff --name-only "$PIN" HEAD > "$RUNNER_TEMP/changed.txt"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          got=set((Path(os.environ['RUNNER_TEMP'])/'changed.txt').read_text().splitlines())
+          assert got=={'.github/workflows/bct-s3-readonly-audit-snapshot-one-shot.yml'},got
+          print('S3_READONLY_PROTECTED_SOURCE_UNMODIFIED_PASS')
+          PY
+      - name: Actual exact corpus audit, no network source-article requests or writes
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, hashlib, re, sqlite3, subprocess
+          from datetime import datetime,timezone
+          from pathlib import Path
+          from bct.future_github import GitHubTransport
+          from tools.bct_s3_corpus_audit import audit_snapshot
+          root=Path(os.environ['RUNNER_TEMP'])/'bct-s3-readonly-audit'
+          root.mkdir(parents=True,exist_ok=True)
+          def cmd(*args):
+              return subprocess.run(args,check=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=180).stdout
+          sha=cmd('git','ls-remote','origin','refs/heads/data').decode().split()[0]
+          if not re.fullmatch('[a-f0-9]{40}',sha):
+              raise ValueError('S3_NO_VALID_CANONICAL_DB_REF')
+          cmd('git','fetch','--no-tags','--depth=1','origin',sha)
+          state=json.loads(cmd('git','show',sha+':state.json'))
+          db_path=root/'canonical.sqlite3'
+          db_path.write_bytes(cmd('git','show',sha+':canonical.sqlite3'))
+          if hashlib.sha256(db_path.read_bytes()).hexdigest()!=state['sha256']:
+              raise ValueError('S3_CANONICAL_DB_HASH_MISMATCH')
+          with sqlite3.connect(f'file:{db_path.resolve()}?mode=ro&immutable=1',uri=True) as db:
+              if db.execute('PRAGMA integrity_check').fetchone()[0]!='ok':
+                  raise ValueError('S3_CANONICAL_DB_CORRUPTED')
+              db.row_factory=sqlite3.Row
+              canonical={row['id']:dict(row) for row in db.execute("SELECT id,url FROM radar_items WHERE status='active'")}
+          if len(canonical)!=state['radar_items']:
+              raise ValueError('S3_ACTIVE_RSS_COUNT_NOT_MATCHED')
+          transport=GitHubTransport(os.environ['GITHUB_REPOSITORY'],'future-bottleneck-data',os.environ['GITHUB_TOKEN'])
+          side_sha=transport.head()
+          sidecar=transport.read_at('future-candidates.json',side_sha).document
+          report={'status':'PASS_READ_ONLY_ACTUAL_WHOLE_CORPUS_AUDIT_NOT_S3_COMPLETION',
+                  'canonical_sha':sha,'sidecar_sha':side_sha,
+                  'checked_utc':datetime.now(timezone.utc).isoformat(),
+                  'source_requests':0,'sidecar_writes':0,'research_promotions':0,
+                  **audit_snapshot(canonical,sidecar)}
+          (root/'receipt.json').write_text(json.dumps(report,indent=2,sort_keys=True,ensure_ascii=False)+'\n')
+          print('BCT_S3_REAL_WHOLE_CORPUS_READONLY_AUDIT='+json.dumps(report,sort_keys=True),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-s3-real-full-corpus-readonly-receipt
+          path: ${{ runner.temp }}/bct-s3-readonly-audit/receipt.json
+          retention-days: 14
+          if-no-files-found: warn
