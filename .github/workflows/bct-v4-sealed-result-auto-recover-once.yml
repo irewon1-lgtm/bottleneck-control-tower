@@ -1,0 +1,115 @@
+name: BCT one-shot source-sealed CPU research result recovery after real Gate
+on:
+  push:
+    branches: [ops/bct-v4-sealed-result-auto-restore-after-gate-20261114]
+    paths: ['.github/workflows/bct-v4-sealed-result-auto-recover-once.yml']
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: bct-sealed-recovery-finalizer-one-shot
+  cancel-in-progress: false
+jobs:
+  wait-for-attested-Gate-and-request-recovery:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 95
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check verified original result, require new actual current-code Gate and dispatch recovery
+        run: |
+          python3 - <<'PY'
+          import base64, json, os, re, subprocess, tempfile, time
+          from pathlib import Path
+          
+          repo = "irewon1-lgtm/bottleneck-control-tower"
+          reviewed_code = "ef9cd1d0e30e1c7e7fcc42cf5ef302915c66f0d3"
+          gate_id = 43590979061
+          producer_id = 43577616321
+          producer_attempt = 1
+          source_artifact_sha256 = "4e141f39d91547533e1817243d3742f279ae85517d8729c67f7302362e0fbfda"
+          
+          def api(path):
+              x=subprocess.run(["gh","api",f"repos/{repo}/{path}"],
+                  capture_output=True,timeout=25)
+              if x.returncode:
+                  raise ValueError("BCT_RECOVERY_METADATA_API_UNAVAILABLE")
+              return json.loads(x.stdout)
+          
+          def get_receipt():
+              v=api("contents/config/bct-operating-release.json?ref=main")
+              return json.loads(base64.b64decode(v["content"]).decode())
+          
+          def gate_and_artifact_confirmed(r):
+              g=api(f"actions/runs/{gate_id}")
+              if g.get("status")!="completed":
+                  return False
+              if (g.get("conclusion")!="success" or g.get("event")!="workflow_dispatch"
+                      or g.get("head_sha")!=reviewed_code or g.get("head_branch")!="main"
+                      or g.get("path")!=".github/workflows/bct-recovery.yml"):
+                  raise ValueError("BCT_NEW_GATE_DID_NOT_PASS")
+              if r.get("gate_run_id")!=gate_id or r.get("validated_code_sha")!=reviewed_code:
+                  return False
+              a=api(f"actions/runs/{gate_id}/artifacts?per_page=100").get("artifacts",[])
+              matches=[x for x in a if x.get("name")==f"bct-recovery-checkpoint-{gate_id}"]
+              if (len(matches)!=1 or matches[0].get("id")!=r.get("artifact_id")
+                      or matches[0].get("digest")!="sha256:"+str(r.get("artifact_sha256"))
+                      or matches[0].get("expired") is not False):
+                  raise ValueError("BCT_NEW_GATE_ARTIFACT_OR_RECEIPT_MISMATCH")
+              return True
+          
+          def original_research_proof():
+              s=api(f"actions/runs/{producer_id}/attempts/{producer_attempt}")
+              if (s.get("id")!=producer_id or s.get("run_attempt")!=producer_attempt
+                      or s.get("event")!="workflow_run" or s.get("status")!="completed"
+                      or s.get("conclusion")!="failure" or s.get("head_branch")!="main"
+                      or s.get("path")!=".github/workflows/v4-cpu-private-research.yml"
+                      or s.get("head_repository",{}).get("full_name")!=repo):
+                  raise ValueError("BCT_ORIGINAL_RESEARCH_PRODUCER_INVALID")
+              js=api(f"actions/runs/{producer_id}/attempts/{producer_attempt}/jobs?per_page=100").get("jobs",[])
+              if len([j for j in js if j.get("name")=="research" and j.get("conclusion")=="success"])!=1:
+                  raise ValueError("BCT_ORIGINAL_RESEARCH_NOT_PROVEN")
+              a=api(f"actions/runs/{producer_id}/artifacts?per_page=100").get("artifacts",[])
+              target=[x for x in a if x.get("name")=="bct-sealed-cpu-result-1"]
+              if (len(target)!=1 or target[0].get("expired") is not False
+                      or target[0].get("digest")!="sha256:"+source_artifact_sha256
+                      or target[0].get("workflow_run",{}).get("id")!=producer_id):
+                  raise ValueError("BCT_ORIGINAL_SEALED_RESULT_MISSING_OR_CHANGED")
+          
+          if (os.environ.get("GITHUB_REPOSITORY")!=repo
+                  or os.environ.get("GITHUB_REF")!="refs/heads/ops/bct-v4-sealed-result-auto-restore-after-gate-20261114"):
+              raise ValueError("BCT_RECOVERY_ORCHESTRATOR_ISOLATED_BRANCH_ONLY")
+          original_research_proof()
+          deadline=time.monotonic()+90*60
+          while time.monotonic()<deadline:
+              current=api("git/ref/heads/main")
+              receipt=get_receipt()
+              if gate_and_artifact_confirmed(receipt):
+                  dispatch={
+                    "ref":"main",
+                    "inputs":{"purpose":"recover-sealed-result",
+                              "result_run":str(producer_id),
+                              "result_attempt":str(producer_attempt)}
+                  }
+                  with tempfile.TemporaryDirectory(prefix="bct-recovery-request-") as td:
+                      body=Path(td)/"dispatch.json"
+                      body.write_text(json.dumps(dispatch))
+                      result=subprocess.run(
+                          ["gh","api","--method","POST",
+                           f"repos/{repo}/actions/workflows/v4-cpu-private-research.yml/dispatches",
+                           "--input",str(body)],capture_output=True,timeout=30)
+                  if result.returncode:
+                      raise ValueError("BCT_SEALED_RESULT_RECOVERY_DISPATCH_REJECTED")
+                  print("BCT_SEALED_RESULT_RECOVERY_DISPATCH_ACCEPTED="+json.dumps({
+                    "gate":gate_id,"reviewed_code":reviewed_code,
+                    "recovery_purpose":"recover-sealed-result",
+                    "original_cpu_run":producer_id,"original_attempt":producer_attempt,
+                    "original_artifact_sha256":source_artifact_sha256,
+                    "cpu_model_reexecuted":False,
+                    "private_state_written_by_dispatcher":False,
+                    "recovery_execution_pass":False},sort_keys=True))
+                  raise SystemExit(0)
+              time.sleep(20)
+          raise ValueError("BCT_GATE_ATTESTATION_NOT_READY_NO_RECOVERY_DISPATCH")
+          PY
