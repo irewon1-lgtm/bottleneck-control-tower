@@ -43,7 +43,7 @@ PRODUCTS = {
 "광물·금속·희토류":r"\b(?:lithium|copper|cobalt|nickel|tungsten|gallium|germanium|graphite|rare earths?|neodymium|dysprosium|antimony)\b",
 "석유·가스·화학":r"\b(?:LNG|liquefied natural gas|petrochemicals?|ethylene|crude oil|oil rigs?|chemical feedstocks?)\b",
 "물류·항만·해운":r"\b(?:container ships?|shipping vessels?|port cranes?|bulk carriers?|freight terminals?|ocean freight)\b",
-"자동차·배터리":r"\b(?:EV battery cells?|battery cathodes?|battery anodes?|electric vehicles?|automotive batteries?|vehicle assembly lines?)\b",
+"자동차·배터리":r"\b(?:EV battery cells?|battery cells?|battery cathodes?|battery anodes?|electric vehicles?|automotive batteries?|vehicle assembly lines?)\b",
 "건설·기반시설":r"\b(?:construction cement|construction steel|rail infrastructure|bridge beams?|building materials?)\b",
 "바이오·의약":r"\b(?:vaccines?|pharmaceutical(?:s)?|biologic drugs?|sterile injectables?|active pharmaceutical ingredients?|drug substances?|CDMO)\b",
 "에너지·원자력":r"\b(?:uranium|HALEU|nuclear reactors?|small modular reactors?|nuclear fuel|enriched uranium)\b"
