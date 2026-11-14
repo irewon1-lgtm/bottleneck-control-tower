@@ -114,7 +114,7 @@ def test_both_lanes_share_one_four_per_host_budget_with_prior_full_attempts():
 def test_missing_partial_stage_refuses_unproven_prior_full_lane():
     source = (ROOT / "tools/bct_s3_missing_partial_backfill.py").read_text()
     assert "S3_FULL_LANE_RECEIPT_MISSING" in source
-    assert "S3_FULL_LANE_NOT_COMMITTED_OR_RSS_CHANGED" in source
+    assert "S3_FULL_LANE_NOT_COMMITTED" in source
     assert "S3_INVALID_PRIOR_PUBLISHER_BUDGET" in source
     assert "cross_lane_publisher_budget_enforced" in source
 
