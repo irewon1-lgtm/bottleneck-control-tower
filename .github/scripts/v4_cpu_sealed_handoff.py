@@ -163,7 +163,12 @@ def main():
         if (not args.run_id or not args.attempt or args.attempt < 1
                 or args.run_id >= int(os.environ.get("GITHUB_RUN_ID") or "0")):
             raise ValueError("SEALED_HANDOFF_RECOVERY_ID")
-        run = api(f"actions/runs/{args.run_id}")
+        # A failed writer can be rerun without rerunning the successful
+        # research producer. GitHub then increments the run's latest attempt,
+        # while its authenticated sealed artifact remains bound to attempt 1.
+        # Fetch the explicitly selected historical attempt, never relabel a
+        # previous artifact as belonging to the latest attempt.
+        run = api(f"actions/runs/{args.run_id}/attempts/{args.attempt}")
         if run.get("id") != args.run_id or run.get("run_attempt") != args.attempt:
             raise ValueError("SEALED_HANDOFF_RECOVERY_ATTEMPT")
         approved_run(run, require_success=False)
