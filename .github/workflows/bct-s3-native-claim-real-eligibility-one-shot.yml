@@ -1,0 +1,116 @@
+name: BCT S3 native claim quick-queue eligibility on actual recovered FULL originals
+on:
+  push:
+    branches: [ops/bct-s3-native-claim-real-eligibility-preflight-20261115]
+    paths: ['.github/workflows/bct-s3-native-claim-real-eligibility-one-shot.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  inspect-real-source-metadata-only:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      PYTHONPATH: .:src:.github/scripts
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 7d18859550301bbcd2cb7f6aa9758db76c8c6d88
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore prior immutable actual failed Gate inputs; no new model call
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 43611022316
+          name: bct-recovery-checkpoint-43611022316
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/bct-stage5-preflight-original
+      - name: Verify exact recovered prior sources against real current QUICK queue
+        run: |
+          set -euo pipefail
+          python -m pip install -e .
+          python3 - <<'PY'
+          from collections import Counter
+          from pathlib import Path
+          import hashlib,json,os,re
+          from bct.future_github import GitHubTransport
+          from bct.future_review import _records, document_complete
+          from bct.future_local_reader import LocalCPUQuickReader
+          from bct_native_claim_probe import native_claim_eligible
+          root=Path(os.environ["RUNNER_TEMP"])/"bct-stage5-preflight-original"
+          candidates=GitHubTransport(os.environ["GITHUB_REPOSITORY"],"future-bottleneck-data",os.environ["GITHUB_TOKEN"])
+          head=candidates.head()
+          c=candidates.read_at("future-candidates.json",head).document
+          t=candidates.read_at("future-tracking.json",head).document
+          versions_path=list(root.rglob("source-recovery-versions.json"))
+          attempts_path=list(root.rglob("source-recovery-attempts.jsonl"))
+          setup_paths=list(root.rglob("local-reader-setup.json"))
+          cache=list(root.rglob("private-source-cache"))
+          if any(len(g)!=1 for g in (versions_path, attempts_path, setup_paths, cache)):
+              raise ValueError("S3_PREVIOUS_ACTUAL_GATE_SOURCE_INPUTS_NOT_UNIQUE")
+          saved=json.loads(versions_path[0].read_text())
+          restored={(x["document_id"],x["old_body_sha256"]) for x in saved if x.get("exact_version_recovered")}
+          obs={x["url"]:x for x in (json.loads(z) for z in attempts_path[0].read_text().splitlines())}
+          setup=json.loads(setup_paths[0].read_text())
+          reader=LocalCPUQuickReader(setup)
+          total=Counter()
+          candidates_to_sort=[]
+          for item in _records(c):
+              if item.get("body_status")!="FULL" or document_complete(t,item):
+                  continue
+              key=(item["document_id"],item["body_sha256"])
+              observation=obs.get(item.get("url"),{})
+              fresh=(item.get("source_recovery") and observation.get("body_status")=="FULL"
+                     and observation.get("body_sha256")==key[1])
+              if key not in restored and not fresh:
+                  continue
+              total["exact_recovered_full_unread_version"]+=1
+              file=cache[0]/(key[1]+".txt")
+              if not file.is_file():
+                  total["not_in_prior_archive_cache"]+=1
+                  continue
+              body=file.read_text()
+              if hashlib.sha256(body.encode()).hexdigest()!=key[1] or len(body)!=item.get("body_chars"):
+                  total["cache_hash_or_extent_mismatch_hold"]+=1
+                  continue
+              payload={"document_id":key[0],"body_sha256":key[1],
+                       "title":item.get("title"),"body_status":"FULL","read_start":0,
+                       "expected_read_end":len(body),"body":body}
+              if reader.input_characters(payload)>12000:
+                  total["prompt_budget_hold"]+=1
+                  continue
+              total["prior_pilot_input_eligible"]+=1
+              if item.get("candidate") or item.get("tracked_matches"):
+                  total["candidate_or_tracked_recovered"]+=1
+              if item.get("reaccess_status") in ("SOURCE_CHANGED","UNAVAILABLE","BLOCKED"):
+                  total["latest_explicit_access_hold"]+=1
+              if native_claim_eligible(payload,item):
+                  total["real_quick_claim_eligible"]+=1
+                  candidates_to_sort.append((len(body),key[0]))
+              else:
+                  total["native_claim_not_in_quick_queue_hold"]+=1
+          result={"status":"S3_REAL_NATIVE_CLAIM_READONLY_AUDIT",
+                  "code_sha":"7d18859550301bbcd2cb7f6aa9758db76c8c6d88",
+                  "original_artifact_run":43611022316,
+                  "corpus_sidecar_generation":head,
+                  "criteria":dict(total),
+                  "actual_model_calls":0,
+                  "production_writes":0,
+                  "article_contents_published":False,
+                  "read_only":True,
+                  "native_probe_could_select_real_quick_source":len(candidates_to_sort)>0}
+          print("BCT_S3_REAL_NATIVE_CLAIM_PREFLIGHT="+json.dumps(result,sort_keys=True),flush=True)
+          p=Path(os.environ["RUNNER_TEMP"])/"bct-s3-real-native-claim-preflight.json"
+          p.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-s3-real-quick-candidate-preflight-safe-only
+          path: ${{ runner.temp }}/bct-s3-real-native-claim-preflight.json
+          retention-days: 7
+          if-no-files-found: warn
