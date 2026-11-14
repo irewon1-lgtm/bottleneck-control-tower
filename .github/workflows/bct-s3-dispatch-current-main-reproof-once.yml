@@ -1,0 +1,44 @@
+name: BCT S3 re-run real original proof from latest approved main once
+on:
+  push:
+    branches: [ops/bct-s3-retry-current-main-proof-20261114]
+    paths: ['.github/workflows/bct-s3-dispatch-current-main-reproof-once.yml']
+permissions:
+  contents: read
+  actions: write
+jobs:
+  request-current-main-proof:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Verify current real Gate receipt and request original proofs using main instead of stale run
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64, json, os, subprocess
+          repo=os.environ['GITHUB_REPOSITORY']
+          if repo != 'irewon1-lgtm/bottleneck-control-tower': raise ValueError('S3_REPOSITORY_MISMATCH')
+          def api(path):
+              x=subprocess.run(['gh','api',f'repos/{repo}/'+path],capture_output=True,timeout=30)
+              if x.returncode: raise ValueError('S3_GATE_API_NOT_READABLE')
+              return json.loads(x.stdout)
+          main=api('git/ref/heads/main')['object']['sha']
+          if main!='45a0fb7d55af8683bf1aba4b0939185b91c01bf0': raise ValueError('S3_MAIN_ADVANCED_REEVALUATE')
+          contents=api('contents/config/bct-operating-release.json?ref=main')
+          release=json.loads(base64.b64decode(contents['content']).decode())
+          if (release.get('gate_run_id')!=43598817355
+                 or release.get('validated_code_sha')!='87d12e8db7d691a0759b0656fe483a92be9c4063'):
+              raise ValueError('S3_APPROVAL_NOT_MATCHING_CURRENT_PROTECTED_CODE')
+          run=api('actions/runs/43598817355')
+          if (run.get('conclusion')!='success' or run.get('status')!='completed'
+                 or run.get('head_sha')!=release['validated_code_sha']):
+              raise ValueError('S3_REAL_GATE_NOT_PASSED')
+          print('S3_ACTUAL_GATE_RECEIPT_AND_MAIN_VERIFIED')
+          PY
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/bct-recurring-original-reproof.yml/dispatches" \
+            -f ref=main >/dev/null
+          echo 'S3_CURRENT_MAIN_SOURCE_REPROOF_DISPATCH_ACCEPTED_NOT_PROOF_OF_SUCCESS'
