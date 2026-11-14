@@ -180,7 +180,20 @@ def stage():
                 else:
                     eligible_hosts.add(host(record["url"]))
             else:
-                audited["full_already_verified"]+=1
+                # FULL with an invalid digest is NOT evidence of source proof.
+                # Distinguish malformed legacy records from exact body-bound
+                # publisher+publication receipts.
+                verified=False
+                if digest and re.fullmatch("[0-9a-f]{64}",str(digest)):
+                    for snapshot in (record, {**record, **version}):
+                        proof=verified_source_metadata(snapshot,digest)
+                        if proof.get("provenance_verified") is True and proof.get("publication_verified") is True:
+                            verified=True
+                            break
+                if verified:
+                    audited["full_already_verified"]+=1
+                else:
+                    audited["full_invalid_body_hash_or_proof_hold"]+=1
     run_context={
       "rss_articles":total,
       "sidecar_records":len(candidates["results"]),
