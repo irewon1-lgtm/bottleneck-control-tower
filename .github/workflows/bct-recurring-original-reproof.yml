@@ -11,8 +11,11 @@ jobs:
     if: github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 55
+    # GitHub Actions replaces an older PENDING run in a shared concurrency
+    # group even when cancel-in-progress=false. Use a self-only queue; the
+    # immutable Future GitHub CAS protects writes against other workflows.
     concurrency:
-      group: future-bottleneck-results
+      group: bct-periodic-original-proof
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4

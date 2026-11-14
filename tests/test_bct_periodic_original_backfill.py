@@ -65,3 +65,12 @@ def test_previous_batch_exclusion_and_CAS_preservation_are_explicit():
     assert 'prepared_document=change["prepared_document"]' in script
     assert 'confirmed_shortages_created":0' in script
     assert 'PASS_ATTEMPTS_SAVED_NO_VERIFIED_PROOF' in script
+
+
+def test_no_shared_pending_slot_starvation():
+    workflow=(Path(__file__).resolve().parents[1]/".github/workflows/bct-recurring-original-reproof.yml").read_text()
+    assert "group: bct-periodic-original-proof" in workflow
+    assert "group: future-bottleneck-results" not in workflow
+    assert "cancel-in-progress: false" in workflow
+    assert "cron: '10 0,12 * * *'" in workflow
+    assert "python tools/bct_original_proof_backfill.py" in workflow
