@@ -225,8 +225,11 @@ def stage():
             "PASS_SOURCE_PROOFS_SAVED_AND_RETRIEVED",
             "PASS_ATTEMPTS_SAVED_NO_VERIFIED_PROOF",
             "NO_ELIGIBLE_ORIGINAL_REPROOF_DUE")
-            or prior_full.get("collection_sha") != data_sha):
-        raise ValueError("S3_FULL_LANE_NOT_COMMITTED_OR_RSS_CHANGED")
+            or not re.fullmatch(r"[0-9a-f]{40}", str(prior_full.get("collection_sha") or ""))):
+        raise ValueError("S3_FULL_LANE_NOT_COMMITTED")
+    # New RSS articles can arrive between the independent source lanes.
+    # They belong to the fresh canonical snapshot and are never silently
+    # counted as verified. Shared publisher limits still apply to both lanes.
     full_host_counts = prior_full.get("selected_host_counts") or {}
     selected, categories = selection(
         sources, candidates, prior_host_counts=full_host_counts)
@@ -238,6 +241,8 @@ def stage():
         "selection": categories,
         "cross_lane_publisher_budget_enforced": True,
         "full_original_lane_status": prior_full["status"],
+        "full_lane_rss_sha": prior_full["collection_sha"],
+        "rss_generation_advanced_between_lanes": prior_full["collection_sha"] != data_sha,
         "source_before_sha": original_sha,
         "canonical_data_sha": data_sha,
         "selected": len(selected),
