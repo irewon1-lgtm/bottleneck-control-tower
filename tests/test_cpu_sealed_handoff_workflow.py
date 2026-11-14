@@ -161,3 +161,61 @@ def test_bootstrap_needs_actual_existing_encrypted_state(monkeypatch, tmp_path, 
     (tmp_path / "state.gpg").write_bytes(b"A" * 60)
     mod.main()
     assert "existing_legacy_cache_bootstrap" in capsys.readouterr().out
+
+
+def test_retry_must_restore_the_original_artifact_attempt_not_latest_run(monkeypatch, tmp_path, capsys):
+    """A writer retry changes latest run_attempt without changing sealed research result."""
+    mod = load_helper()
+    run_id = 43577616321
+    old_attempt = 1
+    monkeypatch.setenv("GITHUB_RUN_ID", "43599999999")
+    old = {
+        "id": run_id, "run_attempt": old_attempt, "path": mod.WORKFLOW,
+        "head_branch": "main", "head_repository": {"full_name": mod.REPOSITORY},
+        "event": "workflow_run", "status": "completed", "conclusion": "failure",
+        "head_sha": "a" * 40,
+    }
+    sealed = b"S" * 60
+    zipped = zip_packet(payload=sealed)
+    item = {
+        "id": 501, "name": "bct-sealed-cpu-result-1", "expired": False,
+        "size_in_bytes": len(zipped),
+        "digest": "sha256:" + hashlib.sha256(zipped).hexdigest(),
+        "workflow_run": {"id": run_id},
+    }
+    requested = []
+    def fake_api(path, *, binary=False):
+        requested.append((path, binary))
+        if path == f"actions/runs/{run_id}/attempts/1":
+            return old
+        if path == f"actions/runs/{run_id}/attempts/1/jobs?per_page=100":
+            return {"jobs": [{"name": "research", "conclusion": "success"}]}
+        if path == f"actions/runs/{run_id}/artifacts?per_page=100":
+            return {"artifacts": [item]}
+        if path == "actions/artifacts/501/zip" and binary:
+            return zipped
+        raise AssertionError(path)
+    monkeypatch.setattr(mod, "api", fake_api)
+    dest = tmp_path / "state.gpg"
+    monkeypatch.setattr(sys, "argv", [
+        "sealed-handoff", "recover-result", "--run-id", str(run_id),
+        "--attempt", "1", "--destination", str(dest),
+    ])
+    mod.main()
+    assert dest.read_bytes() == sealed
+    assert (f"actions/runs/{run_id}/attempts/1", False) in requested
+    assert (f"actions/runs/{run_id}", False) not in requested
+    assert "PENDING_GPG_AUTHENTICATION" in capsys.readouterr().out
+
+
+def test_wrong_historical_attempt_cannot_inherit_another_attempts_artifact(monkeypatch, tmp_path):
+    mod = load_helper()
+    monkeypatch.setenv("GITHUB_RUN_ID", "43599999999")
+    old = {"id": 43577616321, "run_attempt": 1}
+    monkeypatch.setattr(mod, "api", lambda path, **kw: old)
+    monkeypatch.setattr(sys, "argv", [
+        "sealed-handoff", "recover-result", "--run-id", "43577616321",
+        "--attempt", "2", "--destination", str(tmp_path / "state.gpg"),
+    ])
+    with pytest.raises(ValueError, match="SEALED_HANDOFF_RECOVERY_ATTEMPT"):
+        mod.main()
