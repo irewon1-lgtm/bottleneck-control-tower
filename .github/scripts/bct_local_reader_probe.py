@@ -70,6 +70,22 @@ def setup(root,config):
     return source/'build/bin/llama-server',weights/next(iter(config['files'])),receipt
 
 
+def prioritize_native_claim_source(items, version_map):
+    """Prefer a real source that the ordinary quick queue can actually claim.
+
+    Preserve relative order for all other inputs; never erase an explicit
+    SOURCE_CHANGED or UNAVAILABLE access hold to fabricate eligibility.
+    """
+    from bct_native_claim_probe import native_claim_eligible
+    acceptable = [item for item in items
+                  if native_claim_eligible(
+                      item, version_map[(item['document_id'], item['body_sha256'])])]
+    if not acceptable:
+        return list(items), 0
+    first = acceptable[0]
+    return [first, *(item for item in items if item is not first)], len(acceptable)
+
+
 def main():
     root=Path(os.environ['RUNNER_TEMP'])/'bct-recovery'
     prior=json.loads((root/'checkpoint.json').read_text())
@@ -158,6 +174,24 @@ def main():
         qualified=bool(qualification and qualification.get('probe_status')=='PASS'
                        and [b.get('limit') for b in qualification.get('batches',[])]==[1,10,50]
                        and not qualification_corrected)
+        # Source recovery can retain an old, byte-for-byte FULL snapshot while
+        # a later explicit reaccess marked it SOURCE_CHANGED. Such a snapshot
+        # is not eligible for the current native-worker quick claim. On a fresh
+        # batch (or already-acknowledged prior batch), choose the shortest
+        # truly queue-eligible version FIRST, so the 1-item DRAIN limit
+        # exercises an actual interrupted native child instead of no-op work.
+        # Never reorder interrupted unacknowledged batch results.
+        ordered, eligible_native = prioritize_native_claim_source(items, version_map)
+        report['native_claim_quick_eligible_sources'] = eligible_native
+        safe_to_reorder = already_applied or not any(
+            b.get('results') for b in previous.get('batches', []))
+        if safe_to_reorder and eligible_native:
+            items = ordered
+            report['native_claim_selection'] = 'REAL_UNBLOCKED_QUICK_QUEUE'
+        else:
+            report['native_claim_selection'] = 'PRESERVE_UNACKNOWLEDGED_BATCH_ORDER'
+        if not eligible_native:
+            raise RuntimeError('no unblocked exact-version FULL source eligible for native claim')
         if qualification_corrected:
             report['previous_qualification_pilot']=deepcopy(qualification)
             report['qualification_source_corrections']=deepcopy(qualification_corrected)
@@ -192,8 +226,9 @@ def main():
                 if time.monotonic()>=deadline:
                     report['reason']='RUNNER_DEADLINE';return 1
                 record=version_map[(payload['document_id'],payload['body_sha256'])]
+                from bct_native_claim_probe import native_claim_eligible
                 if (not report.get('native_claim_verified')
-                        and (record.get('candidate') or record.get('tracked_matches'))):
+                        and native_claim_eligible(payload, record)):
                     # One fresh pilot input exercises the real worker, remote
                     # PROCESSING claim, controlled interruption and stopped
                     # owner reconciliation. Its same returned response is
@@ -212,6 +247,8 @@ def main():
                     'expected_read_end':payload['expected_read_end']})
                 (root/'local-reader-probe.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
             batch['status']='PASS';offset+=count
+        if not report.get('native_claim_verified'):
+            raise RuntimeError('real interrupted native claim was not verified before pilot PASS')
         report.update(probe_status='PASS',actual_model_calls=sum(limits),
                       next_requirement='Apply actual readings with immutable bindings and verify production 7-state queue before Gate 5 PASS')
     except Exception as exc:
