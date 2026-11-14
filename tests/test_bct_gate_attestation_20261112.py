@@ -67,7 +67,10 @@ def test_new_code_gate_dispatch_and_operational_resume_are_proof_bound():
 
 
 def test_completed_gate_is_authenticated_inside_job_even_if_event_fields_are_missing():
-    assert "if: ${{ github.event_name == 'workflow_run' }}" in TEXT
+    assert "if: ${{ github.event_name == 'workflow_run' || github.event_name == 'workflow_dispatch' }}" in TEXT
+    assert "GATE_RUN_ID: ${{ github.event.workflow_run.id || inputs.gate_run_id }}" in TEXT
+    assert "ref: ${{ github.event.workflow_run.head_sha || github.sha }}" in TEXT
+    assert "GATE_NOT_COMPLETED_AFTER_FINALIZER_WAIT" in TEXT
     assert 'GATE_NON_ATTESTABLE_EVENT_NO_WRITE' in TEXT
     assert "output.write('published=false\\n')" in TEXT
     assert "output.write('published=true\\n')" in TEXT
