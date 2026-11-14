@@ -1,0 +1,114 @@
+name: BCT private research read-only auth diagnosis
+on:
+  push:
+    branches: [diag/bct-private-repo-auth-20261114]
+    paths: ['.github/workflows/bct-private-auth-diagnostic.yml']
+permissions:
+  contents: read
+jobs:
+  check-private-auth:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Probe scoped secret via REST and Git without exposing it or writing
+        env:
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          from __future__ import annotations
+          import base64
+          import json
+          import os
+          from pathlib import Path
+          import re
+          import subprocess
+          import urllib.error
+          import urllib.request
+          
+          PRIVATE_REPO = "irewon1-lgtm/bct-v4-private-state"
+          PUBLIC_REPO = "irewon1-lgtm/bottleneck-control-tower"
+          URL="https://github.com/"+PRIVATE_REPO+".git"
+          token=os.environ.get("BCT_V4_PRIVATE_STATE_TOKEN","")
+          result={"format":"bct-private-credential-read-only-diagnostic-v1",
+                  "secret_present":bool(token),
+                  "secret_header_format_valid":bool(re.fullmatch(r"[A-Za-z0-9_-]{20,512}",token)),
+                  "repository":PRIVATE_REPO,
+                  "no_private_writes":True,
+                  "no_token_values_recorded":True,
+                  "no_originals_or_cpu_loaded":True}
+          def get(path):
+              req=urllib.request.Request("https://api.github.com/"+path,
+                headers={"Authorization":"Bearer "+token,"Accept":"application/vnd.github+json",
+                 "X-GitHub-Api-Version":"2022-11-28","User-Agent":"bct-source-free-diag"})
+              try:
+                  with urllib.request.urlopen(req,timeout=25) as r:
+                      return r.status
+              except urllib.error.HTTPError as err:
+                  return err.code
+              except (TimeoutError,urllib.error.URLError):
+                  return "NETWORK_ERROR"
+          if token:
+              result["rest_private_repository_status"]=get("repos/"+PRIVATE_REPO)
+              result["rest_private_ref_status"]=get("repos/"+PRIVATE_REPO+"/git/ref/heads/codex/bct-v4-cpu-research-state")
+              result["rest_public_repository_status"]=get("repos/"+PUBLIC_REPO)
+              def git_probe(mode):
+                  env=os.environ.copy()
+                  env.update({"GIT_TERMINAL_PROMPT":"0","GCM_INTERACTIVE":"never","GIT_ASKPASS":"/bin/false",
+                              "GIT_CONFIG_COUNT":"2",
+                              "GIT_CONFIG_KEY_0":"http.https://github.com/.extraheader",
+                              "GIT_CONFIG_KEY_1":"credential.helper",
+                              "GIT_CONFIG_VALUE_1":""})
+                  if mode=="basic":
+                      auth=base64.b64encode(("x-access-token:"+token).encode()).decode()
+                      env["GIT_CONFIG_VALUE_0"]="AUTHORIZATION: basic "+auth
+                  else:
+                      env["GIT_CONFIG_VALUE_0"]="AUTHORIZATION: bearer "+token
+                  try:
+                      completed=subprocess.run(["git","ls-remote","--refs",URL],
+                          env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=35)
+                      msg=completed.stderr.decode(errors="replace").lower()
+                      if completed.returncode==0:
+                          label="PASS_AUTHENTICATED_GIT_READ"
+                      elif "repository not found" in msg:
+                          label="REPOSITORY_NOT_FOUND_OR_NO_ACCESS"
+                      elif "authentication failed" in msg or "invalid username or password" in msg:
+                          label="AUTHENTICATION_REJECTED"
+                      elif "403" in msg or "permission denied" in msg:
+                          label="PERMISSION_DENIED"
+                      elif "could not resolve" in msg:
+                          label="DNS_FAILED"
+                      elif "not a git repository" in msg:
+                          label="INVALID_REMOTE"
+                      elif "timed out" in msg:
+                          label="TIMEOUT"
+                      else:
+                          label="OTHER_GIT_FAILURE"
+                      return {"result":label,"exit_code":completed.returncode,"ref_lines":len(completed.stdout.splitlines()) if completed.returncode==0 else 0}
+                  except subprocess.TimeoutExpired:
+                      return {"result":"TIMEOUT"}
+              result["git_basic_probe"]=git_probe("basic")
+              result["git_bearer_probe"]=git_probe("bearer")
+              result["diagnosis"]=(
+                "TOKEN_MISSING" if not token
+                else "SECRET_INVALID_FORMAT" if not result["secret_header_format_valid"]
+                else "REST_PRIVATE_READ_DENIED" if result["rest_private_repository_status"]!=200
+                else "GIT_PRIVATE_READ_DENIED" if result["git_basic_probe"]["result"]!="PASS_AUTHENTICATED_GIT_READ"
+                else "PRIVATE_REPO_READ_AUTH_WORKS_NOW_VERIFY_CAS_WRITE_PATH")
+          else:
+              result["diagnosis"]="TOKEN_MISSING"
+          path=Path(os.environ["RUNNER_TEMP"])/"bct-private-auth-safe-result.json"
+          path.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
+          print("BCT_PRIVATE_ACCESS_SAFE_RESULT="+json.dumps(result,sort_keys=True),flush=True)
+          
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-private-auth-safe-diagnostic
+          path: ${{ runner.temp }}/bct-private-auth-safe-result.json
+          retention-days: 7
+          if-no-files-found: warn
