@@ -1,0 +1,61 @@
+name: BCT final anonymous RSS evidence-ranked count after actual reproof
+on:
+  push:
+    branches: [qa/bct-final-ranked-source-20261114]
+    paths: ['.github/workflows/bct-final-ranked-source-once.yml']
+permissions:
+  contents: read
+jobs:
+  external-readback:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check public research ranks from actual site without login
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://irewon1-lgtm.github.io/bottleneck-control-tower'
+          root="$RUNNER_TEMP/bct-final-evidence"
+          mkdir -p "$root"
+          for f in build-manifest.json api/dashboard.json; do
+            curl --fail --show-error --silent --location --retry 3 --max-time 120 \
+              -H 'Cache-Control: no-cache' "$base/$f" -o "$root/$(basename "$f")"
+          done
+          python - "$root" <<'PY'
+          import json,hashlib,sys
+          from pathlib import Path
+          root=Path(sys.argv[1])
+          m=json.loads((root/'build-manifest.json').read_bytes())
+          raw=(root/'dashboard.json').read_bytes()
+          d=json.loads(raw)
+          assert m['code_commit']=='f86b8e0ff363c07e4037ffd048f667fc4a31c6fe'
+          assert hashlib.sha256(raw).hexdigest()==m['dashboard_sha256']
+          earlier=d['sector_rankings']; rank=d['sector_rankings_live']
+          rss=d['rss_research_evidence']; prec=d['registered_precursor_original_research']
+          assert len(d['records'])==511
+          assert earlier['ranked_record_count']==rank['historical_source_rows']
+          assert rss['source_verified_sector_count']==rank['new_original_verified']
+          assert rank['ranked_record_count']==earlier['ranked_record_count']+rank['new_original_verified']
+          assert sum(x['rss_verified_count'] for x in rank['rows'])==rank['new_original_verified']
+          assert rank['no_verified_supply_shortage_promoted'] is True
+          assert all(x['confirmed_future_shortage'] is False for x in rss['source_records'])
+          assert m['rss_research_verified_source_records']==rank['new_original_verified']
+          assert m['registered_source_research_count']==prec['verified_original_record_count']
+          assert m['rss_article_count']>=10761
+          rows=[{k:r.get(k) for k in ('rank','name','evidence_count','rss_verified_count','rss_source_lead_count','recent_publication')}
+                for r in rank['rows']]
+          print('BCT_FINAL_SOURCE_RANK_PUBLIC_PASS='+json.dumps({
+             'status':'PASS_HASH_BOUND_ANONYMOUS_PUBLIC_READBACK',
+             'site_commit':m['code_commit'],'rss_articles':m['rss_article_count'],
+             'future_screened':rss['screened_articles'],
+             'historical_research_db_records':len(d['records']),
+             'historical_ranked_research':earlier['ranked_record_count'],
+             'new_original_verified_research':rank['new_original_verified'],
+             'persisted_precursor_sources':prec['verified_original_record_count'],
+             'ranked_research_current_total':rank['ranked_record_count'],
+             'rss_provenance_pending':rss['counts'].get('awaiting_original_publisher_proof',0),
+             'sector_rows':rows,'hash':m['dashboard_sha256']},ensure_ascii=False))
+          PY
