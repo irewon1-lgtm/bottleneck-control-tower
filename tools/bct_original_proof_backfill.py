@@ -99,12 +99,16 @@ def accepted_url(value):
         return False
 
 
-def selection(candidates,available_ids,*,limit=24):
-    if type(limit) is not int or not 1<=limit<=24:
+def selection(candidates,available_ids,*,limit=48,canonical_urls=None):
+    if type(limit) is not int or not 1<=limit<=48:
         raise ValueError("BCT_SOURCE_VERIFICATION_BATCH_LIMIT_EXCEEDED")
     ranked=[]
     for document_id,record in candidates.get("results",{}).items():
         if document_id not in available_ids or not source(record) or already_reproof_attempted(record):
+            continue
+        # The actual reading engine uses the active canonical RSS URL, not
+        # this previously saved projection. Never charge a different host.
+        if canonical_urls is not None and record.get("url") != canonical_urls.get(document_id):
             continue
         if not accepted_url(record.get("url")):
             continue
@@ -148,13 +152,14 @@ def stage():
     with sqlite3.connect(f"file:{db_path.resolve()}?mode=ro&immutable=1",uri=True) as db:
         if db.execute("PRAGMA integrity_check").fetchone()[0]!="ok":
             raise ValueError("BCT_BAD_RSS_DB")
-        active_ids={i[0] for i in db.execute("SELECT id FROM radar_items WHERE status='active'")}
+        canonical_urls={i[0]:i[1] for i in db.execute("SELECT id,url FROM radar_items WHERE status='active'")}
+        active_ids=set(canonical_urls)
         total=db.execute("SELECT COUNT(*) FROM radar_items WHERE status='active'").fetchone()[0]
     if total!=len(active_ids) or total!=state["radar_items"]:
         raise ValueError("BCT_S3_CANONICAL_ARTICLE_ID_LOSS")
     if set(candidates.get("results",{}))-active_ids:
         raise ValueError("BCT_S3_SIDECAR_HAS_UNMATCHED_ID")
-    ids,by_host,eligible=selection(candidates,active_ids)
+    ids,by_host,eligible=selection(candidates,active_ids,canonical_urls=canonical_urls)
     audited=Counter()
     eligible_hosts=set()
     for document_id,record in candidates["results"].items():
@@ -166,14 +171,29 @@ def stage():
             audited["full_total"]+=1
             if source(record):
                 audited["full_unverified"]+=1
-                if not accepted_url(record.get("url")):
+                if record.get("url")!=canonical_urls.get(document_id):
+                    audited["full_canonical_url_mismatch_hold"]+=1
+                elif not accepted_url(record.get("url")):
                     audited["full_url_hold"]+=1
                 elif already_reproof_attempted(record):
                     audited["full_prior_attempt_hold"]+=1
                 else:
                     eligible_hosts.add(host(record["url"]))
             else:
-                audited["full_already_verified"]+=1
+                # FULL with an invalid digest is NOT evidence of source proof.
+                # Distinguish malformed legacy records from exact body-bound
+                # publisher+publication receipts.
+                verified=False
+                if digest and re.fullmatch("[0-9a-f]{64}",str(digest)):
+                    for snapshot in (record, {**record, **version}):
+                        proof=verified_source_metadata(snapshot,digest)
+                        if proof.get("provenance_verified") is True and proof.get("publication_verified") is True:
+                            verified=True
+                            break
+                if verified:
+                    audited["full_already_verified"]+=1
+                else:
+                    audited["full_invalid_body_hash_or_proof_hold"]+=1
     run_context={
       "rss_articles":total,
       "sidecar_records":len(candidates["results"]),
@@ -181,8 +201,8 @@ def stage():
       "source_status_counts":dict(audited),
       "all_publisher_eligible":eligible,
       "eligible_publisher_count":len(eligible_hosts),
-      "schedule":"EVERY_TWO_HOURS_BOUNDED_24",
-      "batch_limit":24,
+      "schedule":"HOURLY_TWO_LANE_BOUNDED_48_EACH",
+      "batch_limit":48,
       "max_host_requests_per_batch":4,
     }
     if not ids:

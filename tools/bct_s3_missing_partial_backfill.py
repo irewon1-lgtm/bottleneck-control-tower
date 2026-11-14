@@ -27,9 +27,9 @@ from tools.bct_original_proof_backfill import (
 
 REPO = "irewon1-lgtm/bottleneck-control-tower"
 BRANCH = "refs/heads/main"
-LIMIT = 24
-LANE_LIMIT = 12
-PER_HOST = 3
+LIMIT = 48
+LANE_LIMIT = 24
+PER_HOST = 4
 
 
 def cmd(*args, timeout=180):
@@ -45,13 +45,20 @@ def status(record):
 
 
 def selection(canonical, sidecar, *, limit=LIMIT, lane_limit=LANE_LIMIT,
-              per_host=PER_HOST):
-    if type(limit) is not int or not 1 <= limit <= 24:
+              per_host=PER_HOST, prior_host_counts=None):
+    if type(limit) is not int or not 1 <= limit <= 48:
         raise ValueError("S3_BATCH_OVER_LIMIT")
     if type(lane_limit) is not int or not 1 <= lane_limit <= limit:
         raise ValueError("S3_LANE_LIMIT_INVALID")
     if type(per_host) is not int or not 1 <= per_host <= 4:
         raise ValueError("S3_PUBLISHER_CAP_INVALID")
+    if prior_host_counts is None:
+        prior_host_counts = {}
+    if not isinstance(prior_host_counts, dict) or any(
+            not isinstance(h, str) or not h or type(c) is not int
+            or not 0 <= c <= per_host
+            for h, c in prior_host_counts.items()):
+        raise ValueError("S3_INVALID_PRIOR_PUBLISHER_BUDGET")
     records = sidecar.get("results", {})
     missing = []
     partial = []
@@ -71,6 +78,9 @@ def selection(canonical, sidecar, *, limit=LIMIT, lane_limit=LANE_LIMIT,
         holds["body_" + str(body_status)] += 1
         if body_status != "PARTIAL":
             continue
+        if source["url"] != current.get("url"):
+            holds["partial_canonical_url_mismatch_hold"] += 1
+            continue
         if already_reproof_attempted(current):
             holds["partial_explicit_attempt_hold"] += 1
             continue
@@ -79,7 +89,10 @@ def selection(canonical, sidecar, *, limit=LIMIT, lane_limit=LANE_LIMIT,
     missing.sort()
     partial.sort()
     selected = []
-    used = Counter()
+    # Count requests from the immediately preceding FULL source lane too.
+    # At most four source contacts per publisher across the ENTIRE hourly job.
+    used = Counter(prior_host_counts)
+    selected_host_counts = Counter()
     chosen_lane = Counter()
     for lane, candidates, cap in (
             ("missing", missing, lane_limit),
@@ -90,6 +103,7 @@ def selection(canonical, sidecar, *, limit=LIMIT, lane_limit=LANE_LIMIT,
                 continue
             selected.append((docid, lane, h))
             used[h] += 1
+            selected_host_counts[h] += 1
             chosen_lane[lane] += 1
     # If either lane has fewer eligible articles, fill its unused capacity
     # from the other lane without lifting per-publisher limits.
@@ -104,13 +118,16 @@ def selection(canonical, sidecar, *, limit=LIMIT, lane_limit=LANE_LIMIT,
                 selected.append((docid, lane, h))
                 chosen_lane[lane] += 1
                 used[h] += 1
+                selected_host_counts[h] += 1
     assert len(selected) <= limit
     if len({item[0] for item in selected}) != len(selected):
         raise ValueError("S3_DUPLICATE_ARTICLE")
     return selected, {
         "missing_eligible": len(missing),
         "partial_eligible": len(partial),
-        "publisher_counts": dict(used),
+        "publisher_counts": dict(selected_host_counts),
+        "full_lane_publisher_counts": dict(prior_host_counts),
+        "combined_publisher_requests": dict(used),
         "lane_counts": dict(chosen_lane),
         "full_sidecar_body_counts": dict(holds)
     }
@@ -126,7 +143,7 @@ def self_test():
         "body_sha256": "a" * 64,
         "scope_facts": []
     } for i in range(20)}}
-    chosen, info = selection(data, sidecar)
+    chosen, info = selection(data, sidecar, limit=24, lane_limit=12, per_host=3)
     assert len(chosen) == 24 and len(set(z[0] for z in chosen)) == 24
     assert info["lane_counts"]["missing"] == 12
     assert info["lane_counts"]["partial"] == 12
@@ -135,10 +152,10 @@ def self_test():
     x["source_version"] = "fp0"
     x["acquisition"] = {"versions": {"fp0": {"explicit_checks": {
         "bct-scheduled-original-proof-test": {"trigger": "SCHEDULED"}}}}}
-    chosen2, info2 = selection(data, sidecar)
+    chosen2, info2 = selection(data, sidecar, limit=24, lane_limit=12, per_host=3)
     assert "0" not in [z[0] for z in chosen2]
     assert info2["full_sidecar_body_counts"]["partial_explicit_attempt_hold"] == 1
-    for bad in (0, 25, True):
+    for bad in (0, 49, True):
         try:
             selection(data, sidecar, limit=bad)
         except ValueError:
@@ -203,13 +220,32 @@ def stage():
         raise ValueError("S3_SIDECAR_HAS_NONCANONICAL_ID")
     if len(current_ids) < 10500:
         raise ValueError("S3_SIDECAR_REGRESSION")
-    selected, categories = selection(sources, candidates)
+    prior_path = root.parent / "bct-owner-reproof" / "receipt.json"
+    if not prior_path.is_file():
+        raise ValueError("S3_FULL_LANE_RECEIPT_MISSING")
+    prior_full = json.loads(prior_path.read_text())
+    if (prior_full.get("status") not in (
+            "PASS_SOURCE_PROOFS_SAVED_AND_RETRIEVED",
+            "PASS_ATTEMPTS_SAVED_NO_VERIFIED_PROOF",
+            "NO_ELIGIBLE_ORIGINAL_REPROOF_DUE")
+            or not re.fullmatch(r"[0-9a-f]{40}", str(prior_full.get("collection_sha") or ""))):
+        raise ValueError("S3_FULL_LANE_NOT_COMMITTED")
+    # New RSS articles can arrive between the independent source lanes.
+    # They belong to the fresh canonical snapshot and are never silently
+    # counted as verified. Shared publisher limits still apply to both lanes.
+    full_host_counts = prior_full.get("selected_host_counts") or {}
+    selected, categories = selection(
+        sources, candidates, prior_host_counts=full_host_counts)
     source_groups = Counter(status(c) for c in candidates["results"].values())
     report.update({
         "rss": len(sources), "sidecar_before": len(current_ids),
         "missing_before": len(set(sources) - current_ids),
         "source_status_before": dict(source_groups),
         "selection": categories,
+        "cross_lane_publisher_budget_enforced": True,
+        "full_original_lane_status": prior_full["status"],
+        "full_lane_rss_sha": prior_full["collection_sha"],
+        "rss_generation_advanced_between_lanes": prior_full["collection_sha"] != data_sha,
         "source_before_sha": original_sha,
         "canonical_data_sha": data_sha,
         "selected": len(selected),
