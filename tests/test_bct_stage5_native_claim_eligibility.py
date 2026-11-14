@@ -116,12 +116,17 @@ def test_actual_worker_respects_blocked_access_without_native_execution(tmp_path
     raw = json.loads(candidates.read_text())
     document_id = items[0]["document_id"]
     raw["results"][document_id]["reaccess_status"] = "SOURCE_CHANGED"
+    raw["results"][document_id]["version_access"] = {}
     candidates.write_text(json.dumps(raw))
     first_item = mapped[(document_id, items[0]["body_sha256"])]
     assert not native.native_claim_eligible(items[0], {**first_item, "reaccess_status": "SOURCE_CHANGED"})
     calls = []
+    def reader(payload):
+        calls.append((payload["document_id"], payload["body_sha256"]))
+        from tests.test_future_worker import reply
+        return reply(payload)
     outcome = run_worker(LocalJSONTransport(), str(candidates), str(tracking),
-                         reader=lambda payload: calls.append(payload), cache_dir=cache,
+                         reader=reader, cache_dir=cache,
                          limit=2, review_mode="API_REVIEW", input_rate=0, output_rate=0)
-    assert document_id not in calls
-    assert outcome["model_calls"] <= 1
+    assert (document_id, items[0]["body_sha256"]) not in calls
+    assert outcome["model_calls"] == len(calls)
