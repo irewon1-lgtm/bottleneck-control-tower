@@ -1,0 +1,64 @@
+name: BCT actual public registered RSS sector rank count
+on:
+  push:
+    branches: [qa/bct-rank-count-anon-20261114]
+    paths: ['.github/workflows/bct-rank-count-anon-once.yml']
+permissions:
+  contents: read
+jobs:
+  verify-current-public-research:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Read anonymous published research rank exactly, no repository writes
+        shell: bash
+        run: |
+          set -euo pipefail
+          origin='https://irewon1-lgtm.github.io/bottleneck-control-tower'
+          dest="$RUNNER_TEMP/real-published-rank"
+          mkdir -p "$dest"
+          curl --fail --silent --show-error --location --retry 3 --max-time 90 --header 'Cache-Control: no-cache' \
+            "$origin/build-manifest.json" > "$dest/manifest.json"
+          curl --fail --silent --show-error --location --retry 3 --max-time 120 --header 'Cache-Control: no-cache' \
+            "$origin/api/dashboard.json" > "$dest/dashboard.json"
+          python - "$dest" <<'PY'
+          from pathlib import Path
+          import json,sys,hashlib
+          dest=Path(sys.argv[1])
+          m=json.loads((dest/'manifest.json').read_bytes())
+          raw=(dest/'dashboard.json').read_bytes()
+          d=json.loads(raw)
+          assert m['code_commit']=='3061b67ee7f2c3fdd001d10bbbbfc359d30ab014'
+          assert hashlib.sha256(raw).hexdigest()==m['dashboard_sha256']
+          v=d['sector_rankings_live']
+          hist=d['sector_rankings']
+          reg=d['rss_research_evidence']
+          persisted=d['registered_precursor_original_research']
+          assert len(d['records'])==511
+          assert v['historical_source_rows']==hist['ranked_record_count']
+          assert v['new_original_verified']==len(reg['source_records'])
+          assert v['ranked_record_count']==v['historical_source_rows']+v['new_original_verified']
+          assert persisted['verified_original_record_count']==m['registered_source_research_count']
+          assert v['new_original_verified']>=persisted['verified_original_record_count']
+          assert v['no_verified_supply_shortage_promoted'] is True
+          assert all(x.get('confirmed_future_shortage') is False for x in reg['source_records'])
+          print('BCT_PUBLIC_REAL_RANK='+json.dumps({
+            'status':'PASS_LIVE_PUBLIC_READBACK',
+            'code_sha':m['code_commit'],
+            'rss_articles':m['rss_article_count'],
+            'sidecar_screened':reg['screened_articles'],
+            'existing_research_records':len(d['records']),
+            'previous_ranked_research':hist['ranked_record_count'],
+            'new_registered_verified_originals':v['new_original_verified'],
+            'registered_precursor_source':persisted['verified_original_record_count'],
+            'new_future_sidecar_source':reg['source_verified_sector_count']-persisted['verified_original_record_count'],
+            'sector_ranked_research_total':v['ranked_record_count'],
+            'sector_rows':[{k:r.get(k) for k in ['rank','name','evidence_count','rss_verified_count','rss_source_lead_count','recent_publication']} for r in v['rows']],
+            'provenance_pending':reg['counts'].get('awaiting_original_publisher_proof',0),
+            'source_verified_count':reg['counts'].get('verified_original_and_publication',0),
+            'dashboard_sha256':m['dashboard_sha256']
+          },ensure_ascii=False))
+          PY
