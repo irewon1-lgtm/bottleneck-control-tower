@@ -21,7 +21,10 @@ def sample(i,host="freightwaves.com",attempt=False,full=True,proof=False):
     if proof:
         x.update(origin_id=url,origin_url=url,origin_publisher="Real Publisher",
           provenance_verified=True,provenance_evidence={
-            "body_sha256":SHA,"verified_source_url":url,"source_identity":"canonical"})
+            "body_sha256":SHA,"verified_source_url":url,"source_identity":"canonical"},
+          published_at="2026-11-13T01:00:00+00:00",
+          publication_precision="TIMESTAMP",publication_verified=True,
+          publication_evidence={"body_sha256":SHA,"source_quote":"2026-11-13T01:00:00+00:00"})
     return x
 
 def select(entries,limit=24):
