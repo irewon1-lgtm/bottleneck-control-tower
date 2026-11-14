@@ -5,14 +5,17 @@ PATH = Path(__file__).resolve().parents[1] / ".github/workflows/bct-gate-renewal
 TEXT = PATH.read_text(encoding="utf-8")
 
 
-def test_one_time_gate_dispatch_does_not_change_operating_pipeline():
-    for changed in (
-        ".github/workflows/bct-gate-renewal-20261112.yml",
-        ".github/workflows/future-bottleneck.yml",
-        "src/bct/future_bottleneck.py",
-        "src/bct/future_fair_queue.py",
+def test_current_main_gate_dispatch_covers_strict_guarded_roots_without_changing_pipeline():
+    for protected_root in (
+        "src/**",
+        "tests/**",
+        ".github/scripts/**",
+        ".github/workflows/**",
+        "config/**",
+        "docs/**",
     ):
-        assert f"- '{changed}'" in TEXT
+        assert f"- '{protected_root}'" in TEXT
+    assert "- '!config/bct-operating-release.json'" in TEXT
     assert "branches: [main]" in TEXT
     assert '"full_pipeline":false' in TEXT
     assert '"preserve_resume_only":false' in TEXT

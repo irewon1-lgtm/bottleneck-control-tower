@@ -7,12 +7,18 @@ name: BCT Gate 0-6 release proof renewal
 on:
   push:
     branches: [main]
+    # Keep the real Gate in sync with the strict release guard's protected
+    # code tree. Receipt-only changes must NOT generate another Gate cycle.
+    # This never grants approval: the completed current-main Gate and its
+    # artifact are still verified before any release receipt is written.
     paths:
-      - '.github/workflows/bct-gate-renewal-20261112.yml'
-      - '.github/workflows/future-bottleneck.yml'
-      - 'src/bct/future_bottleneck.py'
-      - 'src/bct/future_fair_queue.py'
-      - '.github/scripts/bct_auto_reader.py'
+      - 'src/**'
+      - 'tests/**'
+      - '.github/scripts/**'
+      - '.github/workflows/**'
+      - 'config/**'
+      - '!config/bct-operating-release.json'
+      - 'docs/**'
   workflow_run:
     workflows: [BCT recovery storage gates]
     types: [completed]
