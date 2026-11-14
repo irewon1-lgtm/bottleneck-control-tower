@@ -1,0 +1,30 @@
+name: BCT one-time start of accepted source-proof backlog schedule
+on:
+  push:
+    branches: [ops/bct-dispatch-recurring-original-proof-20261114]
+    paths: ['.github/workflows/bct-dispatch-recurring-source-once.yml']
+permissions:
+  contents: read
+  actions: write
+jobs:
+  start-main-recurring-source-proof:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Start exactly one approved main-source reproof, no collecting duplicate RSS
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GH_REPO" = 'irewon1-lgtm/bottleneck-control-tower'
+          head=$(gh api "repos/$GH_REPO/branches/main" --jq '.commit.sha')
+          test "$head" = '5fc4f2c60a27a802adf5b4b09fb9d7ddc7829601'
+          workflow=$(gh api "repos/$GH_REPO/actions/workflows/bct-recurring-original-reproof.yml" --jq '.state')
+          test "$workflow" = active
+          gh workflow run bct-recurring-original-reproof.yml --ref main
+          echo 'BCT_OWNER_REQUESTED_SCHEDULED_SOURCE_REPROOF_DISPATCHED'
+          gh api "repos/$GH_REPO/actions/workflows/bct-recurring-original-reproof.yml/runs?event=workflow_dispatch&per_page=3" \
+            --jq '.workflow_runs[] | {id,head_branch,status,conclusion,created_at}'
