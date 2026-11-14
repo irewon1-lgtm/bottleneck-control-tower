@@ -7312,6 +7312,11 @@
       "owner": "review",
       "patch_sha256": "70ae6ac53bc453223fcfd32b44ac92210fa00052e631d27cff3617824480d804",
       "applied_at": "2026-11-14T09:55:47.217682+00:00"
+    },
+    "finish-quick-worker-86523247c54149c1ae5f33dbba4b6688": {
+      "owner": "review",
+      "patch_sha256": "df76032d2b0dba207d5fff5c987c41830b9cff09418c307980211679d58b5bc0",
+      "applied_at": "2026-11-14T10:01:09.381177+00:00"
     }
   },
   "policy": {
@@ -223290,6 +223295,389 @@
       "elapsed_seconds": 123.74851507800031,
       "estimated_cost_usd": 0.0,
       "finished_at": "2026-11-14T09:55:46.785070+00:00"
+    },
+    {
+      "id": "quick-worker-86523247c54149c1ae5f33dbba4b6688",
+      "started_at": "2026-11-14T09:38:22.348119+00:00",
+      "state": "FINISHED",
+      "limit": 5,
+      "max_input_chars": 12000,
+      "results": [
+        {
+          "document_id": "f3213cc3-e842-46da-bd3f-6f136c3bc65a",
+          "body_sha256": "f81a871e782e344951e066d231ba9550c44a7f89e11cd89c6f200a20bcd85158",
+          "event_id": "event-1b9f7e1ee55c4bb14939ca64",
+          "state": "SUCCESS",
+          "input_tokens": 2727,
+          "output_tokens": 40,
+          "input_characters": 11592,
+          "disposition": "DATA_INSUFFICIENT",
+          "review_id": "auto-quick-0000ae406190032e4672beeaa73cfbdd",
+          "reused": false,
+          "elapsed_seconds": 244.31851125799994,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "f36920f4-78e4-4b67-9a5f-2f835447f548",
+          "body_sha256": "e2ccf0f01f40b60319cb806d3fef6840c7debcc6d3c3e258cc47fe010d0100f5",
+          "event_id": "event-e80b6ae9b21d209175de3510",
+          "state": "SUCCESS",
+          "input_tokens": 1630,
+          "output_tokens": 45,
+          "input_characters": 6623,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-2872debffa750c02546b7e3aef8fb7e6",
+          "reused": false,
+          "elapsed_seconds": 158.85204365300024,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "f9d528ef-490d-4ef0-9c2e-eaeb352ddf60",
+          "body_sha256": "7b8685938e980e721b2d09a26f7d4ec4cdd4c0f6da332da95576ec681b74ce2f",
+          "event_id": "event-cebd0390db9d707573bfa782",
+          "state": "SUCCESS",
+          "input_tokens": 2147,
+          "output_tokens": 50,
+          "input_characters": 9844,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-c2e8ae81330e95ced874d0b62b9e8d14",
+          "reused": false,
+          "elapsed_seconds": 198.08557401400003,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "1b31fb63-2cc3-47da-94ed-a2b20e663b6a",
+          "body_sha256": "598debae37b2265cbd81d02622adab11cc4b70eee4df380962248e68a7249cb9",
+          "event_id": "event-e69cc4aae07d2438a861aacb",
+          "state": "SUCCESS",
+          "input_tokens": 2045,
+          "output_tokens": 51,
+          "input_characters": 8658,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-dc147f980806822c7fabe4ea43b63636",
+          "reused": false,
+          "elapsed_seconds": 190.06910874699997,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "1fe16f8b-926a-4124-82f4-e0b56d07ae1c",
+          "body_sha256": "dc05335d0e5ad5261688165f29c9ebcca500e86fc42f77473d85d67283de5b70",
+          "event_id": "event-8c0f00a220311d2c09f4575f",
+          "state": "SUCCESS",
+          "input_tokens": 1143,
+          "output_tokens": 53,
+          "input_characters": 4870,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-96c48b190aaeada636d7652693a79092",
+          "reused": false,
+          "elapsed_seconds": 123.74851507800031,
+          "estimated_cost_usd": 0.0
+        }
+      ],
+      "model_calls": 5,
+      "execution_mode": "LOCAL_ONLY",
+      "before": {
+        "computed_at": "2026-11-14T09:39:23.762158+00:00",
+        "reader_version": "bct-v33-reader-1",
+        "documents_total": 10535,
+        "preserved_versions": 12865,
+        "automatic_candidates": 8320,
+        "review_list_versions": 12328,
+        "quick_pending": 6659,
+        "completed_documents": 746,
+        "deep_pending": 0,
+        "candidate_data_wait": 91,
+        "material_pending": 3968,
+        "oldest_wait_hours": 1067.62,
+        "failed_versions": 2796,
+        "unresolved_versions": 11831,
+        "failure_reasons": {
+          "ENVIRONMENT_DNS_RESOLUTION_FAILED": 822,
+          "FULL_SOURCE_NOT_OBTAINED": 1900,
+          "REQUIRED_EVIDENCE_MISSING": 74
+        },
+        "failure_preview": [
+          {
+            "document_id": "e46eb0a1-ff8a-4ad5-af98-e856a0874918",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.nist.gov/blogs/taking-measure/home-gut-microbiome-tests-give-varying-results"
+          },
+          {
+            "document_id": "910c5f41-107c-42dc-b82a-ad2c8d0a854a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/ntcsa-setting-up-market-surveillance-unit-as-part-of-preparations-for-sawem-launch-in-april-2026-09-30"
+          },
+          {
+            "document_id": "773e8c78-ade3-47e4-a58b-96557f538e06",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/sibanye-confirms-wage-agreement-for-east-boulder-workers-strikes-continue-at-stillwater-east-columbus-continue-2026-09-30"
+          },
+          {
+            "document_id": "6da39140-fa09-4c6f-949b-0b4c6461642c",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/kropz-announces-plans-to-increase-nanophos-production-capacity-at-elandsfontein-2026-09-30"
+          },
+          {
+            "document_id": "6297cff1-c51c-4410-8d05-9aaed371a57a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/six-years-after-a-mining-reboot-egypts-gold-ambitions-start-to-take-shape-2026-09-30"
+          }
+        ],
+        "event_count": 12290,
+        "pending_events": 11410,
+        "preview": [
+          {
+            "document_id": "130b2059-096f-41c8-b2e8-934d6afe6904",
+            "body_sha256": "43ac20572d5bdb0d339eeb62546a5fc6f74151333f62268195dedb569dbac674",
+            "url": "https://www.nist.gov/news-events/news/2026/08/nist-researchers-supersize-quantum-technology-help-detect-faint-photons",
+            "title": "NIST Researchers Supersize Quantum Technology to Help Detect Faint Photons",
+            "body_status": "PARTIAL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY"
+            ],
+            "wait_hours": 1040.96,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "1981b129-bc94-4b14-a3d8-c29d9bd68e6c",
+            "body_sha256": "fefd07f49fb0c4a0521ac9e3df45c79969b1a3d2e19527723ac100941ea16e2b",
+            "url": "https://www.defensenews.com/news/pentagon-congress/2026/09/30/why-the-pentagon-just-dropped-450m-on-tungsten-mining/",
+            "title": "Why the Pentagon just dropped $450M on tungsten mining",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 1040.96,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "1a1b5b33-6e8c-4eb2-983a-47c195455a48",
+            "body_sha256": "f131859bbe7ff80f37197be12103f65ed091bfa83c09e26672981e174b9c71f4",
+            "url": "https://www.datacenterdynamics.com/en/news/infineon-and-eaton-partner-on-silicon-carbide-based-solid-state-transformers-to-support-800vdc-power-architectures/",
+            "title": "Infineon and Eaton partner on silicon-carbide-based solid-state transformers to support 800VDC power architectures",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 1040.96,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "1f44358e-ba30-4427-be28-7f3004dcce81",
+            "body_sha256": "34878d51c92ddb2cab2331ee371a7a730e27c89d0b8ee35b51eacf38694eada1",
+            "url": "https://www.defenseone.com/threats/2026/09/after-40-days-combat-navy-destroyer-returns-home/416311/",
+            "title": "After 40 days of combat, Navy destroyer returns home",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 1040.96,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "25fe2301-b128-410d-ae23-4fe92a29b6b7",
+            "body_sha256": "aee03513c9948a7ba248ee7f71fce0f7a5d04d9608c5f30c7a9560a083259f70",
+            "url": "https://www.defensenews.com/pentagon/2026/09/29/pentagon-awards-raytheon-up-to-207-billion-to-nearly-double-amraam-production/",
+            "title": "Pentagon awards Raytheon up to $20.7 billion to nearly double AMRAAM production",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 1040.96,
+            "resume_at": 0,
+            "kind": "quick"
+          }
+        ]
+      },
+      "held_prior_version_states": {
+        "ERROR": 1
+      },
+      "attempted": 5,
+      "elapsed_seconds": 1044.47048052,
+      "finished_at": "2026-11-14T09:55:57.798057+00:00",
+      "counts": {
+        "SUCCESS": 5
+      },
+      "mean_seconds": 208.89409610399997,
+      "rates": {
+        "SUCCESS": 1.0,
+        "ERROR": 0.0,
+        "BLOCKED": 0.0
+      },
+      "token_totals": {
+        "input_tokens": 9692,
+        "output_tokens": 239
+      },
+      "estimated_cost_usd": 0.0,
+      "projections": {
+        "10": {
+          "seconds": 2088.94096104,
+          "estimated_cost_usd": 0.0,
+          "basis": "THIS_BATCH_ONLY_NOT_A_BACKLOG_GUARANTEE"
+        },
+        "50": {
+          "seconds": 10444.7048052,
+          "estimated_cost_usd": 0.0,
+          "basis": "THIS_BATCH_ONLY_NOT_A_BACKLOG_GUARANTEE"
+        },
+        "1278": {
+          "seconds": 266966.65482091194,
+          "estimated_cost_usd": 0.0,
+          "basis": "THIS_BATCH_ONLY_NOT_A_BACKLOG_GUARANTEE"
+        }
+      },
+      "after": {
+        "computed_at": "2026-11-14T09:56:51.525340+00:00",
+        "reader_version": "bct-v33-reader-1",
+        "documents_total": 10535,
+        "preserved_versions": 12865,
+        "automatic_candidates": 8320,
+        "review_list_versions": 12328,
+        "quick_pending": 6654,
+        "completed_documents": 751,
+        "deep_pending": 0,
+        "candidate_data_wait": 92,
+        "material_pending": 3968,
+        "oldest_wait_hours": 1067.91,
+        "failed_versions": 2796,
+        "unresolved_versions": 11827,
+        "failure_reasons": {
+          "ENVIRONMENT_DNS_RESOLUTION_FAILED": 822,
+          "FULL_SOURCE_NOT_OBTAINED": 1900,
+          "REQUIRED_EVIDENCE_MISSING": 74
+        },
+        "failure_preview": [
+          {
+            "document_id": "e46eb0a1-ff8a-4ad5-af98-e856a0874918",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.nist.gov/blogs/taking-measure/home-gut-microbiome-tests-give-varying-results"
+          },
+          {
+            "document_id": "910c5f41-107c-42dc-b82a-ad2c8d0a854a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/ntcsa-setting-up-market-surveillance-unit-as-part-of-preparations-for-sawem-launch-in-april-2026-09-30"
+          },
+          {
+            "document_id": "773e8c78-ade3-47e4-a58b-96557f538e06",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/sibanye-confirms-wage-agreement-for-east-boulder-workers-strikes-continue-at-stillwater-east-columbus-continue-2026-09-30"
+          },
+          {
+            "document_id": "6da39140-fa09-4c6f-949b-0b4c6461642c",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/kropz-announces-plans-to-increase-nanophos-production-capacity-at-elandsfontein-2026-09-30"
+          },
+          {
+            "document_id": "6297cff1-c51c-4410-8d05-9aaed371a57a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/six-years-after-a-mining-reboot-egypts-gold-ambitions-start-to-take-shape-2026-09-30"
+          }
+        ],
+        "event_count": 12290,
+        "pending_events": 11406,
+        "preview": [
+          {
+            "document_id": "130b2059-096f-41c8-b2e8-934d6afe6904",
+            "body_sha256": "43ac20572d5bdb0d339eeb62546a5fc6f74151333f62268195dedb569dbac674",
+            "url": "https://www.nist.gov/news-events/news/2026/08/nist-researchers-supersize-quantum-technology-help-detect-faint-photons",
+            "title": "NIST Researchers Supersize Quantum Technology to Help Detect Faint Photons",
+            "body_status": "PARTIAL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY"
+            ],
+            "wait_hours": 1041.25,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "1981b129-bc94-4b14-a3d8-c29d9bd68e6c",
+            "body_sha256": "fefd07f49fb0c4a0521ac9e3df45c79969b1a3d2e19527723ac100941ea16e2b",
+            "url": "https://www.defensenews.com/news/pentagon-congress/2026/09/30/why-the-pentagon-just-dropped-450m-on-tungsten-mining/",
+            "title": "Why the Pentagon just dropped $450M on tungsten mining",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 1041.25,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "1a1b5b33-6e8c-4eb2-983a-47c195455a48",
+            "body_sha256": "f131859bbe7ff80f37197be12103f65ed091bfa83c09e26672981e174b9c71f4",
+            "url": "https://www.datacenterdynamics.com/en/news/infineon-and-eaton-partner-on-silicon-carbide-based-solid-state-transformers-to-support-800vdc-power-architectures/",
+            "title": "Infineon and Eaton partner on silicon-carbide-based solid-state transformers to support 800VDC power architectures",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 1041.25,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "1f44358e-ba30-4427-be28-7f3004dcce81",
+            "body_sha256": "34878d51c92ddb2cab2331ee371a7a730e27c89d0b8ee35b51eacf38694eada1",
+            "url": "https://www.defenseone.com/threats/2026/09/after-40-days-combat-navy-destroyer-returns-home/416311/",
+            "title": "After 40 days of combat, Navy destroyer returns home",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 1041.25,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "25fe2301-b128-410d-ae23-4fe92a29b6b7",
+            "body_sha256": "aee03513c9948a7ba248ee7f71fce0f7a5d04d9608c5f30c7a9560a083259f70",
+            "url": "https://www.defensenews.com/pentagon/2026/09/29/pentagon-awards-raytheon-up-to-207-billion-to-nearly-double-amraam-production/",
+            "title": "Pentagon awards Raytheon up to $20.7 billion to nearly double AMRAAM production",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 1041.25,
+            "resume_at": 0,
+            "kind": "quick"
+          }
+        ]
+      },
+      "source_records_unchanged": true,
+      "completed_delta": 5,
+      "quick_pending_delta": -5,
+      "pending_event_delta": -4,
+      "duplicate_auto_reviews": 0,
+      "distinct_events_attempted": 5,
+      "summary_saved": true
     }
   ],
   "targets": [
