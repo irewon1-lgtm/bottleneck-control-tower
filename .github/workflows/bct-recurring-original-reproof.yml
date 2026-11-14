@@ -1,0 +1,67 @@
+name: BCT recurring original-source verification backlog (bounded)
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '10 0,12 * * *' # 09:10 and 21:10 Asia/Seoul
+permissions:
+  contents: write
+  actions: read
+jobs:
+  original-proof:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    concurrency:
+      group: future-bottleneck-results
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify exact-source and CAS regressions, not old Gates
+        env:
+          PYTHONPATH: .:src
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e '.[test]'
+          python -m pytest -q tests/test_bct_periodic_original_backfill.py \
+            tests/test_future_original_verified_capture.py \
+            tests/test_source_metadata_precision.py \
+            tests/test_future_store.py
+      - name: Restore immutable RSS inputs and recheck at most 24 prior FULL originals
+        env:
+          PYTHONPATH: .:src
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_original_proof_backfill.py
+      - name: Summarize saved proofs, holds and backlog without source bodies
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f "$RUNNER_TEMP/bct-owner-reproof/receipt.json" ]]; then
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import os,json,pathlib
+          r=json.loads((pathlib.Path(os.environ["RUNNER_TEMP"])/"bct-owner-reproof/receipt.json").read_text())
+          print("## Original RSS source reproof (actual saved receipts)")
+          print("Status:",r.get("status","UNKNOWN"))
+          print("Source attempts:",r.get("source_downloads_attempted",0))
+          print("New source+publication proofs saved:",r.get("source_proofs_persisted",0))
+          print("Sidecar source commit:",r.get("source_after","NOT_CONFIRMED"))
+          print("Confirmed bottlenecks promoted:",0)
+          PY
+          else
+            echo "Source receipt missing: no new verified data claimed." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-recurring-original-proof-receipt
+          path: ${{ runner.temp }}/bct-owner-reproof/receipt.json
+          retention-days: 14
+          if-no-files-found: warn
