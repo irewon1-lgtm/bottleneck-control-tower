@@ -1,0 +1,84 @@
+name: BCT S3 after Stage5 claim fix launch hourly originals only on proven Gate
+on:
+  push:
+    branches: [ops/bct-s3-post-gate5-fix-reproof-20261115]
+    paths: ['.github/workflows/bct-s3-post-gate5-fix-reproof-one-shot.yml']
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: bct-s3-first-approved-hourly-96-dispatch
+  cancel-in-progress: false
+jobs:
+  authenticated-dispatch:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 115
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Read-only assert actual new current-code Gate and BOTH source receipts before one source-run dispatch
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64,json,os,pathlib,re,subprocess,time
+          
+          REPO="irewon1-lgtm/bottleneck-control-tower"
+          BRANCH="refs/heads/ops/bct-s3-post-gate5-fix-reproof-20261115"
+          REVIEWED_MAIN="7d18859550301bbcd2cb7f6aa9758db76c8c6d88"
+          GATE=43633905177
+          
+          if os.environ.get("GITHUB_REPOSITORY")!=REPO or os.environ.get("GITHUB_REF")!=BRANCH:
+              raise ValueError("S3_IMMEDIATE_RECOVERY_ISOLATED_BRANCH_REQUIRED")
+          
+          def api(path):
+              p=subprocess.run(["gh","api","repos/"+REPO+"/"+path],capture_output=True,timeout=30)
+              if p.returncode:
+                  raise ValueError("S3_OPERATING_GATE_METADATA_UNAVAILABLE")
+              return json.loads(p.stdout)
+          
+          deadline=time.monotonic()+108*60
+          while time.monotonic()<deadline:
+              run=api("actions/runs/"+str(GATE))
+              if run.get("status")=="completed":
+                  if (run.get("conclusion")!="success" or run.get("event")!="workflow_dispatch"
+                          or run.get("path")!=".github/workflows/bct-recovery.yml"
+                          or run.get("head_branch")!="main"
+                          or run.get("head_sha")!=REVIEWED_MAIN
+                          or (run.get("head_repository") or {}).get("full_name")!=REPO):
+                      raise ValueError("S3_NEW_CURRENT_CODE_GATE_NOT_PASSED")
+                  current=api("git/ref/heads/main")["object"]["sha"]
+                  blob=api("contents/config/bct-operating-release.json?ref=main")
+                  receipt=json.loads(base64.b64decode(blob["content"]).decode())
+                  if receipt.get("gate_run_id")!=GATE or receipt.get("validated_code_sha")!=REVIEWED_MAIN:
+                      time.sleep(30)
+                      continue
+                  artifacts=api("actions/runs/"+str(GATE)+"/artifacts?per_page=100")["artifacts"]
+                  targets=[x for x in artifacts if x.get("name")=="bct-recovery-checkpoint-"+str(GATE)]
+                  if (len(targets)!=1 or targets[0].get("expired") is not False
+                          or targets[0].get("id")!=receipt.get("artifact_id")
+                          or targets[0].get("digest")!="sha256:"+str(receipt.get("artifact_sha256"))):
+                      raise ValueError("S3_OPERATING_GATE_CHECKPOINT_ATTESTATION_MISMATCH")
+                  comparison=api("compare/"+REVIEWED_MAIN+"..."+current)
+                  changed={x["filename"] for x in comparison.get("files",[])}
+                  if changed!={"config/bct-operating-release.json",".github/bct-recovery-request.json"}:
+                      raise ValueError("S3_MAIN_NOT_ONLY_DUAL_VERIFIED_GATE_RECEIPTS")
+                  request={"ref":"main"}
+                  packet=pathlib.Path(os.environ["RUNNER_TEMP"])/"s3-96-dispatch.json"
+                  packet.write_text(json.dumps(request))
+                  result=subprocess.run(["gh","api","--method","POST",
+                      "repos/"+REPO+"/actions/workflows/bct-recurring-original-reproof.yml/dispatches",
+                      "--input",str(packet)],capture_output=True,timeout=35)
+                  if result.returncode:
+                      raise ValueError("S3_HOURLY_SOURCE_WORKFLOW_DISPATCH_REJECTED")
+                  print("S3_96_HOURLY_FIRST_REAL_RUN_REQUEST_ACCEPTED="+json.dumps({
+                    "strict_gate_run":GATE,"reviewed_code_sha":REVIEWED_MAIN,
+                    "approved_main_receipt_commit":current,
+                    "source_workflow":"bct-recurring-original-reproof.yml",
+                    "source_attempt_limit_per_hour":96,
+                    "publisher_shared_limit_per_hour":4,
+                    "source_workflow_success_not_yet_verified":True},sort_keys=True),flush=True)
+                  raise SystemExit(0)
+              time.sleep(45)
+          raise ValueError("S3_GATE_COMPLETION_OR_TRUTHFUL_RECEIPT_NOT_READY")
+          PY
