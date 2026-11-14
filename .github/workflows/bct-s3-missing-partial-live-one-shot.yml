@@ -1,0 +1,75 @@
+name: BCT S3 live recovery of unlinked RSS and partial publisher originals
+on:
+  push:
+    branches: [ops/bct-s3-reconcile-missing-partial-20261114]
+    paths:
+      - '.github/workflows/bct-s3-missing-partial-live-one-shot.yml'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: bct-s3-missing-partial-live-one-shot
+  cancel-in-progress: false
+jobs:
+  live-reconcile:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      PYTHONPATH: .:src
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check out isolated work, not public production code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify unchanged main processing code and exactly two isolated additions
+        run: |
+          set -euo pipefail
+          PIN=b1dac6308ee06a1a0b63a8dd4be4e0bd5fe1d126
+          git fetch --no-tags --depth=3 origin "$PIN"
+          git diff --name-only "$PIN" HEAD > "$RUNNER_TEMP/s3-changed.txt"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          got=set((Path(os.environ['RUNNER_TEMP'])/'s3-changed.txt').read_text().splitlines())
+          expected={'tools/bct_s3_reconcile_missing_partial.py','.github/workflows/bct-s3-missing-partial-live-one-shot.yml'}
+          assert got == expected,(got,expected)
+          print('S3_UNCHANGED_PRODUCTION_CODE_AND_TWO_ISOLATED_FILES_PASS')
+          PY
+      - name: Run tested source/URL/CAS regressions and bounded selector self test
+        run: |
+          set -euo pipefail
+          python -m pip install -e '.[test]'
+          python -m pytest -q tests/test_bct_periodic_original_backfill.py tests/test_future_original_verified_capture.py tests/test_source_metadata_precision.py tests/test_future_store.py
+          BCT_S3_SELF_TEST_ONLY=1 python tools/bct_s3_reconcile_missing_partial.py
+      - name: Process real active RSS missing and PARTIAL originals; save CAS and read exact remote
+        run: |
+          set -euo pipefail
+          python tools/bct_s3_reconcile_missing_partial.py
+      - name: Summarize exact stored counts and unresolved holds
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/bct-s3-missing-partial/receipt.json"; then
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json,os
+          from pathlib import Path
+          r=json.loads((Path(os.environ['RUNNER_TEMP'])/'bct-s3-missing-partial/receipt.json').read_text())
+          for k in ('status','rss','sidecar_before','missing_before','selected','requested_source_reads','processed_source_reads','new_linked_ids_read_back','missing_after','persisted_outcomes','source_after_sha'):
+              print(f'{k}: {r.get(k,"NOT_CONFIRMED")}')
+          print('No bottleneck research ranks promoted; S3 remains IN_PROGRESS')
+          PY
+          else
+            echo 'Missing real S3 receipt; no processing PASS claimed' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload safe S3 reconciliation receipt (never article text)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s3-missing-partial-reconciliation-receipt
+          path: ${{ runner.temp }}/bct-s3-missing-partial/receipt.json
+          retention-days: 14
+          if-no-files-found: warn
