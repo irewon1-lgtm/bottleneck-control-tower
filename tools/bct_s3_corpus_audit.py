@@ -165,8 +165,12 @@ def stage():
     if full.get("status") not in FULL_SUCCESS or gap.get("status") not in PARTIAL_SUCCESS:
         raise ValueError("S3_CORPUS_SOURCE_LANE_NOT_ACTUALLY_SAVED")
     data_sha = cmd("git", "ls-remote", "origin", "refs/heads/data").decode().split()[0]
-    if full.get("collection_sha") != data_sha or gap.get("canonical_data_sha") != data_sha:
-        raise ValueError("S3_CORPUS_SOURCE_LANES_DID_NOT_USE_SAME_RSS_GENERATION")
+    if (not re.fullmatch(r"[0-9a-f]{40}", data_sha)
+            or any(not re.fullmatch(r"[0-9a-f]{40}", str(ref or ""))
+                   for ref in (full.get("collection_sha"), gap.get("canonical_data_sha")))):
+        raise ValueError("S3_CORPUS_RSS_GENERATION_NOT_ATTESTABLE")
+    # Audit the LATEST canonical RSS generation even if a new RSS ingest
+    # arrived during FULL or PARTIAL processing; never mark new IDs complete.
     cmd("git", "fetch", "--no-tags", "--depth=1", "origin", data_sha)
     state = json.loads(cmd("git", "show", data_sha + ":state.json"))
     db_path = report_root / "canonical.sqlite3"
@@ -191,6 +195,11 @@ def stage():
         "status": "PASS_EXACT_FULL_CORPUS_AUDIT_NOT_S3_FINAL_PASS",
         "audited_utc": datetime.now(timezone.utc).isoformat(),
         "canonical_rss_sha": data_sha,
+        "full_lane_rss_sha": full["collection_sha"],
+        "gap_lane_rss_sha": gap["canonical_data_sha"],
+        "source_lanes_used_same_rss_generation": full["collection_sha"] == gap["canonical_data_sha"],
+        "rss_advanced_since_any_source_lane": (
+            full["collection_sha"] != data_sha or gap["canonical_data_sha"] != data_sha),
         "sidecar_generation_sha": generation_sha,
         "full_lane_status": full["status"],
         "partial_lane_status": gap["status"],
