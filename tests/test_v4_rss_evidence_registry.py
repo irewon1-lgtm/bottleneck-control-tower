@@ -114,3 +114,27 @@ def test_reverified_existing_full_body_can_be_registered_without_rewriting_immut
     # A changed body hash invalidates all old issuer claims before reranking.
     old["current_body_sha256"]="0"*64
     assert register_rows({"changed-with-old-publisher-proof":old})["source_verified_sector_count"]==0
+
+
+def test_real_source_wording_own_battery_cells_maps_to_explicit_battery_sector():
+    # A real source-verified Tesla battery-cell issuer statement was held only
+    # because the old taxonomy demanded the exact EV prefix. Cells are a
+    # physical battery product, not a proof of a future shortage.
+    row=record(target="its own battery cells",role="SUPPLY")
+    result=register_rows({"source-original":row})
+    assert result["source_verified_sector_count"]==1
+    assert result["source_records"][0]["industry"]=="자동차·배터리"
+    assert result["source_records"][0]["confirmed_future_shortage"] is False
+
+
+def test_battery_cell_software_mentions_remain_outside_literal_product_match():
+    result=register_rows({"nonphysical":record(target="battery management algorithms",role="DEMAND")})
+    assert result["source_verified_sector_count"]==0
+
+
+def test_composite_lithium_battery_target_remains_multisector_pending():
+    # A mineral plus a finished battery component is not silently assigned
+    # to one sector without an explicit relationship or independently
+    # confirmed product scope.
+    result=register_rows({"mixed":record(target="lithium battery cells",role="SUPPLY")})
+    assert result["source_verified_sector_count"]==0
