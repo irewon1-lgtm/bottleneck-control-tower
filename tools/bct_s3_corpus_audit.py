@@ -94,7 +94,9 @@ def audit_snapshot(canonical, candidates):
                     eligible_hosts.add(host(rec["url"]))
         elif state == "PARTIAL":
             decisions["partial_unverified_completeness"] += 1
-            if not accepted_url(rec.get("url")):
+            if original["url"] != rec.get("url"):
+                decisions["partial_canonical_url_mismatch_hold"] += 1
+            elif not accepted_url(rec.get("url")):
                 decisions["partial_invalid_url_hold"] += 1
             elif already_reproof_attempted(rec):
                 decisions["partial_explicit_attempt_hold"] += 1
