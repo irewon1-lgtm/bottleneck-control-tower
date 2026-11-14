@@ -99,8 +99,8 @@ def accepted_url(value):
         return False
 
 
-def selection(candidates,available_ids,*,limit=24):
-    if type(limit) is not int or not 1<=limit<=24:
+def selection(candidates,available_ids,*,limit=48):
+    if type(limit) is not int or not 1<=limit<=48:
         raise ValueError("BCT_SOURCE_VERIFICATION_BATCH_LIMIT_EXCEEDED")
     ranked=[]
     for document_id,record in candidates.get("results",{}).items():
@@ -181,8 +181,8 @@ def stage():
       "source_status_counts":dict(audited),
       "all_publisher_eligible":eligible,
       "eligible_publisher_count":len(eligible_hosts),
-      "schedule":"EVERY_TWO_HOURS_BOUNDED_24",
-      "batch_limit":24,
+      "schedule":"HOURLY_TWO_LANE_BOUNDED_48_EACH",
+      "batch_limit":48,
       "max_host_requests_per_batch":4,
     }
     if not ids:
