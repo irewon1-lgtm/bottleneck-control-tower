@@ -7122,6 +7122,11 @@
       "owner": "review",
       "patch_sha256": "d8344da4f10ee741fd08dd62419b91f225a0a1127ceeaaf4247e503dfc7dadeb",
       "applied_at": "2026-11-14T03:53:02.892911+00:00"
+    },
+    "finish-quick-worker-4d22eab37bc2465092d83275fbc3189e": {
+      "owner": "review",
+      "patch_sha256": "55520c7451674e33294145479b3950fcb4d17ce44ccce86673038376c775ced1",
+      "applied_at": "2026-11-14T03:57:31.951793+00:00"
     }
   },
   "policy": {
@@ -221775,6 +221780,390 @@
       "elapsed_seconds": 109.50560625700018,
       "estimated_cost_usd": 0.0,
       "finished_at": "2026-11-14T03:53:02.528250+00:00"
+    },
+    {
+      "id": "quick-worker-4d22eab37bc2465092d83275fbc3189e",
+      "started_at": "2026-11-14T03:41:32.405174+00:00",
+      "state": "FINISHED",
+      "limit": 5,
+      "max_input_chars": 12000,
+      "results": [
+        {
+          "document_id": "00352e7b-01e2-418a-84ca-e4603e50c9ee",
+          "body_sha256": "94c3140dc08e508a12596e42cf287e8231e8bdc30aa6b6c8254a7a53bcedb69d",
+          "event_id": "event-b9bd5755340b2c2f95497678",
+          "state": "SUCCESS",
+          "input_tokens": 1249,
+          "output_tokens": 45,
+          "input_characters": 5954,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-0dcd8ca8dd97a4df75461623dac16bff",
+          "reused": false,
+          "elapsed_seconds": 91.46338202800007,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "0230d0a6-621c-4934-b840-ad951809e5a2",
+          "body_sha256": "e4e10e5d056f4ba88855289d81ebc0e7c04f6e201c7c8ab465c13612d08530e3",
+          "event_id": "event-4094b7a9cf708e866acc811a",
+          "state": "SUCCESS",
+          "input_tokens": 1766,
+          "output_tokens": 47,
+          "input_characters": 7951,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-75d7d41740fc21926f5f5a963334985e",
+          "reused": false,
+          "elapsed_seconds": 119.27981773599959,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "32f3d95d-84e6-489b-8e0d-cf47e3dadab9",
+          "body_sha256": "2cbc2697181a4303fd32dbd6954dfd36735c0d459c4f0622a526ea9ca059f7ea",
+          "event_id": "event-895b9d4a3c190d95b5334050",
+          "state": "SUCCESS",
+          "input_tokens": 2225,
+          "output_tokens": 47,
+          "input_characters": 10945,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-651847fbeb15f000178f8227824fdda0",
+          "reused": false,
+          "elapsed_seconds": 140.03761952500008,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "96bba72e-a8b5-41a9-a96a-6956f5571b1a",
+          "body_sha256": "0cde727382fcc4cddac232c974c7a7f15eaa5896275262e4e8cd2160d0c746fd",
+          "event_id": "event-9d88f98fbd42878751608655",
+          "state": "SUCCESS",
+          "input_tokens": 1772,
+          "output_tokens": 43,
+          "input_characters": 7298,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-83ccab5f21bb678c31058b4390fc777c",
+          "reused": false,
+          "elapsed_seconds": 115.71927272799985,
+          "estimated_cost_usd": 0.0
+        },
+        {
+          "document_id": "e49a705c-2b2f-4c3d-b14b-c4b2fd0f142c",
+          "body_sha256": "69f07f17002adc3b3bb36ad2fe881e109232bf998cf2fc2bfe4a7a89b30f97bd",
+          "event_id": "event-7b00282ae07e4035a3bb9da5",
+          "state": "SUCCESS",
+          "input_tokens": 1474,
+          "output_tokens": 68,
+          "input_characters": 5846,
+          "disposition": "CHANGE",
+          "review_id": "auto-quick-90e32c37a7a3691cd6e74cc9827ba0c0",
+          "reused": false,
+          "elapsed_seconds": 109.50560625700018,
+          "estimated_cost_usd": 0.0
+        }
+      ],
+      "model_calls": 5,
+      "execution_mode": "LOCAL_ONLY",
+      "before": {
+        "computed_at": "2026-11-14T03:42:29.590902+00:00",
+        "reader_version": "bct-v33-reader-1",
+        "documents_total": 10483,
+        "preserved_versions": 12746,
+        "automatic_candidates": 8210,
+        "review_list_versions": 12210,
+        "quick_pending": 6591,
+        "completed_documents": 734,
+        "deep_pending": 0,
+        "candidate_data_wait": 91,
+        "material_pending": 3897,
+        "oldest_wait_hours": 1061.67,
+        "failed_versions": 2809,
+        "unresolved_versions": 11723,
+        "failure_reasons": {
+          "ENVIRONMENT_DNS_RESOLUTION_FAILED": 831,
+          "FULL_SOURCE_NOT_OBTAINED": 1904,
+          "REQUIRED_EVIDENCE_MISSING": 74
+        },
+        "failure_preview": [
+          {
+            "document_id": "e46eb0a1-ff8a-4ad5-af98-e856a0874918",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.nist.gov/blogs/taking-measure/home-gut-microbiome-tests-give-varying-results"
+          },
+          {
+            "document_id": "910c5f41-107c-42dc-b82a-ad2c8d0a854a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/ntcsa-setting-up-market-surveillance-unit-as-part-of-preparations-for-sawem-launch-in-april-2026-09-30"
+          },
+          {
+            "document_id": "773e8c78-ade3-47e4-a58b-96557f538e06",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/sibanye-confirms-wage-agreement-for-east-boulder-workers-strikes-continue-at-stillwater-east-columbus-continue-2026-09-30"
+          },
+          {
+            "document_id": "6da39140-fa09-4c6f-949b-0b4c6461642c",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/kropz-announces-plans-to-increase-nanophos-production-capacity-at-elandsfontein-2026-09-30"
+          },
+          {
+            "document_id": "6297cff1-c51c-4410-8d05-9aaed371a57a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/six-years-after-a-mining-reboot-egypts-gold-ambitions-start-to-take-shape-2026-09-30"
+          }
+        ],
+        "event_count": 12183,
+        "pending_events": 11314,
+        "preview": [
+          {
+            "document_id": "00352e7b-01e2-418a-84ca-e4603e50c9ee",
+            "body_sha256": "94c3140dc08e508a12596e42cf287e8231e8bdc30aa6b6c8254a7a53bcedb69d",
+            "url": "https://www.freightwaves.com/news/descartes-launches-ai-agent-for-global-trade-data-research",
+            "title": "Descartes launches AI agent for global trade data research",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 1035.01,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "0230d0a6-621c-4934-b840-ad951809e5a2",
+            "body_sha256": "e4e10e5d056f4ba88855289d81ebc0e7c04f6e201c7c8ab465c13612d08530e3",
+            "url": "https://www.defensenews.com/global/europe/2026/09/18/french-army-wants-to-keep-adversaries-guessing-on-see-through-battlefield/",
+            "title": "French Army wants to keep adversaries guessing on see-through battlefield",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF"
+            ],
+            "wait_hours": 1035.01,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "130b2059-096f-41c8-b2e8-934d6afe6904",
+            "body_sha256": "43ac20572d5bdb0d339eeb62546a5fc6f74151333f62268195dedb569dbac674",
+            "url": "https://www.nist.gov/news-events/news/2026/08/nist-researchers-supersize-quantum-technology-help-detect-faint-photons",
+            "title": "NIST Researchers Supersize Quantum Technology to Help Detect Faint Photons",
+            "body_status": "PARTIAL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY"
+            ],
+            "wait_hours": 1035.01,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "1981b129-bc94-4b14-a3d8-c29d9bd68e6c",
+            "body_sha256": "fefd07f49fb0c4a0521ac9e3df45c79969b1a3d2e19527723ac100941ea16e2b",
+            "url": "https://www.defensenews.com/news/pentagon-congress/2026/09/30/why-the-pentagon-just-dropped-450m-on-tungsten-mining/",
+            "title": "Why the Pentagon just dropped $450M on tungsten mining",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 1035.01,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "25fe2301-b128-410d-ae23-4fe92a29b6b7",
+            "body_sha256": "aee03513c9948a7ba248ee7f71fce0f7a5d04d9608c5f30c7a9560a083259f70",
+            "url": "https://www.defensenews.com/pentagon/2026/09/29/pentagon-awards-raytheon-up-to-207-billion-to-nearly-double-amraam-production/",
+            "title": "Pentagon awards Raytheon up to $20.7 billion to nearly double AMRAAM production",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 1035.01,
+            "resume_at": 0,
+            "kind": "quick"
+          }
+        ]
+      },
+      "held_prior_version_states": {
+        "ERROR": 1
+      },
+      "attempted": 5,
+      "elapsed_seconds": 688.1337600000002,
+      "finished_at": "2026-11-14T03:53:10.514921+00:00",
+      "counts": {
+        "SUCCESS": 5
+      },
+      "mean_seconds": 137.62675200000004,
+      "rates": {
+        "SUCCESS": 1.0,
+        "ERROR": 0.0,
+        "BLOCKED": 0.0
+      },
+      "token_totals": {
+        "input_tokens": 8486,
+        "output_tokens": 250
+      },
+      "estimated_cost_usd": 0.0,
+      "projections": {
+        "10": {
+          "seconds": 1376.2675200000003,
+          "estimated_cost_usd": 0.0,
+          "basis": "THIS_BATCH_ONLY_NOT_A_BACKLOG_GUARANTEE"
+        },
+        "50": {
+          "seconds": 6881.337600000002,
+          "estimated_cost_usd": 0.0,
+          "basis": "THIS_BATCH_ONLY_NOT_A_BACKLOG_GUARANTEE"
+        },
+        "1278": {
+          "seconds": 175886.98905600005,
+          "estimated_cost_usd": 0.0,
+          "basis": "THIS_BATCH_ONLY_NOT_A_BACKLOG_GUARANTEE"
+        }
+      },
+      "after": {
+        "computed_at": "2026-11-14T03:53:56.392350+00:00",
+        "reader_version": "bct-v33-reader-1",
+        "documents_total": 10483,
+        "preserved_versions": 12746,
+        "automatic_candidates": 8210,
+        "review_list_versions": 12210,
+        "quick_pending": 6586,
+        "completed_documents": 739,
+        "deep_pending": 0,
+        "candidate_data_wait": 91,
+        "material_pending": 3897,
+        "oldest_wait_hours": 1061.86,
+        "failed_versions": 2809,
+        "unresolved_versions": 11718,
+        "failure_reasons": {
+          "ENVIRONMENT_DNS_RESOLUTION_FAILED": 831,
+          "FULL_SOURCE_NOT_OBTAINED": 1904,
+          "REQUIRED_EVIDENCE_MISSING": 74
+        },
+        "failure_preview": [
+          {
+            "document_id": "e46eb0a1-ff8a-4ad5-af98-e856a0874918",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.nist.gov/blogs/taking-measure/home-gut-microbiome-tests-give-varying-results"
+          },
+          {
+            "document_id": "910c5f41-107c-42dc-b82a-ad2c8d0a854a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/ntcsa-setting-up-market-surveillance-unit-as-part-of-preparations-for-sawem-launch-in-april-2026-09-30"
+          },
+          {
+            "document_id": "773e8c78-ade3-47e4-a58b-96557f538e06",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/sibanye-confirms-wage-agreement-for-east-boulder-workers-strikes-continue-at-stillwater-east-columbus-continue-2026-09-30"
+          },
+          {
+            "document_id": "6da39140-fa09-4c6f-949b-0b4c6461642c",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/kropz-announces-plans-to-increase-nanophos-production-capacity-at-elandsfontein-2026-09-30"
+          },
+          {
+            "document_id": "6297cff1-c51c-4410-8d05-9aaed371a57a",
+            "reason": "ENVIRONMENT_DNS_RESOLUTION_FAILED",
+            "resume_condition": "A different access environment must obtain and hash-verify this exact body before a new explicit reading request; no same-environment DNS retry.",
+            "url": "https://www.miningweekly.com/article/six-years-after-a-mining-reboot-egypts-gold-ambitions-start-to-take-shape-2026-09-30"
+          }
+        ],
+        "event_count": 12183,
+        "pending_events": 11309,
+        "preview": [
+          {
+            "document_id": "130b2059-096f-41c8-b2e8-934d6afe6904",
+            "body_sha256": "43ac20572d5bdb0d339eeb62546a5fc6f74151333f62268195dedb569dbac674",
+            "url": "https://www.nist.gov/news-events/news/2026/08/nist-researchers-supersize-quantum-technology-help-detect-faint-photons",
+            "title": "NIST Researchers Supersize Quantum Technology to Help Detect Faint Photons",
+            "body_status": "PARTIAL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY"
+            ],
+            "wait_hours": 1035.2,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "1981b129-bc94-4b14-a3d8-c29d9bd68e6c",
+            "body_sha256": "fefd07f49fb0c4a0521ac9e3df45c79969b1a3d2e19527723ac100941ea16e2b",
+            "url": "https://www.defensenews.com/news/pentagon-congress/2026/09/30/why-the-pentagon-just-dropped-450m-on-tungsten-mining/",
+            "title": "Why the Pentagon just dropped $450M on tungsten mining",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 1035.2,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "25fe2301-b128-410d-ae23-4fe92a29b6b7",
+            "body_sha256": "aee03513c9948a7ba248ee7f71fce0f7a5d04d9608c5f30c7a9560a083259f70",
+            "url": "https://www.defensenews.com/pentagon/2026/09/29/pentagon-awards-raytheon-up-to-207-billion-to-nearly-double-amraam-production/",
+            "title": "Pentagon awards Raytheon up to $20.7 billion to nearly double AMRAAM production",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 1035.2,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "34d638c7-a24c-44a9-b67f-af2829254e48",
+            "body_sha256": "e113703aed293c2ab2d38c65d6a37e11d8d85a5fa94b7bc32fa42d0030632ed0",
+            "url": "https://www.defensenews.com/global/asia-pacific/2026/09/25/us-f-35-fighters-to-debut-in-indian-multinational-air-exercise/",
+            "title": "US F-35 fighters to debut in Indian multinational air exercise",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "RELIEF",
+              "TRACKED_CHANGE"
+            ],
+            "wait_hours": 1035.2,
+            "resume_at": 0,
+            "kind": "quick"
+          },
+          {
+            "document_id": "39e24b93-a6a8-4d5e-ba2b-852efeec4dab",
+            "body_sha256": "613eb5f260a2d1cc9004866875938119cb85e3a159c53f875955a0186c937d01",
+            "url": "https://www.powermag.com/water-award-finalist-mega-reservoirs-project-in-qatar/",
+            "title": "Water Award Finalist: Mega Reservoirs Project in Qatar",
+            "body_status": "FULL",
+            "discovery_paths": [
+              "DEMAND",
+              "SUPPLY"
+            ],
+            "wait_hours": 1035.2,
+            "resume_at": 0,
+            "kind": "quick"
+          }
+        ]
+      },
+      "source_records_unchanged": true,
+      "completed_delta": 5,
+      "quick_pending_delta": -5,
+      "pending_event_delta": -5,
+      "duplicate_auto_reviews": 0,
+      "distinct_events_attempted": 5,
+      "summary_saved": true
     }
   ],
   "targets": [
