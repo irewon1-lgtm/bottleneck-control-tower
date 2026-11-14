@@ -117,6 +117,11 @@ def test_actual_worker_respects_blocked_access_without_native_execution(tmp_path
     document_id = items[0]["document_id"]
     raw["results"][document_id]["reaccess_status"] = "SOURCE_CHANGED"
     raw["results"][document_id]["version_access"] = {}
+    # The immutable current-body version overrides top-level projection.
+    # Mark the exact version, as a real source reaccess history does.
+    raw["results"][document_id]["versions"][items[0]["body_sha256"]]["reaccess_status"] = "SOURCE_CHANGED"
+    assert not any(x["document_id"] == document_id and x["body_sha256"] == items[0]["body_sha256"]
+                   for x in queue_items(raw, {})["quick"])
     candidates.write_text(json.dumps(raw))
     first_item = mapped[(document_id, items[0]["body_sha256"])]
     assert not native.native_claim_eligible(items[0], {**first_item, "reaccess_status": "SOURCE_CHANGED"})
