@@ -113,3 +113,14 @@ def test_corpus_audit_is_source_free_and_after_both_successful_writers():
     assert "transport.read_at(" in audit
     assert "private CPU" not in audit  # Never read private CPU state
     assert "PASS_EXACT_FULL_CORPUS_AUDIT_NOT_S3_FINAL_PASS" in audit
+
+def test_exact_proof_counts_include_zero_and_stale_original_urls_are_holds():
+    x=rec(3)
+    canonical={"3":{"url":"https://new-publisher.example.org/3"}}
+    result=mod.audit_snapshot(canonical,{"results":{"3":x}})
+    p=result["proof_and_eligibility_counts"]
+    assert p["full_publisher_and_date_verified"]==0
+    assert p["full_original_reproof_eligible"]==0
+    assert p["full_canonical_url_mismatch_hold"]==1
+    assert p["canonical_url_mismatch_needs_review"]==1
+    assert result["session3_complete"] is False
