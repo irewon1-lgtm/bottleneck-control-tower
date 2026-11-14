@@ -1,0 +1,59 @@
+name: BCT one real publisher-verified battery-cell research addition
+on:
+  push:
+    branches: [qa/bct-explicit-battery-real-20261114]
+    paths: ['.github/workflows/bct-explicit-battery-real.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify-public-publisher-fact:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify actual immutable source registration + sector classification
+        env:
+          PYTHONPATH: src:tools
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e '.[test]'
+          python -m pytest -q tests/test_v4_rss_evidence_registry.py
+          python tools/v4_pages_research_input.py prepare --path var/v4/pages-input
+          GITHUB_WORKFLOW='Read-only BCT Pages' python tools/v4_dashboard_static_export.py \
+            --commit 0c5e6a6b3da7766bebcf4896c27649727abd3acc --public-input var/v4/pages-input
+          GITHUB_WORKFLOW='Read-only BCT Pages' python tools/v4_dashboard_static_check.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('var/v4/pages-site')
+          data=json.loads((root/'api/dashboard.json').read_bytes())
+          src=data['rss_research_evidence']
+          sector=data['sector_rankings_live']
+          found=[r for r in src['source_records'] if 'Tesla blames battery supply' in r['title']]
+          assert len(found)==1
+          assert found[0]['industry']=='자동차·배터리'
+          assert found[0]['confirmed_future_shortage'] is False
+          assert src['source_verified_sector_count']>=8
+          assert sector['new_original_verified']==len(src['source_records'])
+          assert sector['ranked_record_count']==sector['historical_source_rows']+len(src['source_records'])
+          assert data['registered_precursor_original_research']['verified_original_record_count']==2
+          assert len(data['records'])==511
+          assert sector['no_verified_supply_shortage_promoted'] is True
+          rows=[r for r in sector['rows'] if r['rss_verified_count']]
+          print('BCT_NEW_EXACT_ORIGINAL_EVIDENCE_PASS='+json.dumps({
+             'evidence_added':1,'new_source_count':len(src['source_records']),
+             'historical_rank_count':sector['historical_source_rows'],
+             'ranked_count':sector['ranked_record_count'],
+             'sector_new':[{'name':r['name'],'verified_original':r['rss_verified_count']} for r in rows],
+             'registered_source_commit':src['sidecar_commit']
+          },ensure_ascii=False))
+          PY
