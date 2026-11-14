@@ -115,3 +115,14 @@ def test_48_full_source_candidates_share_at_most_four_requests_per_publisher():
     assert sum(hosts.values()) == 48 and max(hosts.values()) <= 4
     assert len(hosts) >= 12
 
+def test_stale_saved_url_never_spends_a_different_canonical_publisher_budget():
+    stale=sample(1,host="old-publisher.example.org")
+    good=sample(2,host="actual-publisher.example.org")
+    rows={x["id"]:x for x in [stale,good]}
+    chosen,hosts,eligible=mod.selection(
+        {"results":rows},set(rows),limit=48,
+        canonical_urls={stale["id"]:"https://new-publisher.example.org/news/1",
+                        good["id"]:good["url"]})
+    assert chosen==[good["id"]]
+    assert hosts=={"actual-publisher.example.org":1}
+    assert eligible==1
