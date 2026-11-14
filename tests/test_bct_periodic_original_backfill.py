@@ -49,12 +49,33 @@ def test_max_four_attempts_per_host_and_other_hosts_are_served():
     assert hosts=={"freightwaves.com":4,"breakingdefense.com":4}
     assert due==40
 
-def test_old_actual_product_scope_is_first_and_unapproved_hosts_excluded():
+def test_actual_product_priority_and_other_valid_publishers_are_not_silently_excluded():
     a=sample(1,host="random-aggregator.example")
     b=sample(2);b["scope_facts"][0]["target"]="generic update"
     c=sample(3)
-    ids,_,_=select({r["id"]:r for r in [a,b,c]})
-    assert ids==[c["id"],b["id"]]
+    ids,_,due=select({r["id"]:r for r in [a,b,c]})
+    assert due==3 and set(ids)=={a["id"],b["id"],c["id"]}
+    assert ids.index(a["id"])<ids.index(b["id"])
+    assert ids.index(c["id"])<ids.index(b["id"])
+
+def test_all_publisher_bounded_fair_selection_and_ssrf_url_holds():
+    entries=[sample(i,host=f"publisher-{i%11}.example.com") for i in range(80)]
+    ids,hosts,due=select({x["id"]:x for x in entries})
+    assert due==80 and len(ids)==24
+    assert len(set(ids))==24
+    assert len(hosts)>=6 and max(hosts.values())<=4
+    for invalid in ("127.0.0.1","localhost","news.example.local","[::1]"):
+        assert not mod.accepted_url("http://"+invalid+"/page")
+    assert not mod.accepted_url("file:///etc/passwd")
+    assert not mod.accepted_url("https://news.example.com:8080/page")
+    assert not mod.accepted_url("https://user:pass@news.example.com/")
+    assert mod.accepted_url("https://example.com/article")
+
+def test_previously_attempted_cross_publisher_items_are_not_retried():
+    old=sample(1,host="new-publisher.example",attempt=True)
+    fresh=sample(2,host="second-publisher.example")
+    ids,_,due=select({a["id"]:a for a in [old,fresh]})
+    assert ids==[fresh["id"]] and due==1
 
 @pytest.mark.parametrize("limit",[0,-1,25,100,False])
 def test_batch_bounds_fail_closed(limit):
@@ -75,7 +96,7 @@ def test_no_shared_pending_slot_starvation():
     assert "group: bct-periodic-original-proof" in workflow
     assert "group: future-bottleneck-results" not in workflow
     assert "cancel-in-progress: false" in workflow
-    assert "cron: '10 0,12 * * *'" in workflow
+    assert "cron: '17 */2 * * *'" in workflow
     assert "python tools/bct_original_proof_backfill.py" in workflow
 
 

@@ -2,7 +2,7 @@ name: BCT recurring original-source verification backlog (bounded)
 on:
   workflow_dispatch:
   schedule:
-    - cron: '10 0,12 * * *' # 09:10 and 21:10 Asia/Seoul
+    - cron: '17 */2 * * *' # Every 2 hours in UTC; at most 24 source requests per run
 permissions:
   contents: write
   actions: read
@@ -35,7 +35,7 @@ jobs:
             tests/test_future_original_verified_capture.py \
             tests/test_source_metadata_precision.py \
             tests/test_future_store.py
-      - name: Restore immutable RSS inputs and recheck at most 24 prior FULL originals
+      - name: Audit all active RSS publisher hosts and recheck at most 24 unverified FULL originals
         env:
           PYTHONPATH: .:src
           GITHUB_TOKEN: ${{ github.token }}
@@ -55,6 +55,12 @@ jobs:
           print("Status:",r.get("status","UNKNOWN"))
           print("Source attempts:",r.get("source_downloads_attempted",0))
           print("New source+publication proofs saved:",r.get("source_proofs_persisted",0))
+          print("Active RSS articles:",r.get("rss_articles","UNKNOWN"))
+          print("Screened sidecar articles:",r.get("sidecar_records","UNKNOWN"))
+          print("Full bodies still lacking verified original:",(r.get("source_status_counts") or {}).get("full_unverified","UNKNOWN"))
+          print("Eligible original-source candidates across publishers:",r.get("all_publisher_eligible","UNKNOWN"))
+          print("Distinct eligible publishers:",r.get("eligible_publisher_count","UNKNOWN"))
+          print("Per-host rate limit:",r.get("max_host_requests_per_batch",4))
           print("Sidecar source commit:",r.get("source_after","NOT_CONFIRMED"))
           print("Confirmed bottlenecks promoted:",0)
           PY

@@ -1,4 +1,4 @@
-"""Scheduled bounded original-article reproof; owns no shortlist or shortage claims.
+"""Scheduled full-publisher bounded original-article reproof; owns no shortlist or shortage claims.
 
 Runs the already merged main Future collector on a bounded set of old FULL
 source versions, persists only its existing source-version CAS patch, and
@@ -8,6 +8,7 @@ from __future__ import annotations
 from collections import Counter
 from datetime import datetime,timezone
 import hashlib
+import ipaddress
 import json
 import os
 from pathlib import Path
@@ -22,9 +23,6 @@ from bct.future_github import GitHubTransport
 from bct.future_store import store_patch
 
 REPO="irewon1-lgtm/bottleneck-control-tower"
-PRIORITY_HOSTS={
-"freightwaves.com","powermag.com","breakingdefense.com","defensenews.com",
-"autoevolution.com","electrek.co","northernminer.com"}
 SCOPE=re.compile(r"\b(?:lithium|copper|nickel|cobalt|uranium|gallium|germanium|graphite|"
                  r"battery cells?|semiconductors?|optical transceivers?|HBM|rockets?|missiles?|"
                  r"nuclear fuel|power transformers?|aircraft engines?|container ships?|"
@@ -79,6 +77,28 @@ def host(url):
     except (TypeError,ValueError):return ""
 
 
+def accepted_url(value):
+    """Fail closed on non-public or malformed publisher URL candidates."""
+    if not isinstance(value,str):
+        return False
+    try:
+        u=urlsplit(value)
+        h=(u.hostname or "").lower()
+        if (u.scheme not in ("https","http") or u.username or u.password
+                or not h or "." not in h or h.endswith(".local")
+                or h in ("localhost","localhost.localdomain")
+                or u.port not in (None,80,443)):
+            return False
+        try:
+            ipaddress.ip_address(h)
+            return False
+        except ValueError:
+            pass
+        return True
+    except (TypeError,ValueError):
+        return False
+
+
 def selection(candidates,available_ids,*,limit=24):
     if type(limit) is not int or not 1<=limit<=24:
         raise ValueError("BCT_SOURCE_VERIFICATION_BATCH_LIMIT_EXCEEDED")
@@ -86,9 +106,9 @@ def selection(candidates,available_ids,*,limit=24):
     for document_id,record in candidates.get("results",{}).items():
         if document_id not in available_ids or not source(record) or already_reproof_attempted(record):
             continue
-        h=host(record.get("url"))
-        if h not in PRIORITY_HOSTS:
+        if not accepted_url(record.get("url")):
             continue
+        h=host(record.get("url"))
         ranked.append((
             not qualified_fact(record),
             not bool(record.get("candidate")),
@@ -129,9 +149,44 @@ def stage():
         if db.execute("PRAGMA integrity_check").fetchone()[0]!="ok":
             raise ValueError("BCT_BAD_RSS_DB")
         active_ids={i[0] for i in db.execute("SELECT id FROM radar_items WHERE status='active'")}
+        total=db.execute("SELECT COUNT(*) FROM radar_items WHERE status='active'").fetchone()[0]
+    if total!=len(active_ids) or total!=state["radar_items"]:
+        raise ValueError("BCT_S3_CANONICAL_ARTICLE_ID_LOSS")
+    if set(candidates.get("results",{}))-active_ids:
+        raise ValueError("BCT_S3_SIDECAR_HAS_UNMATCHED_ID")
     ids,by_host,eligible=selection(candidates,active_ids)
+    audited=Counter()
+    eligible_hosts=set()
+    for document_id,record in candidates["results"].items():
+        digest=record.get("current_body_sha256") or record.get("body_sha256")
+        version=(record.get("versions") or {}).get(digest,{}) if digest else {}
+        status=version.get("body_status") or record.get("body_status") or "UNKNOWN"
+        audited["body_"+str(status)]+=1
+        if status=="FULL":
+            audited["full_total"]+=1
+            if source(record):
+                audited["full_unverified"]+=1
+                if not accepted_url(record.get("url")):
+                    audited["full_url_hold"]+=1
+                elif already_reproof_attempted(record):
+                    audited["full_prior_attempt_hold"]+=1
+                else:
+                    eligible_hosts.add(host(record["url"]))
+            else:
+                audited["full_already_verified"]+=1
+    run_context={
+      "rss_articles":total,
+      "sidecar_records":len(candidates["results"]),
+      "unlinked_articles":total-len(candidates["results"]),
+      "source_status_counts":dict(audited),
+      "all_publisher_eligible":eligible,
+      "eligible_publisher_count":len(eligible_hosts),
+      "schedule":"EVERY_TWO_HOURS_BOUNDED_24",
+      "batch_limit":24,
+      "max_host_requests_per_batch":4,
+    }
     if not ids:
-        report={"status":"NO_ELIGIBLE_ORIGINAL_REPROOF_DUE",
+        report={**run_context,"status":"NO_ELIGIBLE_ORIGINAL_REPROOF_DUE",
            "source_before":prior,"collection_sha":collection_sha,
            "selected_count":0,"source_downloads_attempted":0,
            "source_proofs_persisted":0,"confirmed_shortages_created":0,
@@ -144,8 +199,9 @@ def stage():
     candidate_file.write_text(json.dumps(candidates,ensure_ascii=False))
     tracking_file.write_text(json.dumps(tracking,ensure_ascii=False))
     patch_file=root/"collection-change.json"
-    report={"status":"RUNNING","collection_sha":collection_sha,
+    report={**run_context,"status":"RUNNING","collection_sha":collection_sha,
       "source_before":prior,"selected_count":len(ids),
+      "selected_article_ids_sha256":hashlib.sha256("|".join(sorted(ids)).encode()).hexdigest(),
       "eligible_host_qualified":eligible,"selected_host_counts":by_host,
       "user_directed_recheck":False,"source_downloads_attempted":0,
       "source_proofs_persisted":0,"confirmed_shortages_created":0,
