@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths: ['.github/workflows/ui-pages.yml']
   workflow_run:
-    workflows: ['V4 dashboard release gate', 'V4 CPU private research consumer', 'New precursor evidence acquisition', 'RSS live environment check', 'REVIEW_LEAD SHADOW intake']
+    workflows: ['V4 dashboard release gate', 'V4 CPU private research consumer', 'New precursor evidence acquisition', 'RSS live environment check', 'REVIEW_LEAD SHADOW intake', 'BCT recurring original-source verification backlog (bounded)']
     types: [completed]
     branches: [main, codex/bct-v4-integration]
   workflow_dispatch:
@@ -25,7 +25,9 @@ jobs:
       ${{ github.ref == 'refs/heads/main' && (github.event_name != 'workflow_run' ||
           (github.event.workflow_run.head_repository.full_name == github.repository &&
            ((github.event.workflow_run.head_branch == 'main' &&
-             github.event.workflow_run.event != 'pull_request') ||
+             github.event.workflow_run.event != 'pull_request' &&
+             (github.event.workflow_run.name != 'BCT recurring original-source verification backlog (bounded)' ||
+              github.event.workflow_run.conclusion == 'success')) ||
             (github.event.workflow_run.head_branch == 'codex/bct-v4-integration' &&
              github.event.workflow_run.event == 'push' &&
              github.event.workflow_run.conclusion == 'success')))) }}

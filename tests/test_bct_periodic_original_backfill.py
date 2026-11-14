@@ -77,3 +77,12 @@ def test_no_shared_pending_slot_starvation():
     assert "cancel-in-progress: false" in workflow
     assert "cron: '10 0,12 * * *'" in workflow
     assert "python tools/bct_original_proof_backfill.py" in workflow
+
+
+def test_successful_original_reproof_triggers_the_existing_public_pages_refresh():
+    wf=(Path(__file__).resolve().parents[1]/".github/workflows/ui-pages.yml").read_text()
+    assert "'BCT recurring original-source verification backlog (bounded)'" in wf
+    assert "github.event.workflow_run.name != 'BCT recurring original-source verification backlog (bounded)'" in wf
+    assert "github.event.workflow_run.conclusion == 'success'" in wf
+    assert "group: bct-readonly-pages" in wf
+    assert "ref: '6e788d18cf85fdb834b451bb35585a8b58925301'" in wf
