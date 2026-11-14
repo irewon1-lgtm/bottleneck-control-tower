@@ -83,6 +83,8 @@ def audit_snapshot(canonical, candidates):
                 decisions["full_publisher_or_date_unverified"] += 1
                 if not source(rec):
                     decisions["full_proof_state_inconsistent_hold"] += 1
+                elif original["url"] != rec.get("url"):
+                    decisions["full_canonical_url_mismatch_hold"] += 1
                 elif not accepted_url(rec.get("url")):
                     decisions["full_invalid_url_hold"] += 1
                 elif already_reproof_attempted(rec):
@@ -116,6 +118,15 @@ def audit_snapshot(canonical, candidates):
             decisions["legacy_body_ok_completeness_unverified"] += 1
         else:
             decisions["unknown_body_status_hold"] += 1
+    # Explicitly expose zero counts, not omitted keys, so receipts are
+    # machine-checkable even when an entire source lane has zero verified hits.
+    for key in ("full_publisher_and_date_verified",
+                "full_publisher_or_date_unverified",
+                "full_bad_or_missing_hash_hold",
+                "full_original_reproof_eligible",
+                "partial_original_recovery_eligible",
+                "rss_not_in_sidecar"):
+        decisions.setdefault(key, 0)
     if sum(by_status.values()) != len(results):
         raise ValueError("S3_SOURCE_COVERAGE_ACCOUNTING_MISMATCH")
     if decisions["rss_not_in_sidecar"] + len(results) != len(canonical):
