@@ -35,6 +35,13 @@ jobs:
             tests/test_future_original_verified_capture.py \
             tests/test_source_metadata_precision.py \
             tests/test_future_store.py
+      - name: Confirm actual current-code release proof before any new source writes
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PYTHONPATH: .:src
+        run: |
+          set -euo pipefail
+          python .github/scripts/bct_release_guard.py
       - name: Audit all active RSS publisher hosts and recheck at most 24 unverified FULL originals
         env:
           PYTHONPATH: .:src
@@ -43,6 +50,14 @@ jobs:
         run: |
           set -euo pipefail
           python tools/bct_original_proof_backfill.py
+      - name: Recover at most 24 unlinked RSS and PARTIAL originals with CAS readback
+        env:
+          PYTHONPATH: .:src
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s3_missing_partial_backfill.py
       - name: Summarize saved proofs, holds and backlog without source bodies
         if: always()
         shell: bash
@@ -67,10 +82,29 @@ jobs:
           else
             echo "Source receipt missing: no new verified data claimed." >> "$GITHUB_STEP_SUMMARY"
           fi
+      - name: Summarize RSS gap and partial recovery with no source bodies
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f "$RUNNER_TEMP/bct-s3-missing-partial/receipt.json" ]]; then
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json,os
+          from pathlib import Path
+          r=json.loads((Path(os.environ["RUNNER_TEMP"])/"bct-s3-missing-partial/receipt.json").read_text())
+          print("## S3 missing and PARTIAL source recovery (actual saved receipts)")
+          for k in ("status","rss","sidecar_before","missing_before","selected","processed_source_reads","new_linked_ids_read_back","missing_after","persisted_outcomes","source_after_sha"):
+              print(k+":",r.get(k,"NOT_CONFIRMED"))
+          print("Unverified source documents and blocked originals remain held, never promoted")
+          PY
+          else
+            echo "No S3 missing/PARTIAL receipt; no verified progress claimed." >> "$GITHUB_STEP_SUMMARY"
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: bct-recurring-original-proof-receipt
-          path: ${{ runner.temp }}/bct-owner-reproof/receipt.json
+          path: |
+            ${{ runner.temp }}/bct-owner-reproof/receipt.json
+            ${{ runner.temp }}/bct-s3-missing-partial/receipt.json
           retention-days: 14
           if-no-files-found: warn
