@@ -1,0 +1,152 @@
+name: BCT S2 one-shot attach actual saved Gate and resume real CPU
+on:
+  push:
+    branches: [ops/bct-s2-attach-proven-gate-20261114]
+    paths: ['.github/workflows/bct-s2-attach-proven-gate.yml']
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: bct-s2-attach-verified-gate-one-shot
+  cancel-in-progress: false
+jobs:
+  attach-real-gate-receipts:
+    if: github.repository == 'irewon1-lgtm/bottleneck-control-tower'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONPATH: src
+    steps:
+      - name: Use exact code SHA already validated by full real Gate
+        uses: actions/checkout@v4
+        with:
+          ref: 'd7482f24ff41b3aadc07eeb39725ac960d457a9f'
+          persist-credentials: false
+      - name: Verify Gate and checksum existing artifact, never rerun Gate
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install existing standard runtime for original strict receipt verifier
+        run: python -m pip install --disable-pip-version-check -e .
+      - name: Prepare actual source-bound receipts, commit atomically, read back, dispatch CPU
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import re
+          import subprocess
+          import sys
+          import tempfile
+          
+          sys.path.insert(0, ".github/scripts")
+          from bct_release_guard import verify_release
+          from recovery_artifacts import API, prepare_receipts
+          
+          REPO = "irewon1-lgtm/bottleneck-control-tower"
+          EXPECTED_MAIN = "d7482f24ff41b3aadc07eeb39725ac960d457a9f"
+          GATE = 43542830458
+          ARTIFACT = 14095665319
+          DIGEST = "b7664ae0c5f2912268a5ce512ee5f214935334ac17e4d55ec8bd9fdde753f601"
+          
+          def req(method, suffix, payload=None):
+              if not suffix.startswith("/"):
+                  raise ValueError("S2_GITHUB_API_PATH")
+              args=["gh","api","--method",method,"repos/"+REPO+suffix]
+              with tempfile.TemporaryDirectory(prefix="bct-api-packet-") as temporary:
+                  if payload is not None:
+                      source=Path(temporary)/"payload.json"
+                      source.write_text(json.dumps(payload,sort_keys=True),encoding="utf-8")
+                      args.extend(["--input",str(source)])
+                  p=subprocess.run(args,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=70)
+                  if p.returncode:
+                      raise RuntimeError("S2_GITHUB_API_ERROR_"+method+"_"+suffix.split("?")[0]+"_"+str(p.returncode))
+                  if method == "POST" and suffix.endswith("/dispatches"):
+                      return {}
+                  return json.loads(p.stdout)
+          
+          assert os.environ["GITHUB_REPOSITORY"] == REPO
+          assert os.environ["GITHUB_REF"] == "refs/heads/ops/bct-s2-attach-proven-gate-20261114"
+          assert subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip()==EXPECTED_MAIN
+          remote=req("GET","/branches/main")
+          assert remote["commit"]["sha"]==EXPECTED_MAIN,"S2_MAIN_ADVANCED_ABORT"
+          api=API()
+          run=api.read("/actions/runs/"+str(GATE))
+          assert run["status"]=="completed" and run["conclusion"]=="success"
+          assert run["event"]=="workflow_dispatch" and run["path"]==".github/workflows/bct-recovery.yml"
+          assert run["head_sha"]==EXPECTED_MAIN and run["head_branch"]=="main"
+          artifact=api.read("/actions/artifacts/"+str(ARTIFACT))
+          assert artifact["name"]=="bct-recovery-checkpoint-"+str(GATE)
+          assert artifact.get("digest")=="sha256:"+DIGEST and artifact.get("expired") is False
+          assert artifact["workflow_run"]["id"]==GATE and artifact["workflow_run"]["head_sha"]==EXPECTED_MAIN
+          receipt={"gate_run_id":GATE,"validated_code_sha":EXPECTED_MAIN,
+                   "artifact_id":ARTIFACT,"artifact_sha256":DIGEST}
+          validation=verify_release(lambda m,s: api.read(s) if m=="GET" else None,receipt,Path("."))
+          assert validation["status"]=="PASS"
+          with tempfile.TemporaryDirectory(prefix="bct-s2-gate-receipts-") as tmp:
+              root=Path(tmp)
+              prepared=prepare_receipts(api,GATE,EXPECTED_MAIN,Path("."),root/"prepared")
+              assert prepared["status"]=="PREPARED_FROM_ACTUAL_CURRENT_CODE_GATE_SUCCESS"
+              targets={
+                  "config/bct-operating-release.json":root/"prepared"/"bct-operating-release.json",
+                  ".github/bct-recovery-request.json":root/"prepared"/"bct-recovery-request.json",
+              }
+              release=json.loads(targets["config/bct-operating-release.json"].read_text())
+              recovery=json.loads(targets[".github/bct-recovery-request.json"].read_text())
+              assert release==receipt and int(recovery["resume_run_id"])==GATE
+              entry=recovery["resume_archive"]
+              assert entry["artifact_id"]==ARTIFACT and entry["sha256"]==DIGEST and entry["head_sha"]==EXPECTED_MAIN
+              assert recovery["resume_input_only"] is False and prepared["verified_root_files"]>=7
+              assert recovery["resume_cache_inventory_sha256"] and recovery.get("fixed230_file_map_sha256")
+              # Both receipt files in a single non-force Git commit, with parent lease.
+              assert req("GET","/branches/main")["commit"]["sha"]==EXPECTED_MAIN,"S2_BRANCH_MOVED_ABORT"
+              base=req("GET","/git/commits/"+EXPECTED_MAIN)
+              tree=req("POST","/git/trees",{
+                  "base_tree":base["tree"]["sha"],
+                  "tree":[{"path":path,"mode":"100644","type":"blob","content":file.read_text(encoding="utf-8")}
+                          for path,file in targets.items()]
+              })
+              assert re.fullmatch(r"[a-f0-9]{40}",tree["sha"])
+              commit=req("POST","/git/commits",{
+                  "message":"chore(bct): attach verified real Gate "+str(GATE)+" and bind preserved inputs",
+                  "tree":tree["sha"],"parents":[EXPECTED_MAIN],
+              })
+              newsha=commit["sha"]
+              assert re.fullmatch(r"[a-f0-9]{40}",newsha)
+              req("PATCH","/git/refs/heads/main",{"sha":newsha,"force":False})
+              assert req("GET","/branches/main")["commit"]["sha"]==newsha
+              for path,source in targets.items():
+                  found=req("GET","/contents/"+path+"?ref="+newsha)
+                  assert base64.b64decode(found["content"])==source.read_bytes(),"S2_RECEIPT_REMOTE_READBACK_FAILED"
+              result={
+                  "status":"PASS_GATES_0_6_ATTESTED_ATOMIC_DUAL_RECEIPT_REMOTE_READBACK",
+                  "gate_run_id":GATE,"gate_code_sha":EXPECTED_MAIN,
+                  "gate_artifact_id":ARTIFACT,"gate_artifact_sha256":DIGEST,
+                  "new_main":newsha,
+                  "verified_root_files":prepared["verified_root_files"],
+                  "source_originals_modified":False,"research_sidecar_direct_writes":0,
+                  "article_processing_claimed":False,
+              }
+              print("BCT_S2_ACTUAL_GATE_RELEASE_RECEIPT="+json.dumps(result,sort_keys=True),flush=True)
+              Path("s2-success.json").write_text(json.dumps(result,indent=2)+"\n",encoding="utf-8")
+              # A GITHUB_TOKEN main commit does not recursively trigger workflow push events.
+              # Explicitly dispatch the pre-existing real processing pipeline exactly once.
+              req("POST","/actions/workflows/future-bottleneck.yml/dispatches",{
+                  "ref":"main","inputs":{"backlog_body_recovery":False}
+              })
+              print("BCT_S2_EXISTING_REAL_PROCESSING_DISPATCH_ACCEPTED=true; outcome NOT YET PROVEN",flush=True)
+          
+          PY
+      - name: Upload small factual attestation only
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bct-s2-real-Gate-43542830458-attestation
+          path: s2-success.json
+          retention-days: 30
+          if-no-files-found: warn
