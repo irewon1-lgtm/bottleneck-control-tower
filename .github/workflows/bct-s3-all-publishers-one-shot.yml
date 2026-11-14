@@ -1,0 +1,76 @@
+name: BCT S3 real 12 original publisher proofs across all industries
+on:
+  push:
+    branches: [ops/bct-s3-all-publisher-originals-20261114]
+    paths:
+      - '.github/workflows/bct-s3-all-publishers-one-shot.yml'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: bct-s3-all-publishers-source-cas-one-shot
+  cancel-in-progress: false
+jobs:
+  read-verify-save-retrieve:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    env:
+      PYTHONPATH: .:src
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout only isolated S3 work and preserve main code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Guarantee unchanged production engine and strict Gate code
+        run: |
+          set -euo pipefail
+          PIN=4bee55936c5975d2859c9be787ef2159181baf85
+          git fetch --no-tags --depth=3 origin "$PIN"
+          git diff --name-only "$PIN" HEAD > "$RUNNER_TEMP/s3-changed.txt"
+          python - <<'PY'
+          from pathlib import Path
+          actual=set(Path(__import__('os').environ['RUNNER_TEMP'],'s3-changed.txt').read_text().splitlines())
+          expected={'tools/bct_s3_all_publisher_originals.py','.github/workflows/bct-s3-all-publishers-one-shot.yml'}
+          assert actual==expected,(actual,expected)
+          print('S3_PRODUCTION_CODE_UNCHANGED_AND_NO_MAIN_WORKFLOW_MUTATION_PASS')
+          PY
+      - name: Verify old CAS and source capture regressions plus new host-safe selector
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check -e '.[test]'
+          python -m pytest -q tests/test_bct_periodic_original_backfill.py \
+            tests/test_future_original_verified_capture.py \
+            tests/test_source_metadata_precision.py tests/test_future_store.py
+          BCT_S3_SELF_TEST_ONLY=1 python tools/bct_s3_all_publisher_originals.py
+      - name: Execute live corpus-wide S3 audit, bounded fetch, verified CAS save and readback
+        run: |
+          set -euo pipefail
+          python tools/bct_s3_all_publisher_originals.py
+      - name: Report exact saved proofs and explicit holds without exposing bodies
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/bct-s3-all-publisher/receipt.json"; then
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json,os
+          from pathlib import Path
+          v=json.loads((Path(os.environ["RUNNER_TEMP"])/"bct-s3-all-publisher/receipt.json").read_text())
+          for x in ("status","rss_total","sidecar_total","rss_without_sidecar","full_eligible_all_publishers","eligible_publisher_count","selected_count","source_requests_attempted","new_originals_verified_and_retrieved","source_after"):
+              print(x+":",v.get(x,"NOT_VERIFIED"))
+          print("Verified bottleneck promotions: 0 (outside S3 scope)")
+          print("S3 is a first live batch, not full corpus completion.")
+          PY
+          else
+            echo "S3 did not produce an audit receipt, no source proof completion claimed." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Preserve small verification receipt, never article full texts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s3-source-wide-audit-and-12-publisher-proofs
+          path: ${{ runner.temp }}/bct-s3-all-publisher/receipt.json
+          retention-days: 30
+          if-no-files-found: warn
