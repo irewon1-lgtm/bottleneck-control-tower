@@ -16,7 +16,7 @@ import uuid
 
 from bct.future_github import GitHubTransport, _raw
 from bct.future_local_reader import LocalCPUQuickReader
-from bct.future_review import document_complete, queue_summary
+from bct.future_review import document_complete, queue_summary, queue_items
 from bct.future_worker import run_worker, _runs
 from bct.recovery_claim import reconcile_returned
 from bct.recovery_queue import project
@@ -48,7 +48,40 @@ def child(directory):
     return 1
 
 
+
+def native_claim_eligible(payload, record):
+    """Require a genuine unblocked quick-queue source version BEFORE launching the child.
+
+    A recovered FULL body can still have a later explicit SOURCE_CHANGED or
+    UNAVAILABLE access observation. Never clear those observations to obtain
+    a synthetic worker claim. The native interruption probe must use the
+    same queue eligibility as the production worker.
+    """
+    if (record.get('body_status') != 'FULL'
+            or not (record.get('candidate') or record.get('tracked_matches'))
+            or record.get('document_id') != payload.get('document_id')
+            or record.get('body_sha256') != payload.get('body_sha256')
+            or document_complete({}, record)):
+        return False
+    selected = deepcopy(record)
+    selected.pop('versions', None)
+    selected.update(body_sha256=payload['body_sha256'],
+                    current_body_sha256=payload['body_sha256'])
+    chosen = queue_items({'results': {payload['document_id']: selected}}, {})
+    quick = chosen['quick']
+    return (len(quick) == 1
+            and quick[0]['document_id'] == payload['document_id']
+            and quick[0]['body_sha256'] == payload['body_sha256']
+            and quick[0]['resume_at'] == payload['read_start']
+            and quick[0]['body_status'] == 'FULL'
+            and quick[0]['body_chars'] == payload['expected_read_end']
+            and quick[0]['access_status'] not in ('BLOCKED', 'SOURCE_CHANGED'))
+
+
+
 def execute(root, payload, record, setup_receipt, observe_returned):
+    if not native_claim_eligible(payload, record):
+        raise ValueError('native claim pilot input is not an unblocked exact FULL quick-queue item')
     run_id = os.environ['GITHUB_RUN_ID']
     directory = root/'private-native-claim'/run_id; directory.mkdir(parents=True, exist_ok=False)
     branch = 'ops/bct-native-claim-probe-' + run_id + '-' + uuid.uuid4().hex[:8]
