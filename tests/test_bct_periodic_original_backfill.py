@@ -77,7 +77,7 @@ def test_previously_attempted_cross_publisher_items_are_not_retried():
     ids,_,due=select({a["id"]:a for a in [old,fresh]})
     assert ids==[fresh["id"]] and due==1
 
-@pytest.mark.parametrize("limit",[0,-1,25,100,False])
+@pytest.mark.parametrize("limit",[0,-1,49,100,False])
 def test_batch_bounds_fail_closed(limit):
     with pytest.raises(ValueError,match="BATCH_LIMIT_EXCEEDED"):
         mod.selection({"results":{}},set(),limit=limit)
@@ -96,7 +96,7 @@ def test_no_shared_pending_slot_starvation():
     assert "group: bct-periodic-original-proof" in workflow
     assert "group: future-bottleneck-results" not in workflow
     assert "cancel-in-progress: false" in workflow
-    assert "cron: '17 */2 * * *'" in workflow
+    assert "cron: '17 * * * *'" in workflow
     assert "python tools/bct_original_proof_backfill.py" in workflow
 
 
@@ -107,3 +107,11 @@ def test_successful_original_reproof_triggers_the_existing_public_pages_refresh(
     assert "github.event.workflow_run.conclusion == 'success'" in wf
     assert "group: bct-readonly-pages" in wf
     assert "ref: '6e788d18cf85fdb834b451bb35585a8b58925301'" in wf
+
+def test_48_full_source_candidates_share_at_most_four_requests_per_publisher():
+    records = [sample(i, host=f"publisher{i%16}.example.org") for i in range(96)]
+    ids, hosts, due = select({r["id"]: r for r in records}, limit=48)
+    assert due == 96 and len(ids) == 48 and len(set(ids)) == 48
+    assert sum(hosts.values()) == 48 and max(hosts.values()) <= 4
+    assert len(hosts) >= 12
+
