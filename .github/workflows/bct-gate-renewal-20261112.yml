@@ -1,8 +1,9 @@
 # One-time current-main Gate 0–6 renewal after the CPU handoff merge.
 # 2026-11-13 verified manual source restore repair: request a fresh REAL Gate after merge; no bypass.
-# The second job safely attests any eligible actual manual main Gate, without
-# rewriting protected code or source DBs. Receipt JSON is excluded from the
-# existing code_path release guard.
+# The second job safely attests ONLY actual completed Gate steps and bound source
+# checkpoint bytes. A GITHUB_TOKEN-dispatched Gate does not always produce a
+# downstream workflow_run event, so the Gate explicitly dispatches this
+# finalizer after artifact upload. The strict release guard is not bypassed.
 name: BCT Gate 0-6 release proof renewal
 on:
   push:
@@ -23,6 +24,12 @@ on:
     workflows: [BCT recovery storage gates]
     types: [completed]
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      gate_run_id:
+        description: Actual Gate run ID; validated against current main code, all 8 Gate steps and checkpoint artifact
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -56,7 +63,7 @@ jobs:
   attest-and-recover:
     # Do not trust nested workflow_run event fields for the job-level filter.
     # Actual eligibility and every release proof are rechecked against REST.
-    if: ${{ github.event_name == 'workflow_run' }}
+    if: ${{ github.event_name == 'workflow_run' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
@@ -65,19 +72,19 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       PYTHONPATH: src
-      GATE_RUN_ID: ${{ github.event.workflow_run.id }}
+      GATE_RUN_ID: ${{ github.event.workflow_run.id || inputs.gate_run_id }}
     steps:
       - name: Check out exactly the main code tested by the completed Gate
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
           persist-credentials: false
       - name: Attest real Gate steps, exact code tree and artifact before any release write
         id: attest
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import base64, json, os, pathlib, re, subprocess
+          import base64, json, os, pathlib, re, subprocess, time
           import sys
           sys.path.insert(0, '.github/scripts')
           from bct_release_guard import verify_release
@@ -96,6 +103,17 @@ jobs:
               return json.loads(response.stdout)
 
           run = api('GET', '/actions/runs/'+str(run_id))
+          # Explicit finalizer dispatch may start before the Gate job finishes.
+          # Only its completed, successful result may be attested. Never infer
+          # PASS from successful dispatch or from a running Gate.
+          if os.environ.get('GITHUB_EVENT_NAME') == 'workflow_dispatch':
+              for _ in range(60):
+                  if run.get('status') == 'completed':
+                      break
+                  time.sleep(3)
+                  run = api('GET', '/actions/runs/'+str(run_id))
+              if run.get('status') != 'completed':
+                  raise ValueError('GATE_NOT_COMPLETED_AFTER_FINALIZER_WAIT')
           # Non-manual and unsuccessful Gates never issue receipts or invoke readers.
           if (run.get('event') != 'workflow_dispatch'
                   or run.get('path') != '.github/workflows/bct-recovery.yml'

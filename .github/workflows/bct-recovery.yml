@@ -105,6 +105,9 @@ jobs:
           PY
   storage:
     if: ${{ github.event_name != 'workflow_run' && !inputs.preserve_resume_only }}
+    permissions:
+      contents: write
+      actions: write
     # Gate 1 and live body candidates both publish the same sidecar branch.
     # Serialize ONLY their writer jobs; RSS collection keeps its own schedule/lock.
     concurrency:
@@ -364,3 +367,23 @@ jobs:
             ${{ runner.temp }}/bct-recovery/private-native-claim/**/*
           if-no-files-found: error
           retention-days: 30
+      - name: Dispatch strict actual Gate attestation after successful checkpoint upload
+        if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && steps.request.outputs.full_pipeline != 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          # A dispatch is only a request, never approval. The separate
+          # finalizer waits for the completed current-code Gate and validates
+          # every Gate step, artifact, source cache and atomic receipt commit.
+          assert os.environ['GITHUB_REF']=='refs/heads/main'
+          request={'ref':'main','inputs':{'gate_run_id':os.environ['GITHUB_RUN_ID']}}
+          Path(os.environ['RUNNER_TEMP'],'gate-attestor-dispatch.json').write_text(json.dumps(request))
+          PY
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/bct-gate-renewal-20261112.yml/dispatches" \
+            --input "$RUNNER_TEMP/gate-attestor-dispatch.json" >/dev/null
+          echo 'Actual Gate finalizer dispatched after checkpoint upload; no Gate PASS asserted.'
