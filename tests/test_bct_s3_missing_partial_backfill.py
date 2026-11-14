@@ -118,3 +118,9 @@ def test_missing_partial_stage_refuses_unproven_prior_full_lane():
     assert "S3_INVALID_PRIOR_PUBLISHER_BUDGET" in source
     assert "cross_lane_publisher_budget_enforced" in source
 
+def test_stale_partial_canonical_url_is_a_hold_not_an_old_url_recheck():
+    old=part(1)
+    canonical={"1":{**row(1),"url":"https://new-domain.example.org/latest"}}
+    selected,audit=mod.selection(canonical,{"results":{"1":old}})
+    assert selected==[]
+    assert audit["full_sidecar_body_counts"]["partial_canonical_url_mismatch_hold"]==1
