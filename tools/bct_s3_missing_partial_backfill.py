@@ -78,6 +78,9 @@ def selection(canonical, sidecar, *, limit=LIMIT, lane_limit=LANE_LIMIT,
         holds["body_" + str(body_status)] += 1
         if body_status != "PARTIAL":
             continue
+        if source["url"] != current.get("url"):
+            holds["partial_canonical_url_mismatch_hold"] += 1
+            continue
         if already_reproof_attempted(current):
             holds["partial_explicit_attempt_hold"] += 1
             continue
