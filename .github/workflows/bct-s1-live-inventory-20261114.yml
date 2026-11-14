@@ -1,0 +1,145 @@
+name: BCT S1 live 10761 RSS full-ID inventory (read-only)
+on:
+  push:
+    branches: [audit/bct-s1-live-inventory-20261114]
+    paths: ['.github/workflows/bct-s1-live-inventory-20261114.yml']
+permissions:
+  contents: read
+concurrency:
+  group: bct-s1-live-audit-20261114
+  cancel-in-progress: false
+jobs:
+  full-id-reconciliation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      PYTHONPATH: .:src
+      DATA_PIN: e74dfd472c925ccccf5777dc1c7233231158ae9b
+      SIDECAR_PIN: 8b805fc46ff45f50c1264b2a6bc111550d65cc33
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify preserved ID reconciliation and queue regression tests
+        run: |
+          set -euo pipefail
+          python -m pip install -e '.[test]'
+          python -m pytest -q tests/test_bct_session7_queue_monitor.py tests/test_bct_session7_select_work.py
+      - name: Fetch immutable original RSS DB and complete sharded analysis records
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$DATA_PIN"
+          test -n "$SIDECAR_PIN"
+          git fetch --no-tags --depth=1 origin "$DATA_PIN"
+          git fetch --no-tags --depth=1 origin "$SIDECAR_PIN"
+          git cat-file -e "$DATA_PIN:canonical.sqlite3"
+          git cat-file -e "$SIDECAR_PIN:future-candidates.json"
+      - name: Audit every real article ID; do not fetch or mutate source data
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_session7_queue_monitor.py             --data-sha "$DATA_PIN"             --sidecar-sha "$SIDECAR_PIN"             --budget 120             --output bct-s1-artifact
+      - name: Verify 100 percent ID coverage and explain every RSS-analysis difference
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import collections,csv,hashlib,json,os,pathlib,subprocess
+          from datetime import datetime,timezone
+          p=pathlib.Path("bct-s1-artifact")
+          q=json.loads((p/"queue_health.json").read_text(encoding="utf-8"))
+          with (p/"articles_ledger.csv").open(encoding="utf-8-sig",newline="") as f:
+              rows=list(csv.DictReader(f))
+          with (p/"bounded_work_plan.csv").open(encoding="utf-8-sig",newline="") as f:
+              picks=list(csv.DictReader(f))
+          ids=[r["article_id"] for r in rows]
+          unlinked=[r for r in rows if r["sidecar_record_present"]=="False"]
+          linked=[r for r in rows if r["sidecar_record_present"]=="True"]
+          byurl=collections.defaultdict(list)
+          for row in rows:
+              url=(row.get("url") or "").split("#",1)[0].strip()
+              if url:byurl[url].append(row)
+          duplicated=[(u,v) for u,v in byurl.items() if len(v)>1]
+          assert q["status"]=="PASS_READ_ONLY_QUEUE_RECONCILIATION",q
+          assert q["articles"]==len(rows)==len(set(ids))==10761
+          assert q["prior_sidecar_results"]==len(linked)==10399
+          assert q["articles_without_sidecar"]==len(unlinked)==362
+          assert len(linked)+len(unlinked)==len(rows)
+          assert q["sidecar_shards_hash_verified"]==35
+          assert sum(q["body_counts"].values())==len(rows)
+          assert sum(q["work_actions"].values())==len(rows)
+          assert sum(q["review_lanes"].values())==len(rows)
+          assert len(picks)==len({r["article_id"] for r in picks})<=120
+          assert all(r["body_status"]=="NOT_IN_SIDECAR" for r in unlinked)
+          assert all(r["work_action"] and r["review_lane"] and r["body_status"] for r in rows)
+          assert q["new_full_article_downloads"]==q["candidate_promotions"]==0
+          def csvout(name,items,cols):
+              with (p/name).open("w",encoding="utf-8-sig",newline="") as f:
+                  writer=csv.DictWriter(f,fieldnames=cols,extrasaction="ignore")
+                  writer.writeheader()
+                  writer.writerows(items)
+          cols=["article_id","source","url","published_at","collected_at","body_status","review_lane","work_action","recency_bucket"]
+          csvout("analysis_unlinked_362.csv",unlinked,cols)
+          csvout("exact_url_duplicates_for_review.csv",
+              [{"url":url,"article_ids":"|".join(x["article_id"] for x in group),"row_count":len(group)}
+               for url,group in sorted(duplicated)],["url","article_ids","row_count"])
+          top=collections.Counter(r["source"] for r in unlinked)
+          group=collections.Counter(r["recency_bucket"] for r in unlinked)
+          observed=collections.Counter(r["work_action"] for r in unlinked)
+          data_head=subprocess.check_output(["git","ls-remote","origin","refs/heads/data"],text=True).split()[0]
+          sidecar_head=subprocess.check_output(["git","ls-remote","origin","refs/heads/future-bottleneck-data"],text=True).split()[0]
+          assert data_head==os.environ["DATA_PIN"],"RSS generation changed while auditing; retry on new head"
+          assert sidecar_head==os.environ["SIDECAR_PIN"],"Analysis generation changed while auditing; retry on new head"
+          report={
+              "status":"PASS_S1_FULL_ID_INVENTORY_RECONCILED",
+              "scope":"all canonical RSS IDs and full sharded analysis ID set; not full-body completion",
+              "observed_at_utc":datetime.now(timezone.utc).isoformat(),
+              "data_sha":data_head,"sidecar_sha":sidecar_head,
+              "db_sha256":q["canonical_data_db_sha256"],
+              "sidecar_document_sha256":q["sidecar_manifest_sha256"],
+              "sidecar_shards_verified":q["sidecar_shards_hash_verified"],
+              "rss_articles":len(rows),"analysis_connected":len(linked),
+              "unlinked_but_preserved_in_canonical":len(unlinked),
+              "missing_from_canonical":0,"unexplained_missing_ids":0,
+              "duplicate_article_ids":len(rows)-len(set(ids)),
+              "exact_url_duplicate_groups_for_review":len(duplicated),
+              "unlinked_recency":dict(group),
+              "unlinked_actions":dict(observed),
+              "unlinked_top_publishers":top.most_common(15),
+              "body_status_all":q["body_counts"],"work_action_all":q["work_actions"],
+              "bounded_next_batch":len(picks),"full_source_reads_this_job":0,
+              "sidecar_writes_this_job":0,"research_promotions_this_job":0,
+              "gate":"S1_ID_INVENTORY_ONLY",
+              "next_step":"S2 release-guard repair and actual CPU read/save/readback"
+          }
+          (p/"s1_audit.json").write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          readme=[
+            "# BCT S1 — 실제 RSS 10,761건 전수 ID 대조",
+            "",
+            "- 결과: **PASS (기사 ID 인벤토리 범위)**",
+            "- RSS 원본: **10,761건**, 분석 sidecar 연결: **10,399건**",
+            "- 분석 미연결 **362건**은 RSS 원본에 보존되어 있으며 별도 CSV에 전건 기록.",
+            f"- 정확히 동일한 URL을 가진 중복 검토 그룹: **{len(duplicated)}개** (삭제·병합 아님)",
+            f"- 검증된 sidecar 분할 파일: **{q['sidecar_shards_hash_verified']}개**",
+            "- 모든 기사에 본문 상태, 분석 연결 상태, 작업 대기/보류 사유가 부여됨.",
+            "- 본 작업에서는 원문 재수집·CPU 판독·연구 승인·DB 수정이 **0건**.",
+            "- 기존 데이터의 장애·보류 상태는 성공으로 변경하지 않음.",
+            "- 다음 세션: 분석 엔진 release-guard 불일치 복구 및 실제 본문 처리 검증.",
+            ""
+          ]
+          (p/"s1_readme_ko.md").write_text("\n".join(readme),encoding="utf-8")
+          print("BCT_SESSION1_LIVE_ID_AUDIT="+json.dumps(report,ensure_ascii=False),flush=True)
+          PY
+          cat bct-s1-artifact/s1_readme_ko.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve full ID ledger and exact unlinked IDs as downloadable audit receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s1-full-10761-id-ledger
+          path: bct-s1-artifact/
+          retention-days: 30
+          if-no-files-found: warn
