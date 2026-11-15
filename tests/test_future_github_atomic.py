@@ -435,3 +435,65 @@ def test_multi_document_publication_failure_keeps_both_originals():
         t.write_many({PATH:{'results':{},'summary':{'completed':1}},'future-tracking.json':{'reviews':{'r':1}}},expected)
     assert remote.head=='c0' and t.read(PATH).document=={'results':{}}
     assert t.read('future-tracking.json').document=={'reviews':{}}
+
+
+@pytest.mark.parametrize(('temporary_failures', 'expected_status'), [
+    (1, 'APPLIED'),
+    (3, 'PENDING'),
+])
+def test_tiny_tree_422_retry_is_bounded_and_ref_move_remains_atomic(
+        monkeypatch, temporary_failures, expected_status):
+    remote = GitRemote({'notifications': {}})
+    original = remote.request
+    tree_attempts = []
+
+    def flaky_tree(method, suffix, payload=None):
+        if method == 'POST' and suffix == '/git/trees':
+            tree_attempts.append(payload)
+            if len(tree_attempts) <= temporary_failures:
+                raise storage.GitHubRequestError({
+                    'category': 'REQUEST_TOO_LARGE', 'status': 422,
+                    'endpoint': '/git/trees',
+                })
+        return original(method, suffix, payload)
+
+    sleeps = []
+    monkeypatch.setattr(storage.time, 'sleep', sleeps.append)
+    transport = storage.GitHubTransport(
+        'owner/repo', 'test', 'test-token', requester=flaky_tree)
+    result = store_patch(transport, PATH, owner='notification',
+                         patch={'notifications': {'new': {'sent': True}}},
+                         operation_id='tiny-tree-422')
+    assert result.status == expected_status
+    assert len(tree_attempts) == (2 if temporary_failures == 1 else 3)
+    assert sleeps == ([1] if temporary_failures == 1 else [1, 2])
+    assert all(payload == tree_attempts[0] for payload in tree_attempts)
+    assert len(transport.retry_observations) == len(sleeps)
+    assert sum(method == 'PATCH' for method, _ in remote.calls) == (
+        1 if expected_status == 'APPLIED' else 0)
+    assert remote.head != 'c0' if expected_status == 'APPLIED' else remote.head == 'c0'
+    assert remote.transport().read(PATH).document.get('notifications') == (
+        {'new': {'sent': True}} if expected_status == 'APPLIED' else {})
+
+
+@pytest.mark.parametrize(('status', 'category', 'is_large'), [
+    (422, 'REQUEST_TOO_LARGE', True),
+    (413, 'REQUEST_TOO_LARGE', False),
+    (403, 'ACCESS_DENIED', False),
+])
+def test_tree_size_or_permission_errors_do_not_retry(
+        monkeypatch, status, category, is_large):
+    attempts = []
+    def denied(method, suffix, payload=None):
+        attempts.append((method, suffix))
+        raise storage.GitHubRequestError({'category': category, 'status': status})
+    sleeps = []
+    monkeypatch.setattr(storage.time, 'sleep', sleeps.append)
+    transport = storage.GitHubTransport(
+        'owner/repo', 'test', 'test-token', requester=denied)
+    entry = {'path': 'x' * (18000 if is_large else 1),
+             'mode': '100644', 'type': 'blob', 'sha': 'a' * 40}
+    with pytest.raises(storage.GitHubRequestError):
+        transport._retry_object('POST', '/git/trees', {'base_tree': 't0', 'tree': [entry]})
+    assert attempts == [('POST', '/git/trees')]
+    assert not sleeps
