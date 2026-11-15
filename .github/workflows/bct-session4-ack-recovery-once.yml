@@ -1,0 +1,26 @@
+name: BCT Session 4 one-shot authenticated CPU ACK recovery
+on:
+  push:
+    branches: [ops/bct-s4-recover-public-ack-20261116]
+    paths: [.github/workflows/bct-session4-ack-recovery-once.yml]
+permissions:
+  contents: read
+  actions: write
+jobs:
+  refresh-existing-verified-ack:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s4-recover-public-ack-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    env:
+      GH_TOKEN: ${{ github.token }}
+      EXPECTED_MAIN: c403dc319f8aeb2528efae1b797c37943e2b7d4a
+    steps:
+      - name: Request existing source-free recovery, no model work or new private state
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)"
+          [[ "$actual" == "$EXPECTED_MAIN" ]] || { echo "::error::Main changed; no recovery dispatch";exit 1; }
+          jq -n '{ref:"main",inputs:{purpose:"recover-public"}}' > "$RUNNER_TEMP/recovery-dispatch.json"
+          gh api --method POST "repos/$GITHUB_REPOSITORY/actions/workflows/v4-cpu-private-research.yml/dispatches" --input "$RUNNER_TEMP/recovery-dispatch.json"
+          echo "BCT_S4_RECOVER_PUBLIC_REQUEST_ACCEPTED_NO_CPU_INFERENCE"
