@@ -166,8 +166,11 @@ def build(document, trace=None):
               "reason": cpu.get("blocker") or (
                   "NO_STRUCTURED_SOURCE_EVENT" if not events
                   else "NO_INDEPENDENT_QUALIFIED_SUPPLY_DEMAND_PAIR")}
-    result["case_id"] = sha(canonical([FORMAT, source["document_id"],
-                                     source["body_sha256"], cpu.get("window_binding_sha256")]))
+    # The same source/window can gain a later immutable CPU receipt. Keep
+    # old UNREAD evidence, never rewrite it as COMPLETE in the same case ID.
+    result["case_id"] = sha(canonical([FORMAT, graph.VERSION, reader.VERSION,
+                                     source["document_id"], source["body_sha256"],
+                                     sha(canonical(cpu))]))
     return result
 
 
@@ -223,8 +226,10 @@ def dashboard(rows):
     return {"format": "bct-session4-dashboard-readonly-v1",
             "source": "IMMUTABLE_SESSION4_LEDGER",
             "candidate_count": 0,
-            "held_sources": len(rows),
-            "cpu_unread_sources": sum(x["cpu"].get("blocker") == "CPU_WINDOW_UNREAD" for x in rows),
+            "held_cases": len(rows),
+            "held_sources": len({(x["source"]["document_id"], x["source"]["body_sha256"]) for x in rows}),
+            "cpu_unread_sources": len({(x["source"]["document_id"], x["source"]["body_sha256"])
+                                      for x in rows if x["cpu"].get("blocker") == "CPU_WINDOW_UNREAD"}),
             "trace": [{"case_id": x["case_id"], "document_id": x["source"]["document_id"],
                        "body_sha256": x["source"]["body_sha256"],
                        "status": "HOLD", "reason": x["reason"],
