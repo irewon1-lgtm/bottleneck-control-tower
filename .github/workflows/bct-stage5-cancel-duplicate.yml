@@ -1,0 +1,38 @@
+name: BCT duplicate Stage 5 Gate cancel once
+on:
+  push:
+    branches:
+      - ops/bct-stage5-current-sha-trigger-20261115
+    paths:
+      - .github/workflows/bct-stage5-cancel-duplicate.yml
+permissions:
+  contents: read
+  actions: write
+jobs:
+  cancel-only-known-duplicate:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      GH_TOKEN: ${{ github.token }}
+      DUPLICATE_RUN: "43674571175"
+      EXPECTED_SHA: "1d1d75f7ee74b26cf792e72ed5c5eaa61d3948ac"
+    steps:
+      - name: Cancel only queued duplicate, leave original Gate undisturbed
+        shell: bash
+        run: |
+          set -euo pipefail
+          raw="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${DUPLICATE_RUN}")"
+          sha="$(jq -r .head_sha <<<"$raw")"
+          status="$(jq -r .status <<<"$raw")"
+          event="$(jq -r .event <<<"$raw")"
+          if [[ "$sha" != "$EXPECTED_SHA" || "$event" != "workflow_dispatch" ]]; then
+            echo "::error::Target run is not the reviewed main Gate duplicate"
+            exit 1
+          fi
+          if [[ "$status" == "queued" || "$status" == "pending" || "$status" == "waiting" ]]; then
+            gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/runs/${DUPLICATE_RUN}/cancel"
+            echo "KNOWN_DUPLICATE_GATE_CANCEL_REQUEST_ACCEPTED"
+          else
+            echo "Not cancelling run in state $status"
+          fi
