@@ -468,7 +468,8 @@ def test_tiny_tree_422_retry_is_bounded_and_ref_move_remains_atomic(
     assert len(tree_attempts) == (2 if temporary_failures == 1 else 3)
     assert sleeps == ([1] if temporary_failures == 1 else [1, 2])
     assert all(payload == tree_attempts[0] for payload in tree_attempts)
-    assert len(transport.retry_observations) == len(sleeps)
+    # Include the terminal failed attempt, even though it has no sleep.
+    assert len(transport.retry_observations) == temporary_failures
     assert sum(method == 'PATCH' for method, _ in remote.calls) == (
         1 if expected_status == 'APPLIED' else 0)
     assert remote.head != 'c0' if expected_status == 'APPLIED' else remote.head == 'c0'
