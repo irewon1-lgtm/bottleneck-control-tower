@@ -1,0 +1,89 @@
+name: BCT Session 4 actual-source HOLD and readback proof
+on:
+  push:
+    branches: [main, fix/bct-session4-source-to-hold-20261115]
+    paths:
+      - src/bct/session4_evidence_chain.py
+      - tests/test_session4_evidence_chain.py
+      - tools/bct_session4_replay.py
+      - .github/workflows/bct-session4-proof.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  actual-source-e2e:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONPATH: src
+      INPUT_ACQUISITION_RUN: "43645932280"
+      INPUT_CPU_RESEARCH_RUN: "43646721828"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install existing test dependencies; no CPU runtime or model install
+        run: python -m pip install -e '.[test]'
+      - name: Source-bound failure and immutable readback regressions
+        run: python -m pytest -q tests/test_session4_evidence_chain.py tests/test_precursor_graph_trace.py tests/test_precursor_source_pipeline.py tests/test_precursor_target_gap.py
+      - name: Fetch exact previously preserved source and CPU public receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/session4/input/source" "$RUNNER_TEMP/session4/input/research"
+          gh run download "$INPUT_ACQUISITION_RUN" -R "$GITHUB_REPOSITORY" --name precursor-cpu-delta-1 --dir "$RUNNER_TEMP/session4/input/source"
+          gh run download "$INPUT_CPU_RESEARCH_RUN" -R "$GITHUB_REPOSITORY" --name bct-public-research-1 --dir "$RUNNER_TEMP/session4/input/research"
+          python - <<'PYCODE'
+          import os, pathlib, zipfile
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])/'session4/input'
+          for part in ('source','research'):
+              folder=root/part;target=root/(part+'.zip')
+              with zipfile.ZipFile(target,'w',compression=zipfile.ZIP_DEFLATED) as z:
+                  for path in sorted(folder.rglob('*')):
+                      if path.is_file():z.write(path,arcname=str(path.relative_to(folder)))
+          PYCODE
+      - name: Replay verified real article IDs and pending CPU windows into explicit HOLD
+        run: >-
+          python tools/bct_session4_replay.py replay
+          --source-zip "$RUNNER_TEMP/session4/input/source.zip"
+          --research-zip "$RUNNER_TEMP/session4/input/research.zip"
+          --out "$RUNNER_TEMP/session4/proof"
+      - name: Fresh Python process reopens saved SQLite, verifies every record and source-free dashboard
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_session4_replay.py verify --out "$RUNNER_TEMP/session4/proof" > "$RUNNER_TEMP/session4/proof/restore.json"
+          python - <<'PYCODE'
+          import json,os,pathlib
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])/'session4/proof'
+          receipt=json.loads((root/'receipt.json').read_text())
+          restored=json.loads((root/'restore.json').read_text())
+          assert receipt['status']=='PASS_BACKFILL_HOLD_ONLY'
+          assert receipt['source_verified_documents']>=1
+          assert receipt['cpu_unread_documents']>=1
+          assert receipt['pending_cpu_windows_in_exact_documents']>=1
+          assert receipt['source_bound_events']>=1
+          assert receipt['independent_qualified_pairs']==0
+          assert restored['status']=='PASS_NEW_PROCESS_LEDGER_READBACK'
+          assert restored['source_id'] in {x['document_id'] for x in json.loads((root/'dashboard.json').read_text())['trace']}
+          assert restored['new_model_calls']==restored['production_writes']==0
+          print('SESSION4_VERIFIED_REAL_SOURCE_HOLD_NO_FALSE_PROMOTION')
+          PYCODE
+      - name: Retain ONLY derived source-free HOLD ledger and readback receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-session4-real-source-hold-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/session4/proof/session4.sqlite3
+            ${{ runner.temp }}/session4/proof/receipt.json
+            ${{ runner.temp }}/session4/proof/dashboard.json
+            ${{ runner.temp }}/session4/proof/restore.json
+          retention-days: 30
+          if-no-files-found: error
