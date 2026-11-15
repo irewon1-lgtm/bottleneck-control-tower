@@ -1,0 +1,30 @@
+name: BCT Stage 5 current SHA one-shot dispatch
+on:
+  push:
+    branches:
+      - ops/bct-stage5-current-sha-trigger-20261115
+    paths:
+      - .github/workflows/bct-stage5-current-sha-trigger.yml
+permissions:
+  contents: read
+  actions: write
+jobs:
+  dispatch-verified-main:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-stage5-current-sha-trigger-20261115' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      EXPECTED_MAIN: 1d1d75f7ee74b26cf792e72ed5c5eaa61d3948ac
+    steps:
+      - name: Start exactly one real recovery Gate on reviewed main
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq .object.sha)"
+          if [[ "$actual" != "$EXPECTED_MAIN" ]]; then
+            echo "::error::main changed since unit tests; refuse stale Gate dispatch"
+            exit 1
+          fi
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/bct-recovery.yml/dispatches" -f ref=main
+          echo "STAGE5_MAIN_CURRENT_CODE_GATE_DISPATCH_REQUEST_ACCEPTED"
