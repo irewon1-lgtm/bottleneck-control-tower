@@ -31,8 +31,10 @@ jobs:
           gh api "repos/$GITHUB_REPOSITORY/actions/runs/$VERIFIED_RSS_RUN" \
             --jq '.conclusion + ":" + .head_branch + ":" + .name' |
             grep -Fx 'success:main:RSS live environment check'
+          jq -n --arg acq "$VERIFIED_ACQUISITION_RUN" \
+            '{ref:"main",inputs:{purpose:"manual-research",acquisition_run:$acq}}' \
+            > "$RUNNER_TEMP/s4-cpu-dispatch.json"
           gh api --method POST \
             "repos/$GITHUB_REPOSITORY/actions/workflows/v4-cpu-private-research.yml/dispatches" \
-            -f ref=main -f purpose=manual-research \
-            -f acquisition_run="$VERIFIED_ACQUISITION_RUN"
+            --input "$RUNNER_TEMP/s4-cpu-dispatch.json"
           echo 'BCT_S4_MANUAL_CPU_DISPATCH_ACCEPTED_SOURCE_VERIFICATION_REQUIRED'
