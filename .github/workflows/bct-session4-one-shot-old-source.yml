@@ -1,0 +1,37 @@
+name: BCT S4 one-shot exact older-source CPU recovery
+on:
+  push:
+    branches: [ops/bct-session4-older-source-20261115]
+    paths: [.github/workflows/bct-session4-one-shot-old-source.yml]
+permissions:
+  contents: read
+  actions: write
+jobs:
+  manual-older-exact-input:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    env:
+      GH_TOKEN: ${{ github.token }}
+      EXPECTED_MAIN_SHA: c687ef6e0825cf9799c9a1d7042605aab00efc37
+      VERIFIED_ACQUISITION_RUN: '43645932280'
+      VERIFIED_RSS_RUN: '43645752354'
+    steps:
+      - name: Re-present previously preserved real source to pinned CPU without duplicate completed windows
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)" = "$EXPECTED_MAIN_SHA"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$VERIFIED_ACQUISITION_RUN" \
+            --jq '.conclusion + ":" + .head_branch + ":" + .name' |
+            grep -Fx 'success:main:New precursor evidence acquisition'
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$VERIFIED_RSS_RUN" \
+            --jq '.conclusion + ":" + .head_branch + ":" + .name' |
+            grep -Fx 'success:main:RSS live environment check'
+          jq -n --arg acq "$VERIFIED_ACQUISITION_RUN" \
+            '{ref:"main",inputs:{purpose:"manual-research",acquisition_run:$acq}}' \
+            > "$RUNNER_TEMP/s4-cpu-older-source-dispatch.json"
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/v4-cpu-private-research.yml/dispatches" \
+            --input "$RUNNER_TEMP/s4-cpu-older-source-dispatch.json"
+          echo 'BCT_S4_VERIFIED_OLDER_SOURCE_MANUAL_CPU_REQUEST_ACCEPTED'
