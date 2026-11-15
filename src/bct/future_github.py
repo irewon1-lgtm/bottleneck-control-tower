@@ -290,15 +290,31 @@ class GitHubTransport(LegacyGitHubTransport):
         self.last_commit = None
 
     def _retry_object(self, method, suffix, payload=None):
-        # Blob creation is content-addressed and idempotent. Never retry ref
-        # updates or other mutations with an uncertain outcome.
+        # Blob and tree creation are content-addressed: retrying creates no
+        # externally visible sidecar generation. Never retry commit/ref moves
+        # here, and never retry a potentially oversized tree request.
+        small_tree = (
+            method == 'POST' and suffix == '/git/trees' and payload is not None
+            and len(json.dumps(payload, separators=(',', ':')).encode()) <= 16 * 1024
+        )
         for attempt in range(3):
             try:
                 return self.requester(method, suffix, payload)
             except (FileNotFoundError, GitHubRequestError) as exc:
+                # GitHub returned 422 REQUEST_TOO_LARGE for a tiny (~two-entry)
+                # native-claim tree on run 43633905177. A fresh small-tree
+                # POST succeeds against the same base tree. Permit two bounded
+                # retries only for this anomalous, immutable-object case.
+                # Persistent 422 still fails closed; no ref move is attempted.
+                tiny_tree_422 = (
+                    small_tree and isinstance(exc, GitHubRequestError)
+                    and exc.details.get('status') == 422
+                    and exc.details.get('category') == 'REQUEST_TOO_LARGE'
+                )
                 retryable = (isinstance(exc, FileNotFoundError) and method == 'GET'
                              or isinstance(exc, GitHubRequestError)
-                             and exc.details.get('category') == 'GITHUB_SERVICE_ERROR')
+                             and exc.details.get('category') == 'GITHUB_SERVICE_ERROR'
+                             or tiny_tree_422)
                 self.retry_observations.append({'method': method, 'endpoint': suffix,
                     'attempt': attempt + 1, 'error_type': type(exc).__name__,
                     'details': exc.details if isinstance(exc, GitHubRequestError) else {'status': 404}})
@@ -489,7 +505,8 @@ class GitHubTransport(LegacyGitHubTransport):
         for path in changed:
             generation,root_sha,display_sha=self._generation_entries(path,documents[path],previous[path])
             entries.extend(generation);roots[path]=root_sha;displays[path[:-5]+'.ui.json.gz']=display_sha
-        tree = self.requester('POST', '/git/trees', {'base_tree': commit['tree']['sha'], 'tree': entries})
+        tree = self._retry_object('POST', '/git/trees',
+                                  {'base_tree': commit['tree']['sha'], 'tree': entries})
         saved = self.requester('POST', '/git/commits', {'message': 'Persist verified BCT sidecar generation',
                               'tree': tree['sha'], 'parents': [head]})
         for sha, expected in self._staged_blobs.items():
