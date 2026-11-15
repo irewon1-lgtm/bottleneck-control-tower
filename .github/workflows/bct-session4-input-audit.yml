@@ -50,11 +50,12 @@ jobs:
           test -s "$RUNNER_TEMP/s4/target/receipt.json"
       - name: Authenticate existing encrypted research state via reviewed immutable CPU code
         shell: bash
+        working-directory: pinned-cpu
         env:
-          PYTHONPATH: pinned-cpu/src
+          PYTHONPATH: src
           BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
         run: >-
-          python pinned-cpu/tools/v4_cpu_private.py unseal
+          python tools/v4_cpu_private.py unseal
           --packet "$RUNNER_TEMP/s4/bridge/state.gpg"
           --checkpoint "$RUNNER_TEMP/s4/checkpoint"
       - name: Read exact 11 source versions and identify source input selection vs hold
