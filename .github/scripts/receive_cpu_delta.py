@@ -254,6 +254,81 @@ def input_hold(source,reason):
     return {k:source[k] for k in ('document_id','body_key','body_sha256','raw_sha256')}|{'status':'HELD_INPUT_UNAVAILABLE','reason_code':reason}
 
 
+
+def recover_current_exact_holds(holds, sources, current, manifest, cache):
+    """Release *only* artifact-budget holds proven by the already loaded current ZIP.
+
+    A manual replay of the original acquisition can contain immutable exact
+    bodies which were omitted from the 8 *historical* artifact selection. It
+    must not remain blocked solely because that same artifact also appears
+    in the saved CPU checkpoint. This does NOT relax version, rights, native
+    source or provenance checks; hydrate/enqueue recheck all of those.
+    """
+    if not isinstance(holds,list) or not isinstance(sources,dict):
+        raise ValueError('CPU_CURRENT_HOLD_INPUT_INVALID')
+    docs=manifest.get('documents',[])
+    by_id={}
+    for item in docs:
+        by_id.setdefault(item.get('document_id'),[]).append(item)
+    current_digest=current.get('digest')
+    if not isinstance(current_digest,str) or not re.fullmatch('sha256:[0-9a-f]{64}',current_digest):
+        raise ValueError('CPU_CURRENT_ARTIFACT_DIGEST_REQUIRED')
+    manifest_digest=canonical_hash(manifest)
+    remaining=[];recovered=[]
+    for hold in holds:
+        source=sources.get(hold.get('body_key')) if isinstance(hold,dict) else None
+        descriptor=source.get('input_artifact') if isinstance(source,dict) else None
+        if (not source or not isinstance(descriptor,dict)
+                or hold.get('reason_code')!='PRIOR_INPUT_ARTIFACT_BUDGET_HELD'
+                or descriptor.get('artifact_id')!=current.get('id')
+                or descriptor.get('digest')!=current_digest.split(':',1)[1]
+                or descriptor.get('manifest_sha256')!=manifest_digest
+                or descriptor.get('acquisition_run_id')!=manifest.get('acquisition_run_id')
+                or descriptor.get('acquisition_run_attempt')!=manifest.get('acquisition_run_attempt')
+                or descriptor.get('acquisition_run_attempt')!=current.get('acquisition_run_attempt')
+                or descriptor.get('head_sha')!=manifest.get('acquisition_head_sha')):
+            remaining.append(hold);continue
+        matches=by_id.get(source.get('document_id'),[])
+        if len(matches)!=1:
+            remaining.append(hold);continue
+        item=matches[0]
+        metadata=descriptor.get('document_member')
+        native=descriptor.get('native_member')
+        files=manifest.get('files',{})
+        if (not isinstance(metadata,str) or metadata!=item.get('document_member')
+                or not isinstance(native,str) or native!=item.get('native_member')
+                or metadata not in files or native not in files
+                or not metadata.startswith('documents/')
+                or not native.startswith('raw/')
+                or descriptor.get('metadata_sha256')!=item.get('metadata_sha256')
+                or files[metadata].get('sha256')!=descriptor.get('metadata_sha256')
+                or files[native].get('sha256')!=source.get('raw_sha256')
+                or item.get('body_sha256')!=source.get('body_sha256')
+                or item.get('raw_sha256')!=source.get('raw_sha256')):
+            remaining.append(hold);continue
+        # The transport already validated each archive member's literal hash.
+        # Require the exact stored metadata to bind this native/body version.
+        try:
+            document=json.loads((cache/metadata).read_bytes())
+            if (document.get('document_id')!=source['document_id']
+                    or document.get('body_sha256')!=source['body_sha256']
+                    or document.get('raw_sha256')!=source['raw_sha256']
+                    or document.get('version')!=source['body_sha256']
+                    or document.get('provenance')!='PASS'
+                    or document.get('provenance_verified') is not True
+                    or not isinstance(document.get('body'),str)
+                    or hashlib.sha256(document['body'].encode()).hexdigest()!=source['body_sha256']):
+                raise ValueError('CPU_CURRENT_DOCUMENT_SOURCE_BINDING_MISMATCH')
+        except (OSError,ValueError,TypeError,KeyError,UnicodeError):
+            remaining.append(hold);continue
+        recovered.append({'document_id':source['document_id'],
+                          'body_sha256':source['body_sha256'],
+                          'raw_sha256':source['raw_sha256'],
+                          'artifact_id':current['id'],
+                          'status':'EXACT_CURRENT_ARTIFACT_PROVEN_FOR_REHYDRATION'})
+    return remaining,recovered
+
+
 def receive(run_id,head_sha,rss_run_id,rss_manifest,destination,checkpoint,receipt,*,run_attempt=None,rss_run_attempt=None):
     destination,receipt=Path(destination),Path(receipt);vacant(destination);vacant(receipt)
     destination.parent.mkdir(parents=True,exist_ok=True)
@@ -303,6 +378,11 @@ def receive(run_id,head_sha,rss_run_id,rss_manifest,destination,checkpoint,recei
         archive,cache,manifest=load(current,run_id,head_sha,rss_run_id,rss_run_attempt)
         if digest(rss_manifest)!=manifest['rss_manifest_sha256']:raise ValueError('CPU_DELTA_ORIGINAL_RSS_BINDING')
         merge(cache,manifest['files'],[{**d,'acquisition_run_id':run_id,'head_sha':head_sha} for d in manifest['documents']],current)
+        # Historical budget holds are lifted only after the SAME immutable
+        # acquisition is authenticated as the current input and exact native,
+        # body, metadata, and artifact hashes are reverified.
+        holds,current_recovered=recover_current_exact_holds(
+            holds,plan['sources'],current,manifest,cache)
         shutil.copyfile(cache/'manifest.json',stage/'bundle-manifest.json')
         total+=(stage/'bundle-manifest.json').stat().st_size
         shutil.rmtree(cache);archive.unlink()
@@ -365,6 +445,7 @@ def receive(run_id,head_sha,rss_run_id,rss_manifest,destination,checkpoint,recei
         # RSS bytes remain separately bound and cannot acquire opposite IDs.
         vacant(destination);stage.rename(destination)
     result={'status':'PASS_SMALL_EXACT_CPU_INPUTS_WITH_ISOLATED_HOLDS' if holds else 'PASS_SMALL_EXACT_CPU_INPUTS','input_artifacts':input_artifacts,'artifacts':artifacts,
+        'current_artifact_exact_holds_recovered':len(current_recovered),
         'input_holds':holds,'isolated_prior_input_holds':len(holds),
         'analysis_retry_body_keys':plan.get('analysis_needed',[]),
         'analysis_contexts':analysis_contexts,
