@@ -75,6 +75,10 @@ def test_duplicate_source_id_not_double_fetched():
 
 def _db(tmp_path):
     db=tmp_path/"rss.sqlite3"
+    # The integration runner uses the actual clock, unlike the pure tests
+    # that explicitly pass NOW. Fixed 2026-11-13 fixtures cease to be recent
+    # after 48 hours and would fail for reasons unrelated to queue behavior.
+    live_now = datetime.now(timezone.utc)
     with sqlite3.connect(db) as conn:
         conn.execute("""CREATE TABLE radar_items(
            id TEXT PRIMARY KEY,title TEXT,url TEXT,source TEXT,
@@ -82,7 +86,7 @@ def _db(tmp_path):
            snippet TEXT)""")
         for i in range(8):
             older=i<4
-            timestamp=(NOW-timedelta(hours=800 if older else 2)).isoformat()
+            timestamp=(live_now-timedelta(hours=800 if older else 2)).isoformat()
             conn.execute("INSERT INTO radar_items VALUES(?,?,?,?,?,?,?,?,?)",(
                 str(i),"Firm orders for gas turbines increased in 2028",
                 f"https://host{i}.example/story/{i}","rss",
