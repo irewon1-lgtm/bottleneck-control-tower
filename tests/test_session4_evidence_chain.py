@@ -121,3 +121,20 @@ def test_bad_source_locator_never_persists():
     d["retained_collection_events"][0]["locator"]["end"] += 10000
     with pytest.raises((ValueError, IndexError, KeyError)):
         s4.build(d, cpu(d))
+
+
+def test_later_cpu_receipt_appends_a_new_held_case_without_rewriting_history(tmp_path):
+    d = article()
+    old = s4.build(d, cpu(d, read="UNREAD"))
+    subsequent = s4.build(d, cpu(d, read="COMPLETE"))
+    assert old["case_id"] != subsequent["case_id"]
+    location = tmp_path / "research-ledger.sqlite3"
+    s4.persist(location, [old])
+    rows = s4.persist(location, [subsequent])
+    assert len(rows) == 2
+    assert {x["case_id"] for x in rows} == {old["case_id"], subsequent["case_id"]}
+    assert all(x["decision"] == "HOLD" for x in rows)
+    dashboard = s4.dashboard(rows)
+    assert dashboard["held_cases"] == 2
+    assert dashboard["held_sources"] == 1
+    assert dashboard["cpu_unread_sources"] == 1
