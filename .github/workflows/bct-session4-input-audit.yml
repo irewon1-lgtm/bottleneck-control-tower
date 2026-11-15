@@ -1,0 +1,87 @@
+name: BCT Session 4 read-only exact source input selection audit
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/bct-session4-input-audit.yml
+      - tools/bct_session4_input_audit.py
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-session4-readonly-input-diagnosis
+  cancel-in-progress: false
+jobs:
+  inspect-immutable-private-checkpoint:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PINNED_CPU_SOURCE_RUN: "43699547055"
+      PINNED_HOLD_PROOF_RUN: "43698475837"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 6e788d18cf85fdb834b451bb35585a8b58925301
+          path: pinned-cpu
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Verify explicit original 11-case identity contracts without model
+        run: python -m pytest -q tests/test_bct_session4_input_audit.py
+      - name: Retrieve immutable encrypted checkpoint and original source-free HOLD proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/s4/bridge" "$RUNNER_TEMP/s4/target"
+          gh run download "$PINNED_CPU_SOURCE_RUN" -R "$GITHUB_REPOSITORY" \
+            --name bct-sealed-cpu-bridge-1 --dir "$RUNNER_TEMP/s4/bridge"
+          gh run download "$PINNED_HOLD_PROOF_RUN" -R "$GITHUB_REPOSITORY" \
+            --name "bct-session4-real-source-hold-$PINNED_HOLD_PROOF_RUN" --dir "$RUNNER_TEMP/s4/target"
+          test -s "$RUNNER_TEMP/s4/bridge/state.gpg"
+          test -s "$RUNNER_TEMP/s4/target/session4.sqlite3"
+          test -s "$RUNNER_TEMP/s4/target/receipt.json"
+      - name: Authenticate existing encrypted research state via reviewed immutable CPU code
+        shell: bash
+        env:
+          PYTHONPATH: pinned-cpu/src
+          BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+        run: >-
+          python pinned-cpu/tools/v4_cpu_private.py unseal
+          --packet "$RUNNER_TEMP/s4/bridge/state.gpg"
+          --checkpoint "$RUNNER_TEMP/s4/checkpoint"
+      - name: Read exact 11 source versions and identify source input selection vs hold
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_session4_input_audit.py \
+            --checkpoint "$RUNNER_TEMP/s4/checkpoint" \
+            --target-ledger "$RUNNER_TEMP/s4/target/session4.sqlite3" \
+            --target-receipt "$RUNNER_TEMP/s4/target/receipt.json" \
+            --pinned-transport pinned-cpu/.github/scripts/receive_cpu_delta.py \
+            --output "$RUNNER_TEMP/s4/selection.json"
+          python - <<'PY'
+          import json,os,pathlib
+          value=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'s4/selection.json').read_text())
+          assert value['format']=='bct-session4-private-source-selection-audit-v1'
+          assert value['source_count']==len(value['sources'])==11
+          assert value['source_identities_verified']
+          assert value['prior_artifacts_selected']<=value['prior_artifact_limit']==8
+          assert value['new_CPU_calls']==value['production_writes']==0
+          assert value['can_mark_session4_complete'] is False
+          print('BCT_S4_EXACT_11_SOURCE_SELECTION_DIAGNOSIS_PASS')
+          PY
+      - name: Upload only source-free classification and immutable IDs
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-session4-source-selection-${{ github.run_id }}
+          path: ${{ runner.temp }}/s4/selection.json
+          retention-days: 30
+          if-no-files-found: error
