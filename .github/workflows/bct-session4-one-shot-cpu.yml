@@ -1,0 +1,38 @@
+name: BCT Session 4 one-shot verified manual CPU research
+on:
+  push:
+    branches:
+      - ops/bct-session4-manual-cpu-20261115
+    paths:
+      - .github/workflows/bct-session4-one-shot-cpu.yml
+permissions:
+  contents: read
+  actions: write
+jobs:
+  request-manual-source-only:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-session4-manual-cpu-20261115' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    env:
+      GH_TOKEN: ${{ github.token }}
+      EXPECTED_MAIN_SHA: c687ef6e0825cf9799c9a1d7042605aab00efc37
+      VERIFIED_ACQUISITION_RUN: '43696720441'
+      VERIFIED_RSS_RUN: '43696594321'
+    steps:
+      - name: Verify immutable source-run chain and request exactly one bounded manual CPU batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          current="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)"
+          test "$current" = "$EXPECTED_MAIN_SHA"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$VERIFIED_ACQUISITION_RUN" \
+            --jq '.conclusion + ":" + .head_branch + ":" + .name' |
+            grep -Fx 'success:main:New precursor evidence acquisition'
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$VERIFIED_RSS_RUN" \
+            --jq '.conclusion + ":" + .head_branch + ":" + .name' |
+            grep -Fx 'success:main:RSS live environment check'
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/v4-cpu-private-research.yml/dispatches" \
+            -f ref=main -f purpose=manual-research \
+            -f acquisition_run="$VERIFIED_ACQUISITION_RUN"
+          echo 'BCT_S4_MANUAL_CPU_DISPATCH_ACCEPTED_SOURCE_VERIFICATION_REQUIRED'
