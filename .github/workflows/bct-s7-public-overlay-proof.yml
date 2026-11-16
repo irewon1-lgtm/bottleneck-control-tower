@@ -1,0 +1,138 @@
+name: BCT S7 exact published Pages artifact overlay pre-deployment proof
+on:
+  push:
+    branches: [ops/bct-s7-publish-source-truth-pages-20261116]
+    paths:
+      - tools/bct_s7_public_overlay.py
+      - tests/test_bct_s7_public_overlay.py
+      - .github/workflows/ui-pages.yml
+      - .github/workflows/bct-s7-public-overlay-proof.yml
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-s7-original-published-site-preservation-20261116
+  cancel-in-progress: false
+jobs:
+  source-truth-public-overlay-tests:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s7-publish-source-truth-pages-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      PYTHONPATH: src:tools
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Reject false 511 promotion and preserve old Pages assets
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_bct_s7_public_overlay.py -v
+  real-original-pages-tar-qa:
+    needs: source-truth-public-overlay-tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONPATH: src:tools
+      PAGES_RUN: '43838794301'
+      PAGES_ARTIFACT: '14211394848'
+      PAGES_HEAD: 'af6088f1adb2921a4c6d50132cdee6357f6cdcdd'
+      PAGES_DIGEST: 'sha256:641cf9c02359db448a34e02f35e9a58b1d72453ee4be8514b053e39a25368316'
+      S7_RUN: '43875515509'
+      S7_ARTIFACT: '14229273477'
+      S7_HEAD: '3682798909066413ab174798275268c51a8bbfa4'
+      S7_DIGEST: 'sha256:bb0b13dd8076a3a2706dbaa27234a5052508a9211b3941d910ac8484665aebc3'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Authenticate exact published Pages and research preview artifacts
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os,json,subprocess
+          repo=os.environ['GITHUB_REPOSITORY']
+          for kind in ('PAGES','S7'):
+              run=int(os.environ[kind+'_RUN'])
+              artifact=int(os.environ[kind+'_ARTIFACT'])
+              sha=os.environ[kind+'_HEAD']
+              digest=os.environ[kind+'_DIGEST']
+              r=json.loads(subprocess.check_output(['gh','api',f'repos/{repo}/actions/runs/{run}']))
+              a=json.loads(subprocess.check_output(['gh','api',f'repos/{repo}/actions/artifacts/{artifact}']))
+              assert r['id']==run and r['status']=='completed' and r['conclusion']=='success'
+              assert r['head_sha']==sha and r['head_repository']['full_name']==repo
+              assert a['id']==artifact and a['workflow_run']['id']==run
+              assert a['digest']==digest and not a['expired']
+              if kind=='PAGES': assert a['name']=='github-pages'
+              else: assert a['name']==f'bct-s7-source-truth-dashboard-preview-{run}'
+              print('BCT_S7_PREDEPLOY_'+kind+'_ARTIFACT_ATTESTED')
+          PY
+      - name: Download exact existing public Pages and validate paths before extracting
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/previous" "$RUNNER_TEMP/real-old-site"
+          gh run download "$PAGES_RUN" -R "$GITHUB_REPOSITORY" --name github-pages --dir "$RUNNER_TEMP/previous"
+          test -s "$RUNNER_TEMP/previous/artifact.tar"
+          python - <<'PY'
+          import os,pathlib,tarfile
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'previous/artifact.tar'
+          dest=pathlib.Path(os.environ['RUNNER_TEMP'])/'real-old-site'
+          with tarfile.open(p) as tar:
+              members=tar.getmembers()
+              assert len(members)>1703
+              for m in members:
+                  if not (m.isfile() or m.isdir()): raise ValueError('NON_FILE_PUBLISHED_MEMBER')
+                  path=pathlib.PurePosixPath(m.name)
+                  if path.is_absolute() or '..' in path.parts: raise ValueError('BAD_PUBLISHED_PATH')
+                  if m.size>12*1024*1024: raise ValueError('BCT_PAGE_SIZE_LIMIT')
+              tar.extractall(dest,filter='data')
+          assert (dest/'api/dashboard.json').is_file()
+          assert (dest/'index.html').is_file()
+          print('BCT_S7_REAL_1703_PAGES_ARCHIVE_SAFELY_RESTORED')
+          PY
+      - name: Build certified overlay on the actual published 511-legacy site
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/s7-source"
+          gh run download "$S7_RUN" -R "$GITHUB_REPOSITORY" \
+            --name "bct-s7-source-truth-dashboard-preview-$S7_RUN" \
+            --dir "$RUNNER_TEMP/s7-source"
+          python tools/bct_s7_public_overlay.py \
+            --site-root "$RUNNER_TEMP/real-old-site" \
+            --source-status "$RUNNER_TEMP/s7-source/s7-research-status.json" \
+            --run-sha "$S7_HEAD" --run-id "$S7_RUN"
+          python - <<'PY'
+          import pathlib,os,json,hashlib
+          base=pathlib.Path(os.environ['RUNNER_TEMP'])/'real-old-site'
+          old=json.loads((base/'api/dashboard.json').read_text())
+          recent=json.loads((base/'source-truth/status.json').read_text())
+          assert old['counts']['evidence']==511 and len(old['records'])==511
+          assert old['sector_rankings_live']['new_original_verified']==12
+          assert recent['historical']['record_count']==511
+          assert recent['research']['strict_original_publisher_body_date_verified']==18
+          assert recent['research']['new_sourcebound_research_hints_not_independent_pairs']==147
+          assert recent['research']['registered_target_holds']==22
+          assert recent['admission']['eligible_independent_pair_count']==0
+          print('BCT_S7_REAL_PAGES_SOURCE_TRUTH_PREDEPLOY_PASS='+json.dumps({
+           'old_records_unchanged':511,'new_original_verified':18,
+           'research_hints_unpaired':147,'new_admitted_pairs':0,
+           'new_page_sha256':hashlib.sha256((base/'source-truth/index.html').read_bytes()).hexdigest()
+          },sort_keys=True))
+          PY
+      - name: Export source-free smoke proof only
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s7-predeploy-proof-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/real-old-site/source-truth/status.json
+          retention-days: 14
+          if-no-files-found: error
