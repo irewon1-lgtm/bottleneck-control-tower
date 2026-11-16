@@ -78,7 +78,7 @@ function fixtures() {
 async function app(data, failures = {}, hash = "#tracking") {
   const ids = Object.fromEntries(["content", "page-title", "page-subtitle", "snapshot-time", "notice", "dialog-close", "family-dialog", "dialog-title", "dialog-content"].map(id => [id, new Element("div")]));
   const eyebrow = new Element("span");
-  const nav = ["dashboard", "tracking", "future"].map(page => { const el = new Element("a"); el.dataset.page = page; return el; });
+  const nav = ["dashboard", "tracking", "future", "research"].map(page => { const el = new Element("a"); el.dataset.page = page; return el; });
   const calls = [];
   let interval;
   const context = {
@@ -92,6 +92,8 @@ async function app(data, failures = {}, hash = "#tracking") {
     fetch: async (url, options) => {
       calls.push({url, options});
       if (url.includes('queue-resolution-report.json') && data.resolution) return {ok: true, json: async () => clone(data.resolution)};
+      if (url.includes('s7-research-status.json')) return data.s7
+        ? {ok: true, json: async () => clone(data.s7)} : {ok: false};
       const kind = url.includes("future-tracking.json") ? "tracking" : url.includes("future-candidates.json") ? "candidates" : "other";
       if (kind === "other") return {ok: false};
       if (failures[kind] === "network") throw new Error("fixture network failure");
@@ -101,6 +103,7 @@ async function app(data, failures = {}, hash = "#tracking") {
   };
   const source = fs.readFileSync(path.join(__dirname, "..", "docs", "app.js"), "utf8");
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, "..", "docs", "view-model.js"), "utf8"), context);
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, "..", "docs", "s7-research-view.js"), "utf8"), context);
   vm.runInNewContext(source, context, {filename: "docs/app.js"});
   const settle = async () => { for (let i = 0; i < 6; i++) await new Promise(resolve => setImmediate(resolve)); };
   await settle();
@@ -315,4 +318,93 @@ test("operating queue partitions FULL completion and failure without adding part
   assert.equal(walk(queue).find(el=>el.attributes["data-recovery-generation"]).attributes["data-recovery-generation"],"new-run");
   assert.match(queue.textContent,/부분 본문 판독 결과 2건/);
   assert.deepEqual(data,before);
+});
+
+
+function s7Fixture() {
+  const researchCommit = "0c15e7a0f94c1cfbcb4f6362bbbc5b5360106f65";
+  return {
+    format:"bct-s7-source-truth-preview-v1",
+    status:"PASS_RESEARCH_SOURCEBOUND_PRESENTATION_PREVIEW_ONLY",
+    view:"S7_PROOF_NOT_PUBLIC_OPERATING_PAGES",
+    checked_at_utc:"2026-11-16T13:11:32+00:00",
+    research:{
+      status:"VERIFIED_S6_ISOLATED_SOURCE_FREE_HOLD",
+      branch:"research/bct-s6-sourcefree-ledger-20261116",
+      commit_sha:researchCommit,
+      sqlite_sha256:"d0bef9da83910bf4ede638cea87df8f582bcb0cbb12033aee09aac64e832872d",
+      rss_only_article_ids:316,article_reentry_attempts:60,
+      body_states:{FULL:24,PARTIAL:22,UNAVAILABLE:14},
+      strict_original_publisher_body_date_verified:18,
+      registered_target_holds:22,
+      official_public_fact_codes_research_only:20,
+      new_sourcebound_research_hints_not_independent_pairs:147,
+      not_attempted_in_316_snapshot:256,
+      admitted_qualified_independent_pairs:0,
+      research_fact_units_not_additive_to_historical_count:true,
+      stage6_status:"PARTIAL"
+    },
+    historical:{
+      status:"FROZEN_2026_10_14_NOT_FRESH_EVIDENCE",
+      data_at_utc:"2026-10-14T23:16:13.592709+00:00",
+      record_count:511,counts:{reviewed:23,structured:211,discovery:277},
+      sector_ranked_records:508,unclassified_records:3,
+      published_detail_files_different_units:1703,
+      overlay_new_originals_unpaired:12,
+      rank_is_current_verifiable_shortage:false
+    },
+    admission:{
+      eligible_independent_pair_count:0,
+      strict_pair_evaluation_for_all_corpus:"NOT_PERFORMED",
+      historical_rank_511_not_updated:true,
+      new_research_hints_not_ranked:true
+    },
+    generations:{
+      main_code_commit:"95206b4e235e60c2d46a677da5cce725aefe3f56",
+      rss_data_commit_observed:"a42a370044c3a5f8dc67af1faa1ec8bac6993e48",
+      sidecar_commit_observed:"5a9452362ee1c4b97fefc66da25c7cbdcb6176fb",
+      research_ledger_commit:researchCommit
+    },
+    deployment:{
+      public_pages_deployed_by_this_job:false,
+      operating_rss_or_sidecar_writes:0,LIVE_writes:0,public_rank_writes:0,
+      session7:"SOURCE_TRUTH_PREVIEW_NOT_PUBLIC_DEPLOYMENT",session8:"NOT_RUN"
+    }
+  };
+}
+
+test("S7 research tab shows real 511/18/147 as distinct units, holds 22 and zero market admission", async () => {
+  const data=fixtures();
+  data.s7=s7Fixture();
+  const page=await app(data,{}, "#research");
+  const metrics=metricValues(page.content);
+  assert.equal(metrics["과거 섹터 연구 기록"],"511");
+  assert.equal(metrics["엄격 원출처 확인"],"18");
+  assert.equal(metrics["현재 적격 수급쌍"],"0건 입증");
+  assert.match(page.content.textContent,/과거 511건 \+ 신규 연구 단서 147개를 더해 순위를 계산하지 않습니다/);
+  assert.match(page.content.textContent,/등록 TARGET 판정 보류22/);
+  assert.match(page.content.textContent,/2026-10-14/);
+  assert.equal(page.nav.find(el=>el.dataset.page==="research").attributes["aria-current"],"page");
+  assert.ok(page.calls.some(x=>x.url.includes("s7-research-status.json")));
+});
+
+test("invalid S7 evidence status never creates a falsified current candidate count", async () => {
+  const data=fixtures();
+  data.s7=s7Fixture();
+  data.s7.admission.eligible_independent_pair_count=147;
+  const page=await app(data,{}, "#research");
+  assert.match(page.content.textContent,/최신 연구 원장 미연결/);
+  assert.match(page.content.textContent,/연구 상태 파일이 검증되기 전에는 신규 근거 수/);
+  assert.doesNotMatch(page.content.textContent,/147개를 더해 순위를 계산하지 않습니다/);
+});
+
+test("S7 ranking shows evidence lineage before historical ranking without promoting frozen FUTURE", async () => {
+  const data=fixtures();
+  data.s7=s7Fixture();
+  data.tracking.targets[0].history.at(-1).status="FUTURE";
+  const page=await app(data,{}, "#ranking");
+  assert.equal(page.content.children[0].className.includes("s7-provenance"),true);
+  assert.match(page.content.children[0].textContent,/과거 섹터 연구 기록511/);
+  assert.match(page.content.children[0].textContent,/후보 승격 보류/);
+  assert.match(page.content.textContent,/병목 뉴스가 나오기 전에 먼저 잡는다/);
 });
