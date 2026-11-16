@@ -105,6 +105,8 @@ jobs:
       manifest: ${{ steps.manifest.outputs.value }}
       s7_status_sha: ${{ steps.s7_public.outputs.status_sha }}
       s7_index_sha: ${{ steps.s7_public.outputs.index_sha }}
+      s8_html_sha: ${{ steps.s8_rank.outputs.html_sha }}
+      s8_report_sha: ${{ steps.s8_rank.outputs.report_sha }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -140,6 +142,7 @@ jobs:
           set -euo pipefail
           MAIN_SHA=$(gh api "repos/$REPOSITORY/git/ref/heads/main" --jq '.object.sha')
           export MAIN_SHA
+          echo "main_sha=$MAIN_SHA" >> "$GITHUB_OUTPUT"
           mkdir -p "$RUNNER_TEMP/s7-certified" "$RUNNER_TEMP/s7-code"
           gh api "repos/$REPOSITORY/actions/workflows/bct-s7-research-dashboard-preview.yml/runs?branch=main&status=success&per_page=20" > "$RUNNER_TEMP/s7-runs.json"
           python - <<'PY'
@@ -203,6 +206,40 @@ jobs:
               out.write('status_sha='+hashlib.sha256(status.read_bytes()).hexdigest()+'\n')
               out.write('index_sha='+hashlib.sha256(index.read_bytes()).hexdigest()+'\n')
           print('BCT_S7_PAGES_LEGACY_511_AND_SOURCE_TRUTH_OVERLAY_PASS')
+          PY
+      - name: Build read-only basic-analysis and evidence ranking views from sealed source generations
+        id: s8_rank
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          MAIN_SHA: ${{ steps.s7_public.outputs.main_sha }}
+          PYTHONPATH: src
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$REPOSITORY" == "irewon1-lgtm/bottleneck-control-tower" ]]
+          [[ "$MAIN_SHA" =~ ^[0-9a-f]{40}$ ]]
+          # Main source was fetched by S7 above. Execute precisely that SHA.
+          git show "$MAIN_SHA:tools/bct_s8_dual_ranking_overlay.py" > "$RUNNER_TEMP/bct_s8_dual_ranking_overlay.py"
+          python "$RUNNER_TEMP/bct_s8_dual_ranking_overlay.py" \
+            --site-root var/v4/pages-site --main-sha "$MAIN_SHA"
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          root=pathlib.Path('var/v4/pages-site')
+          html=(root/'rankings/index.html').read_bytes()
+          raw=(root/'rankings/report.json').read_bytes()
+          report=json.loads(raw)
+          assert report['main_code_commit']==os.environ['MAIN_SHA']
+          assert report['status']=='READONLY_SEPARATE_BASIC_SCREENING_AND_SOURCE_BOUND_RANKS'
+          assert report['legacy_511_preserved'] and report['new_strict_pairs_admitted']==0
+          assert report['sidecar']['articles_with_screening_result']>0
+          assert report['named_targets']>0 and report['evidence']['historical_records']==511
+          assert b'rankings/#signals' in (root/'index.html').read_bytes()
+          assert b'rankings/#evidence' in (root/'index.html').read_bytes()
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              out.write('html_sha='+hashlib.sha256(html).hexdigest()+'\n')
+              out.write('report_sha='+hashlib.sha256(raw).hexdigest()+'\n')
+          print('BCT_TWO_RANKINGS_BUILD_AND_ORIGINALS_PRESERVED_PASS')
           PY
       - name: Bind deployment to the built public generation
         id: manifest
@@ -288,3 +325,48 @@ jobs:
                   time.sleep(5)
           PY
 
+
+      - name: Verify published dual ranking tab data and exact bytes
+        env:
+          BCT_S8_HTML_SHA: ${{ needs.build.outputs.s8_html_sha }}
+          BCT_S8_REPORT_SHA: ${{ needs.build.outputs.s8_report_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os,time,urllib.request
+          base='https://irewon1-lgtm.github.io/bottleneck-control-tower/'
+          expected_html=os.environ['BCT_S8_HTML_SHA']
+          expected_report=os.environ['BCT_S8_REPORT_SHA']
+          assert len(expected_html)==len(expected_report)==64
+          def read(path):
+              req=urllib.request.Request(base+path,headers={
+                  'Cache-Control':'no-cache','User-Agent':'BCT-dual-ranking-live-smoke'})
+              with urllib.request.urlopen(req,timeout=20) as response:
+                  assert response.status==200
+                  return response.read(1600000)
+          for attempt in range(1,13):
+              try:
+                  html=read('rankings/index.html')
+                  proof=read('rankings/report.json')
+                  index=read('index.html')
+                  assert hashlib.sha256(html).hexdigest()==expected_html
+                  assert hashlib.sha256(proof).hexdigest()==expected_report
+                  assert b'./rankings/#signals' in index and b'./rankings/#evidence' in index
+                  assert b'id="signals"' in html and b'id="evidence"' in html
+                  d=json.loads(proof)
+                  assert d['legacy_511_preserved'] is True
+                  assert d['new_strict_pairs_admitted']==0
+                  assert d['sidecar']['articles_with_screening_result']>0
+                  assert d['named_targets']>=d['displayed_targets']>=1
+                  assert d['evidence']['historical_sector_records']==508
+                  print('BCT_DUAL_RANKINGS_LIVE_HTTP_BYTES_AND_LINEAGE_PASS='+json.dumps({
+                    'url':base+'rankings/','analysis_results':d['sidecar']['articles_with_screening_result'],
+                    'ranked_targets':d['named_targets'],'historical_source_records':511,
+                    'new_strict_pairs':0,'run_attempt':attempt},sort_keys=True))
+                  break
+              except Exception as err:
+                  print('BCT_S8_PUBLIC_BYTES_PENDING_'+str(attempt)+'_'+type(err).__name__,flush=True)
+                  if attempt==12:raise
+                  time.sleep(5)
+          PY
