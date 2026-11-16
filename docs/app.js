@@ -471,7 +471,7 @@
         "과거 511건은 최신 독립 수요·공급 검증 근거 511건이 아닙니다. 연구 상태 파일이 검증되기 전에는 신규 근거 수나 미래 병목 성과를 표시하지 않습니다."));
       return box;
     }
-    const data = window.BCTResearch.summary(s7SourceTruth);
+    const data = globalThis.BCTResearch.summary(s7SourceTruth);
     if (s7SourceError) box.append(node("p",
       "최신 검증 파일 재조회에 실패했습니다. 마지막으로 검증된 원장을 표시하고 있습니다.", "data-note"));
     const metrics = node("div", null, "metrics");
@@ -520,9 +520,9 @@
       const response = await fetch("./s7-research-status.json?t=" + Date.now(),
         {cache: "no-store", signal: controller.signal});
       if (!response.ok) throw new Error("S7 source truth preview unavailable");
-      if (!window.BCTResearch || typeof window.BCTResearch.validate !== "function")
+      if (!globalThis.BCTResearch || typeof globalThis.BCTResearch.validate !== "function")
         throw new Error("S7 schema validator unavailable");
-      const validated = window.BCTResearch.validate(await response.json());
+      const validated = globalThis.BCTResearch.validate(await response.json());
       s7SourceTruth = validated;
       s7SourceError = false;
     } catch {
