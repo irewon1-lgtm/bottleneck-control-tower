@@ -18,8 +18,8 @@ concurrency:
   cancel-in-progress: false
 env:
   PYTHONPATH: src
-  CPU_CODE_SHA: 1cfcd3d7aefcfc068944a47ee924822216961f60
-  EXPECTED_CPU_CODE_SHA: 1cfcd3d7aefcfc068944a47ee924822216961f60
+  CPU_CODE_SHA: d40bffdacd0c6562df85edefd6a5c778bb4c8905
+  EXPECTED_CPU_CODE_SHA: d40bffdacd0c6562df85edefd6a5c778bb4c8905
   ORIGINAL_ACQUISITION: '43645932280'
 jobs:
   bridge:
@@ -87,7 +87,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$CPU_CODE_SHA"
           timeout 120 python tools/v4_cpu_preflight.py guard --output var/v4/cpu-private/free.json
-          echo "key=v4-cpu-runtime-\${RUNNER_OS}-\${RUNNER_ARCH}-\${PYTHON_VERSION}-\${LOCK_SHA}" >> "$GITHUB_OUTPUT"
+          echo "key=v4-cpu-runtime-${RUNNER_OS}-${RUNNER_ARCH}-${PYTHON_VERSION}-${LOCK_SHA}" >> "$GITHUB_OUTPUT"
       - uses: actions/cache/restore@v4
         with:
           key: ${{ steps.key.outputs.key }}
