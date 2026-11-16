@@ -87,7 +87,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$CPU_CODE_SHA"
           timeout 120 python tools/v4_cpu_preflight.py guard --output var/v4/cpu-private/free.json
-          echo "key=v4-cpu-runtime-\${RUNNER_OS}-\${RUNNER_ARCH}-\${PYTHON_VERSION}-\${LOCK_SHA}" >> "$GITHUB_OUTPUT"
+          echo "key=v4-cpu-runtime-${RUNNER_OS}-${RUNNER_ARCH}-${PYTHON_VERSION}-${LOCK_SHA}" >> "$GITHUB_OUTPUT"
       - uses: actions/cache/restore@v4
         with:
           key: ${{ steps.key.outputs.key }}
