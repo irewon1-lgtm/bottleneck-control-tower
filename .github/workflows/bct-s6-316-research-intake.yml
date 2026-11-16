@@ -1,0 +1,160 @@
+name: BCT S6 actual 316 RSS-only intake and verified research fact SQLite
+on:
+  push:
+    branches: [ops/bct-s6-316-intake-fact-ledger-20261116]
+    paths:
+      - tools/bct_s6_316_sourcefree_intake.py
+      - tests/test_bct_s6_316_sourcefree_intake.py
+      - .github/workflows/bct-s6-316-research-intake.yml
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-s6-readonly-316-originals-and-20-public-research-facts
+  cancel-in-progress: false
+jobs:
+  adversarial-no-false-source-or-CPU-status:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s6-316-intake-fact-ledger-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    env:
+      PYTHONPATH: src:tools
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Install repository research dependencies and tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e '.[test]'
+      - name: Test all hashed ID, real original fact and research nonpromotion boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_bct_s6_316_sourcefree_intake.py -v
+  immutable-316-plus-22-plus-20-research-intake:
+    needs: adversarial-no-false-source-or-CPU-status
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    env:
+      PYTHONPATH: src:tools
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Install existing project Python runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e .
+      - name: Authenticate exactly four prior real source-free artifacts and operating HEADs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/parents"
+          python - <<'PY'
+          import os,json,pathlib,subprocess
+          expected={
+            "join":(43848052967,"c5e6ac898f4d3062c3df82064ed775ffed2efb66",14216431920,
+                "bct-s6-canonical-id-source-free-43848052967",
+                "sha256:9451e9e01dbbaf26f65264a73f49cb04bb85531584b37f742ea1899b0f8a079d"),
+            "s5":(43827657779,"2461a5d379ee7fdb6bd89dfbfdf10474b94548d8",14207241610,
+                "bct-s5-22-target-source-free-handoff-43827657779",
+                "sha256:84fe8339a0a8d0f0a733531e552cf8ae7c7827ba6705c86175efc1204272e136"),
+            "standard":(43821707141,"39b1a054ede6020a9d0e15d492a2b7abe7d67d7b",14205155407,
+                "bct-s5-quantitative-source-free-43821707141",
+                "sha256:6f949e59c47e040d1a555426bc9a1ac345892ebd25d41b5eebdc62e2fdb2c563"),
+            "supplier":(43824301850,"24152347209ee696f1fb181d9a8b842dc0515496",14205666980,
+                "bct-s5-supplier-fact-source-free-43824301850",
+                "sha256:f077f746cb06ce5de6efe59b77882a6136b00c77d6b9cc9e3d697c35624110a7"),
+          }
+          repo=os.environ["GITHUB_REPOSITORY"]
+          def gh(path):
+              return json.loads(subprocess.check_output(["gh","api",f"repos/{repo}/{path}"]))
+          for label,(run_id,sha,artifact_id,name,digest) in expected.items():
+              r=gh(f"actions/runs/{run_id}");a=gh(f"actions/artifacts/{artifact_id}")
+              assert r["id"]==run_id and r["status"]=="completed" and r["conclusion"]=="success"
+              assert r["head_sha"]==sha
+              assert a["id"]==artifact_id and a["name"]==name and not a["expired"]
+              assert a["workflow_run"]["id"]==run_id and a["digest"]==digest
+              d=pathlib.Path(os.environ["RUNNER_TEMP"])/"parents"/label
+              d.mkdir(parents=True)
+              subprocess.run(["gh","run","download",str(run_id),"-R",repo,
+                              "--name",name,"--dir",str(d)],check=True)
+          refs={
+            "data":"a42a370044c3a5f8dc67af1faa1ec8bac6993e48",
+            "future-bottleneck-data":"873c2ab0df51d5cbd81cceb4575bf6d0e98d74d7"
+          }
+          for branch,pin in refs.items():
+              now=gh("git/ref/heads/"+branch)["object"]["sha"]
+              assert now==pin,f"OPERATING_REF_MOVED_{branch}_NEW_SNAPSHOT_REQUIRED"
+          print("BCT_S6_316_FOUR_IMMUTABLE_RESEARCH_RECEIPTS_AND_OPERATING_REFS_PASS")
+          PY
+      - name: Join all active canonical original IDs with exact archived hashed ID membership and S5 public fact proofs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -u tools/bct_s6_316_sourcefree_intake.py \
+            --join "$RUNNER_TEMP/parents/join" \
+            --s5 "$RUNNER_TEMP/parents/s5" \
+            --standard "$RUNNER_TEMP/parents/standard" \
+            --supplier "$RUNNER_TEMP/parents/supplier" \
+            --out "$RUNNER_TEMP/s6-intake"
+      - name: Fresh-process source-free SQLite requery and explicit no operating write
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s6_316_sourcefree_intake.py \
+            --verify-only --out "$RUNNER_TEMP/s6-intake"
+          python - <<'PY'
+          import json,os,pathlib
+          r=json.loads((pathlib.Path(os.environ["RUNNER_TEMP"])/
+                        "s6-intake/s6-research-summary.json").read_text())
+          assert r["canonical_rss_articles"]==10992
+          assert r["matched_prior_sidecar_results"]==10676
+          assert r["articles_without_prior_sidecar"]==316
+          assert r["research_hold_registered_target_records"]==22
+          assert r["research_source_bound_original_fact_records"]==20
+          assert r["research_fact_event_groups"]=={
+              "ANTARES_BWXT_FUEL_FRAMEWORK":3,
+              "ANTARES_STANDARD_FABRICATION_AND_CAPACITY_2026Q3":12,
+              "CENTRUS_2026Q3_SINGLE_DISCLOSURE":5}
+          assert r["research_fact_promotable_strict_pairs"]==0
+          assert r["independent_eligible_supply_demand_pair_evaluation"].startswith("NOT_RUN")
+          assert r["source_reentry_plan_status"]=="PLAN_ONLY_NOT_EXECUTED"
+          assert r["source_reentry_plan_max_120"]<=120
+          assert r["original_article_body_verified_from_missing_sidecar"]==0 if \
+                "original_article_body_verified_from_missing_sidecar" in r else \
+                r["article_original_body_verified_from_missing_sidecar"]==0
+          assert r["operating_research_DB_merge"]=="NOT_RUN_RESEARCH_ISOLATED_SQLITE_ONLY"
+          assert r["LIVE_writes"]==r["production_data_branch_writes"]==r["production_sidecar_branch_writes"]==0
+          print("BCT_S6_316_RESEARCH_ONLY_VERIFIED_RECORD_COUNTS="+json.dumps({
+              "RSS_only":r["articles_without_prior_sidecar"],
+              "actions":r["article_intake_actions"],
+              "extra_RSS_title_AI_only":r["separate_rss_title_AI_annotations_in_missing_cohort"],
+              "research_target_HOLD":r["research_hold_registered_target_records"],
+              "source_bound_distinct_public_facts":r["research_source_bound_original_fact_records"],
+              "plan_not_executed":r["source_reentry_plan_max_120"],
+              "eligible_physical_pairs":0,
+              "LIVE_writes":0},sort_keys=True))
+          PY
+      - name: Save source-free SQLite and summary only (no URLs, article HTML, or original bodies)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s6-316-sourcefree-research-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/s6-intake/s6-research-summary.json
+            ${{ runner.temp }}/s6-intake/s6-research-sourcefree.sqlite3
+          retention-days: 30
+          if-no-files-found: warn
