@@ -79,7 +79,9 @@ def validate_s4(earlier):
             or item.get("meaning_analysis_failed") is not False
             or item.get("LIVE_writes")!=0
             or any(not proper_count(item.get(k)) for k in
-                   (*COUNTS,"total","success","failed","unread"))
+                   ("source_bound_event_count","graph_independent_pair_count",
+                    "strict_independent_pair_count","strict_forecast_candidate_count",
+                    "total","success","failed","unread"))
             or item["total"]!=item["success"] or item["unread"]!=0 or item["failed"]!=0):
             fail("S4_SOURCE_OR_SEMANTIC_ROW_NOT_VERIFIED")
         identities.append(tuple(item[k] for k in ("document_id","body_sha256","raw_sha256")))
