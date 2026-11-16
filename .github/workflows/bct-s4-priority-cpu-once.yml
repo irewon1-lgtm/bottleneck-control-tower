@@ -1,0 +1,30 @@
+name: BCT S4 verified priority CPU once
+on:
+  push:
+    branches: [ops/bct-s4-priority-cpu-once-20261116]
+    paths: [.github/workflows/bct-s4-priority-cpu-once.yml]
+permissions:
+  contents: read
+  actions: write
+jobs:
+  dispatch-once:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s4-priority-cpu-once-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    env:
+      GH_TOKEN: ${{ github.token }}
+      EXPECTED_MAIN: e8ddd6468f95d7181c5f4413d6caf8c2e2589871
+      ACQUISITION: '43645932280'
+      RSS: '43645752354'
+    steps:
+      - name: Send one current-main authenticated manual source priority request
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)"
+          [[ "$actual" == "$EXPECTED_MAIN" ]] || { echo "::error::main SHA drift, no CPU requested"; exit 1; }
+          [[ "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$ACQUISITION" --jq '.conclusion+":"+.head_branch+":"+.name')" == 'success:main:New precursor evidence acquisition' ]] || exit 1
+          [[ "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RSS" --jq '.conclusion+":"+.head_branch+":"+.name')" == 'success:main:RSS live environment check' ]] || exit 1
+          jq -n --arg acq "$ACQUISITION" '{ref:"main",inputs:{purpose:"manual-research",acquisition_run:$acq}}' > "$RUNNER_TEMP/request.json"
+          gh api --method POST "repos/$GITHUB_REPOSITORY/actions/workflows/v4-cpu-private-research.yml/dispatches" --input "$RUNNER_TEMP/request.json"
+          echo BCT_S4_ONE_SHOT_PRIORITY_CPU_REQUEST_ACCEPTED
