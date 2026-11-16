@@ -1,0 +1,41 @@
+name: BCT S4 private CPU history bytes audit (read only)
+on:
+  push:
+    branches: [ops/bct-s4-private-storage-capacity-20261116]
+    paths:
+      - tools/bct_s4_private_storage_capacity.py
+      - tests/test_bct_s4_private_storage_capacity.py
+      - .github/workflows/bct-s4-private-capacity-audit.yml
+permissions:
+  contents: read
+jobs:
+  verify-private-history-and-archive-only:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Pure object-accounting regressions before private token access
+        run: |
+          python -m pip install pytest==8.4.2 --disable-pip-version-check
+          python -m pytest -q tests/test_bct_s4_private_storage_capacity.py
+      - name: Read-only Git history byte count from fixed private repo (no fetch of original source text)
+        env:
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+        run: >-
+          python tools/bct_s4_private_storage_capacity.py
+          --output "$RUNNER_TEMP/s4-capacity.json"
+      - name: Upload only source-free storage pressure receipt
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s4-private-storage-pressure-${{ github.run_id }}
+          path: ${{ runner.temp }}/s4-capacity.json
+          retention-days: 30
+          if-no-files-found: warn
