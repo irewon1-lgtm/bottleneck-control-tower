@@ -1,7 +1,7 @@
 name: BCT S7 source-bound dashboard preview and 6-hour refresh QA
 on:
   push:
-    branches: [ops/bct-s7-source-bound-dashboard-preview-20261116]
+    branches: [ops/bct-s7-source-bound-dashboard-preview-20261116, main]
     paths:
       - docs/index.html
       - docs/app.js
@@ -22,7 +22,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   immutable-source-status-and-preview:
-    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && (github.event_name != 'push' || github.ref == 'refs/heads/ops/bct-s7-source-bound-dashboard-preview-20261116') }}
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && (github.event_name != 'push' || github.ref == 'refs/heads/ops/bct-s7-source-bound-dashboard-preview-20261116' || github.ref == 'refs/heads/main') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
