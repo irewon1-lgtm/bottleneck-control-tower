@@ -20,7 +20,8 @@ from bct_s6_canonical_article_id_join import (
     fetch_canonical_sqlite, PINNED_CANONICAL_SHA, PINNED_DATA, PINNED_SIDE,
     PINNED_RSS, PINNED_RESULTS
 )
-from bct_s6_canonical_article_id_join import readback as verify_id_join
+# The immutable historical source-free ID join predates its later
+# same-name status field; inspect original SQL rather than editing its receipt.
 from bct_s5_22_target_disposition import fresh_readback as verify_s5_hold
 from bct_s5_supplier_fact_followon import requery as verify_supplier
 from bct_s5_quantitative_capacity_audit import fresh_readback as verify_standard
@@ -53,8 +54,41 @@ def guard(ok,why):
 def json_file(p):
     return json.loads(Path(p).read_text())
 
+def verify_legacy_join(join_dir):
+    """Verify actual immutable original ID-join SQL, including legacy summary omissions."""
+    summary=json_file(Path(join_dir)/"s6-article-id-join.json")
+    require_objective(summary)
+    dbpath=Path(join_dir)/"s6-article-id-join.sqlite3"
+    guard(sha(dbpath.read_bytes())==summary.get("sqlite_sha256"),
+          "IMMUTABLE_PRIOR_JOIN_SQLITE_SHA_CHANGED")
+    with sqlite3.connect(dbpath.resolve().as_uri()+"?mode=ro",uri=True) as db:
+        guard(db.execute("PRAGMA integrity_check").fetchone()==("ok",),
+              "IMMUTABLE_PRIOR_JOIN_SQLITE_CORRUPT")
+        counts=dict(db.execute("SELECT kind,COUNT(*) FROM article_join GROUP BY kind"))
+        state=dict(db.execute(
+            "SELECT canonical_state,COUNT(*) FROM article_join WHERE kind='CANONICAL_ONLY' GROUP BY canonical_state"))
+        body=dict(db.execute(
+            "SELECT body_state,COUNT(*) FROM article_join WHERE kind='BOTH' GROUP BY body_state"))
+        rows=db.execute("SELECT COUNT(*),COUNT(DISTINCT id_sha) FROM article_join").fetchone()
+    guard(counts=={"BOTH":EXPECTED_MATCHED,"CANONICAL_ONLY":EXPECTED_MISSING}
+          and state=={"active":EXPECTED_MISSING}
+          and body=={"FULL":6052,"PARTIAL":1665,"UNAVAILABLE":2959}
+          and rows==(EXPECTED_RSS,EXPECTED_RSS)
+          and summary.get("id_join_counts")==counts
+          and summary.get("matched_article_body_states")==body
+          and summary.get("canonical_rss_ids")==EXPECTED_RSS
+          and summary.get("sidecar_result_ids")==EXPECTED_MATCHED
+          and summary.get("canonical_sqlite_sha256")==PINNED_CANONICAL_SHA,
+          "PREVIOUS_10992_JOIN_CATEGORY_AND_BODY_PROOF_MISMATCH")
+    if "canonical_without_sidecar_statuses" in summary:
+        guard(summary["canonical_without_sidecar_statuses"]==state,
+              "PREVIOUS_LEGACY_OPTIONAL_FIELD_CONFLICT")
+    return {"status":"PASS_ACTUAL_LEGACY_SQLITE_FRESH_READBACK",
+            "articles":EXPECTED_RSS,"results":EXPECTED_MATCHED,
+            "matched":EXPECTED_MATCHED,"missing_result":EXPECTED_MISSING,"sidecar_only":0}
+
 def validate_parents(join_dir,s5_dir,standard_dir,supplier_dir):
-    j=verify_id_join(join_dir)
+    j=verify_legacy_join(join_dir)
     h=verify_s5_hold(s5_dir)
     d=verify_standard(standard_dir)
     s=verify_supplier(supplier_dir)
@@ -66,7 +100,7 @@ def validate_parents(join_dir,s5_dir,standard_dir,supplier_dir):
     require_objective(s5)
     require_objective(standard)
     require_objective(supplier)
-    guard(j=={"status":"PASS_PINNED_RSS_AND_SIDECAR_FRESH_SQLITE_ID_JOIN",
+    guard(j=={"status":"PASS_ACTUAL_LEGACY_SQLITE_FRESH_READBACK",
               "articles":EXPECTED_RSS,"results":EXPECTED_MATCHED,
               "matched":EXPECTED_MATCHED,"missing_result":EXPECTED_MISSING,
               "sidecar_only":0},"EXACT_PREVIOUS_ID_JOIN_NOT_VERIFIED")
@@ -74,7 +108,7 @@ def validate_parents(join_dir,s5_dir,standard_dir,supplier_dir):
           old.get("sidecar_commit_sha")==PINNED_SIDE and
           old.get("canonical_sqlite_sha256")==PINNED_CANONICAL_SHA and
           old.get("id_join_counts")=={"BOTH":EXPECTED_MATCHED,"CANONICAL_ONLY":EXPECTED_MISSING}
-          and old.get("canonical_without_sidecar_statuses")=={"active":EXPECTED_MISSING},
+          and old.get("matched_article_body_states")=={"FULL":6052,"PARTIAL":1665,"UNAVAILABLE":2959},
           "MISMATCHED_COHORT_GENERATION")
     guard(h.get("cases")==22 and h.get("HOLD")==22 and
           s5.get("qualified")==0 and s5.get("rejected")==0 and
