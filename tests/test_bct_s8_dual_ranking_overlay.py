@@ -161,7 +161,7 @@ class DualRankingTests(unittest.TestCase):
                 rankings.build(root,source,proof(source),{},main_sha=MAIN)
 
     def test_html_escaping_and_url_safety(self):
-        evil="<script>alert(1)</script>"
+        evil="Optical <script>alert(1)</script> transceivers"
         source=analyzed()
         source["hypotheses"]["hyp-a"]["current"]["scope"]["target"]=evil
         source["hypotheses"].pop("hyp-b")
@@ -177,6 +177,30 @@ class DualRankingTests(unittest.TestCase):
         self.assertNotIn(evil,page)
         self.assertIn("&lt;script&gt;",page)
         self.assertNotIn('href="javascript:',page)
+
+    def test_generic_phrases_cannot_outrank_real_products(self):
+        rejected=[
+            "it","id","them","and","ai","semi","aiming",
+            "technologies increasingly critical","them","new facility",
+            "automakers who source their vehicles from china",
+            "cheaper model 3 had exhausted its allocation",
+            "this special model","some products manufactured there",
+            "supporting","providing space","about 258","commercial growth and",
+            "densities our customers","model in japan in march 2025",
+        ]
+        for item in rejected:
+            with self.subTest(item=item):
+                self.assertIsNone(rankings.named_target(item))
+        for item in [
+            "advanced packaging","diesel fuel","gas turbines",
+            "high-bandwidth memory","power transformers",
+            "optical chiplets","HALEU","CoWoS","silicon carbide materials",
+        ]:
+            with self.subTest(valid=item):
+                self.assertIsNotNone(rankings.named_target(item))
+        self.assertEqual(rankings.named_target(
+            "sulfide-based all-solid-state batteries in 2027"),
+            "sulfide-based all-solid-state batteries")
 
     def test_unknown_hypotheses_do_not_create_rank(self):
         source=analyzed()

@@ -165,12 +165,70 @@ def source_host(raw):
     return host.removeprefix("www.")
 
 
+# The raw S1 named-target extractor can return grammar fragments ("it", "id",
+# "technologies increasingly critical"). They must never rank as a product.
+# This is a display-layer quality filter: no source hypothesis is deleted.
+SINGLE_TERMS = frozenset({
+    "haleu", "cowos", "hbm", "dram", "nand", "euv", "cpo", "sic", "gan",
+    "uranium", "tungsten", "lithium", "nickel", "cobalt", "graphite",
+    "hydrogen", "helium", "ammonia", "silicon", "gallium", "germanium",
+    "antimony", "copper", "aniline", "hafnium", "neodymium",
+})
+BAD_EDGES = frozenset({
+    "about", "some", "many", "other", "their", "our", "the", "its", "new",
+    "this", "that", "these", "those", "and", "or", "in", "at", "by",
+    "with", "from", "how", "what", "where", "when", "why", "who",
+    "providing", "supporting", "helping", "aiming", "planned",
+    "positioning", "them", "it", "id", "u", "yet", "due", "then",
+    "as", "to", "of", "for", "on", "into", "than", "we", "they",
+})
+BAD_INTERIOR = frozenset({
+    "who", "whom", "when", "where", "why", "whose", "our", "their",
+    "its", "them", "they", "we", "increasingly", "amid", "were",
+    "was", "had", "has", "have", "would", "could", "should",
+    "currently", "excluding", "approaching", "manufactured",
+    "announced", "exhausted", "weighed", "outlook", "previously",
+    "before", "after", "yet", "now", "according",
+})
+GENERIC_SINGLES = frozenset({
+    "it", "id", "them", "and", "ai", "u", "r2", "r3", "n8", "semi",
+    "aiming", "helping", "supporting", "providing", "scalable",
+    "technologies", "technology", "model", "other", "products",
+    "product", "part", "market", "services", "outlook", "equipment",
+    "materials", "systems", "applications", "pressure", "electricity",
+    "fuel", "turbines", "capacity", "planned", "growth", "peak",
+    "reliable", "power", "facility", "supplier", "manufacturer",
+    "units", "business", "global", "supply", "demand", "energy",
+})
+
+
 def named_target(value):
     if not isinstance(value, str):
         return None
-    result = " ".join(value.split())
-    if (not result or len(result) > 140 or result.upper() in ("UNKNOWN", "UNRESOLVED", "NONE")
-            or result.casefold() in ("미확인", "미분류")):
+    result = " ".join(value.split()).strip(" .,:;")
+    if not result or len(result) > 140 or result.upper() in ("UNKNOWN", "UNRESOLVED", "NONE"):
+        return None
+    if result.casefold() in ("미확인", "미분류"):
+        return None
+    # A trailing coverage year is not a distinct product; preserve the entity.
+    result = re.sub(r"\s+in\s+20(?:2[0-9]|3[0-9])$", "", result, flags=re.I)
+    words = [word.casefold() for word in result.split()]
+    if not words or len(words) > 10:
+        return None
+    if len(words) == 1:
+        key = words[0].strip("-_")
+        return result if key in SINGLE_TERMS and key not in GENERIC_SINGLES else None
+    if words[0] in BAD_EDGES or words[-1] in BAD_EDGES:
+        return None
+    # Reject fragments from headline clauses, not named manufactured objects.
+    split_words = set(re.findall(r"[A-Za-z]+", result.casefold()))
+    if split_words & BAD_INTERIOR:
+        return None
+    if re.search(r"\b(?:in|on|at|by)\s+(?:20\d\d|jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b",
+                 result, re.I):
+        return None
+    # Prevent vague quantities or incomplete clauses posing as TARGET names.
+    if re.match(r"^\d", result) or re.search(r"\b(?:is|are|will|be|can|not)\b", result, re.I):
         return None
     return result
 
