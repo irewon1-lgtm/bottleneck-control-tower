@@ -17,10 +17,10 @@ import time
 
 REPOSITORY = "irewon1-lgtm/bottleneck-control-tower"
 WORKFLOW = "v4-cpu-private-research.yml"
-PINNED_CPU_SHA = "5ff2174c2289afb9307c2d934a5b7d1afe2821d1"
+PINNED_CPU_SHA = "1cf2b3aea3046c73f7d9a65c627b485f63c4a305"
 SOURCE_RUN = 43645932280
 SOURCE_HOLD_RUN = 43698475837
-INITIAL_CPU_RUN = 43779434465
+INITIAL_CPU_RUN = 43782542564
 TOTAL_TARGET_WINDOWS = 240
 MAX_BATCHES = 12
 SECONDS_PER_RUN = 540
@@ -256,8 +256,8 @@ def main():
             temp=Path(tmpstr)
             originals=original_targets(temp)
             previous=counts_from_public(INITIAL_CPU_RUN,originals,temp,
-                                        expected_code="eac28a152bc139b3d5f69cb34ae4136792a92a2f")
-            if previous["counts"]!={"total":240,"success":11,"failed":0,"unread":229}:
+                                        expected_code=PINNED_CPU_SHA)
+            if previous["counts"]!={"total":240,"success":35,"failed":0,"unread":205}:
                 raise ValueError("S4_BASELINE_CHANGED_NOT_SILENTLY_RELABELED")
             progress["initial"]={"run_id":INITIAL_CPU_RUN,"counts":previous["counts"]}
             progress["current"]={"run_id":INITIAL_CPU_RUN,"counts":previous["counts"],
@@ -278,8 +278,8 @@ def main():
                         or not 0 < current["new_cpu_windows"]<=24):
                     raise ValueError("S4_ACTUAL_READ_BATCH_UNPROVEN")
                 increase, drop=snapshots_match(previous,current)
-                if increase<1 or drop!=increase:
-                    raise ValueError("S4_NO_VERIFIED_PROGRESS_IN_EXACT_11_SOURCES")
+                if increase<1 or increase>24 or drop!=increase:
+                    raise ValueError("S4_NO_VERIFIED_24_WINDOW_PROGRESS_IN_EXACT_11_SOURCES")
                 progress["batches"].append({
                     "batch":batch,"run_id":run_id,
                     "source_completed_delta":increase,
