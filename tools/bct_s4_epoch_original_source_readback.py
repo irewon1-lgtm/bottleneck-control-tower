@@ -167,9 +167,17 @@ def count_exact(ledger, identities):
             failure.add(row["key"])
         elif kind in ("CPU_ANALYSIS_RESULT","CPU_ANALYSIS_FAILURE"):
             analysis[(row.get("document_id"),row.get("body_sha256"))]={"kind":kind,
+                "raw_sha256":row.get("raw_sha256"),
                 "read_state":row.get("read_state"),
                 "review_state":row.get("review_state"),
-                "strict_pair_count":row.get("strict_pair_count")}
+                "source_validation":row.get("source_validation"),
+                "target_review_performed":row.get("target_review_performed"),
+                "reason_code":row.get("reason_code"),
+                "source_bound_event_count":row.get("source_bound_event_count"),
+                "graph_independent_pair_count":row.get("graph_independent_pair_count"),
+                "strict_pair_count":row.get("strict_pair_count"),
+                "strict_forecast_candidate_count":row.get("strict_forecast_candidate_count"),
+                "LIVE_writes":row.get("LIVE_writes")}
     if success&failure:
         raise ValueError("S4_EPOCH_WINDOW_SUCCESS_FAILURE_COLLISION")
     sources={}
@@ -189,6 +197,8 @@ def count_exact(ledger, identities):
         done=sum(x in success for x in keys)
         bad=sum(x in failure for x in keys)
         state=analysis.get((ident[0],ident[1]),{})
+        if state.get("raw_sha256")!=ident[2]:
+            raise ValueError("S4_SEMANTIC_RESULT_ORIGINAL_RAW_VERSION_MISMATCH")
         data.append({"document_id":ident[0],"body_sha256":ident[1],
                      "raw_sha256":ident[2],"total":len(keys),
                      "success":done,"failed":bad,
@@ -196,7 +206,14 @@ def count_exact(ledger, identities):
                      "read_state":state.get("read_state"),
                      "review_state":state.get("review_state"),
                      "meaning_analysis_failed":state.get("kind")=="CPU_ANALYSIS_FAILURE",
-                     "strict_independent_pair_count":state.get("strict_pair_count")})
+                     "source_validation":state.get("source_validation"),
+                     "target_review_performed":state.get("target_review_performed"),
+                     "reason_code":state.get("reason_code"),
+                     "source_bound_event_count":state.get("source_bound_event_count"),
+                     "graph_independent_pair_count":state.get("graph_independent_pair_count"),
+                     "strict_independent_pair_count":state.get("strict_pair_count"),
+                     "strict_forecast_candidate_count":state.get("strict_forecast_candidate_count"),
+                     "LIVE_writes":state.get("LIVE_writes")})
     sums={key:sum(row[key] for row in data)
           for key in ("total","success","failed","unread")}
     if sums["total"]!=SOURCE_TOTAL or sums["success"]+sums["failed"]+sums["unread"]!=SOURCE_TOTAL:
@@ -232,11 +249,51 @@ def main():
                 raise ValueError("S4_RESEARCH_MUST_NOT_PROMOTE_TO_LIVE")
         finally:
             ledger.close()
+    # Full CPU coverage is not enough: each original must also have a real
+    # exact-source semantic review, not an absent/unknown result counted as zero.
+    if any(
+        row["read_state"]!="READ_COMPLETE"
+        or row["review_state"] not in
+           ("READ_EVIDENCE_HOLD","NO_VALIDATED_EVENT","RESEARCH_FORECAST_REVIEW")
+        or row["source_validation"]!="EXACT_NATIVE_AND_BODY_HASHES"
+        or row["target_review_performed"] is not True
+        or row["meaning_analysis_failed"]
+        or type(row["strict_independent_pair_count"]) is not int
+        or type(row["graph_independent_pair_count"]) is not int
+        or type(row["strict_forecast_candidate_count"]) is not int
+        or type(row["source_bound_event_count"]) is not int
+        or row["LIVE_writes"]!=0
+        for row in data
+    ):
+        raise ValueError("S4_EXACT_SOURCE_SEMANTIC_REVIEW_NOT_FULLY_VERIFIED")
+    review={
+        "exact_source_semantic_reviews":len(data),
+        "original_exact_body_validation":len(data),
+        "read_evidence_hold":sum(x["review_state"]=="READ_EVIDENCE_HOLD" for x in data),
+        "no_validated_event":sum(x["review_state"]=="NO_VALIDATED_EVENT" for x in data),
+        "research_forecast_review":sum(x["review_state"]=="RESEARCH_FORECAST_REVIEW" for x in data),
+        "source_bound_events":sum(x["source_bound_event_count"] for x in data),
+        "graph_independent_pair_count":sum(x["graph_independent_pair_count"] for x in data),
+        "strict_independent_pair_count":sum(x["strict_independent_pair_count"] for x in data),
+        "strict_forecast_candidate_count":sum(x["strict_forecast_candidate_count"] for x in data),
+        "semantic_review_failures":0,
+        "automatic_LIVE_promotions":0,
+        "public_dashboard_published":False,
+    }
     receipt={"format":"bct-s4-final-11-source-cpu-readback-v1",
              "status":"PASS_SOURCE_BOUND_CPU_READBACK" if count["unread"]==count["failed"]==0
                  else "PARTIAL_SOURCE_BOUND_CPU_READBACK",
              "exact_original_sources":11,"counts":count,
              "source_versions":data,
+             "semantic_review":review,
+             "research_dashboard_readonly":{
+                 "scope":"ORIGINAL_EXACT_11_SOURCES_ONLY",
+                 "mode":"RESEARCH_ONLY_NOT_PUBLIC_DASHBOARD",
+                 "read_complete":11,
+                 "held":review["read_evidence_hold"],
+                 "strict_independent_qualified_pairs":review["strict_independent_pair_count"],
+                 "auto_registered_candidates":0,
+                 "LIVE_publication":False},
              "new_epoch_private_ack":commit,
              "new_epoch_sqlite_sha256":ack["sqlite_sha256"],
              "previous_private_state_ref_untouched":True,
@@ -248,7 +305,10 @@ def main():
     args.out.write_text(json.dumps(receipt,ensure_ascii=False,sort_keys=True,indent=2)+"\n")
     print("S4_FINAL_SOURCE_CPU_READBACK="+json.dumps({
         "status":receipt["status"],"sources":11,"counts":count,
-        "model_calls":0,"remote_restore":True},sort_keys=True))
+        "model_calls":0,"remote_restore":True,
+        "semantic_reviews":review["exact_source_semantic_reviews"],
+        "evidence_hold":review["read_evidence_hold"],
+        "strict_pairs":review["strict_independent_pair_count"]},sort_keys=True))
 
 if __name__=="__main__":
     main()
