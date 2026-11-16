@@ -1,0 +1,154 @@
+name: BCT S6 execute 60 actual public original reentry and immutable research-only readback
+on:
+  push:
+    branches: [ops/bct-s6-60-real-article-backfill-20261116]
+    paths:
+      - tools/bct_s6_60_real_original_reentry.py
+      - tests/test_bct_s6_60_real_original_reentry.py
+      - .github/workflows/bct-s6-60-real-source-reentry.yml
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-s6-actual-public-60-source-reentry-no-operating-write
+  cancel-in-progress: false
+jobs:
+  source-receipt-and-no-false-pair-tests:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s6-60-real-article-backfill-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    env:
+      PYTHONPATH: src:tools
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Install existing repository runtime dependencies for isolated tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e .
+      - name: Validate real source-attempt, duplicate skipping and SQLite evidence boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_bct_s6_60_real_original_reentry.py -v
+  execute-bounded-public-source-requests:
+    needs: source-receipt-and-no-false-pair-tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      PYTHONPATH: src:tools
+      GH_TOKEN: ${{ github.token }}
+      PRIOR_RUN: '43857086796'
+      PRIOR_ARTIFACT_ID: '14220458504'
+      PRIOR_SHA: '1c266920f8db2e9588342305670d7e5f6efaba9c'
+      PRIOR_DIGEST: 'sha256:542d38565e7bf13051fb11e0c3f5b8d9de6f7c16b2d7a27c55d1f2d480e6c5eb'
+      PINNED_DATA: 'a42a370044c3a5f8dc67af1faa1ec8bac6993e48'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Install existing source extraction/runtime without AI or paid API
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e .
+      - name: Verify immutable 316+22+20 preceding source-free research proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$PRIOR_RUN" > "$RUNNER_TEMP/previous-run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$PRIOR_ARTIFACT_ID" > "$RUNNER_TEMP/previous-artifact.json"
+          python - <<'PY'
+          import os,json,pathlib
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])
+          r=json.loads((p/'previous-run.json').read_text())
+          a=json.loads((p/'previous-artifact.json').read_text())
+          assert r['id']==int(os.environ['PRIOR_RUN'])
+          assert r['status']=='completed' and r['conclusion']=='success'
+          assert r['head_sha']==os.environ['PRIOR_SHA']
+          assert r['name']=='BCT S6 actual 316 RSS-only intake and verified research fact SQLite'
+          assert a['id']==int(os.environ['PRIOR_ARTIFACT_ID'])
+          assert a['name']=='bct-s6-316-sourcefree-research-'+os.environ['PRIOR_RUN']
+          assert a['workflow_run']['id']==r['id'] and not a['expired']
+          assert a['digest']==os.environ['PRIOR_DIGEST']
+          print('BCT_S6_REAL_60_PREDECESSOR_RUN_ARTIFACT_SHA_PASS')
+          PY
+          mkdir -p "$RUNNER_TEMP/s6-316"
+          gh run download "$PRIOR_RUN" -R "$GITHUB_REPOSITORY" \
+            --name "bct-s6-316-sourcefree-research-$PRIOR_RUN" \
+            --dir "$RUNNER_TEMP/s6-316"
+          python tools/bct_s6_316_sourcefree_intake.py --verify-only --out "$RUNNER_TEMP/s6-316"
+      - name: Pin current sidecar before actual source reentry; no mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/data" --jq '.object.sha')" = "$PINNED_DATA"
+          SIDE_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/future-bottleneck-data" --jq '.object.sha')
+          export SIDE_SHA
+          python - <<'PY'
+          import os,re
+          assert re.fullmatch('[0-9a-f]{40}',os.environ['SIDE_SHA'])
+          print('BCT_S6_60_LATEST_SIDECAR_HEAD_PINNED')
+          PY
+          echo "SIDE_SHA=$SIDE_SHA" >> "$GITHUB_ENV"
+      - name: Actually request and screen up to 60 still-unprocessed original public articles
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -u tools/bct_s6_60_real_original_reentry.py \
+            --previous "$RUNNER_TEMP/s6-316" \
+            --sidecar-head "$SIDE_SHA" \
+            --out "$RUNNER_TEMP/s6-60"
+      - name: Fresh-process database requery and no-evidence-promotion assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s6_60_real_original_reentry.py \
+            --verify-only --out "$RUNNER_TEMP/s6-60"
+          python - <<'PY'
+          import os,json,pathlib
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'s6-60/s6-60-execution.json'
+          s=json.loads(p.read_text())
+          assert s['format']=='bct-s6-60-real-original-reentry-v1'
+          assert s['status'].startswith('PASS_')
+          assert s['planned_selected']==60
+          assert s['actual_eligible_source_attempts']+s['skipped_existing_current_sidecar_record']==60
+          assert s['existing_operating_CAS_mutations']==0
+          assert s['forecast_candidate_or_LIVE_promotions']==s['research_pair_admitted']==0
+          assert s['original_source_bodies_or_urls_persisted'] is False
+          assert s['model_API_or_private_CPU_calls']==0
+          assert s['retained_target_hold_count']==22
+          assert s['prior_research_fact_codes_preserved']==20
+          assert s['operating_research_DB_merge']=='NOT_RUN_ONLY_ISOLATED_RESEARCH_RUN'
+          assert s['actual_eligible_source_attempts']==sum(s['actual_acquired_body_states'].values())
+          print('BCT_S6_REAL_60_SOURCE_ATTEMPT_COUNTS='+json.dumps({
+              'selected':s['planned_selected'],
+              'actually_attempted':s['actual_eligible_source_attempts'],
+              'already_stored_skipped':s['skipped_existing_current_sidecar_record'],
+              'body_states':s['actual_acquired_body_states'],
+              'verified_public_originals':s['new_strict_original_verified'],
+              'source_bound_research_hints':s['new_source_bound_research_fact_hints'],
+              'eligible_independent_pairs':0,
+              'operating_writes':0,
+          },sort_keys=True))
+          PY
+      - name: Export ONLY source-free source-attempt/locator hashes and summary
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s6-real-60-original-sourcefree-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/s6-60/s6-60-execution.json
+            ${{ runner.temp }}/s6-60/s6-60-sourcefree.sqlite3
+          retention-days: 30
+          if-no-files-found: warn
