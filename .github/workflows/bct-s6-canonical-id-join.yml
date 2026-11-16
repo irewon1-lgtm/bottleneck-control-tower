@@ -102,6 +102,7 @@ jobs:
           assert s["status"]=="PASS_PINNED_CANONICAL_SQLITE_AND_ALL_SIDECAR_ARTICLE_ID_JOIN"
           assert s["canonical_rss_ids"]==10992
           assert s["sidecar_result_ids"]==10676
+          assert s["canonical_without_sidecar_statuses"]=={"active":316}
           assert c.get("BOTH",0)+c.get("CANONICAL_ONLY",0)==10992
           assert c.get("BOTH",0)+c.get("SIDECAR_ONLY",0)==10676
           assert s["canonical_writes"]==s["sidecar_writes"]==s["LIVE_writes"]==0
@@ -109,6 +110,7 @@ jobs:
           print("BCT_S6_ACTUAL_CANONICAL_ID_JOIN_COMPLETE="+json.dumps({
             "matched_rss_sidecar_ids":c.get("BOTH",0),
             "rss_ids_not_in_sidecar":c.get("CANONICAL_ONLY",0),
+            "missing_sidecar_statuses":s["canonical_without_sidecar_statuses"],
             "sidecar_ids_not_in_rss":c.get("SIDECAR_ONLY",0),
             "results":s["sidecar_result_ids"],
             "rss":s["canonical_rss_ids"],
