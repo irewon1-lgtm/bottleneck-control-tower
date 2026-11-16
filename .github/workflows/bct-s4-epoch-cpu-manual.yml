@@ -1,0 +1,237 @@
+name: BCT S4 isolated CPU epoch manual research
+on:
+  workflow_dispatch:
+    inputs:
+      purpose:
+        type: choice
+        options: [manual-research]
+        required: true
+      acquisition_run:
+        type: string
+        required: true
+        description: Exact approved original acquisition 43645932280 only
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-s4-epoch-cpu-manual-one-writer
+  cancel-in-progress: false
+env:
+  PYTHONPATH: src
+  CPU_CODE_SHA: 1cfcd3d7aefcfc068944a47ee924822216961f60
+  EXPECTED_CPU_CODE_SHA: 1cfcd3d7aefcfc068944a47ee924822216961f60
+  ORIGINAL_ACQUISITION: '43645932280'
+jobs:
+  bridge:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.purpose == 'manual-research' && inputs.acquisition_run == '43645932280' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CPU_CODE_SHA }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Verify exact isolated reviewed code and repository context
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CPU_CODE_SHA"
+          test "$GITHUB_JOB" = bridge
+      - name: Read exact remote epoch ACK, eight table hashes, old archive; GPG-seal output
+        shell: bash
+        env:
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+          BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          timeout 120 python tools/bct_s4_epoch_bridge_stage.py --out var/v4/epoch-bridge
+      - name: Send only sealed checkpoint and source-free SHA receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s4-epoch-bridge
+          path: |
+            var/v4/epoch-bridge/state.gpg
+            var/v4/epoch-bridge/bridge-proof.json
+          retention-days: 7
+          if-no-files-found: error
+  research:
+    needs: bridge
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+      BCT_V4_S4_EPOCH_MODE: verified-exact-manual-v1
+      BCT_V4_S4_EPOCH_BRIDGE_PROOF: var/v4/cpu-private/bridge/bridge-proof.json
+      HF_HUB_OFFLINE: '1'
+      TRANSFORMERS_OFFLINE: '1'
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CPU_CODE_SHA }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        id: python
+        with:
+          python-version: '3.12.15'
+      - name: Free-only guard and exact existing runtime cache key
+        id: key
+        env:
+          PYTHON_VERSION: ${{ steps.python.outputs.python-version }}
+          LOCK_SHA: ${{ hashFiles('scripts/v4/requirements.lock','docs/v4/cpu-automation/preflight/model-manifest.json') }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CPU_CODE_SHA"
+          timeout 120 python tools/v4_cpu_preflight.py guard --output var/v4/cpu-private/free.json
+          echo "key=v4-cpu-runtime-\${RUNNER_OS}-\${RUNNER_ARCH}-\${PYTHON_VERSION}-\${LOCK_SHA}" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache/restore@v4
+        with:
+          key: ${{ steps.key.outputs.key }}
+          fail-on-cache-miss: true
+          path: |
+            .v4-cpu-env
+            .v4-cpu-runtime
+      - name: Download only same-run private GPG-sealed bridge (never private token)
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh run download "$GITHUB_RUN_ID" -R "$GITHUB_REPOSITORY" --name bct-s4-epoch-bridge --dir var/v4/cpu-private/bridge
+          test -s var/v4/cpu-private/bridge/state.gpg
+          test -s var/v4/cpu-private/bridge/bridge-proof.json
+      - name: GPG-authenticate bridge and independently verify source-separated checkpoint
+        run: >-
+          timeout 120 python tools/v4_cpu_private.py unseal
+          --packet var/v4/cpu-private/bridge/state.gpg
+          --checkpoint var/v4/cpu-private/prior
+      - name: Verify actual original RSS and acquisition workflow, not schedule attribution
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from bct.v4.cpu_operations import github_manual_context,verified_manual_input
+          import os
+          context=github_manual_context(int(os.environ['ORIGINAL_ACQUISITION']))
+          proof=verified_manual_input(context)
+          with open(os.environ['GITHUB_ENV'],'a')as out:
+              out.write('RSS_RUN='+str(proof['RSS_run_id'])+'\n')
+              out.write('RSS_ATTEMPT='+str(proof['RSS_run_attempt'])+'\n')
+              out.write('ACQUISITION_RUN='+str(context['acquisition_run']['id'])+'\n')
+              out.write('ACQUISITION_ATTEMPT='+str(proof['acquisition_run_attempt'])+'\n')
+              out.write('ACQUISITION_HEAD='+context['acquisition_run']['head_sha']+'\n')
+          PY
+      - name: Retrieve exact signed current original, bounded older input, no URL refetch
+        shell: bash
+        env:
+          BCT_V4_STATE_PASSPHRASE: ''
+        run: |
+          set -euo pipefail
+          timeout 120 gh run download "$RSS_RUN" -R "$GITHUB_REPOSITORY" --name "rss-live-result-$RSS_ATTEMPT" --dir var/v4/cpu-private/rss
+          timeout 300 python .github/scripts/receive_cpu_delta.py \
+            --run-id "$ACQUISITION_RUN" --expected-head "$ACQUISITION_HEAD" \
+            --run-attempt "$ACQUISITION_ATTEMPT" --rss-run-attempt "$RSS_ATTEMPT" \
+            --rss-run-id "$RSS_RUN" --rss-manifest var/v4/cpu-private/rss/new-document-manifest.json \
+            --checkpoint var/v4/cpu-private/prior --destination var/v4/cpu-private/source \
+            --receipt var/v4/cpu-private/input-receipt.json
+          cp var/v4/cpu-private/source/cpu-manifest.json var/v4/cpu-private/rss/new-document-manifest.json
+      - name: Consume <=24 exact pending original CPU windows; no duplicates or stage promotions
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 120 .v4-cpu-env/bin/python tools/v4_cpu_private.py process \
+            --checkpoint var/v4/cpu-private/prior \
+            --input-receipt var/v4/cpu-private/input-receipt.json \
+            --manual-acquisition-run "$ACQUISITION_RUN" \
+            --output var/v4/cpu-private/observation.json
+      - name: Seal only new CPU result with fixed epoch parent
+        run: >-
+          timeout 120 python tools/v4_cpu_private.py seal
+          --checkpoint var/v4/cpu-private/next-checkpoint
+          --packet var/v4/cpu-private/result/state.gpg
+          --parent-file var/v4/cpu-private/prior/parent.json
+      - name: Transfer ONLY authenticated encrypted CPU checkpoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s4-epoch-cpu-result
+          path: var/v4/cpu-private/result/state.gpg
+          retention-days: 7
+          if-no-files-found: error
+  publish:
+    needs: research
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CPU_CODE_SHA }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Free guard; fixed reviewed CPU code, private repo is storage only
+        run: |
+          test "$(git rev-parse HEAD)" = "$CPU_CODE_SHA"
+          timeout 120 python tools/v4_cpu_preflight.py guard --output var/v4/cpu-private/free.json
+      - name: Download only this run's encrypted result
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh run download "$GITHUB_RUN_ID" -R "$GITHUB_REPOSITORY" --name bct-s4-epoch-cpu-result --dir var/v4/cpu-private/result
+          test -s var/v4/cpu-private/result/state.gpg
+      - name: GPG-authenticate exact source version and parent before private writer
+        run: >-
+          timeout 120 python tools/v4_cpu_private.py unseal
+          --packet var/v4/cpu-private/result/state.gpg
+          --checkpoint var/v4/cpu-private/checkpoint
+      - name: Private CAS publish on independent epoch ref, full remote hash/table restore
+        env:
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+        run: >-
+          timeout 180 python tools/v4_cpu_private.py publish
+          --checkpoint var/v4/cpu-private/checkpoint
+          --parent-file var/v4/cpu-private/checkpoint/parent.json
+          --reuse-verified-scope
+          --output var/v4/cpu-private/published.json
+      - name: Source-free verified publisher receipt; no original article or model output
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json,os
+          p=json.loads(Path('var/v4/cpu-private/published.json').read_text())
+          a=p['persistence_receipt']
+          assert p['remote_restore_verified'] is True
+          assert p['research_ref']=='refs/heads/codex/bct-v4-cpu-research-epoch-20261116'
+          assert a['publisher_run_id']==int(os.environ['GITHUB_RUN_ID'])
+          assert a['publisher_execution_sha']==os.environ['CPU_CODE_SHA']
+          assert a['sqlite_sha256'] and a['API_calls']==0
+          safe={'format':'bct-s4-epoch-cpu-publication-receipt-v1',
+                'status':'PASS_REMOTE_PRIVATE_EPOCH_CAS_RESTORED',
+                'private_ack_commit':p['commit'],
+                'checkpoint_commit':a['checkpoint_commit'],
+                'sqlite_sha256':a['sqlite_sha256'],
+                'publisher_run_id':a['publisher_run_id'],
+                'code_sha':a['publisher_execution_sha'],
+                'successful_new_windows':a['new_validated_windows'],
+                'new_complete_analyzed_documents':a['complete_analyzed_new_CPU_documents'],
+                'analysis_errors':a['analysis_errors'],
+                'model_api_calls':a['API_calls'],
+                'LIVE_registration':a['LIVE_registration'],
+                'old_private_ref_writes':0}
+          Path('epoch-s4-publication.json').write_text(json.dumps(safe,sort_keys=True)+'\n')
+          print('BCT_S4_EPOCH_CPU_DURABLE='+json.dumps(safe,sort_keys=True))
+          PY
+      - name: Preserve source-free trusted ACK (no original CPU output)
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s4-epoch-private-published
+          path: epoch-s4-publication.json
+          retention-days: 30
+          if-no-files-found: error
