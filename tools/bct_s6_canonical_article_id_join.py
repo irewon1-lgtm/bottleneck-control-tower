@@ -128,7 +128,7 @@ def join_ids(canonical_rows,candidate,source,prior):
     shared=mids&rids
     canonical_only=mids-rids
     result_only=rids-mids
-    classes=Counter();status=Counter();mapping=[]
+    classes=Counter();status=Counter();canonical_missing_states=Counter();mapping=[]
     for id in sorted(mids|rids):
         position=("BOTH" if id in shared else
                   "CANONICAL_ONLY" if id in canonical_only else "SIDECAR_ONLY")
@@ -136,7 +136,10 @@ def join_ids(canonical_rows,candidate,source,prior):
         if position=="BOTH":
             state=(results[id].get("body_status") or "UNKNOWN")
             status[str(state)]+=1
-        else:state=None
+        else:
+            state=None
+            if position=="CANONICAL_ONLY":
+                canonical_missing_states[str(canonical_rows[id] or "UNKNOWN")]+=1
         mapping.append({"hashed_article_id":hashlib.sha256(id.encode()).hexdigest(),
                         "cohort_state":position,"sidecar_body_state":state,
                         "canonical_status":canonical_rows.get(id)})
@@ -157,6 +160,7 @@ def join_ids(canonical_rows,candidate,source,prior):
         "sidecar_result_ids":len(rids),
         "id_join_counts":dict(sorted(classes.items())),
         "matched_article_body_states":dict(sorted(status.items())),
+        "canonical_without_sidecar_statuses":dict(sorted(canonical_missing_states.items())),
         "row_joined_hashed_article_ids":len(mapping),
         "different_article_ID_populations_not_verified_shortage":True,
         "HOLD_pending_analysis_is_not_equivalent_to_missing_sidecar_record":True,
@@ -199,6 +203,7 @@ def readback(path):
         counts=dict(conn.execute("SELECT kind,COUNT(*) FROM article_join GROUP BY kind"))
         n=conn.execute("SELECT COUNT(*) FROM article_join").fetchone()[0]
     guard(counts==s["id_join_counts"] and n==s["row_joined_hashed_article_ids"]
+          and dict(conn.execute("SELECT canonical_state,COUNT(*) FROM article_join WHERE kind=\u0027CANONICAL_ONLY\u0027 GROUP BY canonical_state"))==s["canonical_without_sidecar_statuses"]
           and s["canonical_writes"]==s["sidecar_writes"]==s["LIVE_writes"]==0
           and s["S6_full_evidence_original_pair_integrity"]=="NOT_EVALUATED",
           "FALSE_OR_OUTDATED_ARTICLE_ID_JOIN")
