@@ -1,0 +1,96 @@
+name: BCT S5 bounded official primary originals research pilot
+on:
+  push:
+    branches: [ops/bct-s5-primary-originals-crosscheck-20261116]
+    paths:
+      - config/bct-s5-public-primary-pilot-20261116.json
+      - tools/bct_s5_primary_originals_crosscheck.py
+      - tests/test_bct_s5_primary_originals_crosscheck.py
+      - .github/workflows/bct-s5-public-primary-crosscheck.yml
+permissions:
+  contents: read
+concurrency:
+  group: bct-s5-public-originals-readonly-pilot
+  cancel-in-progress: false
+jobs:
+  verify-fail-closed-fixtures:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s5-primary-originals-crosscheck-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Run S5 no-private-query, no-duplicate-pair and SQLite tamper tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_bct_s5_primary_originals_crosscheck.py -v
+  capture-public-official-primary-originals:
+    needs: verify-fail-closed-fixtures
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Install existing repository Python dependencies without new model/API
+        run: python -m pip install -e .
+      - name: Capture only eight exact manually checked public original URLs, no private source query
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -u tools/bct_s5_primary_originals_crosscheck.py \
+            --manifest config/bct-s5-public-primary-pilot-20261116.json \
+            --output "$RUNNER_TEMP/s5-primary-evidence"
+      - name: Fresh Python process source-free proof and no-LIVE enforcement
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s5_primary_originals_crosscheck.py \
+            --verify-only --output "$RUNNER_TEMP/s5-primary-evidence"
+          python - <<'PY'
+          import os, pathlib, json
+          d=pathlib.Path(os.environ['RUNNER_TEMP'])/'s5-primary-evidence/summary.json'
+          r=json.loads(d.read_text())
+          assert r['attempted_public_primary_urls']==8
+          assert r['case_count']==8
+          assert r['candidate_or_LIVE_writes']==0
+          assert r['strict_eligible_supply_demand_pairs']==0
+          assert r['S4_11_originals_or_private_epoch_modified'] is False
+          assert r['full_RSS_corpus_audited'] is False
+          assert r['no_source_text_exported'] is True
+          assert r['certificate']=='NO_LIVE_NO_EARLY_NO_STRICT_SUPPLY_DEMAND_PROMOTION'
+          print('BCT_S5_PUBLIC_ORIGINAL_EVIDENCE='+json.dumps({
+            'attempted':r['attempted_public_primary_urls'],
+            'fetched':r['fetched_bodies'],
+            'strict_provenance_verified':r['provenance_verified_originals'],
+            'provenance_held':r['provenance_holds'],
+            'access_held':r['access_holds'],
+            'distinct_verified_issuers':r['independent_original_issuers_with_verified_facts'],
+            'strict_independent_qualified_pairs':r['strict_eligible_supply_demand_pairs'],
+            'no_LIVE_writes':r['candidate_or_LIVE_writes']==0
+          },sort_keys=True),flush=True)
+          if r['fetched_bodies']<2:
+            raise SystemExit('BCT_S5_BELOW_TWO_ACTUAL_CAPTURED_OFFICIAL_BODIES')
+          PY
+      - name: Preserve only derived source-free proof and SQLite fresh readback data
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s5-public-primary-source-free-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/s5-primary-evidence/summary.json
+            ${{ runner.temp }}/s5-primary-evidence/cases.sqlite3
+          retention-days: 30
+          if-no-files-found: warn
