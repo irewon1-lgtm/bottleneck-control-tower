@@ -73,9 +73,22 @@ def audit():
         folder.mkdir()
         git("init","-q")
         git("remote","add","origin",PRIVATE_REPO)
-        git("fetch","--no-tags","origin",
-            "+"+CURRENT_REF+":refs/remotes/origin/cpu-state",
-            "+"+ARCHIVE_REF+":refs/remotes/origin/archive")
+        # Separate authentication/ref visibility from object transport, so
+        # an object pack failure cannot be mistaken for a missing archive.
+        references=git("ls-remote","origin",CURRENT_REF,ARCHIVE_REF).splitlines()
+        advertised={row.split()[1]:row.split()[0] for row in references if len(row.split())==2}
+        if advertised.get(CURRENT_REF)!=EXPECTED_HEAD or advertised.get(ARCHIVE_REF)!=EXPECTED_HEAD:
+            raise ValueError("S4_PRIVATE_REF_VISIBILITY_OR_HEAD_CHANGED")
+        try:
+            git("fetch","--no-tags","origin",
+                "+"+CURRENT_REF+":refs/remotes/origin/cpu-state")
+        except ValueError as exc:
+            raise ValueError("S4_PRIVATE_FETCH_ACTIVE_"+str(exc)) from None
+        try:
+            git("fetch","--no-tags","origin",
+                "+"+ARCHIVE_REF+":refs/remotes/origin/archive")
+        except ValueError as exc:
+            raise ValueError("S4_PRIVATE_FETCH_ARCHIVE_"+str(exc)) from None
         if git("rev-parse","--is-shallow-repository")!="false":
             raise ValueError("S4_PRIVATE_HISTORY_SHALLOW_NOT_EXACT")
         current=git("rev-parse","refs/remotes/origin/cpu-state")
