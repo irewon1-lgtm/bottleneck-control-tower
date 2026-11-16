@@ -281,8 +281,39 @@ def work(ledger, *, extractor=None, max_windows=24, seconds=45,analysis_context=
     start,cpu_start = time.monotonic(),time.process_time()
     before = state(ledger); done = {x['key']:x for x in events(ledger,'CPU_QUEUE_WINDOW_RESULT')}
     legacy = {x['body_key'] for x in events(ledger,'CPU_QUEUE_LEGACY_COMPLETE')}
-    queues = [[t for t in d['tasks'] if t['key'] not in done] for d in events(ledger,'CPU_QUEUE_DOCUMENT') if d['body_key'] not in legacy]
-    tasks = [q[i] for i in range(max(map(len,queues),default=0)) for q in queues if i<len(q)]
+    # Only an explicitly authenticated manual source replay can provide a
+    # version-bound priority list. Keep the original FIFO order otherwise.
+    # This changes which *pending* window receives scarce CPU time, never a
+    # completed key or the bounded 24-window budget.
+    wanted = set()
+    if isinstance(analysis_context, dict) and 'priority_source_versions' in analysis_context:
+        priority = analysis_context['priority_source_versions']
+        if (type(priority) is not list or not 1 <= len(priority) <= 100):
+            raise ValueError('CPU_EXACT_SOURCE_PRIORITY_CONTRACT')
+        for source in priority:
+            if (not isinstance(source, dict) or set(source) != {'document_id','body_sha256'}
+                    or not isinstance(source['document_id'], str) or not source['document_id']
+                    or not isinstance(source['body_sha256'], str)
+                    or not re.fullmatch(r'[0-9a-f]{64}', source['body_sha256'])):
+                raise ValueError('CPU_EXACT_SOURCE_PRIORITY_CONTRACT')
+            wanted.add((source['document_id'], source['body_sha256']))
+        if len(wanted) != len(priority):
+            raise ValueError('CPU_EXACT_SOURCE_PRIORITY_DUPLICATE')
+    pending_docs = [d for d in events(ledger,'CPU_QUEUE_DOCUMENT') if d['body_key'] not in legacy]
+    def round_robin(docs):
+        queues = [[t for t in d['tasks'] if t['key'] not in done] for d in docs]
+        return [q[i] for i in range(max(map(len,queues),default=0)) for q in queues if i<len(q)]
+    if wanted:
+        # The verified manual-replay cohort must consume the complete 24-window
+        # batch before unrelated backlog. Interleaving every older document
+        # behind target documents previously consumed 13 of 24 windows while
+        # the exact original cohort still had hundreds of unread windows.
+        # The fallback executes ONLY after all eligible target tasks are done.
+        target_docs = [d for d in pending_docs if (d['document_id'], d.get('body_sha256')) in wanted]
+        other_docs = [d for d in pending_docs if (d['document_id'], d.get('body_sha256')) not in wanted]
+        tasks = round_robin(target_docs) + round_robin(other_docs)
+    else:
+        tasks = round_robin(pending_docs)
     producer=inference_producer() if tasks else None
     # Lazy CPUExtractor: no data/only cached windows -> no model initialization.
     extractor = extractor or CPUExtractor('var/v4/repair/cpu/runtime')
