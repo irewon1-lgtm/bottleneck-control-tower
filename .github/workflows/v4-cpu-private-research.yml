@@ -79,8 +79,8 @@ jobs:
       BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
       # The one original 11-document replay uses only the immutable transport
       # fix. Scheduled CPU, all other manual runs and recovery stay on 6e788d1.
-      CPU_CODE_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'manual-research' && inputs.acquisition_run == '43645932280' && '3ac2253c1a0a8807eff57b66b5dd88a02fcbd07c' || '6e788d18cf85fdb834b451bb35585a8b58925301' }}
-      EXPECTED_CPU_CODE_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'manual-research' && inputs.acquisition_run == '43645932280' && '3ac2253c1a0a8807eff57b66b5dd88a02fcbd07c' || '6e788d18cf85fdb834b451bb35585a8b58925301' }}
+      CPU_CODE_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'manual-research' && inputs.acquisition_run == '43645932280' && 'eac28a152bc139b3d5f69cb34ae4136792a92a2f' || '6e788d18cf85fdb834b451bb35585a8b58925301' }}
+      EXPECTED_CPU_CODE_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'manual-research' && inputs.acquisition_run == '43645932280' && 'eac28a152bc139b3d5f69cb34ae4136792a92a2f' || '6e788d18cf85fdb834b451bb35585a8b58925301' }}
       HF_HUB_OFFLINE: '1'
       TRANSFORMERS_OFFLINE: '1'
       OMP_NUM_THREADS: '4'
@@ -188,8 +188,8 @@ jobs:
       BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
       # The one original 11-document replay uses only the immutable transport
       # fix. Scheduled CPU, all other manual runs and recovery stay on 6e788d1.
-      CPU_CODE_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'manual-research' && inputs.acquisition_run == '43645932280' && '3ac2253c1a0a8807eff57b66b5dd88a02fcbd07c' || '6e788d18cf85fdb834b451bb35585a8b58925301' }}
-      EXPECTED_CPU_CODE_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'manual-research' && inputs.acquisition_run == '43645932280' && '3ac2253c1a0a8807eff57b66b5dd88a02fcbd07c' || '6e788d18cf85fdb834b451bb35585a8b58925301' }}
+      CPU_CODE_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'manual-research' && inputs.acquisition_run == '43645932280' && 'eac28a152bc139b3d5f69cb34ae4136792a92a2f' || '6e788d18cf85fdb834b451bb35585a8b58925301' }}
+      EXPECTED_CPU_CODE_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.purpose == 'manual-research' && inputs.acquisition_run == '43645932280' && 'eac28a152bc139b3d5f69cb34ae4136792a92a2f' || '6e788d18cf85fdb834b451bb35585a8b58925301' }}
     steps:
       - name: Require a reviewed immutable code SHA
         run: test "${#CPU_CODE_SHA}" = 40 && [[ "$CPU_CODE_SHA" =~ ^[0-9a-f]+$ ]] && test "$CPU_CODE_SHA" = "$EXPECTED_CPU_CODE_SHA"
