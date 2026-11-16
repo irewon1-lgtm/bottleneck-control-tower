@@ -113,7 +113,7 @@ test("existing BCT UI includes route and local S7 source-only rendering dependen
   assert.match(index,/data-page="research"/);
   assert.match(index,/s7-research-view\.js/);
   assert.match(app,/s7-research-status\.json/);
-  assert.match(app,/window\.BCTResearch\.validate/);
+  assert.match(app,/globalThis\.BCTResearch\.validate/);
   assert.match(app,/과거 511건 \+ 신규 연구 단서 147개를 더해 순위를 계산하지 않습니다/);
   assert.match(app,/loadS7SourceTruth/);
   assert.doesNotMatch(app,/researchStatus\s*=\s*511\s*\+\s*147/);
