@@ -3,7 +3,7 @@ from pathlib import Path
 import yaml
 
 p=Path(__file__).resolve().parents[1]/".github/workflows/bct-s4-epoch-cpu-manual.yml"
-sha="1cfcd3d7aefcfc068944a47ee924822216961f60"
+sha="aca2ccf56032c7841188997e857828142dadcb0a"
 old_ref="refs/heads/codex/bct-v4-cpu-research-state"
 new_ref="refs/heads/codex/bct-v4-cpu-research-epoch-20261116"
 
