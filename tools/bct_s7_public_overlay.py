@@ -222,9 +222,9 @@ def build(root,status_path,run_sha,run_id):
     sbytes=Path(status_path).read_bytes()
     require(len(sbytes)<200000,"S7_SOURCE_STATUS_TOO_LARGE")
     status=status_contract(json.loads(sbytes),run_sha)
-    manifest,index=legacy_contract(root,status)
     child=root/SITE_REL
     require(not child.exists(),"DUPLICATE_RESEARCH_OVERLAY")
+    manifest,index=legacy_contract(root,status)
     # No deletion, replacement, or reinterpretation of legacy dashboard counts.
     old_api=(root/"api/dashboard.json").read_bytes()
     old_js=(root/"app.js").read_bytes()
