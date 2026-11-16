@@ -1,0 +1,133 @@
+name: BCT S5 all 22 frozen TARGET disposition and S6 research HOLD handoff
+on:
+  push:
+    branches: [ops/bct-s5-22-target-review-to-s6-handoff-20261116]
+    paths:
+      - tools/bct_s5_22_target_disposition.py
+      - tests/test_bct_s5_22_target_disposition.py
+      - .github/workflows/bct-s5-22-target-review-handoff.yml
+      - docs/v4/bct-s5-22-target-review-handoff-20261116.md
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-s5-22-frozen-targets-source-free-20261116
+  cancel-in-progress: false
+jobs:
+  preserve-target-review-rules:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s5-22-target-review-to-s6-handoff-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Execute negative cases on actual entire frozen 22 TARGET cohort
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_bct_s5_22_target_disposition.py -v
+  authenticated-scoped-source-free-disposition:
+    needs: preserve-target-review-rules
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    env:
+      PYTHONPATH: src
+      GH_TOKEN: ${{ github.token }}
+      S5_SOURCE_RUN: '43824301850'
+      S5_SOURCE_ARTIFACT: '14205666980'
+      S5_SOURCE_HEAD: '24152347209ee696f1fb181d9a8b842dc0515496'
+      S5_SOURCE_DIGEST: 'sha256:f077f746cb06ce5de6efe59b77882a6136b00c77d6b9cc9e3d697c35624110a7'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Authenticate previous real source analysis not reprocess it
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$S5_SOURCE_RUN" > "$RUNNER_TEMP/s5-run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$S5_SOURCE_ARTIFACT" > "$RUNNER_TEMP/s5-artifact.json"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])
+          r=json.loads((p/'s5-run.json').read_text())
+          a=json.loads((p/'s5-artifact.json').read_text())
+          assert r['id']==int(os.environ['S5_SOURCE_RUN'])
+          assert r['status']=='completed' and r['conclusion']=='success'
+          assert r['head_sha']==os.environ['S5_SOURCE_HEAD']
+          assert r['name']=='BCT S5 official independent supplier facts proof'
+          assert a['id']==int(os.environ['S5_SOURCE_ARTIFACT'])
+          assert a['name']=='bct-s5-supplier-fact-source-free-'+os.environ['S5_SOURCE_RUN']
+          assert a['workflow_run']['id']==r['id']
+          assert a['digest']==os.environ['S5_SOURCE_DIGEST'] and not a['expired']
+          print('BCT_S5_22_SOURCE_RESEARCH_IMMUTABLE_ARTIFACT_PASS')
+          PY
+      - name: Download ONLY exact prior public research counts and hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/previous"
+          gh run download "$S5_SOURCE_RUN" -R "$GITHUB_REPOSITORY" \
+            --name "bct-s5-supplier-fact-source-free-$S5_SOURCE_RUN" \
+            --dir "$RUNNER_TEMP/previous"
+          test -s "$RUNNER_TEMP/previous/summary.json"
+      - name: Read all frozen 22 TARGETs and historical registration patches; preserve HOLD
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s5_22_target_disposition.py \
+            --repo-root . --s5-source-receipt "$RUNNER_TEMP/previous/summary.json" \
+            --out "$RUNNER_TEMP/s5-22"
+      - name: New-process SQLite readback and S6 research-only handoff consistency
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s5_22_target_disposition.py --verify-only --out "$RUNNER_TEMP/s5-22"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'s5-22'
+          a=json.loads((p/'s5-closed-review.json').read_text())
+          b=json.loads((p/'s6-research-handoff.json').read_text())
+          assert a['cohort_disposition']=='PASS_ALL_22_TARGETS_EXPLICITLY_CATEGORIZED'
+          assert a['targets_reviewed']==22 and a['qualified']==0 and a['rejected']==0 and a['hold']==22
+          assert a['full_10k_article_research_audit']=='NOT_PERFORMED'
+          assert a['LIVE_candidates_created']==a['production_research_DB_writes']==a['production_rank_writes']==0
+          assert b['s6_intake_scope']=='RESEARCH_ONLY_HOLD_22_NOT_PUBLIC_RANK'
+          assert b['eligible_to_integrate_verified_pairs']==0
+          assert b['S6_full_database_integration']=='NOT_RUN'
+          assert b['promotion_allowed'] is False
+          print('BCT_S5_22_SCOPED_REVIEW_AND_S6_HANDOFF='+json.dumps({
+              'reviewed':a['targets_reviewed'],
+              'qualified':a['qualified'],
+              'rejected':a['rejected'],
+              'held':a['hold'],
+              'registration_files':a['registration_files_read'],
+              'historical_reviews':a['historical_registration_reviews_read'],
+              'historical_distinct_verified_originals':a['qa_original_documents_distinct_reported'],
+              'next_gate':b['s6_next_action'],
+              'S6_full_integration':b['S6_full_database_integration'],
+              'LIVE_writes':0
+          },sort_keys=True))
+          PY
+      - name: Save derived source-free review and S6 handoff only
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s5-22-target-source-free-handoff-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/s5-22/s5-closed-review.json
+            ${{ runner.temp }}/s5-22/s6-research-handoff.json
+            ${{ runner.temp }}/s5-22/s5-to-s6-research.sqlite3
+          retention-days: 30
+          if-no-files-found: warn
