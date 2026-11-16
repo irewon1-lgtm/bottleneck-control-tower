@@ -198,6 +198,9 @@ def summarize(manifest,cases):
     contract_groups={k:{
          "original_issuers_with_verified_facts":len({x["issuer"]for x in v
            if x["verified_original"] and x["fact_codes"]}),
+         "additional_visible_attested_original_issuers":len({x["issuer"]for x in v
+           if x.get("visible_primary_attested") and x.get("attested_fact_codes")}),
+         "economic_events_maximum":1,
          "original_urls_checked":len(v)}
          for k,v in sorted(contract_groups.items())}
     return {
