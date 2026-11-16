@@ -1,0 +1,41 @@
+name: BCT Session 4 bounded exact-source CPU remaining drain
+on:
+  push:
+    branches: [ops/bct-s4-remaining-exact-cpu-20261116]
+    paths: [.github/workflows/bct-s4-drain-execute.yml]
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: bct-s4-actual-original-cohort-drain-one-shot
+  cancel-in-progress: false
+jobs:
+  verified-bounded-drain:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s4-remaining-exact-cpu-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    env:
+      GH_TOKEN: ${{ github.token }}
+      EXPECTED_MAIN_SHA: "2685e274db538838d6073177ac0a2e84f580ca16"
+      BCT_S4_PROGRESS_FILE: ${{ runner.temp }}/bct-session4-exact-source-progress.json
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Sequential exact original CPU replay with private CAS and source-free readback
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -u tools/bct_s4_exact_cohort_drain.py
+      - name: Preserve verified source-free counts, including if partial or blocked
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s4-exact-source-progress-${{ github.run_id }}
+          path: ${{ runner.temp }}/bct-session4-exact-source-progress.json
+          retention-days: 30
+          if-no-files-found: warn
