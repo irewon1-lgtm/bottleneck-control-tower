@@ -6,6 +6,7 @@ Distinct official issuer confirmations are NOT independent economic demand/suppl
 import argparse
 from collections import Counter,defaultdict
 from datetime import date,datetime,timezone
+from html import unescape
 import hashlib
 import ipaddress
 import json
@@ -56,7 +57,8 @@ def validate_manifest(manifest):
     ids=set();urls=set()
     for s in entries:
         guard(type(s)==dict and all(isinstance(s.get(k),str) and s[k] for k in
-              ("id","issuer","host","published_date","url","causal_event","role")),
+              ("id","issuer","host","published_date","url","causal_event","role",
+               "visible_title","visible_date","visible_issuer_marker")),
               "SOURCE_DECLARATION_INVALID")
         guard(s["id"] not in ids and s["url"] not in urls,"DUPLICATE_SOURCE")
         ids.add(s["id"]);urls.add(s["url"])
@@ -70,16 +72,66 @@ def validate_manifest(manifest):
                       for k,v in facts.items()),"FACT_PATTERNS_INVALID")
         guard(not any(q in canonical(s).lower() for q in ("ghp_","github_pat_","authorization: bearer")),
               "PRIVATE_CREDENTIAL_LIKE_SOURCE")
+        guard(20<=len(s["visible_title"])<=150
+              and 8<=len(s["visible_date"])<=30
+              and 8<=len(s["visible_issuer_marker"])<=100,
+              "PUBLIC_SOURCE_VISIBLE_ATTESTATION_CONTRACT")
     return entries
 
 def flattened(s):
     return re.sub(r"\s+"," ",s.replace("\u00a0"," ").casefold()).strip()
 
-def classify_source(source,observed,*,acquired_at):
+def attested_visible_primary(source,raw,final,proof):
+    """Separate, narrower visible-public attestation, NOT global strict provenance.
+
+    It establishes that THIS already-public listed issuer URL displays the
+    exact expected headline, adjacent original date, issuer identification,
+    and at least one actual source-bound observable. It does not establish
+    eligible unreserved supply, whole-article completeness, or a forecast pair.
+    """
+    if not isinstance(raw,bytes) or len(raw)<600:
+        return False
+    if public_url(final,source["host"])!=source["url"]:
+        return False
+    if sha(raw)!=proof.get("raw_sha256"):
+        return False
+    if (not isinstance(proof.get("body"),str)
+        or len(proof["body"])<600
+        or sha(proof["body"])!=proof.get("body_sha256")):
+        return False
+    if not any(flattened(pat) in flattened(proof["body"])
+               for pat in source["fact_patterns"].values()):
+        return False
+    html=raw.decode("utf-8",errors="replace")
+    html=re.sub(r"<script\b[^>]*>.*?</script>|<style\b[^>]*>.*?</style>",
+                " ",html,flags=re.I|re.S)
+    text=flattened(unescape(re.sub(r"<[^>]+>"," ",html)))
+    title=flattened(source["visible_title"])
+    date_mark=flattened(source["visible_date"])
+    issuer=flattened(source["visible_issuer_marker"])
+    if issuer not in text:
+        return False
+    locations=[m.start() for m in re.finditer(re.escape(title),text)]
+    if not locations:
+        return False
+    # Accept exact issuer's date bound near the named article heading, not
+    # an unrelated navigation/news item elsewhere on a long issuer page.
+    if not any(date_mark in text[max(0,i-220):i+len(title)+500]
+               for i in locations):
+        return False
+    # An accessible original article cannot be a challenge or paywall page.
+    if any(x in text[:1000] for x in
+            ("enable javascript to continue","verify you are human",
+             "access denied","captcha challenge")):
+        return False
+    return True
+
+def classify_source(source,observed,*,acquired_at,visible_attested=False):
     """observed=None on retrieval failure, else a real exact downloaded verifier result."""
     base={k:source[k] for k in ("id","issuer","url","published_date","role","causal_event")}
     base.update(source_kind="PUBLIC_PRELISTED_PRIMARY_URL",retrieved=False,
-                verified_original=False,fact_codes=[],held_fact_codes=[],
+                verified_original=False,visible_primary_attested=False,
+                fact_codes=[],held_fact_codes=[],attested_fact_codes=[],
                 live_changes=0,strict_independent_sourcing_gap_proven=False)
     if observed is None:
         return {**base,"status":"ACCESS_HOLD","blockers":["REMOTE_NOT_AVAILABLE_OR_DENIED"]}
@@ -100,25 +152,32 @@ def classify_source(source,observed,*,acquired_at):
                  if flattened(phrase) in body)
     # A matching substring in an unverified page is only a lead.
     evidence=codes if legitimate else []
+    attested=bool(visible_attested and codes)
     blockers=([] if legitimate else
               sorted(set([*p.get("provenance_blockers",[])]
                          +([] if valid_date else ["ORIGINAL_PUBLICATION_DATE_NOT_MATCHED"]))))
     record={**base,"retrieved":True,
             "verified_original":legitimate,
-            "status":"ORIGINAL_SOURCE_VERIFIED" if legitimate else "BODY_CAPTURED_PROVENANCE_HOLD",
+            "visible_primary_attested":attested,
+            "status":"ORIGINAL_SOURCE_VERIFIED" if legitimate else
+                     "VISIBLE_ORIGINAL_ATTESTED_STRICT_PROVENANCE_HOLD" if attested else
+                     "BODY_CAPTURED_PROVENANCE_HOLD",
             "raw_sha256":p["raw_sha256"],"body_sha256":p["body_sha256"],
             "source_published_at":proof_date if legitimate else None,
             "source_length":len(p["body"]),
             "provenance_validation":p.get("provenance","UNKNOWN"),
             "blockers":blockers,
-            "fact_codes":evidence,"held_fact_codes":[] if legitimate else codes}
+            "fact_codes":evidence,
+            "attested_fact_codes":[] if legitimate else codes if attested else [],
+            "held_fact_codes":[] if legitimate or attested else codes}
     return record
 
 def summarize(manifest,cases):
     entries=validate_manifest(manifest)
     guard(len(cases)==len(entries),"CASE_COUNT_NOT_COMPLETE")
     expected={r["id"]:r for r in entries}
-    issuers=set();contract_groups=defaultdict(list);codes=Counter();held=Counter()
+    issuers=set();attested_issuers=set();contract_groups=defaultdict(list);
+    codes=Counter();attested_codes=Counter();held=Counter()
     for case in cases:
         expected_source=expected.get(case.get("id"))
         guard(expected_source is not None and
@@ -129,8 +188,12 @@ def summarize(manifest,cases):
               and case["fact_codes"]==sorted(set(case["fact_codes"])),"UNVERIFIED_PROMOTION")
         if case["verified_original"] and case["fact_codes"]:
             issuers.add(case["issuer"])
+        if case.get("visible_primary_attested") and case.get("attested_fact_codes"):
+            attested_issuers.add(case["issuer"])
         contract_groups[case["causal_event"]].append(case)
-        codes.update(case["fact_codes"]);held.update(case["held_fact_codes"])
+        codes.update(case["fact_codes"])
+        attested_codes.update(case.get("attested_fact_codes",[]))
+        held.update(case["held_fact_codes"])
     # Reports from buyer and seller about the SAME agreement are one causal event.
     contract_groups={k:{
          "original_issuers_with_verified_facts":len({x["issuer"]for x in v
@@ -148,7 +211,10 @@ def summarize(manifest,cases):
        "provenance_holds":sum(c["retrieved"] and not c["verified_original"] for c in cases),
        "access_holds":sum(not c["retrieved"] for c in cases),
        "independent_original_issuers_with_verified_facts":len(issuers),
+       "visible_public_original_attestations":sum(c.get("visible_primary_attested",False) for c in cases),
+       "distinct_visible_public_original_issuers":len(attested_issuers|issuers),
        "verified_fact_codes":dict(sorted(codes.items())),
+       "attested_research_only_fact_codes":dict(sorted(attested_codes.items())),
        "held_fact_codes":dict(sorted(held.items())),
        "same_contract_deduplicated_event_groups":contract_groups,
        "strict_eligible_supply_demand_pairs":0,
@@ -220,14 +286,18 @@ def run(manifest_path,output):
                 raise ValueError("UNEXPECTED_CROSS_DOMAIN_REDIRECT")
             verified=capture.verify(raw,src["url"],final,
                                     datetime.now(timezone.utc).isoformat(),status,ctype)
-            case=classify_source(src,verified,acquired_at=datetime.now(timezone.utc).isoformat())
+            visible=attested_visible_primary(src,raw,final,verified)
+            case=classify_source(src,verified,
+                         acquired_at=datetime.now(timezone.utc).isoformat(),
+                         visible_attested=visible)
         except Exception as exc:
             case=classify_source(src,None,acquired_at=datetime.now(timezone.utc).isoformat())
             case["blockers"]=[("HTTP_"+str(exc.code)) if hasattr(exc,"code") else type(exc).__name__]
         cases.append(case)
         # No original HTML, text, or private derived query printed to CI logs.
         print("S5_PRIMARY_FETCH="+canonical({
-            "source":case["id"],"status":case["status"],"fact_codes":case["fact_codes"],
+            "source":case["id"],"status":case["status"],
+            "fact_codes":case["fact_codes"],"attested_fact_codes":case.get("attested_fact_codes",[]),
             "blockers":case["blockers"]}),flush=True)
     summary=summarize(manifest,cases)
     # Do not accidentally mark source string matches as independent qualified pairs.
@@ -238,6 +308,7 @@ def run(manifest_path,output):
           k:saved[k] for k in ("status","attempted_public_primary_urls","fetched_bodies",
              "provenance_verified_originals","provenance_holds","access_holds",
              "independent_original_issuers_with_verified_facts",
+             "visible_public_original_attestations","distinct_visible_public_original_issuers",
              "strict_eligible_supply_demand_pairs")}),flush=True)
 
 def main():
