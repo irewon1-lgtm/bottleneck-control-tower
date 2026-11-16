@@ -1,0 +1,150 @@
+name: BCT S6 initial research DB metadata and published evidence counter baseline
+on:
+  push:
+    branches: [ops/bct-s6-readonly-sidecar-manifest-baseline-20261116]
+    paths:
+      - tools/bct_s6_operating_manifest_baseline.py
+      - tests/test_bct_s6_operating_manifest_baseline.py
+      - .github/workflows/bct-s6-metadata-baseline.yml
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-s6-source-free-operating-manifest-audit-20261116
+  cancel-in-progress: false
+jobs:
+  no-false-evidence-metadata-tests:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s6-readonly-sidecar-manifest-baseline-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Fail closed on fake 511 evidence, branch drift or mismatched S5 HOLD
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_bct_s6_operating_manifest_baseline.py -v
+  audited-current-public-manifest-intake:
+    needs: no-false-evidence-metadata-tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PYTHONPATH: src
+      GH_TOKEN: ${{ github.token }}
+      S5_RUN: '43827657779'
+      S5_ARTIFACT_ID: '14207241610'
+      S5_SOURCE_SHA: '2461a5d379ee7fdb6bd89dfbfdf10474b94548d8'
+      S5_ARTIFACT_DIGEST: 'sha256:84fe8339a0a8d0f0a733531e552cf8ae7c7827ba6705c86175efc1204272e136c'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Authenticate exact completed S5 22 TARGET source-free proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$S5_RUN" > "$RUNNER_TEMP/s5-run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$S5_ARTIFACT_ID" > "$RUNNER_TEMP/s5-artifact.json"
+          python - <<'PY'
+          import json,os,pathlib
+          d=pathlib.Path(os.environ['RUNNER_TEMP'])
+          r=json.loads((d/'s5-run.json').read_text())
+          a=json.loads((d/'s5-artifact.json').read_text())
+          assert r['id']==int(os.environ['S5_RUN'])
+          assert r['status']=='completed' and r['conclusion']=='success'
+          assert r['head_sha']==os.environ['S5_SOURCE_SHA']
+          assert r['name']=='BCT S5 all 22 frozen TARGET disposition and S6 research HOLD handoff'
+          assert a['id']==int(os.environ['S5_ARTIFACT_ID'])
+          assert a['name']=='bct-s5-22-target-source-free-handoff-'+os.environ['S5_RUN']
+          assert a['workflow_run']['id']==r['id'] and not a['expired']
+          assert a['digest']==os.environ['S5_ARTIFACT_DIGEST']
+          print('BCT_S6_SOURCE_FREE_S5_22_TARGET_SOURCE_IDENTITY_PASS')
+          PY
+      - name: Restore only prior S5 derived evidence and independently requery
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/s5"
+          gh run download "$S5_RUN" -R "$GITHUB_REPOSITORY" \
+            --name "bct-s5-22-target-source-free-handoff-$S5_RUN" \
+            --dir "$RUNNER_TEMP/s5"
+          python tools/bct_s5_22_target_disposition.py --verify-only --out "$RUNNER_TEMP/s5"
+      - name: Pin current data and future-bottleneck-data commit heads
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/s6-sources"
+          DATA_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/data" --jq '.object.sha')
+          FUTURE_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/future-bottleneck-data" --jq '.object.sha')
+          export DATA_SHA FUTURE_SHA
+          python - <<'PY'
+          import json,os,pathlib,re
+          a,b=os.environ['DATA_SHA'],os.environ['FUTURE_SHA']
+          assert re.fullmatch('[0-9a-f]{40}',a) and re.fullmatch('[0-9a-f]{40}',b) and a!=b
+          (pathlib.Path(os.environ['RUNNER_TEMP'])/'s6-sources/heads.json').write_text(
+              json.dumps({'data':a,'future-bottleneck-data':b}))
+          print('BCT_S6_TWO_OPERATING_BRANCH_HEADS_PINNED')
+          PY
+          echo "DATA_SHA=$DATA_SHA" >> "$GITHUB_ENV"
+          echo "FUTURE_SHA=$FUTURE_SHA" >> "$GITHUB_ENV"
+      - name: Capture five public JSON manifests at exact SHAs, no shards or article content
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/contents/precursor-index.json?ref=$DATA_SHA" > "$RUNNER_TEMP/s6-sources/precursor_index.json"
+          gh api "repos/$GITHUB_REPOSITORY/contents/v4-public/acquisition.json?ref=$DATA_SHA" > "$RUNNER_TEMP/s6-sources/v4_acquisition.json"
+          gh api "repos/$GITHUB_REPOSITORY/contents/v4-public/research.json?ref=$DATA_SHA" > "$RUNNER_TEMP/s6-sources/v4_research.json"
+          gh api "repos/$GITHUB_REPOSITORY/contents/future-candidates.json?ref=$FUTURE_SHA" > "$RUNNER_TEMP/s6-sources/future_candidates_manifest.json"
+          gh api "repos/$GITHUB_REPOSITORY/contents/future-tracking.json?ref=$FUTURE_SHA" > "$RUNNER_TEMP/s6-sources/future_tracking_manifest.json"
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/data" --jq '.object.sha')" = "$DATA_SHA"
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/future-bottleneck-data" --jq '.object.sha')" = "$FUTURE_SHA"
+          echo "BCT_S6_TWO_OPERATING_BRANCH_HEADS_UNCHANGED"
+      - name: Parse hashes, numeric categories and S5 HOLD; publish source-free new SQLite
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s6_operating_manifest_baseline.py \
+            --sources "$RUNNER_TEMP/s6-sources" \
+            --s5 "$RUNNER_TEMP/s5/s5-closed-review.json" \
+            --s5-handoff "$RUNNER_TEMP/s5/s6-research-handoff.json" \
+            --out "$RUNNER_TEMP/s6-baseline"
+      - name: Fresh-process proof and no 511 ungrounded count or operating writes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s6_operating_manifest_baseline.py \
+            --verify-only --out "$RUNNER_TEMP/s6-baseline"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'s6-baseline/s6-index-baseline.json'
+          r=json.loads(p.read_text())
+          assert r['decision']=='PASS_OPERATING_BRANCH_METADATA_BASELINE_NOT_EVIDENCE_COUNT'
+          assert r['manifest_target_records']==22 and r['S5_held_targets']==22
+          assert r['published_sector_evidence_511']=='NOT_DETERMINABLE_FROM_MANIFESTS'
+          assert r['candidate_result_items_are_not_qualified_evidence'] is True
+          assert r['S6_full_operating_DB_integration']=='NOT_RUN'
+          assert r['operating_data_branch_writes']==r['research_sidecar_writes']==r['LIVE_writes']==r['rank_promotions']==0
+          print('BCT_S6_CURRENT_METADATA_SOURCE_BOUND_GATE_PASS')
+          PY
+      - name: Publish only source-free branch manifest hash ledger and readback receipt
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s6-research-only-metadata-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/s6-baseline/s6-index-baseline.json
+            ${{ runner.temp }}/s6-baseline/s6-index-metadata.sqlite3
+          retention-days: 30
+          if-no-files-found: warn
