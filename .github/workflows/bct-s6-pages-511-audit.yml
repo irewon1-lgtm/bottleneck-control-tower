@@ -1,0 +1,118 @@
+name: BCT S6 verify actual deployed Pages historical 511 versus 1703 detail files
+on:
+  push:
+    branches: [ops/bct-s6-full-sidecar-evidence-reconcile-20261116]
+    paths:
+      - tools/bct_s6_pages_511_audit.py
+      - tests/test_bct_s6_pages_511_audit.py
+      - .github/workflows/bct-s6-pages-511-audit.yml
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-s6-pages-exact-artifact-historic-511-20261116
+  cancel-in-progress: false
+jobs:
+  negative-count-and-no-promotions:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s6-full-sidecar-evidence-reconcile-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Test 511 vs 1703 vs 10992 and no false future candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_bct_s6_pages_511_audit.py -v
+  actual-published-pages-artifact-audit:
+    needs: negative-count-and-no-promotions
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PYTHONPATH: src
+      GH_TOKEN: ${{ github.token }}
+      PAGES_RUN: '43838794301'
+      PAGES_ARTIFACT: '14211394848'
+      PAGES_HEAD_SHA: 'af6088f1adb2921a4c6d50132cdee6357f6cdcdd'
+      PAGES_ARTIFACT_DIGEST: 'sha256:641cf9c02359db448a34e02f35e9a58b1d72453ee4be8514b053e39a25368316'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Authenticate published BCT Pages official artifact generation
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$PAGES_RUN" > "$RUNNER_TEMP/pages-run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$PAGES_ARTIFACT" > "$RUNNER_TEMP/pages-artifact.json"
+          python - <<'PY'
+          import os,json,pathlib
+          d=pathlib.Path(os.environ['RUNNER_TEMP'])
+          r=json.loads((d/'pages-run.json').read_text())
+          a=json.loads((d/'pages-artifact.json').read_text())
+          assert r['id']==int(os.environ['PAGES_RUN'])
+          assert r['name']=='Read-only BCT Pages'
+          assert r['head_sha']==os.environ['PAGES_HEAD_SHA']
+          assert r['status']=='completed' and r['conclusion']=='success'
+          assert a['id']==int(os.environ['PAGES_ARTIFACT'])
+          assert a['workflow_run']['id']==r['id']
+          assert a['name']=='github-pages' and not a['expired']
+          assert a['digest']==os.environ['PAGES_ARTIFACT_DIGEST']
+          print('BCT_S6_PUBLISHED_SITE_GENERATION_PROVENANCE_PASS')
+          PY
+      - name: Download exact published site tar only and audit 1703 evidence pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/pages-original"
+          gh run download "$PAGES_RUN" -R "$GITHUB_REPOSITORY" \
+            --name github-pages \
+            --dir "$RUNNER_TEMP/pages-original"
+          test -s "$RUNNER_TEMP/pages-original/artifact.tar"
+          python -u tools/bct_s6_pages_511_audit.py \
+            --site-tar "$RUNNER_TEMP/pages-original/artifact.tar" \
+            --out "$RUNNER_TEMP/pages-511-proof"
+      - name: Fresh-process SQL evidence-count proof and no LIVE
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s6_pages_511_audit.py \
+            --verify-only --out "$RUNNER_TEMP/pages-511-proof"
+          python - <<'PY'
+          import os,json,pathlib
+          d=pathlib.Path(os.environ['RUNNER_TEMP'])/'pages-511-proof/published-511-reconciliation.json'
+          r=json.loads(d.read_text())
+          assert r['historical_dashboard_record_count']==511
+          assert r['historical_evidence_breakdown']=={'reviewed':23,'structured':211,'discovery':277}
+          assert r['published_detailed_evidence_files']==1703
+          assert r['published_detail_file_breakdown']['cpu_product']==1186
+          assert r['historical_ranked_sector_rows']==508
+          assert r['live_overlay_sector_ranked_rows']==520
+          assert r['live_overlay_new_publisher_verified_unpaired']==12
+          assert r['latest_rss_article_count_in_published_build']==10992
+          assert r['operating_DB_writes']==r['LIVE_writes']==0
+          assert r['automatically_promoted_shortage_candidates']==0
+          print('BCT_S6_OFFICIAL_511_ROOT_CAUSE_AUDITED')
+          PY
+      - name: Publish source-free actual historical count receipt, not original contents
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s6-published-511-source-free-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/pages-511-proof/published-511-reconciliation.json
+            ${{ runner.temp }}/pages-511-proof/published-511-sourcefree.sqlite3
+          retention-days: 30
+          if-no-files-found: warn
