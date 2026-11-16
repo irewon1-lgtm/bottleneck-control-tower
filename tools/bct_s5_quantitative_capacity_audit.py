@@ -22,6 +22,10 @@ AS_OF="2026-11-16"
 UNKNOWN="UNKNOWN"
 PERIODS=("2027","2028","2029","2030")
 SOURCE_IDS=frozenset(("standard_2026q3_sec_10q","centrus_2026q3_issuer"))
+PINNED_URLS={
+ "standard_2026q3_sec_10q":"https://ir.standardnuclear.com/sec-filings/all-sec-filings/content/0001628280-26-073090/nucl-20260930.htm",
+ "centrus_2026q3_issuer":"https://centrusenergy.gcs-web.com/news-releases/news-release-details/centrus-reports-third-quarter-2026-results",
+}
 PRIOR_S5_RUN=43815790180
 PRIOR_S5_ARTIFACT=14202675339
 PRIOR_S5_SHA="410c4725c3a9ff9426813b8a839f8cc15c0cc494"
@@ -60,8 +64,8 @@ FACTS={
    "The Company’s SN-0 facility",r"operates at just above 25%",900),
   ("STDN_FACILITY_APPROVAL_TARGET","2027-02","YEAR_MONTH",
    "REGULATORY_TARGET_NOT_GRANTED_AUTHORIZATION",
-   "The Company’s SN-0 facility",
-   r"targets receiving DOE authorization to operate at both SN-TN and SN-ID in February 2027",2800),
+   "Facility commissioning and production ramp-up",
+   r"targets receiving DOE authorization to operate at both SN-TN and SN-ID in February 2027",2500),
   ("STDN_FEEDSTOCK_RECEIPT_DEPENDENCY","VERIFIED","QUALITATIVE",
    "FUEL_FEED_SUPPLY_DEPENDENT_NO_MEASURED_RESIDUAL",
    "Feedstock availability",r"ability to perform under customer arrangements depends in part on the availability and timely receipt of enriched uranium feedstock",700),
@@ -125,6 +129,7 @@ def validate_manifest(m):
                     ("url","issuer","host","period_end","source_type")),
                 "SOURCE_METADATA_MISSING")
         source_url(x["url"],x["host"])
+        require(x["url"]==PINNED_URLS[x["id"]],"CHANGED_PUBLIC_ORIGINAL_URL")
         require(x["period_end"]=="2026-09-30"
                 and x["source_type"] in
                     ("ISSUER_OFFICIAL_SEC_10Q","ISSUER_OFFICIAL_2026Q3_RELEASE"),
@@ -214,6 +219,7 @@ def derive(manifest,prior,cases):
     require({x["source_id"] for x in cases}==SOURCE_IDS and len(cases)==2,
             "TWO_OFFICIAL_CASES_REQUIRED")
     found={}
+    expected_fact_by_source={sid:{f[0]:f for f in rules} for sid,rules in FACTS.items()}
     for c in cases:
         if c["status"]=="FETCHED_PUBLIC_ORIGINAL_RESEARCH_ONLY":
             require(all(re.fullmatch("[0-9a-f]{64}",c[k]) for k in
@@ -221,9 +227,18 @@ def derive(manifest,prior,cases):
         require(c.get("automatic_live_candidates")==0 and
                 c.get("source_inference_api_calls")==0,
                 "UNAUTHORIZED_SIDE_EFFECT")
+        require(c["origin_url"]==PINNED_URLS[c["source_id"]]
+                and c.get("strict_original_global_verification")=="NOT_CLAIMED",
+                "SOURCE_IDENTITY_OR_PROVENANCE_STILL_UNVERIFIED")
+        require(len(c["fact_receipts"])==len(expected_fact_by_source[c["source_id"]]),
+                "MISSING_FIXED_SOURCE_FACT")
         for fact in c["fact_receipts"]:
-            require(fact["fact_id"] not in found and fact["fact_id"] in PINNED_FACT_IDS,
-                    "FACT_DUPLICATE_OR_UNKNOWN")
+            fid=fact["fact_id"]
+            require(fid not in found and fid in expected_fact_by_source[c["source_id"]],
+                    "FACT_DUPLICATE_OR_CROSS_SOURCE")
+            expected=expected_fact_by_source[c["source_id"]][fid]
+            require(fact["unit"]==expected[2] and fact["meaning"]==expected[3]
+                    and fact["value"] in (expected[1],UNKNOWN),"CHANGED_TYPED_FACT")
             state=fact["state"]
             require(state in ("SOURCE_LOCATOR_HASH_VERIFIED","HOLD_NO_MATCHED_ORIGINAL_SPAN"),
                     "SOURCE_FACT_STATE")
