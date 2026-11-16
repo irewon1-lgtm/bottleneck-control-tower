@@ -1,0 +1,51 @@
+name: BCT S4 archived private state epoch preflight only
+on:
+  push:
+    branches: [fix/bct-s4-private-storage-epoch-preflight-20261116]
+    paths:
+      - tools/bct_s4_storage_epoch_preflight.py
+      - tests/test_bct_s4_storage_epoch_preflight.py
+      - .github/workflows/bct-s4-storage-epoch-preflight.yml
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify-immutable-proofs-before-design:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fetch independently authenticated sealed and Git-size receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/s4/capacity" "$RUNNER_TEMP/s4/sealed"
+          gh run download 43795385281 -R "$GITHUB_REPOSITORY" \
+            --name bct-s4-private-storage-pressure-43795385281 --dir "$RUNNER_TEMP/s4/capacity"
+          gh run download 43794023619 -R "$GITHUB_REPOSITORY" \
+            --name bct-s4-unpublished-checkpoint-audit-43794023619 --dir "$RUNNER_TEMP/s4/sealed"
+          test -s "$RUNNER_TEMP/s4/capacity/s4-capacity.json"
+          test -s "$RUNNER_TEMP/s4/sealed/unpublished-proof.json"
+      - name: Verify original 59 CPU reads, archive anchor, immutable caps, and migration stops
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s4_storage_epoch_preflight.py \
+            --capacity "$RUNNER_TEMP/s4/capacity/s4-capacity.json" \
+            --sealed-proof "$RUNNER_TEMP/s4/sealed/unpublished-proof.json" \
+            --out "$RUNNER_TEMP/s4/epoch-preflight.json"
+      - name: Preserve public source-free PREPARED-only rollover design receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s4-epoch-readonly-preflight-${{ github.run_id }}
+          path: ${{ runner.temp }}/s4/epoch-preflight.json
+          retention-days: 30
+          if-no-files-found: error
