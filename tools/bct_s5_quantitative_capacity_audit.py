@@ -355,6 +355,7 @@ def fresh_readback(dest):
 
 def run(args):
     from bct import target_acquisition as acquisition
+    from bct.objective_lock import stamp_export
     manifest=json.loads(args.manifest.read_text())
     sources=validate_manifest(manifest)
     prior=json.loads(args.prior.read_text())
@@ -372,8 +373,9 @@ def run(args):
           "id":case["source_id"],"status":case["status"],
           "verified_facts":sum(f["state"]=="SOURCE_LOCATOR_HASH_VERIFIED" for f in case["fact_receipts"]),
           "facts_held":sum(f["state"]!="SOURCE_LOCATOR_HASH_VERIFIED" for f in case["fact_receipts"]),
+          "held_fact_ids":[f["fact_id"] for f in case["fact_receipts"] if f["state"]!="SOURCE_LOCATOR_HASH_VERIFIED"],
           "failure_kind":case.get("error_type","NONE")}),flush=True)
-    report=derive(manifest,prior,cases)
+    report=stamp_export(derive(manifest,prior,cases))
     save_and_verify(args.out,report,cases)
     print("S5_QUANT_BOUND_ANALYSIS="+canon({
        "status":report["research_status"],"source_fetches":report["official_originals_fetched"],
