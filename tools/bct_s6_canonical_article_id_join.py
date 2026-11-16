@@ -202,8 +202,11 @@ def readback(path):
         guard(conn.execute("PRAGMA integrity_check").fetchone()==("ok",),"SQLITE_INTEGRITY")
         counts=dict(conn.execute("SELECT kind,COUNT(*) FROM article_join GROUP BY kind"))
         n=conn.execute("SELECT COUNT(*) FROM article_join").fetchone()[0]
+        missing_statuses=dict(conn.execute(
+            "SELECT canonical_state,COUNT(*) FROM article_join "
+            "WHERE kind='CANONICAL_ONLY' GROUP BY canonical_state"))
     guard(counts==s["id_join_counts"] and n==s["row_joined_hashed_article_ids"]
-          and dict(conn.execute("SELECT canonical_state,COUNT(*) FROM article_join WHERE kind=\u0027CANONICAL_ONLY\u0027 GROUP BY canonical_state"))==s["canonical_without_sidecar_statuses"]
+          and missing_statuses==s["canonical_without_sidecar_statuses"]
           and s["canonical_writes"]==s["sidecar_writes"]==s["LIVE_writes"]==0
           and s["S6_full_evidence_original_pair_integrity"]=="NOT_EVALUATED",
           "FALSE_OR_OUTDATED_ARTICLE_ID_JOIN")
