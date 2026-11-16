@@ -15,7 +15,7 @@ def test_epoch_cache_key_expands_actual_runner_env_not_literals():
 
 def test_pinned_manual_cpu_keeps_old_archive_and_zero_live_promotions():
     flow=(Path(__file__).resolve().parents[1]/".github/workflows/bct-s4-epoch-cpu-manual.yml").read_text()
-    assert "1cfcd3d7aefcfc068944a47ee924822216961f60" in flow
+    assert "f3fb861c8dab87670983660a8a5eaa40a3962dab" in flow
     assert "refs/heads/codex/bct-v4-cpu-research-epoch-20261116" in flow
     assert "old_private_ref_writes':0" in flow
     assert "LIVE_registration" in flow
