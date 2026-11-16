@@ -1,0 +1,35 @@
+name: BCT Session 4 exact-source corrected CPU one-shot
+on:
+  push:
+    branches: [ops/bct-s4-exact-current-cpu-once-20261116]
+    paths: [.github/workflows/bct-s4-exact-current-cpu-once.yml]
+permissions:
+  contents: read
+  actions: write
+jobs:
+  verified-manual-cpu-source:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s4-exact-current-cpu-once-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    env:
+      GH_TOKEN: ${{ github.token }}
+      EXPECTED_MAIN_SHA: 48bf0607f8d8f36e935b2b7dec0c25bd5d2e7e37
+      ORIGINAL_ACQUISITION: '43645932280'
+      ORIGINAL_RSS: '43645752354'
+    steps:
+      - name: Dispatch only verified 11-original research (no schedule claim)
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)" == "$EXPECTED_MAIN_SHA" ]] ||
+            { echo "::error::Main SHA moved, fail closed";exit 1; }
+          [[ "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$ORIGINAL_ACQUISITION" --jq '.conclusion+":"+.head_branch+":"+.name')" == 'success:main:New precursor evidence acquisition' ]] ||
+            { echo "::error::Original acquisition not verified"; exit 1; }
+          [[ "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$ORIGINAL_RSS" --jq '.conclusion+":"+.head_branch+":"+.name')" == 'success:main:RSS live environment check' ]] ||
+            { echo "::error::Original scheduled RSS not verified"; exit 1; }
+          jq -n --arg acq "$ORIGINAL_ACQUISITION" \
+            '{ref:"main",inputs:{purpose:"manual-research",acquisition_run:$acq}}' > "$RUNNER_TEMP/request.json"
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/v4-cpu-private-research.yml/dispatches" \
+            --input "$RUNNER_TEMP/request.json"
+          echo 'BCT_S4_EXACT_SOURCE_CORRECTED_CPU_DISPATCH_ACCEPTED'
