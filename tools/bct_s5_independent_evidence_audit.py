@@ -90,7 +90,7 @@ def validate_s4(earlier):
         or review.get("original_exact_body_validation")!=11
         or review.get("semantic_review_failures")!=0
         or review.get("automatic_LIVE_promotions")!=0
-        or any(review.get(key)!=sum(r[key] for r in rows) for key,part in (
+        or any(review.get(key)!=sum(r[part] for r in rows) for key,part in (
             ("source_bound_events","source_bound_event_count"),
             ("graph_independent_pair_count","graph_independent_pair_count"),
             ("strict_independent_pair_count","strict_independent_pair_count"),
@@ -162,11 +162,6 @@ def triage(earlier, semantic_receipts):
             "actual_eligible_pairs_for_auto_promotion":0,
             "action":RECOMMENDATIONS.get(reason,"SOURCE_BOUND_MANUAL_REVIEW_REQUIRED"),
             "state":"HOLD_NO_AUTOMATIC_PROMOTION"})
-    if any(total_events[key]!=earlier["semantic_review"][key] for key in
-           ("source_bound_events","graph_independent_pair_count",
-            "strict_pair_count","strict_forecast_candidate_count")):
-        # Map private metric names to S4 aggregate field names explicitly.
-        pass
     count_check={"events":"source_bound_events","graph_pairs":"graph_independent_pair_count",
                  "strict_pairs":"strict_independent_pair_count",
                  "strict_candidates":"strict_forecast_candidate_count"}
