@@ -124,9 +124,9 @@ def inspect(held_folder,prior_folder,sealed_folder):
     prior,before=last_ack(prior_folder,selected)
     sealed_folder=Path(sealed_folder)
     parent=json.loads((sealed_folder/"parent.json").read_bytes())
-    if parent.get("producer_job")!="publish":
-        raise ValueError("S4_UNPUBLISHED_PARENT_JOB_NOT_PUBLISHER")
-    if str(parent.get("producer_run_id"))!=str(EXPECTED_SUCCESS_RUN):
+    if parent.get("producer_job")!="research":
+        raise ValueError("S4_SEALED_RESULT_NOT_FROM_RESEARCH_JOB")
+    if str(parent.get("producer_run_id"))!=str(EXPECTED_FAILED_RUN):
         raise ValueError("S4_UNPUBLISHED_PARENT_PRODUCER_RUN_MISMATCH")
     if str(parent.get("producer_attempt"))!=str(prior["producer_attempt"]):
         raise ValueError("S4_UNPUBLISHED_PARENT_PRODUCER_ATTEMPT_MISMATCH")
