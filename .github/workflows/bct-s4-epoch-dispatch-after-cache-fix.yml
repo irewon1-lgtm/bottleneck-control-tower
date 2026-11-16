@@ -1,0 +1,27 @@
+name: BCT S4 epoch corrected runtime manual CPU dispatch once
+on:
+  push:
+    branches: [ops/bct-s4-epoch-after-cache-fix-once-20261116]
+    paths: [.github/workflows/bct-s4-epoch-dispatch-after-cache-fix.yml]
+permissions:
+  contents: read
+  actions: write
+jobs:
+  run-existing-reviewed-epoch-cpu-once:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REQUIRED_MAIN_SHA: '1ebe82ddd0ba536d255e30f2254ca5d3ec7f240d'
+    steps:
+      - name: Confirm published repaired workflow and original acquisition, dispatch once
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)" = "$REQUIRED_MAIN_SHA"
+          test "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/43645932280" --jq '.conclusion+":"+.head_branch+":"+.name')" = 'success:main:New precursor evidence acquisition'
+          test "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/43645752354" --jq '.conclusion+":"+.head_branch+":"+.name')" = 'success:main:RSS live environment check'
+          jq -n '{ref:"main",inputs:{purpose:"manual-research",acquisition_run:"43645932280"}}' > "$RUNNER_TEMP/request.json"
+          gh api --method POST "repos/$GITHUB_REPOSITORY/actions/workflows/bct-s4-epoch-cpu-manual.yml/dispatches" --input "$RUNNER_TEMP/request.json"
+          echo "BCT_S4_EPOCH_CPU_ONE_SHOT_DISPATCH_ACCEPTED"
