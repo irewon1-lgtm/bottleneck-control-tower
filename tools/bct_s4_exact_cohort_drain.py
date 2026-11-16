@@ -120,6 +120,11 @@ def counts_from_public(run_id, targets, tmp, *, expected_code):
             or proof.get("new_process_restore_verified") is not True
             or proof.get("remote_restore_verified") is not True):
         raise ValueError("S4_PRIVATE_CAS_AND_PUBLIC_PRODUCER_NOT_VERIFIED")
+    if (snap.get("counts",{}).get("analysis_runtime_failures") != 0
+            or snap.get("analysis",{}).get("status") == "ERROR_PROGRESS_PRESERVED"
+            or snap.get("last_read_batch",{}).get("new_CPU_windows") !=
+               snap.get("last_read_batch",{}).get("successful_new_CPU_windows")):
+        raise ValueError("S4_CPU_OR_SEMANTIC_ANALYSIS_ERRORS_PRESERVED")
     trace = snap["trace"]
     if len({(x.get("document_id"),x.get("body_sha256"),x.get("raw_sha256"))
             for x in trace}) != len(trace):
@@ -235,7 +240,7 @@ def main():
               "original_source_count":11,
               "target_total_windows":TOTAL_TARGET_WINDOWS,
               "max_batches":MAX_BATCHES,
-              "new_api_or_paid_calls":0,
+              "new_external_paid_ai_api_calls":0,
               "production_source_writes":0,
               "automatic_candidate_promotions":0,
               "batches":[]}
