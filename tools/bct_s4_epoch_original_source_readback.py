@@ -143,17 +143,24 @@ def count_exact(ledger, identities):
     events=ledger.db.execute("SELECT kind,payload FROM events WHERE kind IN "
         "('CPU_RESUME_SOURCE','CPU_RESUME_WINDOW','CPU_RESUME_FAILURE',"
         "'CPU_ANALYSIS_RESULT','CPU_ANALYSIS_FAILURE') ORDER BY seq")
-    sources={}
+    source_by_body={}
     success=set()
     failure=set()
     analysis={}
     for kind,payload in events:
         row=json.loads(payload)
         if kind=="CPU_RESUME_SOURCE":
-            k=(row.get("document_id"),row.get("body_sha256"),row.get("raw_sha256"))
-            if k in sources:
-                raise ValueError("S4_EPOCH_DUPLICATE_ORIGINAL_SOURCE_VERSION")
-            sources[k]=row
+            # Rehydration may append the same byte-identical source receipt
+            # during later manual batches. Keep the latest by immutable body key;
+            # never claim two different exact source versions are interchangeable.
+            body_key=row.get("body_key")
+            if not isinstance(body_key,str) or not body_key:
+                raise ValueError("S4_EPOCH_SOURCE_BODY_KEY_MISSING")
+            prior=source_by_body.get(body_key)
+            if prior is not None and any(prior.get(k)!=row.get(k)
+               for k in ("document_id","body_sha256","raw_sha256")):
+                raise ValueError("S4_EPOCH_SOURCE_VERSION_COLLISION")
+            source_by_body[body_key]=row
         elif kind=="CPU_RESUME_WINDOW":
             success.add(row["key"])
         elif kind=="CPU_RESUME_FAILURE":
@@ -165,6 +172,12 @@ def count_exact(ledger, identities):
                 "strict_pair_count":row.get("strict_pair_count")}
     if success&failure:
         raise ValueError("S4_EPOCH_WINDOW_SUCCESS_FAILURE_COLLISION")
+    sources={}
+    for row in source_by_body.values():
+        key=(row.get("document_id"),row.get("body_sha256"),row.get("raw_sha256"))
+        if key in sources:
+            raise ValueError("S4_EPOCH_SAME_ID_ACROSS_DISTINCT_BODY_KEYS")
+        sources[key]=row
     data=[]
     for ident in identities:
         source=sources.get(ident)
