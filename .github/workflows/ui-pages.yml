@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths: ['.github/workflows/ui-pages.yml']
   workflow_run:
-    workflows: ['V4 dashboard release gate', 'V4 CPU private research consumer', 'New precursor evidence acquisition', 'RSS live environment check', 'REVIEW_LEAD SHADOW intake', 'BCT recurring original-source verification backlog (bounded)']
+    workflows: ['V4 dashboard release gate', 'V4 CPU private research consumer', 'New precursor evidence acquisition', 'RSS live environment check', 'REVIEW_LEAD SHADOW intake', 'BCT recurring original-source verification backlog (bounded)', 'BCT S7 source-bound dashboard preview and 6-hour refresh QA']
     types: [completed]
     branches: [main, codex/bct-v4-integration]
   workflow_dispatch:
@@ -26,7 +26,8 @@ jobs:
           (github.event.workflow_run.head_repository.full_name == github.repository &&
            ((github.event.workflow_run.head_branch == 'main' &&
              github.event.workflow_run.event != 'pull_request' &&
-             (github.event.workflow_run.name != 'BCT recurring original-source verification backlog (bounded)' ||
+             (github.event.workflow_run.name != 'BCT recurring original-source verification backlog (bounded)' &&
+              github.event.workflow_run.name != 'BCT S7 source-bound dashboard preview and 6-hour refresh QA' ||
               github.event.workflow_run.conclusion == 'success')) ||
             (github.event.workflow_run.head_branch == 'codex/bct-v4-integration' &&
              github.event.workflow_run.event == 'push' &&
@@ -102,6 +103,8 @@ jobs:
       pages: read
     outputs:
       manifest: ${{ steps.manifest.outputs.value }}
+      s7_status_sha: ${{ steps.s7_public.outputs.status_sha }}
+      s7_index_sha: ${{ steps.s7_public.outputs.index_sha }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -126,6 +129,81 @@ jobs:
           python tools/v4_dashboard_static_export.py --commit "$BCT_CODE_SHA" --public-input var/v4/pages-input
           python tools/v4_dashboard_static_check.py
           node --check var/v4/pages-site/app.js
+      - name: Verify audited S7 run and merge safe public source-truth route into pinned Pages output
+        id: s7_public
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          PYTHONPATH: src
+        shell: bash
+        run: |
+          set -euo pipefail
+          MAIN_SHA=$(gh api "repos/$REPOSITORY/git/ref/heads/main" --jq '.object.sha')
+          export MAIN_SHA
+          mkdir -p "$RUNNER_TEMP/s7-certified" "$RUNNER_TEMP/s7-code"
+          gh api "repos/$REPOSITORY/actions/workflows/bct-s7-research-dashboard-preview.yml/runs?branch=main&status=success&per_page=20" > "$RUNNER_TEMP/s7-runs.json"
+          python - <<'PY'
+          import json,os,pathlib,re,subprocess
+          source=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'s7-runs.json').read_text())
+          sha=os.environ['MAIN_SHA']
+          assert re.fullmatch('[0-9a-f]{40}',sha)
+          matching=[r for r in source['workflow_runs'] if r['head_sha']==sha
+                    and r['name']=='BCT S7 source-bound dashboard preview and 6-hour refresh QA'
+                    and r['status']=='completed' and r['conclusion']=='success'
+                    and r['head_branch']=='main' and r['head_repository']['full_name']==os.environ['REPOSITORY']]
+          assert matching,'BCT_S7_LATEST_MAIN_SHA_QA_MISSING_ABORT_PAGES_PUBLISH'
+          run=matching[0]
+          run_id=run['id']
+          raw=subprocess.check_output(['gh','api',f"repos/{os.environ['REPOSITORY']}/actions/runs/{run_id}/artifacts"])
+          arts=json.loads(raw)['artifacts']
+          name=f'bct-s7-source-truth-dashboard-preview-{run_id}'
+          matching_arts=[a for a in arts if a['name']==name and a['workflow_run']['id']==run_id
+                         and not a['expired'] and re.fullmatch(r'sha256:[a-f0-9]{64}',a.get('digest',''))
+                         and 1000<a['size_in_bytes']<250000]
+          assert len(matching_arts)==1,'BCT_S7_ATTESTED_PREVIEW_ARTIFACT_MISSING'
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'s7-code'
+          (p/'run-id.txt').write_text(str(run_id))
+          (p/'artifact-id.txt').write_text(str(matching_arts[0]['id']))
+          print(f'BCT_S7_SITE_APPROVED_SAME_SHA_RUN_ID={run_id}')
+          PY
+          S7_RUN=$(cat "$RUNNER_TEMP/s7-code/run-id.txt")
+          S7_ART=$(cat "$RUNNER_TEMP/s7-code/artifact-id.txt")
+          # Fetch the named, same-commit, successful and SHA-identified artifact.
+          gh run download "$S7_RUN" -R "$REPOSITORY" \
+            --name "bct-s7-source-truth-dashboard-preview-$S7_RUN" \
+            --dir "$RUNNER_TEMP/s7-certified"
+          test -s "$RUNNER_TEMP/s7-certified/s7-research-status.json"
+          # Execute only the source at the same approved immutable main SHA.
+          git fetch --no-tags origin "$MAIN_SHA"
+          git show "$MAIN_SHA:tools/bct_s7_public_overlay.py" > "$RUNNER_TEMP/s7-code/bct_s7_public_overlay.py"
+          git show "$MAIN_SHA:docs/s7-research-view.js" > "$RUNNER_TEMP/s7-code/s7-research-view.js"
+          S7_RUN="$S7_RUN" node - <<'JS'
+          "use strict";
+          const fs=require("node:fs"),path=require("node:path"),assert=require("node:assert/strict");
+          const root=process.env.RUNNER_TEMP;
+          const view=require(path.join(root,"s7-code","s7-research-view.js"));
+          const json=JSON.parse(fs.readFileSync(path.join(root,"s7-certified","s7-research-status.json"),"utf8"));
+          view.validate(json);
+          assert.equal(json.generations.main_code_commit,process.env.MAIN_SHA);
+          assert.equal(json.historical.record_count,511);
+          assert.equal(json.research.strict_original_publisher_body_date_verified,18);
+          assert.equal(json.admission.eligible_independent_pair_count,0);
+          console.log("BCT_S7_BROWSER_VALIDATED_JSON_FROM_SAME_MAIN_ARTIFACT_PASS");
+          JS
+          python "$RUNNER_TEMP/s7-code/bct_s7_public_overlay.py" \
+            --site-root var/v4/pages-site \
+            --source-status "$RUNNER_TEMP/s7-certified/s7-research-status.json" \
+            --run-sha "$MAIN_SHA" --run-id "$S7_RUN"
+          python - <<'PY'
+          import hashlib,os,pathlib
+          root=pathlib.Path('var/v4/pages-site/source-truth')
+          status=root/'status.json'
+          index=root/'index.html'
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              out.write('status_sha='+hashlib.sha256(status.read_bytes()).hexdigest()+'\n')
+              out.write('index_sha='+hashlib.sha256(index.read_bytes()).hexdigest()+'\n')
+          print('BCT_S7_PAGES_LEGACY_511_AND_SOURCE_TRUTH_OVERLAY_PASS')
+          PY
       - name: Bind deployment to the built public generation
         id: manifest
         run: |
@@ -165,3 +243,48 @@ jobs:
       - name: Publish verified static pages
         uses: actions/deploy-pages@v4
         id: deployment
+      - name: Verify LIVE public root and source-truth page bytes after Pages deployment
+        env:
+          BCT_S7_STATUS_SHA: ${{ needs.build.outputs.s7_status_sha }}
+          BCT_S7_INDEX_SHA: ${{ needs.build.outputs.s7_index_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,os,time,json,urllib.request
+          base='https://irewon1-lgtm.github.io/bottleneck-control-tower/'
+          status_expected=os.environ['BCT_S7_STATUS_SHA']
+          page_expected=os.environ['BCT_S7_INDEX_SHA']
+          assert len(status_expected)==len(page_expected)==64
+          def get(path):
+              req=urllib.request.Request(base+path,headers={
+                  'User-Agent':'BCT-verified-S7-public-Smoke/1.0',
+                  'Cache-Control':'no-cache'})
+              with urllib.request.urlopen(req,timeout=15) as response:
+                  assert response.status==200
+                  return response.read(300000)
+          for attempt in range(1,13):
+              try:
+                  status=get('source-truth/status.json')
+                  page=get('source-truth/index.html')
+                  index=get('index.html')
+                  assert hashlib.sha256(status).hexdigest()==status_expected
+                  assert hashlib.sha256(page).hexdigest()==page_expected
+                  assert b'./source-truth/' in index
+                  s=json.loads(status)
+                  assert s['historical']['record_count']==511
+                  assert s['research']['strict_original_publisher_body_date_verified']==18
+                  assert s['admission']['eligible_independent_pair_count']==0
+                  assert b'511' in page and b'147' in page
+                  print('BCT_S7_PUBLIC_PAGES_LIVE_SOURCE_TRUTH_HTTP_READBACK_PASS='+json.dumps({
+                    'url':base+'source-truth/','historical':511,
+                    'new_originals':18,'hints_not_ranked':147,'qualified_pairs':0,
+                    'status_sha256':status_expected,'page_sha256':page_expected,
+                    'http_status':200,'retry_number':attempt},sort_keys=True))
+                  break
+              except Exception as error:
+                  print('S7_PUBLIC_BYTES_PENDING_'+str(attempt)+'_'+type(error).__name__,flush=True)
+                  if attempt==12:raise
+                  time.sleep(5)
+          PY
+
