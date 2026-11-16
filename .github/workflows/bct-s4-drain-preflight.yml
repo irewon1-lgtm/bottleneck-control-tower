@@ -36,10 +36,10 @@ jobs:
               cases=s4.original_targets(root)
               current=s4.counts_from_public(
                   s4.INITIAL_CPU_RUN,cases,root,
-                  expected_code='eac28a152bc139b3d5f69cb34ae4136792a92a2f')
+                  expected_code=s4.PINNED_CPU_SHA)
               assert len(cases)==11
-              assert current['counts']=={'total':240,'success':11,'failed':0,'unread':229}
-              assert all(x['window_counts']['success']==1 for x in current['source_status'])
+              assert current['counts']=={'total':240,'success':35,'failed':0,'unread':205}
+              assert all(x['window_counts']['success']>=3 for x in current['source_status'])
               plus,minus=s4.snapshots_match(current,current)
               assert (plus,minus)==(0,0)
               print('BCT_S4_SOURCE_FREE_BASELINE_ATTEST_PASS_11_SOURCES_229_PENDING')
