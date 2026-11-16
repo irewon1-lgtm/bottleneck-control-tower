@@ -100,7 +100,7 @@ jobs:
           r=json.loads(p.read_text())
           assert r['format']=='bct-s5-supplier-facts-readonly-v1'
           assert r['status']=='PASS_READONLY_SOURCE_BOUND_RISK_AND_NONPROMOTION_CLASSIFICATION'
-          assert r['source_holds'] + r['verified_visible_public_originals']==3
+          assert r['source_holds'] + r['verified_visible_public_originals']==4
           assert r['new_bottleneck_candidates']==r['LIVE_writes']==r['model_API_calls']==r['private_epoch_writes']==0
           assert r['strict_pair_evaluated'] is False
           assert r['actual_qualified_pair_count']=='NOT_EVALUATED'
