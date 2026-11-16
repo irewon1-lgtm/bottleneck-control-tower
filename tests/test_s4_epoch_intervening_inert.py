@@ -30,13 +30,20 @@ def jobs(run_id,*,tamper=None):
 
 def setup_reviewed(monkeypatch,tmp_path,run_id):
     parent,proof,path=sample(monkeypatch,tmp_path)
+    # The proof must represent a *later* Actions run than all three
+    # reviewed failed runs, never manufacture older current-run metadata.
+    current="43810000111"
+    monkeypatch.setenv("GITHUB_RUN_ID",current)
+    parent["producer_run_id"]=current
+    proof["producer_run_id"]=int(current)
+    path.write_text(__import__("json").dumps(proof))
     old=epoch._github
     obj=record(run_id)
     def get(uri):
         if uri=="actions/runs/"+str(run_id):return obj
         if uri=="actions/runs/"+str(run_id)+"/jobs?per_page=100":return jobs(run_id)
         if uri.startswith("actions/workflows/"):
-            return {"workflow_runs":[obj,{"id":int(CURRENT),"event":"workflow_dispatch",
+            return {"workflow_runs":[obj,{"id":int(current),"event":"workflow_dispatch",
                                              "status":"in_progress","run_attempt":1}]}
         return old(uri)
     monkeypatch.setattr(epoch,"_github",get)
@@ -80,7 +87,7 @@ def test_unknown_or_unreviewed_future_run_is_blocked_even_if_failed(monkeypatch,
     parent,path=sample(monkeypatch,tmp_path)
     old=epoch._github
     monkeypatch.setattr(epoch,"_github",lambda req:
-        {"workflow_runs":[{"id":43810000000,"status":"completed","conclusion":"failure"},
+        {"workflow_runs":[{"id":43799799999,"status":"completed","conclusion":"failure"},
                           {"id":int(CURRENT),"status":"in_progress","event":"workflow_dispatch","run_attempt":1}]}
         if req.startswith("actions/workflows/") else old(req))
     with pytest.raises(ValueError,match="UNREVIEWED_INTERVENING"):
