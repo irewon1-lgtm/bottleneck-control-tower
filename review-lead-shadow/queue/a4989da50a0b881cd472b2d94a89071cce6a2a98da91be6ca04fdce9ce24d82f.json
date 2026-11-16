@@ -1,0 +1,712 @@
+{
+  "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+  "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+  "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+  "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+  "applies_from": "2026-10-05T15:24:06.650413+00:00",
+  "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+  "body_sha256": "251103d2e3450909a4b85967b4496731c84c97b21e633d499b476ec2c14187ff",
+  "published_at": "2026-11-16T21:41:36+00:00",
+  "acquired_at": "2026-11-16T23:10:08.050243+00:00",
+  "available_at": "2026-11-16T23:10:08.050243+00:00",
+  "intake_started_at": "2026-11-16T23:17:40.123549+00:00",
+  "intake_recorded_at": "2026-11-16T23:17:40.198695+00:00",
+  "first_review_recorded_at": "UNKNOWN",
+  "mode": "PROSPECTIVE_REVIEW",
+  "status": "HOLD",
+  "automatic_extraction": {
+    "version": "BCT_PRECURSOR_V2_SHADOW_2",
+    "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+    "events": [
+      {
+        "event_id": "e4901e0e8594f03337e938fbe92ffd83b85d6589cefaa458c107043651b248ea",
+        "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+        "role": "DEMAND",
+        "kind": "REQUIREMENT",
+        "reference": {
+          "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+          "body_sha256": "251103d2e3450909a4b85967b4496731c84c97b21e633d499b476ec2c14187ff",
+          "locator": {
+            "start": 525,
+            "end": 616
+          },
+          "quote": "Tesla files Cybercab crashes under NHTSA’s Standing General Order in two separate datasets."
+        },
+        "fields": {},
+        "context_references": [
+          {
+            "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+            "body_sha256": "251103d2e3450909a4b85967b4496731c84c97b21e633d499b476ec2c14187ff",
+            "locator": {
+              "start": 525,
+              "end": 616
+            },
+            "quote": "Tesla files Cybercab crashes under NHTSA’s Standing General Order in two separate datasets."
+          }
+        ],
+        "direct_origin": true,
+        "facts": {},
+        "period": null
+      }
+    ],
+    "facts_verified_semantically": false
+  },
+  "candidate_TARGET": "UNKNOWN — deterministic scope suggestions only",
+  "candidate_scope_suggestions": [
+    {
+      "event_id": "e4901e0e8594f03337e938fbe92ffd83b85d6589cefaa458c107043651b248ea",
+      "fields": {},
+      "reference": {
+        "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+        "body_sha256": "251103d2e3450909a4b85967b4496731c84c97b21e633d499b476ec2c14187ff",
+        "locator": {
+          "start": 525,
+          "end": 616
+        },
+        "quote": "Tesla files Cybercab crashes under NHTSA’s Standing General Order in two separate datasets."
+      },
+      "verified_same_TARGET": false
+    }
+  ],
+  "review_reason": "SEMANTIC_REVIEW_REQUIRED",
+  "semantic_review_method": "PENDING_AI_OR_MANUAL",
+  "annotation_method": null,
+  "annotator": null,
+  "annotated_at": null,
+  "source_document": {
+    "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+    "origin_url": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+    "collected_at": "2026-11-16T23:09:06.933567+00:00",
+    "origin_id": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+    "canonical_url": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+    "origin_publisher": "Electrek",
+    "published_at": "2026-11-16T21:41:36+00:00",
+    "published_at_raw": "2026-11-16T21:41:36+00:00",
+    "publication_precision": "TIMESTAMP",
+    "acquired_at": "2026-11-16T23:10:08.050243+00:00",
+    "available_at": "2026-11-16T23:10:08.050243+00:00",
+    "body": "Tesla’s Cybercab now has 8 crashes on file with NHTSA, barely two months after the purpose-built robotaxi started giving public rides in Austin.\nFour happened in driverless “Robotaxi” service, and none topped 5 mph. The other four happened with a test driver on board and Tesla’s driver-assist engaged, including one where a Cybercab hit a car at 53 mph on a highway in Philadelphia.\nThe data points at what we think is the biggest limitation of Tesla’s self-driving program right now: speed.\nTwo different reporting buckets\nTesla files Cybercab crashes under NHTSA’s Standing General Order in two separate datasets.\nAdvertisement - scroll for more content\nThe first is the ADS (Automated Driving System) file, which covers Level 4 driverless operation. That’s the Robotaxi service , where nobody is in the driver’s seat. NHTSA’s latest ADS release, published this month, contains 43 unique Tesla reports, up from 22 in July. Four are Cybercabs:\nAugust, Austin: drove into a large water-filled pothole in a parking lot at 5 mph, with a safety monitor on board.\nSeptember, Austin: stopped at a parking lot exit when a car backing out of a spot hit its right side.\nSeptember, Austin: stopped in traffic and rear-ended by a pickup truck.\nSeptember, Austin: drove over a raised concrete edge of a parking lot, across the sidewalk, and down a curb at up to 3 mph, with a rider on board.\nThose are minor. Two weren’t Tesla’s fault at all, and none involved an injury.\nThe second bucket is the Level 2 ADAS file, which covers driver-assist systems like Autopilot and “Full Self-Driving” (Supervised). Tesla has been testing Cybercabs fitted with steering wheels and a human behind them, often in places where it has no Robotaxi permit. Those crashes land in the ADAS file, with the driver type coded “In-Vehicle (Commercial / Test)” and the system “Verified Engaged.”\nThere are four of them, all in September 2026:\nReport | City | Road | Speed | Hit | Injury\n13781-16881 | Philadelphia, PA | Highway | 53 mph | Passenger car | Unknown\n13781-16964 | Austin, TX | Highway | 5 mph | SUV | Minor, hospitalized\n13781-16524 | Lehi, UT | Intersection | 11 mph | SUV | Minor, not hospitalized\n13781-16583 | Tampa, FL | Highway | 0 mph (stopped) | Passenger car | Property damage\nTesla redacted the narrative of all four as confidential business information, so there’s no way to tell from the public data who was at fault or what the system was doing. Pennsylvania State Police, Austin Police, Lehi Police, and Florida Highway Patrol are listed as the investigating agencies.\nThe Philadelphia crash is not the Broad Street crash where a Cybercab lost its door panel that we reported in October. That one happened on a city street in October. This one happened on a highway in September, at around 10 p.m. local time.\nTesla has no permit to run automated vehicles in Pennsylvania , and it doesn’t run Robotaxi in Utah either. In Utah, a Cybercab was photographed in Park City in September with a driver visible behind the wheel.\nTwo of the eight Cybercab crashes involved injuries. Both are in the Level 2 file.\nRobotaxi crashes are minor because Robotaxi is slow\nAcross all 43 Tesla Robotaxi reports in the ADS file, the highest pre-crash speed is 29 mph. That was a driverless Model Y with two riders hitting a pothole in Dallas in September, after which one rider said they sought medical care. The median speed across all 43 reports is 1 mph.\nNot one of those 43 crashes happened on a highway. Tesla coded 21 on streets, 15 in parking lots, and 7 at intersections.\nThose numbers say more about where Tesla lets the system drive than about the software itself. As we reported last month , Robotaxi sticks to low-speed routes inside small geofenced zones and largely stays off highways.\nThe Robotaxi Safety Report Tesla published on October 21 claims zero people injured by Robotaxi over 3,112,541 driverless miles between January 22 and October 18. It doesn’t mention the Cybercab’s test fleet, and it excludes every mile driven with a safety monitor on board.\nThe same software crashes at speed when it’s allowed to go fast\nTake the speed cap off and the picture changes.\nIn the Level 2 data, Teslas with Autopilot or FSD engaged regularly crash at highway speeds. Our master dataset of Tesla’s ADAS reports holds 69 fatal crashes. Among the 52 where Tesla recorded a speed, the median was 53 mph, the same speed the Cybercab was going in Philadelphia, and 29 happened at 50 mph or more.\nToday alone, we matched three fatal crashes to Tesla’s latest filings:\nA Model 3 with the system engaged at 71 mph hit an overturned truck on I-75 near Naples, Florida.\nA Model Y at 74 mph hit a tree and burned in El Dorado Hills, California.\nA Model X at 39 mph hit a pole and flipped in Naples.\nEngagement within 30 seconds of a crash, which is what triggers these reports, doesn’t prove the system caused it. But the pattern is consistent. At low speeds in a tight geofence, Tesla’s crashes are scrapes with chains, curbs, and potholes. At highway speeds, they can kill.\nThe Cybercab test fleet is where those two worlds overlap. It’s the same vehicle Tesla runs driverless in Austin, and the one Cybercab crash on record at real speed happened at 53 mph on a Philadelphia highway.\nElectrek’s Take\nThe Cybercab’s four driverless crashes are minor, and some weren’t Tesla’s fault. No one is denying that. But minor crashes still count, and so do the four Level 2 crashes that Tesla’s “zero injuries” framing leaves out. Both datasets describe the same vehicle running Tesla’s self-driving software.\nWhat the data shows is that Tesla has a speed problem. Its Robotaxi service looks clean largely because Tesla keeps it slow, off highways, and inside small zones. That’s also what makes it far less useful than a real ride-hailing service. You can’t take a Cybercab to the airport if the airport is on the other side of a freeway.\nTo be clear, we think Tesla is right to do it this way. Given what the Level 2 data shows at 50+ mph, letting driverless Cybercabs onto highways today would be reckless.\nBut it means the hard part is still ahead. Highways, larger geofences, and higher speeds are where crashes become fatal, and that’s where Tesla needs its system to be nearly perfect before it can scale. The Cybercab’s test crashes suggest it isn’t there yet. The question is how long Tesla can keep growing a robotaxi network that can’t go fast.\nIf you’re thinking about an EV, pairing it with home solar can cut your fuel costs to nearly zero. With electricity rates up almost 10% last year and expected to keep climbing, going solar is one of the best ways to protect yourself against rising costs. And with lease and PPA options, you can do it with zero upfront cost and start saving immediately. If you want to find the best deal, check out EnergySage . It’s a free service with hundreds of pre-vetted installers competing for your business, so you save 20 to 30% compared to going it alone. No sales calls until you pick an installer. Get your free quotes here .\nFTC: We use income earning auto affiliate links. More.\nStay up to date with the latest content by subscribing to Electrek on Google News . You’re reading Electrek— experts who break news about Tesla , electric vehicles, and green energy , day after day. Be sure to check out our homepage for all the latest news, and follow Electrek on X , Facebook , and LinkedIn to stay in the loop. Don’t know where to start? Check out our YouTube channel for the latest reviews.",
+    "body_sha256": "251103d2e3450909a4b85967b4496731c84c97b21e633d499b476ec2c14187ff",
+    "version": "251103d2e3450909a4b85967b4496731c84c97b21e633d499b476ec2c14187ff",
+    "raw_sha256": "32eade5dbaeec01117e22014b95173521dc3da73d977271fd06be062ecd2ce90",
+    "checks": {
+      "http_success": true,
+      "original_identity": true,
+      "publisher_observed": true,
+      "attribution_consistent": true,
+      "original_publication": true,
+      "available_at_recorded": true,
+      "full_accessible_body": true,
+      "not_republication": true,
+      "body_hash_matches": true,
+      "publication_before_acquisition": true
+    },
+    "provenance": "PASS",
+    "provenance_verified": true,
+    "provenance_blockers": [],
+    "body_status": "FULL",
+    "raw_path": "var/new-precursors/raw/32eade5dbaeec01117e22014b95173521dc3da73d977271fd06be062ecd2ce90.html",
+    "status": "CAPTURED",
+    "scope_reader_version": "source-scope-reader-5",
+    "scope_read_mode": "LIVE_FRESH",
+    "excluded_page_regions": [
+      {
+        "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+        "body_sha256": "251103d2e3450909a4b85967b4496731c84c97b21e633d499b476ec2c14187ff",
+        "origin_id": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+        "locator": {
+          "start": 617,
+          "end": 656
+        },
+        "source_quote": "Advertisement - scroll for more content",
+        "origin_url": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+        "origin_publisher": "Electrek",
+        "published_at": "2026-11-16T21:41:36+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-11-16T23:10:08.050243+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "PAGE_CHROME_OR_TAXONOMY"
+      },
+      {
+        "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+        "body_sha256": "251103d2e3450909a4b85967b4496731c84c97b21e633d499b476ec2c14187ff",
+        "origin_id": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+        "locator": {
+          "start": 7045,
+          "end": 7099
+        },
+        "source_quote": "FTC: We use income earning auto affiliate links. More.",
+        "origin_url": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+        "origin_publisher": "Electrek",
+        "published_at": "2026-11-16T21:41:36+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-11-16T23:10:08.050243+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+        "body_sha256": "251103d2e3450909a4b85967b4496731c84c97b21e633d499b476ec2c14187ff",
+        "origin_id": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+        "locator": {
+          "start": 7100,
+          "end": 7510
+        },
+        "source_quote": "Stay up to date with the latest content by subscribing to Electrek on Google News . You’re reading Electrek— experts who break news about Tesla , electric vehicles, and green energy , day after day. Be sure to check out our homepage for all the latest news, and follow Electrek on X , Facebook , and LinkedIn to stay in the loop. Don’t know where to start? Check out our YouTube channel for the latest reviews.",
+        "origin_url": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+        "origin_publisher": "Electrek",
+        "published_at": "2026-11-16T21:41:36+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-11-16T23:10:08.050243+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      }
+    ],
+    "retained_collection_events": [
+      {
+        "event_id": "e9b9841882b03adca8c1493557be399834f97e34b2a79fb625b7478f587f121f",
+        "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+        "kind": "ORDER",
+        "event_types": [
+          "ORDER"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 525,
+          "end": 616
+        },
+        "source_quote": "Tesla files Cybercab crashes under NHTSA’s Standing General Order in two separate datasets.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "e998cdb2a659b0abb9d43ed1996561767249e2046fbe48bbc3d9fdb3ed8dd4a7",
+        "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+        "kind": "RAMP",
+        "event_types": [
+          "RAMP"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 1594,
+          "end": 1728
+        },
+        "source_quote": "Tesla has been testing Cybercabs fitted with steering wheels and a human behind them, often in places where it has no Robotaxi permit.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "8b58a862c6c5fc6abc3bf8bf549a53fb8f2eedf72c9df297d39a2c94b7d13271",
+        "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 2437,
+          "end": 2560
+        },
+        "source_quote": "Pennsylvania State Police, Austin Police, Lehi Police, and Florida Highway Patrol are listed as the investigating agencies.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "ae5e95e1921d897d44115dc66c82fd5ca507d65349a401eeb9b5924a825b7bdf",
+        "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+        "kind": "RAMP",
+        "event_types": [
+          "RAMP"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 2802,
+          "end": 2909
+        },
+        "source_quote": "Tesla has no permit to run automated vehicles in Pennsylvania , and it doesn’t run Robotaxi in Utah either.",
+        "scope": {
+          "product": {
+            "value": "automated vehicles",
+            "locator": {
+              "start": 2829,
+              "end": 2847
+            },
+            "reference": {
+              "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+              "body_sha256": "251103d2e3450909a4b85967b4496731c84c97b21e633d499b476ec2c14187ff",
+              "origin_id": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+              "locator": {
+                "start": 2829,
+                "end": 2847
+              },
+              "source_quote": "automated vehicles",
+              "origin_url": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+              "origin_publisher": "Electrek",
+              "published_at": "2026-11-16T21:41:36+00:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-11-16T23:10:08.050243+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            },
+            "support_references": []
+          },
+          "region": {
+            "value": "Pennsylvania",
+            "locator": {
+              "start": 2851,
+              "end": 2863
+            },
+            "reference": {
+              "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+              "body_sha256": "251103d2e3450909a4b85967b4496731c84c97b21e633d499b476ec2c14187ff",
+              "origin_id": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+              "locator": {
+                "start": 2851,
+                "end": 2863
+              },
+              "source_quote": "Pennsylvania",
+              "origin_url": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+              "origin_publisher": "Electrek",
+              "published_at": "2026-11-16T21:41:36+00:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-11-16T23:10:08.050243+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            },
+            "support_references": []
+          }
+        },
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "specification",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "precursor_events": [
+      {
+        "event_id": "e9b9841882b03adca8c1493557be399834f97e34b2a79fb625b7478f587f121f",
+        "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+        "kind": "ORDER",
+        "event_types": [
+          "ORDER"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 525,
+          "end": 616
+        },
+        "source_quote": "Tesla files Cybercab crashes under NHTSA’s Standing General Order in two separate datasets.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "e998cdb2a659b0abb9d43ed1996561767249e2046fbe48bbc3d9fdb3ed8dd4a7",
+        "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+        "kind": "RAMP",
+        "event_types": [
+          "RAMP"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 1594,
+          "end": 1728
+        },
+        "source_quote": "Tesla has been testing Cybercabs fitted with steering wheels and a human behind them, often in places where it has no Robotaxi permit.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "8b58a862c6c5fc6abc3bf8bf549a53fb8f2eedf72c9df297d39a2c94b7d13271",
+        "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 2437,
+          "end": 2560
+        },
+        "source_quote": "Pennsylvania State Police, Austin Police, Lehi Police, and Florida Highway Patrol are listed as the investigating agencies.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "ae5e95e1921d897d44115dc66c82fd5ca507d65349a401eeb9b5924a825b7bdf",
+        "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+        "kind": "RAMP",
+        "event_types": [
+          "RAMP"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 2802,
+          "end": 2909
+        },
+        "source_quote": "Tesla has no permit to run automated vehicles in Pennsylvania , and it doesn’t run Robotaxi in Utah either.",
+        "scope": {
+          "product": {
+            "value": "automated vehicles",
+            "locator": {
+              "start": 2829,
+              "end": 2847
+            },
+            "reference": {
+              "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+              "body_sha256": "251103d2e3450909a4b85967b4496731c84c97b21e633d499b476ec2c14187ff",
+              "origin_id": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+              "locator": {
+                "start": 2829,
+                "end": 2847
+              },
+              "source_quote": "automated vehicles",
+              "origin_url": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+              "origin_publisher": "Electrek",
+              "published_at": "2026-11-16T21:41:36+00:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-11-16T23:10:08.050243+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            },
+            "support_references": []
+          },
+          "region": {
+            "value": "Pennsylvania",
+            "locator": {
+              "start": 2851,
+              "end": 2863
+            },
+            "reference": {
+              "document_id": "cc7683e3-6cc2-485f-ba4f-435d49e110bc",
+              "body_sha256": "251103d2e3450909a4b85967b4496731c84c97b21e633d499b476ec2c14187ff",
+              "origin_id": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+              "locator": {
+                "start": 2851,
+                "end": 2863
+              },
+              "source_quote": "Pennsylvania",
+              "origin_url": "https://electrek.co/2026/11/16/tesla-cybercab-crashes-speed-problem/",
+              "origin_publisher": "Electrek",
+              "published_at": "2026-11-16T21:41:36+00:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-11-16T23:10:08.050243+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            },
+            "support_references": []
+          }
+        },
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "specification",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "objective_version": "bct-objective-1",
+    "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  },
+  "EARLY_success": false,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "record_sha256": "ee9f385e44f7c24d0fa48ee0b099b85b03dd585bf558253117a3294ebe4478dc"
+}
