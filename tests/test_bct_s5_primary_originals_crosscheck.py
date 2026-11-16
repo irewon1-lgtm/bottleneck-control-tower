@@ -91,5 +91,45 @@ class TestS5PublicPrimary(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"SQLITE_ARCHIVE_HASH_CHANGED"):
                 s5.readback(out)
 
+    def test_exact_visible_public_issuer_headline_adjacent_date_and_fact_without_strict_promotion(self):
+        source=loaded()["sources"][0]
+        fact=list(source["fact_patterns"].values())[0]
+        text=(f"<html><main><h1>{source['visible_title']}</h1>"
+              f"<time>{source['visible_date']}</time><article>{fact}</article>"
+              f"<footer>{source['visible_issuer_marker']}</footer></main></html>")
+        raw=text.encode()
+        proof={"body":fact+" additional genuine article text "*20,
+               "raw_sha256":s5.sha(raw)}
+        proof["body_sha256"]=s5.sha(proof["body"])
+        self.assertTrue(s5.attested_visible_primary(source,raw,source["url"],proof))
+        proof["provenance"]="BLOCKED"
+        proof["provenance_verified"]=False
+        proof["published_at"]=None
+        proof["checks"]={"full_accessible_body":False}
+        proof["provenance_blockers"]=["full_accessible_body","original_publication"]
+        case=s5.classify_source(source,proof,acquired_at="2026-11-16T00:00:00Z",
+                                visible_attested=True)
+        self.assertFalse(case["verified_original"])
+        self.assertTrue(case["visible_primary_attested"])
+        self.assertEqual(case["fact_codes"],[])
+        self.assertTrue(case["attested_fact_codes"])
+        self.assertEqual(case["live_changes"],0)
+
+    def test_official_title_from_other_news_or_wrong_date_does_not_establish_attestation(self):
+        src=loaded()["sources"][0]
+        fact=list(src["fact_patterns"].values())[0]
+        text=(f"<html><h1>{src['visible_title']}</h1>"
+              + "background unrelated report " * 160
+              +f"<time>{src['visible_date']}</time>"
+              +f"<p>{fact}</p><footer>{src['visible_issuer_marker']}</footer></html>")
+        raw=text.encode()
+        proof={"body":fact+"."*800,"raw_sha256":s5.sha(raw)}
+        proof["body_sha256"]=s5.sha(proof["body"])
+        self.assertFalse(s5.attested_visible_primary(src,raw,src["url"],proof))
+        text=f"<h1>{src['visible_title']}</h1><p>{src['visible_date']}</p><p>{fact}</p>"
+        raw=text.encode()
+        proof["raw_sha256"]=s5.sha(raw)
+        self.assertFalse(s5.attested_visible_primary(src,raw,src["url"],proof))
+
 if __name__=="__main__":
     unittest.main()
