@@ -60,9 +60,15 @@ def audit():
             cp=subprocess.run(["git","-C",str(folder),*args],env=env,
                               input=stdin,text=True,capture_output=True,timeout=120)
             if cp.returncode:
-                # Never expose a remote URL, stderr, process environment,
-                # token or private source text on failure.
-                raise ValueError("S4_PRIVATE_GIT_READ_COMMAND_FAILED")
+                # Only classify the error. The full remote stderr may contain
+                # sensitive URL/credential detail and must never be logged.
+                error=cp.stderr.lower()
+                category=("REF_NOT_ADVERTISED" if ("couldn't find remote ref" in error or "not our ref" in error)
+                          else "AUTH_REJECTED" if ("authentication failed" in error or "401" in error or "403" in error)
+                          else "REPOSITORY_NOT_VISIBLE" if "repository not found" in error
+                          else "PACK_OR_TRANSPORT" if ("fetch-pack" in error or "early eof" in error or "rpc failed" in error)
+                          else "UNKNOWN")
+                raise ValueError("S4_PRIVATE_GIT_READ_COMMAND_FAILED_"+category)
             return cp.stdout.strip()
         folder.mkdir()
         git("init","-q")
