@@ -205,7 +205,10 @@ def materialize(parent316,parent60,out):
                                 (key,item["id_sha256"],h,payload))
             else:
                 table=name
-                con.executemany("INSERT INTO "+table+" VALUES(?,?,?)",rows)
+                # Parent SELECT reads key,payload,sha; durable table stores
+                # key,sha,payload. Preserve hashes byte-for-byte.
+                con.executemany("INSERT INTO "+table+" VALUES(?,?,?)",
+                                [(key,h,payload) for key,payload,h in rows])
         require(con.execute("PRAGMA foreign_key_check").fetchall()==[],
                 "SQLITE_CROSS_TABLE_FOREIGN_KEY_MISMATCH")
     reported=stamp_export({
