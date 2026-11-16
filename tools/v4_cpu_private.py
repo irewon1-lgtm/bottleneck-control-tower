@@ -84,9 +84,25 @@ def main():
                 imports=ingest_delta(ledger,delta,a.cache,
                     upstream_run_id=str(schedule['RSS_run_id']),storage_policy=policy,source_separated=True,
                     input_artifacts=input_receipt.get('input_artifacts',{}))
+            priority_context = {}
+            if manual and schedule['acquisition_run_id'] == 43645932280:
+                # The earlier source selection proof found 11 exact originals
+                # held by the historical eight-artifact limit. Only when the
+                # authenticated current artifact actually recovered those
+                # exact versions may the manual replay prioritize their
+                # pending windows. All other runs retain standard FIFO.
+                recovered = input_receipt.get('current_artifact_exact_holds_recovered')
+                original_sources = manifest.get('documents')
+                if (type(recovered) is not int or recovered < 1
+                        or not isinstance(original_sources, list)
+                        or not recovered <= len(original_sources) <= 100):
+                    raise ValueError('SESSION4_EXACT_MANUAL_SOURCE_RECOVERY_NOT_VERIFIED')
+                priority_context['priority_source_versions'] = [
+                    {'document_id': row['document_id'], 'body_sha256': row['body_sha256']}
+                    for row in original_sources]
             result=op.observe(ledger,trigger='MANUAL_ACTUAL_INPUT_PENDING_PRIVATE_PUBLICATION' if manual else 'VERIFIED_SCHEDULE_PENDING_PRIVATE_PUBLICATION',execute=True,
                 extractor=CPUExtractor(a.runtime),schedule_context=context,manual_context=manual,persistence_required=True,
-                analysis_context={'cache':a.cache,'manifest':manifest,'per_body':input_receipt.get('analysis_contexts',{})},
+                analysis_context={'cache':a.cache,'manifest':manifest,'per_body':input_receipt.get('analysis_contexts',{}),**priority_context},
                 upstream={'new_URLs':sum(x['status']!='ALREADY_IMPORTED'for x in imports),
                           'bridge_predecessor_proof':predecessor,
                           'new_body_documents':sum(x['status']=='QUEUED'for x in imports),
