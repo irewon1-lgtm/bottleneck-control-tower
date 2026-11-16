@@ -58,7 +58,17 @@ def main():
         manual=op.github_manual_context(a.manual_acquisition_run) if a.manual_acquisition_run else None
         context=None if manual else op.github_schedule_context()
         schedule=op.verified_manual_input(manual) if manual else op.verified_schedule(context)
-        predecessor=private.verify_predecessor(json.loads((a.checkpoint/'parent.json').read_text()))
+        sealed_parent=json.loads((a.checkpoint/'parent.json').read_text())
+        if os.environ.get('BCT_V4_S4_EPOCH_MODE')=='verified-exact-manual-v1':
+            from bct.v4.cpu_s4_epoch_bridge import verify_bridge
+            if not manual or a.manual_acquisition_run!=43645932280:
+                raise ValueError('EPOCH_CPU_ONLY_VERIFIED_EXACT_MANUAL_SOURCE')
+            predecessor=verify_bridge(
+                sealed_parent,
+                os.environ.get('BCT_V4_S4_EPOCH_BRIDGE_PROOF',''),
+                acquisition_run=a.manual_acquisition_run)
+        else:
+            predecessor=private.verify_predecessor(sealed_parent)
         if op.checkpoint_storage_audit(a.checkpoint,policy,scope='private')['status']!='PASS_PRIVATE_STORAGE_REVIEW':
             raise ValueError('PRIVATE_ARCHIVAL_REVIEW_BLOCKED')
         op.restore(a.checkpoint,a.root)
