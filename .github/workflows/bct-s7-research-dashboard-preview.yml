@@ -9,6 +9,7 @@ on:
       - tools/bct_s7_source_truth_preview.py
       - tests/test_bct_s7_source_truth_preview.py
       - tests/test_bct_s7_source_truth.js
+      - tests/test_future_pages_v33.js
       - .github/workflows/bct-s7-research-dashboard-preview.yml
   workflow_dispatch:
   schedule:
@@ -121,6 +122,19 @@ jobs:
           test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/$RESEARCH_BRANCH" --jq '.object.sha')" = "$RESEARCH_SHA"
           node --check "$RUNNER_TEMP/s7-preview/app.js"
           node --check "$RUNNER_TEMP/s7-preview/s7-research-view.js"
+          node - <<'JS'
+          "use strict";
+          const fs=require("node:fs"),path=require("node:path"),assert=require("node:assert/strict");
+          const root=path.join(process.env.RUNNER_TEMP,"s7-preview");
+          const next=require(path.join(process.env.GITHUB_WORKSPACE,"docs","s7-research-view.js"))
+                      .validate(JSON.parse(fs.readFileSync(path.join(root,"s7-research-status.json"),"utf8")));
+          assert.equal(next.historical.record_count,511);
+          assert.equal(next.research.strict_original_publisher_body_date_verified,18);
+          assert.equal(next.research.new_sourcebound_research_hints_not_independent_pairs,147);
+          assert.equal(next.admission.eligible_independent_pair_count,0);
+          assert.equal(next.deployment.public_pages_deployed_by_this_job,false);
+          console.log("BCT_S7_ACTUAL_GENERATED_JSON_ACCEPTED_BY_BROWSER_VIEW_SCHEMA_PASS");
+          JS
       - name: Assert browser bundle status was verified and no operating state published
         shell: bash
         run: |
