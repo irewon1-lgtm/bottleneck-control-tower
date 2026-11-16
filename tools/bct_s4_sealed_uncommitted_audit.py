@@ -124,11 +124,14 @@ def inspect(held_folder,prior_folder,sealed_folder):
     prior,before=last_ack(prior_folder,selected)
     sealed_folder=Path(sealed_folder)
     parent=json.loads((sealed_folder/"parent.json").read_bytes())
-    if (parent.get("producer_job")!="publish"
-            or str(parent.get("producer_run_id"))!=str(EXPECTED_SUCCESS_RUN)
-            or str(parent.get("producer_attempt"))!=str(prior["producer_attempt"])
-            or parent.get("expected_parent")!=prior["private_commit"]):
-        raise ValueError("S4_UNPUBLISHED_PARENT_NOT_LAST_ACK")
+    if parent.get("producer_job")!="publish":
+        raise ValueError("S4_UNPUBLISHED_PARENT_JOB_NOT_PUBLISHER")
+    if str(parent.get("producer_run_id"))!=str(EXPECTED_SUCCESS_RUN):
+        raise ValueError("S4_UNPUBLISHED_PARENT_PRODUCER_RUN_MISMATCH")
+    if str(parent.get("producer_attempt"))!=str(prior["producer_attempt"]):
+        raise ValueError("S4_UNPUBLISHED_PARENT_PRODUCER_ATTEMPT_MISMATCH")
+    if parent.get("expected_parent")!=prior["private_commit"]:
+        raise ValueError("S4_UNPUBLISHED_PARENT_COMMIT_MISMATCH")
     proof,sources,done,failed=sealed_checkpoint(sealed_folder)
     if done & failed:
         raise ValueError("S4_CONFLICTING_WINDOW_RECEIPT")
