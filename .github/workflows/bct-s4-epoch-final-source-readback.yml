@@ -64,18 +64,33 @@ jobs:
           p=pathlib.Path(os.environ["RUNNER_TEMP"])/"s4/final-source.json"
           d=json.loads(p.read_text())
           counts=d["counts"]
+          review=d["semantic_review"]
+          dashboard=d["research_dashboard_readonly"]
           safe={"status":d["status"],"original_sources":d["exact_original_sources"],
                 "original_windows":counts["total"],"read":counts["success"],
                 "unread":counts["unread"],"failed":counts["failed"],
                 "remote_restore":d["eight_table_remote_restore"],
-                "writes":d["private_ref_writes"],"promoted":d["automatic_qualified_supply_demand_adoption"]}
-          print("S4_EXACT_ORIGINAL_READBACK="+json.dumps(safe,sort_keys=True),flush=True)
+                "semantic_reviews":review["exact_source_semantic_reviews"],
+                "evidence_hold":review["read_evidence_hold"],
+                "strict_independent_pairs":review["strict_independent_pair_count"],
+                "writes":d["private_ref_writes"],
+                "promoted":d["automatic_qualified_supply_demand_adoption"],
+                "dashboard_scope":dashboard["mode"]}
+          print("S4_EXACT_ORIGINAL_SEMANTIC_REVIEW="+json.dumps(safe,sort_keys=True),flush=True)
           if (d["status"]!="PASS_SOURCE_BOUND_CPU_READBACK"
               or d["exact_original_sources"]!=11
               or counts!={"total":240,"success":240,"failed":0,"unread":0}
+              or review["exact_source_semantic_reviews"]!=11
+              or review["original_exact_body_validation"]!=11
+              or review["semantic_review_failures"]!=0
+              or sum(review[k] for k in
+                   ("read_evidence_hold","no_validated_event","research_forecast_review"))!=11
+              or review["automatic_LIVE_promotions"]!=0
+              or dashboard["mode"]!="RESEARCH_ONLY_NOT_PUBLIC_DASHBOARD"
+              or dashboard["auto_registered_candidates"]!=0
               or d["eight_table_remote_restore"] is not True
               or d["private_ref_writes"]!=0):
-              raise SystemExit("S4_FINAL_SOURCE_BOUND_CPU_INCOMPLETE")
+              raise SystemExit("S4_FINAL_SOURCE_BOUND_OR_SEMANTIC_REVIEW_INCOMPLETE")
           PY
       - name: Retain source-free progress proof, including incomplete result
         if: ${{ always() }}
