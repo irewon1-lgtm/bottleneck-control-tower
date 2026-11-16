@@ -84,7 +84,7 @@ def test_predecessor_failure_cannot_be_called_inert_with_ambiguous_log(monkeypat
 
 
 def test_unknown_or_unreviewed_future_run_is_blocked_even_if_failed(monkeypatch,tmp_path):
-    parent,path=sample(monkeypatch,tmp_path)
+    parent,proof,path=sample(monkeypatch,tmp_path)
     old=epoch._github
     monkeypatch.setattr(epoch,"_github",lambda req:
         {"workflow_runs":[{"id":43799799999,"status":"completed","conclusion":"failure"},
