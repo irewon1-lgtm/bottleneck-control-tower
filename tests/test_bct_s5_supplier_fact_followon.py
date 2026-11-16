@@ -44,12 +44,14 @@ def cases():
     btext=("BWX Technologies, Inc. announced an initial allocation of 1 MTU. "
            "Fuel deliveries will use future task orders that define specific "
            "quantities, delivery schedules and technical requirements.")
-    return [s5.read_source(s,rendered(s,ctext if "centrus" in s["id"] else btext),
-                           final=s["url"]) for s in sources]
+    return [s5.read_source(s,None,error="TEST_PDF_NOT_NETWORK_ACCESSED")
+            if s.get("content_kind")=="PDF"
+            else s5.read_source(s,rendered(s,ctext if "centrus" in s["id"] else btext),
+                                final=s["url"]) for s in sources]
 
 class IndependentSupplierFactsTest(unittest.TestCase):
     def test_exact_3_pinned_public_source_cohort(self):
-        self.assertEqual(len(s5.validate_manifest(manifest())),3)
+        self.assertEqual(len(s5.validate_manifest(manifest())),4)
         self.assertEqual(set(s5.PINNED),s5.SOURCE_IDS)
     def test_no_private_or_changed_public_endpoint(self):
         m=manifest();m["sources"][0]["url"]="https://127.0.0.1/a"
@@ -63,7 +65,8 @@ class IndependentSupplierFactsTest(unittest.TestCase):
             s5.validate_manifest(m)
     def test_visible_title_date_issuer_and_located_facts_are_separate_from_strict_provenance(self):
         c=cases()
-        self.assertTrue(all(x["status"]=="ORIGINAL_VISIBLE_SOURCE_ATTESTED_RESEARCH_ONLY" for x in c))
+        self.assertTrue(all(x["status"]=="ORIGINAL_VISIBLE_SOURCE_ATTESTED_RESEARCH_ONLY" for x in c[:3]))
+        self.assertEqual(c[3]["status"],"ACCESS_HOLD")
         self.assertTrue(all(x["strict_global_provenance"]=="NOT_INFERRED_FROM_URL" for x in c))
         self.assertTrue(any(f["fact_id"]=="CENTRUS_EXISTING_CASCADE_16" and f["value"]==16
                          for f in c[0]["facts"]))
@@ -75,7 +78,7 @@ class IndependentSupplierFactsTest(unittest.TestCase):
                             if f["state"]=="VISIBLE_SOURCE_SPAN_HASH_VERIFIED"))
     def test_copies_of_centrus_q3_do_not_make_two_economic_facts(self):
         out=s5.aggregate(manifest(),prior(),cases())
-        self.assertEqual(out["centrus_same_disclosure_copies_not_independent_pair"],2)
+        self.assertEqual(out["centrus_same_disclosure_copies_not_independent_pair"],3)
         self.assertEqual(out["distinct_issuer_economic_events_with_evidence"],2)
         self.assertFalse(out["strict_pair_evaluated"])
         self.assertEqual(out["new_bottleneck_candidates"],0)
@@ -121,7 +124,7 @@ class IndependentSupplierFactsTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as t:
             output=Path(t)/"out"
             saved=s5.persist(output,report,c)
-            self.assertEqual(s5.requery(output)["cases"],3)
+            self.assertEqual(s5.requery(output)["cases"],4)
             self.assertTrue(saved["sql_sha256"])
             with self.assertRaisesRegex(ValueError,"NO_OVERWRITE"):
                 s5.persist(output,report,c)
