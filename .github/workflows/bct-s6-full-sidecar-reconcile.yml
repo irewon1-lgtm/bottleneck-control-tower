@@ -1,0 +1,94 @@
+name: BCT S6 full current sidecar shard evidence and 511 URL count reconciliation
+on:
+  push:
+    branches: [ops/bct-s6-full-sidecar-evidence-reconcile-20261116]
+    paths:
+      - tools/bct_s6_full_sidecar_reconcile.py
+      - tests/test_bct_s6_full_sidecar_reconcile.py
+      - .github/workflows/bct-s6-full-sidecar-reconcile.yml
+permissions:
+  contents: read
+concurrency:
+  group: bct-s6-exact-full-sidecar-source-audit-20261116
+  cancel-in-progress: false
+jobs:
+  adversarial-source-unit-tests:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s6-full-sidecar-evidence-reconcile-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Test native restoration, source-unit deduplication and no fake 511
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_bct_s6_full_sidecar_reconcile.py -v
+  actual-40-shard-full-restore-and-source-free-recount:
+    needs: adversarial-source-unit-tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      PYTHONPATH: src
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Read both exact current branch SHAs and restore 100 percent of candidate/tracking shards
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -u tools/bct_s6_full_sidecar_reconcile.py \
+            --workers 5 \
+            --verified-baseline docs/verified-bottlenecks.json \
+            --output "$RUNNER_TEMP/s6-full-sidecar-proof"
+      - name: Independent process reopens SQLite and verifies all counts source-free
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s6_full_sidecar_reconcile.py \
+            --verify-only --output "$RUNNER_TEMP/s6-full-sidecar-proof"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"s6-full-sidecar-proof/s6-full-shard-sourcefree.json"
+          s=json.loads(p.read_text())
+          assert s["status"]=="PASS_EXACT_FULL_SHARD_RECONSTRUCTION_AND_SOURCE_LINK_COUNT"
+          assert s["target_source_links"]["registered_target_ids"]==22
+          assert s["candidate_manifest_proof"]["generation_shards"]==s["candidate_full_restore"]["fetched_shards"]
+          assert s["tracking_manifest_proof"]["generation_shards"]==s["tracking_full_restore"]["fetched_shards"]
+          assert s["canonical_data_branch_writes"]==s["sidecar_branch_writes"]==s["LIVE_writes"]==s["rank_writes"]==0
+          assert s["S6_full_operating_research_DB_integration"]=="NOT_RUN"
+          assert s["qualified_independent_supply_demand_pairs"]=="NOT_PROVEN_BY_SHARD_LINKS"
+          print("BCT_S6_ALL_ACTUAL_SHARDS_VERIFIED="+json.dumps({
+            "all_shards":s["candidate_full_restore"]["fetched_shards"]+s["tracking_full_restore"]["fetched_shards"],
+            "results":s["stored_records"]["stored_result_document_ids"],
+            "targets":s["target_source_links"]["registered_target_ids"],
+            "target_link_url_pairs":s["target_source_links"]["unique_target_link_url_pairs"],
+            "unique_urls_across_targets":s["target_source_links"]["unique_source_urls_across_all_targets"],
+            "reproduces_511":s["published_511_reproduced"],
+            "sources_from_articles":s["stored_records"]["unique_result_original_urls"],
+            "canonical_db_join":"NOT_RUN",
+            "production_writes":0},sort_keys=True))
+          PY
+      - name: Preserve source-free aggregate and SQLite fresh-process proof only
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s6-actual-all-shards-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/s6-full-sidecar-proof/s6-full-shard-sourcefree.json
+            ${{ runner.temp }}/s6-full-sidecar-proof/s6-sidecar-derived.sqlite3
+          retention-days: 30
+          if-no-files-found: warn

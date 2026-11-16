@@ -1,0 +1,130 @@
+name: BCT S6 pinned 10992 canonical RSS SQLite versus 10676 sidecar document IDs
+on:
+  push:
+    branches: [ops/bct-s6-full-sidecar-evidence-reconcile-20261116]
+    paths:
+      - tools/bct_s6_canonical_article_id_join.py
+      - tests/test_bct_s6_canonical_article_id_join.py
+      - .github/workflows/bct-s6-canonical-id-join.yml
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-s6-same-generation-full-canonical-ids-20261116
+  cancel-in-progress: false
+jobs:
+  reject-arithmetic-or-fabricated-article-matches:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s6-full-sidecar-evidence-reconcile-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Test cardinality/canonical SQLite tamper/stored sidecar IDs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_bct_s6_canonical_article_id_join.py -v
+  real-canonical-sqlite-and-all-sidecar-id-join:
+    needs: reject-arithmetic-or-fabricated-article-matches
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      PYTHONPATH: src
+      GH_TOKEN: ${{ github.token }}
+      S6_PREVIOUS_RUN: '43846030879'
+      S6_PREVIOUS_ARTIFACT: '14214378829'
+      S6_PREVIOUS_SHA: '2e95a189833b794cc7e4d1158898d9fa48daf621'
+      S6_PREVIOUS_DIGEST: 'sha256:e289bdce90c734ca42cf869ac9ba280c0e859d4d32dce02b79e9bfa391eaf9a3'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Verify immutable prior 40-shard source-free success and artifact SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$S6_PREVIOUS_RUN" > "$RUNNER_TEMP/prior-run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$S6_PREVIOUS_ARTIFACT" > "$RUNNER_TEMP/prior-artifact.json"
+          python - <<'PY'
+          import os,json,pathlib
+          d=pathlib.Path(os.environ["RUNNER_TEMP"])
+          r=json.loads((d/"prior-run.json").read_text())
+          a=json.loads((d/"prior-artifact.json").read_text())
+          assert r["id"]==int(os.environ["S6_PREVIOUS_RUN"])
+          assert r["status"]=="completed" and r["conclusion"]=="success"
+          assert r["head_sha"]==os.environ["S6_PREVIOUS_SHA"]
+          assert r["name"]=="BCT S6 full current sidecar shard evidence and 511 URL count reconciliation"
+          assert a["id"]==int(os.environ["S6_PREVIOUS_ARTIFACT"])
+          assert a["name"]=="bct-s6-actual-all-shards-"+os.environ["S6_PREVIOUS_RUN"]
+          assert a["digest"]==os.environ["S6_PREVIOUS_DIGEST"] and not a["expired"]
+          assert a["workflow_run"]["id"]==r["id"]
+          print("BCT_S6_PREVIOUS_40_SHARD_RESTORATION_PIN_PASS")
+          PY
+      - name: Download ONLY source-free prior receipts (no private original content)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/prior"
+          gh run download "$S6_PREVIOUS_RUN" -R "$GITHUB_REPOSITORY" \
+            --name "bct-s6-actual-all-shards-$S6_PREVIOUS_RUN" \
+            --dir "$RUNNER_TEMP/prior"
+          test -s "$RUNNER_TEMP/prior/s6-full-shard-sourcefree.json"
+      - name: Read immutable 62MB canonical SQLite and all 39 pinned candidate shards; actually join every document ID
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -u tools/bct_s6_canonical_article_id_join.py \
+            --prior "$RUNNER_TEMP/prior/s6-full-shard-sourcefree.json" \
+            --output "$RUNNER_TEMP/s6-id-join"
+      - name: Fresh independent SQLite requery; make no claims from 10992 minus 10676
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s6_canonical_article_id_join.py \
+            --verify-only --output "$RUNNER_TEMP/s6-id-join"
+          python - <<'PY'
+          import os,json,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"s6-id-join/s6-article-id-join.json"
+          s=json.loads(p.read_text())
+          c=s["id_join_counts"]
+          assert s["status"]=="PASS_PINNED_CANONICAL_SQLITE_AND_ALL_SIDECAR_ARTICLE_ID_JOIN"
+          assert s["canonical_rss_ids"]==10992
+          assert s["sidecar_result_ids"]==10676
+          assert s["canonical_without_sidecar_statuses"]=={"active":316}
+          assert c.get("BOTH",0)+c.get("CANONICAL_ONLY",0)==10992
+          assert c.get("BOTH",0)+c.get("SIDECAR_ONLY",0)==10676
+          assert s["canonical_writes"]==s["sidecar_writes"]==s["LIVE_writes"]==0
+          assert s["S6_full_evidence_original_pair_integrity"]=="NOT_EVALUATED"
+          print("BCT_S6_ACTUAL_CANONICAL_ID_JOIN_COMPLETE="+json.dumps({
+            "matched_rss_sidecar_ids":c.get("BOTH",0),
+            "rss_ids_not_in_sidecar":c.get("CANONICAL_ONLY",0),
+            "missing_sidecar_statuses":s["canonical_without_sidecar_statuses"],
+            "sidecar_ids_not_in_rss":c.get("SIDECAR_ONLY",0),
+            "results":s["sidecar_result_ids"],
+            "rss":s["canonical_rss_ids"],
+            "joined_sourcefree_rows":s["row_joined_hashed_article_ids"],
+            "new_verified_qualified_pairs":"NOT_ESTABLISHED",
+            "production_writes":0},sort_keys=True))
+          PY
+      - name: Preserve hashed IDs and counts, never article text or full canonical DB
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s6-canonical-id-source-free-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/s6-id-join/s6-article-id-join.json
+            ${{ runner.temp }}/s6-id-join/s6-article-id-join.sqlite3
+          retention-days: 30
+          if-no-files-found: warn
