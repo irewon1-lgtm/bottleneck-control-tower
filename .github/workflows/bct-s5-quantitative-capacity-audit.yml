@@ -1,0 +1,129 @@
+name: BCT S5 official Q3 contract versus operational capacity audit
+on:
+  push:
+    branches: [ops/bct-s5-quantitative-contract-capacity-20261116]
+    paths:
+      - config/bct-s5-quantitative-originals-20261116.json
+      - tools/bct_s5_quantitative_capacity_audit.py
+      - tests/test_bct_s5_quantitative_capacity_audit.py
+      - .github/workflows/bct-s5-quantitative-capacity-audit.yml
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-s5-quantitative-fixed-public-originals-20261116
+  cancel-in-progress: false
+jobs:
+  negative-quantitative-inference-tests:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s5-quantitative-contract-capacity-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Test year/contract/authorization/option evidence against false shortage
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_bct_s5_quantitative_capacity_audit.py -v
+  actual-fixed-official-originals-research:
+    needs: negative-quantitative-inference-tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONPATH: src
+      S5_PRIOR_RUN: '43815790180'
+      S5_PRIOR_ARTIFACT_ID: '14202675339'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Install existing repository Python dependencies (no AI model)
+        run: python -m pip install -e .
+      - name: Authenticate immutable preceding eight-public-original proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$S5_PRIOR_RUN" > "$RUNNER_TEMP/s5-prior-run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$S5_PRIOR_ARTIFACT_ID" > "$RUNNER_TEMP/s5-prior-artifact.json"
+          python - <<'PY'
+          import os,json,pathlib
+          r=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'s5-prior-run.json').read_text())
+          a=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'s5-prior-artifact.json').read_text())
+          assert r['id']==43815790180
+          assert r['status']=='completed' and r['conclusion']=='success'
+          assert r['head_sha']=='410c4725c3a9ff9426813b8a839f8cc15c0cc494'
+          assert r['name']=='BCT S5 bounded official primary originals research pilot'
+          assert a['id']==14202675339 and not a['expired']
+          assert a['name']=='bct-s5-public-primary-source-free-43815790180'
+          assert a['workflow_run']['id']==r['id']
+          assert a['digest']=='sha256:a5b6db4373d060f933fb77e5cbad44ba67cc065f4f1618a98622367b7484b5b4'
+          print('S5_QUANT_PREDECESSOR_SOURCE_FREE_ATTESTATION_PASS')
+          PY
+      - name: Retrieve saved source-free predecessor; no prior original body
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/s5-prior"
+          gh run download "$S5_PRIOR_RUN" -R "$GITHUB_REPOSITORY" \
+            --name "bct-s5-public-primary-source-free-$S5_PRIOR_RUN" \
+            --dir "$RUNNER_TEMP/s5-prior"
+          test -s "$RUNNER_TEMP/s5-prior/summary.json"
+      - name: Read only two fixed public issuer Q3 reports and bind facts to source offsets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -u tools/bct_s5_quantitative_capacity_audit.py \
+            --manifest config/bct-s5-quantitative-originals-20261116.json \
+            --prior "$RUNNER_TEMP/s5-prior/summary.json" \
+            --out "$RUNNER_TEMP/s5-quant"
+      - name: Fresh-process readback and strict anti-imputation gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s5_quantitative_capacity_audit.py --verify-only --out "$RUNNER_TEMP/s5-quant"
+          python - <<'PY'
+          import os,json,pathlib
+          s=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'s5-quant/summary.json').read_text())
+          assert s['format']=='bct-s5-typed-quantitative-original-check-v1'
+          assert s['official_originals_fetched']>=1
+          assert s['verified_numeric_or_temporal_fact_count']>=2
+          assert s['confirmed_shortage']=='NOT_ESTABLISHED'
+          assert s['new_early_candidates']==s['LIVE_writes']==0
+          assert s['protected_early_strict_engine_executions']==0
+          assert s['objective_version']=='bct-objective-1'
+          assert s['strict_independent_eligible_demand_supply_pairs'].startswith('NOT_EVALUATED')
+          assert s['annual_comparison']['2028']['same_scope_physical_gap_MTU']=='UNKNOWN'
+          assert s['annual_comparison']['2030']['Antares_firm_TRISO_deliveries_MTU']=='UNKNOWN'
+          assert s['Antares_customer_optional_MTU_not_firm'] in (7,'UNKNOWN')
+          assert s['Standard_building_envelope_MTU_per_year_not_operational'] in (5.5,'UNKNOWN')
+          print('BCT_S5_TYPED_ANNUAL_QUANTITATIVE_PROOF='+json.dumps({
+            'public_originals':s['official_originals_fetched'],
+            'source_bound_facts':s['verified_numeric_or_temporal_fact_count'],
+            'firm_contract_total_mtu':s['firm_contract_cumulative_MTU_by_2030'],
+            'operational_rate_mtu_y':s['Standard_operational_reported_module_MTU_per_year_as_of_2026_09_30'],
+            'building_only_mtu_y':s['Standard_building_envelope_MTU_per_year_not_operational'],
+            'annual_same_scope_gap':'UNKNOWN','eligible_supply_firm':False,
+            'status':s['session5_total_status'],'LIVE_writes':s['LIVE_writes']
+          },sort_keys=True))
+          PY
+      - name: Preserve only evidence offsets/hash and research typed UNKNOWN SQLite
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s5-quantitative-source-free-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/s5-quant/research.sqlite3
+            ${{ runner.temp }}/s5-quant/summary.json
+          retention-days: 30
+          if-no-files-found: warn
