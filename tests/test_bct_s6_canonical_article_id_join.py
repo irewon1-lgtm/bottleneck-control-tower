@@ -52,6 +52,8 @@ class TestS6PinnedRealJoin(unittest.TestCase):
             "BOTH":2,"CANONICAL_ONLY":2,"SIDECAR_ONLY":1})
         self.assertEqual(report["matched_article_body_states"],{
             "FULL":1,"PARTIAL":1})
+        self.assertEqual(report["canonical_without_sidecar_statuses"],{
+            "active":1,"inactive":1})
         self.assertNotEqual(report["id_join_counts"]["CANONICAL_ONLY"],4-3)
         self.assertEqual(report["canonical_rss_ids"],4)
         self.assertEqual(report["sidecar_result_ids"],3)
