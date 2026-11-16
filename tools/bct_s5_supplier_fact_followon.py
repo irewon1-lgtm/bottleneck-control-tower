@@ -21,11 +21,12 @@ FORMAT="bct-s5-supplier-facts-readonly-v1"
 MANIFEST="bct-s5-official-supplier-followon-v1"
 CUTOFF="2026-11-16"
 UNKNOWN="UNKNOWN"
-SOURCE_IDS=frozenset(("centrus_sec_q3_ex99","centrus_issuer_q3","bwxt_antares_issuer"))
+SOURCE_IDS=frozenset(("centrus_sec_q3_ex99","centrus_issuer_q3","bwxt_antares_issuer","centrus_official_8k_pdf"))
 PINNED={
  "centrus_sec_q3_ex99":"https://www.sec.gov/Archives/edgar/data/1065059/000162828026070229/ex991-10q2026_11x04.htm",
  "centrus_issuer_q3":"https://centrusenergy.gcs-web.com/news-releases/news-release-details/centrus-reports-third-quarter-2026-results",
  "bwxt_antares_issuer":"https://www.bwxt.com/bwxt-announces-contract-with-antares-for-triso-nuclear-fuel-production/",
+ "centrus_official_8k_pdf":"https://centrusenergy.gcs-web.com/static-files/cc3fa381-12cb-4630-a441-6b2667774398",
 }
 PRIOR={"run_id":43821707141,"artifact_id":14205155407,
        "artifact_sha256":"6f949e59c47e040d1a555426bc9a1ac345892ebd25d41b5eebdc62e2fdb2c563",
@@ -71,12 +72,13 @@ def validate_manifest(m):
             and m.get("public_source_policy")=="FIXED_OFFICIAL_URLS_ONLY_NO_PRIVATE_DERIVED_QUERIES"
             and m.get("previous_q3_proof")==PRIOR,"MANIFEST_OBJECTIVE_OR_PRIOR_CHANGED")
     rows=m.get("sources")
-    require(isinstance(rows,list) and len(rows)==3
+    require(isinstance(rows,list) and len(rows)==4
             and {r.get("id") for r in rows}==SOURCE_IDS,"SOURCE_COHORT_CHANGED")
     for row in rows:
         require(row.get("url")==PINNED[row["id"]],"UNAPPROVED_SOURCE_URL")
         secure(row["url"],row["host"])
-        require(row.get("causal_event") in FACTS
+        require(row.get("content_kind","HTML") in ("HTML","PDF")
+                and row.get("causal_event") in FACTS
                 and row.get("date")<=CUTOFF
                 and row.get("title") and row.get("issuer_marker")
                 and isinstance(row.get("date_markers"),list)
@@ -115,7 +117,18 @@ class Visible(HTMLParser):
     def result(self):
         return " ".join(" ".join(self.parts).split())
 
-def body_text(raw):
+def body_text(raw,kind="HTML"):
+    if kind=="PDF":
+        require(raw.startswith(b"%PDF-"),"OFFICIAL_PDF_MAGIC_MISSING")
+        from io import BytesIO
+        from pypdf import PdfReader
+        reader=PdfReader(BytesIO(raw),strict=True)
+        require(1<=len(reader.pages)<=30,"UNBOUNDED_PDF_PAGES")
+        text=" ".join(p.extract_text() or "" for p in reader.pages)
+        text=" ".join(text.split())
+        require(len(text)>=550,"UNREADABLE_PDF_BODY")
+        return text
+    require(kind=="HTML","UNKNOWN_SOURCE_MEDIA")
     page=Visible();page.feed(raw.decode("utf-8",errors="replace"))
     return page.result()
 
@@ -139,7 +152,7 @@ def read_source(s,raw,final=None,error=None):
         txt=None
     else:
         require(final==s["url"],"CROSS_SITE_OR_CHANGED_FINAL_URL")
-        txt=body_text(raw)
+        txt=body_text(raw,s.get("content_kind","HTML"))
         if not source_attested(s,txt):
             case["status"]="VISIBLE_DATE_ISSUER_HOLD"
         else:
@@ -163,7 +176,7 @@ def read_source(s,raw,final=None,error=None):
 
 def aggregate(m,prior,cases):
     validate_manifest(m);validate_prior(prior)
-    require(len(cases)==3 and {c.get("source_id") for c in cases}==SOURCE_IDS,"CASE_IDENTITY_INCOMPLETE")
+    require(len(cases)==4 and {c.get("source_id") for c in cases}==SOURCE_IDS,"CASE_IDENTITY_INCOMPLETE")
     ref={r["id"]:r for r in m["sources"]}
     groups=defaultdict(list)
     for c in cases:
@@ -196,14 +209,14 @@ def aggregate(m,prior,cases):
         groups[c["causal_event"]].append(c)
     centrus=groups["CENTRUS_2026Q3_SINGLE_DISCLOSURE"]
     bwxt=groups["ANTARES_BWXT_FUEL_FRAMEWORK"]
-    require(len(centrus)==2 and len(bwxt)==1,"DISTINCT_ECONOMIC_EVENT_SET_CHANGED")
+    require(len(centrus)==3 and len(bwxt)==1,"DISTINCT_ECONOMIC_EVENT_SET_CHANGED")
     verified={f["fact_id"] for c in cases for f in c["facts"]
               if f["state"]=="VISIBLE_SOURCE_SPAN_HASH_VERIFIED"}
     valid_centrus={f["fact_id"] for c in centrus for f in c["facts"]
                    if f["state"]=="VISIBLE_SOURCE_SPAN_HASH_VERIFIED"}
     valid_bwxt={f["fact_id"] for c in bwxt for f in c["facts"]
                 if f["state"]=="VISIBLE_SOURCE_SPAN_HASH_VERIFIED"}
-    # 2 reports of the same Centrus Q3 event remain only 1 issuer/event.
+    # 3 formats/hosts of the same Centrus Q3 disclosure remain 1 issuer/event.
     return {
       "format":FORMAT,"scope":"PUBLIC_PINNED_SUPPLIER_ALTERNATIVE_AND_RISK_EVIDENCE",
       "status":"PASS_READONLY_SOURCE_BOUND_RISK_AND_NONPROMOTION_CLASSIFICATION",
@@ -269,7 +282,7 @@ def requery(folder):
     with sqlite3.connect(dbpath.resolve().as_uri()+"?mode=ro",uri=True) as conn:
         require(conn.execute("PRAGMA integrity_check").fetchone()==("ok",),"SQLITE_INTEGRITY")
         rows=conn.execute("SELECT id,hash,record FROM cases ORDER BY id").fetchall()
-    require(len(rows)==3,"REQUERY_SOURCE_COUNT")
+    require(len(rows)==4,"REQUERY_SOURCE_COUNT")
     cases=[]
     for sid,hashvalue,payload in rows:
         require(digest(payload)==hashvalue,"REQUERY_PAYLOAD_HASH")
@@ -298,7 +311,10 @@ def run(args):
     for s in rows:
         try:
             raw,final,http,ctype=fetcher.fetch(s["url"])
-            require(http==200 and "html" in ctype.lower(),"NO_VALID_HTML_200")
+            require(http==200 and (
+                ("pdf" in ctype.lower() or raw.startswith(b"%PDF-"))
+                if s.get("content_kind")=="PDF"
+                else "html" in ctype.lower()),"NO_VALID_PUBLIC_ORIGINAL_200")
             item=read_source(s,raw,final=final)
         except Exception as e:
             item=read_source(s,None,error=(("HTTP_"+str(e.code)) if hasattr(e,"code")
