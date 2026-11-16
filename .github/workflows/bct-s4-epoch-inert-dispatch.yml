@@ -1,0 +1,27 @@
+name: BCT S4 epoch CPU verified inert-predecessor dispatch once
+on:
+  push:
+    branches: [ops/bct-s4-epoch-inert-verified-cpu-once-20261116]
+    paths: [.github/workflows/bct-s4-epoch-inert-dispatch.yml]
+permissions:
+  contents: read
+  actions: write
+jobs:
+  one-shot-exact-originals:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    env:
+      GH_TOKEN: ${{ github.token }}
+      EXPECTED_MAIN_SHA: '509d6fcdb894f74f4f7fb3ce77b10cb35f5891a6'
+    steps:
+      - name: Verify fixed source and main pin, dispatch existing manual epoch only once
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)" = "$EXPECTED_MAIN_SHA"
+          test "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/43645932280" --jq '.conclusion+":"+.head_branch+":"+.name')" = 'success:main:New precursor evidence acquisition'
+          test "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/43645752354" --jq '.conclusion+":"+.head_branch+":"+.name')" = 'success:main:RSS live environment check'
+          jq -n '{ref:"main",inputs:{purpose:"manual-research",acquisition_run:"43645932280"}}' > "$RUNNER_TEMP/epoch-once.json"
+          gh api --method POST "repos/$GITHUB_REPOSITORY/actions/workflows/bct-s4-epoch-cpu-manual.yml/dispatches" --input "$RUNNER_TEMP/epoch-once.json"
+          echo 'BCT_S4_ISOLATED_EPOCH_MANUAL_CPU_DISPATCH_ACCEPTED'
