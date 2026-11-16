@@ -96,7 +96,9 @@ class TestS5PublicPrimary(unittest.TestCase):
         fact=list(source["fact_patterns"].values())[0]
         text=(f"<html><main><h1>{source['visible_title']}</h1>"
               f"<time>{source['visible_date']}</time><article>{fact}</article>"
-              f"<footer>{source['visible_issuer_marker']}</footer></main></html>")
+              f"<footer>{source['visible_issuer_marker']}</footer>"
+              + "<p>additional sourced article observations and production context. </p>"*16
+              + "</main></html>")
         raw=text.encode()
         proof={"body":fact+" additional genuine article text "*20,
                "raw_sha256":s5.sha(raw)}
