@@ -19,8 +19,8 @@ def prior():
        "operating_heads":{"data":q.PINNED_DATA,"future-bottleneck-data":q.PINNED_SIDE},
        "candidate_full_restore":{"fetched_shards":39,"full_document_sha256":"a"*64},
        "tracking_full_restore":{"fetched_shards":1},
-       "stored_records":{"stored_result_document_ids":10676},
-       "RSS_canonical_snapshot":{"radar_items":10992,
+       "stored_records":{"stored_result_document_ids":q.PINNED_RESULTS},
+       "RSS_canonical_snapshot":{"radar_items":q.PINNED_RSS,
                                  "canonical_sqlite_sha256_expected":q.PINNED_CANONICAL_SHA},
        "sidecar_branch_writes":0,"LIVE_writes":0,
     })
