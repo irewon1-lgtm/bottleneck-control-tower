@@ -4,7 +4,7 @@ import re
 import yaml
 
 OLD='6e788d18cf85fdb834b451bb35585a8b58925301'
-S4='3ac2253c1a0a8807eff57b66b5dd88a02fcbd07c'
+S4='eac28a152bc139b3d5f69cb34ae4136792a92a2f'
 INPUT='43645932280'
 
 
