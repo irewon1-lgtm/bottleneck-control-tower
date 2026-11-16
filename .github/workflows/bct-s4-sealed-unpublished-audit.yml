@@ -1,0 +1,70 @@
+name: BCT S4 sealed unpublished CPU receipt audit
+on:
+  push:
+    branches: [ops/bct-s4-sealed-uncommitted-audit-20261116]
+    paths:
+      - tools/bct_s4_sealed_uncommitted_audit.py
+      - .github/workflows/bct-s4-sealed-unpublished-audit.yml
+permissions:
+  contents: read
+  actions: read
+jobs:
+  authenticate-unpublished-no-model:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PINNED_LAST_PUBLISHED: "43782542564"
+      PINNED_UNPUBLISHED: "43783049883"
+      PINNED_HOLD: "43698475837"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 1cf2b3aea3046c73f7d9a65c627b485f63c4a305
+          path: pinned-v4
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.15"
+      - name: Download three named immutable artifacts (not latest or guessed)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/s4/held" "$RUNNER_TEMP/s4/prior" "$RUNNER_TEMP/s4/failed"
+          gh run download "$PINNED_HOLD" -R "$GITHUB_REPOSITORY" --name "bct-session4-real-source-hold-$PINNED_HOLD" --dir "$RUNNER_TEMP/s4/held"
+          gh run download "$PINNED_LAST_PUBLISHED" -R "$GITHUB_REPOSITORY" --name bct-public-research-1 --dir "$RUNNER_TEMP/s4/prior"
+          gh run download "$PINNED_UNPUBLISHED" -R "$GITHUB_REPOSITORY" --name bct-sealed-cpu-result-1 --dir "$RUNNER_TEMP/s4/failed"
+          test -s "$RUNNER_TEMP/s4/failed/state.gpg"
+          test -s "$RUNNER_TEMP/s4/prior/snapshot.json"
+          test -s "$RUNNER_TEMP/s4/held/session4.sqlite3"
+      - name: Authenticate original sealed failed result with unchanged reviewed code
+        working-directory: pinned-v4
+        env:
+          PYTHONPATH: src
+          BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+        run: >-
+          python tools/v4_cpu_private.py unseal
+          --packet "$RUNNER_TEMP/s4/failed/state.gpg"
+          --checkpoint "$RUNNER_TEMP/s4/verified"
+      - name: Compare all original source/version/window keys without reading native text
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s4_sealed_uncommitted_audit.py \
+            --targets "$RUNNER_TEMP/s4/held" \
+            --prior-public "$RUNNER_TEMP/s4/prior" \
+            --sealed "$RUNNER_TEMP/s4/verified" \
+            --output "$RUNNER_TEMP/s4/unpublished-proof.json"
+          test -s "$RUNNER_TEMP/s4/unpublished-proof.json"
+      - name: Retain only source-free sealed comparison, never decrypted DB or keys
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s4-unpublished-checkpoint-audit-${{ github.run_id }}
+          path: ${{ runner.temp }}/s4/unpublished-proof.json
+          retention-days: 30
+          if-no-files-found: warn
