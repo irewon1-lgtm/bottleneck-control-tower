@@ -59,7 +59,9 @@ def validate_s5(parent,handoff):
           and handoff.get("promotion_allowed") is False
           and handoff.get("production_DB_write_allowed") is False
           and handoff.get("S6_full_database_integration")=="NOT_RUN"
-          and handoff.get("parent_sha256")==sha256(canon(parent))
+          # Previous S5 digest(canonical(payload)) JSON-encodes the string
+          # once more. Preserve that sealed lineage, do not restamp it.
+          and handoff.get("parent_sha256")==sha256(canon(canon(parent)))
           and handoff.get("source_sqlite_sha256")==parent.get("sqlite_sha256")
           and handoff.get("source_cases_sha256")==parent.get("cases_sha256"),
           "S5_S6_HANDOFF_BINDING_CHANGED")
