@@ -125,9 +125,11 @@ def audit(sources,heads,s5,s5_handoff):
           and p.get("format")=="bct-new-precursor-collection-v1"
           and r.get("format")=="bct-public-research-1"
           and all(v.get("objective_version")=="bct-objective-1"
-                  for v in (a,p,r)),
+                  for v in (a,r)),
           "V4_PUBLIC_INPUT_VERSION_OR_OBJECTIVE")
-    for q in (a,p,r):
+    # The legacy precursor-index has no Objective fields by contract.
+    # Verify its concrete type and factual status, never forge a stamp.
+    for q in (a,r):
         require_objective(q)
     check(p.get("independent_pair_count") in (0,None)
           and p.get("early_frozen")==0
@@ -161,6 +163,7 @@ def audit(sources,heads,s5,s5_handoff):
       "data_precursor_new_verified_documents":p.get("new_verified_documents"),
       "data_precursor_unverified_source_holds":p.get("unverified_source_holds"),
       "data_precursor_independent_pairs":p.get("independent_pair_count"),
+      "legacy_precursor_index_objective_stamped":False,
       "data_precursor_early_frozen":p.get("early_frozen"),
       "data_precursor_completed_at":p.get("completed_at"),
       "data_v4_public_read_states":states,
