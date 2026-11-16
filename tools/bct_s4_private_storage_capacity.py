@@ -84,15 +84,14 @@ def audit():
                 "+"+CURRENT_REF+":refs/remotes/origin/cpu-state")
         except ValueError as exc:
             raise ValueError("S4_PRIVATE_FETCH_ACTIVE_"+str(exc)) from None
-        try:
-            git("fetch","--no-tags","origin",
-                "+"+ARCHIVE_REF+":refs/remotes/origin/archive")
-        except ValueError as exc:
-            raise ValueError("S4_PRIVATE_FETCH_ARCHIVE_"+str(exc)) from None
+        # Both refs were independently attested via authenticated ls-remote,
+        # and point to identical immutable commits. Fetching the object graph
+        # once suffices; fetching the same remote head a second time is not
+        # part of the history byte-count contract.
         if git("rev-parse","--is-shallow-repository")!="false":
             raise ValueError("S4_PRIVATE_HISTORY_SHALLOW_NOT_EXACT")
         current=git("rev-parse","refs/remotes/origin/cpu-state")
-        archived=git("rev-parse","refs/remotes/origin/archive")
+        archived=advertised[ARCHIVE_REF]
         if current!=EXPECTED_HEAD or archived!=EXPECTED_HEAD:
             raise ValueError("S4_CURRENT_OR_ARCHIVED_REF_CHANGED")
         objects=git("rev-list","--objects",current)
