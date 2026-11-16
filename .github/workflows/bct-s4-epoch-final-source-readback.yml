@@ -1,0 +1,87 @@
+name: BCT S4 final original 11-source private epoch readback
+on:
+  push:
+    branches: [ops/bct-s4-final-source-verification-20261116]
+    paths: [.github/workflows/bct-s4-epoch-final-source-readback.yml]
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-s4-final-epoch-source-readback-20261116
+  cancel-in-progress: false
+jobs:
+  verify-exact-original-cohort:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s4-final-source-verification-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONPATH: pinned-cpu/src
+      HOLD_PROOF_RUN: "43698475837"
+      SERIAL_CPU_RUN: "43804688113"
+    steps:
+      - name: Read source-free verification script at branch revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Read exact immutable reviewed CPU/SQLite code (no model execution)
+        uses: actions/checkout@v4
+        with:
+          ref: aca2ccf56032c7841188997e857828142dadcb0a
+          path: pinned-cpu
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Download fixed original HOLD ledger and seven-run source-free save receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C pinned-cpu rev-parse HEAD)" = aca2ccf56032c7841188997e857828142dadcb0a
+          mkdir -p "$RUNNER_TEMP/s4/held" "$RUNNER_TEMP/s4/progress"
+          gh run download "$HOLD_PROOF_RUN" -R "$GITHUB_REPOSITORY" --name "bct-session4-real-source-hold-$HOLD_PROOF_RUN" --dir "$RUNNER_TEMP/s4/held"
+          gh run download "$SERIAL_CPU_RUN" -R "$GITHUB_REPOSITORY" --name "bct-s4-epoch-serial-source-free-$SERIAL_CPU_RUN" --dir "$RUNNER_TEMP/s4/progress"
+          test -s "$RUNNER_TEMP/s4/held/session4.sqlite3"
+          test -s "$RUNNER_TEMP/s4/held/receipt.json"
+          test -s "$RUNNER_TEMP/s4/progress/s4-epoch-serial-proof.json"
+      - name: Read-only verify private epoch's exact 11 source versions and 240 CPU windows
+        shell: bash
+        env:
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+        run: |
+          set -euo pipefail
+          python tools/bct_s4_epoch_original_source_readback.py \
+            --held "$RUNNER_TEMP/s4/held" \
+            --progress "$RUNNER_TEMP/s4/progress/s4-epoch-serial-proof.json" \
+            --out "$RUNNER_TEMP/s4/final-source.json"
+      - name: Fail closed if any original-source CPU window is still unread or failed
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"s4/final-source.json"
+          d=json.loads(p.read_text())
+          counts=d["counts"]
+          safe={"status":d["status"],"original_sources":d["exact_original_sources"],
+                "original_windows":counts["total"],"read":counts["success"],
+                "unread":counts["unread"],"failed":counts["failed"],
+                "remote_restore":d["eight_table_remote_restore"],
+                "writes":d["private_ref_writes"],"promoted":d["automatic_qualified_supply_demand_adoption"]}
+          print("S4_EXACT_ORIGINAL_READBACK="+json.dumps(safe,sort_keys=True),flush=True)
+          if (d["status"]!="PASS_SOURCE_BOUND_CPU_READBACK"
+              or d["exact_original_sources"]!=11
+              or counts!={"total":240,"success":240,"failed":0,"unread":0}
+              or d["eight_table_remote_restore"] is not True
+              or d["private_ref_writes"]!=0):
+              raise SystemExit("S4_FINAL_SOURCE_BOUND_CPU_INCOMPLETE")
+          PY
+      - name: Retain source-free progress proof, including incomplete result
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s4-exact-original-readback-${{ github.run_id }}
+          path: ${{ runner.temp }}/s4/final-source.json
+          retention-days: 30
+          if-no-files-found: warn
