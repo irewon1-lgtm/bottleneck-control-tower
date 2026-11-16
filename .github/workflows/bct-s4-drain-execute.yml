@@ -1,23 +1,38 @@
-name: BCT S4 CPU drain runner parse proof
+name: BCT Session 4 bounded exact-source CPU remaining drain
 on:
   push:
     branches: [ops/bct-s4-remaining-exact-cpu-20261116]
-    paths:
-      - .github/workflows/bct-s4-drain-execute.yml
+    paths: [.github/workflows/bct-s4-drain-execute.yml]
 permissions:
   contents: read
   actions: write
 jobs:
-  proof:
+  verified-bounded-drain:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s4-remaining-exact-cpu-20261116' }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 4
+    timeout-minutes: 50
+    env:
+      GH_TOKEN: ${{ github.token }}
+      EXPECTED_MAIN_SHA: "2685e274db538838d6073177ac0a2e84f580ca16"
+      BCT_S4_PROGRESS_FILE: bct-session4-exact-source-progress.json
     steps:
-      - name: Validate workflow parser before any CPU action
-        run: echo BCT_S4_EXECUTOR_WORKFLOW_PARSE_OK > "$RUNNER_TEMP/bct-s4-proof.txt"
-      - name: Save source-free parser verification artifact
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Execute authenticated sequential CPU source batches with saved remote proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -u tools/bct_s4_exact_cohort_drain.py
+      - name: Retain verified per-source counts even on safe partial stop
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: bct-s4-parse-proof-${{ github.run_id }}
-          path: ${{ runner.temp }}/bct-s4-proof.txt
+          name: bct-s4-source-readback-${{ github.run_id }}
+          path: bct-session4-exact-source-progress.json
           retention-days: 30
+          if-no-files-found: warn
