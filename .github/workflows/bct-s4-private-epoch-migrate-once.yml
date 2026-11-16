@@ -24,3 +24,5 @@ jobs:
           jq -n '{ref:"main",inputs:{purpose:"manual-research",acquisition_run:"43645932280"}}' > "$RUNNER_TEMP/epoch-exact-once.json"
           gh api --method POST "repos/$GITHUB_REPOSITORY/actions/workflows/bct-s4-epoch-cpu-manual.yml/dispatches" --input "$RUNNER_TEMP/epoch-exact-once.json"
           echo BCT_S4_EPOCH_CPU_MANUAL_REQUEST_ACCEPTED
+
+# Explicit fast-forward verified one-shot Git ref update; no behavior change
