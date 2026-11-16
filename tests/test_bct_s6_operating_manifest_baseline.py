@@ -35,7 +35,7 @@ def handoff(p):
       "eligible_to_integrate_verified_pairs":0,"hold_cases_for_research_DB":22,
       "promotion_allowed":False,"production_DB_write_allowed":False,
       "S6_full_database_integration":"NOT_RUN",
-      "parent_sha256":s6.sha256(s6.canon(p)),
+      "parent_sha256":s6.sha256(s6.canon(s6.canon(p))),
       "source_sqlite_sha256":p["sqlite_sha256"],
       "source_cases_sha256":p["cases_sha256"]
     })
