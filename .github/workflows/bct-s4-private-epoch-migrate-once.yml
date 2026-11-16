@@ -1,0 +1,83 @@
+name: BCT S4 one-shot split private CPU storage epoch migration
+on:
+  push:
+    branches: [ops/bct-s4-private-epoch-migrate-20261116]
+    paths: [.github/workflows/bct-s4-private-epoch-migrate-once.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  migrate-one-authenticated-sealed-checkpoint:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s4-private-epoch-migrate-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      GH_TOKEN: ${{ github.token }}
+      EXPECTED_MAIN_SHA: 4fe416f22f79d59cb50041ad51ebc5c310ffe209
+    steps:
+      - name: Reject changes to approved main SHA before any credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)" = "$EXPECTED_MAIN_SHA"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 1cf2b3aea3046c73f7d9a65c627b485f63c4a305
+          path: pinned-v4
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.15"
+      - name: Download precisely four previously verified immutable source-free or encrypted inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/s4/input/plan" "$RUNNER_TEMP/s4/input/source-proof" "$RUNNER_TEMP/s4/input/previous" "$RUNNER_TEMP/s4/input/sealed"
+          gh run download 43795776890 -R "$GITHUB_REPOSITORY" --name bct-s4-epoch-readonly-preflight-43795776890 --dir "$RUNNER_TEMP/s4/input/plan"
+          gh run download 43794023619 -R "$GITHUB_REPOSITORY" --name bct-s4-unpublished-checkpoint-audit-43794023619 --dir "$RUNNER_TEMP/s4/input/source-proof"
+          gh run download 43782542564 -R "$GITHUB_REPOSITORY" --name bct-public-research-1 --dir "$RUNNER_TEMP/s4/input/previous"
+          gh run download 43783049883 -R "$GITHUB_REPOSITORY" --name bct-sealed-cpu-result-1 --dir "$RUNNER_TEMP/s4/input/sealed"
+          test -s "$RUNNER_TEMP/s4/input/plan/epoch-preflight.json"
+          test -s "$RUNNER_TEMP/s4/input/source-proof/unpublished-proof.json"
+          test -s "$RUNNER_TEMP/s4/input/previous/snapshot.json"
+          test -s "$RUNNER_TEMP/s4/input/previous/manifest.json"
+          test -s "$RUNNER_TEMP/s4/input/sealed/state.gpg"
+      - name: GPG-authenticate original failed sealed result using immutable CPU code; no CPU rerun
+        working-directory: pinned-v4
+        shell: bash
+        env:
+          PYTHONPATH: src
+          BCT_V4_STATE_PASSPHRASE: ${{ secrets.BCT_V4_STATE_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          python tools/v4_cpu_private.py unseal \
+            --packet "$RUNNER_TEMP/s4/input/sealed/state.gpg" \
+            --checkpoint "$RUNNER_TEMP/s4/verified"
+      - name: Migrate to distinct parentless private root and verify remote CAS, old archive, full SQLite and dashboard-preview lineage
+        shell: bash
+        env:
+          PYTHONPATH: pinned-v4/src
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+        run: |
+          set -euo pipefail
+          python tools/bct_s4_epoch_migrate.py \
+            --checkpoint "$RUNNER_TEMP/s4/verified" \
+            --preflight "$RUNNER_TEMP/s4/input/plan/epoch-preflight.json" \
+            --sealed-proof "$RUNNER_TEMP/s4/input/source-proof/unpublished-proof.json" \
+            --previous-public "$RUNNER_TEMP/s4/input/previous/snapshot.json" \
+            --previous-manifest "$RUNNER_TEMP/s4/input/previous/manifest.json" \
+            --destination "$RUNNER_TEMP/s4/output"
+      - name: Retain only source-free migration and dashboard-preview proof, never raw DB or tokens
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s4-private-epoch-proof-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/s4/output/migration-proof.json
+            ${{ runner.temp }}/s4/output/preview-snapshot.json
+          retention-days: 30
+          if-no-files-found: warn
