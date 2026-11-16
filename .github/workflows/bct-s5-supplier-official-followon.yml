@@ -1,0 +1,129 @@
+name: BCT S5 official independent supplier facts proof
+on:
+  push:
+    branches: [ops/bct-s5-supplier-independent-facts-20261116]
+    paths:
+      - config/bct-s5-supplier-official-followon-20261116.json
+      - tools/bct_s5_supplier_fact_followon.py
+      - tests/test_bct_s5_supplier_fact_followon.py
+      - .github/workflows/bct-s5-supplier-official-followon.yml
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-s5-official-supplier-facts-readonly-20261116
+  cancel-in-progress: false
+jobs:
+  source-identity-and-no-promotion-tests:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s5-supplier-independent-facts-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Preserve actual available/unreserved UNKNOWN through duplicate supplier sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_bct_s5_supplier_fact_followon.py -v
+  source-bound-real-public-originals:
+    needs: source-identity-and-no-promotion-tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONPATH: src
+      PREVIOUS_RUN: '43821707141'
+      PREVIOUS_ARTIFACT: '14205155407'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Install existing repository Python dependencies; no inference model
+        run: python -m pip install -e .
+      - name: Verify immutable real prior Q3 numeric source proof and artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$PREVIOUS_RUN" > "$RUNNER_TEMP/previous-run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$PREVIOUS_ARTIFACT" > "$RUNNER_TEMP/previous-artifact.json"
+          python - <<'PY'
+          import json,os,pathlib
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])
+          run=json.loads((root/'previous-run.json').read_text())
+          a=json.loads((root/'previous-artifact.json').read_text())
+          assert run['id']==43821707141
+          assert run['name']=='BCT S5 official Q3 contract versus operational capacity audit'
+          assert run['status']=='completed' and run['conclusion']=='success'
+          assert run['head_sha']=='39b1a054ede6020a9d0e15d492a2b7abe7d67d7b'
+          assert a['id']==14205155407 and a['workflow_run']['id']==run['id']
+          assert a['name']=='bct-s5-quantitative-source-free-43821707141'
+          assert a['digest']=='sha256:6f949e59c47e040d1a555426bc9a1ac345892ebd25d41b5eebdc62e2fdb2c563'
+          assert not a['expired']
+          print('S5_SUPPLIER_IMMUTABLE_PREVIOUS_Q3_ATTESTATION_PASS')
+          PY
+      - name: Reuse only preceding source-free Q3 numeric summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/prior"
+          gh run download "$PREVIOUS_RUN" -R "$GITHUB_REPOSITORY" \
+            --name "bct-s5-quantitative-source-free-$PREVIOUS_RUN" \
+            --dir "$RUNNER_TEMP/prior"
+          test -s "$RUNNER_TEMP/prior/summary.json"
+      - name: Read fixed SEC/issuer Centrus and BWXT original URLs, publish no source text
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -u tools/bct_s5_supplier_fact_followon.py \
+            --manifest config/bct-s5-supplier-official-followon-20261116.json \
+            --prior "$RUNNER_TEMP/prior/summary.json" \
+            --output "$RUNNER_TEMP/supplier-proof"
+      - name: Independent fresh-process query and non-eligible annual gap enforcement
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s5_supplier_fact_followon.py \
+            --verify-only --output "$RUNNER_TEMP/supplier-proof"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'supplier-proof/summary.json'
+          r=json.loads(p.read_text())
+          assert r['format']=='bct-s5-supplier-facts-readonly-v1'
+          assert r['status']=='PASS_READONLY_SOURCE_BOUND_RISK_AND_NONPROMOTION_CLASSIFICATION'
+          assert r['source_holds'] + r['verified_visible_public_originals']==3
+          assert r['new_bottleneck_candidates']==r['LIVE_writes']==r['model_API_calls']==r['private_epoch_writes']==0
+          assert r['strict_pair_evaluated'] is False
+          assert r['actual_qualified_pair_count']=='NOT_EVALUATED'
+          assert r['objective_version']=='bct-objective-1'
+          assert all(x=='UNKNOWN' for x in r['2027_2030_demonstrated_demand_minus_supply_MTU'].values())
+          assert r['public_source_bodies_captured']>=1
+          print('BCT_S5_SUPPLIER_ACTUAL='+json.dumps({
+            'source_bodies':r['public_source_bodies_captured'],
+            'attested_public_originals':r['verified_visible_public_originals'],
+            'distinct_bound_fact_ids':r['verified_distinct_fact_count'],
+            'centrus_cascade_count_not_kgU':r['centrus_cascade_machine_count'],
+            'FY2027_DOE_funding_risk':r['centrus_fy2027_budget_operation_funding_not_included'],
+            'BWXT_future_task_orders':r['bwxt_future_task_orders_required'],
+            'same_scope_annual_gap':'UNKNOWN',
+            'LIVE_writes':r['LIVE_writes']},sort_keys=True),flush=True)
+          PY
+      - name: Save source-free hash+locator+research HOLD only, also on partial failure
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s5-supplier-fact-source-free-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/supplier-proof/summary.json
+            ${{ runner.temp }}/supplier-proof/source-free.sqlite3
+          retention-days: 30
+          if-no-files-found: warn
