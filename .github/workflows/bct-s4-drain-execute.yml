@@ -6,9 +6,6 @@ on:
 permissions:
   contents: read
   actions: write
-concurrency:
-  group: bct-s4-actual-original-cohort-drain-one-shot
-  cancel-in-progress: false
 jobs:
   verified-bounded-drain:
     if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s4-remaining-exact-cpu-20261116' }}
