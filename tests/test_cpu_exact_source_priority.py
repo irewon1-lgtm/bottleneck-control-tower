@@ -95,8 +95,8 @@ def test_verified_cohort_consumes_full_batch_before_unrelated_pending(tmp_path,m
         older1,raw1=document(suffix='old-1')
         older2,raw2=document(suffix='old-2')
         target,raw3=document(
-            'Atlas ordered Helios heat pumps.\\nA second separate paragraph.\\n'
-            'A third separate paragraph.\\nA fourth paragraph.',suffix='target')
+            'Atlas ordered Helios heat pumps.\nA second separate paragraph.\n'
+            'A third separate paragraph.\nA fourth paragraph.',suffix='target')
         for doc,raw in ((older1,raw1),(older2,raw2),(target,raw3)):
             assert q.enqueue(ledger,doc,raw,{})=='QUEUED'
         wanted=[{'document_id':target['document_id'],
@@ -128,8 +128,8 @@ def test_target_cohort_round_robin_fairness_within_manual_selection(tmp_path,mon
     ledger=q.open_queue(tmp_path)
     with ledger.worker():
         old,oldraw=document(suffix='old')
-        first,first_raw=document('Atlas ordered Helios heat pumps.\\nSecond paragraph.',suffix='first')
-        second,second_raw=document('Atlas ordered Helios heat pumps.\\nAnother paragraph.',suffix='second')
+        first,first_raw=document('Atlas ordered Helios heat pumps.\nSecond paragraph.',suffix='first')
+        second,second_raw=document('Atlas ordered Helios heat pumps.\nAnother paragraph.',suffix='second')
         for d,raw in ((old,oldraw),(first,first_raw),(second,second_raw)):
             q.enqueue(ledger,d,raw,{})
         ctx={'priority_source_versions':[
