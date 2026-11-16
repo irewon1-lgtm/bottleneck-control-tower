@@ -116,7 +116,10 @@ jobs:
           else
             cp "$RUNNER_TEMP/research-prepared/research-sourcefree.sqlite3" "$DATA_FOLDER/"
             cp "$RUNNER_TEMP/research-prepared/research-summary.json" "$DATA_FOLDER/"
-            git add "$DATA_FOLDER/research-sourcefree.sqlite3" "$DATA_FOLDER/research-summary.json"
+            # The project globally ignores *.sqlite3; this explicitly
+            # scoped research-only proof file is intentionally tracked.
+            git add -f "$DATA_FOLDER/research-sourcefree.sqlite3"
+            git add "$DATA_FOLDER/research-summary.json"
             git -c user.name='bct-sourcefree-research-bot' \
                 -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
                 commit -m 'data(S6): append verified sourcefree 316/60/22/20/147 research evidence only'
