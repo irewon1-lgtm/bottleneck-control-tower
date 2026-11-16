@@ -235,7 +235,7 @@ def aggregate(m,prior,cases):
       "centrus_contingent_backlog_usd_billion":5.4 if "CENTRUS_CONTINGENT_LEU_HALEU_BACKLOG_5_4" in valid_centrus else UNKNOWN,
       "centrus_fy2027_budget_operation_funding_not_included":
           True if "CENTRUS_FY27_DOE_OPERATION_FUNDING_ABSENT" in valid_centrus else UNKNOWN,
-      "centrus_D​OE_further_options_not_planned":
+      "centrus_DOE_further_options_not_planned":
           True if "CENTRUS_DOE_NO_FURTHER_OPTIONS_INTENT" in valid_centrus else UNKNOWN,
       "bwxt_initial_contract_allocation_MTU_not_annual":
           1 if "BWXT_ANTARES_INITIAL_ALLOCATION_1_MTU" in valid_bwxt else UNKNOWN,
