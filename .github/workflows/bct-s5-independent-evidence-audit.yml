@@ -1,0 +1,134 @@
+name: BCT S5 independent original evidence HOLD and missing-field triage
+on:
+  push:
+    branches: [ops/bct-s5-independent-evidence-audit-20261116]
+    paths:
+      - tools/bct_s5_independent_evidence_audit.py
+      - tests/test_bct_s5_independent_evidence_audit.py
+      - .github/workflows/bct-s5-independent-evidence-audit.yml
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: bct-s5-source-free-readonly-audit-20261116
+  cancel-in-progress: false
+jobs:
+  adversarial-no-promotion-tests:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' && github.ref == 'refs/heads/ops/bct-s5-independent-evidence-audit-20261116' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Isolated source-free scenario and adversarial tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_bct_s5_independent_evidence_audit.py -v
+  verify-real-exact-source-reviews:
+    needs: adversarial-no-promotion-tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONPATH: pinned-cpu/src
+      S4_SOURCE_RUN: '43807649852'
+      S4_SOURCE_SHA: '81211b7cc46377b662bf0869bc13a1127f19899a'
+      S4_SOURCE_ARTIFACT: '14198728328'
+      S4_SOURCE_DIGEST: 'sha256:126e9013e09d651d21adaed70d0d9fd8dad99ecfb4bb82da80e1ae802c2d29aa'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: aca2ccf56032c7841188997e857828142dadcb0a
+          path: pinned-cpu
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.15'
+      - name: Verify original S4 run, fixed SHA and artifact identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C pinned-cpu rev-parse HEAD)" = aca2ccf56032c7841188997e857828142dadcb0a
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$S4_SOURCE_RUN" > "$RUNNER_TEMP/s4-run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$S4_SOURCE_ARTIFACT" > "$RUNNER_TEMP/s4-artifact.json"
+          python - <<'PY'
+          import json,os,pathlib
+          home=pathlib.Path(os.environ['RUNNER_TEMP'])
+          r=json.loads((home/'s4-run.json').read_text())
+          a=json.loads((home/'s4-artifact.json').read_text())
+          assert r['id']==int(os.environ['S4_SOURCE_RUN'])
+          assert r['head_sha']==os.environ['S4_SOURCE_SHA']
+          assert r['conclusion']=='success' and r['status']=='completed'
+          assert r['path']=='.github/workflows/bct-s4-epoch-final-source-readback.yml'
+          assert a['id']==int(os.environ['S4_SOURCE_ARTIFACT'])
+          assert a['name']=='bct-s4-exact-original-readback-'+os.environ['S4_SOURCE_RUN']
+          assert a['workflow_run']['id']==r['id']
+          assert a['digest']==os.environ['S4_SOURCE_DIGEST'] and not a['expired']
+          print('BCT_S5_IMMUTABLE_S4_SOURCE_AND_ARTIFACT_PROOF_PASS')
+          PY
+      - name: Reuse exact S4 source-free proof, not original body or prior CPU inference
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/s5/s4"
+          gh run download "$S4_SOURCE_RUN" -R "$GITHUB_REPOSITORY" \
+            --name "bct-s4-exact-original-readback-$S4_SOURCE_RUN" \
+            --dir "$RUNNER_TEMP/s5/s4"
+          test -s "$RUNNER_TEMP/s5/s4/final-source.json"
+      - name: Read exact private epoch semantics, classify evidence gaps without promotion
+        shell: bash
+        env:
+          BCT_V4_PRIVATE_STATE_TOKEN: ${{ secrets.BCT_V4_PRIVATE_STATE_TOKEN }}
+        run: |
+          set -euo pipefail
+          python tools/bct_s5_independent_evidence_audit.py \
+            --s4 "$RUNNER_TEMP/s5/s4/final-source.json" \
+            --out "$RUNNER_TEMP/s5/proof"
+      - name: Fresh-process read-only SQLite readback and no-promotion assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/bct_s5_independent_evidence_audit.py \
+            --verify-only --out "$RUNNER_TEMP/s5/proof"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'s5/proof/s5-summary.json'
+          r=json.loads(p.read_text())
+          assert r['format']=='bct-s5-original-evidence-triage-v1'
+          assert r['status']=='PASS_SOURCE_BOUND_GAP_TRIAGE_AND_NO_FALSE_PROMOTION'
+          assert r['original_sources']==11 and r['original_cpu_windows_verified']==240
+          assert r['meaning_reviewed_sources']==11
+          assert r['independently_original_verified_supply_demand_pairs']==0
+          assert r['automatically_promoted_candidates']==0
+          assert r['private_epoch_writes']==r['model_inference_calls']==0
+          assert r['forecast_accuracy']=='UNVERIFIED'
+          assert r['objective_version']=='bct-objective-1'
+          assert r['session5_goal']=='PARTIAL_NO_INDEPENDENT_QUALIFIED_DEMAND_SUPPLY_PAIRS'
+          print('BCT_S5_REAL_11_ORIGINAL_HOLD_TRIAGE_PASS',json.dumps({
+                "sources":r['original_sources'],
+                "source_bound_events":r['source_bound_events'],
+                "blocker_counts":r['blocker_counts'],
+                "missing_target_field_counts":r['missing_target_field_counts'],
+                "strict_pairs":r['independently_original_verified_supply_demand_pairs'],
+                "session5_goal":r['session5_goal']},sort_keys=True))
+          PY
+      - name: Save derived only source-free ledger and status receipt
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bct-s5-source-free-proof-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/s5/proof/s5-summary.json
+            ${{ runner.temp }}/s5/proof/s5-cases.sqlite3
+          retention-days: 30
+          if-no-files-found: warn
