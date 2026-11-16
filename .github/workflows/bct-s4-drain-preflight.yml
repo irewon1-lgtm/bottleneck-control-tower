@@ -1,0 +1,46 @@
+name: BCT S4 exact-source drain input preflight (read only)
+on:
+  push:
+    branches: [ops/bct-s4-remaining-exact-cpu-20261116]
+    paths:
+      - tools/bct_s4_exact_cohort_drain.py
+      - .github/workflows/bct-s4-drain-preflight.yml
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-free-readback:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    env:
+      GH_TOKEN: \${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: \${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reopen original eleven source-free held cases and verify current CPU snapshot
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import importlib.util
+          import pathlib
+          import tempfile
+          spec=importlib.util.spec_from_file_location('s4','tools/bct_s4_exact_cohort_drain.py')
+          s4=importlib.util.module_from_spec(spec);spec.loader.exec_module(s4)
+          with tempfile.TemporaryDirectory(prefix='s4-preflight-') as td:
+              root=pathlib.Path(td)
+              cases=s4.original_targets(root)
+              current=s4.counts_from_public(
+                  s4.INITIAL_CPU_RUN,cases,root,
+                  expected_code='eac28a152bc139b3d5f69cb34ae4136792a92a2f')
+              assert len(cases)==11
+              assert current['counts']=={'total':240,'success':11,'failed':0,'unread':229}
+              assert all(x['window_counts']['success']==1 for x in current['source_status'])
+              plus,minus=s4.snapshots_match(current,current)
+              assert (plus,minus)==(0,0)
+              print('BCT_S4_SOURCE_FREE_BASELINE_ATTEST_PASS_11_SOURCES_229_PENDING')
+          PY
