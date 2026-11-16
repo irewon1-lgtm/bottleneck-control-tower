@@ -1,0 +1,26 @@
+name: BCT S4 dispatch exact first independent-epoch CPU batch
+on:
+  push:
+    branches: [ops/bct-s4-epoch-cpu-batch1-20261116]
+    paths: [.github/workflows/bct-s4-start-epoch-batch1.yml]
+permissions:
+  contents: read
+  actions: write
+jobs:
+  authenticated-single-dispatch:
+    if: ${{ github.repository == 'irewon1-lgtm/bottleneck-control-tower' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    env:
+      GH_TOKEN: ${{ github.token }}
+      EXPECTED_MAIN_SHA: a85e86fad091e10ea2df13211a0687e4166e6e0f
+    steps:
+      - name: Dispatch exactly one source-bound manual CPU run to reviewed epoch code
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)" == "$EXPECTED_MAIN_SHA" ]]
+          [[ "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/43645932280" --jq '.conclusion+":"+.head_branch+":"+.name')" == 'success:main:New precursor evidence acquisition' ]]
+          jq -n '{ref:"main",inputs:{purpose:"manual-research",acquisition_run:"43645932280"}}' > "$RUNNER_TEMP/epoch-batch.json"
+          gh api --method POST "repos/$GITHUB_REPOSITORY/actions/workflows/bct-s4-epoch-cpu-manual.yml/dispatches" --input "$RUNNER_TEMP/epoch-batch.json"
+          echo BCT_S4_EPOCH_EXACT_FIRST_CPU_DISPATCH_SUCCESS
