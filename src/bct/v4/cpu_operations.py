@@ -309,7 +309,7 @@ def github_manual_context(acquisition_run):
     return context
 
 
-STATE_REF='refs/heads/codex/bct-v4-cpu-research-state'
+STATE_REF='refs/heads/codex/bct-v4-cpu-research-epoch-20261116'
 STATE_HISTORY_LIMIT=64*1024**2
 
 
