@@ -300,11 +300,20 @@ def work(ledger, *, extractor=None, max_windows=24, seconds=45,analysis_context=
         if len(wanted) != len(priority):
             raise ValueError('CPU_EXACT_SOURCE_PRIORITY_DUPLICATE')
     pending_docs = [d for d in events(ledger,'CPU_QUEUE_DOCUMENT') if d['body_key'] not in legacy]
+    def round_robin(docs):
+        queues = [[t for t in d['tasks'] if t['key'] not in done] for d in docs]
+        return [q[i] for i in range(max(map(len,queues),default=0)) for q in queues if i<len(q)]
     if wanted:
-        pending_docs.sort(key=lambda d: (
-            0 if (d['document_id'], d.get('body_sha256')) in wanted else 1))
-    queues = [[t for t in d['tasks'] if t['key'] not in done] for d in pending_docs]
-    tasks = [q[i] for i in range(max(map(len,queues),default=0)) for q in queues if i<len(q)]
+        # The verified manual-replay cohort must consume the complete 24-window
+        # batch before unrelated backlog. Interleaving every older document
+        # behind target documents previously consumed 13 of 24 windows while
+        # the exact original cohort still had hundreds of unread windows.
+        # The fallback executes ONLY after all eligible target tasks are done.
+        target_docs = [d for d in pending_docs if (d['document_id'], d.get('body_sha256')) in wanted]
+        other_docs = [d for d in pending_docs if (d['document_id'], d.get('body_sha256')) not in wanted]
+        tasks = round_robin(target_docs) + round_robin(other_docs)
+    else:
+        tasks = round_robin(pending_docs)
     producer=inference_producer() if tasks else None
     # Lazy CPUExtractor: no data/only cached windows -> no model initialization.
     extractor = extractor or CPUExtractor('var/v4/repair/cpu/runtime')
