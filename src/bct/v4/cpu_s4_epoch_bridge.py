@@ -25,6 +25,64 @@ def _github(path):
     if result.returncode:raise ValueError("EPOCH_PUBLIC_RUN_PROOF_UNAVAILABLE")
     return json.loads(result.stdout)
 
+# Exactly two previously observed cache-key failures. Their complete Actions job
+# graphs must prove no native source read, no CPU inference and no publish.
+# These are NOT generic "ignore failed runs" exceptions.
+INERT_CACHE_MISS_RUNS = {43800128467, 43800182468}
+INERT_WORKFLOW_SHA = "a85e86fad091e10ea2df13211a0687e4166e6e0f"
+
+def verified_inert_cache_miss(run):
+    run_id=run.get("id")
+    if (run_id not in INERT_CACHE_MISS_RUNS
+            or run.get("name")!="BCT S4 isolated CPU epoch manual research"
+            or run.get("path")!=".github/workflows/"+WORKFLOW
+            or run.get("head_branch")!="main"
+            or run.get("head_sha")!=INERT_WORKFLOW_SHA
+            or run.get("event")!="workflow_dispatch"
+            or run.get("run_attempt")!=1
+            or run.get("status")!="completed"
+            or run.get("conclusion")!="failure"):
+        raise ValueError("EPOCH_UNVERIFIED_PRIOR_FAILED_CPU_RUN")
+    result=_github("actions/runs/"+str(run_id)+"/jobs?per_page=100")
+    jobs=result.get("jobs",[])
+    if (result.get("total_count")!=3 or len(jobs)!=3
+            or {j.get("name") for j in jobs}!={"bridge","research","publish"}
+            or any(j.get("run_id")!=run_id or j.get("run_attempt")!=1
+                   or j.get("status")!="completed" for j in jobs)):
+        raise ValueError("EPOCH_PRIOR_CACHE_FAILURE_JOB_GRAPH_MISSING")
+    jobs={j["name"]:j for j in jobs}
+    if (jobs["bridge"].get("conclusion")!="success"
+            or jobs["research"].get("conclusion")!="failure"
+            or jobs["publish"].get("conclusion")!="skipped"
+            or jobs["publish"].get("steps")!=[]):
+        raise ValueError("EPOCH_PRIOR_CPU_OR_PUBLICATION_MAY_HAVE_RUN")
+    steps=jobs["research"].get("steps",[])
+    names=[s.get("name") for s in steps]
+    if len(steps)<10 or len(names)!=len(set(names)) or "Run actions/cache/restore@v4" not in names:
+        raise ValueError("EPOCH_PRIOR_RESEARCH_STEPS_UNVERIFIED")
+    index=names.index("Run actions/cache/restore@v4")
+    if (steps[index].get("status")!="completed"
+            or steps[index].get("conclusion")!="failure"
+            or any(x.get("conclusion")!="success" for x in steps[:index])
+            or sum(x.get("conclusion")=="failure" for x in steps)!=1):
+        raise ValueError("EPOCH_PRIOR_FAILURE_NOT_EXACT_CACHE_MISS")
+    required_skipped=(
+        "Download only same-run private GPG-sealed bridge (never private token)",
+        "GPG-authenticate bridge and independently verify source-separated checkpoint",
+        "Verify actual original RSS and acquisition workflow, not schedule attribution",
+        "Retrieve exact signed current original, bounded older input, no URL refetch",
+        "Consume <=24 exact pending original CPU windows; no duplicates or stage promotions",
+        "Seal only new CPU result with fixed epoch parent",
+        "Transfer ONLY authenticated encrypted CPU checkpoint",
+    )
+    if (any(name not in names or steps[names.index(name)].get("conclusion")!="skipped"
+            for name in required_skipped)
+            or any(steps[i].get("conclusion") not in ("skipped","success")
+                   for i in range(index+1,len(steps)))):
+        raise ValueError("EPOCH_PRIOR_CPU_SIDE_EFFECTS_NOT_EXCLUDED")
+    return {"run_id":run_id,"failed_only_at_cache":True,"CPU_window_steps_skipped":True,
+            "private_publish_skipped":True}
+
 def verify_bridge(parent, proof_path, *, acquisition_run):
     if (os.environ.get("GITHUB_REPOSITORY")!="irewon1-lgtm/bottleneck-control-tower"
             or os.environ.get("GITHUB_REF")!="refs/heads/main"
@@ -83,7 +141,13 @@ def verify_bridge(parent, proof_path, *, acquisition_run):
         raise ValueError("EPOCH_PREVIOUS_RUN_LIST_NOT_COMPLETE")
     later=[x for x in running if previous<x.get("id",-1)<int(current)]
     if later:
-        raise ValueError("EPOCH_INTERVENING_CPU_RUN_REQUIRES_RECONCILIATION")
+        if (parent_sha!=INITIAL_ACK
+                or {x.get("id") for x in later}!=INERT_CACHE_MISS_RUNS):
+            raise ValueError("EPOCH_INTERVENING_CPU_RUN_REQUIRES_RECONCILIATION")
+        # Exact prior cache-only failures have no CPU or private write. This
+        # claim is verified from GitHub's actual job/step receipts, not labels.
+        for run in later:
+            verified_inert_cache_miss(run)
     same=[x for x in running if x.get("id")==int(current)]
     if (len(same)!=1 or same[0].get("run_attempt")!=int(attempt)
             or same[0].get("status") not in ("in_progress","queued")
