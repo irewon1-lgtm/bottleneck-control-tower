@@ -81,7 +81,7 @@ def dataset():
       }
     }
     sources={k:wrapper(path,source_objs[k]) for k,(branch,path) in s6.SOURCES.items()}
-    return sources,HEADS,parent(),handoff(parent())
+    return sources,dict(HEADS),parent(),handoff(parent())
 
 class S6MetadataGate(unittest.TestCase):
     def test_five_immutable_manifests_cohort_with_no_evidence_inflation(self):
