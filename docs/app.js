@@ -5,6 +5,7 @@
     detail: ["TARGET 상세", ""],
     evidence: ["근거 보기", "판단에 연결된 원문과 실제로 확보된 내용을 확인합니다."],
     review: ["관찰 중", "아직 후보로 확정하지 못한 TARGET과 부족한 근거를 봅니다."],
+    research: ["근거 검증 현황", "과거 섹터 근거와 새로 확인한 원출처·탐색 단서를 서로 다른 단위로 확인합니다."],
     situation: ["상태 변화", "각 TARGET의 이전 판단과 최신 판단이 어떻게 바뀌었는지 확인합니다."],
     insights: ["부족한 자료", "다음 판단에 필요한 수요·공급·시점·완화 자료를 봅니다."],
     dashboard: ["수집 대시보드", "현재 수집 결과와 기존 SIGNAL·Family 현황"],
@@ -106,6 +107,9 @@
   let snapshot = null;
   let verified = null;
   let verifiedError = false;
+  let s7SourceTruth = null;
+  let s7SourceError = false;
+  let s7Loading = false;
   let tracking = null;
   let queueResolution = null;
   let futureCandidates = null;
@@ -114,7 +118,7 @@
   let trackingError = false;
   let loading = false;
   const route = () => Object.hasOwn(pages, location.hash.slice(1).split("/")[0]) ? location.hash.slice(1).split("/")[0] : "ranking";
-  const researchRoutes = ["ranking", "detail", "evidence", "review", "situation", "insights", "system", "tracking"];
+  const researchRoutes = ["ranking", "detail", "evidence", "review", "situation", "insights", "system", "tracking", "research"];
   const view = globalThis.BCTView;
   function toolbar(key, filters, usePeriod) {
     const state = states[key];
@@ -458,6 +462,76 @@
       } catch { candidatesError = true; }
     } catch { trackingError = true; candidatesError = true; }
     finally { clearTimeout(timeout); trackingLoading = false; if (researchRoutes.includes(route())) render(); }
+  }
+  function researchStatusPanel(compact = false) {
+    const box = panel("원출처 근거 검증 현황", "과거 순위표 근거와 실제 원출처 검증은 종류·기간이 다릅니다.");
+    box.classList.add("s7-provenance");
+    if (!s7SourceTruth) {
+      box.append(empty("최신 연구 원장 미연결",
+        "과거 511건은 최신 독립 수요·공급 검증 근거 511건이 아닙니다. 연구 상태 파일이 검증되기 전에는 신규 근거 수나 미래 병목 성과를 표시하지 않습니다."));
+      return box;
+    }
+    const data = window.BCTResearch.summary(s7SourceTruth);
+    if (s7SourceError) box.append(node("p",
+      "최신 검증 파일 재조회에 실패했습니다. 마지막으로 검증된 원장을 표시하고 있습니다.", "data-note"));
+    const metrics = node("div", null, "metrics");
+    metrics.append(
+      metric("과거 섹터 연구 기록", data.historicalCount, "2026-10-14 기준 · 병목 확정 수와 다름"),
+      metric("엄격 원출처 확인", data.strictOriginals, "2026-11-16 연구 실증 · 전체 시장 원출처 수 아님"),
+      metric("현재 적격 수급쌍", "0건 입증", "전체 시장의 부족이 없다는 뜻이 아님"));
+    box.append(metrics);
+    const noAdd = node("p",
+      "⚠️ 과거 511건 + 신규 연구 단서 147개를 더해 순위를 계산하지 않습니다. 고객·제품·기간이 일치하는 독립 수요와 미예약 적격 공급이 확인되기 전에는 모두 후보 승격 보류입니다.",
+      "data-note");
+    box.append(noAdd);
+    if (!compact) {
+      box.append(table(["자료 구분", "실제 건수", "집계 기준"], [
+        ["과거 검토됨", data.oldReviewed, "10월 14일 고정 연구 레코드"],
+        ["과거 구조화", data.oldStructured, "10월 14일 고정 연구 레코드"],
+        ["과거 탐색", data.oldDiscovery, "10월 14일 고정 연구 레코드"],
+        ["공개 원문 실제 처리", data.attempted, "11월 16일 고정 60건 회차"],
+        ["발행기관·발행일·본문 검증", data.strictOriginals, "해당 회차 60건 중 엄격 검증"],
+        ["공식 공시 근거 코드", data.sourceFacts, "연구용 원문 사실, 독립 수급쌍 아님"],
+        ["신규 원문 문장 단서", data.hints, "본문 위치 해시, 적격 수급 증거 아님"],
+        ["등록 TARGET 판정 보류", data.targetHolds, "22건 전부 HOLD"],
+      ], row => [row[0], row[1], row[2]]));
+    }
+    const source = s7SourceTruth.generations;
+    const record = node("p", null, "record-meta");
+    record.append(
+      node("span", "구 순위 근거: 2026-10-14 · "),
+      node("span", "새 원출처 연구: 2026-11-16 회차 · "),
+      node("span", "화면 검증 실행: " + date(data.renderedAt) + " KST · "),
+      node("span", "운영 코드 " + source.main_code_commit.slice(0, 8) + " / 연구 원장 " + source.research_ledger_commit.slice(0, 8)));
+    box.append(record);
+    const detail = node("details");
+    detail.append(node("summary", "집계 기준·보류 조건 더 보기"),
+      node("p", "과거 섹터 연구 511건(23 + 211 + 277), 공개 상세 파일 1,703개, RSS 기사 10,992건은 서로 다른 단위입니다."),
+      node("p", "현재 보고된 원문 수집 FULL 24, PARTIAL 22, UNAVAILABLE 14. 원출처 검증 18건은 FULL과 별개 검증입니다."),
+      node("p", "검증 파일을 읽은 시간이 새 기사 수집일 또는 새로운 병목 발견일이 아닙니다. 영구 연구 DB·운영 DB·LIVE 후보를 구분하며 기존 순위는 변경하지 않았습니다."));
+    box.append(detail);
+    return box;
+  }
+  async function loadS7SourceTruth() {
+    if (s7Loading) return;
+    s7Loading = true;
+    const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 12000);
+    try {
+      const response = await fetch("./s7-research-status.json?t=" + Date.now(),
+        {cache: "no-store", signal: controller.signal});
+      if (!response.ok) throw new Error("S7 source truth preview unavailable");
+      if (!window.BCTResearch || typeof window.BCTResearch.validate !== "function")
+        throw new Error("S7 schema validator unavailable");
+      const validated = window.BCTResearch.validate(await response.json());
+      s7SourceTruth = validated;
+      s7SourceError = false;
+    } catch {
+      s7SourceError = true;
+    } finally {
+      clearTimeout(timeout);
+      s7Loading = false;
+      if (["ranking", "research", "system"].includes(route())) render();
+    }
   }
   function resolutionPanel() {
     const report = queueResolution;
@@ -909,7 +983,8 @@
       if (link.dataset.page === key || (key === "detail" && link.dataset.page === "ranking")) link.setAttribute("aria-current", "page"); else link.removeAttribute("aria-current");
     });
     content.replaceChildren();
-    if(key === "ranking") {content.append(objectiveDashboard(), focusTargetsPanel(), rankingPanel(key));return;}
+    if(key === "ranking") {content.append(researchStatusPanel(true), objectiveDashboard(), focusTargetsPanel(), rankingPanel(key));return;}
+    if(key === "research") {content.append(researchStatusPanel(false));return;}
     if(key === "review") {content.append(hypothesisPanel(), rankingPanel(key));return;}
     if(key === "detail") {content.append(detailPanel());return;}
     if(key === "evidence") {content.append(documentsPanel(),evidencePanel());return;}
@@ -922,7 +997,7 @@
       return;
     }
     if (key === "future") { content.append(verifiedPanels()); return; }
-    if (key === "system") { const resolution = resolutionPanel(); if (resolution) content.append(resolution); }
+    if (key === "system") { content.append(researchStatusPanel(true)); const resolution = resolutionPanel(); if (resolution) content.append(resolution); }
     if (!snapshot) {
       content.append(empty("데이터 확인 중", "저장된 snapshot을 불러옵니다."));
       if(key === "system") content.append(collectionPanel());
@@ -971,6 +1046,7 @@
   }
   async function refresh() {
     if (researchRoutes.includes(route())) loadTracking();
+    if (["ranking", "research", "system"].includes(route())) loadS7SourceTruth();
     if (loading) return;
     loading = true;
     const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 12000);
@@ -992,7 +1068,7 @@
     } finally { clearTimeout(timeout); loading = false; }
   }
   document.getElementById("dialog-close").addEventListener("click", () => document.getElementById("family-dialog").close());
-  window.addEventListener("hashchange", () => {render();if(researchRoutes.includes(route()) && !tracking && !trackingLoading && !trackingError) loadTracking();});
+  window.addEventListener("hashchange", () => {render();if(researchRoutes.includes(route()) && !tracking && !trackingLoading && !trackingError) loadTracking();if(["ranking", "research", "system"].includes(route())) loadS7SourceTruth();});
   document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
   setInterval(() => { if (!document.hidden) refresh(); }, 300000);
   render(); refresh(); loadVerified(); loadResolution();
