@@ -1,0 +1,878 @@
+{
+  "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+  "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+  "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+  "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+  "applies_from": "2026-10-05T15:24:06.650413+00:00",
+  "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+  "body_sha256": "73a8ec4d6dc6be78b6e1d487f8ca2afe15c3d2dd17f7c09c4b45c0b7339249e5",
+  "published_at": "2026-11-18T18:50:00+00:00",
+  "acquired_at": "2026-11-18T21:42:11.378352+00:00",
+  "available_at": "2026-11-18T21:42:11.378352+00:00",
+  "intake_started_at": "2026-11-18T21:48:04.308986+00:00",
+  "intake_recorded_at": "2026-11-18T21:48:04.603595+00:00",
+  "first_review_recorded_at": "UNKNOWN",
+  "mode": "PROSPECTIVE_REVIEW",
+  "status": "HOLD",
+  "automatic_extraction": {
+    "version": "BCT_PRECURSOR_V2_SHADOW_2",
+    "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+    "events": [],
+    "facts_verified_semantically": false
+  },
+  "candidate_TARGET": "UNKNOWN — deterministic scope suggestions only",
+  "candidate_scope_suggestions": [],
+  "review_reason": "NO_EXTRACTED_CHANGE_SEMANTICS_UNREVIEWED",
+  "semantic_review_method": "PENDING_AI_OR_MANUAL",
+  "annotation_method": null,
+  "annotator": null,
+  "annotated_at": null,
+  "source_document": {
+    "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+    "origin_url": "https://breakingdefense.com/2026/11/making-super-intelligence-useful-when-connectivity-disappears-at-the-tactical-edge/",
+    "collected_at": "2026-11-18T21:40:50.017342+00:00",
+    "origin_id": "https://breakingdefense.com/2026/11/making-super-intelligence-useful-when-connectivity-disappears-at-the-tactical-edge/",
+    "canonical_url": "https://breakingdefense.com/2026/11/making-super-intelligence-useful-when-connectivity-disappears-at-the-tactical-edge/",
+    "origin_publisher": "Breaking Defense",
+    "published_at": "2026-11-18T18:50:00+00:00",
+    "published_at_raw": "2026-11-18T18:50:00+00:00",
+    "publication_precision": "TIMESTAMP",
+    "acquired_at": "2026-11-18T21:42:11.378352+00:00",
+    "available_at": "2026-11-18T21:42:11.378352+00:00",
+    "body": "presented by\nThe sensor-to-shooter digital kill chain begins with collecting target information from the edge sensors, such as drones, shown here during a Lightning Surge 2 demonstration on February 25, 2026, at Schofield Barracks, Hawaii. (US Army Photo by Kathryn Bailey/Capability Program Executive Command and Control Information Network.)\nAccessing Super Intelligence (SI) at the tactical edge is not simply a matter of putting a model on a device and sending it forward into the world. It requires ensuring the model has been trained for the environment, can operate within size, weight, and power constraints, can operate on imperfect or unfamiliar data while providing transparent indications of model drift, confidence levels, and associated operational risks, and can produce information a warfighter is willing to trust.\nBreaking Defense spoke with Bharat Patel, managing director for AI and data, defense portfolio, and Cody Ferguson, principal architect for AI and data, both with Accenture Federal Services, about what “the edge” actually means, how SI can compress decisions, why data quality and model trust matter, and how the Department of War can move useful commercial technology into operational environments.\nBreaking Defense: When we talk about SI at the tactical edge, what does that actually mean for a warfighter operating in a contested, degraded, or disconnected environment?\nBharat Patel, managing director for AI and data, defense portfolio, Accenture Federal Services\nPatel: The first thing I’d say is that “the edge” means different things to different people. For some, it might be a building overseas with on-premises computing. For others, it’s a soldier in the field with a handheld device and limited connectivity. The definition depends on the mission and the environment.\nWhat I’ve learned is that SI adoption is just as subjective. Different warfighters have different levels of risk tolerance. Some are willing to accept a less performant model if it gives them an advantage in a denied environment. Others may require higher confidence before they’re willing to act on the output. The warfighter ultimately has a vote in whether that capability gets adopted.\nThat’s why the use case matters so much. Every use case drives the data you need, the infrastructure required to train and sustain the model, and the size, weight, and power constraints the model has to operate within. A model running in a facility with dedicated compute resources is very different from one supporting a dismounted operator with limited bandwidth and processing power.\nFor SI to be successful at the edge, you can’t just build a good model. You have to build the right model for the environment, the mission, and the operator who’s ultimately going to trust it and use it.\nCody Ferguson, principal architect for AI and data, Accenture Federal Services\nFerguson: I’d define the edge as wherever the mission can no longer rely on traditional enterprise infrastructure. Something that works perfectly in a well-connected environment can quickly become an edge problem the moment connectivity is degraded, denied, or disrupted.\nIn those situations, operators still need access to data, analytics, and decision support, even when they’re working with limited communications, intermittent connectivity, or constrained compute resources. That’s where edge SI becomes important. The ability to process data closer to where it’s generated and provide insights without depending on constant reachback can make a meaningful difference operationally.\nThe challenge is balancing performance, resilience, and trust. The model has to be capable enough to provide value while being efficient enough to operate in constrained environments. If you can strike that balance, SI becomes a force multiplier rather than another dependency.\nBreaking Defense: Drones are often the platform generating this imagery at the edge. How much of that can actually be processed on the drone itself, versus needing to come back for training?\nPatel : Most of what’s happening at the edge right now is imagery-related. A drone or other platform is collecting imagery and trying to determine whether it’s looking at a tank, a logistics vehicle, or something else of interest.\nIt’s worth noting that, despite all the attention SI gets, there are still relatively few operational imagery missions using SI at scale today to my knowledge. The hard part isn’t building a model. It’s the entire lifecycle behind it. You need relevant data, somebody has to label it, the model has to be trained, tested, evaluated, and maintained over time.\nThat’s why there’s a misconception that because imagery is moving around the network and being processed in different places, the model is somehow training itself in real time. In most cases, that’s not what’s happening. Training is a deliberate process that happens beforehand using dedicated compute and carefully curated data. If you’re trying to identify enemy equipment, a dataset full of trees and wildlife isn’t going to help much.\nFor the operations that do have SI-enabled capabilities, what’s happening during the mission is typically inference, not training. The model has already been trained and is being applied to new imagery. Today, that processing often happens wherever the compute is available, not necessarily on the platform itself. But we’re seeing a growing push to move more compute and SI directly onto the platform to reduce latency and dependence on communications links.\nCaching helps keep the workflow moving when connectivity is limited, but it’s not training the model, and it’s not a substitute for getting the data back into a formal retraining pipeline later.\nThe promise of SI is often described as faster decision-making. What kinds of decisions can SI realistically help compress at the edge?\nFerguson: SI can help compress decisions across a broad range of military operations. During my time at the Pentagon, I saw use cases ranging from computer vision and intelligence analysis to logistics and personnel management.\nLogistics is another area where SI can provide immediate value. Commanders need to know how many aircraft are required, whether sufficient fuel, food, water, and medical supplies are available, and how quickly those resources need to move. SI can help bring together data from multiple systems and generate insights faster than traditional processes.\nThe challenge at the edge is that connectivity is often limited or disrupted. When operators are forced onto degraded networks, they still need to process data from sensors, weapon systems, and UAVs and turn it into actionable information. SI can help bridge that gap by bringing relevant insights closer to the point of need.\nPatel: I often think about it in terms of reducing cognitive burden on the operator. One of the most promising use cases is course-of-action generation. If a commander needs to move a force from point A to point B, there are dozens of variables that have to be considered simultaneously: terrain, weather, fuel requirements, force composition, threat locations, historical attack patterns, and the latest intelligence on enemy activity.\nHumans are very good at judgment, but they’re not always good at processing massive amounts of data in real time. SI can rapidly evaluate those variables, identify viable options, and highlight risks and tradeoffs. The goal isn’t to replace the commander. The goal is to help the commander make better-informed decisions faster.\nWhether it’s identifying an object in imagery, prioritizing intelligence, predicting logistics shortfalls, or recommending courses of action, the real value of SI at the edge is helping operators make sense of complexity and focus their attention on the decisions that matter most.\nForward operators are already flooded with data. How can agentic SI surface the information that matters most?\nFerguson: Especially as you get into agentic SI, which is essentially multiplying your army of data scientists that allow you to surface those insights from the data, it’s important you’re starting with the LLMs that exist out there. Depending on your particular use case, you’re using a different LLM in terms of what data that model is best at processing and contextualizing.\nBut you can’t just feed that data to an LLM and expect it to surface the things you care about. You have to give it the right context and bounding that will enable it to look for the things that you have historically looked for and maybe things that you didn’t even know existed.\nHow should the military think about trust in SI at the edge, especially when the operator has seconds to act?\nPatel: Trust is probably the biggest challenge. Just because SI can produce information faster doesn’t necessarily mean a commander or operator can make a decision faster. If they don’t understand where the recommendation came from or don’t trust the output, they’re going to slow down and validate it anyway.\nAt the edge, that’s even more complicated because you’re often working with nontraditional data sources that may not be considered authoritative. The question isn’t just whether the model can generate an answer. It’s whether the commander is willing to accept the risk associated with that answer.\nFor me, trust comes back to testing, evaluation, and training. Operators need to understand what the model does well, where it struggles, and how much confidence they should place in the output. Ultimately, SI doesn’t remove risk from decision-making. It helps commanders manage risk. The more they understand the model’s strengths and limitations, the more effectively they can decide when to trust it and when to ask additional questions.\nFerguson: From a technical perspective, trust starts with the data. Where did the data come from? How was it collected? Has it been validated? Those questions become even more important in contested environments where adversaries may actively try to manipulate information.\nIt is also crucial to consider risks such as data poisoning, model manipulation, or other adversarial efforts designed to influence the output. If corrupted data is introduced into the system, the model may produce inaccurate recommendations with a high degree of confidence.\nThat’s why trust can’t be treated as a feature that gets added at the end. It has to be built throughout the lifecycle, from data collection and model training to testing, monitoring, and operational employment. The commander ultimately owns the decision, but the SI system has to provide enough transparency and reliability that operators understand both the value of the recommendation and the risks associated with acting on it.\nHow can the military take advantage of commercial innovation without creating new integration, security, or sustainment problems?\nPatel: I’m a firm believer that many of the most innovative technologies come from small businesses and nontraditional companies. If the government wants to maintain an advantage, we need to be connected to that ecosystem instead of trying to recreate it ourselves.\nThe reality is that whether you’re talking about a government-developed capability or a commercial product, they’re often building on the same open-source foundations and benefiting from the same global technology ecosystem. Once you recognize that, embracing commercial innovation actually reduces risk. You’re leveraging technologies that are already seeing investment, iteration, and real-world use across multiple markets. Dual-use technology is absolutely real, and we should take advantage of it.\nThe challenge is that many of these companies have never worked with the government before. They don’t understand the security requirements, accounting rules, acquisition processes, or clearance requirements. They also don’t have access to representative government data, which makes it difficult for them to build solutions tailored to military missions. We need to make it easier for those companies to engage while still protecting sensitive information.\nOrganizations like AFWERX, DIU, and In-Q-Tel play a critical role because they help connect the Department to companies that otherwise wouldn’t know how to navigate the defense ecosystem. DIU, in particular, has made meaningful progress in helping capabilities transition by providing additional funding and reducing some of the barriers between prototyping and operational use.\nBut there’s still a gap. The Valley of Death is real because success in a pilot program doesn’t automatically translate into adoption by a program of record. Eventually, somebody has to own the capability for the long haul.\nOne approach I’d like to see explored is resourcing acquisition organizations earlier in the process with the right funding and authorities so they can participate throughout development and prototyping instead of waiting until the end. They would still perform their traditional responsibilities, but they’d also help shape requirements, plan for long-term sustainment, establish training pipelines, oversee independent test and evaluation, and prepare the capability for operational deployment from the beginning.\nToo often, we focus on building the prototype and celebrate the demonstration. The harder challenge is everything that comes after: testing, accreditation, integration, training, sustainment, and lifecycle management. If we bring the acquisition community into the process earlier, we improve the odds that promising technologies actually make it into the hands of warfighters and stay there.\nWhat will separate SI that is genuinely useful to warfighters at the edge from SI that looks promising in a demo but fails operationally?\nPatel: It starts with the warfighter. Too many people build a technology first and then go looking for a problem to attach it to. The successful capabilities start by understanding what operators actually need, what decisions they’re trying to make, and the constraints they’re operating under.\nYou have to build for the environment you’re going into. If I show up with a great SI solution that requires infrastructure the unit doesn’t have, it’s going to fail no matter how impressive the demo was. If they’re operating in a disconnected environment without access to GPUs, then I need to account for that from day one.\nU.S. Air Force Airman 1st Class Robert Bryant, 647th Security Forces Squadron (SFS), conducts a flight test of an unmanned aircraft system (UAS) drone during Exercise KIMCHIBADGER Oct. 7, 2026 on Joint Base Pearl Harbor-Hickam. The 647th SFS supported a Department of War field demonstration, designated KIMCHIBADGER, evaluating distributed artificial intelligence capabilities designed to process tactical sensor data at the edge and maintain decision advantage in communication-denied environments. (U.S. Air Force photo by Senior Airman Gabriel Held.)\nUse cases drive everything. They drive the data you need, the quality of that data, the amount of data required, the infrastructure, and ultimately whether the capability is useful or not. The organizations that start with the mission and work backward tend to be far more successful than those that start with the technology and work forward.\nThere’s also an overfocus on SI itself and an under-focus on all the boring things that make SI real. What’s the infrastructure? What are the standards? What are the risk frameworks and policies? How are you training the workforce? SI isn’t the hard part anymore. The hard part is operationalizing it. The capabilities that succeed are the ones that solve a real problem and fit into how warfighters actually operate.\nFerguson: I’d add that success ultimately comes down to delivering measurable value. That’s true in the military, and it’s true in the commercial market. We’re seeing significant investment in SI, but organizations still want to understand the return on that investment.\nFor the Department, that means demonstrating that SI improves mission outcomes, increases efficiency, reduces cognitive burden on operators, or helps commanders make better decisions faster. If you can’t clearly articulate the operational value, it’s going to be difficult to justify sustained investment.\nThe other differentiator is governance. This is an incredibly powerful technology, but it requires thoughtful implementation from the beginning. Data management, security, testing, risk management, responsible use, and clear guardrails all matter. The organizations that approach SI as an enterprise capability rather than a standalone technology experiment are the ones most likely to succeed operationally.\nPatel: At the end of the day, warfighters don’t care that it’s SI. They care whether it helps them accomplish the mission. If it saves them time, helps them make a better decision, or gives them information they wouldn’t have had otherwise, they’ll use it. If it creates more work, requires infrastructure they don’t have, or doesn’t fit their mission, it’ll stay as a demo.",
+    "body_sha256": "73a8ec4d6dc6be78b6e1d487f8ca2afe15c3d2dd17f7c09c4b45c0b7339249e5",
+    "version": "73a8ec4d6dc6be78b6e1d487f8ca2afe15c3d2dd17f7c09c4b45c0b7339249e5",
+    "raw_sha256": "0eb264f2e77add560951aed4a727402f3cafb0865d23046ae4f97d367d83d18c",
+    "checks": {
+      "http_success": true,
+      "original_identity": true,
+      "publisher_observed": true,
+      "attribution_consistent": true,
+      "original_publication": true,
+      "available_at_recorded": true,
+      "full_accessible_body": true,
+      "not_republication": true,
+      "body_hash_matches": true,
+      "publication_before_acquisition": true
+    },
+    "provenance": "PASS",
+    "provenance_verified": true,
+    "provenance_blockers": [],
+    "body_status": "FULL",
+    "raw_path": "var/new-precursors/raw/0eb264f2e77add560951aed4a727402f3cafb0865d23046ae4f97d367d83d18c.html",
+    "status": "CAPTURED",
+    "scope_reader_version": "source-scope-reader-5",
+    "scope_read_mode": "LIVE_FRESH",
+    "excluded_page_regions": [
+      {
+        "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+        "body_sha256": "73a8ec4d6dc6be78b6e1d487f8ca2afe15c3d2dd17f7c09c4b45c0b7339249e5",
+        "origin_id": "https://breakingdefense.com/2026/11/making-super-intelligence-useful-when-connectivity-disappears-at-the-tactical-edge/",
+        "locator": {
+          "start": 0,
+          "end": 12
+        },
+        "source_quote": "presented by",
+        "origin_url": "https://breakingdefense.com/2026/11/making-super-intelligence-useful-when-connectivity-disappears-at-the-tactical-edge/",
+        "origin_publisher": "Breaking Defense",
+        "published_at": "2026-11-18T18:50:00+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-11-18T21:42:11.378352+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      }
+    ],
+    "retained_collection_events": [
+      {
+        "event_id": "dd17579a2bbc10f879349ee91a757bddebc2fa20d116442f509c8f0597e06f11",
+        "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 3742,
+          "end": 3835
+        },
+        "source_quote": "If you can strike that balance, SI becomes a force multiplier rather than another dependency.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "9db6fcc280093e26fe4decab1462c0b55e7a5ca43cc26bdbe2485f21ee404731",
+        "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 5371,
+          "end": 5515
+        },
+        "source_quote": "But we’re seeing a growing push to move more compute and SI directly onto the platform to reduce latency and dependence on communications links.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "633f62182ef532a17cb7b1280d6853ac82963be3a91310519b64a9f7dd8acd77",
+        "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+        "kind": "RELIEF",
+        "event_types": [
+          "RELIEF"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 5516,
+          "end": 5710
+        },
+        "source_quote": "Caching helps keep the workflow moving when connectivity is limited, but it’s not training the model, and it’s not a substitute for getting the data back into a formal retraining pipeline later.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "294fa0be3e9d861ed65b09e9e22ecbfbefbcbcbe2db803ee6020de53ca07b9bc",
+        "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 11412,
+          "end": 11533
+        },
+        "source_quote": "You’re leveraging technologies that are already seeing investment, iteration, and real-world use across multiple markets.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "27e2be064e3ee74ec9c32bd042a1e534c054a5772524f63f8656298251b45555",
+        "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 12908,
+          "end": 13186
+        },
+        "source_quote": "They would still perform their traditional responsibilities, but they’d also help shape requirements, plan for long-term sustainment, establish training pipelines, oversee independent test and evaluation, and prepare the capability for operational deployment from the beginning.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "1ea1fbc69f0249a7692428602e42437e43561d29bb989a21285002a08488d7fc",
+        "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 15810,
+          "end": 15926
+        },
+        "source_quote": "We’re seeing significant investment in SI, but organizations still want to understand the return on that investment.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "98c5ccf4da6e28dca17a587190042dbdc5c52f20783244e74f4b2090ee73fd38",
+        "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 16118,
+          "end": 16232
+        },
+        "source_quote": "If you can’t clearly articulate the operational value, it’s going to be difficult to justify sustained investment.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "precursor_events": [
+      {
+        "event_id": "dd17579a2bbc10f879349ee91a757bddebc2fa20d116442f509c8f0597e06f11",
+        "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 3742,
+          "end": 3835
+        },
+        "source_quote": "If you can strike that balance, SI becomes a force multiplier rather than another dependency.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "9db6fcc280093e26fe4decab1462c0b55e7a5ca43cc26bdbe2485f21ee404731",
+        "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+        "kind": "CONCENTRATION",
+        "event_types": [
+          "CONCENTRATION"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 5371,
+          "end": 5515
+        },
+        "source_quote": "But we’re seeing a growing push to move more compute and SI directly onto the platform to reduce latency and dependence on communications links.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "633f62182ef532a17cb7b1280d6853ac82963be3a91310519b64a9f7dd8acd77",
+        "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+        "kind": "RELIEF",
+        "event_types": [
+          "RELIEF"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 5516,
+          "end": 5710
+        },
+        "source_quote": "Caching helps keep the workflow moving when connectivity is limited, but it’s not training the model, and it’s not a substitute for getting the data back into a formal retraining pipeline later.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "294fa0be3e9d861ed65b09e9e22ecbfbefbcbcbe2db803ee6020de53ca07b9bc",
+        "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 11412,
+          "end": 11533
+        },
+        "source_quote": "You’re leveraging technologies that are already seeing investment, iteration, and real-world use across multiple markets.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "27e2be064e3ee74ec9c32bd042a1e534c054a5772524f63f8656298251b45555",
+        "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+        "kind": "DEPLOYMENT",
+        "event_types": [
+          "DEPLOYMENT"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 12908,
+          "end": 13186
+        },
+        "source_quote": "They would still perform their traditional responsibilities, but they’d also help shape requirements, plan for long-term sustainment, establish training pipelines, oversee independent test and evaluation, and prepare the capability for operational deployment from the beginning.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "1ea1fbc69f0249a7692428602e42437e43561d29bb989a21285002a08488d7fc",
+        "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 15810,
+          "end": 15926
+        },
+        "source_quote": "We’re seeing significant investment in SI, but organizations still want to understand the return on that investment.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "98c5ccf4da6e28dca17a587190042dbdc5c52f20783244e74f4b2090ee73fd38",
+        "document_id": "54e4e91c-d39f-4141-bf96-6a2f0cc1d5c3",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 16118,
+          "end": 16232
+        },
+        "source_quote": "If you can’t clearly articulate the operational value, it’s going to be difficult to justify sustained investment.",
+        "scope": {},
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "objective_version": "bct-objective-1",
+    "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  },
+  "EARLY_success": false,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "record_sha256": "1db2b09f332fba3ba57b6fb848fabaf59c7cd512c5b3b9db17691f61ce3c795c"
+}
