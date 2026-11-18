@@ -1,0 +1,467 @@
+{
+  "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+  "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+  "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+  "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+  "applies_from": "2026-10-05T15:24:06.650413+00:00",
+  "document_id": "87ed8f37-8883-4cb3-8716-3fb88b56481a",
+  "body_sha256": "cb66b23252f32a82a936ba557a84e1a4ba383cf9b1cb2eb1d84ff508f27dd0ac",
+  "origin_id": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+  "origin_url": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+  "provenance_verified": true,
+  "automatic_extraction": {
+    "version": "BCT_PRECURSOR_V2_SHADOW_2",
+    "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+    "events": [
+      {
+        "event_id": "b8da8972eb87d8ef538ee5035543c0f9371930b60919695e822c185b2089ca69",
+        "document_id": "87ed8f37-8883-4cb3-8716-3fb88b56481a",
+        "role": "SUPPLY",
+        "kind": "READINESS_OR_QUANTITY",
+        "reference": {
+          "document_id": "87ed8f37-8883-4cb3-8716-3fb88b56481a",
+          "body_sha256": "cb66b23252f32a82a936ba557a84e1a4ba383cf9b1cb2eb1d84ff508f27dd0ac",
+          "locator": {
+            "start": 2091,
+            "end": 2260
+          },
+          "quote": "Developers want to go faster and utilities want to go slower, Witter said, because a utility cannot add that much capacity to an already strained system on short notice."
+        },
+        "fields": {},
+        "context_references": [
+          {
+            "document_id": "87ed8f37-8883-4cb3-8716-3fb88b56481a",
+            "body_sha256": "cb66b23252f32a82a936ba557a84e1a4ba383cf9b1cb2eb1d84ff508f27dd0ac",
+            "locator": {
+              "start": 2091,
+              "end": 2260
+            },
+            "quote": "Developers want to go faster and utilities want to go slower, Witter said, because a utility cannot add that much capacity to an already strained system on short notice."
+          }
+        ],
+        "direct_origin": true,
+        "facts": {},
+        "period": null
+      }
+    ],
+    "facts_verified_semantically": false
+  },
+  "semantic_review": {
+    "status": "PENDING",
+    "annotation_method": null,
+    "annotator": null
+  },
+  "final_status": "HOLD",
+  "reason": "SEMANTIC_REVIEW_REQUIRED",
+  "formal_TARGET_id": null,
+  "EARLY_success": false,
+  "review_id": null,
+  "intake_version": "BCT_REVIEW_INTAKE_1",
+  "annotation_sha256": null,
+  "mode": "PROSPECTIVE_REVIEW",
+  "recorded_at": "2026-11-18T18:44:53.295153+00:00",
+  "source_document": {
+    "document_id": "87ed8f37-8883-4cb3-8716-3fb88b56481a",
+    "origin_url": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+    "collected_at": "2026-11-18T18:34:55.147149+00:00",
+    "origin_id": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+    "canonical_url": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+    "origin_publisher": "POWER Magazine",
+    "published_at": "2026-11-18T15:32:20+00:00",
+    "published_at_raw": "2026-11-18T15:32:20+00:00",
+    "publication_precision": "TIMESTAMP",
+    "acquired_at": "2026-11-18T18:37:10.845239+00:00",
+    "available_at": "2026-11-18T18:37:10.845239+00:00",
+    "body": "The sheer scale of artificial intelligence (AI) data centers dominates the conversation about their power needs. But the way these facilities draw electricity may be the harder problem for utilities and on-site generators to solve. That is the view of Brad Witter, senior vice president of Industrial Digital at Generac, who discussed the issue on The POWER Podcast .\nWitter said the industry’s answer is increasingly energy storage: batteries and fast-acting inverters that sit between the load and the grid, smoothing demand and riding through faults. Proving that those systems will work together at utility scale, he added, will depend as much on simulation as on hardware.\nThree Problems, Not One\nWitter described the challenge in three parts: magnitude, spikiness, and fault intolerance. On magnitude, he pointed to a data center proposed in Utah that he said equals the entire state’s load.\nSize alone does not capture the risk, however. AI training clusters, in which thousands of GPUs (graphics processing units) work on a single model, change state together, Witter said. When a step finishes or an interruption occurs, “they all interrupt at once.” In a traditional data center, nodes work more independently, so their ups and downs offset one another and the overall load stays flatter. In an AI cluster, he said, “when one goes up, they all go up.”\nThat behavior is difficult for a grid built around stable, predictable load patterns. Witter offered the example of the largest load on a distribution feeder swinging up and down 50% at the millisecond level. “The spikiness is every bit as much of a problem as the magnitude is,” he said.\nThe third problem is fault response. Witter said these facilities are very sensitive to power quality, and many drop offline automatically when the grid struggles, which makes a bad situation worse for the utility. Generation behind the meter is not spared, he added. All of that spinning generation “does not like that spikiness,” he said, and turbines in particular can be damaged by repeated swings of that size.\nUtilities Set the Terms\nDevelopers want to go faster and utilities want to go slower, Witter said, because a utility cannot add that much capacity to an already strained system on short notice. The practical result, he said, is that many utilities are asking large loads for two things. The first is to bring their own generation, such as turbines or fuel cells, to bridge the gap while the utility catches up. The second is to behave differently once connected, limiting both the spikiness of their demand and their response to grid faults.\nAsked whether utilities are in the driver’s seat, Witter said, “I would cautiously say yes,” noting that community benefits and revenue also give utilities reasons to move quickly. He said he expects hyperscalers to take on a larger share of the required investment in future interconnection agreements, and that the Federal Energy Regulatory Commission (FERC) is getting involved. He described hyperscalers’ willingness to build their own natural gas power plants as a bridge as unprecedented, and characterized the current market as “a land grab.”\nBatteries as the Buffer\nThe scale of conventional backup alone is substantial, Witter said. A 200-MW site, he noted, could require hundreds of generators. To meet utility requirements and still protect on-site equipment, he said, facilities need a buffer in the form of energy storage, which flattens load swings and provides ride-through support during faults. He described storage as almost a necessity for some utility requirements, “table stakes” for securing an interconnection agreement.\nWitter expects that buffer to come from two directions. Uninterruptible power supply (UPS) providers, whose batteries protect power at the rack, are moving their capabilities closer to the meter, he said, though he noted that rack-level UPS systems do not help with load smoothing or grid stability. Standalone battery energy storage, meanwhile, can serve as what he called a facility-level UPS.\nGrid-forming inverters are what deliver that buffer, Witter said. Connected in parallel with the load, they can charge when demand dips and discharge when it rises, offsetting the swings. Because they can form a local grid without the utility present, they can also black start a site. Automation then decides when generators need to run. That arrangement, he said, makes the battery system “the central nervous system” of a site’s off-grid support.\nProving It Before Building It\nValidating these architectures is its own challenge. “You can’t do a proof of concept with a half a gigawatt of infrastructure,” Witter said, and no one will fund a multibillion-dollar test case. Manufacturers must show that equipment meets specifications on paper, he said, but how the pieces interact is “way more important” than whether each one complies individually. Utility-scale simulation, he said, is the only way to build confidence before committing at full scale.\nWitter said labs such as the National Laboratory of the Rockies (NLR, formerly the National Renewable Energy Laboratory [NREL]) are partnering with manufacturers on hybrid testing that mixes real hardware with simulation, and that Generac has an ongoing effort with the lab. He added that utilities now commonly require modeling evidence in interconnection submissions, showing how a facility’s systems would respond to specified grid disturbances.\nThat integration challenge also shapes Generac’s strategy, according to Witter. He said the company has added switchgear, packaging, and transfer switch capabilities and is investing heavily in battery storage, because customers increasingly want a single partner and the orchestration involved is far more complex than the “couple wires” that traditionally tie backup power together. He said Generac’s architecture remains open to third-party equipment.\nAI itself is part of the answer, Witter added. He said Generac uses it for predictive failure algorithms and manufacturing quality, and that large language models may speed the simulation work needed to prove these systems. He called it “an ironic circular loop,” with AI creating the problem it will help solve.\nWhat Success Looks Like\nLooking five years out, Witter said the data centers that got their power strategy right will be the ones that got online at all. Reaching an actionable agreement with the utility is among the biggest hurdles, he said, and many of the technologies involved are not yet fully proven. “The ones that get it right are the ones that work,” he said.\nFor developers that must build bridging power now, he said, the greatest benefit will go to those who plan how that equipment will support the site once utility power arrives, so nothing has to be ripped out and replaced.\nTo hear the full interview with Witter, listen to The POWER Podcast . Click on the SoundCloud player below to listen in your browser now or use the following links to reach the show page on your favorite podcast platform:\nApple Podcasts\nSpotify\nYouTube\nYouTube Music\nAmazon Music\niHeart\nTuneIn\nSoundCloud\nThe POWER Podcast · 219. Spiky AI Loads Are Forcing a Rethink of Data Center Power\nFor more power podcasts, visit The POWER Podcast archives .\n— Aaron Larson is POWER’s executive editor (@AaronL_Power, @POWERmagazine).\nTagged in:\nAI data centers\nAI training\nbatteries\ndata centers\nferc\nGenerac\ngrid-forming inverters\nhyperscalers\ninterconnection\nload smoothing\nUPS\nSept. 28—30, 2026\nWashington, D.C.\nRegister Now\nExplore this topic and more — live at Experience POWER. The power industry's most urgent decisions are being made right now. Be in the room where they happen.\nView Conference Program",
+    "body_sha256": "cb66b23252f32a82a936ba557a84e1a4ba383cf9b1cb2eb1d84ff508f27dd0ac",
+    "version": "cb66b23252f32a82a936ba557a84e1a4ba383cf9b1cb2eb1d84ff508f27dd0ac",
+    "raw_sha256": "d7facc95631488432470fe1f0520b883ba7b548f819bc545487607cf89aa7e19",
+    "checks": {
+      "http_success": true,
+      "original_identity": true,
+      "publisher_observed": true,
+      "attribution_consistent": true,
+      "original_publication": true,
+      "available_at_recorded": true,
+      "full_accessible_body": true,
+      "not_republication": true,
+      "body_hash_matches": true,
+      "publication_before_acquisition": true
+    },
+    "provenance": "PASS",
+    "provenance_verified": true,
+    "provenance_blockers": [],
+    "body_status": "FULL",
+    "raw_path": "var/new-precursors/raw/d7facc95631488432470fe1f0520b883ba7b548f819bc545487607cf89aa7e19.html",
+    "status": "CAPTURED",
+    "scope_reader_version": "source-scope-reader-5",
+    "scope_read_mode": "LIVE_FRESH",
+    "excluded_page_regions": [
+      {
+        "document_id": "87ed8f37-8883-4cb3-8716-3fb88b56481a",
+        "body_sha256": "cb66b23252f32a82a936ba557a84e1a4ba383cf9b1cb2eb1d84ff508f27dd0ac",
+        "origin_id": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+        "locator": {
+          "start": 7386,
+          "end": 7398
+        },
+        "source_quote": "data centers",
+        "origin_url": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+        "origin_publisher": "POWER Magazine",
+        "published_at": "2026-11-18T15:32:20+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-11-18T18:37:10.845239+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      },
+      {
+        "document_id": "87ed8f37-8883-4cb3-8716-3fb88b56481a",
+        "body_sha256": "cb66b23252f32a82a936ba557a84e1a4ba383cf9b1cb2eb1d84ff508f27dd0ac",
+        "origin_id": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+        "locator": {
+          "start": 7501,
+          "end": 7517
+        },
+        "source_quote": "Washington, D.C.",
+        "origin_url": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+        "origin_publisher": "POWER Magazine",
+        "published_at": "2026-11-18T15:32:20+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-11-18T18:37:10.845239+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "HTML_CHROME_CONTEXT"
+      }
+    ],
+    "retained_collection_events": [
+      {
+        "event_id": "a5c731e951d3b18104e1ad342cc45a91790c9c34b90007ed4d3620a49cc46f2c",
+        "document_id": "87ed8f37-8883-4cb3-8716-3fb88b56481a",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT",
+          "RAMP"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 2790,
+          "end": 2990
+        },
+        "source_quote": "He said he expects hyperscalers to take on a larger share of the required investment in future interconnection agreements, and that the Federal Energy Regulatory Commission (FERC) is getting involved.",
+        "scope": {
+          "product": {
+            "value": "interconnection",
+            "locator": {
+              "start": 2885,
+              "end": 2900
+            },
+            "reference": {
+              "document_id": "87ed8f37-8883-4cb3-8716-3fb88b56481a",
+              "body_sha256": "cb66b23252f32a82a936ba557a84e1a4ba383cf9b1cb2eb1d84ff508f27dd0ac",
+              "origin_id": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+              "locator": {
+                "start": 2885,
+                "end": 2900
+              },
+              "source_quote": "interconnection",
+              "origin_url": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+              "origin_publisher": "POWER Magazine",
+              "published_at": "2026-11-18T15:32:20+00:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-11-18T18:37:10.845239+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            },
+            "support_references": []
+          }
+        },
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": true,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "9603dce5fe1c970131c775e7ef5ce2ce318ed8b670b1614a49bcb5f7da7a3167",
+        "document_id": "87ed8f37-8883-4cb3-8716-3fb88b56481a",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 5534,
+          "end": 5838
+        },
+        "source_quote": "He said the company has added switchgear, packaging, and transfer switch capabilities and is investing heavily in battery storage, because customers increasingly want a single partner and the orchestration involved is far more complex than the “couple wires” that traditionally tie backup power together.",
+        "scope": {
+          "product": {
+            "value": "battery",
+            "locator": {
+              "start": 5648,
+              "end": 5655
+            },
+            "reference": {
+              "document_id": "87ed8f37-8883-4cb3-8716-3fb88b56481a",
+              "body_sha256": "cb66b23252f32a82a936ba557a84e1a4ba383cf9b1cb2eb1d84ff508f27dd0ac",
+              "origin_id": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+              "locator": {
+                "start": 5648,
+                "end": 5655
+              },
+              "source_quote": "battery",
+              "origin_url": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+              "origin_publisher": "POWER Magazine",
+              "published_at": "2026-11-18T15:32:20+00:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-11-18T18:37:10.845239+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            },
+            "support_references": []
+          }
+        },
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": true,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "precursor_events": [
+      {
+        "event_id": "a5c731e951d3b18104e1ad342cc45a91790c9c34b90007ed4d3620a49cc46f2c",
+        "document_id": "87ed8f37-8883-4cb3-8716-3fb88b56481a",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT",
+          "RAMP"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 2790,
+          "end": 2990
+        },
+        "source_quote": "He said he expects hyperscalers to take on a larger share of the required investment in future interconnection agreements, and that the Federal Energy Regulatory Commission (FERC) is getting involved.",
+        "scope": {
+          "product": {
+            "value": "interconnection",
+            "locator": {
+              "start": 2885,
+              "end": 2900
+            },
+            "reference": {
+              "document_id": "87ed8f37-8883-4cb3-8716-3fb88b56481a",
+              "body_sha256": "cb66b23252f32a82a936ba557a84e1a4ba383cf9b1cb2eb1d84ff508f27dd0ac",
+              "origin_id": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+              "locator": {
+                "start": 2885,
+                "end": 2900
+              },
+              "source_quote": "interconnection",
+              "origin_url": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+              "origin_publisher": "POWER Magazine",
+              "published_at": "2026-11-18T15:32:20+00:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-11-18T18:37:10.845239+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            },
+            "support_references": []
+          }
+        },
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": true,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      },
+      {
+        "event_id": "9603dce5fe1c970131c775e7ef5ce2ce318ed8b670b1614a49bcb5f7da7a3167",
+        "document_id": "87ed8f37-8883-4cb3-8716-3fb88b56481a",
+        "kind": "CAPACITY_INVESTMENT",
+        "event_types": [
+          "CAPACITY_INVESTMENT"
+        ],
+        "role": "SUPPLY",
+        "locator": {
+          "start": 5534,
+          "end": 5838
+        },
+        "source_quote": "He said the company has added switchgear, packaging, and transfer switch capabilities and is investing heavily in battery storage, because customers increasingly want a single partner and the orchestration involved is far more complex than the “couple wires” that traditionally tie backup power together.",
+        "scope": {
+          "product": {
+            "value": "battery",
+            "locator": {
+              "start": 5648,
+              "end": 5655
+            },
+            "reference": {
+              "document_id": "87ed8f37-8883-4cb3-8716-3fb88b56481a",
+              "body_sha256": "cb66b23252f32a82a936ba557a84e1a4ba383cf9b1cb2eb1d84ff508f27dd0ac",
+              "origin_id": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+              "locator": {
+                "start": 5648,
+                "end": 5655
+              },
+              "source_quote": "battery",
+              "origin_url": "https://www.powermag.com/spiky-ai-loads-are-forcing-a-rethink-of-data-center-power/",
+              "origin_publisher": "POWER Magazine",
+              "published_at": "2026-11-18T15:32:20+00:00",
+              "publication_precision": "TIMESTAMP",
+              "acquired_at": "2026-11-18T18:37:10.845239+00:00",
+              "assertion": "DIRECT_SOURCE_FACT"
+            },
+            "support_references": []
+          }
+        },
+        "window": null,
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": true,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "field_references": {},
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "UNKNOWN",
+          "end": "UNKNOWN"
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY",
+            "NO_SOURCE_PERIOD"
+          ]
+        }
+      }
+    ],
+    "objective_version": "bct-objective-1",
+    "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  },
+  "T": "UNKNOWN",
+  "T_scope": "UNKNOWN",
+  "strict_candidate_first_met_at": "UNKNOWN",
+  "leading_detection_success": false,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "record_sha256": "f3dddf16c1f32b7577ea631f2fb5055931df18536d94577ae5e034b34e6bbed2"
+}
