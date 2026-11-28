@@ -1,0 +1,325 @@
+{
+  "review_rules_version": "BCT_REVIEW_LEAD_RULES_1",
+  "review_contract_version": "BCT_REVIEW_LEAD_CONTRACT_1",
+  "contract_sha256": "2faffce4c97977d725286b097e32d1815a49408c197d52a2b727c37af5fc9cac",
+  "implementation_sha256": "b579b2875531a0189251771614c2f0b7b82f0ee1b89079cda93ef5b4f4185f0e",
+  "applies_from": "2026-10-05T15:24:06.650413+00:00",
+  "document_id": "37d64127-e31a-4ff0-aeab-ea09b261655c",
+  "body_sha256": "ce44e89ce7e265ac777a082cd1491ba33a579329f8283e1be7396ebc45fdd79d",
+  "origin_id": "https://www.autoevolution.com/news/hackers-now-target-mechanics-repair-shops-with-infected-vehicle-diagnostic-software-279146.html",
+  "origin_url": "https://www.autoevolution.com/news/hackers-now-target-mechanics-repair-shops-with-infected-vehicle-diagnostic-software-279146.html",
+  "provenance_verified": true,
+  "automatic_extraction": {
+    "version": "BCT_PRECURSOR_V2_SHADOW_2",
+    "implementation_sha256": "0152d9df3e10cc6f38e0ebfc0460e0f59af7707019b0d7ee43af3654e0f930e9",
+    "events": [],
+    "facts_verified_semantically": false
+  },
+  "semantic_review": {
+    "status": "PENDING",
+    "annotation_method": null,
+    "annotator": null
+  },
+  "final_status": "HOLD",
+  "reason": "NO_EXTRACTED_CHANGE_SEMANTICS_UNREVIEWED",
+  "formal_TARGET_id": null,
+  "EARLY_success": false,
+  "review_id": null,
+  "intake_version": "BCT_REVIEW_INTAKE_1",
+  "annotation_sha256": null,
+  "mode": "PROSPECTIVE_REVIEW",
+  "recorded_at": "2026-11-28T10:04:18.985996+00:00",
+  "source_document": {
+    "document_id": "37d64127-e31a-4ff0-aeab-ea09b261655c",
+    "origin_url": "https://www.autoevolution.com/news/hackers-now-target-mechanics-repair-shops-with-infected-vehicle-diagnostic-software-279146.html",
+    "collected_at": "2026-11-28T09:54:00.284467+00:00",
+    "origin_id": "https://www.autoevolution.com/news/hackers-now-target-mechanics-repair-shops-with-infected-vehicle-diagnostic-software-279146.html",
+    "canonical_url": "https://www.autoevolution.com/news/hackers-now-target-mechanics-repair-shops-with-infected-vehicle-diagnostic-software-279146.html",
+    "origin_publisher": "autoevolution",
+    "published_at": "2026-11-28T07:59:52+00:00",
+    "published_at_raw": "2026-11-28T07:59:52+0000",
+    "publication_precision": "TIMESTAMP",
+    "acquired_at": "2026-11-28T09:55:27.572798+00:00",
+    "available_at": "2026-11-28T09:55:27.572798+00:00",
+    "body": "Great on any Friday: Google Pixel Buds Pro 2 (2025) - Bluetooth Earbuds with Active Noise Cancellation\nHackers Now Target Mechanics, Repair Shops With Infected Vehicle Diagnostic Software\n7 photos\nPhoto: Bogdan Popa/autoevolution\nA new malicious campaign that was spotted on no more, no less than 16 fake GitHub repositories is specifically aimed at repair shops and technicians looking for vehicle diagnostic software online.\nResearch conducted by automotive cybersecurity company Upstream revealed a clever approach to a rather traditional method of infecting computers.\nInstead of distributing malicious files, which would be blocked by antivirus software, the fake GitHub repositories actually include “legitimate open-source code, including standard CAN database (.dbc) files, ISO-TP transport helpers, and UDS service classes,” as the security firm explains.\nThe whole trick is simple: the hackers hope to convince users, most often technicians whose laptops are connected to dealer portals, therefore benefit from access to the networks operated by automakers, to download the packages. Once they extract the files, they are instructed to download additional payloads.\nTo do this, they are being told “to run local package installers, like editable pip commands, or compile solution files,” the security firm notes.\nAll packages come with attached README files that include all the instructions and lengthy descriptions to make the files look genuine. The documents are created using artificial intelligence and specifically use automotive-specific phrases, especially to appear in Google searches and, therefore, find more targets.\nPhoto: Genesis This isn’t the only mechanism used by hackers to convince technicians to install the infected files. A 404.html file, typically used to display an error when no page is found, is included in the root directory with a very simple, yet quite clever role. It displays a GitHub loading package message and a progress bar, but in the background, it connects to a remote server to redirect the browser.\n“When victims click the repository’s associated GitHub Pages link or open the file locally, they are routed to external infrastructure that probably hosts credential-stealing payloads,” the cybersecurity firm explains.\nIn case you wonder what happens when all these steps are executed and a computer is infected, it all comes down to the information the bad actors can steal and eventually monetize or use for other malicious purposes.\nService technicians and repair shops use laptops to connect to our vehicles and obtain vehicle diagnostics data that allow them to read fault codes and figure out what’s wrong with a car. In some cases, the software they use communicates with the portals operated by automakers, and these laptops are configured to automatically log in and access their networks.\nPhoto: Genesis Once they access the portal, service technicians can access additional data to help with the repairs, get codes for the needed vehicle parts, and request additional files if software updates – such as for the infotainment unit – are needed.\nThis is precisely the point attackers hope to reach as part of this sophisticated attempt.\n“Workshop computers routinely store cached single sign-on (SSO) tokens, active browser cookies for OEM service portals, saved credentials for telematics aggregators, and local certificates tied to J2534 interfaces,” the security firm explains.\n“If a suspected infostealer exfiltrates those session tokens, attackers can inject them into their own browsers to hijack authenticated sessions, potentially bypassing multi-factor authentication and logging directly into OEM dealer portals to expose VIN histories, warranty systems, and connected-vehicle infrastructure.”\nGitHub projects are specifically sought-after in the automotive world not only by vehicle owners but also by service technicians who are continuously looking into new ways to conduct certain operations. For example, one of the most recent projects gaining particular attention in the automotive space is a method to enable Google Maps and Waze on the digital cockpit in vehicles part of the Volkswagen Group.\nPhoto: Genesis The method works on MIB2-powered units and is extensively documented in numerous GitHub projects, where technicians can find step-by-step instructions to install the software in certain vehicles. The process involves downloading certain packages and compiling them locally before loading them on a compatible vehicle through the USB port.\nThe unlocking requires approximately 45 minutes to complete, after which users can run navigation apps directly on their digital cockpits, while the main infotainment screen can still be used for running CarPlay. All these GitHub pages have become very popular in the last few weeks.\nThe cybersecurity firm claims this malicious campaign has been observed since the first days of November, and it will likely continue by the end of the year and into early 2027.\nThe cybersecurity company recommends that additional protection methods be employed to prevent computers that had previously been infected from accessing and extracting certain data. “Harden dealer portals with strict token binding, anomaly detection, and shorter session lifetimes to reduce the impact of stolen cookies,” the security company explains in its blog post.\nThe good news is that the GitHub pages discovered to be used as part of this campaign have already been removed, but security researchers warn that more such attempts might appear in the near future, so paying close attention to the payloads you are prompted to download is critical.\nLiked the article? Follow us to see more stories from autoevolution in your Google feeds.\nhackers malware Vehicle Diagnostics WEEKEND\nAbout the author: Bogdan Popa\nBogdan keeps an eye on how technology is taking over the car world. His long-term goals are buying an 18-wheeler because he needs more space for his kid’s toys, and convincing Google and Apple that Android Auto and CarPlay deserve at least as much attention as their phones. Full profile\nUP NEXT Dealer-Built 1967 Shelby GT350S Surfaces After 50 Years With One Family, Sports Rare Power Option",
+    "body_sha256": "ce44e89ce7e265ac777a082cd1491ba33a579329f8283e1be7396ebc45fdd79d",
+    "version": "ce44e89ce7e265ac777a082cd1491ba33a579329f8283e1be7396ebc45fdd79d",
+    "raw_sha256": "735400bebd840a0608b5ff1a238eca17f1d5dbf0a599415064f4d418c79ee08e",
+    "checks": {
+      "http_success": true,
+      "original_identity": true,
+      "publisher_observed": true,
+      "attribution_consistent": true,
+      "original_publication": true,
+      "available_at_recorded": true,
+      "full_accessible_body": true,
+      "not_republication": true,
+      "body_hash_matches": true,
+      "publication_before_acquisition": true
+    },
+    "provenance": "PASS",
+    "provenance_verified": true,
+    "provenance_blockers": [],
+    "body_status": "FULL",
+    "raw_path": "var/new-precursors/raw/735400bebd840a0608b5ff1a238eca17f1d5dbf0a599415064f4d418c79ee08e.html",
+    "status": "CAPTURED",
+    "scope_reader_version": "source-scope-reader-5",
+    "scope_read_mode": "LIVE_FRESH",
+    "excluded_page_regions": [
+      {
+        "document_id": "37d64127-e31a-4ff0-aeab-ea09b261655c",
+        "body_sha256": "ce44e89ce7e265ac777a082cd1491ba33a579329f8283e1be7396ebc45fdd79d",
+        "origin_id": "https://www.autoevolution.com/news/hackers-now-target-mechanics-repair-shops-with-infected-vehicle-diagnostic-software-279146.html",
+        "locator": {
+          "start": 5779,
+          "end": 5808
+        },
+        "source_quote": "About the author: Bogdan Popa",
+        "origin_url": "https://www.autoevolution.com/news/hackers-now-target-mechanics-repair-shops-with-infected-vehicle-diagnostic-software-279146.html",
+        "origin_publisher": "autoevolution",
+        "published_at": "2026-11-28T07:59:52+00:00",
+        "publication_precision": "TIMESTAMP",
+        "acquired_at": "2026-11-28T09:55:27.572798+00:00",
+        "assertion": "DIRECT_SOURCE_FACT",
+        "reason": "PAGE_CHROME_OR_TAXONOMY"
+      }
+    ],
+    "retained_collection_events": [
+      {
+        "event_id": "38a1466bbb503e585c984c0a497fa7cdcfc4becc5ce53b55fda2df73c5879dce",
+        "document_id": "37d64127-e31a-4ff0-aeab-ea09b261655c",
+        "kind": "DEMAND_CHANGE",
+        "event_types": [
+          "DEMAND_CHANGE"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 0,
+          "end": 102
+        },
+        "source_quote": "Great on any Friday: Google Pixel Buds Pro 2 (2025) - Bluetooth Earbuds with Active Noise Cancellation",
+        "scope": {},
+        "window": {
+          "text": "2025",
+          "locator": {
+            "start": 46,
+            "end": 50
+          }
+        },
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "2025-01-01",
+          "end": "2025-12-31",
+          "precision": "SOURCE_WINDOW_NOT_EXACT_NEED_DATE",
+          "reference": {
+            "text": "2025",
+            "locator": {
+              "start": 46,
+              "end": 50
+            }
+          }
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [
+            {
+              "text": "2025",
+              "precision": "YEAR",
+              "start": "2025-01-01",
+              "end": "2025-12-31",
+              "fact_kind": "UNATTRIBUTED_PERIOD",
+              "reference": {
+                "document_id": "37d64127-e31a-4ff0-aeab-ea09b261655c",
+                "body_sha256": "ce44e89ce7e265ac777a082cd1491ba33a579329f8283e1be7396ebc45fdd79d",
+                "origin_id": "https://www.autoevolution.com/news/hackers-now-target-mechanics-repair-shops-with-infected-vehicle-diagnostic-software-279146.html",
+                "locator": {
+                  "start": 46,
+                  "end": 50
+                },
+                "source_quote": "2025",
+                "origin_url": "https://www.autoevolution.com/news/hackers-now-target-mechanics-repair-shops-with-infected-vehicle-diagnostic-software-279146.html",
+                "origin_publisher": "autoevolution",
+                "published_at": "2026-11-28T07:59:52+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-11-28T09:55:27.572798+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "DEMAND_CANCEL_OR_DELAY",
+              "reference": {
+                "document_id": "37d64127-e31a-4ff0-aeab-ea09b261655c",
+                "body_sha256": "ce44e89ce7e265ac777a082cd1491ba33a579329f8283e1be7396ebc45fdd79d",
+                "origin_id": "https://www.autoevolution.com/news/hackers-now-target-mechanics-repair-shops-with-infected-vehicle-diagnostic-software-279146.html",
+                "locator": {
+                  "start": 0,
+                  "end": 102
+                },
+                "source_quote": "Great on any Friday: Google Pixel Buds Pro 2 (2025) - Bluetooth Earbuds with Active Noise Cancellation",
+                "origin_url": "https://www.autoevolution.com/news/hackers-now-target-mechanics-repair-shops-with-infected-vehicle-diagnostic-software-279146.html",
+                "origin_publisher": "autoevolution",
+                "published_at": "2026-11-28T07:59:52+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-11-28T09:55:27.572798+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY"
+          ]
+        }
+      }
+    ],
+    "precursor_events": [
+      {
+        "event_id": "38a1466bbb503e585c984c0a497fa7cdcfc4becc5ce53b55fda2df73c5879dce",
+        "document_id": "37d64127-e31a-4ff0-aeab-ea09b261655c",
+        "kind": "DEMAND_CHANGE",
+        "event_types": [
+          "DEMAND_CHANGE"
+        ],
+        "role": "DEMAND",
+        "locator": {
+          "start": 0,
+          "end": 102
+        },
+        "source_quote": "Great on any Friday: Google Pixel Buds Pro 2 (2025) - Bluetooth Earbuds with Active Noise Cancellation",
+        "scope": {},
+        "window": {
+          "text": "2025",
+          "locator": {
+            "start": 46,
+            "end": 50
+          }
+        },
+        "quantity": "UNKNOWN",
+        "unit": "UNKNOWN",
+        "basis": "UNKNOWN",
+        "qualified": false,
+        "coverage_complete": false,
+        "incremental": false,
+        "pending": false,
+        "demand_status": "UNKNOWN",
+        "scope_reader_version": "source-scope-reader-5",
+        "scope_unknowns": {
+          "product": "NO_UNAMBIGUOUS_SOURCE_BOUND_PRODUCT",
+          "specification": "NO_UNAMBIGUOUS_SOURCE_BOUND_SPECIFICATION",
+          "region": "NO_UNAMBIGUOUS_SOURCE_BOUND_REGION",
+          "customer_group": "NO_UNAMBIGUOUS_SOURCE_BOUND_CUSTOMER_GROUP",
+          "supply_pool": "NO_UNAMBIGUOUS_SOURCE_BOUND_SUPPLY_POOL"
+        },
+        "missing_scope": [
+          "product",
+          "specification",
+          "region",
+          "customer_group",
+          "supply_pool"
+        ],
+        "future_period": {
+          "start": "2025-01-01",
+          "end": "2025-12-31",
+          "precision": "SOURCE_WINDOW_NOT_EXACT_NEED_DATE",
+          "reference": {
+            "text": "2025",
+            "locator": {
+              "start": 46,
+              "end": 50
+            }
+          }
+        },
+        "raw_period_references": [],
+        "temporal_facts": {
+          "version": "source-temporal-reader-3",
+          "periods": [
+            {
+              "text": "2025",
+              "precision": "YEAR",
+              "start": "2025-01-01",
+              "end": "2025-12-31",
+              "fact_kind": "UNATTRIBUTED_PERIOD",
+              "reference": {
+                "document_id": "37d64127-e31a-4ff0-aeab-ea09b261655c",
+                "body_sha256": "ce44e89ce7e265ac777a082cd1491ba33a579329f8283e1be7396ebc45fdd79d",
+                "origin_id": "https://www.autoevolution.com/news/hackers-now-target-mechanics-repair-shops-with-infected-vehicle-diagnostic-software-279146.html",
+                "locator": {
+                  "start": 46,
+                  "end": 50
+                },
+                "source_quote": "2025",
+                "origin_url": "https://www.autoevolution.com/news/hackers-now-target-mechanics-repair-shops-with-infected-vehicle-diagnostic-software-279146.html",
+                "origin_publisher": "autoevolution",
+                "published_at": "2026-11-28T07:59:52+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-11-28T09:55:27.572798+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "quantities": [],
+          "financial_amounts_not_output": [],
+          "relief": [
+            {
+              "kind": "DEMAND_CANCEL_OR_DELAY",
+              "reference": {
+                "document_id": "37d64127-e31a-4ff0-aeab-ea09b261655c",
+                "body_sha256": "ce44e89ce7e265ac777a082cd1491ba33a579329f8283e1be7396ebc45fdd79d",
+                "origin_id": "https://www.autoevolution.com/news/hackers-now-target-mechanics-repair-shops-with-infected-vehicle-diagnostic-software-279146.html",
+                "locator": {
+                  "start": 0,
+                  "end": 102
+                },
+                "source_quote": "Great on any Friday: Google Pixel Buds Pro 2 (2025) - Bluetooth Earbuds with Active Noise Cancellation",
+                "origin_url": "https://www.autoevolution.com/news/hackers-now-target-mechanics-repair-shops-with-infected-vehicle-diagnostic-software-279146.html",
+                "origin_publisher": "autoevolution",
+                "published_at": "2026-11-28T07:59:52+00:00",
+                "publication_precision": "TIMESTAMP",
+                "acquired_at": "2026-11-28T09:55:27.572798+00:00",
+                "assertion": "DIRECT_SOURCE_FACT"
+              }
+            }
+          ],
+          "unknown_reasons": [
+            "NO_PHYSICAL_QUANTITY"
+          ]
+        }
+      }
+    ],
+    "objective_version": "bct-objective-1",
+    "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7"
+  },
+  "T": "UNKNOWN",
+  "T_scope": "UNKNOWN",
+  "strict_candidate_first_met_at": "UNKNOWN",
+  "leading_detection_success": false,
+  "objective_version": "bct-objective-1",
+  "objective_sha256": "0b2de0186c92fa0c5466539b42cdf5a4fba164a7c9fb62092e396cb4ebe0cff7",
+  "record_sha256": "735cc4a1896b8918f71945e32ac43223aab665f934b27dbc8cb65c79651496b1"
+}
